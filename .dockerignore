@@ -1,0 +1,7 @@
+**/node_modules
+*/npm-debug.log
+**/build
+**/.env*
+*/docs
+evc-app/src/**/*.js
+evc-app/index.js

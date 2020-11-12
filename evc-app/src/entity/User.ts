@@ -31,6 +31,9 @@ export class User {
   @Column({ nullable: true })
   address: string;
 
+  @Column({ default: '' })
+  country: string;
+
   @Column({ default: 'en-US' })
   locale: string;
 

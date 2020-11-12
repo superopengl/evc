@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Modal, Form, Input, Checkbox, Layout, Divider } from 'antd';
+import { Typography, Button, Select, Form, Input, Checkbox, Layout, Divider } from 'antd';
 import { Logo } from 'components/Logo';
 import { signOn } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
+import { LocaleSelector } from 'components/LocaleSelector';
+import { CountrySelector } from 'components/CountrySelector';
 const { Title } = Typography;
 
 
@@ -83,6 +85,15 @@ const ProfileForm = (props) => {
       </Form.Item>
       <Form.Item label="Phone" name="phone" rules={[{ required: false, whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="Phone number" autoComplete="tel" allowClear={true} maxLength="100" />
+      </Form.Item>
+      <Form.Item label="Address" name="address" rules={[{ required: false, whitespace: true, max: 200, message: ' ' }]}>
+        <Input placeholder="Residence address" autoComplete="address" allowClear={true} maxLength="200" />
+      </Form.Item>
+      <Form.Item label="Residence country" name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
+        <CountrySelector />
+      </Form.Item>
+      <Form.Item label="Language" name="locale" rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}>
+        <LocaleSelector />
       </Form.Item>
       <Form.Item style={{ marginTop: '1rem' }}>
         <Button block type="primary" htmlType="submit" disabled={sending}>Save</Button>

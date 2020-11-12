@@ -86,7 +86,7 @@ class HomePage extends React.Component {
           </section>
           {/* <section><HomeSearchArea /></section> */}
           <HashAnchorPlaceholder id="services" />
-          {/* <section><HomeServiceArea /></section> */}
+          <section><HomeServiceArea bgColor="#135200"/></section>
           {/* <HashAnchorPlaceholder id="team" /> */}
           {/* <section><HomeTeamArea /></section> */}
           {/* <section><HomeContactArea bgColor="#135200"></HomeContactArea></section> */}

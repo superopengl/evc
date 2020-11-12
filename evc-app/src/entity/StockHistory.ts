@@ -10,40 +10,40 @@ export class StockHistory {
   @Index()
   symbol: string;
 
-  @Column()
+  @Column({ default: () => `timezone('UTC', now())` })
   @Index()
-  changedAt: Date;
+  createdAt?: Date;
 
   @Column()
   company: string;
 
-  @Column()
+  @Column({nullable: true})
   market: string;
 
-  @Column()
+  @Column('decimal')
   peLo: number;
 
-  @Column()
+  @Column('decimal')
   peHi: number;
 
-  @Column()
+  @Column('decimal')
   value: number;
 
-  @Column()
+  @Column('decimal')
   supportPriceLo: number;
 
-  @Column()
+  @Column('decimal')
   supportPriceHi: number;
 
-  @Column()
+  @Column('decimal')
   pressurePriceLo: number;
 
-  @Column()
+  @Column('decimal')
   pressurePriceHi: number;
 
   @Column('uuid')
   by: string;
 
   @Column({ default: false })
-  published: boolean;
+  shouldPublish: boolean;
 }

@@ -10,3 +10,4 @@ export * from './messageController';
 export * from './contactController';
 export * from './statsController';
 export * from './blogController';
+export * from './stockController';

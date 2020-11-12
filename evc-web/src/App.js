@@ -34,6 +34,8 @@ import AdminBoardPage from 'pages/AdminBoard/AdminBoardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
+import StockListPage from 'pages/Stock/StockListPage';
+import StockPage from 'pages/Stock/StockPage';
 
 
 class App extends React.Component {
@@ -105,10 +107,9 @@ class App extends React.Component {
             <RoleRoute visible={isAdmin} loading={loading} exact path="/recurring" component={RecurringListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/impersonate" component={ImpersonatePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/tasks/new" exact component={MyTaskPage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/tasks/:id" exact component={MyTaskPage} />
-            <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/tasks" exact component={isClient ? MyTaskListPage : AdminTaskListPage} />
-            <RoleRoute visible={isAdmin || isAgent} loading={loading} path="/tasks/:id/proceed" exact component={ProceedTaskPage} />
+            <RoleRoute visible={!isGuest} loading={loading} path="/stock/new" exact component={StockPage} />
+            <RoleRoute visible={!isGuest} loading={loading} path="/stock/:id" exact component={StockPage} />
+            <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
             <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />

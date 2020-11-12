@@ -16,6 +16,7 @@ import { HashLink } from 'react-router-hash-link';
 import { logout } from 'services/authService';
 import styled from 'styled-components';
 import { GlobalContext } from '../contexts/GlobalContext';
+import PropTypes from 'prop-types';
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -117,7 +118,7 @@ const HomeHeaderRaw = props => {
             {isGuest && <Menu.Item key="login"><Link to="/login">Log In</Link></Menu.Item>}
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><Link to="/board">Board</Link></Menu.Item>} */}
             {isClient && <Menu.Item key="landing"><Link to="/landing">Dashboard</Link></Menu.Item>}
-            {!isGuest && <Menu.Item key="task"><Link to="/tasks">Tasks</Link></Menu.Item>}
+            {!isGuest && <Menu.Item key="stock"><Link to="/stock">Stocks</Link></Menu.Item>}
             {isClient && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>}
             {/* {isAdmin && <Menu.Item key="clients"><Link to="/clients">Users</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="admin"><Link to="/admin">Admin</Link></Menu.Item>} */}
@@ -164,7 +165,7 @@ const HomeHeaderRaw = props => {
             {/* {isAdmin && <Menu.Item key="admin"><SettingOutlined /> <Link to="/admin">Admin</Link></Menu.Item>} */}
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><DashboardOutlined /> <Link to="/board">Board</Link></Menu.Item>} */}
             {isClient && <Menu.Item key="landing"><DashboardOutlined /> <Link to="/landing">Dashboard</Link></Menu.Item>}
-            {!isGuest && <Menu.Item key="task"><SnippetsOutlined /> <Link to="/tasks">Task</Link></Menu.Item>}
+            {!isGuest && <Menu.Item key="stock"><SnippetsOutlined /> <Link to="/stock">Stocks</Link></Menu.Item>}
             {isClient && <Menu.Item key="portfolio"><IdcardOutlined /> <Link to="/portfolios">Portfolios</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="task_template"><ToolOutlined /> <Link to="/task_template">Task Template</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="doc_template"><ReconciliationOutlined /> <Link to="/doc_template">Doc Template</Link></Menu.Item>}
@@ -189,7 +190,8 @@ const HomeHeaderRaw = props => {
   );
 }
 
-HomeHeaderRaw.propTypes = {};
+HomeHeaderRaw.propTypes = {
+};
 
 HomeHeaderRaw.defaultProps = {};
 

@@ -672,3 +672,62 @@ paths:
       responses:
         200:
           description: OK
+  /stock/search:
+    post:
+      operationId: searchStock
+      responses:
+        200:
+          description: OK
+  /stock/list:
+    get:
+      operationId: listStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/{symbol}:
+    get:
+      operationId: getStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/{symbol}/history:
+    get:
+      operationId: getStockHistory
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
+  /stock:
+    post:
+      operationId: saveStock
+      responses:
+        200:
+          description: OK

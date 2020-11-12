@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Select } from 'antd';
-import { searchStock, listStock } from 'services/stockService';
+import { searchStock, listStock, getStock } from 'services/stockService';
 import Highlighter from "react-highlight-words";
 import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';

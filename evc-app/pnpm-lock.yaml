@@ -16,18 +16,21 @@ dependencies:
   express-async-handler: 1.1.4
   express-fileupload: 1.1.10
   express-list-endpoints: 4.0.1
+  geoip-lite: 1.4.2
   http-assert: 1.4.1
   jsonwebtoken: 8.5.1
   lodash: 4.17.19
   md-to-pdf: 3.1.1
   md5: 2.3.0
   moment: 2.27.0
+  node-cache: 5.1.2
   nodemailer: 6.4.14
   pg: 8.3.3_pg@8.3.3
   pug: 3.0.0
   serialize-error: 7.0.1
   swagger-routes-express: 3.2.1
   typeorm: 0.2.25
+  ua-parser-js: 0.7.22
   uuid: 8.3.0
   ws: 7.3.1
   yamljs: 0.3.0
@@ -482,6 +485,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-WWZ/QfrdTyDMvCu5a41Pf3jsA2c=
+  /async/2.6.3:
+    dependencies:
+      lodash: 4.17.20
+    dev: false
+    resolution:
+      integrity: sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
   /atob/2.1.2:
     dev: true
     engines:
@@ -959,6 +968,12 @@ packages:
     dev: true
     resolution:
       integrity: sha1-0dyXOSAxTfZ/vrlCI7TuNQI56Ws=
+  /clone/2.1.2:
+    dev: false
+    engines:
+      node: '>=0.8'
+    resolution:
+      integrity: sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
   /code-point-at/1.1.0:
     dev: false
     engines:
@@ -992,6 +1007,12 @@ packages:
   /color-name/1.1.4:
     resolution:
       integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
+  /colors/1.4.0:
+    dev: false
+    engines:
+      node: '>=0.1.90'
+    resolution:
+      integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
   /commander/2.20.3:
     dev: true
     resolution:
@@ -1797,6 +1818,20 @@ packages:
       - darwin
     resolution:
       integrity: sha512-Auw9a4AxqWpa9GUfj370BMPzzyncfBABW8Mab7BGWBYDj4Isgq+cDKtx0i6u9jcX9pQDnswsaaOTgTmA5pEjuQ==
+  /geoip-lite/1.4.2:
+    dependencies:
+      async: 2.6.3
+      colors: 1.4.0
+      iconv-lite: 0.4.24
+      ip-address: 5.9.4
+      lazy: 1.0.11
+      rimraf: 2.7.1
+      yauzl: 2.10.0
+    dev: false
+    engines:
+      node: '>=5.10.0'
+    resolution:
+      integrity: sha512-1rUNqar68+ldSSlSMdpLZPAM+NRokIDzB2lpQFRHSOaDVqtmy25jTAWe0lM2GqWFeaA35RiLhF8GF0vvL+qOKA==
   /get-caller-file/2.0.5:
     dev: false
     engines:
@@ -2184,6 +2219,16 @@ packages:
     dev: true
     resolution:
       integrity: sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+  /ip-address/5.9.4:
+    dependencies:
+      jsbn: 1.1.0
+      lodash: 4.17.19
+      sprintf-js: 1.1.2
+    dev: false
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha512-dHkI3/YNJq4b/qQaz+c8LuarD3pY24JqZWfjB8aZx1gtpc2MDILu9L9jpZe1sHpzo/yWFweQVn+U//FhazUxmw==
   /ipaddr.js/1.9.1:
     dev: false
     engines:
@@ -2466,6 +2511,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
+  /jsbn/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha1-sBMHyym2GKHtJux56RH4A8TaAEA=
   /json-buffer/3.0.0:
     dev: true
     resolution:
@@ -2573,6 +2622,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-odePw6UEdMuAhF07O24dpJpEbo4=
+  /lazy/1.0.11:
+    dev: false
+    engines:
+      node: '>=0.2.0'
+    resolution:
+      integrity: sha1-2qBoIGKCVCwIgojpdcKXwa53tpA=
   /libbase64/1.2.1:
     dev: false
     resolution:
@@ -3136,6 +3191,14 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
+  /node-cache/5.1.2:
+    dependencies:
+      clone: 2.1.2
+    dev: false
+    engines:
+      node: '>= 8.0.0'
+    resolution:
+      integrity: sha512-t1QzWwnk4sjLWaQAS8CHgOJ+RAfmHpxFWmc36IWTiWHQfs0w5JDMBS1b1ZxQteo0vVVuWJvIUKHDkkeK7vIGCg==
   /node-fetch/2.6.1:
     dev: false
     engines:
@@ -4050,6 +4113,13 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-YTObci/mo1FWiSENJOFMlhSGE+8=
+  /rimraf/2.7.1:
+    dependencies:
+      glob: 7.1.6
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
   /rimraf/3.0.2:
     dependencies:
       glob: 7.1.6
@@ -4758,6 +4828,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
+  /ua-parser-js/0.7.22:
+    dev: false
+    resolution:
+      integrity: sha512-YUxzMjJ5T71w6a8WWVcMGM6YWOTX27rCoIQgLXiWaxqXSx9D7DNjiGWn1aJIRSQ5qr0xuhra77bSIh6voR/46Q==
   /uc.micro/1.0.6:
     dev: false
     resolution:
@@ -5207,12 +5281,14 @@ specifiers:
   express-async-handler: ^1.1.4
   express-fileupload: ^1.1.7-alpha.3
   express-list-endpoints: ^4.0.1
+  geoip-lite: ^1.4.2
   http-assert: ^1.4.1
   jsonwebtoken: ^8.5.1
   lodash: ^4.17.15
   md-to-pdf: ^3.1.1
   md5: ^2.3.0
   moment: ^2.27.0
+  node-cache: ^5.1.2
   nodemailer: ^6.4.14
   nodemon: ^2.0.4
   pg: ^8.3.3
@@ -5224,6 +5300,7 @@ specifiers:
   tslint: ^6.1.2
   typeorm: ^0.2.25
   typescript: ^3.9.3
+  ua-parser-js: ^0.7.22
   uuid: ^8.3.0
   ws: ^7.3.1
   yamljs: ^0.3.0

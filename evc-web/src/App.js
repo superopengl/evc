@@ -36,6 +36,7 @@ import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
 import StockListPage from 'pages/Stock/StockListPage';
 import StockPage from 'pages/Stock/StockPage';
+import { ContactWidget } from 'components/ContactWidget';
 
 
 class App extends React.Component {
@@ -120,6 +121,7 @@ class App extends React.Component {
 
           </Switch>
         </BrowserRouter>
+        <ContactWidget/>
       </GlobalContext.Provider>
     );
   }

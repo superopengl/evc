@@ -5,20 +5,26 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { sendEmail } from '../services/emailService';
 import * as delay from 'delay';
 
+
 export const saveContact = handlerWrapper(async (req, res) => {
-  const { name, company, contact, message } = req.body;
-  assert(name && contact && message, 404, `Invalid contact information`);
+  const {email, givenName, surname} = (req as any).user || {};
+  const { name, contact, message } = req.body;
+
+  const userName = `${givenName || ''} ${surname || ''}`.trim();
+  const recipentName = userName || name;
+  const recipentContact = email || contact;
+  assert(recipentName && recipentContact && message, 404, `Invalid contact information`);
 
   await sendEmail({
     template: 'contact',
     to: 'techseeding2020@gmail.com',
+    from: email,
     vars: {
-      name,
-      company,
-      contact,
+      name: recipentName,
+      contact: recipentContact,
       message
     }
-  });
+  }, true);
 
   await delay(1000);
 

@@ -8,7 +8,7 @@ import * as path from 'path';
 import { logError } from '../utils/logger';
 
 let emailerInstance = null;
-const sender = 'Easy Value Check <techseeding2020@gmail.com>';
+const sender = 'EasyValueCheck <techseeding2020@gmail.com>';
 
 function getEmailer() {
   if (!emailerInstance) {
@@ -27,7 +27,7 @@ function getEmailer() {
 }
 
 export async function sendEmail(req: EmailRequest, throws = false) {
-  const { to, template, vars, shouldBcc, attachments } = req;
+  const { to, template, vars, shouldBcc, attachments, from } = req;
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
 
@@ -41,14 +41,15 @@ export async function sendEmail(req: EmailRequest, throws = false) {
       template: path.join(__dirname, 'emailTemplates', template),
       locals,
       message: {
-        from: sender,
+        from: from || sender,
         bcc: shouldBcc ? sender : undefined,
         to,
         attachments
       }
-    })
+    });
+    console.log('Sent out email to', to);
   } catch (err) {
-    logError(err, req, null, 'Sending email error');
+    logError(err, req, null, 'Sending email error', to, template, vars);
     if (throws) {
       throw err;
     }
@@ -59,6 +60,7 @@ export async function sendEmail(req: EmailRequest, throws = false) {
 
 export class EmailRequest {
   to: string;
+  from?: string;
   template: string;
   vars: object;
   attachments?: { filename: string, path: string }[];

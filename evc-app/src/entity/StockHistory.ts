@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
@@ -20,25 +21,25 @@ export class StockHistory {
   @Column({nullable: true})
   market: string;
 
-  @Column('decimal')
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
   peLo: number;
 
-  @Column('decimal')
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
   peHi: number;
 
-  @Column('decimal')
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
   value: number;
 
-  @Column('decimal')
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
   supportPriceLo: number;
 
-  @Column('decimal')
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
   supportPriceHi: number;
 
-  @Column('decimal')
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
   pressurePriceLo: number;
 
-  @Column('decimal')
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
   pressurePriceHi: number;
 
   @Column('uuid')

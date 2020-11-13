@@ -89,6 +89,8 @@ async function createNewLocalUser(payload): Promise<User> {
   const { email, password, role } = payload;
   const user = createUserEntity(email, password, role);
 
+  user.resetPasswordToken = uuidv4();
+  user.status = UserStatus.ResetPassword;
   const repo = getRepository(User);
   await repo.save(user);
 
@@ -96,19 +98,25 @@ async function createNewLocalUser(payload): Promise<User> {
 }
 
 
-export const signin = handlerWrapper(async (req, res) => {
+export const signon = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
-  const result = await createNewLocalUser(payload);
+  const user = await createNewLocalUser({
+    password: uuidv4(), // Temp password to fool the functions beneath
+    ...payload,
+    role: 'client'
+  });
 
-  const { id, email } = result;
+  const { id, email, resetPasswordToken } = user;
 
+  const url = `${process.env.AUA_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
   sendEmail({
     template: 'welcome',
     to: email,
     vars: {
-      email
+      email,
+      url
     },
     shouldBcc: true
   });
@@ -127,7 +135,7 @@ async function setUserToResetPasswordStatus(user: User) {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.AUA_DOMAIN_NAME}/reset_password/${resetPasswordToken}/`;
+  const url = `${process.env.AUA_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
     to: user.email,
     template: 'resetPassword',
@@ -212,7 +220,7 @@ export const handleInviteUser = async user => {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.AUA_DOMAIN_NAME}/reset_password/${resetPasswordToken}/`;
+  const url = `${process.env.AUA_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
     to: user.email,
     template: 'inviteUser',
@@ -248,13 +256,13 @@ async function decodeEmailFromGoogleToken(token) {
   const decoded = jwt.decode(token, secret);
   const { email, given_name: givenName, family_name: surname } = decoded;
   assert(email, 400, 'Invalid Google token');
-  return {email, givenName, surname};
+  return { email, givenName, surname };
 }
 
 export const ssoGoogle = handlerWrapper(async (req, res) => {
   const { token } = req.body;
 
-  const {email, givenName, surname} = await decodeEmailFromGoogleToken(token);
+  const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
   const repo = getRepository(User);
   let user = await repo

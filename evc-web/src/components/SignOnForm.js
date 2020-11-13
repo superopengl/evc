@@ -1,22 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Modal, Form, Input, Checkbox, Layout, Divider } from 'antd';
-import { Logo } from 'components/Logo';
+import { Typography, Button, Form, Input, Checkbox, Layout, Divider } from 'antd';
 import { signOn } from 'services/authService';
-import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
-const PageContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  // background-color: #f3f3f3;
-`;
 
 const ContainerStyled = styled.div`
   margin: 0 auto;
@@ -26,17 +17,11 @@ const ContainerStyled = styled.div`
   // background-color: #f3f3f3;
 `;
 
-const LogoContainer = styled.div`
-  margin-bottom: 2rem;
-`;
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
 
 const SignOnForm = (props) => {
+
+  const {onOk } = props;
 
   const [sending, setSending] = React.useState(false);
 
@@ -51,13 +36,13 @@ const SignOnForm = (props) => {
 
       await signOn(values);
 
+      onOk();
       // Guest
       notify.success(
         '🎉 Successfully signed up!',
-        'Congratulations and thank you very much for signing up Easy Value Check. The invitation email has been sent out. Please verify your email within 24 hours.'
+        <>Congratulations and thank you very much for signing up Easy Value Check. The invitation email has been sent out to <Text strong>{values.email}</Text>.</>
       );
-    } catch (e) {
-      console.error(e);
+    } finally {
       setSending(false);
     }
   }

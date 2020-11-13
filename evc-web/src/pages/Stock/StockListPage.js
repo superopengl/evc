@@ -67,10 +67,6 @@ const StockListPage = (props) => {
     fetchListByPage(0);
   }, []);
 
-  React.useEffect(() => {
-    fetchListByPage(0);
-  }, [queryInfo]);
-
   const fetchListByPage = async (page) => {
     setLoading(true);
     try {
@@ -93,6 +89,10 @@ const StockListPage = (props) => {
   }
 
   const handleSearch = async (value) => {
+    fetchListByPage(0);
+  }
+
+  const handleSearchChange = async (value) => {
     const text = value?.trim();
 
     const newQueryInfo = {
@@ -121,12 +121,12 @@ const StockListPage = (props) => {
               enterButton={<><SearchOutlined /> Search</>}
               onSearch={value => handleSearch(value)}
               onPressEnter={e => handleSearch(e.target.value)}
-              onChange={e => handleSearch(e.target.value)}
-              loading={loading}
+              onChange={e => handleSearchChange(e.target.value)}
+              loading={false}
               value={queryInfo?.text}
               allowClear
             />
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}>Add Stock</Button>
+            <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}>Add Stock</Button>
           </Space>
           <InfiniteScroll
             initialLoad={true}

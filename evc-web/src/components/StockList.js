@@ -45,7 +45,8 @@ const StockList = (props) => {
   React.useEffect(() => {
     setList(data);
     setText(search);
-  }, [data, search]);
+    setLoading(setLoading);
+  }, [data, search, propLoading]);
 
   const columnDef = [
     {

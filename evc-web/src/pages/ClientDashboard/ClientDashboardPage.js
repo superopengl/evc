@@ -15,6 +15,7 @@ import { Loading } from 'components/Loading';
 import { Tooltip } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
+import { isProfileComplete } from 'util/isProfileComplete';
 
 const { Paragraph } = Typography;
 
@@ -48,7 +49,7 @@ const ClientDashboardPage = (props) => {
 
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
-  const isProfileMissing = !user.givenName || !user.surname;
+  const isProfileMissing = !isProfileComplete(user);
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [portfolioList, setPortfolioList] = React.useState([]);

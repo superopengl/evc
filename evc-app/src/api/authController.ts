@@ -14,6 +14,7 @@ import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
+import { logUserLogin } from '../utils/loginLog';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -56,6 +57,8 @@ export const login = handlerWrapper(async (req, res) => {
   await getRepository(User).save(user);
 
   attachJwtCookie(user, res);
+
+  logUserLogin(req, 'local');
 
   res.json(sanitizeUser(user));
 });
@@ -287,6 +290,8 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   await getRepository(User).save(user);
 
   attachJwtCookie(user, res);
+
+  logUserLogin(req, 'google');
 
   res.json(sanitizeUser(user));
 });

@@ -7,6 +7,7 @@ export class UserLogin {
   id?: number;
 
   @Column({ default: () => `timezone('UTC', now())` })
+  @Index()
   createdAt?: Date;
 
   @Column('uuid')
@@ -14,8 +15,14 @@ export class UserLogin {
   userId: string;
 
   @Column()
-  ipAddress: string;
+  loginMethod: string;
 
   @Column()
-  userAgent: string;
+  ipAddress: string;
+
+  @Column('json', { nullable: true })
+  location: object;
+
+  @Column('json', { nullable: true })
+  userAgent: object;
 }

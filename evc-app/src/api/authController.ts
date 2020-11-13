@@ -111,7 +111,7 @@ export const signon = handlerWrapper(async (req, res) => {
 
   const url = `${process.env.AUA_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
-  sendEmail({
+  await sendEmail({
     template: 'welcome',
     to: email,
     vars: {
@@ -119,7 +119,7 @@ export const signon = handlerWrapper(async (req, res) => {
       url
     },
     shouldBcc: true
-  });
+  }, true);
 
   const info = {
     id,

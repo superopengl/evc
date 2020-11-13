@@ -8,7 +8,7 @@ import * as path from 'path';
 import { logError } from '../utils/logger';
 
 let emailerInstance = null;
-const sender = 'Easy Value Check <info@easyvaluecheck.com>';
+const sender = 'Easy Value Check <techseeding2020@gmail.com>';
 
 function getEmailer() {
   if (!emailerInstance) {
@@ -26,7 +26,7 @@ function getEmailer() {
   return emailerInstance;
 }
 
-export function sendEmail(req: EmailRequest) {
+export async function sendEmail(req: EmailRequest, throws = false) {
   const { to, template, vars, shouldBcc, attachments } = req;
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
@@ -36,16 +36,23 @@ export function sendEmail(req: EmailRequest) {
     ...vars
   };
 
-  getEmailer().send({
-    template: path.join(__dirname, 'emailTemplates', template),
-    locals,
-    message: {
-      from: sender,
-      bcc: shouldBcc ? sender : undefined,
-      to,
-      attachments
+  try {
+    await getEmailer().send({
+      template: path.join(__dirname, 'emailTemplates', template),
+      locals,
+      message: {
+        from: sender,
+        bcc: shouldBcc ? sender : undefined,
+        to,
+        attachments
+      }
+    })
+  } catch (err) {
+    logError(err, req, null, 'Sending email error');
+    if (throws) {
+      throw err;
     }
-  }).catch(err => logError(err, req, null, 'Sending email error'));
+  }
 }
 
 
@@ -78,7 +85,7 @@ export class EmailRequest {
 //     Destination: {
 //       CcAddresses: [],
 //       ToAddresses: [req.to],
-//       BccAddresses: req.shouldBcc ? ['info@easyvaluecheck.com'] : []
+//       BccAddresses: req.shouldBcc ? ['techseeding2020@gmail.com'] : []
 //     },
 //     Message: {
 //       Body: {
@@ -96,8 +103,8 @@ export class EmailRequest {
 //         Data: template.subject
 //       }
 //     },
-//     Source: 'Easy Value Check <info@easyvaluecheck.com>',
-//     ReplyToAddresses: ['Easy Value Check <info@easyvaluecheck.com>'],
+//     Source: 'Easy Value Check <techseeding2020@gmail.com>',
+//     ReplyToAddresses: ['Easy Value Check <techseeding2020@gmail.com>'],
 //   };
 
 //   const sesRequest = ses.sendEmail(params).promise();

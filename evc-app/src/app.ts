@@ -108,7 +108,7 @@ export function createAppInstance() {
 
   app.get('/healthcheck', (req, res) => res.send('OK'));
 
-  app.get('/r/:token', (req, res) => res.redirect(`/api/v1/auth/reset_password/${req.params.token}`));
+  app.get('/r/:token', (req, res) => res.redirect(`/api/v1/auth/r/${req.params.token}`));
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listEndpoints(app)));
   app.use('/', express.static(staticWwwDir));

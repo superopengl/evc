@@ -3,11 +3,11 @@ ORANGE='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-echo -e "${ORANGE}Techseeding easyvaluecheck${NC}"
+echo -e "${ORANGE}Techseeding EasyValueCheck${NC}"
 
 alias ahome='cd /Users/jshao/github/evc'
 
-export AWS_PROFILE=txd
+export AWS_PROFILE=evc
 
 ssh-add -K ~/.ssh/superopengl_id_rsa
 

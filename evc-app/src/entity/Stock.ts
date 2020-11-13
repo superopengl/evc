@@ -41,5 +41,5 @@ export class Stock {
   by: string;
 
   @Column({ default: false })
-  shouldPublish: boolean;
+  isPublished: boolean;
 }

@@ -8,8 +8,8 @@ export class TaskHistoryTrigger1599197181037 implements MigrationInterface {
         RETURNS trigger AS
         $BODY$
         BEGIN
-            INSERT INTO stock_history (symbol, "createdAt", company, market, "peLo", "peHi", value, "supportPriceLo", "supportPriceHi", "pressurePriceLo", "pressurePriceHi", "by", "shouldPublish")
-            VALUES (NEW.symbol, NEW."createdAt", NEW.company, NEW.market, NEW."peLo", NEW."peHi", NEW.value, NEW."supportPriceLo", NEW."supportPriceHi", NEW."pressurePriceLo", NEW."pressurePriceHi", NEW."by", NEW."shouldPublish");
+            INSERT INTO stock_history (symbol, "createdAt", company, market, "peLo", "peHi", value, "supportPriceLo", "supportPriceHi", "pressurePriceLo", "pressurePriceHi", "by", "isPublished")
+            VALUES (NEW.symbol, NEW."createdAt", NEW.company, NEW.market, NEW."peLo", NEW."peHi", NEW.value, NEW."supportPriceLo", NEW."supportPriceHi", NEW."pressurePriceLo", NEW."pressurePriceHi", NEW."by", NEW."isPublished");
             RETURN NULL;
         END;
         $BODY$

@@ -45,5 +45,5 @@ export class StockHistory {
   by: string;
 
   @Column({ default: false })
-  shouldPublish: boolean;
+  isPublished: boolean;
 }

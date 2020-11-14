@@ -26,7 +26,7 @@ position: fixed;
 z-index: 1;
 width: 100%;
 // background-color: rgba(255,255,255,0.8);
-background-color: rgba(255,255,255);
+background-color: rgba(255,255,255, 0.8);
 display: flex;
 white-space: nowrap;
 border: 0;
@@ -53,7 +53,7 @@ display: flex;
 height: ${headerHeight}px;
 `
 
-const HomeHeaderRaw = props => {
+const GuestHomeHeaderRaw = props => {
   const [visible, setVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [current, setCurrent] = React.useState();
@@ -188,11 +188,11 @@ const HomeHeaderRaw = props => {
   );
 }
 
-HomeHeaderRaw.propTypes = {
+GuestHomeHeaderRaw.propTypes = {
 };
 
-HomeHeaderRaw.defaultProps = {};
+GuestHomeHeaderRaw.defaultProps = {};
 
-export const HomeHeader = withRouter(HomeHeaderRaw);
+export const GuestHomeHeader = withRouter(GuestHomeHeaderRaw);
 
-export default HomeHeader;
+export default GuestHomeHeader;

@@ -59,7 +59,7 @@ const HomeSearchAreaRaw = props => {
   const context = useContext(GlobalContext);
 
   const handleSignIn = () => {
-    props.history.push('/signon')
+    props.history.push('/signup')
   }
 
   const handleSearch = async value => {

@@ -101,7 +101,7 @@ async function createNewLocalUser(payload): Promise<User> {
 }
 
 
-export const signon = handlerWrapper(async (req, res) => {
+export const signup = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
   const user = await createNewLocalUser({

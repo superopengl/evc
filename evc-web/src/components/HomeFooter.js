@@ -8,16 +8,13 @@ const { Footer } = Layout;
 // const gitVersion = gitInfo.commit.shortHash;
 const gitVersion = process.env.REACT_APP_GIT_HASH;
 
-const FooterStyled = styled(Footer)`
+const FooterStyled = styled.div`
 width: 100%;
 text-align: center;
 font-size: 0.8rem;
 color: #aaaaaa;
 background-color: #000011;
-padding-left: 1rem;
-padding-right: 1rem;
-position: fixed;
-bottom: 0;
+padding: 2rem 1rem;
 
 a {
   color: #aaaaaa;

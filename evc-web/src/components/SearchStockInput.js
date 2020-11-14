@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Select } from 'antd';
-import { searchStock, listStock, getStock } from 'services/stockService';
+import { searchStock, listStock, getStock, incrementStock } from 'services/stockService';
 import Highlighter from "react-highlight-words";
 import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
@@ -26,6 +26,7 @@ export const SearchStockInput = (props) => {
 
   const handleChange = (symbol) => {
     setText('');
+    incrementStock(symbol);
     onChange(symbol);
   }
 
@@ -48,6 +49,7 @@ export const SearchStockInput = (props) => {
       onFocus={handleFocus}
       onBlur={handleBlur}
       onSearch={handleSearch}
+      style={{textAlign: 'left', width: '100%'}}
       // showArrow={false}
       suffixIcon={<SearchOutlined/>}
       filterOption={(input, option) => {

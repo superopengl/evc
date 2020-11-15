@@ -7,7 +7,7 @@ import { signOn } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
-import SignOnForm from 'components/SignOnForm';
+import SignUpForm from 'components/SignUpForm';
 const { Title, Text } = Typography;
 
 const PageContainer = styled.div`
@@ -46,7 +46,7 @@ const SignOnPage = (props) => {
           <PageContainer>
             <ContainerStyled>
               <Logo />
-              <SignOnForm onOk={() => props.history.push('/')} />
+              <SignUpForm onOk={() => props.history.push('/')} />
             </ContainerStyled>
           </PageContainer>
         </LayoutStyled>;

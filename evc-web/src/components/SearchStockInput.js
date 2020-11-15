@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 
 export const SearchStockInput = (props) => {
-  const {onChange} = props;
+  const {onChange, onFetchData} = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
@@ -24,10 +24,17 @@ export const SearchStockInput = (props) => {
   }, []);
 
 
-  const handleChange = (symbol) => {
+  const handleChange = async (symbol) => {
     setText('');
     incrementStock(symbol);
-    onChange(symbol);
+    setLoading(true);
+    let data = null;
+    try{
+      data = await onFetchData(symbol);
+    }finally{
+      setLoading(false);
+    }
+    onChange(data);
   }
 
   const handleSearch = async (value) => {
@@ -50,6 +57,7 @@ export const SearchStockInput = (props) => {
       onBlur={handleBlur}
       onSearch={handleSearch}
       style={{textAlign: 'left', width: '100%'}}
+      loading={loading}
       // showArrow={false}
       suffixIcon={<SearchOutlined/>}
       filterOption={(input, option) => {

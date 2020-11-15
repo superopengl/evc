@@ -7,13 +7,14 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { GlobalOutlined, SearchOutlined } from '@ant-design/icons';
-import SignOnForm from 'components/SignOnForm';
+import SignUpForm from 'components/SignUpForm';
 import { LogoTextDark } from 'components/LogoTextDark';
 import { SearchStockInput } from 'components/SearchStockInput';
 import { getStockHistory, incrementStock } from 'services/stockService';
 import HotStockList from 'components/HotStockList';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { HiOutlineTranslate } from 'react-icons/hi';
+import SearchResultModal from 'components/SearchResultModal';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -69,7 +70,7 @@ const HomeCarouselAreaRaw = props => {
 
   const windowWidth = useWindowWidth();
   const context = useContext(GlobalContext);
-
+  const [resultStock, setResultStock] = React.useState();
   const isGuest = context.role === 'guest';
 
   const posterHeight = windowWidth < 576 ? 300 :
@@ -84,8 +85,12 @@ const HomeCarouselAreaRaw = props => {
     props.history.push('/signup')
   }
 
-  const handleSearchChange = async symbol => {
+  const handleFetchSearchedSymbol = async symbol => {
     const data = await getStockHistory(symbol);
+    return data;
+  }
+  const handleSearchChange = async stock => {
+    setResultStock(stock);
   }
 
   const span = {
@@ -137,9 +142,10 @@ const HomeCarouselAreaRaw = props => {
           <Col {...span} style={{ textAlign: 'center' }}>
             <SearchPanel direction="vertical" >
               <SearchStockInput
+                onFetchData={handleFetchSearchedSymbol}
                 onChange={handleSearchChange}
                 style={{ maxWidth: 500, width: '100%' }} />
-              <Text>Most Searched</Text>
+              <Text>most searched</Text>
               <HotStockList size={10} />
             </SearchPanel>
           </Col>
@@ -152,6 +158,7 @@ const HomeCarouselAreaRaw = props => {
               </Title> */}
 
       </InnerContainer>
+      <SearchResultModal stock={resultStock}/>
     </Container>
   );
 }

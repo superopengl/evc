@@ -34,10 +34,10 @@ text-align: center;
     // headerStyle={{backgroundColor: bgColor}}
     >
       <Card.Meta
-        title={<Space size="small" direction="vertical">
-          <Text style={{ fontSize: '3rem', margin: '0 4px', color: '#389e0d' }}>$ {price}</Text>
+        title={<div style={{display: 'flex', flexDirection: 'column'}}>
+          <Text style={{ fontSize: '3rem', margin: '0 4px', color: '#389e0d' }}><sup>$</sup> {price}.00</Text>
           <Text>{period}</Text>
-        </Space>}
+        </div>}
         description={list}
       ></Card.Meta>
     </StyledCard>

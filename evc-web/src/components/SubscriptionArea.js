@@ -46,6 +46,7 @@ max-width: 1200px;
 const { Title, Text } = Typography;
 
 export const SubscriptionArea = props => {
+  const {onClick} = props;
   return (
     <Container>
       <InnerContainer>

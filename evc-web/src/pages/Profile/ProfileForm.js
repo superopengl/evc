@@ -66,7 +66,7 @@ const ProfileForm = (props) => {
     }
   }
 
-  const isBuiltinAdmin = user.email === 'admin@easyvaluecheck.com';
+  const isBuiltinAdmin = user.email === 'system@easyvaluecheck.com';
 
   return (
     <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user}>

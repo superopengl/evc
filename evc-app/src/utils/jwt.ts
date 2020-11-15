@@ -4,21 +4,18 @@ import { getUtcNow } from './getUtcNow';
 import * as moment from 'moment';
 import { UserRole } from 'aws-sdk/clients/workmail';
 import { assert } from './assert';
+import { sanitizeUser } from './sanitizeUser';
+import { getRepository } from 'typeorm';
+import { User } from '../entity/User';
 
 const cookieName = 'jwt';
 const isProd = process.env.NODE_ENV === 'prod';
 
 export function attachJwtCookie(user, res) {
   assert(user.id, 500, `User has no id`);
-  const payload = {
-    id: user.id,
-    email: user.email,
-    givenName: user.givenName,
-    surname: user.surname,
-    role: user.role,
-    loginType: user.loginType,
-    expires: moment(getUtcNow()).add(24, 'hours').toDate()
-  };
+  const payload = sanitizeUser(user);
+  payload.expires = moment(getUtcNow()).add(30, 'minutes').toDate();
+
   const token = jwt.sign(payload, JwtSecret);
 
   res.cookie(cookieName, token, {
@@ -31,15 +28,15 @@ export function attachJwtCookie(user, res) {
   });
 }
 
-export const JwtSecret = 'techseeding.aua';
+export const JwtSecret = 'techseeding.evc';
 
-export function verifyJwtFromCookie(req): { id: string, email: string, role: UserRole } {
+export function verifyJwtFromCookie(req) {
   const token = req.cookies[cookieName];
   let user = null;
   if (token) {
     user = jwt.verify(token, JwtSecret);
-    const { expires } = user;
-    assert(moment(expires).isAfter(), 401, 'Token expired');
+    // const { expires } = user;
+    // assert(moment(expires).isAfter(), 401, 'Token expired');
   }
 
   return user;

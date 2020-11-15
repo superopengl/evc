@@ -112,7 +112,7 @@ const UserListPage = () => {
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Delete user">
-              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@easyvaluecheck.com'} />
+              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'system@easyvaluecheck.com'} />
             </Tooltip>
           </Space>
         )

@@ -19,7 +19,7 @@ import PortfolioListPage from 'pages/Portfolio/PortfolioListPage';
 import AdminTaskListPage from 'pages/AdminTask/AdminTaskListPage';
 import ProceedTaskPage from 'pages/AdminTask/ProceedTaskPage';
 import { getAuthUser } from 'services/authService';
-import {RoleRoute} from 'components/RoleRoute';
+import { RoleRoute } from 'components/RoleRoute';
 import MyTaskPage from 'pages/MyTask/MyTaskPage';
 import RecurringListPage from 'pages/Recurring/RecurringListPage';
 import MessagePage from 'pages/Message/MessagePage';
@@ -38,12 +38,12 @@ import StockListPage from 'pages/Stock/StockListPage';
 import StockPage from 'pages/Stock/StockPage';
 import { ContactWidget } from 'components/ContactWidget';
 import SubscriptionListPage from 'pages/Subscription/SubscriptionListPage';
+import { getEventSource } from 'services/eventSevice';
 
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       user: null,
       role: 'guest',
@@ -53,6 +53,8 @@ class App extends React.Component {
       notifyCount: 0,
       setNotifyCount: this.setNotifyCount
     };
+
+
   }
 
   async componentDidMount() {
@@ -62,6 +64,11 @@ class App extends React.Component {
       this.setUser(user);
       const count = await countUnreadMessage();
       this.setNotifyCount(count);
+
+      const eventSource = getEventSource();
+      eventSource.onmessage = (event) => {
+        console.log('sse', event.data);
+      }
     }
     this.setLoading(false);
   }
@@ -89,7 +96,7 @@ class App extends React.Component {
       <GlobalContext.Provider value={this.state}>
         <BrowserRouter basename="/">
           <Switch>
-            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? ClientHomePage : isAdmin ? StockListPage : Error404 } />
+            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? ClientHomePage : isAdmin ? StockListPage : Error404} />
             <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
@@ -123,7 +130,7 @@ class App extends React.Component {
 
           </Switch>
         </BrowserRouter>
-        <ContactWidget/>
+        <ContactWidget />
       </GlobalContext.Provider>
     );
   }

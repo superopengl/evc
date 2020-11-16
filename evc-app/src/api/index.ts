@@ -12,4 +12,4 @@ export * from './statsController';
 export * from './blogController';
 export * from './stockController';
 export * from './subscriptionController';
-export * from './sseController';
+export * from './eventController';

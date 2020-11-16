@@ -772,7 +772,7 @@ paths:
       responses:
         200:
           description: OK
-  /events:
+  /event:
     get:
       operationId: subscribeEvent
       responses:

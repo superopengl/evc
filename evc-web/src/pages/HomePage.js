@@ -11,7 +11,7 @@ import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
-import { SubscriptionArea } from 'components/SubscriptionArea';
+import { HomeSubscriptionArea } from 'components/homeAreas/HomeSubscriptionArea';
 
 const { Content } = Layout;
 
@@ -65,7 +65,7 @@ class HomePage extends React.Component {
           <section>
             <HomeCarouselArea></HomeCarouselArea>
           </section>
-          <SubscriptionArea />
+          <HomeSubscriptionArea />
           {/* <section><HomeSearchArea /></section> */}
           <HashAnchorPlaceholder id="services" />
           <section><HomeServiceArea bgColor="#135200"/></section>

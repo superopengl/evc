@@ -28,7 +28,7 @@ import ImpersonatePage from 'pages/Impersonate/ImpersonatePage';
 import { countUnreadMessage } from 'services/messageService';
 import PortfolioFormPage from 'pages/Portfolio/PortfolioFormPage';
 import DeclarationPage from 'pages/DeclarationPage';
-import ClientDashboardPage from 'pages/ClientDashboard/ClientDashboardPage';
+import ClientHomePage from 'pages/ClientHome/ClientHomePage';
 import AdminStatsPage from 'pages/AdminStats/AdminStatsPage';
 import AdminBoardPage from 'pages/AdminBoard/AdminBoardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
@@ -89,7 +89,7 @@ class App extends React.Component {
       <GlobalContext.Provider value={this.state}>
         <BrowserRouter basename="/">
           <Switch>
-            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? ClientDashboardPage : isAdmin ? StockListPage : Error404 } />
+            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? ClientHomePage : isAdmin ? StockListPage : Error404 } />
             <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />

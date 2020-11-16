@@ -16,8 +16,6 @@ const ContainerStyled = styled.div`
   width: 100%;
 `;
 
-
-
 const SignUpForm = (props) => {
 
   const {onOk } = props;

@@ -749,3 +749,37 @@ paths:
       responses:
         200:
           description: OK
+  /subscription:
+    get:
+      operationId: listSubscriptionHistory
+      responses:
+        200:
+          description: OK
+  /subscription/current:
+    get:
+      operationId: getCurrentSubscription
+      responses:
+        200:
+          description: OK
+  /subscription/{plan}:
+    post:
+      operationId: changeSubscription
+      parameters:
+        - name: plan
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /events:
+    get:
+      operationId: subscribeEvent
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: publishEvent
+      responses:
+        200:
+          description: OK

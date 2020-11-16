@@ -4,3 +4,4 @@ export enum Role {
     Client = 'client',
     Agent = 'agent',
 }
+

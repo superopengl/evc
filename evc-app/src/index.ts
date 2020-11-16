@@ -9,12 +9,12 @@ import * as WebSocket from 'ws';
 
 function validateEnvVars() {
   const requiredEnvVars = [
-    'AUA_DOMAIN_NAME',
-    'AUA_S3_BUCKET',
+    'EVC_DOMAIN_NAME',
+    'EVC_S3_BUCKET',
     'AWS_DEFAULT_REGION',
-    'AUA_FILE_PREFIX',
+    'EVC_FILE_PREFIX',
     'GIT_HASH',
-    'AUA_GOOGLE_SSO_CLIENT_SECRET',
+    'EVC_GOOGLE_SSO_CLIENT_SECRET',
   ];
 
   const missingVars = requiredEnvVars.map(v => process.env[v]).filter(x => !x);
@@ -50,7 +50,7 @@ async function launchApp() {
   const app = createAppInstance();
   restartCronService(true);
 
-  const httpPort = +process.env.AUA_HTTP_PORT || 80;
+  const httpPort = +process.env.EVC_HTTP_PORT || 80;
   const server = http.createServer(app);
 
   // const httpsPort = +process.env.AUA_HTTPS_PORT || 443;

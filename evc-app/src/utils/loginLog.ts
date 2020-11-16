@@ -4,8 +4,7 @@ import * as geoip from 'geoip-lite';
 import * as uaParser from 'ua-parser-js';
 import { getRepository } from 'typeorm';
 
-export async function logUserLogin(req, loginType: 'local' | 'google') {
-  const user = (req as any).user as User;
+export async function logUserLogin(user, req, loginType: 'local' | 'google') {
   const entity = new UserLogin();
 
   entity.userId = user.id;

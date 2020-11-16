@@ -2,7 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 
 @Entity()
-export class SubscriptionPast {
+@Index('idx_user_subscription_history2', ['userId', 'createdAt'])
+export class SubscriptionHistory {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -14,7 +15,6 @@ export class SubscriptionPast {
   createdAt?: Date;
 
   @Column('uuid')
-  @Index()
   userId: string;
 
   @Column()

@@ -54,7 +54,7 @@ export const login = handlerWrapper(async (req, res) => {
 
   attachJwtCookie(user, res);
 
-  logUserLogin(req, 'local');
+  logUserLogin(user, req, 'local');
 
   res.json(sanitizeUser(user));
 });
@@ -108,7 +108,7 @@ export const signup = handlerWrapper(async (req, res) => {
 
   const { id, email, resetPasswordToken } = user;
 
-  const url = `${process.env.AUA_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.EVC_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
   await sendEmail({
     template: 'welcome',
@@ -134,7 +134,7 @@ async function setUserToResetPasswordStatus(user: User) {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.AUA_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.EVC_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
     to: user.email,
     template: 'resetPassword',
@@ -196,7 +196,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
   assert(user, 401, 'Token expired');
 
-  const url = `${process.env.AUA_DOMAIN_NAME}/reset_password?token=${token}`;
+  const url = `${process.env.EVC_DOMAIN_NAME}/reset_password?token=${token}`;
   res.redirect(url);
 });
 
@@ -219,7 +219,7 @@ export const handleInviteUser = async user => {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.AUA_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.EVC_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
     to: user.email,
     template: 'inviteUser',
@@ -251,7 +251,7 @@ export const inviteUser = handlerWrapper(async (req, res) => {
 
 async function decodeEmailFromGoogleToken(token) {
   assert(token, 400, 'Empty code payload');
-  const secret = process.env.AUA_GOOGLE_SSO_CLIENT_SECRET;
+  const secret = process.env.EVC_GOOGLE_SSO_CLIENT_SECRET;
   const decoded = jwt.decode(token, secret);
   const { email, given_name: givenName, family_name: surname } = decoded;
   assert(email, 400, 'Invalid Google token');
@@ -287,7 +287,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
   attachJwtCookie(user, res);
 
-  logUserLogin(req, 'google');
+  logUserLogin(user, req, 'google');
 
   res.json(sanitizeUser(user));
 });

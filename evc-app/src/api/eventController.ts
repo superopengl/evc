@@ -16,13 +16,17 @@ import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { Subscription } from '../entity/Subscription';
 import { Subject } from 'rxjs';
+import { EventService } from '../services/eventService';
 
-const eventSubject = new Subject();
+const isProd = process.env.NODE_ENV === 'prod';
+const eventService = new EventService('price');
 
 export const subscribeEvent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { user: { id: userId } } = req as any;
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6007');
+  if (!isProd) {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6007');
+  }
   const sse = res.sse();
   // res.setHeader('Content-Type', 'text/event-stream');
   // res.setHeader('Cache-Control', 'no-cache');
@@ -36,9 +40,8 @@ export const subscribeEvent = handlerWrapper(async (req, res) => {
   // });
   // res.flushHeaders();
 
-  const channel$ = eventSubject.subscribe(event => {
-    const eventMessage = JSON.stringify(event);
-    res.write(`data: ${eventMessage}\n\n`);
+  const channel$ = eventService.subscribe(data => {
+    res.write(`data: ${data}\n\n`);
     (res as any).flush();
   });
 
@@ -52,7 +55,7 @@ export const publishEvent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const event = req.body;
 
-  eventSubject.next(event);
+  eventService.publish(event);
 
   res.json();
 });

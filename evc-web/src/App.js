@@ -39,7 +39,7 @@ import StockPage from 'pages/Stock/StockPage';
 import { ContactWidget } from 'components/ContactWidget';
 import SubscriptionListPage from 'pages/Subscription/SubscriptionListPage';
 import { getEventSource } from 'services/eventSevice';
-
+import {Subject} from 'rxjs';
 
 class App extends React.Component {
   constructor(props) {
@@ -51,10 +51,9 @@ class App extends React.Component {
       setUser: this.setUser,
       setLoading: this.setLoading,
       notifyCount: 0,
-      setNotifyCount: this.setNotifyCount
+      setNotifyCount: this.setNotifyCount,
+      event$: new Subject()
     };
-
-
   }
 
   async componentDidMount() {
@@ -66,8 +65,9 @@ class App extends React.Component {
       this.setNotifyCount(count);
 
       const eventSource = getEventSource();
-      eventSource.onmessage = (event) => {
-        console.log('sse', event.data);
+      eventSource.onmessage = (message) => {
+        const event = JSON.parse(message.data);
+        this.state.event$.next(event);
       }
     }
     this.setLoading(false);

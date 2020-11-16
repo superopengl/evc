@@ -13,7 +13,7 @@ width: 100%;
 text-align: center;
 font-size: 0.8rem;
 color: #aaaaaa;
-background-color: #000011;
+background-color: #141414;
 padding: 2rem 1rem;
 
 a {

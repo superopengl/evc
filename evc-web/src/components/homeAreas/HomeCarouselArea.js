@@ -23,6 +23,7 @@ const Container = styled.div`
 // border-bottom: 1px solid #f0f0f0;
 // background: #092b00;
 background-image: linear-gradient(#135200, #092b00);
+// background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
 margin: 0 auto 0;
 padding: 0 4rem 64px;
 width: 100%;
@@ -113,6 +114,7 @@ const HomeCarouselAreaRaw = props => {
           </LogoPlate>
 
           <Space>
+            <Link to="/"><Button size="large" type="link">Blog</Button></Link>
             <Link to="/signup"><Button size="large" type="link">Sign Up</Button></Link>
             <Link to="/login"><Button size="large" type="link">Login</Button></Link>
             <LocaleSelector bordered={false} style={{ color: 'white', width: 110 }} size="large" defaultValue="en-US" />

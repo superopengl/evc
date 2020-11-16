@@ -17,7 +17,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { isProfileComplete } from 'util/isProfileComplete';
 import { SearchStockInput } from 'components/SearchStockInput';
-import { getStock, getStockHistory } from 'services/stockService';
+import { getStock, getStockHistory, getWatchList, watchStock } from 'services/stockService';
 import { List } from 'antd';
 import StockCard from 'components/StockCard';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -56,7 +56,7 @@ const span = {
   md: 2,
   lg: 3,
   xl: 4,
-  xxl: 6
+  xxl: 4
 };
 
 const ClientHomePage = (props) => {
@@ -69,16 +69,23 @@ const ClientHomePage = (props) => {
   const [searchResult, setSearchResult] = React.useState();
   const [taskListByPortfolioMap, setTaskListByPortfolioMap] = React.useState({});
   const [searchList, setSearchList] = React.useState([]);
+  const [watchList, setWatchList] = React.useState([]);
 
   const loadList = async () => {
-    setLoading(true);
-    // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
-    const list = await listTask();
-    setTaskListByPortfolioMap(groupBy(list, 'portfolioId'));
 
-    setLoading(false);
     if (isProfileMissing) {
       setProfileModalVisible(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
+      const watchList = await getWatchList();
+      setWatchList(watchList);
+    } finally {
+      setLoading(false);
+
     }
   }
 
@@ -109,8 +116,10 @@ const ClientHomePage = (props) => {
     setSearchResult(null);
   }
 
-  const handleWatch = (stock) => {
+  const handleAddToWatchlist = async (stock) => {
     setSearchResult(null);
+    await watchStock(stock.symbol);
+    setWatchList([...watchList, stock]);
   }
 
   return (
@@ -130,7 +139,7 @@ const ClientHomePage = (props) => {
         </Loading>
         <List
           grid={{ gutter: 20, ...span }}
-          dataSource={searchList}
+          dataSource={watchList}
           renderItem={item => (
             <List.Item>
               <StockCard value={item} showRemove={true} showWatch={true} />
@@ -151,7 +160,7 @@ const ClientHomePage = (props) => {
         <Space direction="vertical" style={{ width: '100%' }}>
 
           <StockCard value={searchResult} />
-          <Button block type="primary" icon={<EyeOutlined />} onClick={() => handleWatch(searchResult)}>Add to watchlist</Button>
+          <Button block type="primary" icon={<EyeOutlined />} onClick={() => handleAddToWatchlist(searchResult)}>Add to watchlist</Button>
           <Button block onClick={handleCloseSearchResult}>Cancel</Button>
         </Space>
       </Modal>

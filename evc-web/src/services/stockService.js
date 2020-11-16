@@ -5,11 +5,11 @@ export async function searchStock(payload) {
 }
 
 export async function getStock(symbol) {
-  return httpGet(`stock/${symbol}`);
+  return httpGet(`stock/s/${symbol}`);
 }
 
 export async function incrementStock(symbol) {
-  return httpGet(`stock/${symbol}/inc`);
+  return httpGet(`stock/s/${symbol}/inc`);
 }
 
 export async function listHotStock(size = 10) {
@@ -17,7 +17,7 @@ export async function listHotStock(size = 10) {
 }
 
 export async function getStockHistory(symbol) {
-  return httpGet(`stock/${symbol}/history`);
+  return httpGet(`stock/s/${symbol}/history`);
 }
 
 export async function listStock() {
@@ -25,9 +25,21 @@ export async function listStock() {
 }
 
 export async function deleteStock(symbol) {
-  return httpDelete(`stock/${symbol}`);
+  return httpDelete(`stock/s/${symbol}`);
 }
 
 export async function saveStock(stock) {
   return httpPost(`stock`, stock);
+}
+
+export async function getWatchList() {
+  return httpGet(`stock/watchlist`);
+}
+
+export async function watchStock(symbol) {
+  return httpPost(`stock/s/${symbol}/watch`);
+}
+
+export async function unwatchStock(symbol) {
+  return httpPost(`stock/s/${symbol}/unwatch`);
 }

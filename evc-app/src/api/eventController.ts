@@ -25,7 +25,7 @@ export const subscribeEvent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { user: { id: userId } } = req as any;
   if (!isProd) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:6007');
+    res.setHeader('Access-Control-Allow-Origin', process.env.EVC_WEB_DOMAIN_NAME);
   }
   const sse = res.sse();
   // res.setHeader('Content-Type', 'text/event-stream');

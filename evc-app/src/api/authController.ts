@@ -108,7 +108,7 @@ export const signup = handlerWrapper(async (req, res) => {
 
   const { id, email, resetPasswordToken } = user;
 
-  const url = `${process.env.EVC_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
   await sendEmail({
     template: 'welcome',
@@ -134,7 +134,7 @@ async function setUserToResetPasswordStatus(user: User) {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.EVC_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
     to: user.email,
     template: 'resetPassword',
@@ -196,7 +196,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
   assert(user, 401, 'Token expired');
 
-  const url = `${process.env.EVC_DOMAIN_NAME}/reset_password?token=${token}`;
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/reset_password?token=${token}`;
   res.redirect(url);
 });
 
@@ -219,7 +219,7 @@ export const handleInviteUser = async user => {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.EVC_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
     to: user.email,
     template: 'inviteUser',

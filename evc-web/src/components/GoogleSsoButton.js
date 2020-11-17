@@ -35,7 +35,7 @@ const GoogleSsoButton = props => {
   }
 
   return <GoogleLogin
-    clientId={process.env.REACT_APP_AUA_GOOGLE_SSO_CLIENT_ID}
+    clientId={process.env.REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID}
     buttonText="Log In with Google"
     // isSignedIn={true}
     render={render}

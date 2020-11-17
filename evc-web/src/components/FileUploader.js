@@ -153,7 +153,7 @@ export const FileUploader = (props) => {
     <Container className="clearfix">
       <Dragger
         multiple={true}
-        action={`${process.env.REACT_APP_AUA_API_ENDPOINT}/file`}
+        action={`${process.env.REACT_APP_EVC_API_ENDPOINT}/file`}
         withCredentials={true}
         accept="*/*"
         listType="text"

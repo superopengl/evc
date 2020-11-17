@@ -61,8 +61,8 @@ ARG REACT_APP_GIT_HASH
 ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
-ENV REACT_APP_AUA_API_ENDPOINT=/api/v1
-ENV REACT_APP_AUA_GOOGLE_SSO_CLIENT_ID=305430338996-fmmjqqkon9hvngpctccis9t1biqtqile.apps.googleusercontent.com
+ENV REACT_APP_EVC_API_ENDPOINT=/api/v1
+ENV REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID=305430338996-fmmjqqkon9hvngpctccis9t1biqtqile.apps.googleusercontent.com
 
 # Build app
 COPY ./evc-app /usr/portal/app

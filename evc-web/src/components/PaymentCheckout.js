@@ -60,7 +60,7 @@ export const PaymentCheckout = (props) => {
     });
   }
 
-  return (
+  return (<div style={{maxWidth: 400, minWidth: 240, width: '100%', marginLeft:'auto', marginRight: 'auto'}}>
     <PayPalButton
       // amount={amount}
       // createOrder={handleCreateOrder}
@@ -82,7 +82,7 @@ export const PaymentCheckout = (props) => {
       }}
     // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
     />
-
+</div>
   )
 }
 

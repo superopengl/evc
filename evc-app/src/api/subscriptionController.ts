@@ -1,5 +1,5 @@
 
-import { getManager, getRepository, Like } from 'typeorm';
+import { getManager, getRepository, LessThan, Like, MoreThan, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Stock } from '../entity/Stock';
 import { User } from '../entity/User';
@@ -15,32 +15,109 @@ import * as geoip from 'geoip-lite';
 import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { Subscription } from '../entity/Subscription';
+import { SubscriptionType } from '../types/SubscriptionType';
+import { SubscriptionStatus } from '../types/SubscriptionStatus';
 
 export const listSubscriptionHistory = handlerWrapper(async (req, res) => {
   assert(false, 501);
 
 });
 
-export const getCurrentSubscription = handlerWrapper(async (req, res) => {
+export const getMySubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
-  assert(false, 501);
   const { user: { id: userId } } = req as any;
   const { symbol } = req.params;
 
+  const subscriptions = await getCurrentSubscription(userId);
+
+  res.json(subscriptions);
+});
+
+export async function getCurrentSubscription(userId) {
+  const now = getUtcNow();
+
+  const subscription = await getRepository(Subscription)
+    .createQueryBuilder()
+    .where({
+      userId,
+      start: LessThan(now),
+      status: SubscriptionStatus.Enabled
+    })
+    .andWhere(`"end" IS NULL OR "end" > :now`, { now })
+    .getOne();
+
+  if(subscription) {
+    const stocks = await getRepository(Stock).find({
+      symbol: In(subscription.symbols)
+    });
+    Object.assign(subscription, {stocks});
+  }
+
+  return subscription;
+}
+
+export const cancelSubscription = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { id } = req.params;
+  const { user: { id: userId } } = req as any;
+
+  await getRepository(Subscription).update(
+    { id, userId },
+    { status: SubscriptionStatus.Disabled }
+  );
+
+  res.json();
+});
+
+function downgradeSubscription() {
+
+}
+
+function upgradeSubscription() {
+
+}
+
+export const provisionSubscription = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { user: { id: userId } } = req as any;
+  const { plan, recurring, symbols, alertDays } = req.body;
+  const now = getUtcNow();
+
   const repo = getRepository(Subscription);
-  const subscription = await repo.findOne({
-    where: {
-      userId
-    },
-    order: {
-      createdAt: 'DESC'
-    }
+  const existing = await repo.findOne({
+    userId,
+    status: SubscriptionStatus.Provisioning,
   });
+  assert(!existing, 500, 'Cannot provision this subscription as you already have a provisioning subscription.');
+
+  const months = recurring ? null : plan === SubscriptionType.UnlimitedQuarterly ? 3 : 1;
+  const end = months ? moment(now).add(months, 'month').toDate() : null;
+
+  const subscriptionId = uuidv4();
+  const subscription = new Subscription();
+  subscription.id = subscriptionId;
+  subscription.userId = userId;
+  subscription.type = plan;
+  subscription.symbols = plan === SubscriptionType.SelectedMonthly ? symbols : [];
+  subscription.start = now;
+  subscription.end = end;
+  subscription.status = SubscriptionStatus.Provisioning;
+
+  await getRepository(Subscription).insert(subscription);
 
   res.json(subscription);
 });
 
-export const changeSubscription = handlerWrapper(async (req, res) => {
-  assert(false, 501);
+export const settleSubscription = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { user: { id: userId } } = req as any;
+  const { id } = req.params;
 
+  await getRepository(Subscription).update(
+    { userId, id, status: SubscriptionStatus.Provisioning },
+    { status: SubscriptionStatus.Enabled }
+  );
+
+  res.json();
 });
+

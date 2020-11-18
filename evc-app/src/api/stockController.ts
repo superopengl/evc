@@ -39,6 +39,8 @@ export const incrementStock = handlerWrapper(async (req, res) => {
   } catch (err) {
     logError(err, req, null);
   }
+
+  res.json();
 });
 
 export const getStock = handlerWrapper(async (req, res) => {

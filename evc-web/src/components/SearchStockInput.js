@@ -6,16 +6,20 @@ import { searchStock, listStock, getStock, incrementStock } from 'services/stock
 import Highlighter from "react-highlight-words";
 import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 
 export const SearchStockInput = (props) => {
-  const {onChange, onFetchData} = props;
+  const { onChange, onFetchData, excluding, traceSearch, mode } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
 
   const loadEntities = async () => {
     const stocks = await listStock();
-    const sorted = _.orderBy(stocks, ['company'], ['asc']);
+    const sorted = _.chain(stocks)
+      .filter(s => !excluding.includes(s.symbol))
+      .orderBy(['company'], ['asc'])
+      .value();
     setList(sorted);
   }
 
@@ -26,12 +30,14 @@ export const SearchStockInput = (props) => {
 
   const handleChange = async (symbol) => {
     setText('');
-    incrementStock(symbol);
+    if (traceSearch) {
+      incrementStock(symbol);
+    }
     setLoading(true);
     let data = null;
-    try{
+    try {
       data = await onFetchData(symbol);
-    }finally{
+    } finally {
       setLoading(false);
     }
     onChange(data);
@@ -48,21 +54,23 @@ export const SearchStockInput = (props) => {
   return (
     <Select
       size="large"
-      style={{...props.style}}
+      mode={mode}
+      style={{ ...props.style }}
       showSearch
+      allowClear={true}
       autoFocus={true}
       placeholder="Search for symbols or companies"
       onChange={handleChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
       onSearch={handleSearch}
-      style={{textAlign: 'left', width: '100%'}}
+      style={{ textAlign: 'left', width: '100%' }}
       loading={loading}
       // showArrow={false}
-      suffixIcon={<SearchOutlined/>}
+      suffixIcon={<SearchOutlined />}
       filterOption={(input, option) => {
         const match = input.toLowerCase();
-        const {symbol, company} = option.data;
+        const { symbol, company } = option.data;
         return symbol.toLowerCase().includes(match) || company.toLowerCase().includes(match);
       }}
     >
@@ -71,10 +79,26 @@ export const SearchStockInput = (props) => {
           searchWords={[text]}
           autoEscape={true}
           textToHighlight={item.company} /> (<Highlighter highlightClassName="search-highlighting"
-          searchWords={[text]}
-          autoEscape={true}
-          textToHighlight={item.symbol} />)
+            searchWords={[text]}
+            autoEscape={true}
+            textToHighlight={item.symbol} />)
     </Select.Option>)}
     </Select>
   );
 }
+
+SearchStockInput.propTypes = {
+  onFetchData: PropTypes.func,
+  onChange: PropTypes.func,
+  excluding: PropTypes.array.isRequired,
+  traceSearch: PropTypes.bool,
+  mode: PropTypes.string,
+};
+
+SearchStockInput.defaultProps = {
+  excluding: [],
+  onFetchData: x => x,
+  onChange: x => { },
+  traceSearch: false,
+  mode: ''
+};

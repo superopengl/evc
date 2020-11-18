@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Spin, Typography, Card, Space } from 'antd';
+import { Spin, Typography, Card, Space, Tag } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { IconContext } from "react-icons";
@@ -13,14 +13,16 @@ height: 400px;
 & .ant-card-head {
   color: #333333;
 }
+position: relative;
 
 &.subscription-active {
-box-shadow: 0 1px 2px rgba(255,0,0,0.1);
-}
+// box-shadow: 0 5px 3px rgba(255,197,61,0.8);
+border: 2px solid #ffe58f;
+background-color: #fffbe6;
 `;
 
 export const SubscriptionCard = props => {
-  const { onClick, title, description, icon, price, period, active } = props;
+  const { onClick, title, description, icon, price, unit, active } = props;
 
 
 
@@ -31,15 +33,16 @@ export const SubscriptionCard = props => {
         {icon}
         {title.toUpperCase()}
       </Space>}
-      hoverable={true}
+      hoverable={!active}
       onClick={onClick}
     // bodyStyle={{backgroundColor: bgColor}}
     // headerStyle={{backgroundColor: bgColor}}
     >
+      {active && <Text strong type="warning" style={{position:'absolute', right: 8, bottom: 4}}>Current plan</Text>}
       <Card.Meta
         title={<div style={{display: 'flex', flexDirection: 'column'}}>
           <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#389e0d' }}><sup><small>$</small></sup> {price}</Text>
-          <Text>{period}</Text>
+          <Text>{unit}</Text>
         </div>}
         description={description}
       ></Card.Meta>
@@ -51,8 +54,10 @@ SubscriptionCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.any,
   price: PropTypes.any.isRequired,
-  period: PropTypes.string.isRequired,
+  unit: PropTypes.string.isRequired,
+  active: PropTypes.bool
 };
 
 SubscriptionCard.defaultProps = {
+  active: false
 };

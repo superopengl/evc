@@ -781,21 +781,37 @@ paths:
           description: OK
   /subscription:
     get:
+      operationId: getMySubscription
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: provisionSubscription
+      responses:
+        200:
+          description: OK
+  /subscription/history:
+    get:
       operationId: listSubscriptionHistory
       responses:
         200:
           description: OK
-  /subscription/current:
-    get:
-      operationId: getCurrentSubscription
+  /subscription/{id}/cancel:
+    post:
+      operationId: cancelSubscription
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
       responses:
         200:
           description: OK
-  /subscription/{plan}:
+  /subscription/{id}/settle:
     post:
-      operationId: changeSubscription
+      operationId: settleSubscription
       parameters:
-        - name: plan
+        - name: id
           in: path
           type: string
           required: true
@@ -818,4 +834,4 @@ paths:
       operationId: getDebugInfo
       responses:
         200:
-          description: OK          
+          description: OK

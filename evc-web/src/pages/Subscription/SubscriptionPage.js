@@ -68,7 +68,7 @@ const StyledCol = styled(Col)`
   margin-bottom: 20px;
 `;
 
-const SubscriptionListPage = (props) => {
+const SubscriptionPage = (props) => {
 
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
@@ -99,8 +99,8 @@ const SubscriptionListPage = (props) => {
   );
 };
 
-SubscriptionListPage.propTypes = {};
+SubscriptionPage.propTypes = {};
 
-SubscriptionListPage.defaultProps = {};
+SubscriptionPage.defaultProps = {};
 
-export default withRouter(SubscriptionListPage);
+export default withRouter(SubscriptionPage);

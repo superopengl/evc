@@ -16,10 +16,11 @@ import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { Subscription } from '../entity/Subscription';
 import { Subject } from 'rxjs';
-import { EventService } from '../services/eventService';
+import { RedisPubSubService } from '../services/RedisPubSubService';
+import { redisCache } from '../services/redisCache';
 
 const isProd = process.env.NODE_ENV === 'prod';
-const eventService = new EventService('price');
+const eventService = new RedisPubSubService('price');
 
 export const subscribeEvent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
@@ -27,7 +28,7 @@ export const subscribeEvent = handlerWrapper(async (req, res) => {
   if (!isProd) {
     res.setHeader('Access-Control-Allow-Origin', process.env.EVC_WEB_DOMAIN_NAME);
   }
-  const sse = res.sse();
+  res.sse();
   // res.setHeader('Content-Type', 'text/event-stream');
   // res.setHeader('Cache-Control', 'no-cache');
   // res.flushHeaders();

@@ -53,6 +53,7 @@ async function launchApp() {
 
   const httpPort = +process.env.EVC_HTTP_PORT || 80;
   const server = http.createServer(app);
+  (app as any).locals.server = server;
 
   // const httpsPort = +process.env.AUA_HTTPS_PORT || 443;
   // // start https server

@@ -5,13 +5,14 @@ import { SysLog } from '../entity/SysLog';
 import { logError } from '../utils/logger';
 import * as redis from 'redis';
 
-export class EventService {
+const redisUrl = process.env.REDIS_URL;
+
+export class RedisPubSubService {
   private publisher = null;
   private subscriber = null;
   private eventSubject$ = new Subject();
 
   constructor(private channelName) {
-    const redisUrl = process.env.REDIS_URL;
     this.publisher = redis.createClient(redisUrl);
     this.subscriber = redis.createClient(redisUrl);
 

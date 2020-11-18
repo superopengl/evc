@@ -22,14 +22,16 @@ const { Title, Paragraph, Text } = Typography;
 const Container = styled.div`
 // border-bottom: 1px solid #f0f0f0;
 // background: #092b00;
-background-image: linear-gradient(#135200, #092b00);
+background-image: linear-gradient(160deg, #3273A4, #15be53);
+// background-image: linear-gradient(#135200, #15be53);
+// background-image: linear-gradient(150deg, #135200 100px, #15be53 300px, #15bead 500px, #18b0d7 700px);
 // background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
 margin: 0 auto 0;
 padding: 0 4rem 64px;
 width: 100%;
 // height: 100%;
 .signup-panel .ant-typography {
-  color: rgba(255,255,255,0.85) !important;
+  color: rgba(255,255,255,1) !important;
 }
 `;
 
@@ -41,10 +43,10 @@ max-width: 1200px;
 
 .top-menu {
   .ant-select, .ant-btn-link {
-    color: rgba(255,255,255,0.7) !important;
+    color: rgba(255,255,255,0.8) !important;
 
     .ant-select-arrow {
-      color: rgba(255,255,255,0.7) !important;
+      color: rgba(255,255,255,0.8) !important;
     }
     &:hover {
       color: white !important;

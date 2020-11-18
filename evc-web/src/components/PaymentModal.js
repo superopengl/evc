@@ -7,7 +7,7 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
-import { PaymentCheckout } from 'components/PaymentCheckout';
+import { PayPalCheckoutButton } from 'components/PayPalCheckoutButton';
 import { Alert, Modal, Space } from 'antd';
 import StepWizard from 'react-step-wizard';
 import { DoubleRightOutlined, RightOutlined } from '@ant-design/icons';
@@ -76,6 +76,11 @@ const PaymentModal = (props) => {
     }
   }
 
+  const handleSelectedStockChange = (values) => {
+    const {symbols} = values;
+    debugger;
+  }
+
   return (
     <Modal
       visible={modalVisible}
@@ -101,9 +106,12 @@ const PaymentModal = (props) => {
           {alertMessage && <Alert message={alertMessage} />}
           <StepWizard ref={wizardRef}>
             {isAddSingle && <div>
-              <Form layout="vertical" onFinish={() => wizardRef.current.nextStep()}>
+              <Form layout="vertical" 
+              onFinish={() => wizardRef.current.nextStep()}
+              onValuesChange={handleSelectedStockChange}
+              >
                 <Paragraph type="secondary">Please choose a stock to subscribe.</Paragraph>
-                <Form.Item label="Stock" name="symbol" rules={[{ required: true, message: ' ' }]}>
+                <Form.Item label="Stock" name="symbols" rules={[{ required: true, message: ' ' }]}>
                   <SearchStockInput mode="multiple" excluding={excluding} />
                 </Form.Item>
                 <Form.Item>
@@ -111,7 +119,7 @@ const PaymentModal = (props) => {
                 </Form.Item>
               </Form>
             </div>}
-            <PaymentCheckout payPalPlanId={payPalPlanId} />
+            <PayPalCheckoutButton payPalPlanId={payPalPlanId} />
           </StepWizard>
         </Space>}
     </Modal>);

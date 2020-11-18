@@ -20,7 +20,7 @@ import { SearchStockInput } from 'components/SearchStockInput';
 import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { PaymentCheckout } from 'components/PaymentCheckout';
+import { PayPalCheckoutButton } from 'components/PayPalCheckoutButton';
 import { getMySubscription } from 'services/subscriptionService';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { Alert } from 'antd';

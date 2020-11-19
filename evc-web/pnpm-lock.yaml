@@ -25,6 +25,7 @@ dependencies:
   react-async-script-loader: 0.3.0_react@16.13.1
   react-beautiful-dnd: 13.0.0_react-dom@16.13.1+react@16.13.1
   react-chat-elements: 10.10.2_eb0d650be231ffd0ace4a30b38162117
+  react-copy-to-clipboard: 5.0.2_react@16.13.1
   react-dom: 16.13.1_react@16.13.1
   react-file-icon: 1.0.0_react-dom@16.13.1+react@16.13.1
   react-google-login: 5.1.21_react-dom@16.13.1+react@16.13.1
@@ -10922,6 +10923,16 @@ packages:
       react-dom: '*'
     resolution:
       integrity: sha512-zAdOuL7rOOaGHgjUp0lgdQktWvFUshsjdEaDBqHO/nUIsuEE8cXc3SW/2qM1fqOgO57iMYC3ng48vmzjDYspaQ==
+  /react-copy-to-clipboard/5.0.2_react@16.13.1:
+    dependencies:
+      copy-to-clipboard: 3.3.1
+      prop-types: 15.7.2
+      react: 16.13.1
+    dev: false
+    peerDependencies:
+      react: ^15.3.0 || ^16.0.0
+    resolution:
+      integrity: sha512-/2t5mLMMPuN5GmdXo6TebFa8IoFxZ+KTDDqYhcDm0PhkgEzSxVvIX26G20s1EB02A4h2UZgwtfymZ3lGJm0OLg==
   /react-dev-utils/10.2.1:
     dependencies:
       '@babel/code-frame': 7.8.3
@@ -14013,6 +14024,7 @@ specifiers:
   react-async-script-loader: ^0.3.0
   react-beautiful-dnd: ^13.0.0
   react-chat-elements: ^10.10.2
+  react-copy-to-clipboard: ^5.0.2
   react-dom: ^16.13.1
   react-file-icon: ^1.0.0
   react-google-login: ^5.1.21

@@ -30,6 +30,7 @@ import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
 import MoneyAmount from './MoneyAmount';
 import { notify } from 'util/notify';
+import ReferralLinkInput from './ReferralLinkInput';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
@@ -136,7 +137,7 @@ const ReferralBalanceForm = (props) => {
         <Title level={4}>Referral</Title>
         <Space><Text type="success">have referred</Text><Title type="success">{account.referralCount}</Title></Space>
       </Space>
-      <Input value={account?.referralUrl} addonAfter={<CopyOutlined />} readonly={true}></Input>
+      <ReferralLinkInput value={account?.referralUrl}/>
       <Divider></Divider>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <Title level={4}>Balance</Title>

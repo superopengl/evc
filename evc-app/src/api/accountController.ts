@@ -42,10 +42,17 @@ const getAccountForUser = async (userId) => {
 
   const subscription = await getUserSubscription(userId);
 
+  const balance = await getRepository(UserBalanceLog)
+    .createQueryBuilder()
+    .where({ userId })
+    .select(`SUM(amount) AS amount`)
+    .getRawOne();
+
   const result = {
     subscription,
     referralUrl,
-    referralCount: +(referralCountInfo?.count || 0)
+    referralCount: +(referralCountInfo?.count || 0),
+    balance: +balance?.amount || 0
   };
 
   return result;
@@ -55,13 +62,6 @@ export const getAccount = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const result = await getAccountForUser(id);
-  const balance = await getRepository(UserBalanceLog)
-    .createQueryBuilder()
-    .where({ userId: id })
-    .select(`SUM(amount) AS amount`)
-    .getRawOne();
-
-  Object.assign(result, { balance: +balance?.amount || 0 });
 
   res.json(result);
 });

@@ -4,6 +4,7 @@ import { Spin, Typography, Card, Space, Tag } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { IconContext } from "react-icons";
+import MoneyAmount from './MoneyAmount';
 
 const { Title, Text } = Typography;
 
@@ -18,7 +19,19 @@ position: relative;
 &.subscription-active {
 // box-shadow: 0 5px 3px rgba(255,197,61,0.8);
 border: 2px solid #fa8c16;
+background-color: rgba(250, 140, 22, 0);
+transform: scale(1.05);
+
+&:hover {
+background-color: rgba(250, 140, 22, 0);
+
+}
+}
+
+&:hover {
 background-color: rgba(250, 140, 22, 0.1);
+transform: scale(1.05);
+}
 `;
 
 export const SubscriptionCard = props => {
@@ -41,7 +54,8 @@ export const SubscriptionCard = props => {
       {active && <Text strong type="warning" style={{position:'absolute', right: 8, bottom: 4}}>Current plan</Text>}
       <Card.Meta
         title={<div style={{display: 'flex', flexDirection: 'column'}}>
-          <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#389e0d' }}><sup><small>$</small></sup> {price}</Text>
+          {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#389e0d' }}><sup><small>$</small></sup> {price}</Text> */}
+          <MoneyAmount  style={{ fontSize: '2.2rem', margin: '0 4px'}} type="success" value={price} />
           <Text>{unit}</Text>
         </div>}
         description={description}

@@ -105,9 +105,9 @@ const ReferralBalanceForm = (props) => {
   const handleAdjustBalance = async (values) => {
     try {
       setLoading(true);
-      const {amount} = values;
+      const { amount } = values;
       await adjustBalance(user.id, amount);
-    notify.success(<>Successfully added <Text strong>${amount.toFixed(2)}</Text> to user <Text code>{user.email}</Text></>);
+      notify.success(<>Successfully added <Text strong>${amount.toFixed(2)}</Text> to user <Text code>{user.email}</Text></>);
       formRef.current.resetFields();
       await loadData();
     } finally {
@@ -124,8 +124,8 @@ const ReferralBalanceForm = (props) => {
   return (
     <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Title>Subscription</Title>
-        <Text>{currentSubscription?.title || subscriptionDef.find(s => s.key === 'free').title}</Text>
+        <Title level={4}>Subscription</Title>
+        <Title type="success">{currentSubscription?.title || subscriptionDef.find(s => s.key === 'free').title}</Title>
       </Space>
       {currentSubscription && <>
         {currentSubscription.start}
@@ -133,13 +133,13 @@ const ReferralBalanceForm = (props) => {
       </>}
       <Divider></Divider>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Title>Referral</Title>
-        <Space>have referred <Title type="success">{account.referralCount}</Title></Space>
+        <Title level={4}>Referral</Title>
+        <Space><Text type="success">have referred</Text><Title type="success">{account.referralCount}</Title></Space>
       </Space>
       <Input value={account?.referralUrl} addonAfter={<CopyOutlined />} readonly={true}></Input>
       <Divider></Divider>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Title>Balance</Title>
+        <Title level={4}>Balance</Title>
         <Title><MoneyAmount type="success" value={account.balance} /></Title>
       </Space>
       <Space style={{ width: '100%', justifyContent: 'flex-end' }}>

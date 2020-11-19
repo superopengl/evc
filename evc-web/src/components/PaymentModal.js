@@ -31,6 +31,7 @@ const PaymentModal = (props) => {
   const { visible, oldPlan, newPlan, excluding, onOk, onCancel } = props;
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
+  const [selectedSymbols, setSelectedSymbols] = React.useState();
   const wizardRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -77,9 +78,11 @@ const PaymentModal = (props) => {
   }
 
   const handleSelectedStockChange = (values) => {
-    const {symbols} = values;
-    debugger;
+    const { symbols } = values;
+    setSelectedSymbols(symbols);
   }
+
+  const canShowPayButtons = !isAddSingle || selectedSymbols?.length > 0;
 
   return (
     <Modal
@@ -104,23 +107,20 @@ const PaymentModal = (props) => {
       </> :
         <Space direction="vertical" style={{ width: '100%' }} >
           {alertMessage && <Alert message={alertMessage} />}
-          <StepWizard ref={wizardRef}>
-            {isAddSingle && <div>
-              <Form layout="vertical" 
+          {isAddSingle && <div>
+            <Form layout="vertical"
               onFinish={() => wizardRef.current.nextStep()}
               onValuesChange={handleSelectedStockChange}
-              >
-                <Paragraph type="secondary">Please choose a stock to subscribe.</Paragraph>
-                <Form.Item label="Stock" name="symbols" rules={[{ required: true, message: ' ' }]}>
-                  <SearchStockInput mode="multiple" excluding={excluding} />
-                </Form.Item>
-                <Form.Item>
-                  <Button block type="primary" ghost htmlType="submit" icon={<DoubleRightOutlined />} />
-                </Form.Item>
-              </Form>
-            </div>}
+            >
+              <Paragraph type="secondary">Please choose a stock to subscribe.</Paragraph>
+              <Form.Item label="Stock" name="symbols" rules={[{ required: true, message: ' ' }]}>
+                <SearchStockInput mode="multiple" excluding={excluding} />
+              </Form.Item>
+            </Form>
+          </div>}
+          {canShowPayButtons && <>
             <PayPalCheckoutButton payPalPlanId={payPalPlanId} />
-          </StepWizard>
+          </>}
         </Space>}
     </Modal>);
 }

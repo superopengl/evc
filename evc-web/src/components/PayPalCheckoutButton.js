@@ -60,7 +60,7 @@ export const PayPalCheckoutButton = (props) => {
     });
   }
 
-  return (<div style={{maxWidth: 400, minWidth: 240, width: '100%', marginLeft:'auto', marginRight: 'auto'}}>
+  return (<div style={{minWidth: 240, width: '100%', marginLeft:'auto', marginRight: 'auto'}}>
     <PayPalButton
       // amount={amount}
       // createOrder={handleCreateOrder}

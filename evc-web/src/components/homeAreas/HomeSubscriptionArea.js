@@ -59,6 +59,7 @@ export const HomeSubscriptionArea = props => {
                 icon={s.icon}
                 description={s.description}
                 price={s.price}
+                interactive={false}
                 unit={s.unit} />
             </StyledCol>)}
           </StyledRow>

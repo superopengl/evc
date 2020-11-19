@@ -130,7 +130,7 @@ const HomeHeaderRaw = props => {
               {/* <Menu.Item key="blog_admin"><HashLink to="/blogs/admin">Blog</HashLink></Menu.Item> */}
               <Menu.Item key="stats"><Link to="/stats">Statistics</Link></Menu.Item>
             </Menu.SubMenu>}
-            {!isGuest && <Menu.SubMenu key="me" title={<Avatar size={40} icon={<UserOutlined style={{ fontSize: 20 }} />} style={{ backgroundColor: isAdmin ? '#FF4D4F' : isAgent ? '#000000' : '#389e0d' }} />}>
+            {!isGuest && <Menu.SubMenu key="me" title={<Avatar size={40} icon={<UserOutlined style={{ fontSize: 20 }} />} style={{ backgroundColor: isAdmin ? '#222222' : isAgent ? '#3273A4' : '#15be53' }} />}>
               <Menu.Item key="profile"><Link to="/profile">Profile</Link></Menu.Item>
               {isClient && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}
               {canChangePassword && <Menu.Item key="changePassword"><Link to="/change_password">Change Password</Link></Menu.Item>}

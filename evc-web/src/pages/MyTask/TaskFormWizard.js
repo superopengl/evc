@@ -154,7 +154,7 @@ const TaskFormWizard = props => {
       {task && <><Space size="large" direction="vertical" style={{ width: '100%' }}>
         <div style={{ textAlign: 'center', fontSize: '2rem' }}>
           <Text type="secondary">{progess.current} / {progess.total}</Text>
-          <Progress strokeColor="#389e0d" strokeLinecap="square" type="line" percent={progess.total ? 100 * progess.current / progess.total : 0} showInfo={false} />
+          <Progress strokeColor="#15be53" strokeLinecap="square" type="line" percent={progess.total ? 100 * progess.current / progess.total : 0} showInfo={false} />
         </div>
         <StepWizard ref={wizardRef} onStepChange={handleStepChange}>
           <TaskNameStep

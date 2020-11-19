@@ -13,14 +13,14 @@ display: flex;
 align-items: center;
 justify-content: center;
 border: none;
-background-color: rgba(56, 158, 13, 0.8);
+background-color: rgba(21, 190, 83, 0.8);
 color: white;
 // box-shadow: 1px 1px 5px #222222;
 border: 2px solid white;
 
 &:focus,&:hover,&:active {
 color: white;
-background-color: rgba(56, 158, 13, 0.8);
+background-color: rgba(21, 190, 83, 0.8);
 border: 2px solid white;
 }
 `;
@@ -40,7 +40,8 @@ export const ContactWidget = () => {
       onCancel={() => setModalVisible(false)}
       footer={null}
       destroyOnClose={true}
-      centered={true}
+      // centered={true}
+      maskClosable={false}
     >
       <ContactForm onDone={() => setModalVisible(false)}></ContactForm>
     </Modal>

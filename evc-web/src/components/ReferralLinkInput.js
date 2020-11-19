@@ -24,7 +24,7 @@ const ReferralLinkInput = (props) => {
     <Tooltip title="Click to copy to clipboard">
       <CopyToClipboard text={value}>
         <div>
-          <StyledInput value={value} addonBefore={<CopyOutlined />} readonly={true} />
+          <StyledInput value={value} addonBefore={<CopyOutlined />} readOnly={true} />
         </div>
       </CopyToClipboard>
     </Tooltip>
@@ -32,7 +32,7 @@ const ReferralLinkInput = (props) => {
 };
 
 ReferralLinkInput.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
 };
 
 ReferralLinkInput.defaultProps = {

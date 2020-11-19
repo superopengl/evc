@@ -13,7 +13,7 @@ const MoneyAmount = (props) => {
 
   return (
     <Text {...other}>
-      <sup><small>$</small></sup> {(+value || 0).toFixed(2)}
+      $ {(+value || 0).toFixed(2)}
     </Text>
   );
 };

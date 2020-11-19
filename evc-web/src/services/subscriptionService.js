@@ -1,10 +1,6 @@
 import { httpGet, httpPost, httpDelete } from './http';
 
 
-export async function getMySubscription() {
-  return httpGet(`subscription`);
-}
-
 export async function cancelSubscription(id) {
   return httpPost(`subscription/${id}/cancel`);
 }

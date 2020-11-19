@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { Typography, Button, Modal, Form, Input, Checkbox, Layout, Divider } from 'antd';
 import { Logo } from 'components/Logo';
-import { signOn } from 'services/authService';
+import { signUp } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
@@ -22,7 +22,7 @@ const ContainerStyled = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 400px;
+  max-width: 440px;
   // background-color: #f3f3f3;
 `;
 
@@ -33,7 +33,7 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
-const SignOnPage = (props) => {
+const SignUpPage = (props) => {
 
   const [sending, setSending] = React.useState(false);
 
@@ -56,8 +56,8 @@ const SignOnPage = (props) => {
   );
 }
 
-SignOnPage.propTypes = {};
+SignUpPage.propTypes = {};
 
-SignOnPage.defaultProps = {};
+SignUpPage.defaultProps = {};
 
-export default withRouter(SignOnPage);
+export default withRouter(SignUpPage);

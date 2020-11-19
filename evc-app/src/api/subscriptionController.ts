@@ -1,7 +1,6 @@
 
-import { getManager, getRepository, LessThan, Like, MoreThan, In } from 'typeorm';
+import { getManager, getRepository, Like, MoreThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { Stock } from '../entity/Stock';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -17,44 +16,12 @@ import { getCache, setCache } from '../utils/cache';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
+import { getUserSubscription } from '../utils/getUserSubscription';
 
 export const listSubscriptionHistory = handlerWrapper(async (req, res) => {
   assert(false, 501);
 
 });
-
-export const getMySubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
-  const { user: { id: userId } } = req as any;
-  const { symbol } = req.params;
-
-  const subscriptions = await getCurrentSubscription(userId);
-
-  res.json(subscriptions);
-});
-
-export async function getCurrentSubscription(userId) {
-  const now = getUtcNow();
-
-  const subscription = await getRepository(Subscription)
-    .createQueryBuilder()
-    .where({
-      userId,
-      start: LessThan(now),
-      status: SubscriptionStatus.Enabled
-    })
-    .andWhere(`"end" IS NULL OR "end" > :now`, { now })
-    .getOne();
-
-  if(subscription) {
-    const stocks = await getRepository(Stock).find({
-      symbol: In(subscription.symbols)
-    });
-    Object.assign(subscription, {stocks});
-  }
-
-  return subscription;
-}
 
 export const cancelSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');

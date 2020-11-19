@@ -17,8 +17,8 @@ position: relative;
 
 &.subscription-active {
 // box-shadow: 0 5px 3px rgba(255,197,61,0.8);
-border: 2px solid #ffe58f;
-background-color: #fffbe6;
+border: 2px solid #fa8c16;
+background-color: rgba(250, 140, 22, 0.1);
 `;
 
 export const SubscriptionCard = props => {

@@ -133,7 +133,7 @@ const ClientHomePage = (props) => {
           style={{ width: '100%', maxWidth: 400 }} />
         {/* <SubscriptionArea /> */}
         <Divider />
-        <Paragraph type="secondary">You can go to the <Link to="/subscription">Subscription</Link> page to upgrade your subscription plan to get better service.</Paragraph>
+        <Paragraph type="secondary">You can go to the <Link to="/account">Account</Link> page to upgrade your subscription plan to get better service.</Paragraph>
         <Loading loading={loading}>
 
         </Loading>

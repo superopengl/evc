@@ -172,7 +172,7 @@ const MyAccountPage = (props) => {
           <Divider></Divider>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title>Referral Link</Title>
-            <Space><Text type="success">have referred</Text><Title type="success">{account.referralCount}</Title></Space>
+            <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
           </Space>
           <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
           <ReferralLinkInput value={account?.referralUrl}/>

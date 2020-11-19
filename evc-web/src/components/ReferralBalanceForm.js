@@ -135,7 +135,7 @@ const ReferralBalanceForm = (props) => {
       <Divider></Divider>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <Title level={4}>Referral</Title>
-        <Space><Text type="success">have referred</Text><Title type="success">{account.referralCount}</Title></Space>
+        <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
       </Space>
       <ReferralLinkInput value={account?.referralUrl}/>
       <Divider></Divider>

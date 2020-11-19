@@ -15,6 +15,7 @@ import { subscriptionDef } from 'def/subscriptionDef';
 import { SearchStockInput } from './SearchStockInput';
 import * as _ from 'lodash';
 import MoneyAmount from './MoneyAmount';
+import { StripeCheckout } from './StripeCheckout';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -166,6 +167,7 @@ const PaymentModal = (props) => {
             )}
 
             <PayPalCheckoutButton payPalPlanId={payPalPlanId} />
+            <StripeCheckout/>
           </Space>}
 
         </Space>}

@@ -2,6 +2,8 @@ dependencies:
   '@ant-design/icons': 4.2.2_react@16.13.1
   '@craco/craco': 5.6.4_react-scripts@3.4.1
   '@react-hook/window-size': 3.0.7_react@16.13.1
+  '@stripe/react-stripe-js': 1.1.2_4ade58c46249ef920deea800c2af861e
+  '@stripe/stripe-js': 1.11.0
   '@testing-library/jest-dom': 4.2.4
   abbreviate: 0.0.3
   abnacn-validator: 0.0.5
@@ -1898,6 +1900,23 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
+  /@stripe/react-stripe-js/1.1.2_4ade58c46249ef920deea800c2af861e:
+    dependencies:
+      '@stripe/stripe-js': 1.11.0
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+    dev: false
+    peerDependencies:
+      '@stripe/stripe-js': ^1.2.0
+      react: ^16.8.0
+      react-dom: ^16.8.0
+    resolution:
+      integrity: sha512-07hu8RJXwWKGbvdvd1yt1cYvGtDB8jFX+q10f7FQuItUt9rlSo0am3WIx845iMHANiYgxyRb1PS201Yle9xxPQ==
+  /@stripe/stripe-js/1.11.0:
+    dev: false
+    resolution:
+      integrity: sha512-SDNZKuETBEVkernd1tq8tL6wNfVKrl24Txs3p+4NYxoaIbNaEO7mrln/2Y/WRcQBWjagvhDIM5I6+X1rfK0qhQ==
   /@svgr/babel-plugin-add-jsx-attribute/4.2.0:
     dev: false
     engines:
@@ -13997,6 +14016,8 @@ specifiers:
   '@ant-design/icons': ^4.2.2
   '@craco/craco': ^5.6.4
   '@react-hook/window-size': ^3.0.7
+  '@stripe/react-stripe-js': ^1.1.2
+  '@stripe/stripe-js': ^1.11.0
   '@testing-library/jest-dom': ^4.2.4
   abbreviate: ^0.0.3
   abnacn-validator: ^0.0.5

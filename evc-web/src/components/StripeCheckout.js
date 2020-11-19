@@ -17,7 +17,7 @@ import { Typography, Button, Form, Input, Checkbox, Switch, Divider } from 'antd
 // next create the class and Bind React and ReactDom to window
 //as we will be needing them later
 
-const PUBLISHABLE_KEY = process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY;
+const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -43,12 +43,13 @@ const CheckoutForm = () => {
 
 export const StripeCheckout = (props) => {
 
-  const stripePromise = loadStripe(PUBLISHABLE_KEY);
+  const stripePromise = loadStripe('pk_test_51Hp56jEBt7ChgqJqBRoTJ8V2IPcwYDAMdJhp9XbNTPDHoyOhpOt3HBPIv8iV39mHoUMUQ9NN7gKxZIVDVzJhGWWx00MK1EEkKD');
 
   return (
     <Elements stripe={stripePromise}>
     <CheckoutForm />
     </Elements>
+
   )
 }
 

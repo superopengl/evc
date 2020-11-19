@@ -32,7 +32,7 @@ justify-content: center;
 margin-bottom: 0rem;
 width: 100%;
 text-align: center;
-padding: 2rem 0;
+padding: 2rem;
 background: #f0f0f0;
 `;
 

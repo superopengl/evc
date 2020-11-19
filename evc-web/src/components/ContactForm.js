@@ -69,7 +69,7 @@ const ContactForm = props => {
           <Input placeholder="Email or phone" allowClear={true} maxLength={100} disabled={loading} />
         </Form.Item>}
         <Form.Item name="message" rules={[{ required: true, message: 'Message content is required', whitespace: true, max: 1000 }]}>
-          <Input.TextArea autoSize={{ minRows: 3 }} allowClear={true} maxLength={1000} disabled={loading} placeholder="Message, question or bug report." />
+          <Input.TextArea autoSize={{ minRows: 3 }} allowClear={true} maxLength={1000} disabled={loading} placeholder="Enquiry, question or bug report." />
         </Form.Item>
         <Form.Item>
           <SubmitButton block type="primary" htmlType="submit" disabled={loading}>Submit</SubmitButton>

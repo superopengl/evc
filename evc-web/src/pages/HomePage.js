@@ -2,7 +2,6 @@
 import { Affix, Button, Layout, Modal } from 'antd';
 import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
-import HomeContactArea from 'components/homeAreas/HomeContactArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeSearchArea from 'components/homeAreas/HomeSearchArea';
 import HomeTeamArea from 'components/homeAreas/HomeTeamArea';
@@ -71,7 +70,6 @@ class HomePage extends React.Component {
           <section><HomeServiceArea bgColor="#135200"/></section>
           {/* <HashAnchorPlaceholder id="team" /> */}
           {/* <section><HomeTeamArea /></section> */}
-          {/* <section><HomeContactArea bgColor="#135200"></HomeContactArea></section> */}
         <HomeFooter />
         </ContentStyled>
       </LayoutStyled>

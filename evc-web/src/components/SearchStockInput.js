@@ -9,7 +9,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 export const SearchStockInput = (props) => {
-  const { onChange, onFetchData, excluding, traceSearch, mode, value } = props;
+  const { onChange, onFetchData, excluding, traceSearch, mode, style, value } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
@@ -55,7 +55,6 @@ export const SearchStockInput = (props) => {
     <Select
       size="large"
       mode={mode}
-      style={{ ...props.style }}
       showSearch
       allowClear={true}
       autoFocus={true}
@@ -64,10 +63,10 @@ export const SearchStockInput = (props) => {
       onFocus={handleFocus}
       onBlur={handleBlur}
       onSearch={handleSearch}
-      style={{ textAlign: 'left', width: '100%' }}
+      style={{ textAlign: 'left', width: '100%', ...style }}
       loading={loading}
       // showArrow={false}
-      suffixIcon={<SearchOutlined />}
+      suffixIcon={<SearchOutlined size="large" />}
       filterOption={(input, option) => {
         const match = input.toLowerCase();
         const { symbol, company } = option.data;

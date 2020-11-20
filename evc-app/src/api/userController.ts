@@ -102,7 +102,6 @@ export const searchUsers = handlerWrapper(async (req, res) => {
       's.*',
       'u.id as id',
       'u."createdAt" as "createdAt"',
-      ''
     ]);
 
   const list = await query.execute();

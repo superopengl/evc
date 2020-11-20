@@ -32,6 +32,7 @@ const PaymentModal = (props) => {
 
   const { visible, oldPlan, newPlan, excluding, onOk, onCancel, balance } = props;
   const [loading, setLoading] = React.useState(false);
+  const [recurring, setRecurring] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(visible);
   const [selectedSymbols, setSelectedSymbols] = React.useState();
   const [willUseBalance, setWillUseBalance] = React.useState(true);
@@ -88,6 +89,10 @@ const PaymentModal = (props) => {
   const handleUseBalanceChange = checked => {
     setWillUseBalance(checked);
   }
+  
+  const handleRecurringChange = checked => {
+    setRecurring(checked);
+  }
 
   const calculateTotalAmount = () => {
     const price = newPlanDef.price;
@@ -118,7 +123,7 @@ const PaymentModal = (props) => {
 
   const canShowPayButtons = !isAddSingle || selectedSymbols?.length > 0;
 
-  const paymentPlans = calculateTotalAmount();
+  const paymentTermsPreview = calculateTotalAmount();
 
   return (
     <Modal
@@ -153,23 +158,27 @@ const PaymentModal = (props) => {
               </Form.Item>
             </Form>
           </div>}
-          {canShowPayButtons && <Divider/>}
+          {canShowPayButtons && <Divider />}
           {canShowPayButtons && <Space size="large" direction="vertical" style={{ width: '100%' }} >
-            
+            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+              <Text>Recurring payment?</Text>
+              <Switch defaultChecked onChange={handleRecurringChange} />
+            </Space>
             {balance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Text>Use balance <MoneyAmount strong value={balance} /> to deduct?</Text>
               <Switch defaultChecked onChange={handleUseBalanceChange} />
             </Space>}
-            {paymentPlans.map((price, i) => <Space key={i} style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Text strong>Term {i + 1}{i === 0 ? ' (this time)' : i === paymentPlans.length - 1 ? ' and following' : ''}</Text>
+            {paymentTermsPreview.map((price, i) => <Space key={i} style={{ width: '100%', justifyContent: 'space-between' }}>
+              <Text strong>Term {i + 1}{i === 0 ? ' (this time)' : i === paymentTermsPreview.length - 1 ? ' and following' : ''}</Text>
               <MoneyAmount type="success" strong value={price} />
             </Space>
             )}
-
-            <PayPalCheckoutButton payPalPlanId={payPalPlanId} />
-            <StripeCheckout/>
           </Space>}
 
+          <>
+            <PayPalCheckoutButton payPalPlanId={payPalPlanId} />
+            <StripeCheckout />
+          </>
         </Space>}
     </Modal>);
 }

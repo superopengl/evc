@@ -19,6 +19,8 @@ import PortfolioList from 'pages/Portfolio/PortfolioList';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { BiDollar } from 'react-icons/bi';
 import ReferralBalanceForm from 'components/ReferralBalanceForm';
+import * as _ from 'lodash';
+import { subscriptionDef } from 'def/subscriptionDef';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -39,6 +41,7 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
+const subscriptionDefMap = _.keyBy(subscriptionDef, 'key');
 
 
 const UserListPage = () => {
@@ -70,6 +73,11 @@ const UserListPage = () => {
       title: 'Surname',
       dataIndex: 'surname',
       render: (text) => text,
+    },
+    {
+      title: 'Subscription',
+      dataIndex: 'subscriptionType',
+      render: (value) => subscriptionDefMap[value].title
     },
     {
       title: 'Role',

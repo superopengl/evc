@@ -93,7 +93,9 @@ export const searchUsers = handlerWrapper(async (req, res) => {
     const sanitisedPlans = plans.map(p => p === SubscriptionType.Free ? null : p);
     query = query.where(`s.type IN (:...plans)`, { plans: sanitisedPlans });
   }
-  query = query.orderBy(orderBy, orderDirection)
+
+  query = query.leftJoin(q => q.from(Subscription, 'p'), 'p', 'p."userId" = u.id')
+    .orderBy(orderBy, orderDirection)
     .addOrderBy('u.email', 'ASC')
     .offset(page * size)
     .limit(size)
@@ -102,6 +104,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
       's.*',
       'u.id as id',
       'u."createdAt" as "createdAt"',
+      `COALESCE(p.type, 'free') as "subscriptionType"`
     ]);
 
   const list = await query.execute();

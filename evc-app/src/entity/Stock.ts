@@ -1,49 +1,6 @@
-import { Entity, Column, PrimaryColumn, Index, PrimaryGeneratedColumn, Unique, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Index, PrimaryGeneratedColumn, JoinColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
-
-@Entity()
-export class Stock {
-  @PrimaryColumn()
-  symbol: string;
-
-  @Column({ default: () => `timezone('UTC', now())` })
-  @Index()
-  createdAt?: Date;
-
-  @Column()
-  company: string;
-
-  @Column({ nullable: true })
-  market: string;
-
-  @Column('decimal', {transformer: new ColumnNumericTransformer()})
-  peLo: number;
-
-  @Column('decimal', {transformer: new ColumnNumericTransformer()})
-  peHi: number;
-
-  @Column('decimal', {transformer: new ColumnNumericTransformer()})
-  value: number;
-
-  @Column('decimal', {transformer: new ColumnNumericTransformer()})
-  supportPriceLo: number;
-
-  @Column('decimal', {transformer: new ColumnNumericTransformer()})
-  supportPriceHi: number;
-
-  @Column('decimal', {transformer: new ColumnNumericTransformer()})
-  pressurePriceLo: number;
-
-  @Column('decimal', {transformer: new ColumnNumericTransformer()})
-  pressurePriceHi: number;
-
-  @Column('uuid')
-  by: string;
-
-  @Column({ default: false })
-  isPublished: boolean;
-}
 
 // @Entity()
 // export class Stock {
@@ -51,15 +8,58 @@ export class Stock {
 //   symbol: string;
 
 //   @Column({ default: () => `timezone('UTC', now())` })
+//   @Index()
 //   createdAt?: Date;
 
 //   @Column()
 //   company: string;
 
-//   @ManyToMany(type => StockTag, { onDelete: 'CASCADE' })
-//   @JoinTable()
-//   tags: string[];
+//   @Column({ nullable: true })
+//   market: string;
+
+//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
+//   peLo: number;
+
+//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
+//   peHi: number;
+
+//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
+//   value: number;
+
+//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
+//   supportPriceLo: number;
+
+//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
+//   supportPriceHi: number;
+
+//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
+//   pressurePriceLo: number;
+
+//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
+//   pressurePriceHi: number;
+
+//   @Column('uuid')
+//   by: string;
+
+//   @Column({ default: false })
+//   isPublished: boolean;
 // }
+
+@Entity()
+export class Stock {
+  @PrimaryColumn()
+  symbol: string;
+
+  @Column({ default: () => `timezone('UTC', now())` })
+  createdAt?: Date;
+
+  @Column()
+  company: string;
+
+  @ManyToMany(type => StockTag, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags: string[];
+}
 
 @Entity()
 export class StockTag {
@@ -77,141 +77,168 @@ export class StockTag {
   color: string;
 }
 
-// @Entity()
-// @Index('idx_stockSupport_symbol_createAt', ['symbol', 'createdAt'])
-// export class StockSupport {
-//   @PrimaryGeneratedColumn()
-//   id: number;
+@Entity()
+@Index(['symbol', 'createdAt'])
+export class StockSupport {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-//   @Column({ default: () => `timezone('UTC', now())` })
-//   createdAt?: Date;
+  @Column({ default: () => `timezone('UTC', now())` })
+  createdAt?: Date;
 
-//   @Column('uuid')
-//   symbol: string;
+  @ManyToOne(() => Stock)
+  @JoinColumn({name: 'symbol', referencedColumnName: 'symbol'})
+  stock: Stock;
 
-//   @Column('uuid')
-//   author: string;
+  @Column('uuid')
+  symbol: string;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   lo: number;
+  @Column('uuid')
+  author: string;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   hi: number;
-// }
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  lo: number;
 
-// @Entity()
-// @Index('idx_stockResistance_symbol_createAt', ['symbol', 'createdAt'])
-// export class StockResistance {
-//   @PrimaryGeneratedColumn()
-//   id: number;
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  hi: number;
+}
 
-//   @Column({ default: () => `timezone('UTC', now())` })
-//   createdAt?: Date;
+@Entity()
+@Index(['symbol', 'createdAt'])
+export class StockResistance {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-//   @Column('uuid')
-//   symbol: string;
+  @Column({ default: () => `timezone('UTC', now())` })
+  createdAt?: Date;
 
-//   @Column('uuid')
-//   author: string;
+  // @Column('uuid')
+  @ManyToOne(() => Stock)
+  @JoinColumn({name: 'symbol', referencedColumnName: 'symbol'})
+  stock: Stock;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   lo: number;
+  @Column('uuid')
+  symbol: string;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   hi: number;
-// }
+  @Column('uuid')
+  author: string;
 
-// @Entity()
-// @Index('idx_stockEps_symbol_year_quarter', ['symbol', 'year', 'quarter'])
-// export class StockEps {
-//   @PrimaryGeneratedColumn()
-//   id: number;
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  lo: number;
 
-//   @Column({ default: () => `timezone('UTC', now())` })
-//   createdAt?: Date;
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  hi: number;
+}
 
-//   @Column('uuid')
-//   symbol: string;
+@Entity()
+@Index('idx_stockEps_symbol_year_quarter', ['symbol', 'year', 'quarter'])
+export class StockEps {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-//   @Column('uuid')
-//   author: string;
+  @Column({ default: () => `timezone('UTC', now())` })
+  createdAt?: Date;
 
-//   @Column('smallint')
-//   year: number;
+  @ManyToOne(() => Stock)
+  @JoinColumn({name: 'symbol', referencedColumnName: 'symbol'})
+  stock: Stock;
 
-//   @Column('smallint')
-//   quarter: number;
+  @Column('uuid')
+  symbol: string;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer()})
-//   value: number;
-// }
+  @Column('uuid')
+  author: string;
 
-// @Entity()
-// @Index('idx_stockPe_symbol_createAt', ['symbol', 'createdAt'])
-// export class StockPe {
-//   @PrimaryGeneratedColumn()
-//   id: number;
+  @Column('smallint')
+  year: number;
 
-//   @Column({ default: () => `timezone('UTC', now())` })
-//   createdAt?: Date;
+  @Column('smallint')
+  quarter: number;
 
-//   @Column('uuid')
-//   symbol: string;
+  @Column('decimal', {transformer: new ColumnNumericTransformer()})
+  value: number;
+}
 
-//   @Column('uuid')
-//   author: string;
+@Entity()
+@Index(['symbol', 'createdAt'])
+export class StockPe {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   lo: number;
+  @Column({ default: () => `timezone('UTC', now())` })
+  createdAt?: Date;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   hi: number;
-// }
+  @ManyToOne(() => Stock)
+  @JoinColumn({name: 'symbol', referencedColumnName: 'symbol'})
+  stock: Stock;
 
-// @Entity()
-// @Index('idx_stockFairValue_symbol_createAt', ['symbol', 'createdAt'])
-// export class StockValue {
-//   @PrimaryGeneratedColumn()
-//   id: number;
+  @Column('uuid')
+  symbol: string;
 
-//   @Column({ default: () => `timezone('UTC', now())` })
-//   createdAt?: Date;
+  @Column('uuid')
+  author: string;
 
-//   @Column('uuid')
-//   symbol: string;
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  lo: number;
 
-//   @Column('uuid')
-//   author: string;
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  hi: number;
+}
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   lo: number;
+@Entity()
+@Index(['symbol', 'createdAt'])
+export class StockValue {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-//   @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
-//   hi: number;
+  @Column({ default: () => `timezone('UTC', now())` })
+  createdAt?: Date;
 
-//   @Column({default: false})
-//   special: boolean;
-// }
+  @ManyToOne(() => Stock)
+  @JoinColumn({name: 'symbol', referencedColumnName: 'symbol'})
+  stock: Stock;
 
-// export class StockPublish {
-//   @PrimaryGeneratedColumn('uuid')
-//   id: string;
+  @Column('uuid')
+  symbol: string;
 
-//   @Column({ default: () => `timezone('UTC', now())` })
-//   createdAt?: Date;
+  @Column('uuid')
+  author: string;
 
-//   @Column('uuid')
-//   symbol: string;
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  lo: number;
 
-//   @Column('uuid')
-//   author: string;
+  @Column('decimal', {transformer: new ColumnNumericTransformer(), nullable: true})
+  hi: number;
 
-//   @ManyToOne(() => StockSupport)
-//   support: StockSupport;
+  @Column({default: false})
+  special: boolean;
+}
 
-//   @ManyToOne(() => StockResistance)
-//   resistance: StockResistance;
+@Entity()
+@Index(['symbol', 'createdAt'])
+export class StockPublish {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-//   @ManyToOne(() => StockValue)
-//   value: StockValue;
-// }
+  @Column({ default: () => `timezone('UTC', now())` })
+  createdAt?: Date;
+
+  @ManyToOne(() => Stock)
+  @JoinColumn({name: 'symbol', referencedColumnName: 'symbol'})
+  stock: Stock;
+
+  @Column('uuid')
+  symbol: string;
+
+  @Column('uuid')
+  author: string;
+
+  @ManyToOne(() => StockSupport)
+  support: StockSupport;
+
+  @ManyToOne(() => StockResistance)
+  resistance: StockResistance;
+
+  @ManyToOne(() => StockValue)
+  value: StockValue;
+}

@@ -170,16 +170,16 @@ export const saveStock = handlerWrapper(async (req, res) => {
   const stock = new Stock();
 
 
-  Object.assign(stock, req.body);
-  stock.symbol = stock.symbol.toUpperCase();
-  stock.by = userId;
+  // Object.assign(stock, req.body);
+  // stock.symbol = stock.symbol.toUpperCase();
+  // stock.by = userId;
 
-  const repo = getRepository(Stock);
-  await repo.save(stock);
+  // const repo = getRepository(Stock);
+  // await repo.save(stock);
 
-  if (stock.isPublished) {
-    await publishStock(stock);
-  }
+  // if (stock.isPublished) {
+  //   await publishStock(stock);
+  // }
 
   res.json();
 });

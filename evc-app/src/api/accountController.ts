@@ -21,6 +21,7 @@ import { redisCache } from '../services/redisCache';
 import { ReferralCode } from '../entity/ReferralCode';
 import { getUserSubscription } from '../utils/getUserSubscription';
 import { UserBalanceLog } from '../entity/UserBalanceLog';
+import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 
 export const createReferral = async (userId) => {
   const entity = new ReferralCode();
@@ -48,8 +49,12 @@ const getAccountForUser = async (userId) => {
     .select(`SUM(amount) AS amount`)
     .getRawOne();
 
+
+  const referralPolicy = await getRepository(ReferralUserPolicy).findOne(userId);
+
   const result = {
     subscription,
+    referralPolicy,
     referralUrl,
     referralCount: +(referralCountInfo?.count || 0),
     balance: +balance?.amount || 0

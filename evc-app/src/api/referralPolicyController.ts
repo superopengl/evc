@@ -43,12 +43,16 @@ export const getReferralUserPolicy = handlerWrapper(async (req, res) => {
 
 export const saveReferralUserPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
+  const { user: { id } } = req as any;
   const { id: userId } = req.params;
   const policy = new ReferralUserPolicy();
   Object.assign(
     policy,
-    { id: uuidv4() },
     req.body,
+    {
+      userId,
+      by: id
+    }
   );
   await getRepository(ReferralUserPolicy).save(policy);
 
@@ -76,12 +80,16 @@ export const getReferralGlobalPolicy = handlerWrapper(async (req, res) => {
 
 export const saveReferralGlobalPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
+  const { id: userId } = req.params;
   const policy = new ReferralGlobalPolicy();
   Object.assign(
     policy,
     { id: uuidv4() },
     req.body,
-    { active: false }
+    {
+      active: false,
+      by: userId
+    }
   );
 
   await getRepository(ReferralGlobalPolicy).save(policy);

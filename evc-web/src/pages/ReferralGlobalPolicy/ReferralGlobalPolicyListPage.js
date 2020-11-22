@@ -52,6 +52,16 @@ const ReferralGlobalPolicyListPage = (props) => {
 
   const columnDef = [
     {
+      title: 'Amount per Referral',
+      dataIndex: 'amount',
+      render: (value) => <MoneyAmount value={value} />
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      render: (value) => value
+    },
+    {
       title: 'Start',
       dataIndex: 'start',
       render: (value) => <TimeAgo value={value} accurate={true} />,
@@ -66,20 +76,10 @@ const ReferralGlobalPolicyListPage = (props) => {
       dataIndex: 'active',
       render: (value) => <Text strong={value}>{value ? 'Active' : ''}</Text>,
     },
-    {
-      title: 'Amount per Referral',
-      dataIndex: 'amount',
-      render: (value) => <MoneyAmount value={value} />
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      render: (value) => value
-    },
-    {
-      title: 'Created At',
-      render: (value) => <TimeAgo value={value} accurate={false} />
-    },
+    // {
+    //   title: 'Created At',
+    //   render: (value) => <TimeAgo value={value} accurate={false} />
+    // },
     {
       // title: 'Action',
       // fixed: 'right',
@@ -176,7 +176,7 @@ const ReferralGlobalPolicyListPage = (props) => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: '100%'}}>
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Global Referral Policy</Title>
           </StyledTitleRow>

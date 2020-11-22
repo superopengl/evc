@@ -1,4 +1,4 @@
-import { Button, Layout, Form, Space, Typography, Input, Row, Col } from 'antd';
+import { Button, Layout, Form, Space, Typography, Switch, Row, Col } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -31,22 +31,16 @@ import { InputNumber } from 'antd';
 import MoneyAmount from './MoneyAmount';
 import { notify } from 'util/notify';
 import ReferralLinkInput from './ReferralLinkInput';
+import { saveReferralUserPolicy } from 'services/referralPolicyService';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
 
-const ContainerStyled = styled.div`
-  margin: 6rem auto 2rem auto;
-  padding: 0 1rem;
-  width: 100%;
-  max-width: 1000px;
+const Container = styled.div`
+.ant-form-item-control-input-content {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  // .ant-divider {
-  //   margin: 20px 0 8px;
-  // }
+  justify-content: flex-end;
+}
 `;
 
 const span = {
@@ -82,8 +76,7 @@ const ReferralBalanceForm = (props) => {
 
   const { user, onOK } = props;
   const [loading, setLoading] = React.useState(true);
-  const [newPlan, setNewPlan] = React.useState();
-  const [account, setAccount] = React.useState({});
+  const [account, setAccount] = React.useState();
   const [balanceAfter, setBalanceAfter] = React.useState();
   const formRef = React.useRef();
 
@@ -102,7 +95,7 @@ const ReferralBalanceForm = (props) => {
     loadData();
   }, []);
 
-  const currentSubscription = account.subscription;
+  const currentSubscription = account?.subscription;
 
   const handleAdjustBalance = async (values) => {
     try {
@@ -123,46 +116,80 @@ const ReferralBalanceForm = (props) => {
     setBalanceAfter((account?.balance || 0) + +amount);
   }
 
-  return (
-    <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
-      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Title level={4}>Subscription</Title>
-        <Title type="success">{currentSubscription?.title || subscriptionDef.find(s => s.key === 'free').title}</Title>
-      </Space>
-      {currentSubscription && <>
-        {currentSubscription.start}
-        {currentSubscription.end}
-      </>}
-      <Divider></Divider>
-      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Title level={4}>Referral</Title>
-        <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
-      </Space>
-      <ReferralLinkInput value={account?.referralUrl}/>
-      <Divider></Divider>
-      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Title level={4}>Balance</Title>
-        <Title><MoneyAmount type="success" value={account.balance} /></Title>
-      </Space>
-      <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-        <div>After adjustment <MoneyAmount strong value={balanceAfter} /></div>
-      </Space>
-      <Form
-        ref={formRef}
-        onFinish={handleAdjustBalance}
-        onValuesChange={handleBalanceValueChange}
-      >
-        <Form.Item label="Adjust amount" name="amount" rules={[{ required: true, type: 'number', message: ' ', whitespace: true }]}
-          extra="Adjust the user's balance by adding up some amount. Either + or - number is avaiable."
-        >
-          <InputNumber block disabled={loading} />
-        </Form.Item>
-        <Form.Item>
-          <Button block type="primary" htmlType="submit" loading={loading}>Add Up To Balance</Button>
-        </Form.Item>
-      </Form>
+  const handleSaveReferralUserPolicy = async values => {
+    try{
+      setLoading(true);
+      await saveReferralUserPolicy(user.id, values);
+      notify.success(<>Successfully set special referral policy to the user</>);
+      await loadData();
+    }finally{
+      setLoading(false);
+    }
+  }
 
-    </Space>
+  return (
+    <Container>
+      <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={4}>Subscription</Title>
+          <Title type="success">{currentSubscription?.title || subscriptionDef.find(s => s.key === 'free').title}</Title>
+        </Space>
+        {currentSubscription && <>
+          {currentSubscription.start}
+          {currentSubscription.end}
+        </>}
+        <Divider></Divider>
+        <Title level={4}>User Referral Policy</Title>
+        <Paragraph type="secondary">Setting this policy will override the global referral policy.</Paragraph>
+        {account && <Form onFinish={handleSaveReferralUserPolicy} initialValues={account.referralPolicy}>
+          <Form.Item label="Override global policy" name="active"
+          rules={[{ required: true, message: ' ' }]}
+          valuePropName="checked"
+          >
+            <Switch />
+          </Form.Item>
+          <Form.Item label="Amount per referral" name="amount"
+            rules={[{ required: true, type: 'number', min: 0, max: 9.99, message: ' ', whitespace: true }]}
+          >
+            <InputNumber block disabled={loading} />
+          </Form.Item>
+          <Form.Item>
+            <Button block type="primary" htmlType="submit" loading={loading}>Set Referral Policy</Button>
+          </Form.Item>
+        </Form>}
+        <Divider></Divider>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={4}>Referral</Title>
+          <Space><Text>have referred</Text><Title type="success">{account?.referralCount}</Title></Space>
+        </Space>
+        <ReferralLinkInput value={account?.referralUrl} />
+        <Divider></Divider>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={4}>Balance</Title>
+          <Title><MoneyAmount type="success" value={account?.balance} /></Title>
+        </Space>
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <div>After adjustment <MoneyAmount strong value={balanceAfter} /></div>
+        </Space>
+        <Paragraph type="secondary">
+          Adjust the user's balance by adding up some amount. Either + or - number is avaiable.
+      </Paragraph>
+        <Form
+          ref={formRef}
+          onFinish={handleAdjustBalance}
+          onValuesChange={handleBalanceValueChange}
+        >
+          <Form.Item label="Adjust amount" name="amount" rules={[{ required: true, type: 'number', message: ' ', whitespace: true }]}
+          >
+            <InputNumber block disabled={loading} />
+          </Form.Item>
+          <Form.Item>
+            <Button block type="primary" htmlType="submit" loading={loading}>Adjust Balance</Button>
+          </Form.Item>
+        </Form>
+
+      </Space>
+    </Container>
   );
 };
 

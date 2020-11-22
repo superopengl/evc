@@ -74,37 +74,35 @@ export const searchUsers = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const page = +req.body.page;
   const size = +req.body.size;
-  const orderBy = req.body.orderBy || 'email';
+  const orderField = req.body.orderBy || 'email';
   const orderDirection = req.body.orderDirection || 'ASC';
   const text = req.body.text?.trim();
-  const plans = (req.body.plans || []);
+  const subscription = (req.body.subscription || []);
 
-  assert(page >= 0 && size > 0, 400, 'Invalid page and size parameter');
+  assert(page > 0 && size > 0, 400, 'Invalid page and size parameter');
 
   let query = getRepository(User)
     .createQueryBuilder('u')
     .where(`u.status != :status`, { status: UserStatus.Disabled });
 
   if (text) {
-    query = query.andWhere(`u.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text`, { text })
+    query = query.andWhere(`(u.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text)`, { text: `%${text}%` })
   }
   query = query.leftJoin(q => q.from(Subscription, 's'), 's', `s."userId" = u.id`);
-  if (plans.length) {
-    const sanitisedPlans = plans.map(p => p === SubscriptionType.Free ? null : p);
-    query = query.where(`s.type IN (:...plans)`, { plans: sanitisedPlans });
+  if (subscription.length) {
+    query = query.andWhere(`(s.type IN (:...subscription) OR s.type IS NULL)`, {subscription });
   }
 
-  query = query.leftJoin(q => q.from(Subscription, 'p'), 'p', 'p."userId" = u.id')
-    .orderBy(orderBy, orderDirection)
+  query = query.orderBy(orderField, orderDirection)
     .addOrderBy('u.email', 'ASC')
-    .offset(page * size)
+    .offset((page - 1) * size)
     .limit(size)
     .select([
       'u.*',
       's.*',
       'u.id as id',
       'u."createdAt" as "createdAt"',
-      `COALESCE(p.type, 'free') as "subscriptionType"`
+      's.type as "subscriptionType"'
     ]);
 
   const list = await query.execute();

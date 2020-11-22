@@ -23,6 +23,18 @@ export const listSubscriptionHistory = handlerWrapper(async (req, res) => {
 
 });
 
+export async function createInitialFreeSubscription(userId) {
+  const sub = new Subscription();
+  Object.assign(sub, {
+    userId,
+    type: SubscriptionType.Free,
+    start: getUtcNow(),
+    status: SubscriptionStatus.Enabled
+  });
+
+  await getRepository(Subscription).save(sub);
+}
+
 export const cancelSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { id } = req.params;
@@ -35,14 +47,6 @@ export const cancelSubscription = handlerWrapper(async (req, res) => {
 
   res.json();
 });
-
-function downgradeSubscription() {
-
-}
-
-function upgradeSubscription() {
-
-}
 
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');

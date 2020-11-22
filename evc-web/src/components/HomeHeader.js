@@ -128,6 +128,7 @@ const HomeHeaderRaw = props => {
               <Menu.Item key="recurring"><Link to="/recurring">Recurring</Link></Menu.Item>
               <Menu.Item key="stocktag"><Link to="/stocktag">Stock Tags</Link></Menu.Item>
               <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>
+              <Menu.Item key="referral_policy"><Link to="/referral_policy">Referral Policy</Link></Menu.Item>
               {/* <Menu.Item key="blog_admin"><HashLink to="/blogs/admin">Blog</HashLink></Menu.Item> */}
               <Menu.Item key="stats"><Link to="/stats">Statistics</Link></Menu.Item>
             </Menu.SubMenu>}
@@ -172,6 +173,7 @@ const HomeHeaderRaw = props => {
             {isAdmin && <Menu.Item key="recurring"><CalendarOutlined /> <Link to="/recurring">Recurring</Link></Menu.Item>}
             {/* {isAdmin && <Menu.Item key="clients"><SettingOutlined /> <Link to="/clients">Users</Link></Menu.Item>} */}
             {isAdmin && <Menu.Item key="stocktag"><TeamOutlined /> <Link to="/stocktag">Stock Tags</Link></Menu.Item>}
+            {isAdmin && <Menu.Item key="referral_policy"><TeamOutlined /> <Link to="/referral_policy">Referral Policy</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="user"><TeamOutlined /> <Link to="/user">User</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="message"><BellOutlined /> <Link to="/message">Messages <Badge count={notifyCount} showZero={false} /></Link></Menu.Item>} */}
             {(isAdmin || isAgent) && <Menu.Item key="stats"><DashboardOutlined /> <Link to="/stats">Statistics</Link></Menu.Item>}

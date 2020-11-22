@@ -42,6 +42,7 @@ import { getEventSource } from 'services/eventSevice';
 import {Subject} from 'rxjs';
 import DebugPage from 'pages/Debug/DebugPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';
+import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -112,6 +113,7 @@ class App extends React.Component {
             <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/new/:type" component={PortfolioFormPage} />
             <RoleRoute loading={loading} path="/reset_password" exact component={ResetPasswordPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template" component={TaskTemplatePage} />
+            <RoleRoute visible={isAdmin} loading={loading} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/debug" component={DebugPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template/:id" component={TaskTemplatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/doc_template" component={DocTemplatePage} />

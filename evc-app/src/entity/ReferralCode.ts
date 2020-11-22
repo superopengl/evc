@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
-import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
@@ -14,3 +13,4 @@ export class ReferralCode {
   @Index()
   userId: string;
 }
+

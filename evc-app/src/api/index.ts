@@ -16,3 +16,4 @@ export * from './eventController';
 export * from './debugController';
 export * from './accountController';
 export * from './stockTagController';
+export * from './referralPolicyController';

@@ -19,9 +19,9 @@ export async function getUserSubscription(userId) {
     .getOne();
 
   if (subscription) {
-    const stocks = await getRepository(Stock).find({
+    const stocks = subscription.symbols?.length ? await getRepository(Stock).find({
       symbol: In(subscription.symbols)
-    });
+    }) : [];
     Object.assign(subscription, { stocks });
   }
 

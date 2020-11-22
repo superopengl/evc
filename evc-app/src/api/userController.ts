@@ -90,7 +90,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
   }
   query = query.leftJoin(q => q.from(Subscription, 's'), 's', `s."userId" = u.id`);
   if (subscription.length) {
-    query = query.andWhere(`(s.type IN (:...subscription) OR s.type IS NULL)`, {subscription });
+    query = query.andWhere(`(s.type IN (:...subscription))`, { subscription });
   }
 
   query = query.orderBy(orderField, orderDirection)

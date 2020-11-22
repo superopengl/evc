@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Select } from 'antd';
+import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Select, Divider } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
@@ -23,6 +23,7 @@ import * as _ from 'lodash';
 import { subscriptionDef } from 'def/subscriptionDef';
 import Highlighter from "react-highlight-words";
 import HighlightingText from 'components/HighlightingText';
+import CheckboxButton from 'components/CheckboxButton';
 
 
 const { Title, Text, Paragraph } = Typography;
@@ -46,16 +47,11 @@ const LayoutStyled = styled(Layout)`
 
 const subscriptionDefMap = _.keyBy(subscriptionDef, 'key');
 
-const SUBSCRIPTION_OPTIONS = subscriptionDef.map(x => ({
-  label: x.title,
-  value: x.key
-}))
-
 const DEFAULT_QUERY_INFO = {
   text: '',
   page: 1,
   size: 50,
-  subscription: subscriptionDef.map(x => x.key),
+  subscription: [],
   orderField: 'createdAt',
   orderDirection: 'DESC'
 };
@@ -163,15 +159,6 @@ const UserListPage = () => {
     loadList();
   }, []);
 
-  const handleSubscriptionFilter = async (subscription) => {
-    debugger;
-    const newQueryInfo = {
-      ...queryInfo,
-      subscription
-    }
-    await loadList(newQueryInfo);
-  }
-
   const updateQueryInfo = (queryInfo) => {
     reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
     setQueryInfo(queryInfo);
@@ -272,6 +259,19 @@ const UserListPage = () => {
     loadList();
   }
 
+  const handleSubscriptionChange = (type, checked) => {
+    let subscription = [...queryInfo.subscription];
+    if (checked) {
+      subscription.push(type);
+    } else {
+      subscription = subscription.filter(x => x !== type);
+    }
+    const newQueryInfo = {
+      ...queryInfo,
+      subscription
+    }
+    loadList(newQueryInfo);
+  }
 
   return (
     <LayoutStyled>
@@ -283,8 +283,8 @@ const UserListPage = () => {
           </StyledTitleRow>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Input.Search
-              placeholder="input search text"
-              enterButton={<><SearchOutlined /> Search</>}
+              placeholder="Input search text"
+              enterButton={<SearchOutlined />}
               onSearch={value => handleSearch(value)}
               onPressEnter={e => handleSearch(e.target.value)}
               onChange={e => handleSearchTextChange(e.target.value)}
@@ -293,20 +293,16 @@ const UserListPage = () => {
               allowClear
             />
 
-            <Select
-              mode="multiple"
-              allowClear
-              style={{ width: '600px' }}
-              placeholder="Status filter"
-              value={queryInfo?.subscription || []}
-              onChange={handleSubscriptionFilter}
-            >
-              {SUBSCRIPTION_OPTIONS.map((x, i) => <Select.Option key={i} value={x.value}>
-                {x.label}
-              </Select.Option>)}
-            </Select>
-            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Invite User</Button>
-            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
+            <Space>
+              {subscriptionDef.map((x, i) => <CheckboxButton key={i} value={x.key}
+                onChange={checked => handleSubscriptionChange(x.key, checked)}
+                value={queryInfo.subscription.includes(x.key)}
+              >
+                {x.title}
+              </CheckboxButton>)}
+            </Space>
+            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}></Button>
+            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
           <Table columns={columnDef}
             dataSource={list}

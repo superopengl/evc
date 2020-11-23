@@ -5,12 +5,12 @@ import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-import { TimeAgo } from './TimeAgo';
-import MoneyAmount from './MoneyAmount';
 import { NumberRangeInput } from 'components/NumberRangeInput';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
+import { Divider } from 'antd';
+import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 
 const Container = styled.div`
   .current-published {
@@ -58,29 +58,18 @@ export const StockRangeTimelineEditor = (props) => {
   }
 
   const toggleCurrentItem = item => {
-    if(!clickable) return;
+    if (!clickable) return;
     setCurrentItem(currentItem === item ? null : item);
   }
 
   const handleDeleteItem = async (item) => {
-    Modal.confirm({
-      title: <>Delete <NumberRangeDisplay value={item} showTime={false} /></>,
-      maskClosable: true,
-      closable: true,
-      okButtonProps: {
-        danger: true
-      },
-      okText: 'Yes, delete',
-      onOk: async () => {
-        try {
-          setLoading(true);
-          await onDelete(item.id);
-          updateList(await onLoadList());
-        } finally {
-          setLoading(false);
-        }
-      }
-    })
+    try {
+      setLoading(true);
+      await onDelete(item.id);
+      updateList(await onLoadList());
+    } finally {
+      setLoading(false);
+    }
   }
 
   return <Container>
@@ -92,16 +81,19 @@ export const StockRangeTimelineEditor = (props) => {
         itemLayout="horizontal"
         rowKey="id"
         size="small"
+        loadMore={list.length >= 6 && <div style={{ width: '100%', textAlign: 'center' }}>
+          <Button block size="large" type="link" icon={<EllipsisOutlined />} />
+        </div>}
         renderItem={item => (
           <List.Item
             onClick={() => toggleCurrentItem(item)}
-            style={{position: 'relative'}}
+            style={{ position: 'relative' }}
             className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
-            extra={<Button type="link" danger icon={<DeleteOutlined/>} onClick={() => handleDeleteItem(item)} />}
+            extra={<ConfirmDeleteButton onDelete={() => handleDeleteItem(item)} />}
           >
-            {clickable && <div style={{position:'absolute', right: 10, top: 10}}>
+            {clickable && <div style={{ position: 'absolute', right: 10, top: 10 }}>
               {item.id === publishedId ? <FlagFilled />
-              : item === currentItem ? <FlagOutlined /> : null}
+                : item === currentItem ? <FlagOutlined /> : null}
             </div>}
             <List.Item.Meta
               description={<NumberRangeDisplay value={item} showTime={showTime} />}
@@ -128,7 +120,7 @@ StockRangeTimelineEditor.propTypes = {
 StockRangeTimelineEditor.defaultProps = {
   showTime: true,
   mode: null,
-  clickable: true,
-  onChange: () => {},
-  onDelete: () => {}
+  clickable: false,
+  onChange: () => { },
+  onDelete: () => { }
 };

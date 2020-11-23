@@ -22,3 +22,4 @@ export * from './stockPeController';
 export * from './stockEpsController';
 export * from './stockResistanceController';
 export * from './stockSupportController';
+export * from './stockPublishController';

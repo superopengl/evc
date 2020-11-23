@@ -37,7 +37,7 @@ export const saveStockPe = handlerWrapper(async (req, res) => {
 
   await getRepository(StockPe).insert(entity);
 
-  res.json(entity);
+  res.json();
 });
 
 

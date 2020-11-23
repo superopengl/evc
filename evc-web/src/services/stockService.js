@@ -104,3 +104,11 @@ export async function saveStockValue(symbol, payload) {
 export async function deleteStockValue(id) {
   return httpDelete(`stock/value/${id}`);
 }
+
+export async function listStockPublish(symbol) {
+  return httpGet(`stock/s/${symbol}/publish`);
+}
+
+export async function saveStockPublish(symbol, payload) {
+  return httpPost(`stock/s/${symbol}/publish`, payload);
+}

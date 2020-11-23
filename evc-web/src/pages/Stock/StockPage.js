@@ -42,9 +42,9 @@ const StockPage = props => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <StyledTitleRow>
+        {/* <StyledTitleRow>
           <Title level={2} style={{ margin: 'auto' }}>Stock</Title>
-        </StyledTitleRow>
+        </StyledTitleRow> */}
         <StockForm symbol={id === 'new' ? null : id} onOk={() => handlePostSave()}/>
       </ContainerStyled>
     </LayoutStyled >

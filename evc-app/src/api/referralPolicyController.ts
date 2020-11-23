@@ -80,7 +80,7 @@ export const getReferralGlobalPolicy = handlerWrapper(async (req, res) => {
 
 export const saveReferralGlobalPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { id: userId } = req.params;
+  const { user: {id} } = req as any;
   const policy = new ReferralGlobalPolicy();
   Object.assign(
     policy,
@@ -88,7 +88,7 @@ export const saveReferralGlobalPolicy = handlerWrapper(async (req, res) => {
     req.body,
     {
       active: false,
-      by: userId
+      by: id
     }
   );
 

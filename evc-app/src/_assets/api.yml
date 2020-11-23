@@ -779,7 +779,6 @@ paths:
         - name: symbol
           in: path
           type: string
-          format: uuid
           required: true
       responses:
         200:
@@ -791,7 +790,6 @@ paths:
         - name: symbol
           in: path
           type: string
-          format: uuid
           required: true
       responses:
         200:
@@ -803,7 +801,6 @@ paths:
         - name: symbol
           in: path
           type: string
-          format: uuid
           required: true
       responses:
         200:
@@ -815,7 +812,60 @@ paths:
         - name: symbol
           in: path
           type: string
-          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/support:
+    get:
+      operationId: getStockSupport
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveStockSupport
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/resistance:
+    post:
+      operationId: saveStockResistence
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/eps:
+    post:
+      operationId: saveStockResistence
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/pe:
+    post:
+      operationId: saveStockResistence
+      parameters:
+        - name: symbol
+          in: path
+          type: string
           required: true
       responses:
         200:

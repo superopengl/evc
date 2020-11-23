@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Space, Form, Input, Modal, Layout, InputNumber } from 'antd';
+import { Typography, Button, Space, Form, Input, Modal, Layout, InputNumber, Row, Col } from 'antd';
 import { Logo } from 'components/Logo';
 import { signUp } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -13,10 +13,14 @@ import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
-import { deleteStock, getStock, saveStock } from 'services/stockService';
+import { deleteStock, getStock, listStockSupport, saveStock, saveStockSupport } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSevice';
+import { Divider } from 'antd';
+
+import { SaveOutlined } from '@ant-design/icons';
+import { StockRangeTimelineEditor } from 'components/StockRangeTimelineEditor';
 const { Title, Text, Paragraph } = Typography;
 
 
@@ -46,6 +50,15 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
+const span = {
+  xs: 24,
+  sm: 24,
+  md: 12,
+  lg: 8,
+  xl: 6,
+  xxl: 6
+};
+
 const StockForm = (props) => {
   const { symbol, onOk } = props;
   const [loading, setLoading] = React.useState(true);
@@ -54,9 +67,9 @@ const StockForm = (props) => {
   const [stock, setStock] = React.useState();
 
   const loadEntity = async () => {
+    setLoading(true);
     if (symbol) {
-      const entity = await getStock(symbol);
-      setStock(entity);
+      setStock(await getStock(symbol));
     }
     setLoading(false);
   }
@@ -111,7 +124,7 @@ const StockForm = (props) => {
 
   const handlePublishMarketPrice = async (values) => {
     const { price } = values;
-    try{
+    try {
       setPublishingPrice(true);
 
       const event = {
@@ -123,7 +136,7 @@ const StockForm = (props) => {
       await publishEvent(event);
       notify.success(`Publishing market price at $${price}`);
 
-    }finally{
+    } finally {
       setPublishingPrice(false);
     }
   }
@@ -132,21 +145,25 @@ const StockForm = (props) => {
     return <Loading />
   }
 
+
   return (<>
     <Form
       labelCol={{ span: 10 }}
       wrapperCol={{ span: 14 }}
-      layout="horizontal"
+      layout="inline"
       onFinish={handleSave}
       onValuesChange={handleValuesChange}
       style={{ textAlign: 'left' }}
       initialValues={stock}>
-      <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-        <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
-      </Form.Item>
-      <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-        <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
-      </Form.Item>
+      <Space>
+        <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+          <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
+        </Form.Item>
+        <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+          <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
+        </Form.Item>
+      </Space>
+      <Divider />
       <Form.Item label="Market" name="market" rules={[{ required: false, whitespace: true, message: ' ' }]}>
         <Input placeholder="market" allowClear={true} maxLength="100" />
       </Form.Item>
@@ -185,6 +202,25 @@ const StockForm = (props) => {
       <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
       </Form.Item>
     </Form>
+    <Divider />
+    <Row gutter={20}>
+      <Col {...span}>
+        <Title level={3}>Support</Title>
+        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+      </Col>
+      <Col {...span}>
+        <Title level={3}>Resistance</Title>
+        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+      </Col>
+      <Col {...span}>
+        <Title level={3}>EPS</Title>
+        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+      </Col>
+      <Col {...span}>
+        <Title level={3}>PE</Title>
+        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+      </Col>
+    </Row>
     <Modal
       visible={simulatorVisible}
       destroyOnClose={true}

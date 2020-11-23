@@ -13,7 +13,7 @@ const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
 padding: 0 1rem;
 width: 100%;
-max-width: 400px;
+// max-width: 400px;
 `;
 
 const StyledTitleRow = styled.div`

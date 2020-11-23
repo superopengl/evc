@@ -149,7 +149,7 @@ const ReferralBalanceForm = (props) => {
             <Switch />
           </Form.Item>
           <Form.Item label="Amount per referral" name="amount"
-            rules={[{ required: true, type: 'number', min: 0, max: 9.99, message: ' ', whitespace: true }]}
+            rules={[{ required: true, type: 'number', min: 0,message: ' ', whitespace: true }]}
           >
             <InputNumber block disabled={loading} />
           </Form.Item>

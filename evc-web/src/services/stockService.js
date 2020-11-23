@@ -43,3 +43,11 @@ export async function watchStock(symbol) {
 export async function unwatchStock(symbol) {
   return httpPost(`stock/s/${symbol}/unwatch`);
 }
+
+export async function listStockSupport(symbol) {
+  return httpGet(`stock/s/${symbol}/support`);
+}
+
+export async function saveStockSupport(symbol, lo, hi) {
+  return httpPost(`stock/s/${symbol}/support`, { lo, hi });
+}

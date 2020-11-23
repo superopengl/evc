@@ -2,7 +2,6 @@
 import { getManager, getRepository, Like } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Stock } from '../entity/Stock';
-import { StockPe } from '../entity/StockPe';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -16,9 +15,6 @@ import * as geoip from 'geoip-lite';
 import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
-import { StockSupport } from '../entity/StockSupport';
-import { StockResistance } from '../entity/StockResistance';
-import { StockEps } from '../entity/StockEps';
 
 async function publishStock(stock) {
 
@@ -173,17 +169,12 @@ export const saveStock = handlerWrapper(async (req, res) => {
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
 
+  Object.assign(stock, req.body);
+  stock.symbol = stock.symbol.toUpperCase();
+  stock.by = userId;
 
-  // Object.assign(stock, req.body);
-  // stock.symbol = stock.symbol.toUpperCase();
-  // stock.by = userId;
-
-  // const repo = getRepository(Stock);
-  // await repo.save(stock);
-
-  // if (stock.isPublished) {
-  //   await publishStock(stock);
-  // }
+  const repo = getRepository(Stock);
+  await repo.save(stock);
 
   res.json();
 });
@@ -196,140 +187,4 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const getStockSupport = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
 
-  const list = await getRepository(StockSupport).find({
-    where: {
-      symbol
-    },
-    order: {
-      createdAt: 'DESC'
-    },
-  });
-
-  res.json(list);
-});
-
-export const saveStockSupport = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
-  const { user: { id: userId } } = req as any;
-  const { lo, hi } = req.body;
-  const entity = new StockSupport();
-  Object.assign(entity, {
-    symbol,
-    author: userId,
-    lo,
-    hi
-  });
-
-  await getRepository(StockSupport).insert(entity);
-
-  res.json(entity);
-});
-
-export const getStockResistance = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
-
-  const list = await getRepository(StockResistance).find({
-    where: {
-      symbol
-    },
-    order: {
-      createdAt: 'DESC'
-    },
-  });
-
-  res.json(list);
-});
-
-export const saveStockResistance = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
-  const { user: { id: userId } } = req as any;
-  const { lo, hi } = req.body;
-  const entity = new StockResistance();
-  Object.assign(entity, {
-    symbol,
-    author: userId,
-    lo,
-    hi
-  });
-
-  await getRepository(StockResistance).insert(entity);
-
-  res.json(entity);
-});
-
-export const getStockEps = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
-
-  const list = await getRepository(StockEps).find({
-    where: {
-      symbol
-    },
-    order: {
-      year: 'DESC',
-      quarter: 'DESC'
-    },
-  });
-
-  res.json(list);
-});
-
-export const saveStockEps = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
-  const { user: { id: userId } } = req as any;
-  const { year, quarter, value } = req.body;
-  const entity = new StockEps();
-  Object.assign(entity, {
-    symbol,
-    author: userId,
-    year,
-    quarter,
-    value
-  });
-
-  await getRepository(StockEps).insert(entity);
-
-  res.json(entity);
-});
-
-export const getStockPe = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
-
-  const list = await getRepository(StockPe).find({
-    where: {
-      symbol
-    },
-    order: {
-      createdAt: 'DESC'
-    },
-  });
-
-  res.json(list);
-});
-
-export const saveStockPe = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { symbol } = req.params;
-  const { user: { id: userId } } = req as any;
-  const { lo, hi } = req.body;
-  const entity = new StockPe();
-  Object.assign(entity, {
-    symbol,
-    author: userId,
-    lo,
-    hi
-  });
-
-  await getRepository(StockPe).insert(entity);
-
-  res.json(entity);
-});

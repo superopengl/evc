@@ -6,8 +6,8 @@ import { Stock } from './Stock';
 @Entity()
 @Index(['symbol', 'createdAt'])
 export class StockPe {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
 
   @Column({ default: () => `timezone('UTC', now())` })
   createdAt?: Date;

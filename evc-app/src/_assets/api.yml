@@ -818,7 +818,7 @@ paths:
           description: OK
   /stock/s/{symbol}/support:
     get:
-      operationId: getStockSupport
+      operationId: listStockSupport
       parameters:
         - name: symbol
           in: path
@@ -839,7 +839,7 @@ paths:
           description: OK
   /stock/s/{symbol}/resistance:
     get:
-      operationId: getStockResistance
+      operationId: listStockResistance
       parameters:
         - name: symbol
           in: path
@@ -860,7 +860,7 @@ paths:
           description: OK
   /stock/s/{symbol}/eps:
     get:
-      operationId: getStockEps
+      operationId: listStockEps
       parameters:
         - name: symbol
           in: path
@@ -881,7 +881,7 @@ paths:
           description: OK
   /stock/s/{symbol}/pe:
     get:
-      operationId: getStockPe
+      operationId: listStockPe
       parameters:
         - name: symbol
           in: path
@@ -896,6 +896,87 @@ paths:
         - name: symbol
           in: path
           type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/value:
+    get:
+      operationId: getStockValue
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveStockValue
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/support/{id}:
+    delete:
+      operationId: deleteStockSupport
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/resistance/{id}:
+    delete:
+      operationId: deleteStockResistance
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/pe/{id}:
+    delete:
+      operationId: deleteStockPe
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/eps/{id}:
+    delete:
+      operationId: deleteStockEps
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/value/{id}:
+    delete:
+      operationId: deleteStockValue
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
           required: true
       responses:
         200:

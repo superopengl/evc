@@ -10,7 +10,6 @@ export class StockSupport {
   id?: string;
 
   @Column({ default: () => `timezone('UTC', now())` })
-  @Index()
   createdAt?: Date;
 
   @ManyToOne(() => Stock)

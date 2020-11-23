@@ -7,33 +7,42 @@ import { SaveOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { TimeAgo } from './TimeAgo';
 import MoneyAmount from './MoneyAmount';
+import styled from 'styled-components';
 
-const {Text} = Typography;
+const { Text } = Typography;
 const { RangePicker } = DatePicker;
 
-function convertToMoments(value) {
-  if (!value) return value;
-  return Array.isArray(value) ? value.map(x => moment(x)) : moment(value);
-}
+const NumberPanel = styled.div`
+  width: 100%;
+  // height: 100%;
+  // padding: 0;
+  // margin: 0;
+  // background-color: #f3f3f3;
+  // .ant-typography {
+  //   color: #000000;
+  // }
+`;
 
 export const NumberRangeDisplay = (props) => {
-  const {  showTime, value } = props;
-  const {lo, hi, createdAt} = value;
+  const { showTime, value } = props;
+  const { lo, hi, createdAt } = value;
 
   const formatNumber = num => {
-    return _.isNumber(num) ? <MoneyAmount value={num} showSymbol={false}/> : '';
+    return _.isNumber(num) ? <MoneyAmount value={num} showSymbol={false} /> : '';
   }
 
   const displayLo = formatNumber(lo);
   const displayHi = formatNumber(hi);
 
   return <Space size="small" direction="horizontal">
-    {showTime && <TimeAgo value={createdAt} accurate={true}/>}
-    {
-    displayLo && displayHi ? <div><Text>{displayLo}</Text> / <Text>{displayHi}</Text></div> :
-    <Text>{displayLo || displayHi}</Text>
-    }
-    
+    {showTime && <TimeAgo value={createdAt} accurate={true} />}
+    <NumberPanel>
+      {
+        displayLo && displayHi ? <><Text>{displayLo}</Text> / <Text>{displayHi}</Text></> :
+          displayLo || displayHi ? <Text>{displayLo || displayHi}</Text> : <Text>None</Text>
+      }
+    </NumberPanel>
+
   </Space>
 }
 

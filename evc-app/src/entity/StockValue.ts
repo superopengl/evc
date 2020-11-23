@@ -30,4 +30,10 @@ export class StockValue {
 
   @Column({ default: false })
   special: boolean;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true, array: true })
+  sourceEps: number[];
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true, array: true })
+  sourcePe: number[];
 }

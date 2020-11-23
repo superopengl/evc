@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { List, Typography, Space, Button } from 'antd';
+import { List, Typography, Space, Button, Modal } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined,FlagFilled, FlagOutlined } from '@ant-design/icons';
+import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined,FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { TimeAgo } from './TimeAgo';
 import MoneyAmount from './MoneyAmount';
@@ -26,15 +26,21 @@ const Container = styled.div`
 
 
 export const StockEpsTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, mode, showTime, publishedId } = props;
+  const { onLoadList, onSaveNew, onDelete, onChange, mode, showTime, publishedId } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [currentItem, setCurrentItem] = React.useState();
 
+
+  const updateList = list => {
+    setList(list);
+    onChange(list);
+  }
+
   const loadEntity = async () => {
     try {
       setLoading(true);
-      setList(await onLoadList());
+      updateList(await onLoadList());
     } finally {
       setLoading(false);
     }
@@ -48,15 +54,33 @@ export const StockEpsTimelineEditor = (props) => {
     try {
       setLoading(true);
       await onSaveNew(range);
-      setList(await onLoadList());
+      updateList(await onLoadList());
     } finally {
       setLoading(false);
     }
   }
 
-  const toggleCurrentItem = item => {
-    setCurrentItem(currentItem === item ? null : item);
+  const handleDeleteItem = async (item) => {
+    Modal.confirm({
+      title: 'Delete EPS',
+      maskClosable: true,
+      closable: true,
+      okButtonProps: {
+        danger: true
+      },
+      okText: 'Yes, delete',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          await onDelete(item.id);
+          updateList(await onLoadList());
+        } finally {
+          setLoading(false);
+        }
+      }
+    })
   }
+
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
@@ -67,11 +91,12 @@ export const StockEpsTimelineEditor = (props) => {
         itemLayout="horizontal"
         rowKey="id"
         size="small"
-        renderItem={item => (
+        renderItem={(item, index) => (
           <List.Item
             // onClick={() => toggleCurrentItem(item)}
             // style={{position: 'relative'}}
-            // className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
+            // className={index <= 3 ? 'current-selected' : ''}
+            extra={<Button type="link" danger icon={<DeleteOutlined/>} onClick={() => handleDeleteItem(item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
               {item.id === publishedId ? <FlagFilled />
@@ -93,6 +118,8 @@ export const StockEpsTimelineEditor = (props) => {
 StockEpsTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   onItemClick: PropTypes.func,
   publishedId: PropTypes.string,
   showTime: PropTypes.bool,
@@ -101,5 +128,6 @@ StockEpsTimelineEditor.propTypes = {
 
 StockEpsTimelineEditor.defaultProps = {
   showTime: true,
-  mode: null
+  mode: null,
+  onChange: () => {}
 };

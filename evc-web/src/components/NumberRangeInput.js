@@ -3,15 +3,8 @@ import React from 'react';
 import { DatePicker, InputNumber, Space, Button } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { CheckOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-
-const { RangePicker } = DatePicker;
-
-function convertToMoments(value) {
-  if (!value) return value;
-  return Array.isArray(value) ? value.map(x => moment(x)) : moment(value);
-}
+import { CheckOutlined } from '@ant-design/icons';
 
 export const NumberRangeInput = (props) => {
   const { onChange, onSave, value, disabled} = props;

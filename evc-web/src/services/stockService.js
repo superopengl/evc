@@ -60,6 +60,14 @@ export async function saveStockResistance(symbol, lo, hi) {
   return httpPost(`stock/s/${symbol}/resistance`, { lo, hi });
 }
 
+export async function listStockEps(symbol) {
+  return httpGet(`stock/s/${symbol}/eps`);
+}
+
+export async function saveStockEps(symbol, values) {
+  return httpPost(`stock/s/${symbol}/eps`, values);
+}
+
 export async function listStockPe(symbol) {
   return httpGet(`stock/s/${symbol}/pe`);
 }

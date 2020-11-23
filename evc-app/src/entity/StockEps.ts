@@ -4,7 +4,7 @@ import { Stock } from './Stock';
 
 
 @Entity()
-@Index('idx_stockEps_symbol_year_quarter', ['symbol', 'year', 'quarter'])
+@Index('idx_stockEps_symbol_year_quarter', ['symbol', 'year', 'quarter'], {unique: true})
 export class StockEps {
   @PrimaryGeneratedColumn()
   id: number;

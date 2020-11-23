@@ -16,6 +16,7 @@ import { CountrySelector } from 'components/CountrySelector';
 import { deleteStock, getStock, listStockSupport, saveStock, saveStockSupport,
   listStockResistance, saveStockResistance,
   listStockPe, saveStockPe,
+  listStockEps, saveStockEps,
  } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
@@ -24,6 +25,7 @@ import { Divider } from 'antd';
 
 import { SaveOutlined } from '@ant-design/icons';
 import { StockRangeTimelineEditor } from 'components/StockRangeTimelineEditor';
+import { StockEpsTimelineEditor } from 'components/StockEpsTimelineEditor';
 const { Title, Text, Paragraph } = Typography;
 
 
@@ -217,11 +219,11 @@ const StockForm = (props) => {
       </Col>
       <Col {...span}>
         <Title level={3}>EPS</Title>
-        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+        <StockEpsTimelineEditor onLoadList={() => listStockEps(symbol)} onSaveNew={values => saveStockEps(symbol, values)} />
       </Col>
       <Col {...span}>
         <Title level={3}>PE</Title>
-        <StockRangeTimelineEditor onLoadList={() => listStockPe(symbol)} onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)} />
+        <StockRangeTimelineEditor onLoadList={() => listStockPe(symbol)} onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)} clickable={false}/>
       </Col>
     </Row>
     <Modal

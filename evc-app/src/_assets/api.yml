@@ -838,8 +838,18 @@ paths:
         200:
           description: OK
   /stock/s/{symbol}/resistance:
+    get:
+      operationId: getStockResistance
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
     post:
-      operationId: saveStockResistence
+      operationId: saveStockResistance
       parameters:
         - name: symbol
           in: path
@@ -849,8 +859,18 @@ paths:
         200:
           description: OK
   /stock/s/{symbol}/eps:
+    get:
+      operationId: getStockEps
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
     post:
-      operationId: saveStockResistence
+      operationId: saveStockEps
       parameters:
         - name: symbol
           in: path
@@ -860,8 +880,18 @@ paths:
         200:
           description: OK
   /stock/s/{symbol}/pe:
+    get:
+      operationId: getStockPe
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
     post:
-      operationId: saveStockResistence
+      operationId: saveStockPe
       parameters:
         - name: symbol
           in: path

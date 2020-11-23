@@ -13,7 +13,10 @@ import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
-import { deleteStock, getStock, listStockSupport, saveStock, saveStockSupport } from 'services/stockService';
+import { deleteStock, getStock, listStockSupport, saveStock, saveStockSupport,
+  listStockResistance, saveStockResistance,
+  listStockPe, saveStockPe,
+ } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSevice';
@@ -210,7 +213,7 @@ const StockForm = (props) => {
       </Col>
       <Col {...span}>
         <Title level={3}>Resistance</Title>
-        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+        <StockRangeTimelineEditor onLoadList={() => listStockResistance(symbol)} onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)} />
       </Col>
       <Col {...span}>
         <Title level={3}>EPS</Title>
@@ -218,7 +221,7 @@ const StockForm = (props) => {
       </Col>
       <Col {...span}>
         <Title level={3}>PE</Title>
-        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+        <StockRangeTimelineEditor onLoadList={() => listStockPe(symbol)} onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)} />
       </Col>
     </Row>
     <Modal

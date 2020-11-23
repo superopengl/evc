@@ -51,3 +51,19 @@ export async function listStockSupport(symbol) {
 export async function saveStockSupport(symbol, lo, hi) {
   return httpPost(`stock/s/${symbol}/support`, { lo, hi });
 }
+
+export async function listStockResistance(symbol) {
+  return httpGet(`stock/s/${symbol}/resistance`);
+}
+
+export async function saveStockResistance(symbol, lo, hi) {
+  return httpPost(`stock/s/${symbol}/resistance`, { lo, hi });
+}
+
+export async function listStockPe(symbol) {
+  return httpGet(`stock/s/${symbol}/pe`);
+}
+
+export async function saveStockPe(symbol, lo, hi) {
+  return httpPost(`stock/s/${symbol}/pe`, { lo, hi });
+}

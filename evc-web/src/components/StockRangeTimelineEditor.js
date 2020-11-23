@@ -3,7 +3,7 @@ import React from 'react';
 import { List, Typography, Space, Button } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { TimeAgo } from './TimeAgo';
 import MoneyAmount from './MoneyAmount';
@@ -65,9 +65,12 @@ export const StockRangeTimelineEditor = (props) => {
         renderItem={item => (
           <List.Item
             onClick={() => toggleCurrentItem(item)}
-            extra={item.id === publishedId ? <PushpinFilled />
-              : item === currentItem ? <PushpinOutlined /> : <EllipsisOutlined style={{color: 'transparent'}} />}
+            style={{position: 'relative'}}
           >
+            <div style={{position:'absolute', left: 0, top: 16}}>
+              {item.id === publishedId ? <PushpinFilled />
+              : item === currentItem ? <CheckOutlined /> : null}
+            </div>
             <List.Item.Meta
               description={<NumberRangeDisplay value={item} showTime={showTime} />}
             />

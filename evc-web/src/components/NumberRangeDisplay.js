@@ -27,8 +27,12 @@ export const NumberRangeDisplay = (props) => {
   const { showTime, value } = props;
   const { lo, hi, createdAt } = value;
 
+  if(lo === null && hi === null) {
+    return <Text>None</Text>
+  }
+
   const formatNumber = num => {
-    return _.isNumber(num) ? <MoneyAmount value={num} showSymbol={false} /> : '';
+    return _.isNumber(+num) ? <MoneyAmount value={+num} showSymbol={false} /> : '';
   }
 
   const displayLo = formatNumber(lo);
@@ -38,7 +42,7 @@ export const NumberRangeDisplay = (props) => {
     {showTime && <TimeAgo value={createdAt} accurate={true} />}
     <NumberPanel>
       {
-        displayLo && displayHi ? <><Text>{displayLo}</Text> / <Text>{displayHi}</Text></> :
+        displayLo && displayHi && lo !== hi ? <><Text>{displayLo}</Text> / <Text>{displayHi}</Text></> :
           displayLo || displayHi ? <Text>{displayLo || displayHi}</Text> : <Text>None</Text>
       }
     </NumberPanel>

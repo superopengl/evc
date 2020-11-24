@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import { List } from 'antd';
 import { StockName } from './StockName';
+import { NumberRangeDisplay } from './NumberRangeDisplay';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -55,7 +56,7 @@ const StockList = (props) => {
       title: 'Stock',
       // onFilter: (value, record) => record.name.includes(value),
       render: (value, item) => <>
-        <Highlighter highlightClassName="search-highlighting" searchWords={[text]} autoEscape={false} textToHighlight={item.symbol} /><br/>
+        <Highlighter highlightClassName="search-highlighting" searchWords={[text]} autoEscape={false} textToHighlight={item.symbol} /><br />
         <Text type="secondary"><small><Highlighter highlightClassName="search-highlighting" searchWords={[text]} autoEscape={false} textToHighlight={item.company} /></small></Text>
       </>,
     },
@@ -79,7 +80,7 @@ const StockList = (props) => {
       title: 'Last Updated',
       dataIndex: 'createdAt',
       render: (text) => {
-        return <TimeAgo value={text} accurate={false}/>;
+        return <TimeAgo value={text} accurate={false} />;
       }
     },
     {
@@ -106,52 +107,51 @@ const StockList = (props) => {
 
   return (
     <List
-    grid={{
-      gutter: 10,
-      xs: 1,
-      sm: 2,
-      md: 3,
-      lg: 4,
-      xl: 6,
-      xxl: 6,
-    }}
-    size="small"
-    dataSource={list}
-    renderItem={stock => (
-      <List.Item>
-        <Card 
-        size="small" 
-        type="inner"
-        // bordered={false}
-        hoverable={true}
-        onClick={() => props.history.push(`/stock/${stock.symbol}`)}
-        title={<StockName value={stock}/>}
-        >
-          Card content
+      grid={{
+        gutter: 10,
+        xs: 1,
+        sm: 2,
+        md: 3,
+        lg: 4,
+        xl: 6,
+        xxl: 6,
+      }}
+      size="small"
+      dataSource={list}
+      renderItem={stock => (
+        <List.Item>
+          <Card
+            size="small"
+            type="inner"
+            // bordered={false}
+            hoverable={true}
+            onClick={() => props.history.push(`/stock/${stock.symbol}`)}
+            title={<StockName value={stock} />}
+          >
+            <Space direction="vertical">
+            <Space>
+              Published At
+            <TimeAgo value={stock.publishedAt} accurate={true} />
+            </Space>
+            <Space>
+              Resistance
+            <NumberRangeDisplay value={{ lo: stock.resistanceLo, hi: stock.resistanceHi }} showTime={false} />
+            </Space>
+            <Space>
+              Value
+            <NumberRangeDisplay value={{ lo: stock.valueLo, hi: stock.valueHi }} showTime={false} />
+            </Space>
+            <Space>
+              Support
+            <NumberRangeDisplay value={{ lo: stock.supportLo, hi: stock.supportHi }} showTime={false} />
+            </Space>
+            </Space>
           </Card>
-      </List.Item>
-    )}
+        </List.Item>
+      )}
     />
-
   )
-  return (
-      <Table
-        columns={columnDef}
-        dataSource={list}
-        // scroll={{x: 1000}}
-        rowKey="symbol"
-        size="small"
-        loading={loading}
-        pagination={false}
-        // onChange={handleTableChange}
-        // rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
-        onRow={(item) => ({
-          onDoubleClick: () => {
-            props.history.push(`stock/${item.symbol}`);
-          }
-        })}
-      />
-  );
+
 };
 
 StockList.propTypes = {

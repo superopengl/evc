@@ -16,6 +16,9 @@ export const listStockResistance = handlerWrapper(async (req, res) => {
     order: {
       createdAt: 'DESC'
     },
+    relations: [
+      'publish'
+    ],
     take: limit
   });
 

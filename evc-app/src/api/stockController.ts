@@ -16,6 +16,10 @@ import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockTag } from '../entity/StockTag';
+import { StockPublish } from '../entity/StockPublish';
+import { StockSupport } from '../entity/StockSupport';
+import { StockResistance } from '../entity/StockResistance';
+import { StockValue } from '../entity/StockValue';
 
 async function publishStock(stock) {
 
@@ -50,7 +54,7 @@ export const getStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
 
   const repo = getRepository(Stock);
-  const stock = await repo.findOne(symbol, {relations: ['tags']});
+  const stock = await repo.findOne(symbol, { relations: ['tags'] });
   assert(stock, 404);
 
   res.json(stock);
@@ -145,6 +149,8 @@ export const searchStock = handlerWrapper(async (req, res) => {
 
   let query = getManager()
     .createQueryBuilder()
+    // .relation(Stock, 'tags')
+    // .loadMany()
     .from(history ? StockHistory : Stock, 's')
     .where('1 = 1');
   if (text) {
@@ -156,12 +162,43 @@ export const searchStock = handlerWrapper(async (req, res) => {
   if (to) {
     query = query.andWhere('s."createdAt" <= :date', { data: moment(to).toDate() });
   }
-  query = query.orderBy('symbol')
-    .addOrderBy('"createdAt"', 'DESC')
+  query = query
+    .leftJoin(q =>
+      q.from(StockPublish, 'pu')
+        .distinctOn(['pu.symbol'])
+        .orderBy('pu.symbol')
+        .addOrderBy('pu.createdAt', 'DESC'),
+      'pu', 'pu.symbol = s.symbol')
+    .leftJoin(StockSupport, 'ss', 'pu."supportId" = ss.id')
+    .leftJoin(StockResistance, 'sr', 'pu."resistanceId" = sr.id')
+    .leftJoin(StockValue, 'sv', 'pu."valueId" = sv.id')
+    .orderBy('s.symbol')
+    .addOrderBy('pu."createdAt"', 'DESC')
+    .select([
+      's.*',
+      'pu."createdAt" as "publishedAt"',
+      'ss.lo as "supportLo"',
+      'ss.hi as "supportHi"',
+      'sr.lo as "resistanceLo"',
+      'sr.hi as "resistanceHi"',
+      'sv.lo as "valueLo"',
+      'sv.hi as "valueHi"',
+    ])
     .offset(pagenation.skip)
     .limit(pagenation.limit);
 
   const list = await query.execute();
+
+  // list = await getRepository(Stock).find({
+  //   relations: [
+  //     'tags',
+  //   ],
+  //   join: {
+  //     alias: 'pub',
+  //     leftJoin
+  //   }
+  // });
+
   res.json(list);
 });
 
@@ -169,12 +206,12 @@ export const saveStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
-  const {tags, ...other} = req.body;
+  const { tags, ...other } = req.body;
 
   Object.assign(stock, other);
   stock.symbol = stock.symbol.toUpperCase();
   stock.by = userId;
-  stock.tags = await getRepository(StockTag).find({id: In(tags)});
+  stock.tags = await getRepository(StockTag).find({ id: In(tags) });
 
   const repo = getRepository(Stock);
   await repo.save(stock);

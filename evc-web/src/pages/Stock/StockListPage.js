@@ -12,6 +12,7 @@ import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutline
 import InfiniteScroll from 'react-infinite-scroller';
 import { Loading } from 'components/Loading';
 import StockTagSelect from 'components/StockTagSelect';
+import { Divider } from 'antd';
 
 const { Title, Paragraph } = Typography;
 
@@ -19,7 +20,7 @@ const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
 padding: 0 1rem;
 width: 100%;
-max-width: 600px;
+// max-width: 600px;
 `;
 
 const StyledTitleRow = styled.div`
@@ -129,10 +130,10 @@ const StockListPage = (props) => {
       <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
+          {/* <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Stock List</Title>
-          </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }} >
+          </StyledTitleRow> */}
+          <Space style={{ width: '100%', justifyContent: 'space-between' }} >
             <Input.Search
               placeholder="input search text"
               enterButton={<SearchOutlined />}
@@ -145,6 +146,7 @@ const StockListPage = (props) => {
             />
             <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
           </Space>
+          <Divider/>
           <InfiniteScroll
             initialLoad={true}
             pageStart={0}

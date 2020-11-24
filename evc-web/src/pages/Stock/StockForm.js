@@ -64,9 +64,20 @@ const ColStyled = styled(Col)`
   // background-color: #f3f3f3;
 `;
 
-const ColInnerCard = styled(Card)`
-height: 100%;
-`;
+// const ColInnerCard = styled(Card)`
+// height: 100%;
+// `;
+
+const ColInnerCard = props => (
+  <Card
+    size="small"
+    type="inner"
+    {...props}
+    style={{ height: '100%' }}
+  >
+    {props.children}
+  </Card>
+)
 
 const LogoContainer = styled.div`
   margin-bottom: 2rem;

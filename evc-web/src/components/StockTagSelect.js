@@ -29,10 +29,28 @@ const SelectStyled = styled(Select)`
 }
 `;
 
-const MultiValueLabel = props => {
-  if (!props.data.color) {
-    debugger;
+const Input = props => {
+  if (props.isHidden) {
+    return <components.Input {...props} />;
   }
+  return (
+    <div style={{padding: 6}}>
+    <div style={{ border: `1px dotted #999999`, padding: 0, margin: 0 }}>
+        <components.Input {...props} />
+    </div>
+
+    </div>
+  );
+};
+
+const Option = props => {
+  const {data, innerProps} = props;
+  return <div {...innerProps} style={{ padding: 6 }}>
+    {data.color ? <StockTag color={data.color}>{data.label}</StockTag> : data.label}
+    </div>;
+}
+
+const MultiValueLabel = props => {
   return (
     <StockTag color={props.data.color}>{props.data.label}</StockTag>
     // <components.MultiValueLabel {...props} />
@@ -67,10 +85,20 @@ const colourStyles = {
   //     },
   //   };
   // },
+  // option: (styles) => {
+  //   return {
+  //     ...styles,
+  //     width: '100%',
+  //     margin: '6px 0',
+  //     padding: 20,
+  //     backgroundColor: 'red',
+  //   }
+  // },
   multiValue: (styles, { data }) => {
     return {
       ...styles,
       width: '100%',
+      margin: '6px 0',
       backgroundColor: 'none',
       // backgroundColor: data.color,
     };
@@ -93,28 +121,41 @@ const colourStyles = {
   // },
 };
 
+function convertTagToOption(tag) {
+  return {
+    label: tag.name,
+    value: tag.id,
+    color: tag.color
+  };
+}
+
+function convertTagsToOptions(tags) {
+  return (tags || []).map(convertTagToOption);
+}
+
+function convertOptionToTag(option) {
+  return {
+    id: option.value,
+    name: option.label,
+    color: option.color
+  }
+}
+
 const StockTagSelect = (props) => {
 
   const { value, onChange } = props;
-  const [tagList, setTagList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [defaultValue, setDefaultValue] = React.useState([]);
   const [options, setOptions] = React.useState([]);
+  const [selectedOptions, setSelectedOptions] = React.useState([]);
 
   const loadEntity = async () => {
     try {
       setLoading(true);
       const allTags = await listStockTags();
-      setTagList(allTags);
-      const options = tagList
-        // .filter(t => !selectedTags.includes(t.id))
-        // .filter(t => !defaultValue.some(x => x.key === t.id))
-        .map(x => ({
-          value: x.id,
-          label: x.name,
-          color: x.color
-        }));
-      setOptions(options);
+      const allOptions = convertTagsToOptions(allTags);
+      setOptions(allOptions);
+      const selectedOptions = allOptions.filter(x => value.some(t => t.id === x.value));
+      setSelectedOptions(selectedOptions);
     } finally {
       setLoading(false);
     }
@@ -125,58 +166,56 @@ const StockTagSelect = (props) => {
   }, []);
 
 
-  const handleChange = selected => {
-    setDefaultValue(selected);
-    onChange(selected.map(s => s.key));
-  }
+  // const handleChange = selected => {
+  //   setSelectedOptions(selected);
+  //   onChange(selected.map(s => s.key));
+  // }
 
-  const handleChangeNew = async (newValue, actionMeta) => {
-    debugger;
+  const handleChange = async (newValue, actionMeta) => {
     switch (actionMeta.action) {
-      case 'create-option':
-        break;
       case 'select-option':
-        break;
-      case 'remove-value':
-        break;
+        case 'remove-value':
+          updateSelectedOptions(newValue);
+          break;
+      case 'create-option':
       default:
-        throw new Error(`Unsupported action ${actionMeta.action}`);
     }
   }
 
   const handleCreateNew = async (newTagName) => {
-    debugger;
     const tagId = uuidv4();
     const newTag = {
       id: tagId,
       name: newTagName,
       color: tinycolor.random().toHexString()
     };
-    const newOption = {
-      label: newTagName,
-      value: tagId,
-      color: newTag.color
-    };
+    const newOption = convertTagToOption(newTag);
     try {
       setLoading(true);
       await saveStockTag(newTag);
       setOptions([...options, newOption]);
+      updateSelectedOptions([...selectedOptions, newOption]);
     } finally {
       setLoading(false);
     }
   }
 
+  const updateSelectedOptions = (newSelectedOptions) => {
+    setSelectedOptions(newSelectedOptions);
+    onChange(newSelectedOptions.map(convertOptionToTag));
+  }
+
   return <CreatableSelect
     isMulti
     closeMenuOnSelect={false}
-    components={{ MultiValueLabel }}
+    components={{ MultiValueLabel, Option, Input }}
     isClearable={false}
     isSearchable={true}
     isLoading={loading}
-    onChange={handleChangeNew}
+    onChange={handleChange}
     onCreateOption={handleCreateNew}
 
-    defaultValue={defaultValue}
+    value={selectedOptions}
     styles={colourStyles}
     options={options}
   />

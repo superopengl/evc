@@ -15,11 +15,11 @@ const StockTag = (props) => {
     <Tag 
       style={{
       // padding: '6px 16px', 
-      borderRadius: 30, 
+      // borderRadius: 30, 
       backgroundColor, 
       color, 
       // fontWeight: 'bold',
-      width: '100%',
+      // width: '100%',
       textAlign: 'center',
       // border: 'none'
       }}

@@ -3,7 +3,7 @@ import React from 'react';
 import { DatePicker, InputNumber, Popover, Button } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { Select } from 'antd';
 
@@ -32,7 +32,7 @@ export const ConfirmDeleteButton = (props) => {
       <Button style={{marginLeft: 10}} danger type="primary" onClick={handleDelete} disabled={loading}>Yes, delete</Button>
     </>}
   >
-    <Button type="link" danger icon={<DeleteOutlined />} disabled={loading} />
+    <Button type="link" danger icon={<CloseOutlined style={{fontSize: '0.8rem'}} />} disabled={loading} />
   </Popover>
 }
 

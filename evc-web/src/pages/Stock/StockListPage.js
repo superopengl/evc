@@ -1,16 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Space, Button, Input } from 'antd';
+import { Typography, Layout, Space, Button, Input, Form, Modal } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { listMessages } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
-import { searchStock } from 'services/stockService';
+import { saveStock, searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Loading } from 'components/Loading';
+import StockTagSelect from 'components/StockTagSelect';
 
 const { Title, Paragraph } = Typography;
 
@@ -61,7 +62,7 @@ const StockListPage = (props) => {
   const [text, setText] = React.useState('');
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-
+  const [visible, setVisible] = React.useState(false);
 
   React.useEffect(() => {
     fetchListByPage(0);
@@ -85,7 +86,23 @@ const StockListPage = (props) => {
   }
 
   const addNewStock = () => {
-    props.history.push(`/stock/new`);
+    setVisible(true);
+  }
+
+  const handleCreateNew = async (values) => {
+    if (loading) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const stock = { ...values, tags: values.tags.map(t => t.id) };
+      await saveStock(stock);
+
+      props.history.push(`/stock/${stock.symbol.toUpperCase()}`)
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handleSearch = async (value) => {
@@ -118,7 +135,7 @@ const StockListPage = (props) => {
           <Space style={{ width: '100%', justifyContent: 'flex-end' }} >
             <Input.Search
               placeholder="input search text"
-              enterButton={<><SearchOutlined /> Search</>}
+              enterButton={<SearchOutlined />}
               onSearch={value => handleSearch(value)}
               onPressEnter={e => handleSearch(e.target.value)}
               onChange={e => handleSearchChange(e.target.value)}
@@ -126,7 +143,7 @@ const StockListPage = (props) => {
               value={queryInfo?.text}
               allowClear
             />
-            <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}>Add Stock</Button>
+            <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
           </Space>
           <InfiniteScroll
             initialLoad={true}
@@ -140,6 +157,38 @@ const StockListPage = (props) => {
           </InfiniteScroll>
         </Space>
       </ContainerStyled>
+      <Modal
+        visible={visible}
+        closable={true}
+        maskClosable={false}
+        destroyOnClose={true}
+        title="New Stock"
+        footer={null}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+      >
+        <Loading loading={loading}>
+          <Form
+            layout="vertical"
+            onFinish={handleCreateNew}
+          // onValuesChange={handleValuesChange}
+          // style={{ textAlign: 'left' }}
+          >
+            <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+              <Input placeholder="Stock symbol" allowClear={true} maxLength="100" />
+            </Form.Item>
+            <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+              <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
+            </Form.Item>
+            <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
+              <StockTagSelect />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" block htmlType="submit">Create</Button>
+            </Form.Item>
+          </Form>
+        </Loading>
+      </Modal>
     </LayoutStyled>
   );
 };

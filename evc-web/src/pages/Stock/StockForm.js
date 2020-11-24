@@ -52,6 +52,11 @@ const Container = styled.div`
     padding-left: 0;
     padding-right: 0;
   }
+
+  .ant-list-item {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 const ColStyled = styled(Col)`
@@ -97,11 +102,12 @@ const StockForm = (props) => {
   const [valueList, setValueList] = React.useState();
 
   const loadEntity = async () => {
-    setLoading(true);
-    if (symbol) {
+    try {
+      setLoading(true);
       setStock(await getStock(symbol));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   React.useEffect(() => {
@@ -115,7 +121,7 @@ const StockForm = (props) => {
 
     try {
       setLoading(true);
-      const stock = {...values, tags: values.tags.map(t => t.id)};
+      const stock = { ...values, tags: values.tags.map(t => t.id) };
       await saveStock(stock);
       setDrawerVisible(false);
       await loadEntity();
@@ -127,12 +133,29 @@ const StockForm = (props) => {
     }
   }
 
+  const handleSaveForm = async (propName, e) => {
+    const newStock = {
+      ...stock,
+      [propName]: e
+    }
+
+    newStock.tags = newStock.tags.map(t => t.id || t);
+
+    try {
+      setLoading(true);
+      await saveStock(newStock);
+      await loadEntity();
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleValuesChange = (changedValues, allValues) => {
     console.log(changedValues);
   }
 
   const handleCancel = () => {
-    props.history.goBack();
+    props.history.push('/stock');
   }
 
   const handleDelete = () => {
@@ -197,7 +220,7 @@ const StockForm = (props) => {
       title={<StockName value={stock} />}
       extra={[
         <Button key="1" disabled={loading} onClick={() => loadEntity()} icon={<SyncOutlined />} />,
-        <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined/>}></Button>,
+        <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
         <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
       ]}
     />
@@ -301,8 +324,8 @@ const StockForm = (props) => {
       onClose={() => setDrawerVisible(false)}
       footer={
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
-          <Button block type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button>
-          <Button block onClick={() => setDrawerVisible(false)}>Cancel</Button>
+          {/* <Button block type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button> */}
+          {/* <Button block onClick={() => setDrawerVisible(false)}>Cancel</Button> */}
           <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>
         </Space>
       }
@@ -310,18 +333,18 @@ const StockForm = (props) => {
       <Form
         layout="vertical"
         ref={formRef}
-        onFinish={handleSave}
+        // onFinish={handleSave}
         // onValuesChange={handleValuesChange}
         // style={{ textAlign: 'left' }}
         initialValues={stock}>
         <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-          <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
+          <Input placeholder="Stock symbol" allowClear={true} maxLength="100" onBlur={e => handleSaveForm('symbol', e.target.value)} disabled={true} readOnly={true} />
         </Form.Item>
         <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-          <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
+          <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" onBlur={e => handleSaveForm('company', e.target.value)} />
         </Form.Item>
         <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
-          <StockTagSelect />
+          <StockTagSelect onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} />
         </Form.Item>
       </Form>
     </Drawer>
@@ -329,7 +352,7 @@ const StockForm = (props) => {
 }
 
 StockForm.propTypes = {
-  symbol: PropTypes.string
+  symbol: PropTypes.string.isRequired
 };
 
 StockForm.defaultProps = {

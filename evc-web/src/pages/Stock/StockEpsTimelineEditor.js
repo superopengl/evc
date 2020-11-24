@@ -80,6 +80,7 @@ export const StockEpsTimelineEditor = (props) => {
         itemLayout="horizontal"
         rowKey="id"
         size="small"
+        locale={{emptyText: ' '}}
         renderItem={(item, index) => (
           <List.Item
             // onClick={() => toggleCurrentItem(item)}

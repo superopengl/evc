@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, PrimaryGeneratedColumn, Index } from 'typeorm';
 import { StockTag } from './StockTag';
 
 @Entity()

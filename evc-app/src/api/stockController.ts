@@ -1,5 +1,5 @@
 
-import { getManager, getRepository, Like } from 'typeorm';
+import { getManager, getRepository, Like, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Stock } from '../entity/Stock';
 import { User } from '../entity/User';
@@ -15,6 +15,7 @@ import * as geoip from 'geoip-lite';
 import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
+import { StockTag } from '../entity/StockTag';
 
 async function publishStock(stock) {
 
@@ -49,7 +50,7 @@ export const getStock = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
 
   const repo = getRepository(Stock);
-  const stock = await repo.findOne(symbol);
+  const stock = await repo.findOne(symbol, {relations: ['tags']});
   assert(stock, 404);
 
   res.json(stock);
@@ -168,10 +169,12 @@ export const saveStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
+  const {tags, ...other} = req.body;
 
-  Object.assign(stock, req.body);
+  Object.assign(stock, other);
   stock.symbol = stock.symbol.toUpperCase();
   stock.by = userId;
+  stock.tags = await getRepository(StockTag).find({id: In(tags)});
 
   const repo = getRepository(Stock);
   await repo.save(stock);

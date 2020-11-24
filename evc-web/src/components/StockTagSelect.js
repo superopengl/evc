@@ -38,6 +38,7 @@ const StockTagSelect = (props) => {
       const allTags = await listStockTags();
       setTagList(allTags);
       setSelectedTags(value.map(id => allTags.find(t => t.id === id)).filter(x => x))
+      debugger;
     } finally {
       setLoading(false);
     }
@@ -54,7 +55,7 @@ const StockTagSelect = (props) => {
 
   const handleChange = selected => {
     setSelectedTags(selected);
-    onChange(selected);
+    onChange(selected.map(s => s.key));
   }
 
   return (

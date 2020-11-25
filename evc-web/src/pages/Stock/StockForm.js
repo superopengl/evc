@@ -258,8 +258,8 @@ const StockForm = (props) => {
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
-        {(sourceEps && sourcePe) &&  <ColInnerCard title="Fair Value">
-          <StockValueTimelineEditor
+         <ColInnerCard title="Fair Value">
+         {(sourceEps && sourcePe) ? <StockValueTimelineEditor
             onLoadList={() => listStockValue(symbol)}
             onSaveNew={payload => saveStockValue(symbol, payload)}
             onDelete={id => deleteStockValue(id)}
@@ -267,8 +267,8 @@ const StockForm = (props) => {
             clickable={true}
             sourceEps={sourceEps}
             sourcePe={sourcePe}
-          />
-        </ColInnerCard>}
+          /> : <Alert type="warning" message="Please setup EPS and PE before setting Fair Value" showIcon/>}
+        </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
         <ColInnerCard title="Support">

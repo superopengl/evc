@@ -50,7 +50,6 @@ export const NumberRangeInput = (props) => {
   }
 
   return <Space>
-    {`${disabled} ${propsDisabled}`}
     <InputNumber value={lo} onChange={handleChangeLo} disabled={disabled || readOnly} readOnly={readOnly}/>
     <InputNumber value={hi} onChange={handleChangeHi} disabled={disabled || readOnly} readOnly={readOnly}/>
     <Button type="primary" icon={<CheckOutlined />} onClick={handleSave} disabled={disabled || !isValidValue()} />

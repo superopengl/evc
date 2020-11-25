@@ -97,7 +97,7 @@ const StockListPage = (props) => {
 
     try {
       setLoading(true);
-      const stock = { ...values, tags: values.tags.map(t => t.id) };
+      const stock = { ...values, tags: values.tags?.map(t => t.id) };
       await saveStock(stock);
 
       props.history.push(`/stock/${stock.symbol.toUpperCase()}`)

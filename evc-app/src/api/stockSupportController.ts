@@ -16,9 +16,6 @@ export const listStockSupport = handlerWrapper(async (req, res) => {
     order: {
       createdAt: 'DESC'
     },
-    relations: [
-      'publish'
-    ],
     take: limit
   });
 

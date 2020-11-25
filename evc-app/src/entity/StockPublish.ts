@@ -18,18 +18,18 @@ export class StockPublish {
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
   stock: Stock;
 
-  @Column('uuid')
+  @Column()
   symbol: string;
 
   @Column('uuid')
   author: string;
 
-  @ManyToOne(() => StockSupport, {nullable: false})
-  support: StockSupport;
+  @Column('uuid')
+  supportId: string;
 
-  @ManyToOne(() => StockResistance, {nullable: false})
-  resistance: StockResistance;
+  @Column('uuid')
+  resistanceId: string;
 
-  @ManyToOne(() => StockValue, {nullable: false})
-  value: StockValue;
+  @Column('uuid')
+  valueId: string;
 }

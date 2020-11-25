@@ -28,6 +28,7 @@ const Container = styled.div`
 
 export const StockValueTimelineEditor = (props) => {
   const { onLoadList, onSaveNew, onChange, onDelete, clickable, showTime, publishedId, sourceEps, sourcePe } = props;
+  const [disabled, setDisabled] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [currentItem, setCurrentItem] = React.useState();
@@ -53,11 +54,15 @@ export const StockValueTimelineEditor = (props) => {
   }, []);
 
   React.useEffect(() => {
-    const sum = _.sum(sourceEps);
-    setDerivedValue({
-      lo: _.isNumber(sourcePe.lo) ? sourcePe.lo * sum : null,
-      hi: _.isNumber(sourcePe.hi) ? sourcePe.hi * sum : null
-    });
+    const enabled = !!(sourceEps?.length === 4 && sourcePe);
+    setDisabled(!enabled);
+    if (enabled) {
+      const sum = _.sum(sourceEps.map(x => x.value));
+      setDerivedValue({
+        lo: _.isNumber(sourcePe.lo) ? sourcePe.lo * sum : null,
+        hi: _.isNumber(sourcePe.hi) ? sourcePe.hi * sum : null
+      });
+    }
   }, [sourceEps, sourcePe])
 
   const handleSave = async (range) => {
@@ -67,8 +72,8 @@ export const StockValueTimelineEditor = (props) => {
         lo: range[0],
         hi: range[1],
         special: isSpecialFairValue,
-        sourceEps,
-        sourcePe: [sourcePe.lo, sourcePe.hi]
+        epsIds: sourceEps.map(x => x.id),
+        peId: sourcePe.id,
       });
       setIsSpecialFairValue(false);
       updateList(await onLoadList());
@@ -100,13 +105,14 @@ export const StockValueTimelineEditor = (props) => {
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
       <Space direction="vertical" size="middle">
         <Space>
+          {`${loading} ${disabled}`}
           <Text>Special Fair Value</Text>
-          <Switch checked={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} />
+          <Switch checked={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} disabled={loading || disabled}/>
         </Space>
         <NumberRangeInput
           onSave={handleSave}
           value={[derivedValue?.lo, derivedValue?.hi]}
-          disabled={loading}
+          disabled={loading || disabled}
           readOnly={!isSpecialFairValue}
           allowInputNone={true}
         />
@@ -117,13 +123,13 @@ export const StockValueTimelineEditor = (props) => {
         itemLayout="horizontal"
         rowKey="id"
         size="small"
-        locale={{emptyText: ' '}}
+        locale={{ emptyText: ' ' }}
         renderItem={item => (
           <List.Item
             onClick={() => toggleCurrentItem(item)}
             style={{ position: 'relative' }}
             className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
-            extra={<ConfirmDeleteButton onDelete={() => handleDeleteItem(item)} />}
+            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             {clickable && <div style={{ position: 'absolute', right: 10, top: 10 }}>
               {item.id === publishedId ? <FlagFilled />
@@ -157,8 +163,6 @@ StockValueTimelineEditor.defaultProps = {
   showTime: true,
   mode: null,
   clickable: true,
-  sourceEps: [0, 0, 0, 0],
-  sourcePe: { lo: 0, hi: 0 },
   onChange: () => { },
   onDelete: () => { }
 };

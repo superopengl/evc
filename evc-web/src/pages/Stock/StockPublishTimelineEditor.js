@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Modal, Typography, Space, Button, Table } from 'antd';
+import { Modal, Typography, Space, Button, Table, Popover } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined, FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -30,6 +30,7 @@ export const StockPublishTimelineEditor = (props) => {
   const { onLoadList, onPublishNew } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
+  const [publishConfirmVisible, setPublishConfirmVisible] = React.useState(false);
 
   const loadEntity = async () => {
     try {
@@ -44,30 +45,22 @@ export const StockPublishTimelineEditor = (props) => {
     loadEntity();
   }, []);
 
-  const handlePublishNew = async (range) => {
-    Modal.confirm({
-      title: "Publish with the latest information",
-      async onOk() {
-        try {
-          setLoading(true);
-          await onPublishNew(range);
-          setList(await onLoadList());
-        } finally {
-          setLoading(false);
-        }
-      },
-      maskClosable: true,
-      okText: 'Yes, Publish!',
-      onCancel() {
-      },
-    });
+  const handlePublishNew = async () => {
+    try {
+      setLoading(true);
+      await onPublishNew();
+      setPublishConfirmVisible(false);
+      setList(await onLoadList());
+    } finally {
+      setLoading(false);
+    }
   }
 
   const columnDef = [
     {
       title: 'Published At',
       dataIndex: 'createdAt',
-      render: (value, item) => <TimeAgo value={value} accurate={true}/>
+      render: (value, item) => <TimeAgo value={value} accurate={true} />
     },
     {
       title: 'Support',
@@ -77,27 +70,45 @@ export const StockPublishTimelineEditor = (props) => {
     {
       title: 'Resistance',
       dataIndex: 'resistance',
-      render: (value, item) => <NumberRangeDisplay value={value}  showTime={false}/>
+      render: (value, item) => <NumberRangeDisplay value={value} showTime={false} />
     },
     {
       title: 'Value',
       dataIndex: 'value',
-      render: (value, item) => <NumberRangeDisplay value={value}  showTime={false}/>
+      render: (value, item) => <NumberRangeDisplay value={value} showTime={false} />
     },
   ];
 
 
+  const handleVisibleChange = visible => {
+    setPublishConfirmVisible(visible);
+  }
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <Button type="primary" onClick={handlePublishNew} disabled={loading}>Publish New</Button>
+      <Popover
+        title="Publish with the latest information?"
+        trigger="click"
+        visible={publishConfirmVisible}
+        onVisibleChange={handleVisibleChange}
+        content={<Space style={{width: '100%', justifyContent: 'flex-end'}}>
+          <Button onClick={() => setPublishConfirmVisible(false)} disabled={loading}>Cancel</Button>
+          <Button style={{ marginLeft: 10 }}
+            type="primary"
+            onClick={handlePublishNew}
+            disabled={loading}>Yes, publish</Button>
+        </Space>}
+      >
+
+        <Button type="primary" disabled={loading || publishConfirmVisible}>Publish New</Button>
+      </Popover>
       <Table
-       columns={columnDef} 
-        locale={{emptyText: ' '}}
-        size="small" 
-      pagination={false}
-      dataSource={list} 
-      rowKey="id" 
+        columns={columnDef}
+        locale={{ emptyText: ' ' }}
+        size="small"
+        pagination={false}
+        dataSource={list}
+        rowKey="id"
       />
     </Space>
   </Container>

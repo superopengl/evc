@@ -13,6 +13,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { Loading } from 'components/Loading';
 import StockTagSelect from 'components/StockTagSelect';
 import { Divider } from 'antd';
+import StockTagFilter from 'components/StockTagFilter';
 
 const { Title, Paragraph } = Typography;
 
@@ -43,6 +44,7 @@ const LayoutStyled = styled(Layout)`
 
 const DEFAULT_QUERY_INFO = {
   text: '',
+  tags: [],
   page: 1,
   size: 50,
   total: 0,
@@ -52,12 +54,13 @@ const DEFAULT_QUERY_INFO = {
   orderDirection: 'DESC'
 };
 
+const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
 const size = 50;
 
 const StockListPage = (props) => {
 
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject('query', DEFAULT_QUERY_INFO, true))
+  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
   const [hasMore, setHasMore] = React.useState(true);
   const [page, setPage] = React.useState(0);
   const [text, setText] = React.useState('');
@@ -65,8 +68,22 @@ const StockListPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [visible, setVisible] = React.useState(false);
 
+  const searchByQueryInfo = async (queryInfo, dryRun = false) => {
+    try {
+      if (!dryRun) {
+        setLoading(true);
+        const data = await searchStock(queryInfo);
+        setList(data);
+      }
+      setQueryInfo(queryInfo);
+      reactLocalStorage.setObject(LOCAL_STORAGE_QUERY_KEY, queryInfo);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   React.useEffect(() => {
-    fetchListByPage(0);
+    searchByQueryInfo(queryInfo);
   }, []);
 
   const fetchListByPage = async (page) => {
@@ -107,22 +124,17 @@ const StockListPage = (props) => {
   }
 
   const handleSearch = async (value) => {
-    fetchListByPage(0);
+    const text = value?.trim();
+    searchByQueryInfo({ ...queryInfo, text });
   }
 
   const handleSearchChange = async (value) => {
     const text = value?.trim();
-
-    const newQueryInfo = {
-      ...queryInfo,
-      text
-    }
-    updateQueryInfo(newQueryInfo);
+    searchByQueryInfo({ ...queryInfo, text }, true);
   }
 
-  const updateQueryInfo = (queryInfo) => {
-    reactLocalStorage.setObject('query', queryInfo);
-    setQueryInfo(queryInfo);
+  const handleTagFilterChange = (tags) => {
+    searchByQueryInfo({ ...queryInfo, tags });
   }
 
   return (
@@ -147,17 +159,18 @@ const StockListPage = (props) => {
               />
               <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
             </Space>
+            <StockTagFilter onChange={handleTagFilterChange} />
             <Divider />
-            <InfiniteScroll
+            {/* <InfiniteScroll
               initialLoad={true}
               pageStart={0}
               loadMore={() => handleFetchNextPageData()}
               hasMore={!loading && hasMore}
               useWindow={true}
               loader={<Space key="loader" style={{ width: '100%', justifyContent: 'center' }}><Loading /></Space>}
-            >
-              <StockList data={list} />
-            </InfiniteScroll>
+            > */}
+            <StockList data={list} />
+            {/* </InfiniteScroll> */}
           </Space>
         </Loading>
       </ContainerStyled>

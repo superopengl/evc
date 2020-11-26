@@ -88,7 +88,7 @@ export const StockPublishTimelineEditor = (props) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      {disabled && <Alert message="Please setup Fair Value, Support and Resistance before publishing." type="warning" />}
+      {disabled && <Alert message="Please setup Fair Value, Support and Resistance before publishing." type="warning" showIcon />}
       <Popover
         title="Publish with the latest information?"
         trigger="click"

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Modal } from 'antd';
+import { List, Typography, Space, Alert, Modal } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
@@ -97,8 +97,8 @@ export const StockValueTimelineEditor = (props) => {
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
       <Space direction="vertical" size="middle">
+        {disabled && <Alert type="warning" message="Please setup EPS and EP before setting up Fair Value" showIcon/>}
         <Space>
-          {`${loading} ${disabled}`}
           <Text>Special Fair Value</Text>
           <Switch checked={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} disabled={loading || disabled}/>
         </Space>

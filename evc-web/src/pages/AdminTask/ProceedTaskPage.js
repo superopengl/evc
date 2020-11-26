@@ -23,7 +23,7 @@ import TaskCommentPanel from './TaskCommentPanel';
 
 const { Text, Title } = Typography;
 const ContainerStyled = styled.div`
-  margin: 5rem auto 0 auto;
+  margin: 6rem auto 0 auto;
   padding: 1rem;
   // max-width: 900px;
   width: 100%;

@@ -17,7 +17,7 @@ import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 const { Title } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 5rem 1rem 2rem 1rem;
+  margin: 6rem 1rem 2rem 1rem;
 
   .ant-table-row.unread {
     font-weight: bold;

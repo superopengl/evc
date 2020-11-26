@@ -20,7 +20,7 @@ import * as tinycolor from 'tinycolor2';
 const { Title, Text } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 5rem auto 2rem;
+  margin: 6rem auto 2rem;
   max-width: 600px;
   width: 100%;
 

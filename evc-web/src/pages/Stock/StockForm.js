@@ -351,15 +351,17 @@ const StockForm = (props) => {
 
   return (<Container>
     <PageHeader
+    ghost={false}
       onBack={handleCancel}
       title={<StockName value={stock} />}
       extra={[
+        <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
         <Button key="1" disabled={loading} onClick={() => loadEntity()} icon={<SyncOutlined />} />,
         <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
         <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
       ]}
     />
-    <Row gutter={20}>
+    <Row gutter={20} style={{marginTop: 20}}>
       <ColStyled {...span}>
         <ColInnerCard title="EPS">
           <StockEpsTimelineEditor
@@ -490,9 +492,9 @@ const StockForm = (props) => {
         <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
           <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" onBlur={e => handleSaveForm('company', e.target.value)} />
         </Form.Item>
-        <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
+        {/* <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
           <StockTagSelect onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Drawer>
   </Container >);

@@ -15,7 +15,7 @@ const LayoutStyled = styled(Layout)`
 `;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
+  margin: 5rem 1rem 2rem 1rem;
   // height: 100%;
   // height: calc(100vh + 64px);
 

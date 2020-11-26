@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Modal, Typography, Space, Button, Table, Popover } from 'antd';
+import { Modal, Typography, Space, Button, Table, Popover, Alert } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined, FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
-
+import { ImRocket } from 'react-icons/im';
 const { Text } = Typography;
 
 const Container = styled.div`
@@ -21,21 +21,32 @@ const Container = styled.div`
     background-color: rgba(21,190,83, 0.1);
   }
   .current-selected {
-    background-color: rgba(250, 140, 22, 0.1);
+    background-color: rgba(250, 140, 22, 0.2);
+
+    &:hover {
+      .ant-table-cell {
+        background: none !important;
+      }
+    }
   }
 `;
 
 
 export const StockPublishTimelineEditor = (props) => {
-  const { onLoadList, onPublishNew } = props;
+  const { onLoadList, onPublishNew, onChange, onSelected, shouldHighlightItem, disabled } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [publishConfirmVisible, setPublishConfirmVisible] = React.useState(false);
 
+  const udpateList = (list) => {
+    setList(list);
+    onChange(list);
+  }
+
   const loadEntity = async () => {
     try {
       setLoading(true);
-      setList(await onLoadList());
+      udpateList(await onLoadList());
     } finally {
       setLoading(false);
     }
@@ -50,7 +61,7 @@ export const StockPublishTimelineEditor = (props) => {
       setLoading(true);
       await onPublishNew();
       setPublishConfirmVisible(false);
-      setList(await onLoadList());
+      udpateList(await onLoadList());
     } finally {
       setLoading(false);
     }
@@ -86,12 +97,13 @@ export const StockPublishTimelineEditor = (props) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
+      {disabled && <Alert message="Please setup Fair Value, Support and Resistance before publishing." type="warning" />}
       <Popover
         title="Publish with the latest information?"
         trigger="click"
-        visible={publishConfirmVisible}
+        visible={publishConfirmVisible && !disabled}
         onVisibleChange={handleVisibleChange}
-        content={<Space style={{width: '100%', justifyContent: 'flex-end'}}>
+        content={<Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Button onClick={() => setPublishConfirmVisible(false)} disabled={loading}>Cancel</Button>
           <Button style={{ marginLeft: 10 }}
             type="primary"
@@ -99,8 +111,12 @@ export const StockPublishTimelineEditor = (props) => {
             disabled={loading}>Yes, publish</Button>
         </Space>}
       >
-
-        <Button type="primary" disabled={loading || publishConfirmVisible}>Publish New</Button>
+        <Button type="primary"
+          disabled={disabled || loading || publishConfirmVisible}
+          icon={<ImRocket style={{ position: 'relative', left: -2, top: 3, marginRight: 6 }} />}
+        >
+          Publish New
+          </Button>
       </Popover>
       <Table
         columns={columnDef}
@@ -109,6 +125,15 @@ export const StockPublishTimelineEditor = (props) => {
         pagination={false}
         dataSource={list}
         rowKey="id"
+        rowClassName={(item, index) => {
+          return shouldHighlightItem(item) ? 'current-selected' : '';
+        }}
+        onRow={(item, index) => {
+          return {
+            onClick: () => onSelected(item),
+            // onMouseOver: () => onSelected(item)
+          }
+        }}
       />
     </Space>
   </Container>
@@ -117,7 +142,15 @@ export const StockPublishTimelineEditor = (props) => {
 StockPublishTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onPublishNew: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
+  onSelected: PropTypes.func,
+  shouldHighlightItem: PropTypes.func,
+  disabled: PropTypes.bool.isRequired,
 };
 
 StockPublishTimelineEditor.defaultProps = {
+  onChange: () => { },
+  onSelected: () => { },
+  shouldHighlightItem: () => false,
+  disabled: false
 };

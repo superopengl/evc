@@ -16,9 +16,6 @@ export class StockResistance {
   @Column()
   symbol: string;
 
-  @Column('uuid', {nullable: true})
-  publishId: string;
-
   @Column('uuid')
   author: string;
 

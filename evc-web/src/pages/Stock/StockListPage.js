@@ -76,7 +76,8 @@ const StockListPage = (props) => {
         setList(data);
       }
       setQueryInfo(queryInfo);
-      reactLocalStorage.setObject(LOCAL_STORAGE_QUERY_KEY, queryInfo);
+      // Not remember the search text in local storage
+      reactLocalStorage.setObject(LOCAL_STORAGE_QUERY_KEY, { ...queryInfo, text: '' });
     } finally {
       setLoading(false);
     }
@@ -159,7 +160,7 @@ const StockListPage = (props) => {
               />
               <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
             </Space>
-            <StockTagFilter onChange={handleTagFilterChange} />
+            <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
             <Divider />
             {/* <InfiniteScroll
               initialLoad={true}

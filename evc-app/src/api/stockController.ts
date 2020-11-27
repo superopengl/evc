@@ -16,14 +16,9 @@ import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockTag } from '../entity/StockTag';
-import { StockPublish } from '../entity/StockPublish';
-import { StockSupport } from '../entity/StockSupport';
-import { StockResistance } from '../entity/StockResistance';
-import { StockValue } from '../entity/StockValue';
+import { searchStock } from '../utils/searchStock';
+import { StockSearchParams } from '../types/StockSearchParams';
 
-async function publishStock(stock) {
-
-}
 
 export const incrementStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
@@ -51,10 +46,11 @@ export const incrementStock = handlerWrapper(async (req, res) => {
 export const getStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { user: { id: userId } } = req as any;
-  const symbol = req.params.symbol.toUpperCase();
+  const {symbol} = req.params;
 
-  const repo = getRepository(Stock);
-  const stock = await repo.findOne(symbol, { relations: ['tags'] });
+  const result = await searchStock({symbols: [symbol]});
+  const stock = result[0];
+
   assert(stock, 404);
 
   res.json(stock);
@@ -137,80 +133,18 @@ export const listHotStock = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const searchStock = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'client');
-  const { text, history, from, to, tags, page, size } = req.body;
+export const searchStockList = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { page, size } = req.body;
+  const query = Object.assign(
+    {},
+    req.body,
+    {
+      skip: (+page - 1) * +size,
+      limit: +size,
+    }) as StockSearchParams;
 
-  assert(page > 0 && size > 0, 400, 'Invalid page and size parameter');
-  const pagenation = {
-    skip: (page - 1) * size,
-    limit: size,
-  };
-
-  let query = getManager()
-    .createQueryBuilder()
-    .from(history ? StockHistory : Stock, 's')
-    .where('1 = 1');
-  if (text) {
-    query = query.andWhere('s.symbol ILIKE :text OR s.company ILIKE :text', { text: `%${text}%` });
-  }
-  if (from) {
-    query = query.andWhere('s."createdAt" >= :date', { data: moment(from).toDate() });
-  }
-  if (to) {
-    query = query.andWhere('s."createdAt" <= :date', { data: moment(to).toDate() });
-  }
-  query = query
-    .leftJoin(q =>
-      q.from(StockPublish, 'pu')
-        .distinctOn(['pu.symbol'])
-        .orderBy('pu.symbol')
-        .addOrderBy('pu.createdAt', 'DESC'),
-      'pu', 'pu.symbol = s.symbol')
-    .leftJoin(StockSupport, 'ss', 'pu."supportId" = ss.id')
-    .leftJoin(StockResistance, 'sr', 'pu."resistanceId" = sr.id')
-    .leftJoin(StockValue, 'sv', 'pu."valueId" = sv.id');
-  if (tags?.length) {
-    // Filter by tags
-    query = query.innerJoin(q => q.from('stock_tags_stock_tag', 'tg')
-      .innerJoin(
-        sq => sq.from('stock_tags_stock_tag', 'stg')
-          .where(`stg."stockTagId" IN (:...tags)`, { tags }),
-        'stg',
-        'stg."stockSymbol" = tg."stockSymbol"'
-      )
-      .groupBy('tg."stockSymbol"')
-      .select([
-        'tg."stockSymbol" as symbol',
-        'array_agg(tg."stockTagId") as tags'
-      ]),
-      'tag', 'tag.symbol = s.symbol');
-  } else {
-    query = query.leftJoin(q => q.from('stock_tags_stock_tag', 'tg')
-      .groupBy('tg."stockSymbol"')
-      .select([
-        'tg."stockSymbol" as symbol',
-        'array_agg(tg."stockTagId") as tags'
-      ]),
-      'tag', 'tag.symbol = s.symbol');
-  }
-  query = query.orderBy('s.symbol')
-    .addOrderBy('pu."createdAt"', 'DESC')
-    .select([
-      's.*',
-      'tag.tags',
-      'pu."createdAt" as "publishedAt"',
-      'ss.lo as "supportLo"',
-      'ss.hi as "supportHi"',
-      'sr.lo as "resistanceLo"',
-      'sr.hi as "resistanceHi"',
-      'sv.lo as "valueLo"',
-      'sv.hi as "valueHi"',
-    ])
-    .offset(pagenation.skip)
-    .limit(pagenation.limit);
-
-  const list = await query.execute();
+  const list = await searchStock(query);
 
   res.json(list);
 });

@@ -721,7 +721,7 @@ paths:
           description: OK
   /stock/search:
     post:
-      operationId: searchStock
+      operationId: searchStockList
       responses:
         200:
           description: OK

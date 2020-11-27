@@ -1,6 +1,6 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
-import { StockResistance } from './StockResistance';
-import { StockSupport } from './StockSupport';
+import { StockResistanceShort } from './StockResistanceShort';
+import { StockSupportShort } from './StockSupportShort';
 import { StockValue } from './StockValue';
 import { Stock } from './Stock';
 

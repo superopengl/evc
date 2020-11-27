@@ -24,7 +24,7 @@ export async function listHotStock(size = 10) {
 }
 
 export async function getStockHistory(symbol) {
-  return httpGet(`stock/s/${symbol}/history`);
+  // return httpGet(`stock/s/${symbol}/history`);
 }
 
 export async function listStock() {
@@ -55,29 +55,52 @@ export async function unwatchStock(symbol) {
   return httpPost(`stock/s/${symbol}/unwatch`);
 }
 
-export async function listStockSupport(symbol) {
-  return httpGet(`stock/s/${symbol}/support`);
+export async function listStockSupportShort(symbol) {
+  return httpGet(`stock/s/${symbol}/support/short`);
 }
 
-export async function saveStockSupport(symbol, lo, hi) {
-  return httpPost(`stock/s/${symbol}/support`, { lo, hi });
+export async function saveStockSupportShort(symbol, lo, hi) {
+  return httpPost(`stock/s/${symbol}/support/short`, { lo, hi });
 }
 
-export async function deleteStockSupport(id) {
-  return httpDelete(`stock/support/${id}`);
+export async function deleteStockSupportShort(id) {
+  return httpDelete(`stock/support/short/${id}`);
 }
 
-
-export async function listStockResistance(symbol) {
-  return httpGet(`stock/s/${symbol}/resistance`);
+export async function listStockSupportLong(symbol) {
+  return httpGet(`stock/s/${symbol}/support/long`);
 }
 
-export async function saveStockResistance(symbol, lo, hi) {
-  return httpPost(`stock/s/${symbol}/resistance`, { lo, hi });
+export async function saveStockSupportLong(symbol, lo, hi) {
+  return httpPost(`stock/s/${symbol}/support/long`, { lo, hi });
 }
 
-export async function deleteStockResistance(id) {
-  return httpDelete(`stock/resistance/${id}`);
+export async function deleteStockSupportLong(id) {
+  return httpDelete(`stock/support/long/${id}`);
+}
+
+export async function listStockResistanceShort(symbol) {
+  return httpGet(`stock/s/${symbol}/resistance/short`);
+}
+
+export async function saveStockResistanceShort(symbol, lo, hi) {
+  return httpPost(`stock/s/${symbol}/resistance/short`, { lo, hi });
+}
+
+export async function deleteStockResistanceShort(id) {
+  return httpDelete(`stock/resistance/short/${id}`);
+}
+
+export async function listStockResistanceLong(symbol) {
+  return httpGet(`stock/s/${symbol}/resistance/long`);
+}
+
+export async function saveStockResistanceLong(symbol, lo, hi) {
+  return httpPost(`stock/s/${symbol}/resistance/long`, { lo, hi });
+}
+
+export async function deleteStockResistanceLong(id) {
+  return httpDelete(`stock/resistance/long/${id}`);
 }
 
 export async function listStockEps(symbol) {

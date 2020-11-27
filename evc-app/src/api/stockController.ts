@@ -18,6 +18,7 @@ import { StockWatchList } from '../entity/StockWatchList';
 import { StockTag } from '../entity/StockTag';
 import { searchStock } from '../utils/searchStock';
 import { StockSearchParams } from '../types/StockSearchParams';
+import { Role } from '../types/Role';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -45,10 +46,23 @@ export const incrementStock = handlerWrapper(async (req, res) => {
 
 export const getStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const { user: { id: userId } } = req as any;
-  const {symbol} = req.params;
+  const { user: { role } } = req as any;
+  const symbol = req.params.symbol.toUpperCase();
 
-  const result = await searchStock({symbols: [symbol]});
+  const repo = getRepository(Stock);
+  const option = role === Role.Client ? {} : { relations: ['tags'] }
+  const stock = await repo.findOne(symbol, option);
+  assert(stock, 404);
+
+  res.json(stock);
+});
+
+
+export const searchSingleStock = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { symbol } = req.params;
+
+  const result = await searchStock({ symbols: [symbol] });
   const stock = result[0];
 
   assert(stock, 404);

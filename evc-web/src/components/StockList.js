@@ -14,6 +14,7 @@ import { List } from 'antd';
 import { StockName } from './StockName';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { ImRocket } from 'react-icons/im';
+import StockInfoCard from './StockInfoCard';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -121,51 +122,11 @@ const StockList = (props) => {
       dataSource={list}
       renderItem={stock => (
         <List.Item>
-          <Card
-            size="small"
-            type="inner"
-            // bordered={false}
-            hoverable={true}
-            onClick={() => props.history.push(`/stock/${stock.symbol}`)}
-            title={<StockName value={stock} />}
-          >
-            <Space direction="vertical" style={{ width: '100%' }}>
-
-              <Row>
-                <Col span={12}>
-                  <Text type="secondary">Resistance</Text>
-                </Col>
-                <Col span={12}>
-                  <NumberRangeDisplay value={{ lo: stock.resistanceLo, hi: stock.resistanceHi }} showTime={false} />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <Text type="secondary">Value</Text>
-
-                </Col>
-                <Col span={12}>
-                  <NumberRangeDisplay value={{ lo: stock.valueLo, hi: stock.valueHi }} showTime={false} />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <Text type="secondary">Support</Text>
-                </Col>
-                <Col span={12}>
-                  <NumberRangeDisplay value={{ lo: stock.supportLo, hi: stock.supportHi }} showTime={false} />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={12}>
-                  <Text type="secondary">Published</Text>
-                </Col>
-                <Col span={12}>
-                  <TimeAgo value={stock.publishedAt} accurate={true} />
-                </Col>
-              </Row>
-            </Space>
-          </Card>
+          <StockInfoCard 
+          value={stock}
+          hoverable
+          onClick={() => props.history.push(`/stock/${stock.symbol}`)}
+          />
         </List.Item>
       )}
     />

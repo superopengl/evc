@@ -4,6 +4,13 @@ export async function searchStock(payload) {
   return httpPost(`stock/search`, { page: 0, size: 20, ...payload });
 }
 
+export async function searchSingleStock(symbol) {
+  if(!symbol) {
+    throw new Error(`Symbol is not specified`);
+  }
+  return httpPost(`stock/search/${symbol}`);
+}
+
 export async function getStock(symbol) {
   return httpGet(`stock/s/${symbol}`);
 }

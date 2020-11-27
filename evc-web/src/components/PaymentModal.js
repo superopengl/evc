@@ -12,7 +12,7 @@ import { Alert, Modal, Space } from 'antd';
 import StepWizard from 'react-step-wizard';
 import { DoubleRightOutlined, RightOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { SearchStockInput } from './SearchStockInput';
+import { StockSearchInput } from './StockSearchInput';
 import * as _ from 'lodash';
 import MoneyAmount from './MoneyAmount';
 import { StripeCheckout } from './StripeCheckout';
@@ -154,7 +154,7 @@ const PaymentModal = (props) => {
             >
               <Paragraph type="secondary">Please choose a stock to subscribe.</Paragraph>
               <Form.Item label="Stock" name="symbols" rules={[{ required: true, message: ' ' }]}>
-                <SearchStockInput mode="multiple" excluding={excluding} />
+                <StockSearchInput mode="multiple" excluding={excluding} />
               </Form.Item>
             </Form>
           </div>}

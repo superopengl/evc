@@ -37,9 +37,6 @@ export async function searchStock(queryInfo: StockSearchParams) {
       .orderBy('pu.symbol')
       .addOrderBy('pu.createdAt', 'DESC'),
       'pu', 'pu.symbol = s.symbol')
-    .leftJoin(StockSupportShort, 'ss', 'pu."supportId" = ss.id')
-    .leftJoin(StockResistanceShort, 'sr', 'pu."resistanceId" = sr.id')
-    .leftJoin(StockValue, 'sv', 'pu."valueId" = sv.id');
   if (tags?.length) {
     // Filter by tags
     query = query.innerJoin(q => q.from('stock_tags_stock_tag', 'tg')
@@ -69,13 +66,8 @@ export async function searchStock(queryInfo: StockSearchParams) {
     .select([
       's.*',
       'tag.tags',
+      'pu.*',
       'pu."createdAt" as "publishedAt"',
-      'ss.lo as "supportLo"',
-      'ss.hi as "supportHi"',
-      'sr.lo as "resistanceLo"',
-      'sr.hi as "resistanceHi"',
-      'sv.lo as "valueLo"',
-      'sv.hi as "valueHi"',
     ])
     .offset(skip)
     .limit(limit);

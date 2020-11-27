@@ -3,6 +3,7 @@ import { StockResistanceShort } from './StockResistanceShort';
 import { StockSupportShort } from './StockSupportShort';
 import { StockValue } from './StockValue';
 import { Stock } from './Stock';
+import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
@@ -25,11 +26,47 @@ export class StockPublish {
   author: string;
 
   @Column('uuid')
-  supportId: string;
+  supportShortId: string;
 
   @Column('uuid')
-  resistanceId: string;
+  supportLongId: string;
+
+  @Column('uuid')
+  resistanceShortId: string;
+
+  @Column('uuid')
+  resistanceLongId: string;
 
   @Column('uuid')
   valueId: string;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  valueLo: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  valueHi: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  supportShortLo: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  supportShortHi: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  supportLongLo: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  supportLongHi: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  resistanceShortLo: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  resistanceShortHi: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  resistanceLongLo: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  resistanceLongHi: number;
 }

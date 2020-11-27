@@ -65,19 +65,22 @@ export const StockPublishTimelineEditor = (props) => {
       render: (value, item) => <TimeAgo value={value} accurate={true} />
     },
     {
-      title: 'Support',
-      dataIndex: 'support',
-      render: (value, item) => <NumberRangeDisplay value={value} showTime={false} />
+      title: 'Support (short)',
+      render: (value, item) => <Space size="small" direction="vertical">
+      <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi}/>
+      <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi}/>
+      </Space>
     },
     {
-      title: 'Resistance',
-      dataIndex: 'resistance',
-      render: (value, item) => <NumberRangeDisplay value={value} showTime={false} />
+      title: 'Resistance (short)',
+      render: (value, item) =>  <Space size="small" direction="vertical">
+        <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} />
+        <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi} />
+        </Space>
     },
     {
       title: 'Value',
-      dataIndex: 'value',
-      render: (value, item) => <NumberRangeDisplay value={value} showTime={false} />
+      render: (value, item) => <NumberRangeDisplay lo={item.valueLo} hi={item.valueHi} />
     },
   ];
 

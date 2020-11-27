@@ -6,6 +6,8 @@ import { StockSupportShort } from '../entity/StockSupportShort';
 import { StockResistanceShort } from '../entity/StockResistanceShort';
 import { StockValue } from '../entity/StockValue';
 import { v4 as uuidv4 } from 'uuid';
+import { StockSupportLong } from '../entity/StockSupportLong';
+import { StockResistanceLong } from '../entity/StockResistanceLong';
 
 export const listStockPublish = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -15,9 +17,6 @@ export const listStockPublish = handlerWrapper(async (req, res) => {
   const list = await getRepository(StockPublish)
     .createQueryBuilder('sp')
     .where({ symbol })
-    .leftJoinAndMapOne('sp.support', StockSupportShort, 'ss', 'ss.id = sp."supportId"')
-    .leftJoinAndMapOne('sp.resistance', StockResistanceShort, 'sr', 'sr.id = sp."resistanceId"')
-    .leftJoinAndMapOne('sp.value', StockValue, 'sv', 'sv.id = sp."valueId"')
     .orderBy('sp."createdAt"', 'DESC')
     .limit(limit)
     .getMany();
@@ -30,28 +29,43 @@ export const saveStockPublish = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const { user: { id: userId } } = req as any;
 
-  const { supportId, resistanceId, valueId } = req.body;
-  assert(supportId, 400, 'supportId is not specified');
-  assert(resistanceId, 400, 'resistanceId is not specified');
+  const { supportShortId, supportLongId, resistanceShortId, resistanceLongId, valueId } = req.body;
+  assert(supportShortId, 400, 'supportShortId is not specified');
+  assert(supportLongId, 400, 'supportLongId is not specified');
+  assert(resistanceShortId, 400, 'resistanceShortId is not specified');
+  assert(resistanceLongId, 400, 'resistanceLongId is not specified');
   assert(valueId, 400, 'valueId is not specified');
 
-  // await getManager()
-  //   .query(
-  //     `insert into stock_publish (symbol, author, "supportId", "resistanceId", "valueId") values ($1, $2, $3, $4, $5)`,
-  //     [symbol, userId, supportId, resistanceId, valueId]
-  //   );
 
-  await getManager().transaction(async tranc => {
-    const publish = new StockPublish();
-    publish.id = uuidv4();
-    publish.symbol = symbol;
-    publish.author = userId;
-    publish.supportId = supportId;
-    publish.resistanceId = resistanceId;
-    publish.valueId = valueId;
+  const [supportShort, supportLong, resistanceShort, resistanceLong, value] = await Promise.all([
+    getRepository(StockSupportShort).findOne(supportShortId),
+    getRepository(StockSupportLong).findOne(supportLongId),
+    getRepository(StockResistanceShort).findOne(resistanceShortId),
+    getRepository(StockResistanceLong).findOne(resistanceLongId),
+    getRepository(StockValue).findOne(valueId),
+  ]);
 
-    await tranc.getRepository(StockPublish).insert(publish);
-  });
+  const publish = new StockPublish();
+  publish.id = uuidv4();
+  publish.symbol = symbol;
+  publish.author = userId;
+  publish.supportShortId = supportShortId;
+  publish.supportLongId = supportLongId;
+  publish.resistanceShortId = resistanceShortId;
+  publish.resistanceLongId = resistanceLongId;
+  publish.valueId = valueId;
+  publish.valueLo = value.lo;
+  publish.valueHi = value.hi;
+  publish.supportShortLo = supportShort.lo;
+  publish.supportShortHi = supportShort.hi;
+  publish.supportLongLo = supportLong.lo;
+  publish.supportLongHi = supportLong.hi;
+  publish.resistanceShortLo = resistanceShort.lo;
+  publish.resistanceShortHi = resistanceShort.hi;
+  publish.resistanceLongLo = resistanceLong.lo;
+  publish.resistanceLongHi = resistanceLong.hi;
+
+  await getRepository(StockPublish).insert(publish);
 
   res.json();
 });

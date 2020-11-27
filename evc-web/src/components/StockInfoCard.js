@@ -18,49 +18,55 @@ const StockInfoCard = (props) => {
 
   return (
     <Card
-    size="small"
-    type="inner"
-    // bordered={false}
-    title={<StockName value={stock} />}
-    onClick={props.onClick}
-    hoverable={hoverable}
-    actions={actions}
-  >
-    <Space direction="vertical" style={{ width: '100%' }}>
-      <Row>
-        <Col span={12}>
-          <Text type="secondary">Resistance</Text>
-        </Col>
-        <Col span={12}>
-          <NumberRangeDisplay value={{ lo: stock.resistanceLo, hi: stock.resistanceHi }} showTime={false} />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <Text type="secondary">Value</Text>
-        </Col>
-        <Col span={12}>
-          <NumberRangeDisplay value={{ lo: stock.valueLo, hi: stock.valueHi }} showTime={false} />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <Text type="secondary">Support</Text>
-        </Col>
-        <Col span={12}>
-          <NumberRangeDisplay value={{ lo: stock.supportLo, hi: stock.supportHi }} showTime={false} />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <Text type="secondary">Published</Text>
-        </Col>
-        <Col span={12}>
-          <TimeAgo value={stock.publishedAt} accurate={true} />
-        </Col>
-      </Row>
-    </Space>
-  </Card>
+      size="small"
+      type="inner"
+      // bordered={false}
+      title={<StockName value={stock} />}
+      onClick={props.onClick}
+      hoverable={hoverable}
+      actions={actions}
+    >
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <Row>
+          <Col span={12}>
+            <Text type="secondary">Resistance</Text>
+          </Col>
+          <Col span={12}>
+            <Space size="small" direction="vertical">
+              <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} />
+              <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} />
+            </Space>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Text type="secondary">Value</Text>
+          </Col>
+          <Col span={12}>
+            <NumberRangeDisplay lo={stock.valueLo} hi={stock.valueHi} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Text type="secondary">Support</Text>
+          </Col>
+          <Col span={12}>
+            <Space size="small" direction="vertical">
+            <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} />
+            <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} />
+            </Space>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Text type="secondary">Published</Text>
+          </Col>
+          <Col span={12}>
+            <TimeAgo value={stock.publishedAt} accurate={true} />
+          </Col>
+        </Row>
+      </Space>
+    </Card>
   );
 };
 

@@ -23,6 +23,8 @@ import { StockPublish } from '../entity/StockPublish';
 import { StockResistanceShort } from '../entity/StockResistanceShort';
 import { StockSupportShort } from '../entity/StockSupportShort';
 import { StockValue } from '../entity/StockValue';
+import { StockSupportLong } from '../entity/StockSupportLong';
+import { StockResistanceLong } from '../entity/StockResistanceLong';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -146,18 +148,10 @@ export const listHotStock = handlerWrapper(async (req, res) => {
         .orderBy('pu.symbol')
         .addOrderBy('pu.createdAt', 'DESC'),
         'pu', 'pu.symbol = s.symbol')
-      .innerJoin(StockSupportShort, 'ss', 'pu."supportId" = ss.id')
-      .innerJoin(StockResistanceShort, 'sr', 'pu."resistanceId" = sr.id')
-      .innerJoin(StockValue, 'sv', 'pu."valueId" = sv.id')
       .select([
         's.*',
+        'pu.*',
         'pu."createdAt" as "publishedAt"',
-        'ss.lo as "supportLo"',
-        'ss.hi as "supportHi"',
-        'sr.lo as "resistanceLo"',
-        'sr.hi as "resistanceHi"',
-        'sv.lo as "valueLo"',
-        'sv.hi as "valueHi"',
       ])
       .orderBy(`h.count`, 'DESC')
       .limit(limit)

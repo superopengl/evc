@@ -24,10 +24,9 @@ const NumberPanel = styled.div`
 `;
 
 export const NumberRangeDisplay = (props) => {
-  const { showTime, value } = props;
-  const { lo, hi, createdAt } = value;
+  const { lo, hi, time } = props;
 
-  if(lo === null && hi === null) {
+  if(!lo && lo !== 0 && !hi && hi !== 0) {
     return <Text>None</Text>
   }
 
@@ -39,10 +38,10 @@ export const NumberRangeDisplay = (props) => {
   const displayHi = formatNumber(hi);
 
   return <Space size="small" direction="horizontal">
-    {showTime && <TimeAgo value={createdAt} accurate={true} />}
+    {time && <TimeAgo value={time} accurate={true} />}
     <NumberPanel>
       {
-        displayLo && displayHi && lo !== hi ? <><Text>{displayLo}</Text> / <Text>{displayHi}</Text></> :
+        displayLo && displayHi && lo !== hi ? <><Text>{displayLo}</Text> ~ <Text>{displayHi}</Text></> :
           displayLo || displayHi ? <Text>{displayLo || displayHi}</Text> : <Text>None</Text>
       }
     </NumberPanel>
@@ -51,10 +50,12 @@ export const NumberRangeDisplay = (props) => {
 }
 
 NumberRangeDisplay.propTypes = {
-  value: PropTypes.object.isRequired,
-  showTime: PropTypes.bool,
+  lo: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  hi: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  time: PropTypes.any,
 };
 
 NumberRangeDisplay.defaultProps = {
-  showTime: true
+  lo: null,
+  hi: null,
 };

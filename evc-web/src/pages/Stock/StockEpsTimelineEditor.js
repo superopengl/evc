@@ -57,7 +57,8 @@ export const StockEpsTimelineEditor = (props) => {
     }
   }
 
-  const handleDeleteItem = async (item) => {
+  const handleDeleteItem = async (e, item) => {
+    e.stopPropagation();
     try {
       setLoading(true);
       await onDelete(item.id);
@@ -85,7 +86,7 @@ export const StockEpsTimelineEditor = (props) => {
             // style={{position: 'relative'}}
             // className={index <= 3 ? 'current-selected' : ''}
             className={getClassNameOnSelect(item)}
-            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
+            extra={<ConfirmDeleteButton onOk={e => handleDeleteItem(e, item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
               {item.id === publishedId ? <FlagFilled />

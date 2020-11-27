@@ -71,7 +71,7 @@ const HotStockList = (props) => {
       render: (text, item) => <>{item.supportLo} / {item.supportHi}</>
     },
     {
-      title: 'Pressure',
+      title: 'Resistance',
       render: (text, item) => <>{item.resistanceLo} / {item.resistanceHi}</>
     },
   ];

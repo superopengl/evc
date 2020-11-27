@@ -53,45 +53,41 @@ const StockList = (props) => {
     setLoading(setLoading);
   }, [data, search, propLoading]);
 
-  const columnDef = [
-    {
-      title: 'Stock',
-      // onFilter: (value, record) => record.name.includes(value),
-      render: (value, item) => <>
-        <Highlighter highlightClassName="search-highlighting" searchWords={[text]} autoEscape={false} textToHighlight={item.symbol} /><br />
-        <Text type="secondary"><small><Highlighter highlightClassName="search-highlighting" searchWords={[text]} autoEscape={false} textToHighlight={item.company} /></small></Text>
-      </>,
-    },
-    {
-      title: 'PE',
-      render: (text, item) => <>{item.peLo} - {item.peHi}</>
-    },
-    {
-      title: 'Value',
-      render: (text, item) => <>{item.value}</>
-    },
-    {
-      title: 'Support',
-      render: (text, item) => <>{item.supportPriceLo} - {item.supportPriceHi}</>
-    },
-    {
-      title: 'Pressure',
-      render: (text, item) => <>{item.pressurePriceLo} - {item.pressurePriceHi}</>
-    },
-    {
-      title: 'Last Updated',
-      dataIndex: 'createdAt',
-      render: (text) => {
-        return <TimeAgo value={text} accurate={false} />;
-      }
-    },
-    {
-      title: 'Status',
-      dataIndex: 'publised',
-      render: (value) => {
-        return value ? 'Published' : 'Saved'
-      }
-    },
+  // const columnDef = [
+  //   {
+  //     title: 'Stock',
+  //     // onFilter: (value, record) => record.name.includes(value),
+  //     render: (value, item) => <>
+  //       <Highlighter highlightClassName="search-highlighting" searchWords={[text]} autoEscape={false} textToHighlight={item.symbol} /><br />
+  //       <Text type="secondary"><small><Highlighter highlightClassName="search-highlighting" searchWords={[text]} autoEscape={false} textToHighlight={item.company} /></small></Text>
+  //     </>,
+  //   },
+  //   {
+  //     title: 'Value',
+  //   render: (text, item) => <>{item.valueLo} / {item.valueHi}</>
+  //   },
+  //   {
+  //     title: 'Support',
+  //     render: (text, item) => <>{item.supportLo} / {item.supportHi}</>
+  //   },
+  //   {
+  //     title: 'Resistance',
+  //     render: (text, item) => <>{item.resistanceLo} / {item.resistanceHi}</>
+  //   },
+  //   {
+  //     title: 'Last Updated',
+  //     dataIndex: 'createdAt',
+  //     render: (text) => {
+  //       return <TimeAgo value={text} accurate={false} />;
+  //     }
+  //   },
+  //   {
+  //     title: 'Status',
+  //     dataIndex: 'publised',
+  //     render: (value) => {
+  //       return value ? 'Published' : 'Saved'
+  //     }
+  //   },
     // {
     //   title: 'Action',
     //   render: (text, record) => (
@@ -105,7 +101,7 @@ const StockList = (props) => {
     //     </Space>
     //   ),
     // },
-  ];
+  // ];
 
   return (
     <List

@@ -19,6 +19,10 @@ import { StockTag } from '../entity/StockTag';
 import { searchStock } from '../utils/searchStock';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { Role } from '../types/Role';
+import { StockPublish } from '../entity/StockPublish';
+import { StockResistance } from '../entity/StockResistance';
+import { StockSupport } from '../entity/StockSupport';
+import { StockValue } from '../entity/StockValue';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -125,7 +129,7 @@ export const listStock = handlerWrapper(async (req, res) => {
 
 export const listHotStock = handlerWrapper(async (req, res) => {
   const { size } = req.query;
-  const limit = +size || 10;
+  const limit = +size || 6;
 
   const cacheKey = 'hotStockList';
   let list = getCache(cacheKey);
@@ -133,12 +137,29 @@ export const listHotStock = handlerWrapper(async (req, res) => {
     list = await getManager()
       .createQueryBuilder()
       .from(Stock, 's')
-      .innerJoin(q => q.from(StockSearch, 'h')
+      .leftJoin(q => q.from(StockSearch, 'h')
         .select('h.symbol, COUNT(1) AS count')
-        .groupBy('h.symbol')
-        .orderBy('count', 'DESC'), 'h', `s.symbol = h.symbol`
+        .groupBy('h.symbol'), 'h', `s.symbol = h.symbol`
       )
-      .select('*')
+      .innerJoin(q => q.from(StockPublish, 'pu')
+        .distinctOn(['pu.symbol'])
+        .orderBy('pu.symbol')
+        .addOrderBy('pu.createdAt', 'DESC'),
+        'pu', 'pu.symbol = s.symbol')
+      .innerJoin(StockSupport, 'ss', 'pu."supportId" = ss.id')
+      .innerJoin(StockResistance, 'sr', 'pu."resistanceId" = sr.id')
+      .innerJoin(StockValue, 'sv', 'pu."valueId" = sv.id')
+      .select([
+        's.*',
+        'pu."createdAt" as "publishedAt"',
+        'ss.lo as "supportLo"',
+        'ss.hi as "supportHi"',
+        'sr.lo as "resistanceLo"',
+        'sr.hi as "resistanceHi"',
+        'sv.lo as "valueLo"',
+        'sv.hi as "valueHi"',
+      ])
+      .orderBy(`h.count`, 'DESC')
       .limit(limit)
       .execute();
     setCache(cacheKey, list, 1);

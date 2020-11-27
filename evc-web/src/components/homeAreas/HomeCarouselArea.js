@@ -72,7 +72,8 @@ const SearchPanel = styled(Space)`
 background: rgba(255,255,255,0.4);
 padding: 20px;
 border-radius: 4px;
-margin: auto
+margin: auto;
+width: 90%;
 `;
 
 const LogoPlate = styled.div`
@@ -164,7 +165,7 @@ const HomeCarouselAreaRaw = props => {
                 traceSearch={true}
                  />
               <Text>most searched</Text>
-              <HotStockList size={10} />
+              <HotStockList size={6} />
             </SearchPanel>
           </Col>
         </Row>

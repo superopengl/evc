@@ -12,7 +12,7 @@ const { Paragraph, Text } = Typography;
 
 const StockInfoCard = (props) => {
 
-  const { value, onClick, ...other } = props;
+  const { value, onClick, hoverable, actions } = props;
 
   const [stock] = React.useState(value);
 
@@ -23,7 +23,8 @@ const StockInfoCard = (props) => {
     // bordered={false}
     title={<StockName value={stock} />}
     onClick={props.onClick}
-    {...other}
+    hoverable={hoverable}
+    actions={actions}
   >
     <Space direction="vertical" style={{ width: '100%' }}>
       <Row>

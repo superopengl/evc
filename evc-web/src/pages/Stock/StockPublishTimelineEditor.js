@@ -3,7 +3,7 @@ import React from 'react';
 import { Modal, Typography, Space, Button, Table, Popover, Alert } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined, FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined, PushpinOutlined, EllipsisOutlined, CheckOutlined, FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import MoneyAmount from 'components/MoneyAmount';
 import { NumberRangeInput } from 'components/NumberRangeInput';
@@ -60,7 +60,7 @@ export const StockPublishTimelineEditor = (props) => {
 
   const columnDef = [
     {
-      title: 'Published At',
+      title: <ClockCircleOutlined />,
       dataIndex: 'createdAt',
       render: (value, item) => <TimeAgo value={value} accurate={true} />
     },

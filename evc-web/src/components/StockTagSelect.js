@@ -178,6 +178,10 @@ const StockTagSelect = (props) => {
     loadEntity();
   }, []);
 
+  React.useEffect(() => {
+    const selectedOptions = options.filter(x => value.some(t => t.id === x.value));
+    setSelectedOptions(selectedOptions);
+  }, [value]);
 
   // const handleChange = selected => {
   //   setSelectedOptions(selected);

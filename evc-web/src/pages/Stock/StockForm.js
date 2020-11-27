@@ -14,7 +14,7 @@ import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 import {
-  deleteStock, getStock, saveStock,
+  deleteStock, getStock, updateStock,
   listStockSupport, saveStockSupport, deleteStockSupport,
   listStockResistance, saveStockResistance, deleteStockResistance,
   listStockPe, saveStockPe, deleteStockPe,
@@ -138,16 +138,16 @@ const StockForm = (props) => {
   }, []);
 
   const handleSaveForm = async (propName, e) => {
-    const newStock = {
+    const updatedStock = {
       ...stock,
       [propName]: e
     }
 
-    newStock.tags = newStock.tags.map(t => t.id || t);
+    updatedStock.tags = updatedStock.tags.map(t => t.id || t);
 
     try {
       setLoading(true);
-      await saveStock(newStock);
+      await updateStock(updatedStock);
       await loadEntity();
     } finally {
       setLoading(false);
@@ -469,9 +469,9 @@ const StockForm = (props) => {
         <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
           <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" onBlur={e => handleSaveForm('company', e.target.value)} />
         </Form.Item>
-        {/* <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
+        <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
           <StockTagSelect onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} />
-        </Form.Item> */}
+        </Form.Item>
       </Form>
     </Drawer>
   </Container >);

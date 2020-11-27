@@ -12,7 +12,7 @@ export const StockName = (props) => {
  const {symbol, company} = value;
 
   return (
-  <Text {...other}>{symbol} <Text type="secondary"><small>({company})</small></Text></Text>
+  <Text {...other}>{symbol} <Text type="secondary">({company})</Text></Text>
   );
 };
 

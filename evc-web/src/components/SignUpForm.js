@@ -42,6 +42,8 @@ const SignUpForm = (props) => {
         '🎉 Successfully signed up!',
         <>Congratulations and thank you very much for signing up Easy Value Check. The invitation email has been sent out to <Text strong>{values.email}</Text>.</>
       );
+    } catch {
+      // Ignore error which will be handled by the http service.
     } finally {
       setSending(false);
     }

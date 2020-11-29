@@ -5,15 +5,9 @@ import * as _ from 'lodash';
 export function sanitizeUser(user: User) {
   return _.pick(user, [
     'id',
-    'email',
-    'givenName',
-    'surname',
     'role',
     'lastLoggedInAt',
-    'country',
-    'locale',
-    'status',
     'loginType',
-    'subscribedSymbols'
+    'profile'
   ]);
 }

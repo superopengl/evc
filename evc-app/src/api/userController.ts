@@ -1,5 +1,5 @@
 
-import { getRepository, Not } from 'typeorm';
+import { getRepository, IsNull, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Portfolio } from '../entity/Portfolio';
 import { User } from '../entity/User';
@@ -59,10 +59,10 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   Object.assign(user, req.body);
 
   const newEmail = email?.trim().toLowerCase();
-  const hasEmailChange = newEmail && user.email.toLowerCase() !== newEmail;
+  const hasEmailChange = newEmail && user.emailHash.toLowerCase() !== newEmail;
   if (hasEmailChange) {
-    assert(user.email !== 'system@easyvaluecheck.com', 400, 'Cannot change the email for the builtin admin');
-    user.email = newEmail;
+    assert(user.emailHash !== 'system@easyvaluecheck.com', 400, 'Cannot change the email for the builtin admin');
+    user.emailHash = newEmail;
     await handleInviteUser(user);
   } else {
     await repo.save(user);
@@ -86,7 +86,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
 
   let query = getRepository(User)
     .createQueryBuilder('u')
-    .where(`u.status != :status`, { status: UserStatus.Disabled });
+    .where({ deletedAt: IsNull() });
 
   if (text) {
     query = query.andWhere(`(u.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text)`, { text: `%${text}%` })
@@ -136,14 +136,14 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   const { id } = req.params;
 
   const repo = getRepository(User);
-  const user = await repo.findOne({ id, email: Not('system@easyvaluecheck.com') });
+  const user = await repo.findOne({ id, emailHash: Not('system@easyvaluecheck.com') });
 
   if (user) {
     await getRepository(Portfolio).update({ userId: id }, { deleted: true });
     await getRepository(Task).update({ userId: id }, { status: TaskStatus.ARCHIVE });
     await repo.delete(id);
     await sendEmail({
-      to: user.email,
+      to: user.emailHash,
       template: 'deleteUser',
       vars: {
         toWhom: getEmailRecipientName(user),

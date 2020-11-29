@@ -1,5 +1,5 @@
 
-import { getRepository, getConnection } from 'typeorm';
+import { getRepository, getConnection, Not } from 'typeorm';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
@@ -17,30 +17,18 @@ import { logUserLogin } from '../utils/loginLog';
 import { sanitizeUser } from '../utils/sanitizeUser';
 import { createReferral } from './accountController';
 import { createInitialFreeSubscription } from './subscriptionController';
+import { computeEmailHash } from '../utils/computeEmailHash';
+import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
   res.json(user || null);
 });
 
-async function getLoginUser(email) {
-  const repo = getRepository(User);
-  const user = await repo
-    .createQueryBuilder()
-    .where(
-      'LOWER(email) = LOWER(:email) AND status != :status',
-      {
-        email,
-        status: UserStatus.Disabled
-      })
-    .getOne();
-  return user;
-}
-
 export const login = handlerWrapper(async (req, res) => {
   const { name, password } = req.body;
 
-  const user = await getLoginUser(name);
+  const user = await getActiveUserByEmail(name);
 
   assert(user, 400, 'User or password is not valid');
 
@@ -76,7 +64,7 @@ function createUserEntity(email, password, role): User {
 
   const user = new User();
   user.id = id;
-  user.email = email.toLowerCase();
+  user.emailHash = computeEmailHash(email);
   user.secret = computeUserSecret(password, salt);
   user.salt = salt;
   user.role = role;
@@ -114,7 +102,7 @@ export const signup = handlerWrapper(async (req, res) => {
     role: 'client'
   });
 
-  const { id, email, resetPasswordToken } = user;
+  const { id, emailHash: email, resetPasswordToken } = user;
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
@@ -144,7 +132,7 @@ async function setUserToResetPasswordStatus(user: User) {
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
-    to: user.email,
+    to: user.profile.email,
     template: 'resetPassword',
     vars: {
       toWhom: getEmailRecipientName(user),
@@ -157,9 +145,8 @@ async function setUserToResetPasswordStatus(user: User) {
 }
 
 export const forgotPassword = handlerWrapper(async (req, res) => {
-  const email = req.body.email.toLowerCase();
-  const userRepo = getRepository(User);
-  const user = await userRepo.findOne({ email });
+  const { email } = req.body;
+  const user = await getActiveUserByEmail(email);
   if (!user) {
     res.json();
     return;
@@ -213,7 +200,7 @@ export const impersonate = handlerWrapper(async (req, res) => {
   const { email } = req.body;
   assert(email, 400, 'Invalid email');
 
-  const user = await getLoginUser(email);
+  const user = await getActiveUserByEmail(email);
 
   assert(user, 404, 'User not found');
 
@@ -222,18 +209,19 @@ export const impersonate = handlerWrapper(async (req, res) => {
   res.json(sanitizeUser(user));
 });
 
-export const handleInviteUser = async user => {
+export const handleInviteUser = async (user: User) => {
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const email = user.profile.email;
   await sendEmail({
-    to: user.email,
+    to: email,
     template: 'inviteUser',
     vars: {
       toWhom: getEmailRecipientName(user),
-      email: user.email,
+      email,
       url
     },
     shouldBcc: false
@@ -245,9 +233,8 @@ export const handleInviteUser = async user => {
 export const inviteUser = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { email, role } = req.body;
-  assert(email, 400, 'Invalid email');
 
-  const existingUser = await getLoginUser(email);
+  const existingUser = await getActiveUserByEmail(email);
   assert(!existingUser, 400, 'User exists');
 
   const user = createUserEntity(email, uuidv4(), role || 'client');

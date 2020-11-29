@@ -65,6 +65,7 @@
     "serialize-error": "^7.0.1",
     "swagger-routes-express": "^3.1.2",
     "typeorm": "^0.2.25",
+    "typeorm-plus": "^0.1.2",
     "ua-parser-js": "^0.7.22",
     "uuid": "^8.3.0",
     "ws": "^7.3.1",

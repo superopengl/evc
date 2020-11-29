@@ -10,7 +10,7 @@ export async function sendArchiveEmail(task: Task) {
   const { id: taskId, name: taskName, forWhom } = task;
 
   await sendEmail({
-    to: user.email,
+    to: user.emailHash,
     template: 'taskArchived',
     vars: {
       toWhom: getEmailRecipientName(user),

@@ -19,7 +19,7 @@ export async function sendCompletedEmail(task: Task) {
     undefined;
 
   await sendEmail({
-    to: user.email,
+    to: user.emailHash,
     template: 'taskComplete',
     vars: {
       toWhom: getEmailRecipientName(user),

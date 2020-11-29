@@ -1,10 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
+import { DeleteDateColumn } from 'typeorm-plus'
+import { UserProfile } from './UserProfile';
 
 
 @Entity()
-@Index('user_email_unique', { synchronize: false })
+@Index('user_email_hash_unique', { synchronize: false })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -18,25 +20,8 @@ export class User {
    * as TypeOrm doesn't support case insensitive index.
    */
   @Column()
-  email!: string;
+  emailHash!: string;
 
-  @Column({ nullable: true })
-  givenName: string;
-
-  @Column({ nullable: true })
-  surname: string;
-
-  @Column({ nullable: true })
-  phone: string;
-
-  @Column({ nullable: true })
-  address: string;
-
-  @Column({ default: '' })
-  country: string;
-
-  @Column({ default: 'en-US' })
-  locale: string;
 
   @Column({ default: 'local' })
   loginType: string;
@@ -64,8 +49,12 @@ export class User {
   @Column({ type: 'uuid', nullable: true })
   resetPasswordToken?: string;
 
-  @Column('uuid', { nullable: true })
-  @Index()
-  referralCode: string;
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @OneToOne(() => UserProfile)
+  @JoinColumn()
+  profile: UserProfile;
 }
+
 

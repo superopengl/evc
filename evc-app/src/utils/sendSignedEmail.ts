@@ -19,7 +19,7 @@ export async function sendSignedEmail(task: Task) {
     undefined;
 
   await sendEmail({
-    to: user.email,
+    to: user.emailHash,
     template: 'taskSigned',
     vars: {
       toWhom: getEmailRecipientName(user),

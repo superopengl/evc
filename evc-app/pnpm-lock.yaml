@@ -33,6 +33,7 @@ dependencies:
   serialize-error: 7.0.1
   swagger-routes-express: 3.2.1
   typeorm: 0.2.25
+  typeorm-plus: 0.1.2
   ua-parser-js: 0.7.22
   uuid: 8.3.0
   ws: 7.3.1
@@ -567,6 +568,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==
+  /base64-js/1.5.1:
+    dev: false
+    resolution:
+      integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
   /binary-extensions/2.1.0:
     engines:
       node: '>=8'
@@ -687,6 +692,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-/gDYp/UtU0eA1ys8bOs9J6a+E/KWIY+DZ+Q2WESNUA0jFRsJOc0SNUO6xJ5SGA1xueg3NL65W6s+NY5l9cunuw==
+  /buffer/5.7.1:
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+    dev: false
+    resolution:
+      integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
   /builtin-modules/1.1.1:
     dev: true
     engines:
@@ -821,6 +833,15 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-N9oWFcegS0sFr9oh1oz2d7Npos6vNoWW9HvtCg5N1KRFpUhaAhvTv5Y58g880fZaEYSNm3qDz8SU1UrGvp+n7A==
+  /chalk/4.1.0:
+    dependencies:
+      ansi-styles: 4.3.0
+      supports-color: 7.2.0
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-qwx12AxXe2Q5xQ43Ac//I6v5aXTipYrSESdOgzrN+9XjgEpyjpKuvSGaN4qE93f7TQTlerQQ8S+EQ0EyDoVL1A==
   /character-parser/2.2.0:
     dependencies:
       is-regex: 1.1.1
@@ -932,6 +953,21 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-s7Zofobm20qriqDoU9sXptQx0t2R9PEgac92mENNm7xaEe1hn71IIMsXMK+6encA6WRCWWxIGQbipr3q998tlQ==
+  /cli-highlight/2.1.8:
+    dependencies:
+      chalk: 4.1.0
+      highlight.js: 10.4.0
+      mz: 2.7.0
+      parse5: 5.1.1
+      parse5-htmlparser2-tree-adapter: 6.0.1
+      yargs: 15.4.1
+    dev: false
+    engines:
+      node: '>=8.0.0'
+      npm: '>=5.0.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-mFuTW5UOV3/S0wZE9/1b0EcAM0XOJIhoAWPhWm5voiJ6ugVBkvYBIEL7sbHo9sEtWdEmwDIWab32qpaRI3cfqQ==
   /cli-truncate/0.2.1:
     dependencies:
       slice-ansi: 0.0.4
@@ -1234,6 +1270,19 @@ packages:
         optional: true
     resolution:
       integrity: sha512-IX2ncY78vDTjZMFUdmsvIRFY2Cf4FnD0wRs+nQwJU8Lu99/tPFdb0VybiiMTPe3I6rQmwsqQqRBvxU+bZ/I8sg==
+  /debug/4.3.1:
+    dependencies:
+      ms: 2.1.2
+    dev: false
+    engines:
+      node: '>=6.0'
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    resolution:
+      integrity: sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
   /decamelize-keys/1.1.0:
     dependencies:
       decamelize: 1.2.0
@@ -2049,6 +2098,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-9FG7SSzv9yOY5CGGxfI6NDm7xLYtMOjKtPBxw7Zff3t5UcRcUNTGEeS8lNjhceL34KeetLMoGMFTGoaa83HwyQ==
+  /highlight.js/10.4.0:
+    dev: false
+    resolution:
+      integrity: sha512-EfrUGcQ63oLJbj0J0RI9ebX6TAITbsDBLbsjr881L/X5fMO9+oadKzEF21C7R3ULKG6Gv3uoab2HiqVJa/4+oA==
   /highlight.js/9.18.3:
     dev: false
     resolution:
@@ -2190,6 +2243,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
+  /ieee754/1.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
   /ignore-by-default/1.0.1:
     dev: true
     resolution:
@@ -3456,6 +3513,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-CF+TKjXqoqyDwHqBhFQ+3l5t83xYi6fVT1tQNg+Ye0JRLnTxWvIroCjEp1A0k4lneHNBGnICUf0cfYVYGEazqw==
+  /parse5-htmlparser2-tree-adapter/6.0.1:
+    dependencies:
+      parse5: 6.0.1
+    dev: false
+    resolution:
+      integrity: sha512-qPuWvbLgvDGilKc5BoicRovlT4MtYT6JfJyBOMDsKoiT+GiuP5qyrPCnR9HcPECIJJmZh5jRndyNThnhhb/vlA==
   /parse5/3.0.3:
     dependencies:
       '@types/node': 14.11.8
@@ -3466,6 +3529,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ugq4DFI0Ptb+WWjAdOK16+u/nHfiIrcE+sh8kZMaM0WllQKLI9rOUq6c2b7cwPkXdzfQESqvoqK6ug7U/Yyzug==
+  /parse5/6.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==
   /parseurl/1.3.3:
     dev: false
     engines:
@@ -4842,6 +4909,27 @@ packages:
     dev: true
     resolution:
       integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
+  /typeorm-plus/0.1.2:
+    dependencies:
+      app-root-path: 3.0.0
+      buffer: 5.7.1
+      chalk: 2.4.2
+      cli-highlight: 2.1.8
+      debug: 4.3.1
+      dotenv: 6.2.0
+      glob: 7.1.6
+      js-yaml: 3.14.0
+      mkdirp: 1.0.4
+      reflect-metadata: 0.1.13
+      sha.js: 2.4.11
+      tslib: 1.14.1
+      xml2js: 0.4.23
+      yargonaut: 1.1.4
+      yargs: 13.3.2
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-MHEgxUQZCBnogOx5ug0iu6Q/1xc/caLtdk7iENGaEkjRpHOlxIxv5dQejuzip7k7WlUhxm7e6gXI1E4LS5lcvw==
   /typeorm/0.2.25:
     dependencies:
       app-root-path: 3.0.0
@@ -5134,7 +5222,7 @@ packages:
       integrity: sha512-QC1/iN/2/RPVJ5jYK8BGttj5z83LmSKmvbvrXPNCLZSEb32KKVDJDl/MOt2N01qU2H/FkzEa9PKto1BqDjtd7Q==
   /wrap-ansi/6.2.0:
     dependencies:
-      ansi-styles: 4.2.1
+      ansi-styles: 4.3.0
       string-width: 4.2.0
       strip-ansi: 6.0.0
     dev: false
@@ -5344,6 +5432,7 @@ specifiers:
   ts-node: ^8.10.2
   tslint: ^6.1.2
   typeorm: ^0.2.25
+  typeorm-plus: ^0.1.2
   typescript: ^3.9.3
   ua-parser-js: ^0.7.22
   uuid: ^8.3.0

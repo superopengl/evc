@@ -1,7 +1,7 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
 import { StockResistanceShort } from './StockResistanceShort';
 import { StockSupportShort } from './StockSupportShort';
-import { StockValue } from './StockValue';
+import { StockFairValue } from './StockFairValue';
 import { Stock } from './Stock';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
@@ -38,35 +38,65 @@ export class StockPublish {
   resistanceLongId: string;
 
   @Column('uuid')
-  valueId: string;
+  fairValueId: string;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
-  valueLo: number;
-
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
-  valueHi: number;
-
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   supportShortLo: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('int2', { default: 0 })
+  supportShortLoTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   supportShortHi: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('int2', { default: 0 })
+  supportShortHiTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   supportLongLo: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('int2', { default: 0 })
+  supportLongLoTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   supportLongHi: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('int2', { default: 0 })
+  supportLongHiTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   resistanceShortLo: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('int2', { default: 0 })
+  resistanceShortLoTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   resistanceShortHi: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('int2', { default: 0 })
+  resistanceShortHiTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   resistanceLongLo: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('int2', { default: 0 })
+  resistanceLongLoTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   resistanceLongHi: number;
+
+  @Column('int2', { default: 0 })
+  resistanceLongHiTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
+  fairValueLo: number;
+
+  @Column('int2', { default: 0 })
+  fairValueLoTrend: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
+  fairValueHi: number;
+
+  @Column('int2', { default: 0 })
+  fairValueHiTrend: number;
 }

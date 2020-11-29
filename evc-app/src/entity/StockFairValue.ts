@@ -8,7 +8,7 @@ import { StockPe } from './StockPe';
 
 @Entity()
 @Index(['symbol', 'createdAt'])
-export class StockValue {
+export class StockFairValue {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
@@ -27,11 +27,11 @@ export class StockValue {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   hi: number;
 
-  @Column({nullable: true})
-  loTrend: boolean;
+  @Column('int2', { default: 0 })
+  loTrend: number;
 
-  @Column({nullable: true})
-  hiTrend: boolean;
+  @Column('int2', { default: 0 })
+  hiTrend: number;
 
   @Column({ default: false })
   special: boolean;
@@ -41,4 +41,7 @@ export class StockValue {
 
   @Column('uuid')
   peId: string;
+
+  @Column({default: false})
+  published: boolean;
 }

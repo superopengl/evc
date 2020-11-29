@@ -955,7 +955,7 @@ paths:
           description: OK
   /stock/s/{symbol}/value:
     get:
-      operationId: getStockValue
+      operationId: getStockFairValue
       parameters:
         - name: symbol
           in: path
@@ -965,7 +965,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: saveStockValue
+      operationId: saveStockFairValue
       parameters:
         - name: symbol
           in: path
@@ -1069,7 +1069,7 @@ paths:
           description: OK
   /stock/value/{id}:
     delete:
-      operationId: deleteStockValue
+      operationId: deleteStockFairValue
       parameters:
         - name: id
           in: path

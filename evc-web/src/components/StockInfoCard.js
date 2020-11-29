@@ -28,40 +28,40 @@ const StockInfoCard = (props) => {
     >
       <Space direction="vertical" style={{ width: '100%' }}>
         <Row>
-          <Col span={12}>
+          <Col span={10}>
             <Text type="secondary">Resistance</Text>
           </Col>
-          <Col span={12}>
+          <Col span={14}>
             <Space size="small" direction="vertical">
-              <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} />
-              <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} />
+              <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} loTrend={stock.resistanceShortLoTrend} hiTrend={stock.resistanceShortHiTrend} />
+              <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} loTrend={stock.resistanceLongLoTrend} hiTrend={stock.resistanceLongHiTrend}  />
             </Space>
           </Col>
         </Row>
         <Row>
-          <Col span={12}>
+          <Col span={10}>
             <Text type="secondary">Value</Text>
           </Col>
-          <Col span={12}>
-            <NumberRangeDisplay lo={stock.valueLo} hi={stock.valueHi} />
+          <Col span={14}>
+            <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} loTrend={stock.fairValueLoTrend} hiTrend={stock.fairValueHiTrend}/>
           </Col>
         </Row>
         <Row>
-          <Col span={12}>
+          <Col span={10}>
             <Text type="secondary">Support</Text>
           </Col>
-          <Col span={12}>
+          <Col span={14}>
             <Space size="small" direction="vertical">
-            <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} />
-            <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} />
+            <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} loTrend={stock.supportShortLoTrend} hiTrend={stock.supportShortHiTrend} />
+            <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} loTrend={stock.supportLongLoTrend} hiTrend={stock.supportLongHiTrend}/>
             </Space>
           </Col>
         </Row>
         <Row>
-          <Col span={12}>
+          <Col span={10}>
             <Text type="secondary">Published</Text>
           </Col>
-          <Col span={12}>
+          <Col span={14}>
             <TimeAgo value={stock.publishedAt} accurate={true} />
           </Col>
         </Row>

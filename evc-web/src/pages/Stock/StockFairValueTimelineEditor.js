@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 
 
-export const StockValueTimelineEditor = (props) => {
+export const StockFairValueTimelineEditor = (props) => {
   const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, showTime, sourceEps, sourcePe } = props;
   const [disabled, setDisabled] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
@@ -125,7 +125,7 @@ export const StockValueTimelineEditor = (props) => {
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             <List.Item.Meta
-              description={<NumberRangeDisplay lo={item.lo} hi={item.hi} time={item.createdAt} />}
+              description={<NumberRangeDisplay lo={item.lo} hi={item.hi} loTrend={item.loTrend} hiTrend={item.hiTrend} time={item.createdAt} />}
             />
             {item.special ? <Tag color="gold">special</Tag> : <Tag color="blue">computed</Tag>}
           </List.Item>
@@ -135,7 +135,7 @@ export const StockValueTimelineEditor = (props) => {
   </Container>
 }
 
-StockValueTimelineEditor.propTypes = {
+StockFairValueTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
   onChange: PropTypes.func,
@@ -147,7 +147,7 @@ StockValueTimelineEditor.propTypes = {
   sourcePe: PropTypes.array.isRequired,
 };
 
-StockValueTimelineEditor.defaultProps = {
+StockFairValueTimelineEditor.defaultProps = {
   showTime: true,
   onChange: () => { },
   onDelete: () => { },

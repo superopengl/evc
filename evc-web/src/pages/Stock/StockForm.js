@@ -21,7 +21,7 @@ import {
   listStockResistanceLong, saveStockResistanceLong, deleteStockResistanceLong,
   listStockPe, saveStockPe, deleteStockPe,
   listStockEps, saveStockEps, deleteStockEps,
-  listStockValue, saveStockValue, deleteStockValue,
+  listStockFairValue, saveStockFairValue, deleteStockFairValue,
   listStockPublish, saveStockPublish,
 } from 'services/stockService';
 import { Loading } from 'components/Loading';
@@ -32,7 +32,7 @@ import { Divider } from 'antd';
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, SaveOutlined, SyncOutlined } from '@ant-design/icons';
 import { StockRangeTimelineEditor } from './StockRangeTimelineEditor';
 import { StockEpsTimelineEditor } from './StockEpsTimelineEditor';
-import { StockValueTimelineEditor } from './StockValueTimelineEditor';
+import { StockFairValueTimelineEditor } from './StockFairValueTimelineEditor';
 import { StockPublishTimelineEditor } from './StockPublishTimelineEditor';
 import { PageHeader } from 'antd';
 import { Select } from 'antd';
@@ -107,7 +107,7 @@ const DEFAULT_SELECTED = {
   resistanceLongId: null,
   supportShortId: null,
   supportLongId: null,
-  valueId: null,
+  fairValueId: null,
   epsIds: [],
   epId: null,
 };
@@ -209,7 +209,7 @@ const StockForm = (props) => {
         supportLongId: supportLongList[0].id,
         resistanceShortId: resistanceShortList[0].id,
         resistanceLongId: resistanceLongList[0].id,
-        valueId: valueList[0].id
+        fairValueId: valueList[0].id
       };
       await saveStockPublish(symbol, payload);
     } finally {
@@ -250,7 +250,7 @@ const StockForm = (props) => {
       switch (selected.source) {
         case 'value':
         case 'publish':
-          return item.id === selected.valueId;
+          return item.id === selected.fairValueId;
         case 'pe':
           return item.peId === selected.peId;
         case 'eps':
@@ -267,7 +267,7 @@ const StockForm = (props) => {
     setSelected({
       ...DEFAULT_SELECTED,
       source: 'value',
-      valueId: item.id,
+      fairValueId: item.id,
       epsIds: item.epsIds,
       peId: item.peId
     });
@@ -322,7 +322,7 @@ const StockForm = (props) => {
   }
 
   const updateSelectedByPublish = (item) => {
-    const value = valueList.find(x => x.id === item.valueId);
+    const value = valueList.find(x => x.id === item.fairValueId);
     setSelected({
       ...DEFAULT_SELECTED,
       source: 'publish',
@@ -331,7 +331,7 @@ const StockForm = (props) => {
       supportLongId: item.supportLongId,
       resistanceShortId: item.resistanceShortId,
       resistanceLongId: item.resistanceLongId,
-      valueId: item.valueId,
+      fairValueId: item.fairValueId,
       peId: value.peId,
       epsIds: value.epsIds
     });
@@ -354,7 +354,7 @@ const StockForm = (props) => {
         case 'value':
         case 'eps':
         case 'pe':
-          return item.valueId === selected.valueId;
+          return item.fairValueId === selected.fairValueId;
         default:
       }
 
@@ -403,10 +403,10 @@ const StockForm = (props) => {
       </ColStyled>
       <ColStyled {...span}>
         <ColInnerCard title="Fair Value">
-          <StockValueTimelineEditor
-            onLoadList={() => listStockValue(symbol)}
-            onSaveNew={payload => saveStockValue(symbol, payload)}
-            onDelete={id => deleteStockValue(id)}
+          <StockFairValueTimelineEditor
+            onLoadList={() => listStockFairValue(symbol)}
+            onSaveNew={payload => saveStockFairValue(symbol, payload)}
+            onDelete={id => deleteStockFairValue(id)}
             onChange={list => setValueList(list)}
             sourceEps={epsList}
             sourcePe={peList}

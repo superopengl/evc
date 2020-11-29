@@ -127,15 +127,15 @@ export async function deleteStockPe(id) {
   return httpDelete(`stock/pe/${id}`);
 }
 
-export async function listStockValue(symbol) {
+export async function listStockFairValue(symbol) {
   return httpGet(`stock/s/${symbol}/value`);
 }
 
-export async function saveStockValue(symbol, payload) {
+export async function saveStockFairValue(symbol, payload) {
   return httpPost(`stock/s/${symbol}/value`, payload);
 }
 
-export async function deleteStockValue(id) {
+export async function deleteStockFairValue(id) {
   return httpDelete(`stock/value/${id}`);
 }
 

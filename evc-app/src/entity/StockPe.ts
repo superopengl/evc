@@ -1,7 +1,7 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, OneToMany } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
-import { StockValue } from './StockValue';
+import { StockFairValue } from './StockFairValue';
 
 
 @Entity()
@@ -23,9 +23,15 @@ export class StockPe {
   @Column('uuid')
   author: string;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   lo: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   hi: number;
+
+  @Column('int2', { default: 0 })
+  loTrend: number;
+
+  @Column('int2', { default: 0 })
+  hiTrend: number;
 }

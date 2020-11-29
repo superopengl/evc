@@ -67,20 +67,20 @@ export const StockPublishTimelineEditor = (props) => {
     {
       title: 'Support (short)',
       render: (value, item) => <Space size="small" direction="vertical">
-      <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi}/>
-      <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi}/>
+      <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi} loTrend={item.supportShortLoTrend} hiTrend={item.supportShortHiTrend}/>
+      <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi} loTrend={item.supportLongLoTrend} hiTrend={item.supportLongHiTrend}/>
       </Space>
     },
     {
       title: 'Resistance (short)',
       render: (value, item) =>  <Space size="small" direction="vertical">
-        <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} />
-        <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi} />
+        <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} loTrend={item.resistanceShortLoTrend} hiTrend={item.resistanceShortHiTrend}/>
+        <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi}  loTrend={item.resistanceLongLoTrend} hiTrend={item.resistanceLongHiTrend}/>
         </Space>
     },
     {
       title: 'Value',
-      render: (value, item) => <NumberRangeDisplay lo={item.valueLo} hi={item.valueHi} />
+      render: (value, item) => <NumberRangeDisplay lo={item.fairValueLo} hi={item.fairValueHi} loTrend={item.fairValueLoTrend} hiTrend={item.fairValueHiTrend} />
     },
   ];
 

@@ -15,6 +15,7 @@ import { handleInviteUser } from './authController';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
+import { attachJwtCookie } from '../utils/jwt';
 
 export const getProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -66,6 +67,8 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   } else {
     await repo.save(user);
   }
+
+  attachJwtCookie(user, res);
 
   res.json();
 });

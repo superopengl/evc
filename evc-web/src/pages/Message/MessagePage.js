@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Space } from 'antd';
 import HomeHeader from 'components/HomeHeader';
-import { listMessages } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import MessageList from '../../components/MessageList';
 
@@ -43,7 +42,7 @@ const MessagePage = () => {
 
 
   const handleFetchNextPage = async (page, size) => {
-    return await listMessages({page, size, unreadOnly: false});
+    // return await listMessages({page, size, unreadOnly: false});
   }
 
   return (

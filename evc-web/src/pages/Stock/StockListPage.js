@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Space, Button, Input, Form, Modal } from 'antd';
 import HomeHeader from 'components/HomeHeader';
-import { listMessages } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
 import { createStock, searchStock } from 'services/stockService';

@@ -8,11 +8,7 @@ export async function getActiveUserByEmail(email) {
   assert(email, 400, 'Invalid email');
   const emailHash = computeEmailHash(email);
   const user = await getRepository(User).findOne({
-    where: {
-      emailHash,
-      deletedAt: IsNull()
-    },
-    relations: ['profile']
-  });
+    emailHash
+  }, { relations: ['profile'] });
   return user;
 }

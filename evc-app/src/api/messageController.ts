@@ -1,6 +1,5 @@
 
 import { getRepository, IsNull, getManager } from 'typeorm';
-import { Task } from '../entity/Task';
 import { Message } from '../entity/Message';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -17,7 +16,6 @@ async function listMessageForClient(clientId, pagenation, unreadOnly) {
       .addOrderBy('"createdAt"', 'DESC')
       .distinctOn(['"taskId"'])
     , 'x')
-    .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
     .offset(pagenation.skip)
     .limit(pagenation.limit)
     .select([
@@ -35,33 +33,6 @@ async function listMessageForClient(clientId, pagenation, unreadOnly) {
   return list;
 }
 
-async function listMessageForAgent(agentId, pagenation, unreadOnly) {
-  const query =  getManager()
-  .createQueryBuilder()
-  .select('*')
-  .from(q => q.from(Message, 'x')
-    .where(`"agentUserId" = :id`, { id: agentId })
-    .andWhere(unreadOnly ? `"readAt" IS NULL` : '1 = 1')
-    .orderBy('"taskId"')
-    .addOrderBy('"createdAt"', 'DESC')
-    .distinctOn(['"taskId"'])
-  , 'x')
-  .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
-  .offset(pagenation.skip)
-  .limit(pagenation.limit)
-  .select([
-    'x.id as id',
-    'x."taskId" as "taskId"',
-    'x."createdAt" as "createdAt"',
-    'l.id as "taskId"',
-    'l."forWhom" as "forWhom"',
-    'l.name as name',
-    'content',
-    '"readAt"'
-  ]);
-  const list = await query.execute();
-  return list;
-}
 
 async function listMessageForAdmin(pagenation, unreadOnly) {
   const query = getManager()
@@ -73,7 +44,6 @@ async function listMessageForAdmin(pagenation, unreadOnly) {
       .addOrderBy('"createdAt"', 'DESC')
       .distinctOn(['"taskId"'])
     , 'x')
-    .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x."taskId"`)
     .offset(pagenation.skip)
     .limit(pagenation.limit)
     .select([
@@ -132,7 +102,6 @@ export const getMessage = handlerWrapper(async (req, res) => {
 
   const result = await repo.createQueryBuilder('x')
     .where(query)
-    .innerJoin(q => q.from(Task, 'l').select('*'), 'l', `l.id = x.taskId`)
     .select([
       `x.id as id`,
       `x.content as content`,

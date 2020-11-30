@@ -163,14 +163,7 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 
 export const searchStockList = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { page, size } = req.body;
-  const query = Object.assign(
-    {},
-    req.body,
-    {
-      skip: (+page - 1) * +size,
-      limit: +size,
-    }) as StockSearchParams;
+  const query = req.body as StockSearchParams;
 
   const list = await searchStock(query);
 
@@ -185,7 +178,6 @@ export const createStock = handlerWrapper(async (req, res) => {
 
   Object.assign(stock, other);
   stock.symbol = stock.symbol.toUpperCase();
-  stock.by = userId;
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({ id: In(tags) });
   }
@@ -205,7 +197,6 @@ export const updateStock = handlerWrapper(async (req, res) => {
 
   assert(stock, 404);
   Object.assign(stock, other);
-  stock.by = userId;
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({ id: In(tags) });
   }

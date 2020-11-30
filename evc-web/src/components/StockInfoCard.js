@@ -14,7 +14,11 @@ const StockInfoCard = (props) => {
 
   const { value, onClick, hoverable, actions } = props;
 
-  const [stock] = React.useState(value);
+  const [stock, setStock] = React.useState(value);
+
+  React.useEffect(() => {
+    setStock(value);
+  }, [value]);
 
   return (
     <Card

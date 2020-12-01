@@ -9,7 +9,7 @@
     "start:prod": "npm run link-web && npm run build && TZ=utc node index.js",
     "start": "TZ=utc ts-node index.ts",
     "dev": "npm run clean && nodemon -w src --ext ts --exec npm start",
-    "dev:symbols": "TZ=utc ts-node endpoints/index-symbols.ts",
+    "dev:symbols": "TZ=utc ts-node -e 'import {start} from \"./endpoints/index-symbols\"; start()'",
     "build": "npm run lint && npm run clean && npm run compile",
     "build:prod": "rm -rf www && npm run compile",
     "clean": "ts-clean && rm -rf www",

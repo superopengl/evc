@@ -18,7 +18,7 @@ async function updateDatabase(stockList) {
   return await getManager().query(sql);
 }
 
-export const execute = async () => {
+export const start = async () => {
   let connection: Connection = null;
   try {
     connection = await connectDatabase();
@@ -33,6 +33,4 @@ export const execute = async () => {
       connection.close();
     }
   }
-}
-
-execute();
+};

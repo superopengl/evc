@@ -15,7 +15,6 @@ import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { Subscription } from '../entity/Subscription';
 import { Subject } from 'rxjs';
-import { RedisPubSubService } from '../services/RedisPubSubService';
 import { redisCache } from '../services/redisCache';
 import { ReferralCode } from '../entity/ReferralCode';
 import { getUserSubscription } from '../utils/getUserSubscription';

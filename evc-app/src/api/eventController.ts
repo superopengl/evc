@@ -15,11 +15,12 @@ import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { Subscription } from '../entity/Subscription';
 import { Subject } from 'rxjs';
-import { RedisPubSubService } from '../services/RedisPubSubService';
+import { RedisRealtimePricePubService, RedisRealtimePriceSubService, RedisSubService } from '../services/RedisPubSubService';
 import { redisCache } from '../services/redisCache';
 
 const isProd = process.env.NODE_ENV === 'prod';
-const eventService = new RedisPubSubService('price');
+const subscriber = new RedisRealtimePriceSubService();
+const publisher = new RedisRealtimePricePubService();
 
 export const subscribeEvent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
@@ -40,7 +41,7 @@ export const subscribeEvent = handlerWrapper(async (req, res) => {
   // });
   // res.flushHeaders();
 
-  const channel$ = eventService.subscribe(data => {
+  const channel$ = subscriber.subscribe(data => {
     res.write(`data: ${data}\n\n`);
     (res as any).flush();
   });
@@ -55,7 +56,7 @@ export const publishEvent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const event = req.body;
 
-  eventService.publish(event);
+  publisher.publish(event);
 
   res.json();
 });

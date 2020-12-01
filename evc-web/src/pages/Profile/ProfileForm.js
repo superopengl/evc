@@ -45,8 +45,8 @@ const LayoutStyled = styled(Layout)`
 const ProfileForm = (props) => {
   const { user, initial, onOk } = props;
   const [sending, setSending] = React.useState(false);
+  const [profile] = React.useState(user.profile || user);
 
-  console.log('profile', user);
   const handleSave = async (values) => {
     if (sending) {
       return;
@@ -59,17 +59,17 @@ const ProfileForm = (props) => {
 
       notify.success('Successfully saved profile!')
 
-      Object.assign(user.profile, values);
+      Object.assign(profile, values);
       onOk(user);
     } finally {
       setSending(false);
     }
   }
 
-  const isBuiltinAdmin = user.profile.email === 'system@easyvaluecheck.com';
+  const isBuiltinAdmin = profile.email === 'system@easyvaluecheck.com';
 
   return (
-    <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user.profile}>
+    <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={profile}>
       {!initial && <Form.Item
         label="Email"
         name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>

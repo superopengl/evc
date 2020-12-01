@@ -20,6 +20,7 @@ import { createInitialFreeSubscription } from './subscriptionController';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
+import { ReferralCode } from '../entity/ReferralCode';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -57,7 +58,7 @@ export const logout = handlerWrapper(async (req, res) => {
 
 
 function createUserAndProfileEntity(payload): { user: User, profile: UserProfile } {
-  const { email, password, role, ...other } = payload;
+  const { email, password, role, referralCode, ...other } = payload;
   const thePassword = password || uuidv4();
   validatePasswordStrength(thePassword);
   assert([Role.Client, Role.Agent].includes(role), 400, `Unsupported role ${role}`);
@@ -79,6 +80,7 @@ function createUserAndProfileEntity(payload): { user: User, profile: UserProfile
   user.role = role;
   user.status = UserStatus.Enabled;
   user.profileId = profileId;
+  user.referredBy = referralCode;
 
   return { user, profile };
 }
@@ -113,7 +115,7 @@ export const signup = handlerWrapper(async (req, res) => {
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
-  await sendEmail({
+  sendEmail({
     template: 'welcome',
     to: email,
     vars: {
@@ -121,7 +123,7 @@ export const signup = handlerWrapper(async (req, res) => {
       url
     },
     shouldBcc: true
-  }, true);
+  }, true).catch(() => {});
 
   const info = {
     id,
@@ -276,7 +278,8 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     loginType: 'google',
     lastLoggedInAt: now,
     lastNudgedAt: now,
-  }
+    referredBy: referralCode,
+  };
 
   if (isNewUser) {
     const { user: newUser, profile } = createUserAndProfileEntity({

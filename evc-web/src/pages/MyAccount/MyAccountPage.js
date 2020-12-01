@@ -117,7 +117,6 @@ const MyAccountPage = (props) => {
           setNewPlan(subscription.key);
         },
         cancelText: 'No, keep the current plan',
-
       });
     }
   }

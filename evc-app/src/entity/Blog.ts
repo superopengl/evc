@@ -11,7 +11,7 @@ export class Blog {
   @Column()
   lastUpdatedAt: Date;
 
-  @Column({ type: 'varchar', array: true, default: '{}' })
+  @Column({ type: 'text', array: true, default: '{}' })
   files: string[];
 
   @Column()
@@ -20,6 +20,6 @@ export class Blog {
   @Column()
   md: string;
 
-  @Column({ type: 'varchar', array: true, default: '{}' })
+  @Column({ type: 'text', array: true, default: '{}' })
   tags: string[];
 }

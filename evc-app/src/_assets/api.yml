@@ -199,6 +199,18 @@ paths:
       responses:
         200:
           description: OK
+  /user/:id/subscription:
+    get:
+      operationId: listUserSubscriptionHistory
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
   /user/:id/balance:
     post:
       operationId: adjustBalance
@@ -675,30 +687,19 @@ paths:
           description: OK
   /subscription:
     post:
-      operationId: provisionSubscription
+      operationId: createSubscription
       responses:
         200:
           description: OK
   /subscription/history:
     get:
-      operationId: listSubscriptionHistory
+      operationId: listMySubscriptionHistory
       responses:
         200:
           description: OK
   /subscription/{id}/cancel:
     post:
       operationId: cancelSubscription
-      parameters:
-        - name: id
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
-  /subscription/{id}/settle:
-    post:
-      operationId: settleSubscription
       parameters:
         - name: id
           in: path

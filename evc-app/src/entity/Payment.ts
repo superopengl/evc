@@ -1,36 +1,46 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne } from 'typeorm';
+import { PaymentMethod } from '../types/PaymentMethod';
+import { PaymentStatus } from '../types/PaymentStatus';
+import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
+import { Subscription } from './Subscription';
+import { UserBalanceTransaction } from './UserBalanceLog';
 
 @Entity()
 export class Payment {
-  @PrimaryGeneratedColumn()
-  id?: number;
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
 
   @Column({ default: () => `timezone('UTC', now())` })
   @Index()
   createdAt?: Date;
 
-  @Column('uuid')
-  @Index()
-  userId: string;
+  @OneToOne(() => UserBalanceTransaction)
+  balanceTransaction: UserBalanceTransaction;
 
-  @Column()
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
 
-  @Column('json')
+  @Column({ nullable: true })
+  method: PaymentMethod;
+
+  @Column('json', { nullable: true })
+  rawRequest: object;
+
+  @Column('json', { nullable: true })
   rawResponse: object;
 
-  @Column('uuid')
-  paymentType: string;
-
-  @Column('json')
-  info: object;
-
   @Column()
+  status: PaymentStatus;
+
+  @Column({ nullable: true })
   ipAddress: string;
 
-  @Column()
-  status: string;
-
-  @Column()
+  @Column({ default: false })
   auto: boolean;
+
+  @Column({ default: 1 })
+  attempt: number;
+
+  @ManyToOne(() => Subscription, subscription => subscription.payments)
+  subscription: Subscription;
 }

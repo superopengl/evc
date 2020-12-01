@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
 import { redisCache } from '../services/redisCache';
 import { ReferralCode } from '../entity/ReferralCode';
 import { getUserSubscription } from '../utils/getUserSubscription';
-import { UserBalanceLog } from '../entity/UserBalanceLog';
+import { UserBalanceTransaction } from '../entity/UserBalanceLog';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 
 export const createReferral = async (userId) => {
@@ -40,7 +40,7 @@ const getAccountForUser = async (userId) => {
 
   const subscription = await getUserSubscription(userId);
 
-  const balance = await getRepository(UserBalanceLog)
+  const balance = await getRepository(UserBalanceTransaction)
     .createQueryBuilder()
     .where({ userId })
     .select(`SUM(amount) AS amount`)
@@ -82,12 +82,12 @@ export const adjustBalance = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { amount } = req.body;
   if (amount !== 0) {
-    const entity = new UserBalanceLog();
+    const entity = new UserBalanceTransaction();
     entity.id = uuidv4();
     entity.userId = id;
     entity.amount = amount;
 
-    await getRepository(UserBalanceLog).insert(entity);
+    await getRepository(UserBalanceTransaction).insert(entity);
   }
 
   res.json();

@@ -16,7 +16,6 @@ import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
 import { sanitizeUser } from '../utils/sanitizeUser';
 import { createReferral } from './accountController';
-import { createInitialFreeSubscription } from './subscriptionController';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
@@ -94,8 +93,6 @@ async function createNewLocalUser(payload): Promise<{ user: User, profile: UserP
   await getManager().save([profile, user]);
 
   await createReferral(user.id);
-
-  await createInitialFreeSubscription(user.id);
 
   return { user, profile };
 }
@@ -294,7 +291,6 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     await getManager().save([user, profile]);
 
     await createReferral(user.id);
-    await createInitialFreeSubscription(user.id);
   } else {
     user = Object.assign(user, extra);
     await getRepository(User).save(user);

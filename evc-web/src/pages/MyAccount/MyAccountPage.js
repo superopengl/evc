@@ -113,11 +113,13 @@ const MyAccountPage = (props) => {
         okButtonProps: {
           danger: true
         },
+        onOk: () => {
+          setNewPlan(subscription.key);
+        },
         cancelText: 'No, keep the current plan',
 
       });
     }
-    setNewPlan(subscription.key);
   }
 
   const handlePaymentOk = () => {

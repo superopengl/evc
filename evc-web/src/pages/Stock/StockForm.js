@@ -26,7 +26,7 @@ import {
 } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
-import { publishEvent } from 'services/eventSevice';
+import { publishEvent } from 'services/eventSourceService';
 import { Divider } from 'antd';
 
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, SaveOutlined, SyncOutlined } from '@ant-design/icons';

@@ -38,7 +38,7 @@ import StockListPage from 'pages/Stock/StockListPage';
 import StockPage from 'pages/Stock/StockPage';
 import { ContactWidget } from 'components/ContactWidget';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
-import { getEventSource } from 'services/eventSevice';
+import { getEventSource } from 'services/eventSourceService';
 import {Subject} from 'rxjs';
 import DebugPage from 'pages/Debug/DebugPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';

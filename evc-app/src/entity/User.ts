@@ -68,9 +68,12 @@ export class User {
   @Column()
   profileId: string;
 
-  @Column({type: 'uuid', nullable: true})
-  @Index()
+  @Column({ type: 'uuid', nullable: true })
+  @Index({ where: `"everPaid" = TRUE` })
   referredBy: string;
+
+  @Column({ default: false })
+  everPaid: boolean;
 }
 
 

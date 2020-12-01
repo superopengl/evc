@@ -35,7 +35,7 @@ const getAccountForUser = async (userId) => {
 
   const referralCount = await getRepository(User)
     .createQueryBuilder()
-    .where({ referredBy: userId })
+    .where({ referredBy: userId, everPaid: true })
     .getCount();
 
   const subscription = await getUserSubscription(userId);

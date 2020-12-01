@@ -153,12 +153,10 @@ const ClientHomePage = (props) => {
         {/* <SubscriptionArea /> */}
         <Divider />
         <Paragraph type="secondary">You can go to the <Link to="/account">Account</Link> page to upgrade your subscription plan to get better service.</Paragraph>
-        <Loading loading={loading}>
-
-        </Loading>
         <List
           grid={{ gutter: 20, ...span }}
           dataSource={watchList}
+          loading={loading}
           renderItem={item => (
             <List.Item>
               <StockCardClientSearch

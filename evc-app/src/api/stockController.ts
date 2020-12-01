@@ -68,7 +68,7 @@ export const searchSingleStock = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
 
   const result = await searchStock({ symbols: [symbol] });
-  const stock = result[0];
+  const stock = result.data[0];
 
   assert(stock, 404);
 

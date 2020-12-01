@@ -68,7 +68,7 @@ const HomeHeaderRaw = props => {
   const handleLogout = () => {
     Modal.confirm({
       title: "Logout",
-      content: <>Do you want to log out <Text code>{user.email}</Text></>,
+      content: <>Do you want to log out <Text code>{user.profile.email}</Text></>,
       async onOk() {
         await logout();
         setVisible(false);

@@ -81,7 +81,7 @@ class ChangePasswordPage extends React.Component {
               <HomeHeader></HomeHeader>
               <ContainerStyled>
                 <Title level={2}>Change Password</Title>
-                <Text  code>{user.email}</Text>
+                <Text  code>{user.profile.email}</Text>
                 <br/>
                 <br/>
                 <Form layout="vertical" onFinish={this.handleSubmit} style={{ textAlign: 'left' }}>

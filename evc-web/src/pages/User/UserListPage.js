@@ -188,7 +188,8 @@ const UserListPage = () => {
     e.stopPropagation();
     const { id, email } = item;
     Modal.confirm({
-      title: <>Delete user <strong>{email}</strong>?</>,
+      title: <>Delete user</>,
+      content: <>Delete user <Text code>{email}</Text>?</>,
       onOk: async () => {
         setLoading(true);
         await deleteUser(id);

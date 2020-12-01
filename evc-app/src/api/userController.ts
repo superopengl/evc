@@ -87,7 +87,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
 
   let query = getRepository(User)
     .createQueryBuilder('u')
-    .innerJoin(UserProfile, 'p', 'u.id = p."userId"');
+    .innerJoin(UserProfile, 'p', 'u."profileId" = p.id');
 
   if (text) {
     query = query.andWhere(`(p.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text)`, { text: `%${text}%` })
@@ -98,13 +98,14 @@ export const searchUsers = handlerWrapper(async (req, res) => {
   }
 
   query = query.orderBy(orderField, orderDirection)
-    .addOrderBy('u.email', 'ASC')
+    .addOrderBy('p.email', 'ASC')
     .offset((page - 1) * size)
     .limit(size)
     .select([
       'p.*',
       's.*',
       'u.id as id',
+      'u."loginType"',
       'u."createdAt" as "createdAt"',
       's.type as "subscriptionType"'
     ]);

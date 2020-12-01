@@ -118,7 +118,7 @@ const UserListPage = () => {
       // width: 200,
       render: (text, user) => {
         return (
-          <Space size="small" style={{ width: '100%' }}>
+          <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Tooltip placement="bottom" title="Referral & balance">
               <Button shape="circle" icon={<BiDollar style={{ position: 'relative', top: 2 }} />}
                 disabled={user.role !== 'client'}

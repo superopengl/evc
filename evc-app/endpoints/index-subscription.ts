@@ -6,14 +6,17 @@ import { getReferralGlobalPolicy } from '../src/api/referralPolicyController';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
 import { getUtcNow } from '../src/utils/getUtcNow';
-import { UserBalanceTransaction } from '../src/entity/UserBalanceLog';
+import { UserBalanceTransaction } from '../src/entity/UserBalanceTransaction';
 import { getUnitPricing } from '../src/utils/getUnitPricing';
 import { SubscriptionType } from '../src/types/SubscriptionType';
 import { getSubscriptionPrice } from '../src/utils/getSubscriptionPrice';
 import { Payment } from '../src/entity/Payment';
-import { PaymentMethod } from '../src/types/PaymentMethod';
 import { PaymentStatus } from '../src/types/PaymentStatus';
 import * as moment from 'moment';
+import { getUserBalance } from '../src/utils/getUserBalance';
+import { calculateAmountToPay } from '../src/utils/calculateAmountToPay';
+import { calculateNewSubscriptionPayment } from '../src/api';
+import { calculateNewSubscriptionPaymentDetail } from '../src/utils/calculateNewSubscriptionPaymentDetail';
 
 async function expireSubscriptions() {
   await getManager()
@@ -32,40 +35,6 @@ async function sendAlertForExpiringSubscriptions() {
     .andWhere(`DATEADD(day, "alertDays", timezone('UTC', now())) >= "end"`)
     .execute();
   // TODO: send notificaiton emails to them
-}
-
-async function getUserBalance(userId) {
-  const result = await getRepository(UserBalanceTransaction)
-    .createQueryBuilder()
-    .where({ userId })
-    .select('SUM(amount) as total')
-    .execute();
-
-  return result?.total || 0;
-}
-
-function calculateAmountToPay(balanceAmount, price) {
-  let balanceDeductAmount = 0;
-  let additionalPay = price;
-  let paymentMethod: PaymentMethod;
-  if (balanceAmount >= price) {
-    // Full balance pay. Pay 0
-    balanceDeductAmount = price;
-    additionalPay = 0;
-    paymentMethod = PaymentMethod.Balance;
-  } else if (balanceAmount > 0) {
-    // Mix pay
-    balanceDeductAmount = balanceAmount;
-    additionalPay = price - balanceAmount;
-    paymentMethod = PaymentMethod.BalanceCardMix;
-  } else {
-    // Full pay
-    balanceDeductAmount = 0;
-    additionalPay = price;
-    paymentMethod = PaymentMethod.Card;
-  }
-
-  return { balanceDeductAmount, additionalPay, paymentMethod };
 }
 
 async function handlePayWithCard(subscription: Subscription) {
@@ -95,12 +64,19 @@ function extendSubscriptionEndDate(subscription: Subscription) {
 
 async function renewRecurringSubscription(subscription: Subscription) {
   const { userId } = subscription;
-  const balanceAmount = await getUserBalance(userId);
-  const price = getSubscriptionPrice(subscription);
-  const { balanceDeductAmount, additionalPay, paymentMethod } = calculateAmountToPay(balanceAmount, price);
+
 
   const { rawRequest, rawResponse, status } = await handlePayWithCard(subscription);
   await getManager().transaction(async m => {
+    const { balanceDeductAmount, additionalPay, paymentMethod } = await calculateNewSubscriptionPaymentDetail(
+      m,
+      userId,
+      subscription.type,
+      true,
+      subscription.symbols
+    );
+
+
     let balanceTransaction: UserBalanceTransaction = null;
     if (balanceDeductAmount) {
       balanceTransaction = new UserBalanceTransaction();

@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
 import { redisCache } from '../services/redisCache';
 import { ReferralCode } from '../entity/ReferralCode';
 import { getUserSubscription } from '../utils/getUserSubscription';
-import { UserBalanceTransaction } from '../entity/UserBalanceLog';
+import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 
 export const createReferral = async (userId) => {

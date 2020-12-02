@@ -43,6 +43,8 @@ import {Subject} from 'rxjs';
 import DebugPage from 'pages/Debug/DebugPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';
 import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
+import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
+import MySubscriptionListModal from 'pages/MySubscription/MySubscriptionListModal';
 
 class App extends React.Component {
   constructor(props) {
@@ -128,6 +130,7 @@ class App extends React.Component {
             <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
             <RoleRoute visible={isClient} loading={loading} path="/account" exact component={MyAccountPage} />
+            <RoleRoute visible={isClient} loading={loading} path="/subscription" exact component={MySubscriptionPage} />
             <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
             <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
             <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} />

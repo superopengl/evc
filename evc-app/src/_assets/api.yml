@@ -686,14 +686,37 @@ paths:
         200:
           description: OK
   /subscription:
+    get:
+      operationId: getMyCurrnetSubscription
+      responses:
+        200:
+          description: OK
     post:
-      operationId: createSubscription
+      operationId: provisionSubscription
+      responses:
+        200:
+          description: OK
+  /subscription/calc:
+    post:
+      operationId: calculateNewSubscriptionPayment
       responses:
         200:
           description: OK
   /subscription/history:
     get:
       operationId: listMySubscriptionHistory
+      responses:
+        200:
+          description: OK
+  /subscription/{id}/commit:
+    post:
+      operationId: commitSubscription
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
       responses:
         200:
           description: OK
@@ -704,6 +727,7 @@ paths:
         - name: id
           in: path
           type: string
+          format: uuid
           required: true
       responses:
         200:

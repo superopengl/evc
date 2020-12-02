@@ -19,6 +19,11 @@ import { getUserSubscription } from '../utils/getUserSubscription';
 import { Payment } from '../entity/Payment';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
+import { calculateNewSubscriptionPaymentDetail } from '../utils/calculateNewSubscriptionPaymentDetail';
+import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { provisionSubscriptionTransaction } from '../utils/provisionSubscriptionTransaction';
+import { commitSubscriptionTransactionAfterInitalPay } from '../utils/commitSubscriptionTransactionAfterInitalPay';
+import * as _ from 'lodash';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -29,7 +34,7 @@ async function getUserSubscriptionHistory(userId) {
       start: 'DESC'
     },
     relations: [
-      'payment'
+      'payments'
     ]
   });
 
@@ -67,6 +72,17 @@ export const cancelSubscription = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { user: { id: userId } } = req as any;
+
+  const subscription = await getRepository(Subscription).findOne(
+    { userId, status: SubscriptionStatus.Alive }
+  );
+
+  res.json(subscription);
+});
+
 function createPaymentEntity(payload): Payment {
   const { paymentMethod, balanceAmount, paymentInfo } = payload;
   const entity = new Payment();
@@ -77,6 +93,27 @@ function createPaymentEntity(payload): Payment {
   entity.status = PaymentStatus.OK;
   return entity;
 }
+
+export const provisionSubscription = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { user: { id: userId } } = req as any;
+  const { plan, recurring, symbols, preferToUseBalance, alertDays } = req.body;
+
+  const subscription = await provisionSubscriptionTransaction(userId, plan, recurring, symbols, preferToUseBalance, alertDays);
+  res.json(subscription);
+});
+
+export const commitSubscription = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { id } = req.params;
+  const { user: { id: userId } } = req as any;
+  const { paidAmount, paymentMethod, rawRequest, rawResponse } = req.body;
+  assert(_.isNumber(paidAmount), 400, 'Invalid paidAmount');
+
+  await commitSubscriptionTransactionAfterInitalPay(id, userId, paidAmount, paymentMethod, rawRequest, rawResponse, false, req.ip);
+  res.json();
+});
+
 
 export const createSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
@@ -113,5 +150,13 @@ export const createSubscription = handlerWrapper(async (req, res) => {
   });
 
   res.json(subscription);
+});
+
+export const calculateNewSubscriptionPayment = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { user: { id: userId } } = req as any;
+  const { type, symbols, preferToUseBalance } = req.body;
+  const result = await calculateNewSubscriptionPaymentDetail(null, userId, type, preferToUseBalance, symbols);
+  res.json(result);
 });
 

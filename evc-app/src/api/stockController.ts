@@ -24,6 +24,7 @@ import { StockSupportShort } from '../entity/StockSupportShort';
 import { StockFairValue } from '../entity/StockFairValue';
 import { StockSupportLong } from '../entity/StockSupportLong';
 import { StockResistanceLong } from '../entity/StockResistanceLong';
+import { redisCache } from '../services/redisCache';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -123,8 +124,11 @@ export const unwatchStock = handlerWrapper(async (req, res) => {
 });
 
 export const listStock = handlerWrapper(async (req, res) => {
-  const list = await getRepository(Stock).find({ select: ['symbol', 'company'] });
-
+  let list = getCache('stock-list');
+  if (!list) {
+    list = await getRepository(Stock).find({ select: ['symbol', 'company'] }) as any;
+    setCache('stock-list', list, 1200);
+  }
   res.json(list);
 });
 

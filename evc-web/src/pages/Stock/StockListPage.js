@@ -19,7 +19,7 @@ const { Title, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
-padding: 0 1rem;
+padding: 0 1rem 4rem 1rem;
 width: 100%;
 // max-width: 600px;
 `;
@@ -145,16 +145,6 @@ const StockListPage = (props) => {
               <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
             </Space>
             <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
-            <Divider />
-            {/* <InfiniteScroll
-              initialLoad={true}
-              pageStart={0}
-              loadMore={() => handleFetchNextPageData()}
-              hasMore={!loading && hasMore}
-              useWindow={true}
-              loader={<Space key="loader" style={{ width: '100%', justifyContent: 'center' }}><Loading /></Space>}
-            > */}
-            <StockList data={list} />
             <Pagination
               total={85}
               current={queryInfo.page}
@@ -172,7 +162,8 @@ const StockListPage = (props) => {
                 searchByQueryInfo({ ...queryInfo, page: current, size });
               }}
             />
-            {/* </InfiniteScroll> */}
+            <Divider />
+            <StockList data={list} />
           </Space>
         </Loading>
       </ContainerStyled>

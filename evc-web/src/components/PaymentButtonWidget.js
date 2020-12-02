@@ -33,10 +33,10 @@ const ContainerStyled = styled.div`
 
 const PaymentButtonWidget = (props) => {
 
-  const { visible, newPlan, paymentDetail, onProvision, onCommit, onOk } = props;
+  const { visible, newPlan, recurring: propRecurring, paymentDetail, onProvision, onCommit, onOk } = props;
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
-  const [recurring, setRecurring] = React.useState(true);
+  const [recurring, setRecurring] = React.useState(propRecurring);
   const [detail, setDetail] = React.useState(paymentDetail);
   const [willUseBalance, setWillUseBalance] = React.useState(true);
   const wizardRef = React.useRef(null);
@@ -44,7 +44,8 @@ const PaymentButtonWidget = (props) => {
 
   React.useEffect(() => {
     setDetail(paymentDetail);
-  }, [paymentDetail])
+    setRecurring(propRecurring);
+  }, [paymentDetail, propRecurring]);
 
   const handleFullBalancePay = async () => {
     const subscription = await onProvision();
@@ -53,14 +54,18 @@ const PaymentButtonWidget = (props) => {
     onOk();
   }
 
-  if (paymentDetail.additionalPay === 0) {
+  if(!detail) {
+    return <Loading loading={true}/>
+  }
+
+  if (detail.additionalPay === 0) {
     return <Button type="primary" block onClick={handleFullBalancePay}>Purchase without paying</Button>
   }
 
 
   return (
     <>
-      {paymentDetail.additionalPay === 0 ? <></> :
+      {detail.additionalPay === 0 ? <></> :
         <>
           <PayPalCheckoutButton payPalPlanId={''} />
           <StripeCheckout />
@@ -77,7 +82,7 @@ PaymentButtonWidget.propTypes = {
     paymentMethod: PropTypes.string,
     price: PropTypes.number,
     totalBalanceAmount: PropTypes.number,
-  }).isRequired,
+  }),
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
   onOk: PropTypes.func,

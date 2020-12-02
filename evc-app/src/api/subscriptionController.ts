@@ -1,5 +1,5 @@
 
-import { EntityManager, getManager, getRepository, Like, MoreThan } from 'typeorm';
+import { EntityManager, getManager, getRepository, Like, MoreThan, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
@@ -28,10 +28,12 @@ import * as _ from 'lodash';
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
     where: {
-      userId
+      userId,
+      status: In([SubscriptionStatus.Alive, SubscriptionStatus.Expired, SubscriptionStatus.Terminated])
     },
     order: {
-      start: 'DESC'
+      start: 'DESC',
+      createdAt: 'DESC',
     },
     relations: [
       'payments'
@@ -66,7 +68,10 @@ export const cancelSubscription = handlerWrapper(async (req, res) => {
 
   await getRepository(Subscription).update(
     { id, userId },
-    { status: SubscriptionStatus.Terminated }
+    { 
+      end: getUtcNow(),
+      status: SubscriptionStatus.Terminated
+    }
   );
 
   res.json();
@@ -82,17 +87,6 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 
   res.json(subscription);
 });
-
-function createPaymentEntity(payload): Payment {
-  const { paymentMethod, balanceAmount, paymentInfo } = payload;
-  const entity = new Payment();
-  entity.id = uuidv4();
-  entity.balanceTransaction = balanceAmount;
-  entity.amount = 0;
-  entity.method = paymentMethod;
-  entity.status = PaymentStatus.OK;
-  return entity;
-}
 
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
@@ -112,44 +106,6 @@ export const commitSubscription = handlerWrapper(async (req, res) => {
 
   await commitSubscriptionTransactionAfterInitalPay(id, userId, paidAmount, paymentMethod, rawRequest, rawResponse, false, req.ip);
   res.json();
-});
-
-
-export const createSubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
-  const { user: { id: userId } } = req as any;
-  const { plan, recurring, symbols, alertDays } = req.body;
-  const now = getUtcNow();
-
-  const months = recurring ? null : plan === SubscriptionType.UnlimitedQuarterly ? 3 : 1;
-  const end = months ? moment(now).add(months, 'month').toDate() : null;
-
-  const payment = createPaymentEntity(req.body);
-
-  const subscriptionId = uuidv4();
-  const subscription = new Subscription();
-  subscription.id = subscriptionId;
-  subscription.userId = userId;
-  subscription.type = plan;
-  subscription.symbols = plan === SubscriptionType.SelectedMonthly ? symbols : [];
-  subscription.start = now;
-  subscription.end = end;
-  subscription.status = SubscriptionStatus.Alive;
-
-  await getManager().transaction(async m => {
-    // Terminates all ongoing subscriptions
-    await m.getRepository(Subscription).update(
-      { userId, status: SubscriptionStatus.Alive },
-      { status: SubscriptionStatus.Terminated }
-    );
-
-    await m.save(payment);
-
-    subscription.payments = [payment];
-    await m.save(subscription);
-  });
-
-  res.json(subscription);
 });
 
 export const calculateNewSubscriptionPayment = handlerWrapper(async (req, res) => {

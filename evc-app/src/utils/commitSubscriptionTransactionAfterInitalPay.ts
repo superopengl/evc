@@ -7,6 +7,8 @@ import { Payment } from '../entity/Payment';
 import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { getSubscriptionPrice } from './getSubscriptionPrice';
+import { now } from 'moment';
+import { getUtcNow } from './getUtcNow';
 
 
 export async function commitSubscriptionTransactionAfterInitalPay(
@@ -56,6 +58,7 @@ export async function commitSubscriptionTransactionAfterInitalPay(
       userId,
       status: SubscriptionStatus.Alive
     }, {
+      end: getUtcNow(),
       status: SubscriptionStatus.Terminated
     });
 

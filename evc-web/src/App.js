@@ -44,7 +44,7 @@ import DebugPage from 'pages/Debug/DebugPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';
 import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
-import MySubscriptionListModal from 'pages/MySubscription/MySubscriptionListModal';
+import MySubscriptionHistoryPage from 'pages/MySubscription/MySubscriptionHistoryPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -131,6 +131,7 @@ class App extends React.Component {
             <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
             <RoleRoute visible={isClient} loading={loading} path="/account" exact component={MyAccountPage} />
             <RoleRoute visible={isClient} loading={loading} path="/subscription" exact component={MySubscriptionPage} />
+            <RoleRoute visible={isClient} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
             <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
             <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
             <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} />
@@ -139,7 +140,7 @@ class App extends React.Component {
 
           </Switch>
         </BrowserRouter>
-        <ContactWidget />
+        {(isClient || isGuest) && <ContactWidget />}
       </GlobalContext.Provider>
     );
   }

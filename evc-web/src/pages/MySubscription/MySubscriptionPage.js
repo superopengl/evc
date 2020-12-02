@@ -30,8 +30,9 @@ import MoneyAmount from 'components/MoneyAmount';
 import ReferralLinkInput from 'components/ReferralLinkInput';
 import { cancelSubscription, getMyCurrentSubscription } from 'services/subscriptionService';
 import { TimeAgo } from 'components/TimeAgo';
-import MySubscriptionListModal from './MySubscriptionListModal';
 import { PageHeader } from 'antd';
+import StockTag from 'components/StockTag';
+import { Tag } from 'antd';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
@@ -82,7 +83,6 @@ const StyledCol = styled(Col)`
 const MySubscriptionPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
-  const [historyVisible, setHistoryVisible] = React.useState(false);
   const [currentSubscription, changeToNewSubscription] = React.useState();
   const [planType, setPlanType] = React.useState();
 
@@ -102,16 +102,42 @@ const MySubscriptionPage = (props) => {
 
   const currentPlanKey = currentSubscription?.type || 'free';
 
+  const handleCancelCurrentPlan = () => {
+    Modal.confirm({
+      title: 'Cancel subscription',
+      icon: <WarningOutlined />,
+      content: 'Changing back to free plan will terminate your current subscription without refund. Continue?',
+      okText: 'Yes, continue',
+      maskClosable: true,
+      okButtonProps: {
+        danger: true
+      },
+      onOk: async () => {
+        try {
+          setLoading(true);
+          await cancelSubscription(currentSubscription.id);
+          loadEntity();
+        } finally {
+          setLoading(false);
+        }
+      },
+      cancelText: 'No, keep the current plan',
+    });
+  }
+
   const handleChangePlan = (subscription) => {
     if (subscription.key === currentPlanKey) {
       return;
     }
-    if (currentSubscription) {
+    if (subscription.key === 'free') {
+      handleCancelCurrentPlan();
+    } else if (currentSubscription) {
       Modal.confirm({
         title: 'Change subscription',
         icon: <WarningOutlined />,
-        description: 'Changing subscription will terminate your current subscription without refund. Continue?',
+        content: 'Changing subscription will terminate your current subscription without refund. Continue?',
         okText: 'Yes, continue',
+        maskClosable: true,
         okButtonProps: {
           danger: true
         },
@@ -140,6 +166,7 @@ const MySubscriptionPage = (props) => {
       title: 'Terminate current subscription',
       icon: <WarningOutlined />,
       okText: 'Yes, terminate it',
+      maskClosable: true,
       okButtonProps: {
         danger: true
       },
@@ -166,16 +193,10 @@ const MySubscriptionPage = (props) => {
               style={{ padding: '16px 0' }}
               title={<Title>Subscription</Title>}
               extra={[
-                <Button key={0} onClick={() => setHistoryVisible(true)}>Subscription History</Button>,
+                <Button key={0} onClick={() => props.history.push('/subscription/history')}>Subscription History</Button>,
                 <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terimnate</Button>
               ]}
             />
-            {currentSubscription && <>
-              <Title>{currentSubscription.title}</Title>
-              {currentSubscription.stocks?.map((s, i) => <div key={i}>
-                <StockName value={s} />
-              </div>)}
-            </>}
             <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
             <StyledRow gutter={20}>
               {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
@@ -189,6 +210,12 @@ const MySubscriptionPage = (props) => {
                   unit={s.unit} />
               </StyledCol>)}
             </StyledRow>
+            {currentSubscription && <>
+              <Title>{getSubscriptionName(currentSubscription.type)}</Title>
+              <Space size="small">{currentSubscription.symbols?.map((s, i) => <Tag key={i}>{s}</Tag>)}</Space>
+              <Text>Started <TimeAgo value={currentSubscription.start} /></Text>
+              <Text>Next payment <TimeAgo value={currentSubscription.end} /></Text>
+            </>}
             {planType && <PaymentModal
               visible={!!planType}
               planType={planType}
@@ -198,7 +225,6 @@ const MySubscriptionPage = (props) => {
             />}
           </Space>
         </Loading>
-        <MySubscriptionListModal visible={historyVisible} onOk={() => setHistoryVisible(false)} />
       </ContainerStyled>
     </LayoutStyled >
   );

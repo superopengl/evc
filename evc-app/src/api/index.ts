@@ -17,3 +17,4 @@ export * from './stockPeController';
 export * from './stockEpsController';
 export * from './stockSupportResistanceController';
 export * from './stockPublishController';
+export * from './webhookController';

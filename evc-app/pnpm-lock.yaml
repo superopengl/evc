@@ -33,6 +33,7 @@ dependencies:
   redis: 3.0.2
   rxjs: 6.6.3
   serialize-error: 7.0.1
+  stripe: 8.126.0
   swagger-routes-express: 3.2.1
   typeorm: 0.2.25
   typeorm-plus: 0.1.2
@@ -4706,6 +4707,15 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-PFMZQukIwml8DsNEhYwobHygpgo=
+  /stripe/8.126.0:
+    dependencies:
+      '@types/node': 14.14.10
+      qs: 6.9.4
+    dev: false
+    engines:
+      node: ^8.1 || >=10.*
+    resolution:
+      integrity: sha512-AQai9rEi6JYE3BY/favh5mkxedmpsYp+M7y90Fj6CGKYGkTKmtOkgNqs0MQTMGgrJlzMlpJjOYkQxpxb4t84KQ==
   /supports-color/2.0.0:
     dev: false
     engines:
@@ -5511,6 +5521,7 @@ specifiers:
   redis: ^3.0.2
   rxjs: ^6.6.3
   serialize-error: ^7.0.1
+  stripe: ^8.126.0
   swagger-routes-express: ^3.1.2
   ts-clean: ^1.0.3
   ts-node: ^8.10.2

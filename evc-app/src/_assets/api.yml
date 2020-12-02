@@ -818,6 +818,13 @@ paths:
           in: path
           type: string
           required: true
+
+      responses:
+        200:
+          description: OK
+  /checkout/stripe/session:
+    get: 
+      operationId: fetchCheckoutSession
       responses:
         200:
           description: OK

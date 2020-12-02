@@ -19,6 +19,7 @@ import { StripeCheckout } from './StripeCheckout';
 import { Row, Col } from 'antd';
 import { calculatePaymentDetail, commitSubscription, provisionSubscription } from 'services/subscriptionService';
 import { Loading } from './Loading';
+import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -69,6 +70,7 @@ const PaymentButtonWidget = (props) => {
         <>
           <PayPalCheckoutButton payPalPlanId={''} />
           <StripeCheckout />
+          <StripeCardPaymentWidget />
         </>
       }
     </>

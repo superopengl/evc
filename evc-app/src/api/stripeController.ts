@@ -17,7 +17,7 @@ import { Subscription } from '../entity/Subscription';
 import { Subject } from 'rxjs';
 import { RedisRealtimePricePubService, RedisRealtimePriceSubService, RedisSubService } from '../services/RedisPubSubService';
 import { redisCache } from '../services/redisCache';
-import { getStripe, parseStripeWebhookEvent } from '../services/stripeService';
+import { createStripeCheckoutSession, parseStripeWebhookEvent } from '../services/stripeService';
 
 const isProd = process.env.NODE_ENV === 'prod';
 const subscriber = new RedisRealtimePriceSubService();
@@ -26,12 +26,18 @@ const publisher = new RedisRealtimePricePubService();
 export const webhookStripe = async (req, res) => {
   const event = await parseStripeWebhookEvent(req);
 
-  switch(event.type) {
+  switch (event.type) {
     case 'checkout.session.completed':
       const session = event.data.object;
       break;
     default:
   }
 
-  res.json({received: true});
+  res.json({ received: true });
 };
+
+export const fetchCheckoutSession = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const session = await createStripeCheckoutSession();
+  res.json(session.id);
+});

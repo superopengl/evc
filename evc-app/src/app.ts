@@ -12,7 +12,7 @@ import { authMiddleware } from './middlewares/authMiddleware';
 import * as cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
 import { sseMiddleware } from 'express-sse-middleware';
-import { webhookStripe } from './api/webhookController';
+import { webhookStripe } from './api/stripeController';
 
 
 function errorHandler(err, req, res, next) {

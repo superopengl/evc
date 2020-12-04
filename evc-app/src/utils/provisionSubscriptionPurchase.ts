@@ -10,7 +10,6 @@ import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { calculateNewSubscriptionPaymentDetail } from './calculateNewSubscriptionPaymentDetail';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
-import { UserStripeCustomer } from '../entity/UserStripeCustomer';
 
 export async function provisionSubscriptionPurchase(
   userId: string,

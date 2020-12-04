@@ -7,19 +7,20 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
-import { PayPalCheckoutButton } from 'components/PayPalCheckoutButton';
+import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Modal, Space } from 'antd';
 import StepWizard from 'react-step-wizard';
 import { DoubleRightOutlined, RightOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { StockSearchInput } from './StockSearchInput';
+import { StockSearchInput } from '../StockSearchInput';
 import * as _ from 'lodash';
-import MoneyAmount from './MoneyAmount';
-import { StripeCheckout } from './StripeCheckout';
+import MoneyAmount from '../MoneyAmount';
+import { StripeCheckout } from '../StripeCheckout';
 import { Row, Col } from 'antd';
-import { Loading } from './Loading';
-import PaymentButtonWidget from './PaymentButtonWidget';
-import { calculatePaymentDetail, commitSubscription, provisionSubscription } from 'services/subscriptionService';
+import { Loading } from '../Loading';
+import { calculatePaymentDetail, confirmSubscriptionPayment, provisionSubscription } from 'services/subscriptionService';
+import FullBalancePayButton from './FullBalancePayButton';
+import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -44,6 +45,7 @@ const PaymentModal = (props) => {
   const wizardRef = React.useRef(null);
   const needsSelectSymbols = planType === 'selected_monthly';
 
+
   const loadPaymentDetail = async (symbols, useBalance) => {
     if (needsSelectSymbols && !symbols?.length) {
       setPaymentDetail({});
@@ -63,8 +65,12 @@ const PaymentModal = (props) => {
   }, [visible]);
 
   React.useEffect(() => {
-    loadPaymentDetail(selectedSymbols, willUseBalance);
-  }, []);
+    if (planType) {
+      loadPaymentDetail(selectedSymbols, willUseBalance);
+    }
+  }, [planType]);
+
+  if (!planType) return null;
 
   const newPlanDef = subscriptionDef.find(s => s.key === planType);
 
@@ -89,24 +95,31 @@ const PaymentModal = (props) => {
     loadPaymentDetail(list, willUseBalance);
   }
 
-  const isValidPlan = !needsSelectSymbols || selectedSymbols?.length > 0
-
-  const handlePurchase = () => {
-
-  }
-
-  const handlePurchaseDone = () => {
-    onOk();
-  }
+  const isValidPlan = (!needsSelectSymbols || selectedSymbols?.length > 0) && paymentDetail;
 
   const handleProvisionSubscription = async () => {
-    const result = await provisionSubscription({
-      plan: planType,
-      recurring: recurring,
-      symbols: selectedSymbols,
-      preferToUseBalance: willUseBalance
-    });
-    return result;
+    try {
+      setLoading(true);
+      const provisionData = await provisionSubscription({
+        plan: planType,
+        recurring: recurring,
+        symbols: selectedSymbols,
+        preferToUseBalance: willUseBalance
+      });
+      return provisionData;
+    } catch {
+      setLoading(false);
+    }
+  }
+
+  const handleSuccessfulPayment = async (paymentId, payload) => {
+    try {
+      setLoading(true);
+      await confirmSubscriptionPayment(paymentId, payload);
+    } finally {
+      setLoading(false);
+    }
+    onOk();
   }
 
   // const handleCommitSubscription = async (data) => {
@@ -121,7 +134,7 @@ const PaymentModal = (props) => {
   return (
     <Modal
       visible={modalVisible}
-      closable={true}
+      closable={!loading}
       maskClosable={false}
       title="Subscribe plan"
       destroyOnClose={true}
@@ -176,12 +189,16 @@ const PaymentModal = (props) => {
             {paymentDetail ? <MoneyAmount strong value={paymentDetail.additionalPay} /> : '-'}
           </Space>
           {isValidPlan && <Divider />}
-          {isValidPlan && <PaymentButtonWidget
-            paymentDetail={paymentDetail}
-            onProvision={handleProvisionSubscription}
-            onOk={handlePurchaseDone}
-            recurring={recurring}
-          />}
+          {isValidPlan && <>
+            {paymentDetail.additionalPay === 0 ? <FullBalancePayButton 
+            onProvision={handleProvisionSubscription} 
+            onCommit={handleSuccessfulPayment} 
+            /> :
+              <>
+                <PayPalCheckoutButton payPalPlanId={''} />
+                <StripeCardPaymentWidget onProvision={handleProvisionSubscription} onCommit={handleSuccessfulPayment} />
+              </>}
+          </>}
         </Space>
       </Loading>
 
@@ -190,7 +207,7 @@ const PaymentModal = (props) => {
 }
 
 PaymentModal.propTypes = {
-  planType: PropTypes.string.isRequired,
+  planType: PropTypes.string,
   visible: PropTypes.bool.isRequired,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,

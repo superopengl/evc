@@ -720,9 +720,9 @@ paths:
       responses:
         200:
           description: OK
-  /subscription/payment/{id}/card/confirm:
+  /subscription/payment/{id}/confirm:
     post:
-      operationId: confirmStripeCardPayment
+      operationId: confirmSubscriptionPayment
       parameters:
         - name: id
           in: path

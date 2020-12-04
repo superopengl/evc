@@ -1,15 +1,19 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { Space, Button } from 'antd';
+import { Space, Button, Typography } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import { confirmCardPayment } from 'services/subscriptionService';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { confirmSubscriptionPayment } from 'services/subscriptionService';
+import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
-const StripeCardPaymentWidget = (props) => {
+const stripePromise = loadStripe(process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY);
 
-  const { onProvision, onOk } = props;
+const { Title, Text, Paragraph } = Typography;
+
+const StripeCardPaymentForm = (props) => {
+
+  const { onProvision, onCommit } = props;
   const [loading, setLoading] = React.useState(false);
   const [inputComplete, setInputComplete] = React.useState(false);
   const stripe = useStripe();
@@ -42,9 +46,9 @@ const StripeCardPaymentWidget = (props) => {
       if (error) {
         notify.error('Failed to complete the payment', error.message);
       } else {
-        const paymentMethodId = rawResponse.setupIntent.payment_method;
-        await confirmCardPayment(paymentId, { rawResponse, paymentMethodId });
-        onOk();
+        await onCommit(paymentId, {
+          stripePaymentMethodId: rawResponse.setupIntent.payment_method
+        });
       }
     } finally {
       setLoading(false);
@@ -58,7 +62,7 @@ const StripeCardPaymentWidget = (props) => {
   return (
     <form onSubmit={handleSubmit}>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-
+        <Text>Please input card information</Text>
         <CardElement
           onChange={handleCardInfoChange}
           options={{
@@ -85,14 +89,17 @@ const StripeCardPaymentWidget = (props) => {
   )
 }
 
+const StripeCardPaymentWidget = props => (<Elements stripe={stripePromise}>
+  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} />
+</Elements>)
+
 
 StripeCardPaymentWidget.propTypes = {
   onProvision: PropTypes.func.isRequired,
-  onOk: PropTypes.func
+  onCommit: PropTypes.func.isRequired,
 };
 
 StripeCardPaymentWidget.defaultProps = {
-  onOk: () => { }
 };
 
-export default withRouter(StripeCardPaymentWidget);
+export default StripeCardPaymentWidget;

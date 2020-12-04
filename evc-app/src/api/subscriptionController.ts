@@ -24,8 +24,7 @@ import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { provisionSubscriptionPurchase } from '../utils/provisionSubscriptionPurchase';
 import { commitSubscriptionPurchase } from '../utils/commitSubscriptionPurchase';
 import * as _ from 'lodash';
-import { UserStripeCustomer } from '../entity/UserStripeCustomer';
-import { previsionStripePayment, createStripeSetupSetupIntent, chargeStripe } from '../services/stripeService';
+import { createStripeClientSecret, chargeStripe } from '../services/stripeService';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -98,7 +97,9 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
   const payment = await provisionSubscriptionPurchase(userId, plan, recurring, symbols, preferToUseBalance, alertDays, req.ip);
   const { method } = payment;
   const result: any = {
-    method
+    method,
+    paymentId: payment.id,
+    subscriptionId: payment.subscription.id,
   };
   switch (method) {
     case PaymentMethod.Balance:
@@ -106,14 +107,14 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
       break;
     case PaymentMethod.BalanceCardMix:
     case PaymentMethod.Card:
-      const clientSecret = recurring ? await createStripeSetupSetupIntent(payment) : await previsionStripePayment(payment);
+      const clientSecret = await createStripeClientSecret(payment);
       result.clientSecret = clientSecret;
-      result.paymentId = payment.id;
-      result.subscriptionId = payment.subscription.id;
       break;
     case PaymentMethod.PayPal:
+      assert(false, 501);
       break;
     case PaymentMethod.AliPay:
+      assert(false, 501);
       break;
     default:
       assert(false, 500, `Unknown payment method ${method}`);
@@ -122,7 +123,7 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
   res.json(result);
 });
 
-export const confirmStripeCardPayment = handlerWrapper(async (req, res) => {
+export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { id } = req.params;
   const { user: { id: userId } } = req as any;
@@ -137,17 +138,19 @@ export const confirmStripeCardPayment = handlerWrapper(async (req, res) => {
   switch (method) {
     case PaymentMethod.Balance:
       // Immidiately commit the subscription purchase if it can be paied fully by balance
-      await commitSubscriptionPurchase(payment.id, null, null);
+      await commitSubscriptionPurchase(payment.id, null);
       break;
     case PaymentMethod.BalanceCardMix:
     case PaymentMethod.Card:
       const { stripePaymentMethodId } = req.body;
       const rawResponse = await chargeStripe(payment, stripePaymentMethodId);
-      await commitSubscriptionPurchase(id, rawRequest, rawResponse);
+      await commitSubscriptionPurchase(id, rawResponse);
       break;
     case PaymentMethod.PayPal:
+      assert(false, 501);
       break;
     case PaymentMethod.AliPay:
+      assert(false, 501);
       break;
     default:
       assert(false, 500, `Unknown payment method ${method}`);

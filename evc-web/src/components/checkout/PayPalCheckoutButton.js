@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import scriptLoader from "react-async-script-loader";
-import { Loading } from "./Loading";
+import { Loading } from "../Loading";
 import { PayPalButton } from "react-paypal-button-v2";
 import PropTypes from 'prop-types';
 

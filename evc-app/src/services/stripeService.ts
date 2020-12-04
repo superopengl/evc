@@ -1,11 +1,13 @@
 import Stripe from 'stripe';
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { Payment } from '../entity/Payment';
 import { UserStripeCustomer } from '../entity/UserStripeCustomer';
 import { assert } from '../utils/assert';
+import { UserProfile } from '../entity/UserProfile';
+import { User } from '../entity/User';
 
 
-let stripe = null;
+let stripe: Stripe = null;
 function getStripe() {
   if (!stripe) {
     stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2020-08-27' });
@@ -39,21 +41,28 @@ export async function parseStripeWebhookEvent(req) {
   }
 }
 
-async function createStripeCustomer() {
-  return await getStripe().customers.create();
+async function createStripeCustomer(userId: string, userProfile: UserProfile) {
+  return await getStripe().customers.create({
+    email: userProfile.email,
+    name: `${userProfile.givenName} ${userProfile.surname}`.trim(),
+    metadata: {
+      evc_user_id: userId,
+    }
+  });
 }
 
-async function getUserStripeCustomerId(userId) {
+async function getUserStripeCustomer(userId) {
   const repo = getRepository(UserStripeCustomer);
   let customer = await repo.findOne({ userId });
   if (!customer) {
-    const stripeCustomer = await createStripeCustomer();
+    const user = await getRepository(User).findOne(userId, { relations: ['profile'] });
+    const stripeCustomer = await createStripeCustomer(userId, user.profile);
     customer = new UserStripeCustomer();
     customer.userId = userId;
     customer.customerId = stripeCustomer.id;
     await repo.insert(customer);
   }
-  return customer.customerId;
+  return customer;
 }
 
 async function createStripePaymentIntent(amount, customerId) {
@@ -68,8 +77,39 @@ async function createStripePaymentIntent(amount, customerId) {
   return intent;
 }
 
-export async function previsionStripePayment(payment: Payment): Promise<string> {
-  const stripeCustomerId = await getUserStripeCustomerId(payment.userId);
-  const intent = await createStripePaymentIntent(payment.amount, stripeCustomerId);
+async function createStripeSetupIntent(customerId) {
+  const intent = await getStripe().setupIntents.create({
+    customer: customerId,
+  });
+  return intent;
+}
+
+export async function createStripeSetupSetupIntent(payment: Payment): Promise<string> {
+  const {id} = await getUserStripeCustomer(payment.userId);
+  const intent = await createStripeSetupIntent(id);
   return intent.client_secret;
+}
+
+export async function previsionStripePayment(payment: Payment): Promise<string> {
+  const {id} = await getUserStripeCustomer(payment.userId);
+  const intent = await createStripePaymentIntent(payment.amount, id);
+  return intent.client_secret;
+}
+
+export async function chargeStripe(payment: Payment, stripePaymentMethodId: string) {
+  const customer = await getUserStripeCustomer(payment.userId);
+  customer.paymentMethodId = stripePaymentMethodId;
+
+  const paymentIntent = await getStripe().paymentIntents.create({
+    amount: Math.ceil(payment.amount * 100),
+    currency: 'usd',
+    customer: customer.id,
+    payment_method: stripePaymentMethodId,
+    off_session: true,
+    confirm: true
+  });
+
+  await getManager().save(customer);
+
+  return paymentIntent;
 }

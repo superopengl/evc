@@ -14,7 +14,6 @@ import { User } from '../entity/User';
 
 export async function commitSubscriptionPurchase(
   paymentId: string,
-  rawRequest: any,
   rawResponse: any,
 ) {
   await getManager().transaction(async (m) => {
@@ -27,7 +26,6 @@ export async function commitSubscriptionPurchase(
     });
     assert(payment, 404, 'Cannot commit subscriptino due to invalid payment status');
 
-    payment.rawRequest = rawRequest;
     payment.rawResponse = rawResponse;
     payment.status = PaymentStatus.Paid;
 

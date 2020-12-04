@@ -15,7 +15,7 @@ import { PaymentStatus } from '../src/types/PaymentStatus';
 import * as moment from 'moment';
 import { getUserBalance } from '../src/utils/getUserBalance';
 import { calculateAmountToPay } from '../src/utils/calculateAmountToPay';
-import { calculateNewSubscriptionPayment } from '../src/api';
+import { previewSubscriptionPayment } from '../src/api';
 import { calculateNewSubscriptionPaymentDetail } from '../src/utils/calculateNewSubscriptionPaymentDetail';
 
 async function expireSubscriptions() {

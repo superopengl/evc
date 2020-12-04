@@ -99,7 +99,7 @@ export async function chargeStripe(payment: Payment, newStripePaymentMethodId?: 
     currency: 'usd',
     customer: stripeCustomerId,
     payment_method: stripePaymentMethodId || newStripePaymentMethodId,
-    off_session: true,
+    off_session: !newStripePaymentMethodId,
     confirm: true
   });
 

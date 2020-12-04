@@ -12,7 +12,7 @@ import { getUtcNow } from './getUtcNow';
 import { User } from '../entity/User';
 
 
-export async function commitSubscriptionPurchase(
+export async function commitSubscription(
   paymentId: string,
   rawResponse: any,
 ) {

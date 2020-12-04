@@ -1,4 +1,7 @@
 import Stripe from 'stripe';
+import { getRepository } from 'typeorm';
+import { Payment } from '../entity/Payment';
+import { UserStripeCustomer } from '../entity/UserStripeCustomer';
 import { assert } from '../utils/assert';
 
 
@@ -23,15 +26,6 @@ export async function createStripeCheckoutSession() {
   return session;
 };
 
-export async function retrieveCheckoutSession() {
-  const checkoutSessionId = '';
-  const session = await getStripe().checkout.sessions.retrieve(checkoutSessionId, {
-    expand: ['customer', 'setup_intent']
-  });
-  const setupIntentId = session.id;
-}
-
-
 export async function parseStripeWebhookEvent(req) {
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SIGN_SECRET;
@@ -43,4 +37,39 @@ export async function parseStripeWebhookEvent(req) {
   catch (err) {
     assert(false, 400, `Webhook Error: ${err.message}`);
   }
+}
+
+async function createStripeCustomer() {
+  return await getStripe().customers.create();
+}
+
+async function getUserStripeCustomerId(userId) {
+  const repo = getRepository(UserStripeCustomer);
+  let customer = await repo.findOne({ userId });
+  if (!customer) {
+    const stripeCustomer = await createStripeCustomer();
+    customer = new UserStripeCustomer();
+    customer.userId = userId;
+    customer.customerId = stripeCustomer.id;
+    await repo.insert(customer);
+  }
+  return customer.customerId;
+}
+
+async function createStripePaymentIntent(amount, customerId) {
+  if (amount <= 0) {
+    throw new Error('The stripe payment amount must be a positive number');
+  }
+  const intent = await getStripe().paymentIntents.create({
+    amount: Math.ceil(amount * 100),
+    currency: 'usd',
+    customer: customerId,
+  });
+  return intent;
+}
+
+export async function previsionStripePayment(payment: Payment): Promise<string> {
+  const stripeCustomerId = await getUserStripeCustomerId(payment.userId);
+  const intent = await createStripePaymentIntent(payment.amount, stripeCustomerId);
+  return intent.client_secret;
 }

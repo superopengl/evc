@@ -41,7 +41,7 @@ async function handlePayWithCard(subscription: Subscription) {
   // TODO: Call API to pay by card
   const rawRequest = {};
   const rawResponse = {};
-  const status = PaymentStatus.OK;
+  const status = PaymentStatus.Paid;
   return { rawRequest, rawResponse, status };
 }
 

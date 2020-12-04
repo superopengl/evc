@@ -20,6 +20,8 @@ import { Row, Col } from 'antd';
 import { calculatePaymentDetail, commitSubscription, provisionSubscription } from 'services/subscriptionService';
 import { Loading } from './Loading';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
+import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -30,6 +32,7 @@ const ContainerStyled = styled.div`
   width: 100%;
 `;
 
+const stripePromise = loadStripe(process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY);
 
 
 const PaymentButtonWidget = (props) => {
@@ -49,28 +52,24 @@ const PaymentButtonWidget = (props) => {
   }, [paymentDetail, propRecurring]);
 
   const handleFullBalancePay = async () => {
-    const subscription = await onProvision();
-    const {id} = subscription;
-    await onCommit(id, 0, null, null);
+    await onProvision();
     onOk();
   }
 
-  if(!detail) {
-    return <Loading loading={true}/>
+  if (!detail) {
+    return <Loading loading={true} />
   }
-
-  if (detail.additionalPay === 0) {
-    return <Button type="primary" block onClick={handleFullBalancePay}>Purchase without paying</Button>
-  }
-
 
   return (
     <>
-      {detail.additionalPay === 0 ? <></> :
+      {detail.additionalPay === 0 ? <>
+        <Button type="primary" block onClick={handleFullBalancePay}>Purchase without paying</Button>
+      </> :
         <>
           <PayPalCheckoutButton payPalPlanId={''} />
-          <StripeCheckout />
-          <StripeCardPaymentWidget />
+          <Elements stripe={stripePromise}>
+            <StripeCardPaymentWidget onProvision={onProvision} />
+          </Elements>
         </>
       }
     </>
@@ -86,7 +85,7 @@ PaymentButtonWidget.propTypes = {
     totalBalanceAmount: PropTypes.number,
   }),
   onProvision: PropTypes.func.isRequired,
-  onCommit: PropTypes.func.isRequired,
+  // onCommit: PropTypes.func.isRequired,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
   disabled: PropTypes.bool,

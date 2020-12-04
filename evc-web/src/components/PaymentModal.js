@@ -95,28 +95,28 @@ const PaymentModal = (props) => {
 
   }
 
+  const handlePurchaseDone = () => {
+    onOk();
+  }
+
   const handleProvisionSubscription = async () => {
-    const subscription = await provisionSubscription({
+    const result = await provisionSubscription({
       plan: planType,
       recurring: recurring,
       symbols: selectedSymbols,
       preferToUseBalance: willUseBalance
     });
-    return subscription;
+    return result;
   }
 
-  const handleCommitSubscription = async (subscriptionId, paidAmount, req, resp) => {
-    await commitSubscription(subscriptionId, {
-      paidAmount: paidAmount,
-      paymentMethod: paymentDetail.paymentMethod,
-      rawRequest: req,
-      rawResponse: resp
-    });
-  }
-
-  const handlePurchaseDone = () => {
-    onOk();
-  }
+  // const handleCommitSubscription = async (data) => {
+  //   await commitSubscription(subscriptionId, {
+  //     paidAmount: paidAmount,
+  //     paymentMethod: paymentDetail.paymentMethod,
+  //     rawRequest: req,
+  //     rawResponse: resp
+  //   });
+  // }
 
   return (
     <Modal
@@ -179,7 +179,6 @@ const PaymentModal = (props) => {
           {isValidPlan && <PaymentButtonWidget
             paymentDetail={paymentDetail}
             onProvision={handleProvisionSubscription}
-            onCommit={handleCommitSubscription}
             onOk={handlePurchaseDone}
             recurring={recurring}
           />}

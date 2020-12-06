@@ -89,7 +89,6 @@ async function renewRecurringSubscription(subscription: Subscription) {
     payment.balanceTransaction = balanceTransaction;
     payment.amount = additionalPay;
     payment.method = paymentMethod;
-    payment.rawRequest = rawRequest;
     payment.rawResponse = rawResponse;
     payment.status = status;
     payment.auto = true;

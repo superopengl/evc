@@ -9,8 +9,6 @@ const MoneyAmount = (props) => {
 
   const { value, showSymbol, ...other } = props;
 
-  const [] = React.useState(value);
-
   return (
     <Text {...other}>
       {showSymbol ? `$ `: ''}{(+value || 0).toFixed(2)}
@@ -19,7 +17,7 @@ const MoneyAmount = (props) => {
 };
 
 MoneyAmount.propTypes = {
-  value: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   showSymbol: PropTypes.bool,
 };
 

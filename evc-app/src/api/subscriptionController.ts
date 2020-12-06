@@ -116,11 +116,12 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
 
 export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
-  const { id } = req.params;
-  const { user: { id: userId } } = req as any;
+  const { id: paymentId } = req.params;
+  const { user } = req as any;
+  const userId = user.id;
 
   const payment = await getRepository(Payment).findOne({
-    id,
+    id: paymentId,
     userId,
   });
   assert(payment, 404);
@@ -129,13 +130,13 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
   switch (method) {
     case PaymentMethod.Balance:
       // Immidiately commit the subscription purchase if it can be paied fully by balance
-      await commitSubscription(payment.id, null);
+      await commitSubscription(paymentId, null);
       break;
     case PaymentMethod.BalanceCardMix:
     case PaymentMethod.Card:
       const { stripePaymentMethodId } = req.body;
       const rawResponse = await chargeStripe(payment, stripePaymentMethodId);
-      await commitSubscription(id, rawResponse);
+      await commitSubscription(paymentId, rawResponse);
       break;
     case PaymentMethod.PayPal:
       assert(false, 501);

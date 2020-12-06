@@ -8,27 +8,7 @@ import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
 import { getUtcNow } from '../utils/getUtcNow';
 import { v4 as uuidv4 } from 'uuid';
 
-export async function getMyCurrentReferralAmount(userId) {
-  const now = getUtcNow();
-  const globalPolicy = await getRepository(ReferralGlobalPolicy)
-    .createQueryBuilder()
-    .where({ active: true })
-    .andWhere(`"start" >= :now AND ("end" IS NULL OR "end" < :now)`, { now })
-    .getOne();
 
-  const userPolicy = await getRepository(ReferralUserPolicy)
-    .findOne({
-      userId,
-      active: true
-    });
-
-  let amount = userPolicy?.amount;
-  if (amount !== 0 && !amount) {
-    amount = globalPolicy?.amount || 0;
-  }
-
-  return amount;
-}
 
 export const getReferralUserPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');

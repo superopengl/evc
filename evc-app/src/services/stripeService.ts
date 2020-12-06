@@ -47,6 +47,7 @@ async function createStripeCustomer(userId: string, userProfile: UserProfile) {
     name: `${userProfile.givenName} ${userProfile.surname}`.trim(),
     metadata: {
       evc_user_id: userId,
+      evc_payment_id: null,
     }
   });
 }

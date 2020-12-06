@@ -223,6 +223,18 @@ paths:
       responses:
         200:
           description: OK
+  /user/:id/balance/history:
+    get:
+      operationId: listUserBalanceHistory
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
   /user/:id/referral_policy:
     get:
       operationId: getReferralUserPolicy
@@ -752,6 +764,12 @@ paths:
   /account:
     get:
       operationId: getMyAccount
+      responses:
+        200:
+          description: OK
+  /balance/history:
+    get:
+      operationId: listMyBalanceHistory
       responses:
         200:
           description: OK

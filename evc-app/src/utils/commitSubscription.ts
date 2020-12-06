@@ -10,6 +10,7 @@ import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { now } from 'moment';
 import { getUtcNow } from './getUtcNow';
 import { User } from '../entity/User';
+import { handleReferralKickbackWhenPaid } from '../services/referralService';
 
 
 export async function commitSubscription(
@@ -46,7 +47,7 @@ export async function commitSubscription(
     await m.save(subscription);
 
     if (payment.method !== PaymentMethod.Balance) {
-      await m.getRepository(User).update({ id: userId, everPaid: false }, { everPaid: true });
+      await handleReferralKickbackWhenPaid(m, userId);
     }
   });
 }

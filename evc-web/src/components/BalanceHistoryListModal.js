@@ -1,10 +1,20 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Modal, List, Drawer } from 'antd';
+import { Space, Typography, List, Drawer } from 'antd';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
 import { TimeAgo } from 'components/TimeAgo';
+import { getSubscriptionName } from 'util/getSubscriptionName';
+import * as _ from 'lodash';
+
+const { Text, Title } = Typography;
+
+const StyledDrawer = styled(Drawer)`
+  .ant-list-item {
+    padding: 8px 0;
+  }
+`
 
 const BalanceHistoryListModal = (props) => {
 
@@ -30,16 +40,22 @@ const BalanceHistoryListModal = (props) => {
   }, [propVisible]);
 
   return (
-    <Drawer
+    <StyledDrawer
       title="Balance History"
       visible={visible}
       closable={true}
       maskClosable={true}
       destroyOnClose={false}
       onClose={() => onOk()}
-      // onCancel={() => onOk()}
-      footer={null}
       width={400}
+      footer={
+        <>
+          <Text strong level={5}>Sub Total</Text>
+          <MoneyAmount style={{ fontSize: '1.5rem', marginLeft: '1rem' }} type="success" strong value={_.sum(data, x => x.amount)} />
+        </>
+
+      }
+      footerStyle={{ textAlign: 'right' }}
     >
       <List
         loading={loading}
@@ -47,15 +63,15 @@ const BalanceHistoryListModal = (props) => {
         size="small"
         renderItem={item => {
           return <List.Item>
-            <List.Item.Meta 
-            description={<TimeAgo value={item.createdAt} />} 
-            title={item.referredUserEmail} 
+            <List.Item.Meta
+              description={<TimeAgo value={item.createdAt} />}
+              title={item.referredUserEmail || getSubscriptionName(item.type)}
             />
-            <MoneyAmount strong type="success" value={item.amount} />
+            <MoneyAmount type={item.amount < 0 ? 'danger' : 'success'} value={item.amount} />
           </List.Item>
         }}
       />
-    </Drawer>
+    </StyledDrawer>
   )
 };
 

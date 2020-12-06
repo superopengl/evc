@@ -48,6 +48,9 @@ export class Payment {
   subscription: Subscription;
 
   @OneToOne(() => UserBalanceTransaction, { nullable: true, cascade: true })
-  @JoinColumn()
+  @JoinColumn({name: 'balanceTransactionId', referencedColumnName: 'id'})
   balanceTransaction: UserBalanceTransaction;
+
+  @Column('uuid', {nullable: true})
+  balanceTransactionId: string;
 }

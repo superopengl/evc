@@ -29,6 +29,8 @@ import { flushTranslation, listAllTranslationsForEdit, saveTranslation, newLocal
 import { notify } from 'util/notify';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -88,12 +90,8 @@ const EmailTemplateListPage = () => {
       title: 'Template',
       render: (text, item) => {
         return <Space direction="vertical" style={{ width: '100%' }}>
-          <Input value={item.subject} />
-          <Input.TextArea
-            autoSize={{ minRows: 1, maxRows: 3 }}
-            value={item.body}
-            onChange={e => handleInputChange(item, e.target.value)}
-          />
+          <Input value={item.subject} readOnly />
+          <ReactQuill value={item.body} readOnly modules={{toolbar:false}}/>
         </Space>
       },
     },
@@ -196,7 +194,7 @@ const EmailTemplateListPage = () => {
             <Input.TextArea allowClear />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <Input.TextArea allowClear />
+            <ReactQuill />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit">Save</Button>

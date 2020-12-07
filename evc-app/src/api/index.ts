@@ -19,3 +19,4 @@ export * from './stockSupportResistanceController';
 export * from './stockPublishController';
 export * from './stripeController';
 export * from './translationController';
+export * from './emailTemplateController';

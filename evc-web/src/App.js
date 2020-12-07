@@ -46,6 +46,7 @@ import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlo
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 import MySubscriptionHistoryPage from 'pages/MySubscription/MySubscriptionHistoryPage';
 import TranslationListPage from 'pages/Translation/TranslationListPage';
+import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -125,6 +126,7 @@ class App extends React.Component {
             <RoleRoute visible={isAdmin} loading={loading} exact path="/recurring" component={RecurringListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/impersonate" component={ImpersonatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/translation" component={TranslationListPage} />
+            <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/stock" exact component={StockListPage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />

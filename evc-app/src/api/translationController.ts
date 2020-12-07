@@ -68,7 +68,7 @@ export const saveLocaleResourceItem = handlerWrapper(async (req, res) => {
 
 export const flushLocaleResource = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const tasks = [Locale.Engish, Locale.ChineseTraditional, Locale.ChineseTraditional].map(locale => {
+  const tasks = [Locale.Engish, Locale.ChineseSimple, Locale.ChineseTraditional].map(locale => {
     const cacheKey = getCacheKey(locale);
     return redisCache.del(cacheKey);
   });
@@ -76,3 +76,19 @@ export const flushLocaleResource = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+
+export const newLocaleResource = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { key } = req.body;
+
+  const entities = [Locale.Engish, Locale.ChineseSimple, Locale.ChineseTraditional].map(locale => {
+    const entity = new Translation();
+    entity.key = key;
+    entity.locale = locale;
+    entity.value = req.body[locale]
+    return entity;
+  });
+  await getRepository(Translation).insert(entities);
+
+  res.json();
+});

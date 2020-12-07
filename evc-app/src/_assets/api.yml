@@ -851,6 +851,11 @@ paths:
       responses:
         200:
           description: OK
+    post:
+      operationId: newLocaleResource
+      responses:
+        200:
+          description: OK
   /i18n/resource/:locale:
     get:
       operationId: getLocaleResource

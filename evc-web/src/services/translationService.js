@@ -8,6 +8,10 @@ export async function listAllTranslationsForEdit() {
   return httpGet('i18n/resource');
 }
 
+export async function newLocaleResource(payload) {
+  return httpPost('i18n/resource', payload);
+}
+
 export async function flushTranslation() {
   return httpPost('i18n/resource/flush');
 }

@@ -5,7 +5,8 @@ import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   IdcardOutlined, SearchOutlined,
-  UserOutlined
+  UserOutlined,
+  PlusOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space, Alert } from 'antd';
@@ -24,7 +25,7 @@ import { subscriptionDef } from 'def/subscriptionDef';
 import Highlighter from "react-highlight-words";
 import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
-import { flushTranslation, listAllTranslationsForEdit, saveTranslation } from 'services/translationService';
+import { flushTranslation, listAllTranslationsForEdit, saveTranslation, newLocaleResource } from 'services/translationService';
 import { notify } from 'util/notify';
 
 const { Title, Text, Paragraph } = Typography;
@@ -46,54 +47,44 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
-const subscriptionDefMap = _.keyBy(subscriptionDef, 'key');
-
-const DEFAULT_QUERY_INFO = {
-  text: '',
-  page: 1,
-  size: 50,
-  subscription: [],
-  orderField: 'createdAt',
-  orderDirection: 'DESC'
-};
-
-const LOCAL_STORAGE_KEY = 'user_query';
-
-const InplaceEditableInput = props => {
-  const { locale, value, onChange } = props;
-
-
-}
 
 const TranslationListPage = () => {
 
-  const [profileModalVisible, setProfileModalVisible] = React.useState(false);
-  const [portfolioModalVisible, setPortfolioModalVisible] = React.useState(false);
-  const [referralBalanceModal, setReferralBalanceModal] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState();
+  const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
-  const [inviteVisible, setInviteVisible] = React.useState(false);
-  const context = React.useContext(GlobalContext);
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
   const columnDef = [
     {
       title: 'Key',
       dataIndex: 'key',
+      sorter: {
+        compare: (a, b) => a.key.localeCompare(b.keyy)
+      },
       render: (text) => text,
     },
     {
       title: 'Locale',
       dataIndex: 'locale',
-      render: (text) => text,
+      sorter: {
+        compare: (a, b) => a.locale.localeCompare(b.locale)
+      },
+      render: (text) => {
+        switch (text) {
+          case 'zh-CN':
+            return '简体中文';
+          case 'zh-TW':
+            return '繁體中文';
+          case 'en-US':
+          default:
+            return 'English';
+        }
+      },
     },
     {
       title: 'Translations',
       dataIndex: 'value',
       render: (text, item) => {
-        const { key, local } = item;
         return <Input.TextArea
           autoSize={{ minRows: 1, maxRows: 3 }}
           value={text}
@@ -116,7 +107,7 @@ const TranslationListPage = () => {
     }
   }
 
-  const loadList = async (qi = queryInfo) => {
+  const loadList = async () => {
     try {
       setLoading(true);
       setList(await listAllTranslationsForEdit());
@@ -129,16 +120,21 @@ const TranslationListPage = () => {
     loadList();
   }, []);
 
-  const handleSearchTextChange = text => {
-    const newQueryInfo = {
-      ...queryInfo,
-      text
-    }
-  }
-
   const handleFlush = async (value) => {
     await flushTranslation();
     notify.success('Succesfully flushed translation cache. All clients will get the latest translation resources');
+  }
+
+  const handleSaveNew = async (values) => {
+    try{
+      setLoading(true);
+      await newLocaleResource(values);
+      setDrawerVisible(false);
+      await loadList();
+    }finally{
+      setLoading(false);
+
+    }
   }
 
   return (
@@ -150,33 +146,47 @@ const TranslationListPage = () => {
             <Title level={2} style={{ margin: 'auto' }}>Translations</Title>
           </StyledTitleRow>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button type="primary" ghost onClick={handleFlush}>Flush Update</Button>
+            <Button type="primary" ghost onClick={handleFlush}>Flush Cache</Button>
+            <Button type="primary" ghost onClick={() => setDrawerVisible(true)} icon={<PlusOutlined/>} />
           </Space>
           <Table columns={columnDef}
             dataSource={list}
             size="small"
-
-            // scroll={{x: 1000}}
             rowKey={item => `${item.key}.${item.locale}`}
             loading={loading}
             pagination={false}
           />
         </Space>
       </ContainerStyled>
-
       <Drawer
-        visible={referralBalanceModal}
-        destroyOnClose={true}
+        title="New Translation"
+        visible={drawerVisible}
+        closable={true}
         maskClosable={true}
-        title="Referral & Balance"
-        onClose={() => setReferralBalanceModal(false)}
+        onClose={() => setDrawerVisible(false)}
         width={400}
+        destroyOnClose={true}
       >
-        {currentUser && <Space size="large" direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
-          <Text code>{currentUser.email}</Text>
-          <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
-
-        </Space>}
+        <Form 
+          layout="vertical"
+          onFinish={handleSaveNew}
+        >
+          <Form.Item label="Key" name="key" rules={[{required: true, whitespace: true, message: ' '}]}>
+            <Input allowClear autoFocus/>
+          </Form.Item>
+          <Form.Item label="English" name="en-US" rules={[{required: true, whitespace: true, message: ' '}]}>
+            <Input.TextArea allowClear />
+          </Form.Item>
+          <Form.Item label="简体中文" name="zh-CN" rules={[{required: true, whitespace: true, message: ' '}]}>
+            <Input.TextArea allowClear />
+          </Form.Item>
+          <Form.Item label="繁體中文" name="zh-TW" rules={[{required: true, whitespace: true, message: ' '}]}>
+            <Input.TextArea allowClear />
+          </Form.Item>
+          <Form.Item>
+            <Button block type="primary" htmlType="submit">Save</Button>
+          </Form.Item>
+        </Form>
       </Drawer>
     </LayoutStyled >
 

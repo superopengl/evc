@@ -49,6 +49,12 @@ const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
   height: 100%;
+
+  .ant-drawer-content {
+    .ql-editor {
+      height: 300px !important;
+    } 
+  }
 `;
 
 
@@ -176,6 +182,7 @@ const EmailTemplateListPage = () => {
       </ContainerStyled>
       <Drawer
         // title=" "
+        id="scrolling-container"
         visible={drawerVisible}
         closable={true}
         maskClosable={true}
@@ -189,16 +196,16 @@ const EmailTemplateListPage = () => {
           initialValues={{...currentItem, body: currentItem?.body || ''}}
         >
           <Form.Item label="Key" name="key" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <Input allowClear autoFocus />
+            <Input allowClear autoFocus disabled={currentItem}/>
           </Form.Item>
           <Form.Item label="Locale" name="locale" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <LocaleSelector/>
+            <LocaleSelector disabled={currentItem} />
           </Form.Item>
           <Form.Item label="Subject" name="subject" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <Input.TextArea allowClear />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <ReactQuill/>
+            <ReactQuill scrollingContainer="#scrolling-container"/>
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit">Save</Button>

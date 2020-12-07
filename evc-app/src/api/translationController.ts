@@ -13,12 +13,19 @@ function getCacheKey(locale) {
 
 export const getAllLocaleResource = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const list = await getRepository(Translation).find({
-    order: {
-      key: 'ASC',
-      locale: 'ASC'
-    }
-  });
+  const list = await getRepository(Translation)
+    .createQueryBuilder('en')
+    .where(`en.locale = 'en-US'`)
+    .leftJoin(q => q.from(Translation, 'cn').where(`cn.locale = 'zh-CN'`), 'cn', 'en.key = cn.key')
+    .leftJoin(q => q.from(Translation, 'tw').where(`tw.locale = 'zh-TW'`), 'tw', 'en.key = tw.key')
+    .orderBy('key', 'ASC')
+    .select([
+      `en.key as key`,
+      `en.value as "en-US"`,
+      `cn.value as "zh-CN"`,
+      `tw.value as "zh-TW"`,
+    ])
+    .execute();
   res.json(list);
 });
 

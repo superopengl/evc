@@ -47,12 +47,15 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
+const NEW_ITEM = Object.freeze({
+  isNew: true,
+  key: '',
+});
 
 const TranslationListPage = () => {
 
   const [loading, setLoading] = React.useState(true);
-  const [drawerVisible, setDrawerVisible] = React.useState(false);
-  const [list, setList] = React.useState([]);
+  const [list, setList] = React.useState([{ ...NEW_ITEM }]);
 
   const columnDef = [
     {
@@ -61,48 +64,82 @@ const TranslationListPage = () => {
       sorter: {
         compare: (a, b) => a.key.localeCompare(b.keyy)
       },
-      render: (text) => text,
-    },
-    {
-      title: 'Locale',
-      dataIndex: 'locale',
-      sorter: {
-        compare: (a, b) => a.locale.localeCompare(b.locale)
-      },
-      render: (text) => {
-        switch (text) {
-          case 'zh-CN':
-            return '简体中文';
-          case 'zh-TW':
-            return '繁體中文';
-          case 'en-US':
-          default:
-            return 'English';
-        }
-      },
-    },
-    {
-      title: 'Translations',
-      dataIndex: 'value',
-      render: (text, item) => {
-        return <Input.TextArea
-          autoSize={{ minRows: 1, maxRows: 3 }}
+      render: (text, item) => item.isNew ?
+        <Input
+          allowClear
+          autoFocus
           value={text}
-          onChange={e => handleInputChange(item, e.target.value)}
-          onBlur={e => handleInputBlur(item, e.target.value)}
+          onChange={e => handleNewItemKeyChange(item, e.target.value)}
         />
+        : text,
+    },
+    {
+      title: 'English',
+      dataIndex: 'en-US',
+      sorter: {
+        compare: (a, b) => a['en-US'].localeCompare(b['en-US'])
       },
+      render: (text, item) => <Input.TextArea
+        autoSize={{ minRows: 1, maxRows: 3 }}
+        value={text}
+        allowClear={item.isNew}
+        onChange={e => handleInputChange(item, 'en-US', e.target.value)}
+        onBlur={e => handleInputBlur(item, 'en-US', e.target.value)}
+      />
+    },
+    {
+      title: '简体中文',
+      dataIndex: 'zh-CN',
+      sorter: {
+        compare: (a, b) => a['zh-CN'].localeCompare(b['zh-CN'])
+      },
+      render: (text, item) => <Input.TextArea
+        autoSize={{ minRows: 1, maxRows: 3 }}
+        value={text}
+        allowClear={item.isNew}
+        onChange={e => handleInputChange(item, 'zh-CN', e.target.value)}
+        onBlur={e => handleInputBlur(item, 'zh-CN', e.target.value)}
+      />
+    },
+    {
+      title: '繁體中文',
+      dataIndex: 'zh-TW',
+      sorter: {
+        compare: (a, b) => a['zh-TW'].localeCompare(b['zh-TW'])
+      },
+      render: (text, item) => <Input.TextArea
+        autoSize={{ minRows: 1, maxRows: 3 }}
+        value={text}
+        allowClear={item.isNew}
+        onChange={e => handleInputChange(item, 'zh-TW', e.target.value)}
+        onBlur={e => handleInputBlur(item, 'zh-TW', e.target.value)}
+      />
+    },
+    {
+      render: (text, item) => <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          {item.isNew && <Button type="primary" ghost shape="circle" icon={<PlusOutlined />} disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)}/>}
+        </Space>
     },
   ];
 
-  const handleInputChange = (item, value) => {
-    item.value = value;
+  const isItemValid = (item) => {
+    return item.key && item['en-US'] && item['zh-CN'] && item['zh-TW'];
+  }
+
+  const handleNewItemKeyChange = (item, keyName) => {
+    item.key = keyName;
     setList([...list]);
   }
 
-  const handleInputBlur = async (item, value) => {
+  const handleInputChange = (item, locale, value) => {
+    item[locale] = value;
+    setList([...list]);
+  }
+
+  const handleInputBlur = async (item, locale, value) => {
+    if (item.isNew) return;
     if (item.value !== value) {
-      await saveTranslation(item.locale, item.key, item.value);
+      await saveTranslation(locale, item.key, value);
       await loadList();
     }
   }
@@ -110,7 +147,9 @@ const TranslationListPage = () => {
   const loadList = async () => {
     try {
       setLoading(true);
-      setList(await listAllTranslationsForEdit());
+      const data = await listAllTranslationsForEdit();
+      data.unshift({ ...NEW_ITEM });
+      setList(data);
     } finally {
       setLoading(false);
     }
@@ -120,20 +159,19 @@ const TranslationListPage = () => {
     loadList();
   }, []);
 
-  const handleFlush = async (value) => {
+  const handleFlush = async () => {
     await flushTranslation();
     notify.success('Succesfully flushed translation cache. All clients will get the latest translation resources');
   }
 
-  const handleSaveNew = async (values) => {
-    try{
+  const handleSaveNew = async (item) => {
+    if(!isItemValid(item)) return;
+    try {
       setLoading(true);
-      await newLocaleResource(values);
-      setDrawerVisible(false);
+      await newLocaleResource(item);
       await loadList();
-    }finally{
+    } finally {
       setLoading(false);
-
     }
   }
 
@@ -147,49 +185,17 @@ const TranslationListPage = () => {
           </StyledTitleRow>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button type="primary" ghost onClick={handleFlush}>Flush Cache</Button>
-            <Button type="primary" ghost onClick={() => setDrawerVisible(true)} icon={<PlusOutlined/>} />
           </Space>
           <Table columns={columnDef}
             dataSource={list}
             size="small"
-            rowKey={item => `${item.key}.${item.locale}`}
+            rowKey="key"
             loading={loading}
             pagination={false}
           />
         </Space>
       </ContainerStyled>
-      <Drawer
-        title="New Translation"
-        visible={drawerVisible}
-        closable={true}
-        maskClosable={true}
-        onClose={() => setDrawerVisible(false)}
-        width={400}
-        destroyOnClose={true}
-      >
-        <Form 
-          layout="vertical"
-          onFinish={handleSaveNew}
-        >
-          <Form.Item label="Key" name="key" rules={[{required: true, whitespace: true, message: ' '}]}>
-            <Input allowClear autoFocus/>
-          </Form.Item>
-          <Form.Item label="English" name="en-US" rules={[{required: true, whitespace: true, message: ' '}]}>
-            <Input.TextArea allowClear />
-          </Form.Item>
-          <Form.Item label="简体中文" name="zh-CN" rules={[{required: true, whitespace: true, message: ' '}]}>
-            <Input.TextArea allowClear />
-          </Form.Item>
-          <Form.Item label="繁體中文" name="zh-TW" rules={[{required: true, whitespace: true, message: ' '}]}>
-            <Input.TextArea allowClear />
-          </Form.Item>
-          <Form.Item>
-            <Button block type="primary" htmlType="submit">Save</Button>
-          </Form.Item>
-        </Form>
-      </Drawer>
     </LayoutStyled >
-
   );
 };
 

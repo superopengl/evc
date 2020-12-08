@@ -117,8 +117,8 @@ const TranslationListPage = () => {
     },
     {
       render: (text, item) => <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          {item.isNew && <Button type="primary" ghost shape="circle" icon={<PlusOutlined />} disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)}/>}
-        </Space>
+        {item.isNew && <Button type="primary" ghost shape="circle" icon={<PlusOutlined />} disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)} />}
+      </Space>
     },
   ];
 
@@ -138,10 +138,10 @@ const TranslationListPage = () => {
 
   const handleInputBlur = async (item, locale, value) => {
     if (item.isNew) return;
-    if (item.value !== value) {
-      await saveTranslation(locale, item.key, value);
-      await loadList();
-    }
+    // if (item.value !== value) {
+    await saveTranslation(locale, item.key, value);
+    // await loadList();
+    // }
   }
 
   const loadList = async () => {
@@ -165,7 +165,7 @@ const TranslationListPage = () => {
   }
 
   const handleSaveNew = async (item) => {
-    if(!isItemValid(item)) return;
+    if (!isItemValid(item)) return;
     try {
       setLoading(true);
       await newLocaleResource(item);

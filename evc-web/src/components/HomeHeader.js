@@ -119,6 +119,8 @@ const HomeHeaderRaw = props => {
             {isGuest && <Menu.Item key="login"><Link to="/login">Log In</Link></Menu.Item>}
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><Link to="/board">Board</Link></Menu.Item>} */}
             {isClient && <Menu.Item key="landing"><Link to="/">Home</Link></Menu.Item>}
+            {isAdmin && <Menu.Item key="stocks"><Link to="/">Stocks</Link></Menu.Item>}
+            {isAdmin && <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="stock"><Link to="/stock">Stocks</Link></Menu.Item>} */}
             {/* {isClient && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="clients"><Link to="/clients">Users</Link></Menu.Item>} */}
@@ -129,7 +131,6 @@ const HomeHeaderRaw = props => {
               {/* <Menu.Item key="doc_template"><Link to="/doc_template">Doc Templates</Link></Menu.Item> */}
               {/* <Menu.Item key="recurring"><Link to="/recurring">Recurring</Link></Menu.Item> */}
               <Menu.Item key="stocktag"><Link to="/stocktag">Stock Tags</Link></Menu.Item>
-              <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>
               <Menu.Item key="translation"><Link to="/translation">Translation</Link></Menu.Item>
               <Menu.Item key="config"><Link to="/config">Config</Link></Menu.Item>
               <Menu.Item key="email_template"><Link to="/email_template">Email Template</Link></Menu.Item>

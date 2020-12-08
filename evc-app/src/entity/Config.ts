@@ -6,6 +6,6 @@ export class Config {
   @PrimaryColumn()
   key: string;
 
-  @Column()
+  @Column('json')
   value: any;
 }

@@ -3,50 +3,76 @@ import { awsConfig } from '../utils/awsConfig';
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import * as nodemailer from 'nodemailer';
-import * as Email from 'email-templates';
-import * as path from 'path';
 import { logError } from '../utils/logger';
+import { EmailRequest } from '../types/EmailRequest';
+import { Locale } from '../types/Locale';
+import { getRepository } from 'typeorm';
+import { EmailTemplate } from '../entity/EmailTemplate';
+import * as handlebars from 'handlebars';
+import { htmlToText } from 'html-to-text';
 
-let emailerInstance = null;
-const sender = 'EasyValueCheck <noreply@easyvaluecheck.com>';
+let emailTransporter = null;
+const NO_REPLY_SYSTEM_SENDER = 'EasyValueCheck <noreply@easyvaluecheck.com>';
+const BCC_SYSTEM_EMAIL = 'EasyValueCheck Admin <admin@easyvaluecheck.com>';
 
 function getEmailer() {
-  if (!emailerInstance) {
+  if (!emailTransporter) {
     awsConfig();
-    const transport = nodemailer.createTransport({
+    emailTransporter = nodemailer.createTransport({
       SES: new aws.SES({ apiVersion: '2010-12-01' })
     });
-
-    emailerInstance = new Email({
-      preview: false,
-      send: true,
-      transport,
-    });
   }
-  return emailerInstance;
+  return emailTransporter;
 }
 
-export async function sendEmail(req: EmailRequest, throws = false) {
-  const { to, template, vars, shouldBcc, attachments, from } = req;
-  assert(to, 400, 'Email recipient is not specified');
-  assert(template, 400, 'Email template is not specified');
+async function getEmailTemplate(templateName: string, locale: Locale): Promise<EmailTemplate> {
+  if (!locale) {
+    locale = Locale.Engish;
+  }
 
-  const locals = {
+  const template = await getRepository(EmailTemplate).findOne({ key: templateName, locale });
+  assert(template, 500, `Cannot find email template for key ${templateName} and locale ${locale}`);
+
+  return template;
+}
+
+async function composeEmailOption(req: EmailRequest) {
+  const { subject, text, html } = await compileEmailBody(req);
+
+  return {
+    from: req.from || NO_REPLY_SYSTEM_SENDER,
+    to: req.to,
+    bcc: req.shouldBcc ? BCC_SYSTEM_EMAIL : undefined,
+    subject: subject,
+    text: text,
+    html: html,
+  };
+}
+
+async function compileEmailBody(req: EmailRequest) {
+  const { template, vars, locale } = req;
+  const { subject, body } = await getEmailTemplate(template, locale);
+
+  const allVars = {
     website: process.env.EVC_API_DOMAIN_NAME,
     ...vars
   };
 
+  const compiledBody = handlebars.compile(body);
+  const html = compiledBody(allVars);
+
+  return { subject, html, text: htmlToText(html) };
+}
+
+
+export async function sendEmail(req: EmailRequest, throws = false) {
+  const { to, template, vars } = req;
+  assert(to, 400, 'Email recipient is not specified');
+  assert(template, 400, 'Email template is not specified');
+
   try {
-    await getEmailer().send({
-      template: path.join(__dirname, 'emailTemplates', template),
-      locals,
-      message: {
-        from: from || sender,
-        bcc: shouldBcc ? sender : undefined,
-        to,
-        attachments
-      }
-    });
+    const option = await composeEmailOption(req);
+    await getEmailer().sendMail(option);
     console.log('Sent out email to', to);
   } catch (err) {
     logError(err, req, null, 'Sending email error', to, template, vars);
@@ -57,12 +83,3 @@ export async function sendEmail(req: EmailRequest, throws = false) {
 }
 
 
-
-export class EmailRequest {
-  to: string;
-  from?: string;
-  template: string;
-  vars: object;
-  attachments?: { filename: string, path: string }[];
-  shouldBcc?: boolean = false;
-}

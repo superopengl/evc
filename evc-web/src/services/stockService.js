@@ -150,3 +150,15 @@ export async function saveStockPublish(symbol, payload) {
 export async function syncStockList() {
   return httpPost(`/stock/data/sync`);
 }
+
+export async function getMarketMostActive() {
+  return httpGet(`/stock/data/mostactive`);
+}
+
+export async function getMarketGainers() {
+  return httpGet(`/stock/data/gainers`);
+}
+
+export async function getMarketLosers() {
+  return httpGet(`/stock/data/losers`);
+}

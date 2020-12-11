@@ -702,7 +702,25 @@ paths:
       operationId: syncStockList
       responses:
         200:
-          description: OK          
+          description: OK
+  /stock/data/mostactive:
+    get:
+      operationId: getMostActive
+      responses:
+        200:
+          description: OK
+  /stock/data/gainers:
+    get:
+      operationId: getGainers
+      responses:
+        200:
+          description: OK
+  /stock/data/losers:
+    get:
+      operationId: getLosers
+      responses:
+        200:
+          description: OK
   /subscription:
     get:
       operationId: getMyCurrnetSubscription

@@ -7,17 +7,18 @@ const { Text } = Typography;
 
 export const StockName = (props) => {
 
-  const { value, ...other } = props;
+  const { value, size, style, ...other } = props;
 
  const {symbol, company} = value;
 
   return (
-  <Text {...other}>{symbol} <Text type="secondary">({company})</Text></Text>
+  <Text {...other} style={{fontSize: size}}>{symbol} <Text type="secondary" style={{fontSize: size}}>({company})</Text></Text>
   );
 };
 
 StockName.propTypes = {
   value: PropTypes.object.isRequired,
+  size: PropTypes.any,
 };
 
 StockName.defaultProps = {

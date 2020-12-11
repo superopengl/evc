@@ -15,6 +15,7 @@ const StockCardClientSearch = (props) => {
   const [stock] = React.useState(value);
 
   return (
+    <>
     <StockInfoCard
       value={stock}
       hoverable={false}
@@ -30,6 +31,7 @@ const StockCardClientSearch = (props) => {
         </Tooltip>,
       ].filter(x => x)}
     />
+  </>
   );
 };
 

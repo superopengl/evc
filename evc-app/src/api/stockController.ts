@@ -24,7 +24,7 @@ import { StockFairValue } from '../entity/StockFairValue';
 import { StockSupportLong } from '../entity/StockSupportLong';
 import { StockResistanceLong } from '../entity/StockResistanceLong';
 import { redisCache } from '../services/redisCache';
-import { syncStockSymbols } from '../services/iexService';
+import { getMarketGainers, getMarketLosers, getMarketMostActive, syncStockSymbols } from '../services/iexService';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -222,4 +222,16 @@ export const syncStockList = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   await syncStockSymbols();
   res.json();
+});
+
+export const getMostActive = handlerWrapper(async (req, res) => {
+  res.json(await getMarketMostActive());
+});
+
+export const getGainers = handlerWrapper(async (req, res) => {
+  res.json(await getMarketGainers());
+});
+
+export const getLosers = handlerWrapper(async (req, res) => {
+  res.json(await getMarketLosers());
 });

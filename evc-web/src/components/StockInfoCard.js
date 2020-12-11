@@ -2,12 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Typography, Space, Row, Col, Tooltip, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { TimeAgo } from 'components/TimeAgo';
 import { StockName } from './StockName';
 
 const { Paragraph, Text } = Typography;
+
+
+const TooltipIcon = props => <Tooltip title={props.message}>
+  <QuestionCircleFilled />
+</Tooltip>
 
 
 const StockInfoCard = (props) => {
@@ -23,6 +28,7 @@ const StockInfoCard = (props) => {
   return (
     <Card
       size="small"
+      bordered={false}
       type="inner"
       // bordered={false}
       title={<StockName value={stock} />}
@@ -30,35 +36,34 @@ const StockInfoCard = (props) => {
       hoverable={hoverable}
       actions={actions}
     >
-      xx
       <Space direction="vertical" style={{ width: '100%' }}>
         <Row>
           <Col span={10}>
-            <Text type="secondary">Resistance</Text>
+            <Text type="secondary">Fair Value</Text> <TooltipIcon message="How to use fair value" />
+          </Col>
+          <Col span={14}>
+            <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} loTrend={stock.fairValueLoTrend} hiTrend={stock.fairValueHiTrend} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={10}>
+            <Text type="secondary">Support</Text> <TooltipIcon message="How to use support" />
           </Col>
           <Col span={14}>
             <Space size="small" direction="vertical">
-              <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} loTrend={stock.resistanceShortLoTrend} hiTrend={stock.resistanceShortHiTrend} />
-              <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} loTrend={stock.resistanceLongLoTrend} hiTrend={stock.resistanceLongHiTrend}  />
+              <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} loTrend={stock.supportShortLoTrend} hiTrend={stock.supportShortHiTrend} />
+              <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} loTrend={stock.supportLongLoTrend} hiTrend={stock.supportLongHiTrend} />
             </Space>
           </Col>
         </Row>
         <Row>
           <Col span={10}>
-            <Text type="secondary">Value</Text>
-          </Col>
-          <Col span={14}>
-            <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} loTrend={stock.fairValueLoTrend} hiTrend={stock.fairValueHiTrend}/>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={10}>
-            <Text type="secondary">Support</Text>
+            <Text type="secondary">Resistance</Text> <TooltipIcon message="How to use resistance" />
           </Col>
           <Col span={14}>
             <Space size="small" direction="vertical">
-            <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} loTrend={stock.supportShortLoTrend} hiTrend={stock.supportShortHiTrend} />
-            <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} loTrend={stock.supportLongLoTrend} hiTrend={stock.supportLongHiTrend}/>
+              <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} loTrend={stock.resistanceShortLoTrend} hiTrend={stock.resistanceShortHiTrend} />
+              <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} loTrend={stock.resistanceLongLoTrend} hiTrend={stock.resistanceLongHiTrend} />
             </Space>
           </Col>
         </Row>

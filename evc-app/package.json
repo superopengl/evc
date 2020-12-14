@@ -4,7 +4,7 @@
   "description": "EVC server",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "up": "node index.js",
     "start:prod": "npm run link-web && npm run build && TZ=utc node index.js",
     "start": "TZ=utc ts-node index.ts",
@@ -26,8 +26,11 @@
   "author": "techseeding2020@gmail.com",
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^26.0.19",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.4",
     "ts-clean": "^1.0.3",
+    "ts-jest": "^26.4.4",
     "ts-node": "^8.10.2",
     "tslint": "^6.1.2",
     "typescript": "^3.9.3"
@@ -62,6 +65,7 @@
     "md-to-pdf": "^3.1.1",
     "md5": "^2.3.0",
     "moment": "^2.27.0",
+    "moment-timezone": "^0.5.32",
     "node-cache": "^5.1.2",
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.4.14",

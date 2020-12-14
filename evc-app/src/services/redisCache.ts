@@ -26,24 +26,32 @@ class RedisCache {
 
   async set(key: string, value: any) {
     return new Promise((res, rej) => {
-      this.redisCache.set(key, value, (err, data) => {
-        return err ? rej(err) : res();
+      this.redisCache.set(key, value, (err, value) => {
+        return err ? rej(err) : res(value);
+      });
+    });
+  }
+
+  async setex(key: string, seconds: number, value: any) {
+    return new Promise((res, rej) => {
+      this.redisCache.setex(key, seconds, value, (err, value) => {
+        return err ? rej(err) : res(value);
       });
     });
   }
 
   async incr(key: string) {
     return new Promise((res, rej) => {
-      this.redisCache.incr(key, (err, data) => {
-        return err ? rej(err) : res();
+      this.redisCache.incr(key, (err, value) => {
+        return err ? rej(err) : res(value);
       });
     });
   }
 
   async decr(key: string) {
     return new Promise((res, rej) => {
-      this.redisCache.decr(key, (err, data) => {
-        return err ? rej(err) : res();
+      this.redisCache.decr(key, (err, value) => {
+        return err ? rej(err) : res(value);
       });
     });
   }

@@ -384,6 +384,30 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/insider:
+    get:
+      operationId: getStockInsider
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true      
+      responses:
+        200:
+          description: OK          
+  /stock/s/{symbol}/news:
+    get:
+      operationId: getStockNews
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true      
+      responses:
+        200:
+          description: OK                    
   /stock/s/{symbol}/history:
     get:
       operationId: getStockHistory

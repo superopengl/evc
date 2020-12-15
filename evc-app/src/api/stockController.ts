@@ -238,7 +238,8 @@ export const getMostActive = handlerWrapper(async (req, res) => {
 });
 
 export const getGainers = handlerWrapper(async (req, res) => {
-  res.json(await getMarketGainers());
+  const data = await getMarketGainers();
+  res.json(data);
 });
 
 export const getLosers = handlerWrapper(async (req, res) => {

@@ -26,7 +26,7 @@ async function request(relativeApiPath: string, query?: object) {
     ...query,
     token: process.env.IEXCLOUD_PUBLIC_KEY
   })
-  const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/${path}?${queryParams}`;
+  const url = `${process.env.IEXCLOUD_API_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/${path}?${queryParams}`;
   const resp = await fetch(url, query);
   return resp.json();
 }
@@ -53,15 +53,16 @@ export async function syncStockSymbols() {
 }
 
 export async function getMarketMostActive() {
-  return await request('/stock/market/list/mostactive', { listLimit: 5 });
+  return await request('/stock/market/list/mostactive');
 }
 
 export async function getMarketGainers() {
-  return await request('/stock/market/list/gainers', { listLimit: 5 });
+  // Cannot add listLimit=5 query param because iex API has a bug that adding listLimit will return nothing.
+  return await request('/stock/market/list/gainers');
 }
 
 export async function getMarketLosers() {
-  return await request('/stock/market/list/losers', { listLimit: 5 });
+  return await request('/stock/market/list/losers');
 }
 
 export async function getInsiderRoster(symbol: string) {

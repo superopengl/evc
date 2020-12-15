@@ -20,5 +20,5 @@ export function computeSecondsToNextUpdateTime(scheduledEtTimes: number[]) {
   const now = moment();
   const nextTickMoment = getNextTickMoment(scheduledEtTimes, now);
   const duration = moment.duration(nextTickMoment.diff(now));
-  return duration.asSeconds();
+  return Math.ceil(duration.asSeconds());
 }

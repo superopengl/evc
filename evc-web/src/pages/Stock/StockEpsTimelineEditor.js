@@ -22,12 +22,10 @@ const Container = styled.div`
 `;
 
 
-export const StockEpsTimelineEditor = (props) => {
+const StockEpsTimelineEditor = (props, ref) => {
   const { onLoadList, onSaveNew, onDelete, onChange, onSelected, getClassNameOnSelect } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
-  const [currentItem, setCurrentItem] = React.useState();
-
 
   const updateList = list => {
     setList(list);
@@ -42,6 +40,12 @@ export const StockEpsTimelineEditor = (props) => {
       setLoading(false);
     }
   }
+
+  React.useImperativeHandle(ref, () => ({
+    refresh() {
+      loadEntity();
+    }
+  }));
 
   React.useEffect(() => {
     loadEntity();
@@ -94,7 +98,7 @@ export const StockEpsTimelineEditor = (props) => {
             <List.Item.Meta
               description={<Space>
                 <Text type="secondary">{item.year} Q{item.quarter}</Text>
-                <MoneyAmount value={item.value} showSymbol={false}/>
+                <MoneyAmount value={item.value}/>
               </Space>}
             />
           </List.Item>
@@ -120,3 +124,5 @@ StockEpsTimelineEditor.defaultProps = {
   onSelected: () => { },
   getClassNameOnSelect: () => false,
 };
+
+export default React.forwardRef(StockEpsTimelineEditor);

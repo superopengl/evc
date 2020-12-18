@@ -392,10 +392,10 @@ paths:
           in: path
           type: string
           format: uuid
-          required: true      
+          required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/s/{symbol}/chart/intraday:
     get:
       operationId: getStockChartIntraday
@@ -404,10 +404,10 @@ paths:
           in: path
           type: string
           format: uuid
-          required: true      
+          required: true
       responses:
         200:
-          description: OK                    
+          description: OK
   /stock/s/{symbol}/chart/5d:
     get:
       operationId: getStockChart5D
@@ -416,10 +416,22 @@ paths:
           in: path
           type: string
           format: uuid
-          required: true      
+          required: true
       responses:
         200:
-          description: OK                              
+          description: OK
+  /stock/s/{symbol}/earnings:
+    get:
+      operationId: getEarningToday
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
   /stock/s/{symbol}/news:
     get:
       operationId: getStockNews
@@ -428,10 +440,10 @@ paths:
           in: path
           type: string
           format: uuid
-          required: true      
+          required: true
       responses:
         200:
-          description: OK                    
+          description: OK
   /stock/s/{symbol}/history:
     get:
       operationId: getStockHistory
@@ -573,6 +585,17 @@ paths:
           description: OK
     post:
       operationId: saveStockEps
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/eps/sync:
+    post:
+      operationId: syncStockEps
       parameters:
         - name: symbol
           in: path

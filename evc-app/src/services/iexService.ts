@@ -81,12 +81,12 @@ export async function getInsiderTransactions(symbol: string) {
 export async function getNews(symbol: string) {
   const list = await request(`/stock/${symbol}/news/last/10`);
   return list
-  .filter(x => x.lang === 'en')
-  .map(x => ({
-    ...x,
-    image: `${x.image}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`,
-    url: `${x.url}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`
-  }));
+    .filter(x => x.lang === 'en')
+    .map(x => ({
+      ...x,
+      image: `${x.image}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`,
+      url: `${x.url}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`
+    }));
 }
 
 export async function getChartIntraday(symbol: string) {
@@ -97,3 +97,7 @@ export async function getChart5D(symbol: string) {
   return await request(`/stock/${symbol}/chart/5d`);
 }
 
+export async function getEarnings(symbol: string, last = 1) {
+  const { earnings } = await request(`/stock/${symbol}/earnings/${last}`);
+  return earnings;
+}

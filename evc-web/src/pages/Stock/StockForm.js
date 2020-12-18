@@ -22,7 +22,7 @@ import {
   listStockPe, saveStockPe, deleteStockPe,
   listStockEps, saveStockEps, deleteStockEps,
   listStockFairValue, saveStockFairValue, deleteStockFairValue,
-  listStockPublish, saveStockPublish,
+  listStockPublish, saveStockPublish, syncStockEps,
 } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
@@ -31,7 +31,7 @@ import { Divider } from 'antd';
 
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, SaveOutlined, SyncOutlined } from '@ant-design/icons';
 import { StockRangeTimelineEditor } from './StockRangeTimelineEditor';
-import { StockEpsTimelineEditor } from './StockEpsTimelineEditor';
+import StockEpsTimelineEditor from './StockEpsTimelineEditor';
 import { StockFairValueTimelineEditor } from './StockFairValueTimelineEditor';
 import { StockPublishTimelineEditor } from './StockPublishTimelineEditor';
 import { PageHeader } from 'antd';
@@ -129,6 +129,8 @@ const StockForm = (props) => {
   const [valueList, setValueList] = React.useState([]);
   const [publishList, setPublishList] = React.useState([]);
   const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
+  const epsEditorRef = React.useRef(null);
+  const [epsSyncing, setEpsSyncing] = React.useState(false);
 
   const loadEntity = async () => {
     try {
@@ -345,12 +347,12 @@ const StockForm = (props) => {
           return item.id === selected.publishId;
         case 'support_short':
           return item.supportShortId === selected.supportShortId;
-          case 'support_long':
-            return item.supportLongId === selected.supportLongId;
+        case 'support_long':
+          return item.supportLongId === selected.supportLongId;
         case 'resistance_short':
           return item.resistanceShortId === selected.resistanceShortId;
-          case 'resistance_long':
-            return item.resistanceLongId === selected.resistanceLongId;
+        case 'resistance_long':
+          return item.resistanceLongId === selected.resistanceLongId;
         case 'value':
         case 'eps':
         case 'pe':
@@ -364,19 +366,29 @@ const StockForm = (props) => {
     return `${shouldHighlight() ? 'current-selected-datepoint' : ''} ${selected.source === 'publish' ? 'source' : ''}`;
   }
 
+  const handleSyncEps = async () => {
+    try {
+      setEpsSyncing(true);
+      await syncStockEps(stock.symbol);
+      epsEditorRef.current.refresh();
+    } finally {
+      setEpsSyncing(false);
+    }
+  }
+
   return (<Container>
     <PageHeader
-    ghost={false}
+      ghost={false}
       onBack={handleCancel}
       title={<StockName value={stock} />}
       extra={[
         <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
-        // <Button key="1" disabled={loading} onClick={() => loadEntity()} icon={<SyncOutlined />} />,
+        <Button key="1" disabled={loading} onClick={() => handleSyncEps()} loading={epsSyncing}>Sync Last 4 EPS</Button>,
         // <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
         // <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
       ]}
     />
-    <Row gutter={20} style={{marginTop: 20}}>
+    <Row gutter={20} style={{ marginTop: 20 }}>
       <ColStyled {...span}>
         <ColInnerCard title="EPS">
           <StockEpsTimelineEditor
@@ -386,6 +398,7 @@ const StockForm = (props) => {
             onChange={list => setEpsList(list)}
             onSelected={updateSelectedByEps}
             getClassNameOnSelect={getClassNameOnSelectForEpsItem}
+            ref={epsEditorRef}
           />
         </ColInnerCard>
       </ColStyled>

@@ -111,6 +111,10 @@ export async function saveStockEps(symbol, values) {
   return httpPost(`stock/s/${symbol}/eps`, values);
 }
 
+export async function syncStockEps(symbol) {
+  return httpPost(`stock/s/${symbol}/eps/sync`);
+}
+
 export async function deleteStockEps(id) {
   return httpDelete(`stock/eps/${id}`);
 }
@@ -165,6 +169,10 @@ export async function getMarketLosers() {
 
 export async function getStockInsider(symbol) {
   return httpGet(`/stock/s/${symbol}/insider`);
+}
+
+export async function getStockEarnings(symbol) {
+  return httpGet(`/stock/s/${symbol}/earnings`);
 }
 
 export async function getStockNews(symbol) {

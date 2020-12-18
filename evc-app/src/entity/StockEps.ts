@@ -20,9 +20,6 @@ export class StockEps {
   @Column()
   symbol: string;
 
-  @Column('uuid')
-  author: string;
-
   @Column('smallint')
   year: number;
 

@@ -32,7 +32,9 @@ import {
   getMarketGainers,
   getMarketLosers,
   getMarketMostActive,
-  syncStockSymbols
+  syncStockSymbols,
+  getChartIntraday,
+  getChart5D
 } from '../services/iexService';
 
 
@@ -265,3 +267,14 @@ export const getStockNews = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   res.json(await getNews(symbol));
 });
+
+export const getStockChartIntraday = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  res.json(await getChartIntraday(symbol));
+});
+
+export const getStockChart5D = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  res.json(await getChart5D(symbol));
+});
+

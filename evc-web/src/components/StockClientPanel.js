@@ -9,6 +9,7 @@ import { FaCrown } from 'react-icons/fa';
 import { IconContext } from "react-icons";
 import StockInsiderPanel from './StockInsiderPanel';
 import StockNewsPanel from './StockNewsPanel';
+import StockChart from './charts/StockChart';
 const { Paragraph, Text } = Typography;
 
 const MemberOnlyIcon = () => <Text type="danger"><LockFilled/></Text>
@@ -21,6 +22,7 @@ const StockClientPanel = (props) => {
     <Space direction="vertical" style={{ width: '100%' }}>
       <StockName size={20} strong value={stock} />
       <Text type="secondary">Electronic Technology</Text>
+      <StockChart symbol={stock.symbol} type="1d"/>
       <Space size="large" style={{ alignItems: 'flex-end' }}>
         <div>
           <Text style={{ fontSize: 30 }} strong>125.45 <Text type="success"><small>+0.63 (+0.51%)</small></Text></Text>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Button, Tooltip, Modal, Tabs } from 'antd';
+import { List, Typography, Space, Image, Tooltip, Modal, Tabs } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
 import StockInfoCard from './StockInfoCard';
@@ -8,8 +8,9 @@ import { StockName } from './StockName';
 import { FaCrown } from 'react-icons/fa';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
+import { TimeAgo } from 'components/TimeAgo';
 import { Loading } from './Loading';
-const { Paragraph, Text } = Typography;
+const { Paragraph, Text, Title } = Typography;
 
 
 const StockNewsPanel = (props) => {
@@ -33,9 +34,31 @@ const StockNewsPanel = (props) => {
 
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
-      <Loading loading={loading}>
-        <em>{JSON.stringify(data, null, 2)}</em>
-      </Loading>
+      <List
+        loading={loading}
+        dataSource={data}
+        renderItem={item => (
+          <List.Item
+            extra={
+              item.image ? <Image src={item.image} /> : null
+            }
+          >
+            {/* <a href={item.url} target="_blank" rel="noopener noreferrer"> */}
+            <List.Item.Meta
+              title={<Space>
+                <a href={item.url} target="_blank" rel="noopener noreferrer">
+                  <Title level={5} style={{margin: 0}}>
+                    {item.headline}
+                  </Title>
+                </a>
+                <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />
+              </Space>}
+              description={item.summary}
+            />
+            {/* </a> */}
+          </List.Item>
+        )}
+      />
     </Space>
   );
 };

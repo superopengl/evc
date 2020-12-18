@@ -434,7 +434,7 @@ paths:
           description: OK
   /stock/s/{symbol}/earnings:
     get:
-      operationId: getStockarningToday
+      operationId: getStockEarningToday
       parameters:
         - name: symbol
           in: path
@@ -443,7 +443,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/s/{symbol}/news:
     get:
       operationId: getStockNews

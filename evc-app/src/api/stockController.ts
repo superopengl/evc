@@ -38,6 +38,7 @@ import {
   getChart5D,
   getQuote
 } from '../services/iexService';
+import { StockLastPrice } from '../types/StockLastPrice';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -297,5 +298,27 @@ export const getStockChart5D = handlerWrapper(async (req, res) => {
 export const getStockQuote = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   res.json(await getQuote(symbol));
+});
+
+export const getStockPrice = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const cacheKey = `stock.${symbol}.lastPrice`;
+  let data = await redisCache.get(cacheKey) as StockLastPrice;
+  if (!data) {
+    const quote = await getQuote(symbol);
+    if (quote) {
+      data = {
+        price: quote.latestPrice,
+        time: quote.latestUpdate
+      };
+
+      redisCache.set(cacheKey, data);
+    }
+  }
+  const result = {
+    price: data?.price,
+    time: data?.time
+  }
+  res.json(result);
 });
 

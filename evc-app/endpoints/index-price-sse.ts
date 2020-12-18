@@ -2,6 +2,7 @@ import errorToJson from 'error-to-json';
 import * as EventSource from 'eventsource';
 import * as dotenv from 'dotenv';
 import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService';
+import { redisCache } from '../src/services/redisCache';
 
 const publisher = new RedisRealtimePricePubService();
 
@@ -12,8 +13,11 @@ type LastPrice = {
   time: Date
 }
 
-async function updatePriceInCache(priceList: LastPrice[]) {
-  
+async function updateLastPriceInCache(priceList: LastPrice[]) {
+  for(const p of priceList) {
+    const key = `stock.${p.symbol}.lastPrice`;
+    redisCache.set(key, p);
+  }
 }
 
 function handleMessage(data) {
@@ -23,7 +27,7 @@ function handleMessage(data) {
       
       // Publish prices.
       publisher.publish(data);
-      updatePriceInCache(priceList);
+      updateLastPriceInCache(priceList);
     }
   } catch (err) {
     console.error('Task', 'sse', 'message error', errorToJson(err));

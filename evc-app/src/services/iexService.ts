@@ -114,6 +114,5 @@ export async function getEarnings(symbol: string, last = 1) {
 }
 
 export async function getQuote(symbol: string) {
-  const data = await requestIexApi(`/stock/${symbol}/quote`);
-  return data;
+  return await requestIexApi(`/stock/${symbol}/quote`);
 }

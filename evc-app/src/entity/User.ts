@@ -48,9 +48,6 @@ export class User {
   @Column({ nullable: true })
   lastLoggedInAt?: Date;
 
-  @Column({ nullable: true })
-  lastNudgedAt?: Date;
-
   @Column({ default: UserStatus.Enabled })
   status!: UserStatus;
 

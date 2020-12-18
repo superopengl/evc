@@ -12,7 +12,7 @@ type LastPrice = {
   time: Date
 }
 
-function updatePriceInCache(priceList: LastPrice[]) {
+async function updatePriceInCache(priceList: LastPrice[]) {
   
 }
 
@@ -23,6 +23,7 @@ function handleMessage(data) {
       
       // Publish prices.
       publisher.publish(data);
+      updatePriceInCache(priceList);
     }
   } catch (err) {
     console.error('Task', 'sse', 'message error', errorToJson(err));

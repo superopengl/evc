@@ -420,9 +420,9 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/earnings:
+  /stock/s/{symbol}/quote:
     get:
-      operationId: getEarningToday
+      operationId: getStockQuote
       parameters:
         - name: symbol
           in: path
@@ -432,6 +432,18 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/earnings:
+    get:
+      operationId: getStockarningToday
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/news:
     get:
       operationId: getStockNews

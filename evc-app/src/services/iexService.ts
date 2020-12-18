@@ -101,3 +101,7 @@ export async function getEarnings(symbol: string, last = 1) {
   const { earnings } = await request(`/stock/${symbol}/earnings/${last}`);
   return earnings;
 }
+
+export async function getQuote(symbol: string) {
+  return await request(`/stock/${symbol}/quote`);
+}

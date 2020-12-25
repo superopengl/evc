@@ -4,19 +4,13 @@ import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import * as iexService from '../src/services/iexService';
+import { singleBatchRequest } from '../src/services/iexService';
 import { StockIexEpsInfo, syncManyStockEps } from '../src/services/stockEpsService';
 
-start('stock-eps', async () => {
-  const stocks = await getRepository(Stock)
-    .createQueryBuilder()
-    .select('symbol')
-    .getRawMany();
-  const symbols = stocks.map(s => s.symbol);
-  const result = await iexService.batchRequest(symbols, ['earnings'], { last: 4 });
 
+async function udpateDatabase(iexBatchResponse) {
   const epsInfo: StockIexEpsInfo[] = [];
-  for (const item of Object.values(result)) {
+  for (const item of Object.values(iexBatchResponse)) {
     const { symbol, earnings } = (item as any).earnings;
     if (symbol && earnings?.length) {
       for (const earning of earnings) {
@@ -30,4 +24,40 @@ start('stock-eps', async () => {
   }
 
   await syncManyStockEps(epsInfo);
+}
+
+async function syncIexToDatabase(symbols: string[]) {
+  const types = ['earnings'];
+  const params = { last: 4 };
+  const resp = await singleBatchRequest(symbols, types, params);
+  await udpateDatabase(resp);
+}
+
+const JOB_NAME = 'stock-eps';
+
+start(JOB_NAME, async () => {
+  const stocks = await getRepository(Stock)
+    .createQueryBuilder()
+    .select('symbol')
+    .getRawMany();
+  const symbols = stocks.map(s => s.symbol);
+
+  const batchSize = 100;
+  let round = 0;
+  const total = Math.ceil(symbols.length / batchSize);
+
+  let batchSymbols = [];
+  for (const symbol of symbols) {
+    batchSymbols.push(symbol);
+    if (batchSymbols.length === batchSize) {
+      console.log(JOB_NAME, `${++round}/${total}`);
+      await syncIexToDatabase(batchSymbols);
+      batchSymbols = [];
+    }
+  }
+
+  if (batchSymbols.length > 0) {
+    console.log(JOB_NAME, `${++round}/${total}`);
+    await syncIexToDatabase(batchSymbols);
+  }
 });

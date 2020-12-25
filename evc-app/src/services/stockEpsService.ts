@@ -9,7 +9,7 @@ export type StockIexEpsInfo = {
   value: number,
 }
 
-export const syncStockEps = async (symbol:string) => {
+export const syncStockEps = async (symbol: string) => {
   const earnings = await getEarnings(symbol, 4);
   const infoList = earnings.map(e => {
     const data: StockIexEpsInfo = {
@@ -26,8 +26,11 @@ export const syncStockEps = async (symbol:string) => {
 
 export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
   await executeSqlStatement(epsInfo, item => {
-    const {symbol,fiscalPeriod, value} = item;
-    const [full, quarter, year] = /Q([1-4]) ([0-9]{4})/.exec(fiscalPeriod);
+    const { symbol, fiscalPeriod, value } = item;
+    const matches = /Q([1-4]) ([0-9]{4})/.exec(fiscalPeriod);
+    if (!matches) return null;
+
+    const [full, quarter, year] = matches;
 
     return `INSERT INTO public.stock_eps(symbol, "createdAt", year, quarter, value) VALUES ('${symbol}', timezone('UTC', now()), ${year}, '${quarter}', '${value}') ON CONFLICT (symbol, year, quarter) DO UPDATE SET value = excluded.value, "createdAt" = excluded."createdAt"`;
   });

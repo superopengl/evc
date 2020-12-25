@@ -8,6 +8,7 @@ import { ScheduledClockCacheStrategy } from '../utils/cacheStrategies/ScheduledC
 import { FixedPeriodCacheStrategy } from '../utils/cacheStrategies/FixedPeriodCacheStrategy';
 import { NoCacheStrategy } from '../utils/cacheStrategies/NoCacheStrategy';
 import 'colors';
+import { assert } from '../utils/assert';
 
 function composeSingleLine(stock) {
   const { symbol, name } = stock;
@@ -115,4 +116,35 @@ export async function getEarnings(symbol: string, last = 1) {
 
 export async function getQuote(symbol: string) {
   return await requestIexApi(`/stock/${symbol}/quote`);
+}
+
+async function singleBatchRequest(symbols: string[], types: string[], options: {}) {
+  const len = symbols.length;
+  assert(0 < len && len <= 100, 400, `Wrong size of iex batch request ${len}`);
+  return await requestIexApi('/stock/market/batch', {
+    ...options,
+    symbols: symbols.join(','),
+    types: types.join(',')
+  })
+}
+
+export async function batchRequest(symbols: string[], types: string[], options?: {}) {
+  const batchSize = 100;
+  let batchSymbols = [];
+  const result = {};
+  for (const symbol of symbols) {
+    batchSymbols.push(symbol);
+    if (batchSymbols.length === batchSize) {
+      const resp = await singleBatchRequest(batchSymbols, types, options);
+      Object.assign(result, resp);
+      batchSymbols = [];
+    }
+  }
+
+  if (batchSymbols.length > 0) {
+    const resp = await singleBatchRequest(batchSymbols, types, options);
+    Object.assign(result, resp);
+  }
+
+  return result;
 }

@@ -5,6 +5,7 @@ import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService
 import { redisCache } from '../src/services/redisCache';
 import { StockLastPrice } from '../src/types/StockLastPrice';
 import 'colors';
+import { start } from './jobStarter';
 
 const publisher = new RedisRealtimePricePubService();
 
@@ -39,26 +40,23 @@ function handleMessage(data) {
   }
 }
 
-export const start = async () => {
+const JOB_NAME = 'price-sse';
+
+start(JOB_NAME, async () => {
   let es: EventSource = null;
   try {
-    dotenv.config();
-
     const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}`;
-    console.log('Task', 'sse', 'url', url);
+    console.log('Task', JOB_NAME, 'url', url);
     es = new EventSource(url);
 
     es.onopen = () => {
-      console.log('Task', 'sse', 'opened');
+      console.log('Task', JOB_NAME, 'opened');
     };
     es.onerror = (err) => {
-      console.log('Task sse error'.red, err);
+      console.log(`Task ${JOB_NAME} error`.red, err);
     };
     es.onmessage = (e) => handleMessage(e.data);
-  } catch (err) {
-    console.error('Task sse failed'.red, errorToJson(err));
+  } finally {
     es?.close();
   }
-};
-
-start();
+});

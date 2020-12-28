@@ -74,7 +74,8 @@ const StockEpsTimelineEditor = (props, ref) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <StockEpsInput onSave={handleSave} disabled={loading} />
+      {/* <StockEpsInput onSave={handleSave} disabled={loading} /> */}
+      <Button type="primary" disabled={loading} onClick={() => loadEntity()} loading={loading}>Sync Last 4 EPS</Button>
       <List
         dataSource={list}
         loading={loading}
@@ -89,7 +90,7 @@ const StockEpsTimelineEditor = (props, ref) => {
             // style={{position: 'relative'}}
             // className={index <= 3 ? 'current-selected' : ''}
             className={getClassNameOnSelect(item)}
-            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
+            // extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
               {item.id === publishedId ? <FlagFilled />

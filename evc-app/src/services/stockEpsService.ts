@@ -28,7 +28,10 @@ export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
   await executeSqlStatement(epsInfo, item => {
     const { symbol, fiscalPeriod, value } = item;
     const matches = /Q([1-4]) ([0-9]{4})/.exec(fiscalPeriod);
-    if (!matches) return null;
+    if (!matches) {
+      // Wrong fiscal period format
+      return null;
+    }
 
     const [full, quarter, year] = matches;
 

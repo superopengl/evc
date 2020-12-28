@@ -140,7 +140,12 @@ export const unwatchStock = handlerWrapper(async (req, res) => {
 export const listStock = handlerWrapper(async (req, res) => {
   let list = getCache('stock-list');
   if (!list) {
-    list = await getRepository(Stock).find({ select: ['symbol', 'company'] }) as any;
+    list = await getRepository(Stock).find({ 
+      select: ['symbol', 'company'],
+      order: {
+        symbol: 'ASC'
+      }
+    }) as any;
     setCache('stock-list', list, 1200);
   }
   res.json(list);

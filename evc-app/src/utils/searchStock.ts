@@ -27,7 +27,6 @@ export async function searchStock(queryInfo: StockSearchParams) {
     pageNo = 1;
   }
 
-  const count = await query.getCount();
 
   // if (from) {
   //   query = query.andWhere('s."createdAt" >= :date', { data: moment(from).toDate() });
@@ -65,6 +64,9 @@ export async function searchStock(queryInfo: StockSearchParams) {
       ]),
       'tag', 'tag.symbol = s.symbol');
   }
+
+  const count = await query.getCount();
+
   query = query.orderBy('s.symbol')
     .addOrderBy(`pu."${orderField || 'createdAt'}"`, orderDirection || 'DESC')
     .select([

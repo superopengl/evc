@@ -33,7 +33,6 @@ import {
   getMarketGainers,
   getMarketLosers,
   getMarketMostActive,
-  syncStockSymbols,
   getChartIntraday,
   getChart5D,
   getQuote
@@ -234,12 +233,6 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
   const repo = getRepository(Stock);
   await repo.delete(symbol);
-  res.json();
-});
-
-export const syncStockList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  await syncStockSymbols();
   res.json();
 });
 

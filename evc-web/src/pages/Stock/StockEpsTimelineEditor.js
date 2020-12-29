@@ -41,12 +41,6 @@ const StockEpsTimelineEditor = (props, ref) => {
     }
   }
 
-  React.useImperativeHandle(ref, () => ({
-    refresh() {
-      loadEntity();
-    }
-  }));
-
   React.useEffect(() => {
     loadEntity();
   }, []);
@@ -126,4 +120,4 @@ StockEpsTimelineEditor.defaultProps = {
   getClassNameOnSelect: () => false,
 };
 
-export default React.forwardRef(StockEpsTimelineEditor);
+export default StockEpsTimelineEditor;

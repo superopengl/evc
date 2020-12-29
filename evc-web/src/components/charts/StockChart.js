@@ -61,6 +61,7 @@ const StockChart = props => {
     //     </div>
     //   },
     // },
+    height: 200,
     xField: 'minute',
     yField: 'average',
     areaStyle: {
@@ -73,7 +74,7 @@ const StockChart = props => {
       max: _.max(data.map(x => x.high)),
     },
     xAxis: {
-      tickInterval: 10
+      tickInterval: 30
     }
   };
 

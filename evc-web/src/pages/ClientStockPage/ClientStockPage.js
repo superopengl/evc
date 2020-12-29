@@ -167,33 +167,31 @@ const ClientStockPage = (props) => {
             <StockQuotePanel symbol={stock.symbol} />
             <Row gutter={20}>
               <Col {...span}>
-                <Card type="inner" title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>}>
-                  <StockInfoCard value={stock} showTitle={false} />
-                </Card>
+                  <StockInfoCard value={stock} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
               </Col>
               <Col {...span}>
-                <Card type="inner" title="Chart">
+                <Card size="small" type="inner" title="Chart">
                   <StockChart symbol={stock.symbol} type="1d" />
                 </Card>
               </Col>
               <Col {...span}>
-                <Card type="inner" title={<>Insider Transactions  <MemberOnlyIcon /></>}>
+                <Card size="small" type="inner" title={<>Insider Transactions  <MemberOnlyIcon /></>}>
                   <StockInsiderPanel symbol={stock.symbol} />
                 </Card>
               </Col>
               <Col {...span}>
-                <Card type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
+                <Card size="small" type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
                   调用Advanced Stats中的putCallRatio
                   做成实时图表，最好能显示近一年平均值，两者方便对比。
                 </Card>
               </Col>
               <Col {...span}>
-                <Card type="inner" title={<>Earnings Today</>}>
+                <Card size="small" type="inner" title={<>Earnings Today</>}>
                   <StockEarningsPanel symbol={stock.symbol} />
                 </Card>
               </Col>
               <Col {...span}>
-                <Card type="inner" title={<>News</>}>
+                <Card size="small" type="inner" title={<>News</>}>
                   <StockNewsPanel symbol={stock.symbol} />
                 </Card>
               </Col>

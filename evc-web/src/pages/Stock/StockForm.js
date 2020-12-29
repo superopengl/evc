@@ -391,6 +391,7 @@ const StockForm = (props) => {
       <ColStyled {...span}>
         <ColInnerCard title="EPS">
           <StockEpsTimelineEditor
+            symbol={symbol}
             onLoadList={() => listStockEps(symbol)}
             onSaveNew={values => saveStockEps(symbol, values)}
             onDelete={id => deleteStockEps(id)}

@@ -12,7 +12,7 @@ import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
-
+import { syncStockEps } from 'services/stockService';
 const {Text} = Typography;
 
 const Container = styled.div`
@@ -65,11 +65,20 @@ const StockEpsTimelineEditor = (props, ref) => {
     }
   }
 
+  const handleSyncEps = async () => {
+    try {
+      setLoading(true);
+      await syncStockEps(props.symbol);
+      loadEntity();
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
       {/* <StockEpsInput onSave={handleSave} disabled={loading} /> */}
-      <Button type="primary" disabled={loading} onClick={() => loadEntity()} loading={loading}>Sync Last 4 EPS</Button>
+      <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Sync Last 4 EPS</Button>
       <List
         dataSource={list}
         loading={loading}
@@ -111,6 +120,7 @@ StockEpsTimelineEditor.propTypes = {
   onSelected: PropTypes.func,
   getClassNameOnSelect: PropTypes.func,
   showTime: PropTypes.bool,
+  symbol: PropTypes.string.isRequired,
 };
 
 StockEpsTimelineEditor.defaultProps = {

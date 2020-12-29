@@ -59,16 +59,14 @@ const StockListPage = (props) => {
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
+  const [loadResponse, setLoadResponse] = React.useState();
 
   const searchByQueryInfo = async (queryInfo, dryRun = false) => {
     try {
       if (!dryRun) {
         setLoading(true);
-        const { count, page, data } = await searchStock(queryInfo);
-        setTotal(count);
-        setList([...data]);
-        setQueryInfo({ ...queryInfo, page });
+        setLoadResponse(await searchStock(queryInfo));
       } else {
         setQueryInfo(queryInfo);
       }
@@ -83,26 +81,15 @@ const StockListPage = (props) => {
     searchByQueryInfo(queryInfo);
   }, []);
 
-  const handleCreateNew = async (values) => {
-    if (loading) {
-      return;
+  React.useEffect(() => {
+    if (loadResponse) {
+      const { count, page, data } = loadResponse;
+      setTotal(count);
+      setList([...data]);
+      setQueryInfo({ ...queryInfo, page });
     }
+  }, [loadResponse]);
 
-    try {
-      setLoading(true);
-      const stock = { ...values, tags: values.tags?.map(t => t.id) };
-      await createStock(stock);
-
-      props.history.push(`/stock/${stock.symbol.toUpperCase()}`)
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleSearch = async (value) => {
-    const text = value?.trim();
-    searchByQueryInfo({ ...queryInfo, text });
-  }
 
   const handleSelectedStock = (symbol) => {
     props.history.push(`/stock/${symbol}`);

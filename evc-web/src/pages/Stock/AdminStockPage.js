@@ -34,7 +34,7 @@ const LayoutStyled = styled(Layout)`
 `;
 
 
-const StockPage = props => {
+const AdminStockPage = props => {
   const symbol = props.match.params.symbol;
 
   const handlePostSave = () => {
@@ -55,8 +55,8 @@ const StockPage = props => {
   );
 };
 
-StockPage.propTypes = {};
+AdminStockPage.propTypes = {};
 
-StockPage.defaultProps = {};
+AdminStockPage.defaultProps = {};
 
-export default withRouter(StockPage);
+export default withRouter(AdminStockPage);

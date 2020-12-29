@@ -6,6 +6,7 @@ import { DeleteOutlined, EyeOutlined, QuestionCircleFilled } from '@ant-design/i
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { TimeAgo } from 'components/TimeAgo';
 import { StockName } from './StockName';
+import { searchSingleStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
 
 const { Paragraph, Text } = Typography;
 
@@ -21,8 +22,12 @@ const StockInfoCard = (props) => {
 
   const [stock, setStock] = React.useState(value);
 
+  const loadEntity = async () => {
+    setStock(await searchSingleStock(value.symbol));
+  }
+
   React.useEffect(() => {
-    setStock(value);
+    loadEntity();
   }, [value]);
 
   return (

@@ -27,15 +27,8 @@ const StockClientPanel = (props) => {
 
   return (
     <Space direction="vertical" style={{ width: '100%' }} key={key}>
-      <Space style={{width: '100%', justifyContent: 'space-between'}}>
-        <StockName size={20} strong value={stock} />
-        <div>
-          <Button type="link" icon={<SyncOutlined />} onClick={handleRefresh} />
-          {onUnwatch && <Button type="link" icon={<EyeInvisibleOutlined />} onClick={onUnwatch} />}
-        </div>
-      </Space>
-         <Text type="secondary">Electronic Technology</Text>
-          <StockQuotePanel symbol={stock.symbol} />
+      <Text type="secondary">Electronic Technology</Text>
+      <StockQuotePanel symbol={stock.symbol} />
       <Tabs type="card">
         <Tabs.TabPane key="1" tab={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>}>
           <StockInfoCard value={stock} />

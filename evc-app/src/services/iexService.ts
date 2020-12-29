@@ -110,7 +110,8 @@ export async function getChart5D(symbol: string) {
 }
 
 export async function getEarnings(symbol: string, last = 1) {
-  const { earnings } = await requestIexApi(`/stock/${symbol}/earnings/${last}`);
+  const resp = await requestIexApi(`/stock/${symbol}/earnings/${last}`);
+  const { earnings } = resp ?? {};
   return earnings;
 }
 

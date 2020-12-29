@@ -1,4 +1,4 @@
-import { Button, Layout, Modal, Space, Typography, Tabs, Row, PageHeader } from 'antd';
+import { Button, Layout, Modal, Space, Typography, Row, Col, Card, PageHeader } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -23,7 +23,15 @@ import StockCardClientSearch from 'components/StockCardClientSearch';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { StockName } from 'components/StockName';
 import StockClientPanel from 'components/StockClientPanel';
-import { DeleteOutlined, EditOutlined, EllipsisOutlined, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, LockFilled, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/icons';
+import StockInfoCard from 'components/StockInfoCard';
+import { FaCrown } from 'react-icons/fa';
+import { IconContext } from "react-icons";
+import StockInsiderPanel from 'components/StockInsiderPanel';
+import StockNewsPanel from 'components/StockNewsPanel';
+import StockEarningsPanel from 'components/StockEarningsPanel';
+import StockChart from 'components/charts/StockChart';
+import StockQuotePanel from 'components/StockQuotePanel';
 
 const { Paragraph, Text } = Typography;
 
@@ -63,14 +71,15 @@ const StockPanelContainer = styled.div`
   padding: 1rem;
 `;
 
+const MemberOnlyIcon = () => <Text type="danger"><LockFilled /></Text>
 
 const span = {
-  xs: 1,
-  sm: 1,
-  md: 1,
-  lg: 1,
-  xl: 1,
-  xxl: 1
+  xs: 24,
+  sm: 24,
+  md: 12,
+  lg: 8,
+  xl: 8,
+  xxl: 6
 };
 
 const ClientStockPage = (props) => {
@@ -145,14 +154,51 @@ const ClientStockPage = (props) => {
             extra={[
               <Button key="sync" type="primary" ghost icon={<SyncOutlined />} onClick={handleRefresh} />,
               <Button key="unwatch" type="primary" ghost icon={<EyeInvisibleOutlined />} onClick={handleUnwatch} />
-              
+
               // <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
               // <Button key="1" disabled={loading} onClick={() => handleSyncEps()} loading={epsSyncing}>Sync Last 4 EPS</Button>,
               // <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
               // <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
             ]}
           />
-          <StockClientPanel value={stock} onUnwatch={() => handleUnwatch(stock)} />
+          {/* <StockClientPanel value={stock} /> */}
+          <Space direction="vertical" style={{ width: '100%' }}>
+            <Text type="secondary">Electronic Technology</Text>
+            <StockQuotePanel symbol={stock.symbol} />
+            <Row gutter={20}>
+              <Col {...span}>
+                <Card type="inner" title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>}>
+                  <StockInfoCard value={stock} showTitle={false} />
+                </Card>
+              </Col>
+              <Col {...span}>
+                <Card type="inner" title="Chart">
+                  <StockChart symbol={stock.symbol} type="1d" />
+                </Card>
+              </Col>
+              <Col {...span}>
+                <Card type="inner" title={<>Insider Transactions  <MemberOnlyIcon /></>}>
+                  <StockInsiderPanel symbol={stock.symbol} />
+                </Card>
+              </Col>
+              <Col {...span}>
+                <Card type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
+                  调用Advanced Stats中的putCallRatio
+                  做成实时图表，最好能显示近一年平均值，两者方便对比。
+                </Card>
+              </Col>
+              <Col {...span}>
+                <Card type="inner" title={<>Earnings Today</>}>
+                  <StockEarningsPanel symbol={stock.symbol} />
+                </Card>
+              </Col>
+              <Col {...span}>
+                <Card type="inner" title={<>News</>}>
+                  <StockNewsPanel symbol={stock.symbol} />
+                </Card>
+              </Col>
+            </Row>
+          </Space>
         </>}
       </ContainerStyled>
     </LayoutStyled >

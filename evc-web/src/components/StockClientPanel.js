@@ -18,20 +18,15 @@ const MemberOnlyIcon = () => <Text type="danger"><LockFilled /></Text>
 
 const StockClientPanel = (props) => {
 
-  const { value: stock, onUnwatch } = props;
-  const [key, setKey] = React.useState(0);
-
-  const handleRefresh = () => {
-    setKey(key + 1);
-  }
+  const { value: stock } = props;
 
   return (
-    <Space direction="vertical" style={{ width: '100%' }} key={key}>
+    <Space direction="vertical" style={{ width: '100%' }}>
       <Text type="secondary">Electronic Technology</Text>
       <StockQuotePanel symbol={stock.symbol} />
       <Tabs type="card">
         <Tabs.TabPane key="1" tab={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>}>
-          <StockInfoCard value={stock} />
+          <StockInfoCard value={stock} showTitle={false} />
         </Tabs.TabPane>
         <Tabs.TabPane key="6" tab={<>Chart</>}>
           <StockChart symbol={stock.symbol} type="1d" />
@@ -59,7 +54,6 @@ const StockClientPanel = (props) => {
 
 StockClientPanel.propTypes = {
   value: PropTypes.object.isRequired,
-  onUnwatch: PropTypes.func,
 };
 
 StockClientPanel.defaultProps = {

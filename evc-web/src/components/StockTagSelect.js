@@ -50,7 +50,7 @@ const Input = props => {
 const Option = props => {
   const { data, innerProps } = props;
   return <div {...innerProps} style={{ padding: 6 }}>
-    {data.color ? <StockTag color={data.color}>{data.label}</StockTag> : data.label}
+    {data.color2 ? <StockTag color={data.color}>{data.label}</StockTag> : data.label}
   </div>;
 }
 
@@ -116,18 +116,18 @@ const colourStyles = {
   multiValueLabel: (styles, { data }) => ({
     ...styles,
     // width: '100%',
-    color: getFontColor(data.color),
-    backgroundColor: data.color,
+    // color: getFontColor(data.color),
+    // backgroundColor: data.color,
     borderRadius: '4px 0 0 4px',
   }),
   multiValueRemove: (styles, { data }) => {
     const color = chroma(data.color);
     return {
       ...styles,
-      backgroundColor: data.color,
+      // backgroundColor: data.color,
       borderRadius: '0 4px 4px 0',
       ':hover': {
-        backgroundColor: data.color, //color.alpha(0.5).css(),
+        // backgroundColor: data.color, //color.alpha(0.5).css(),
         // color: 'white',
       },
     }

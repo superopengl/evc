@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { StockName } from './StockName';
 
 export const StockSearchInput = (props) => {
-  const { onChange, onFetchData, excluding, traceSearch, mode, style, value } = props;
+  const { onChange, excluding, traceSearch, mode, style, value } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
@@ -30,22 +30,18 @@ export const StockSearchInput = (props) => {
 
 
   const handleChange = async (symbol) => {
-
     setText('');
-    if (!symbol) {
-      return;
+    if (symbol) {
+      if (traceSearch) {
+        incrementStock(symbol);
+      }
+      try{ 
+        setLoading(true);
+        await onChange(symbol);
+      }finally{
+        setLoading(false);
+      }
     }
-    if (traceSearch) {
-      incrementStock(symbol);
-    }
-    setLoading(true);
-    let data = null;
-    try {
-      data = await onFetchData(symbol);
-    } finally {
-      setLoading(false);
-    }
-    onChange(data);
   }
 
   const handleSearch = async (value) => {
@@ -53,20 +49,15 @@ export const StockSearchInput = (props) => {
     setText(text);
   }
 
-  const handleFocus = () => { }
-  const handleBlur = () => { }
-
   return (
     <Select
       size="large"
       mode={mode}
       showSearch
       allowClear={true}
-      autoFocus={true}
+      // autoFocus={true}
       placeholder="Search for symbols or companies"
       onChange={handleChange}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
       onSearch={handleSearch}
       style={{ textAlign: 'left', width: '100%', ...style }}
       loading={loading}
@@ -93,7 +84,6 @@ export const StockSearchInput = (props) => {
 }
 
 StockSearchInput.propTypes = {
-  onFetchData: PropTypes.func,
   onChange: PropTypes.func,
   excluding: PropTypes.array.isRequired,
   traceSearch: PropTypes.bool,
@@ -102,7 +92,6 @@ StockSearchInput.propTypes = {
 
 StockSearchInput.defaultProps = {
   excluding: [],
-  onFetchData: x => x,
   onChange: () => { },
   traceSearch: false,
   mode: ''

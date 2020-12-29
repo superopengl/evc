@@ -15,7 +15,7 @@ export const saveStockTag = handlerWrapper(async (req, res) => {
 });
 
 export const listStockTags = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req, 'client', 'admin', 'agent');
   const list = await getRepository(StockTag).find({order: {createdAt: 'ASC'}});
   res.json(list);
 });

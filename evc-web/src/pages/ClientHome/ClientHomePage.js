@@ -101,12 +101,8 @@ const ClientHomePage = (props) => {
     setProfileModalVisible(false);
   }
 
-  const handleFetchSearchedSymbol = async symbol => {
-    const data = await searchSingleStock(symbol);
-    return data;
-  }
-
-  const handleSearchChange = async stock => {
+  const handleSearchChange = async symbol => {
+    const stock = await searchSingleStock(symbol);
     setSearchResult(stock);
     // if (searchList.some(x => x.symbol === stock.symbol)) {
     //   return;
@@ -148,7 +144,6 @@ const ClientHomePage = (props) => {
       <HomeHeader></HomeHeader>
       <ContainerStyled>
         <StockSearchInput
-          onFetchData={handleFetchSearchedSymbol}
           onChange={handleSearchChange}
           style={{ width: '100%', maxWidth: 400 }} />
         {/* <SubscriptionArea /> */}

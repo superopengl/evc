@@ -101,15 +101,17 @@ const HomeHeaderRaw = props => {
 
   return (
     <HeaderStyled>
-      <Space>
-        <HeaderLogo>
-          <HashLink to="/">
-            <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto" height="60" style={{ padding: '14px 0 14px 0' }}></img>
-          </HashLink>
-          {/* {isAdmin && <Text>Admin</Text>} */}
-        </HeaderLogo>
-        {/* <StockSearchInput style={{ maxWidth: 500 }} /> */}
-      </Space>
+      <HeaderLogo>
+        <HashLink to="/">
+          <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto" height="60" style={{ padding: '14px 0 14px 0' }}></img>
+        </HashLink>
+        {/* {isAdmin && <Text>Admin</Text>} */}
+      </HeaderLogo>
+      {/* <StockSearchInput style={{ maxWidth: 500 }} /> */}
+      <div style={{ flex: '1', padding: '0 2rem' }}>
+        {props.children}
+      </div>
+
       <MediaQuery minDeviceWidth={801}>
         <MenuContianer>
           <Menu
@@ -206,7 +208,6 @@ const HomeHeaderRaw = props => {
           </Menu>
         </Drawer>
       </MediaQuery>
-
     </HeaderStyled>
   );
 }

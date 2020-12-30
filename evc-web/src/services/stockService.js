@@ -179,10 +179,6 @@ export async function getStockQuote(symbol) {
   return httpGet(`/stock/s/${symbol}/quote`);
 }
 
-export async function getStockChartIntraday(symbol) {
-  return httpGet(`/stock/s/${symbol}/chart/intraday`);
-}
-
-export async function getStockChart5D(symbol) {
-  return httpGet(`/stock/s/${symbol}/chart/5d`);
+export async function getStockChart(symbol, period) {
+  return httpGet(`/stock/s/${symbol}/chart/${period}`);
 }

@@ -49,11 +49,12 @@ async function requestAndCache(apiPath: string, cacheStrategy: ICacheStrategy, o
     return await requestIexApi(apiPath, options);
   }
 
-  let data = await redisCache.get(apiPath);
+  const cacheKey = `${apiPath}?${JSON.stringify(options)}`;
+  let data = await redisCache.get(cacheKey);
   if (!data) {
     data = await requestIexApi(apiPath, options);
     if (data) {
-      await redisCache.setex(apiPath, expireSeconds, data);
+      await redisCache.setex(cacheKey, expireSeconds, data);
     }
   }
   return data;
@@ -101,12 +102,64 @@ export async function getNews(symbol: string) {
     }));
 }
 
-export async function getChartIntraday(symbol: string) {
-  return await requestAndCache(`/stock/${symbol}/intraday-prices`, new FixedPeriodCacheStrategy('1 minute'));
-}
+export async function getChart(symbol: string, period: string) {
+  let chartInterval = undefined;
+  let chartLast = undefined;
+  let apiPath = '';
+  let param = {};
 
-export async function getChart5D(symbol: string) {
-  return await requestAndCache(`/stock/${symbol}/chart/5d`, new FixedPeriodCacheStrategy('6 hours'));
+  switch (period) {
+    case '1h':
+      // every 1 minute
+      param = {
+        chartInterval: 1,
+        chartLast: 60
+      }
+      apiPath = `/stock/${symbol}/intraday-prices`;
+      break;
+    case '4h':
+      // every 1 minute
+      param = {
+        chartInterval: 1,
+        chartLast: 240
+      }
+      apiPath = `/stock/${symbol}/intraday-prices`;
+      break;
+    case '1d':
+      // every 5 minutes
+      param = {
+        chartInterval: 5,
+      }
+      apiPath = `/stock/${symbol}/intraday-prices`;
+      break;
+    case '5d':
+      // 10 minute intervals
+      param = {
+        chartInterval: 3,
+      }
+      apiPath = `/stock/${symbol}/chart/5dm`;
+      break;
+    case '1m':
+      // 30 minute intervals
+      param = {
+        chartInterval: 2,
+      }
+      apiPath = `/stock/${symbol}/chart/1mm`;
+      break;
+    case '1y':
+      // 30 minute intervals
+      apiPath = `/stock/${symbol}/chart/1y`;
+      break;
+    default:
+      assert(false, 400, `Unsupported period ${period}`);
+  }
+
+  return await requestAndCache(
+    apiPath,
+    new FixedPeriodCacheStrategy('1 minute'),
+    { includeToday: true, chartIEXWhenNull: true, ...param }
+  );
+
 }
 
 export async function getEarnings(symbol: string, last = 1) {

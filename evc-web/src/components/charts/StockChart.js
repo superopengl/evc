@@ -1,41 +1,45 @@
 import React, { useRef } from 'react';
-import { Area, Stock } from '@ant-design/charts';
+import { Area, Stock, DualAxes } from '@ant-design/charts';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { getStockChartIntraday, getStockChart5D } from 'services/stockService';
+import { getStockChart } from 'services/stockService';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import {Button, Space} from 'antd';
 
 const StockChart = props => {
-  const { symbol, type } = props;
-  const [period, setPeriod] = React.useState(type);
+  const { symbol, type: propPeriod } = props;
+  const [period, setPeriod] = React.useState(propPeriod);
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const periods = [
+    '1h',
+    '4h',
+    '1d',
+    '5d',
+    '1m',
+    '1y'
+  ]
 
-  const getFetchFunction = period => {
-    switch (period) {
-      case '1d':
-        return getStockChartIntraday;
-      case '5d':
-        return getStockChart5D;
-      default:
-        throw new Error(`Unsupported period ${period}`);
-    }
+  const getTime = item => {
+    const {date, minute} = item;
+    return minute ? `${date} ${minute}`: date;
   }
 
   const formatTimeForRawData = (data) => {
+    const minuteOnly = ['1h', '4h', '1d'].includes(period);
    const formatted =  (data ?? []).filter(x => x.average !== null).map((x, i) => ({
-      ...x,
-      tradeTime: moment(`${x.date} ${x.minute}`).toString()
+      price: x.average || x.close,
+      time: minuteOnly ? x.minute : getTime(x),
+      volume: x.volume,
     }));
     return formatted;
   }
 
-  const loadData = async () => {
+  const loadData = async (period) => {
     try {
       setLoading(true);
-      const fetchFunc = getFetchFunction(type);
-      const rawData = await fetchFunc(symbol);
+      const rawData = await getStockChart(symbol, period);
       setData(formatTimeForRawData(rawData));
     } finally {
       setLoading(false);
@@ -43,8 +47,15 @@ const StockChart = props => {
   };
 
   React.useEffect(() => {
-    loadData();
-  }, [type]);
+    loadData(propPeriod);
+  }, [propPeriod]);
+
+  const handleChangePeriod = async p => {
+    if(p !== period) {
+      loadData(p);
+      setPeriod(p);
+    }
+  }
 
   const config = {
     // width: 400,
@@ -62,34 +73,58 @@ const StockChart = props => {
     //   },
     // },
     height: 200,
-    xField: 'minute',
-    yField: 'average',
-    areaStyle: {
-      fill: 'l(270) 0:#ffffff 0.5:#15be53 1:#15be53',
-      fillOpacity: 0.7,
-    },
-    line: { color: '#15be53' },
+    xField: 'time',
+    yField: 'price',
+    // areaStyle: {
+    //   fill: 'l(270) 0:#ffffff 0.5:#15be53 1:#15be53',
+    //   fillOpacity: 0.7,
+    // },
+    // line: { color: '#15be53' },
     yAxis: {
-      min: _.min(data.map(x => x.low)),
-      max: _.max(data.map(x => x.high)),
+      min: _.min(data.map(x => x.price)),
+      max: _.max(data.map(x => x.price)),
     },
-    xAxis: {
-      tickInterval: 30
-    }
+    // xAxis: {
+    //   tickInterval: 30
+    // }
   };
 
-  return <>
-  {/* <Stock
-    {...config}
-  /> */}
+  const configDual = {
+    data: [data, data],
+    xField: 'time',
+    yField: ['price', 'volume'],
+    geometryOptions: [
+      {
+        geometry: 'line',
+        color: '#3273A4',
+        lineStyle: {
+          lineWidth: 1,
+        }
+      },
+      {
+        geometry: 'column',
+        color: '#fa8c16',
+        // color: (_ref, x, y, z) => {
+        //   const value = _ref.price;
+        //   return value > 1800 ? '#f4664a' : '#30bf78';
+        // }
+      },
+    ]
+  }
 
-    <Area {...config}/>
+  return <>
+    <Space style={{justifyContent: 'flex-end', width: '100%'}}>
+      {periods.map(p => <Button type="link" key={p} onClick={() => handleChangePeriod(p)} disabled={p === period}>{p}</Button>)}
+      
+      </Space>
+    {/* <Area {...config}/> */}
+    <DualAxes {...configDual} />
   </>
 }
 
 StockChart.propTypes = {
   symbol: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['1d', '5d']).isRequired
+  type: PropTypes.string.isRequired
 };
 
 StockChart.defaultProps = {

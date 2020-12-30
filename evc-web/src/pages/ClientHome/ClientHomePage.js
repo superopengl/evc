@@ -22,7 +22,6 @@ import { List } from 'antd';
 import StockCardClientSearch from 'components/StockCardClientSearch';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { StockName } from 'components/StockName';
-import StockClientPanel from 'components/StockClientPanel';
 import StockList from 'components/StockList';
 
 const { Paragraph, Text } = Typography;

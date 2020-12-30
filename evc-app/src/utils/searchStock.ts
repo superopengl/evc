@@ -6,9 +6,10 @@ import { StockResistanceShort } from '../entity/StockResistanceShort';
 import { StockFairValue } from '../entity/StockFairValue';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
+import { StockWatchList } from '../entity/StockWatchList';
 
-export async function searchStock(queryInfo: StockSearchParams) {
-  const { symbols, text, tags, page, size, orderField, orderDirection } = queryInfo;
+export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
+  const { symbols, text, tags, page, size, orderField, orderDirection, watchOnly } = queryInfo;
 
   let pageNo = page || 1;
   const pageSize = size || 50;
@@ -25,6 +26,23 @@ export async function searchStock(queryInfo: StockSearchParams) {
   if (text) {
     query = query.andWhere('s.symbol ILIKE :text OR s.company ILIKE :text', { text: `%${text}%` });
     pageNo = 1;
+  }
+
+  let includesWatch = false;
+  if (includesWatchForUserId) {
+    includesWatch = true;
+    const userId = includesWatchForUserId;
+    if (watchOnly) {
+      query = query.innerJoin(q => q.from(StockWatchList, 'sw')
+        .where('sw."userId" = :userId', { userId }),
+        'sw',
+        'sw.symbol = s.symbol');
+    } else {
+      query = query.leftJoin(q => q.from(StockWatchList, 'sw')
+        .where('sw."userId" = :userId', { userId }),
+        'sw',
+        'sw.symbol = s.symbol');
+    }
   }
 
   query = query
@@ -68,8 +86,11 @@ export async function searchStock(queryInfo: StockSearchParams) {
       's.company as company',
       'tag.tags',
       'pu."createdAt" as "publishedAt"',
-    ])
-    .offset((pageNo - 1) * pageSize)
+    ]);
+  if (includesWatch) {
+    query = query.addSelect('sw."createdAt" as watched');
+  }
+  query = query.offset((pageNo - 1) * pageSize)
     .limit(pageSize);
   const data = await query.execute();
 

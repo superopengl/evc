@@ -35,7 +35,6 @@ import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
 import StockListPage from 'pages/Stock/StockListPage';
-import AdminStockPage from 'pages/Stock/AdminStockPage';
 import { ContactWidget } from 'components/ContactWidget';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import { getEventSource } from 'services/eventSourceService';
@@ -48,7 +47,7 @@ import MySubscriptionHistoryPage from 'pages/MySubscription/MySubscriptionHistor
 import ConfigListPage from 'pages/Config/ConfigListPage';
 import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
 import TranslationListPage from 'pages/Translation/TranslationListPage';
-import ClientStockPage from 'pages/ClientStockPage/ClientStockPage';
+import StockPage from 'pages/StockPage/StockPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -131,7 +130,7 @@ class App extends React.Component {
             <RoleRoute visible={isAdmin} loading={loading} exact path="/config" component={ConfigListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={isClient ? ClientStockPage : AdminStockPage} />
+            <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />
             {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
             <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />

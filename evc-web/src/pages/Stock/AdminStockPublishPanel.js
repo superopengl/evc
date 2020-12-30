@@ -112,13 +112,10 @@ const DEFAULT_SELECTED = {
   epId: null,
 };
 
-const StockForm = (props) => {
-  const { symbol, onOk } = props;
-  const [loading, setLoading] = React.useState(true);
+const AdminStockPublishPanel = (props) => {
+  const [stock, setStock] = React.useState(props.stock);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
-  const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
-  const [stock, setStock] = React.useState();
   const [epsList, setEpsList] = React.useState([]);
   const [peList, setPeList] = React.useState([]);
   const [supportShortList, setSupportShortList] = React.useState([]);
@@ -128,59 +125,11 @@ const StockForm = (props) => {
   const [valueList, setValueList] = React.useState([]);
   const [publishList, setPublishList] = React.useState([]);
   const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
-  const epsEditorRef = React.useRef(null);
-  const [epsSyncing, setEpsSyncing] = React.useState(false);
 
-  const loadEntity = async () => {
-    try {
-      setLoading(true);
-      setStock(await getStock(symbol));
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  React.useEffect(() => {
-    loadEntity();
-  }, []);
-
-  const handleSaveForm = async (propName, e) => {
-    const updatedStock = {
-      ...stock,
-      [propName]: e
-    }
-
-    updatedStock.tags = updatedStock.tags.map(t => t.id || t);
-
-    try {
-      setLoading(true);
-      await updateStock(updatedStock);
-      await loadEntity();
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleCancel = () => {
-    props.history.push('/');
-  }
-
-  const handleDelete = () => {
-    Modal.confirm({
-      title: "Delete Stock",
-      content: <>Do you want delete <Text strong>{stock.symbol} ({stock.company})</Text>?</>,
-      async onOk() {
-        await deleteStock(stock.symbol);
-        onOk();
-      },
-      maskClosable: true,
-      okText: 'Yes, Delete!',
-      okButtonProps: {
-        type: 'danger'
-      },
-      onCancel() {
-      },
-    });
+  const { symbol } = stock;
+  const handleChangeTags = async (tagIds) => {
+    stock.tags = tagIds.map(t => t.id || t);
+    await updateStock(stock);
   }
 
   const handlePublishMarketPrice = async (values) => {
@@ -203,19 +152,14 @@ const StockForm = (props) => {
   }
 
   const handlePublish = async () => {
-    try {
-      setLoading(true);
-      const payload = {
-        supportShortId: supportShortList[0].id,
-        supportLongId: supportLongList[0].id,
-        resistanceShortId: resistanceShortList[0].id,
-        resistanceLongId: resistanceLongList[0].id,
-        fairValueId: valueList[0].id
-      };
-      await saveStockPublish(symbol, payload);
-    } finally {
-      setLoading(false);
-    }
+    const payload = {
+      supportShortId: supportShortList[0].id,
+      supportLongId: supportLongList[0].id,
+      resistanceShortId: resistanceShortList[0].id,
+      resistanceLongId: resistanceLongList[0].id,
+      fairValueId: valueList[0].id
+    };
+    await saveStockPublish(symbol, payload);
   }
 
   if (symbol && !stock) {
@@ -365,28 +309,8 @@ const StockForm = (props) => {
     return `${shouldHighlight() ? 'current-selected-datepoint' : ''} ${selected.source === 'publish' ? 'source' : ''}`;
   }
 
-  const handleSyncEps = async () => {
-    try {
-      setEpsSyncing(true);
-      await syncStockEps(stock.symbol);
-      epsEditorRef.current.refresh();
-    } finally {
-      setEpsSyncing(false);
-    }
-  }
-
   return (<Container>
-    <PageHeader
-      ghost={false}
-      onBack={handleCancel}
-      title={<StockName value={stock} />}
-      extra={[
-        <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
-        // <Button key="1" disabled={loading} onClick={() => handleSyncEps()} loading={epsSyncing}>Sync Last 4 EPS</Button>,
-        // <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
-        // <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
-      ]}
-    />
+    <StockTagSelect value={stock.tags} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
     <Row gutter={20} style={{ marginTop: 20 }}>
       <ColStyled {...span}>
         <ColInnerCard title="EPS">
@@ -512,45 +436,14 @@ const StockForm = (props) => {
       </Form>
       <Button block type="link" onClick={() => setSimulatorVisible(false)}>Cancel</Button>
     </Modal>
-
-
-    {/* <Drawer
-      visible={drawerVisible}
-      destroyOnClose={true}
-      closable={true}
-      maskClosable={true}
-      title={<StockName value={stock} />}
-      width={300}
-      onClose={() => setDrawerVisible(false)}
-      footer={
-        <Space direction="vertical" style={{ width: '100%' }} size="middle">
-          <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>
-        </Space>
-      }
-    >
-      <Form
-        layout="vertical"
-        ref={formRef}
-        initialValues={stock}>
-        <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-          <Input placeholder="Stock symbol" allowClear={true} maxLength="100" onBlur={e => handleSaveForm('symbol', e.target.value)} disabled={true} readOnly={true} />
-        </Form.Item>
-        <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-          <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" onBlur={e => handleSaveForm('company', e.target.value)} />
-        </Form.Item>
-        <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
-          <StockTagSelect onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} />
-        </Form.Item>
-      </Form>
-    </Drawer> */}
   </Container >);
 }
 
-StockForm.propTypes = {
-  symbol: PropTypes.string.isRequired
+AdminStockPublishPanel.propTypes = {
+  stock: PropTypes.object.isRequired
 };
 
-StockForm.defaultProps = {
+AdminStockPublishPanel.defaultProps = {
 };
 
-export default withRouter(StockForm);
+export default withRouter(AdminStockPublishPanel);

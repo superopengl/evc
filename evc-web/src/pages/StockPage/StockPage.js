@@ -32,6 +32,7 @@ import StockNewsPanel from 'components/StockNewsPanel';
 import StockEarningsPanel from 'components/StockEarningsPanel';
 import StockChart from 'components/charts/StockChart';
 import StockQuotePanel from 'components/StockQuotePanel';
+import AdminStockPublishPanel from '../Stock/AdminStockPublishPanel';
 
 const { Paragraph, Text } = Typography;
 
@@ -82,11 +83,11 @@ const span = {
   xxl: 6
 };
 
-const ClientStockPage = (props) => {
+const StockPage = (props) => {
   const symbol = props.match.params.symbol;
 
   const context = React.useContext(GlobalContext);
-  const { user, setUser } = context;
+  const { user, role, setUser } = context;
   const isProfileMissing = !isProfileComplete(user);
   const [stock, setStock] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -95,6 +96,8 @@ const ClientStockPage = (props) => {
   const [searchList, setSearchList] = React.useState([]);
   const [watchList, setWatchList] = React.useState([]);
   const [key, setKey] = React.useState(0);
+
+  const isAdminOrAgent = ['admin', 'agent'].includes(role);
 
   const loadEntity = async () => {
     try {
@@ -165,9 +168,11 @@ const ClientStockPage = (props) => {
           <Space direction="vertical" style={{ width: '100%' }}>
             <Text type="secondary">Electronic Technology</Text>
             <StockQuotePanel symbol={stock.symbol} />
+            {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
+
             <Row gutter={20}>
               <Col {...span}>
-                  <StockInfoCard value={stock} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
+                <StockInfoCard value={stock} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
               </Col>
               <Col {...span}>
                 <Card size="small" type="inner" title="Chart">
@@ -203,8 +208,8 @@ const ClientStockPage = (props) => {
   );
 };
 
-ClientStockPage.propTypes = {};
+StockPage.propTypes = {};
 
-ClientStockPage.defaultProps = {};
+StockPage.defaultProps = {};
 
-export default withRouter(ClientStockPage);
+export default withRouter(StockPage);

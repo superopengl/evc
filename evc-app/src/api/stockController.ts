@@ -107,16 +107,25 @@ export const getStockHistory = handlerWrapper(async (req, res) => {
 });
 
 export const getWatchList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'client');
   const { user: { id: userId } } = req as any;
-  const list = await getRepository(Stock)
-    .createQueryBuilder('s')
-    .innerJoin(
-      q => q.from(StockWatchList, 'w').where(`w."userId" = :userId`, { userId }),
-      'w',
-      `s.symbol = w.symbol`
-    )
-    .getMany();
+  // const list = await getRepository(Stock)
+  //   .createQueryBuilder('s')
+  //   .innerJoin(
+  //     q => q.from(StockWatchList, 'w').where(`w."userId" = :userId`, { userId }),
+  //     'w',
+  //     `s.symbol = w.symbol`
+  //   )
+  //   .getMany();
+
+  const list = await searchStock({
+    orderField: 'symbol',
+    orderDirection: 'ASC',
+    page: 1,
+    size: 9999999,
+    watchOnly: true,
+    noCount: true,
+  }, userId);
 
   res.json(list);
 });
@@ -140,7 +149,7 @@ export const unwatchStock = handlerWrapper(async (req, res) => {
 export const listStock = handlerWrapper(async (req, res) => {
   let list = getCache('stock-list');
   if (!list) {
-    list = await getRepository(Stock).find({ 
+    list = await getRepository(Stock).find({
       select: ['symbol', 'company'],
       order: {
         symbol: 'ASC'

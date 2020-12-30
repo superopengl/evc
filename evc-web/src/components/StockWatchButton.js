@@ -25,7 +25,7 @@ export const StockWatchButton = (props) => {
 
 StockWatchButton.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.bool.isRequired,
+  value: PropTypes.any,
   size: PropTypes.number,
 };
 

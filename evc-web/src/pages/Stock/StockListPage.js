@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from "react-dom";
 import styled from 'styled-components';
 import { Typography, Layout, Space, Button, Input, Form, Modal, Pagination, List } from 'antd';
 import HomeHeader from 'components/HomeHeader';
@@ -60,17 +61,29 @@ const StockListPage = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [loadResponse, setLoadResponse] = React.useState();
+
+  const updateWithResponse = loadResponse => {
+    if (loadResponse) {
+      const { count, page, data } = loadResponse;
+      ReactDOM.unstable_batchedUpdates(() => {
+        setTotal(count);
+        setList([...data]);
+        setQueryInfo({ ...queryInfo, page });
+        setLoading(false);
+      });
+    }
+  }
 
   const searchByQueryInfo = async (queryInfo, dryRun = false) => {
     try {
       if (!dryRun) {
         setLoading(true);
-        setLoadResponse(await searchStock(queryInfo));
+        const resp = await searchStock(queryInfo);
+        updateWithResponse(resp);
       } else {
         setQueryInfo(queryInfo);
       }
-    } finally {
+    } catch {
       setLoading(false);
     }
     // Not remember the search text in local storage
@@ -80,16 +93,6 @@ const StockListPage = (props) => {
   React.useEffect(() => {
     searchByQueryInfo(queryInfo);
   }, []);
-
-  React.useEffect(() => {
-    if (loadResponse) {
-      const { count, page, data } = loadResponse;
-      setTotal(count);
-      setList([...data]);
-      setQueryInfo({ ...queryInfo, page });
-    }
-  }, [loadResponse]);
-
 
   const handleSelectedStock = (symbol) => {
     props.history.push(`/stock/${symbol}`);
@@ -111,7 +114,7 @@ const StockListPage = (props) => {
           style={{ width: '100%', maxWidth: 400 }} />
       </HomeHeader>
       <ContainerStyled>
-        <Loading loading={loading}>
+        {/* <Loading loading={loading}> */}
           <Space size="small" direction="vertical" style={{ width: '100%' }}>
             {/* <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Stock List</Title>
@@ -135,9 +138,9 @@ const StockListPage = (props) => {
               }}
             />
             <Divider />
-            <StockList data={list} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
+            <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
           </Space>
-        </Loading>
+        {/* </Loading> */}
       </ContainerStyled>
     </LayoutStyled>
   );

@@ -20,7 +20,7 @@ const { Text, Title, Paragraph } = Typography;
 
 const StockList = (props) => {
 
-  const { data, onItemClick } = props;
+  const { data, loading, onItemClick } = props;
 
   return (
     <List
@@ -34,6 +34,7 @@ const StockList = (props) => {
         xxl: 6,
       }}
       size="small"
+      loading={loading}
       dataSource={data}
       renderItem={stock => (
         <List.Item>

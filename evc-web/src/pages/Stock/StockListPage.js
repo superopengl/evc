@@ -17,7 +17,7 @@ import StockTagFilter from 'components/StockTagFilter';
 import StockInfoCard from 'components/StockInfoCard';
 import { StockSearchInput } from 'components/StockSearchInput';
 
-const { Title, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -114,12 +114,10 @@ const StockListPage = (props) => {
           style={{ width: '100%', maxWidth: 400 }} />
       </HomeHeader>
       <ContainerStyled>
-        {/* <Loading loading={loading}> */}
-          <Space size="small" direction="vertical" style={{ width: '100%' }}>
-            {/* <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>Stock List</Title>
-          </StyledTitleRow> */}
-            <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
+        <Space size="small" direction="vertical" style={{ width: '100%' }}>
+          <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
+          <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
+          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Pagination
               total={85}
               current={queryInfo.page}
@@ -137,10 +135,8 @@ const StockListPage = (props) => {
                 searchByQueryInfo({ ...queryInfo, page: current, size });
               }}
             />
-            <Divider />
-            <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
           </Space>
-        {/* </Loading> */}
+        </Space>
       </ContainerStyled>
     </LayoutStyled>
   );

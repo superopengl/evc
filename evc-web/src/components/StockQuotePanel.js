@@ -80,6 +80,15 @@ const StockQuotePanel = (props) => {
     return <Text type={type}><small>{symbol}{diffNumber.toFixed(2)} ({symbol}{diffPercentage}%)</small></Text>
   }
 
+  const getDeltaComponent = (changeValue, changePrecent) => {
+    if (changeValue === 0) {
+      return <Text type="secondary">0 (0%)</Text>
+    }
+    const symbol = changeValue >= 0 ? '+' : '-';
+    const type = changeValue >= 0 ? 'success' : 'danger';
+    return <Text type={type}><small>{symbol}{changeValue.toFixed(2)} ({symbol}{changePrecent.toFixed(2)}%)</small></Text>
+  }
+
   if (loading) {
     return <Loading />
   }
@@ -91,13 +100,18 @@ const StockQuotePanel = (props) => {
         <div><Text type="secondary"><small>Price At: {moment(updateTime).format('h:mm a')} EST</small></Text></div>
       </div>
       <div>
-          <Text style={{ fontSize: 20 }} strong>{quote.open} {getTrendComponent(quote.open, currentPrice)}</Text>
-          <div><Text type="secondary"><small>pre market</small></Text></div>
-        </div>
+        <Text style={{ fontSize: 20 }} strong>{quote.open} {getTrendComponent(quote.open, currentPrice)}</Text>
+        <div><Text type="secondary"><small>pre market</small></Text></div>
+      </div>
+      <div>
+        <Text style={{ fontSize: 20 }} strong>{quote.extendedPrice} {getDeltaComponent(quote.extendedChange, quote.extendedChangePercent)}</Text>
         <div>
-          <Text style={{ fontSize: 20 }} strong>{quote.close} {getTrendComponent(quote.close, currentPrice)}</Text>
-          <div><Text type="secondary"><small>post market</small></Text></div>
+          <Space size="small">
+            <Text type="secondary"><small>After hours</small></Text>
+            <TimeAgo direction="horizontal" value={quote.extendedPriceTime} />
+          </Space>
         </div>
+      </div>
     </Space>
   );
 };

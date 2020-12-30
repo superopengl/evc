@@ -17,6 +17,8 @@ import { StockName } from './StockName';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { ImRocket } from 'react-icons/im';
 import StockInfoCard from './StockInfoCard';
+import { timer } from 'rxjs';
+import { mergeMap, filter } from 'rxjs/operators';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -27,6 +29,7 @@ const StyledTable = styled(Table)`
 }
 
 .ant-table-cell {
+  background-color: white !important;
   padding: 2px !important;
 }
 
@@ -93,19 +96,19 @@ const StockMostPanel = (props) => {
   const { title, onFetch } = props;
 
   const [list, setList] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
 
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      setList(await onFetch());
-    } finally {
-      setLoading(false);
-    }
+  const pollData = () => {
+    return timer(0, 15 * 1000).pipe(
+      mergeMap(() => onFetch()),
+      filter(data => !!data),
+    ).subscribe(data => setList(data));
   }
 
   React.useEffect(() => {
-    loadList();
+    const subscription = pollData();
+    return () => {
+      subscription.unsubscribe();
+    }
   }, []);
 
   const getFormattedList = () => {
@@ -121,7 +124,6 @@ const StockMostPanel = (props) => {
     <>    
       {title && <Title level={5}>{title}</Title>}
       <StyledTable
-      loading={loading}
       dataSource={getFormattedList()}
       columns={columnDef}
       rowKey="key"

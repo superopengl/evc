@@ -20,7 +20,7 @@ const TooltipLabel = props => <Tooltip title={props.message}>
 
 const StockInfoCard = (props) => {
 
-  const { value: stock, title, hoverable, actions } = props;
+  const { value: stock, title, hoverable, actions, showWatch } = props;
 
   const [watched, setWatched] = React.useState(stock?.watched);
   const context = React.useContext(GlobalContext);
@@ -28,7 +28,7 @@ const StockInfoCard = (props) => {
   const isClient = role === 'client';
 
 
-  const handleWatchOrUnwatch = async watching => {
+  const handleToggleWatch = async watching => {
     if (watching) {
       await watchStock(stock.symbol);
     } else {
@@ -44,7 +44,7 @@ const StockInfoCard = (props) => {
       type="inner"
       title={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
         {title ?? <StockName value={stock} />}
-        {isClient && <StockWatchButton value={watched} onChange={handleWatchOrUnwatch} />}
+        {isClient && showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
       </Space>}
       onClick={props.onClick}
       hoverable={hoverable}
@@ -102,10 +102,12 @@ StockInfoCard.propTypes = {
   onClick: PropTypes.func,
   actions: PropTypes.array,
   title: PropTypes.object,
+  showWatch: PropTypes.bool,
 };
 
 StockInfoCard.defaultProps = {
   title: null,
+  showWatch: true,
 };
 
 export default withRouter(StockInfoCard);

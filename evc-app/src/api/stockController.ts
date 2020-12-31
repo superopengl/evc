@@ -37,6 +37,7 @@ import {
   getChart
 } from '../services/iexService';
 import { StockLastPrice } from '../types/StockLastPrice';
+import { webhookStripe } from './stripeController';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -64,12 +65,25 @@ export const incrementStock = handlerWrapper(async (req, res) => {
 
 export const getStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const { user: { role } } = req as any;
+  const { user: { id, role } } = req as any;
   const symbol = req.params.symbol.toUpperCase();
 
   const repo = getRepository(Stock);
-  const option = role === Role.Client ? {} : { relations: ['tags'] }
-  const stock = await repo.findOne(symbol, option);
+  let stock: Stock;
+  if (role === Role.Client) {
+    const result = await repo.createQueryBuilder('s')
+      .where(`s.symbol = :symbol`, { symbol })
+      .leftJoin(q => q.from(StockWatchList, 'sw')
+        .where('sw."userId" = :id', { id }),
+        'sw',
+        'sw.symbol = s.symbol')
+      .select('s.*')
+      .addSelect('sw."createdAt" as watched')
+      .execute();
+    stock = result ? result[0] : null;
+  } else {
+    stock = await repo.findOne(symbol, { relations: ['tags'] });
+  }
   assert(stock, 404);
 
   res.json(stock);

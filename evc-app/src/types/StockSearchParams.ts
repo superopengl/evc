@@ -9,4 +9,6 @@ export type StockSearchParams = {
   size?: number;
   watchOnly?: boolean;
   noCount?: boolean;
+  overValued?: boolean;
+  underValued?: boolean;
 };

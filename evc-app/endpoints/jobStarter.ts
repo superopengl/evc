@@ -15,10 +15,10 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>) => {
   } catch (e) {
     console.error('Task', jobName, 'failed', errorToJson(e));
   } finally {
-    try {
-      connection?.close();
-    } catch {
-      // Do nothing
-    }
+    // try {
+    //   connection?.close();
+    // } catch {
+    //   // Do nothing
+    // }
   }
 };

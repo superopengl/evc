@@ -36,7 +36,7 @@ import {
   getQuote,
   getChart
 } from '../services/iexService';
-import { StockLastPrice } from '../types/StockLastPrice';
+import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
 
 
@@ -322,7 +322,7 @@ export const getStockQuote = handlerWrapper(async (req, res) => {
 export const getStockPrice = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const cacheKey = `stock.${symbol}.lastPrice`;
-  let data = await redisCache.get(cacheKey) as StockLastPrice;
+  let data = await redisCache.get(cacheKey) as StockLastPriceInfo;
   if (!data) {
     const quote = await getQuote(symbol);
     if (quote) {

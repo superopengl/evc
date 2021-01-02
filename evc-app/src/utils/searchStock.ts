@@ -9,7 +9,7 @@ import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
-  const { symbols, text, tags, page, size, orderField, orderDirection, watchOnly, noCount } = queryInfo;
+  const { symbols, text, tags, page, size, orderField, orderDirection, watchOnly, noCount, overValued, underValued } = queryInfo;
 
   let pageNo = page || 1;
   const pageSize = size || 50;
@@ -74,6 +74,14 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
         'array_agg(tg."stockTagId") as tags'
       ]),
       'tag', 'tag.symbol = s.symbol');
+  }
+
+  if (overValued && underValued) {
+
+  } else if (overValued) {
+
+  } else if (underValued) {
+
   }
 
   const count = noCount ? null : await query.getCount();

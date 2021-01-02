@@ -38,7 +38,10 @@ import {
 } from '../services/iexService';
 import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
+import { StockLastPrice } from '../entity/StockLastPrice';
+import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 
+const redisPricePublisher = new RedisRealtimePricePubService();
 
 export const incrementStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
@@ -314,9 +317,37 @@ export const getStockChart = handlerWrapper(async (req, res) => {
   res.json(await getChart(symbol, period));
 });
 
+async function updateStockLastPrice(info: StockLastPriceInfo) {
+  redisPricePublisher.publish({
+    type: 'price',
+    data: info
+  });
+
+  const { symbol, price, time } = info;
+  const lastPrice = new StockLastPrice();
+  lastPrice.symbol = symbol;
+  lastPrice.price = price;
+  lastPrice.updatedAt = new Date(time);
+  await getManager()
+    .createQueryBuilder()
+    .insert()
+    .into(StockLastPrice)
+    .values(lastPrice)
+    .onConflict(`(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"`)
+    .execute();
+}
+
 export const getStockQuote = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
-  res.json(await getQuote(symbol));
+  const quote = await getQuote(symbol);
+  if (quote) {
+    await updateStockLastPrice({
+      symbol,
+      price: quote.latestPrice,
+      time: quote.latestUpdate
+    });
+  }
+  res.json(quote);
 });
 
 export const getStockPrice = handlerWrapper(async (req, res) => {

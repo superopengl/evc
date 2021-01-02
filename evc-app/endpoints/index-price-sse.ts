@@ -11,76 +11,106 @@ import { StockLastPrice } from '../src/entity/StockLastPrice';
 import { connectDatabase } from '../src/db';
 import { executeSqlStatement } from './executeSqlStatement';
 import * as moment from 'moment';
+import { Stock } from '../src/entity/Stock';
+import { combineLatest, Subject } from 'rxjs';
+import { throttleTime, debounceTime, startWith } from 'rxjs/operators';
 
+const JOB_NAME = 'price-sse';
 const publisher = new RedisRealtimePricePubService();
+const CLIENT_EVENT_FREQUENCY = 2 * 1000; //2 seconds
+const DB_UPDATE_FREQUENCY = 10 * 1000;  // 10 seconds.
+let symbolSourceMap: Map<string, Subject<StockLastPriceInfo>>;
 
-async function saveLastPrice(priceList: StockLastPriceInfo[]) {
-  // for (const p of priceList) {
-  //   const { symbol, price, time } = p;
-  //   const key = `lastPrice.${symbol}`;
-  //   redisCache.set(key, data);
-  // }
-
-  const values = priceList.map(p => {
-    const { symbol, price, time } = p;
-    return {
-      symbol,
-      price,
-      updatedAt: new Date(time)
-    }
-  });
-
-  // for(const v of values) {
-  //   const lastPrice = new StockLastPrice();
-  //   lastPrice.symbol = v.symbol;
-  //   lastPrice.price = v.price;
-  //   lastPrice.updatedAt = v.updatedAt;
-  //   await getRepository(StockLastPrice).insert(lastPrice);
-  // }
-
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockLastPrice)
-    .onConflict(`(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"`)
-    .values(values)
-    .execute();
-
-  // await executeSqlStatement(priceList, item => {
-  //   const { symbol, price, time } = item;
-  //   const updated = moment(time).format('YYYY-MM-DD HH:mm:ss');
-  //   return `INSERT INTO public.stock_last_price(symbol, price, "updatedAt") VALUES ('${symbol}', ${price}, timezone('UTC', '${updated}')) ON CONFLICT (symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"`;
-  // });
+function createSourceForClientPublish() {
+  const source$ = new Subject<StockLastPriceInfo>();
+  source$
+    .pipe(
+      debounceTime(CLIENT_EVENT_FREQUENCY)
+    )
+    .subscribe(p => {
+      const event = {
+        type: 'price',
+        data: p
+      }
+      publisher.publish(event);
+    })
+  return source$;
 }
 
-async function publishPriceEvents(priceList: StockLastPriceInfo[]) {
-  for (const p of priceList) {
-    // p.symbol = 'GOOG';
-    const event = {
-      type: 'price',
-      data: p
-    }
-    publisher.publish(event);
+async function initialize() {
+  if (symbolSourceMap) return;
+  const stocks = await getRepository(Stock).find({
+    select: ['symbol']
+  });
+  symbolSourceMap = new Map<string, Subject<StockLastPriceInfo>>();
+  for (const s of stocks) {
+    const source$ = createSourceForClientPublish();
+    symbolSourceMap.set(s.symbol, source$);
+  }
+
+  const dbSources = Array.from(symbolSourceMap.values()).map(s => s.pipe(startWith(null)));
+  combineLatest(dbSources)
+    .pipe(
+      debounceTime(DB_UPDATE_FREQUENCY)
+    )
+    .subscribe(async (list: StockLastPriceInfo[]) => {
+      try {
+        updateLastPriceInDatabase(list);
+      } catch (err) {
+        console.error('Task sse saveLastPrice', errorToJson(err));
+      }
+    });
+}
+
+async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
+  const values = priceList
+    .filter(p => !!p)
+    .map(p => {
+      const { symbol, price, time } = p;
+      return {
+        symbol,
+        price,
+        updatedAt: new Date(time)
+      }
+    });
+
+  if (values.length) {
+    await getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(StockLastPrice)
+      .onConflict(`(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"`)
+      .values(values)
+      .execute();
   }
 }
 
-function handleMessage(data) {
+async function publishPriceEventsToClient(priceList: StockLastPriceInfo[]) {
+  for (const p of priceList) {
+    p.symbol = 'GOOG';
+    const subject$ = symbolSourceMap.get(p.symbol);
+    if (subject$) {
+      subject$.next(p);
+    }
+  }
+}
+
+function handleEventMessage(eventMessage: string) {
   try {
-    const priceList = JSON.parse(data) as StockLastPriceInfo[];
+    const priceList = JSON.parse(eventMessage) as StockLastPriceInfo[];
     if (priceList?.length) {
-      publishPriceEvents(priceList);
-      saveLastPrice(priceList).catch(err => console.error('Task sse saveLastPrice', errorToJson(err)));
+      publishPriceEventsToClient(priceList);
     }
   } catch (err) {
     console.error('Task', 'sse', 'message error', errorToJson(err));
   }
 }
 
-const JOB_NAME = 'price-sse';
-
 start(JOB_NAME, async () => {
   let es: EventSource = null;
   try {
+    await initialize();
+
     const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}`;
     console.log('Task', JOB_NAME, 'url', url);
     es = new EventSource(url);
@@ -91,7 +121,7 @@ start(JOB_NAME, async () => {
     es.onerror = (err) => {
       console.log(`Task ${JOB_NAME} error`.red, err);
     };
-    es.onmessage = (e) => handleMessage(e.data);
+    es.onmessage = (e) => handleEventMessage(e.data);
   } catch (err) {
     console.log(`Task ${JOB_NAME} error`.red, err);
     es?.close();

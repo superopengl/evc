@@ -10,8 +10,24 @@ import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
 import { Loading } from './Loading';
+import styled from 'styled-components';
 const { Paragraph, Text, Title } = Typography;
 
+const Container = styled(Space)`
+width: 100%;
+
+.ant-list-item {
+  align-items: flex-start;
+}
+`;
+
+const NewsImage = styled(Image)`
+width: 200px;
+border: 1px solid #f0f0f0;
+padding: 4px;
+border-radius: 4px;
+margin-left: 10px;
+`;
 
 const StockNewsPanel = (props) => {
 
@@ -33,33 +49,33 @@ const StockNewsPanel = (props) => {
   }, []);
 
   return (
-    <Space direction="vertical" style={{ width: '100%' }}>
+    <Container direction="vertical">
       <List
         loading={loading}
         dataSource={data}
         renderItem={item => (
           <List.Item
             extra={
-              item.image ? <Image src={item.image} /> : null
+              item.image ? <NewsImage src={item.image} /> : null
             }
           >
             {/* <a href={item.url} target="_blank" rel="noopener noreferrer"> */}
             <List.Item.Meta
-              title={<Space>
+              title={
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
                   <Title level={5} style={{margin: 0}}>
                     {item.headline}
                   </Title>
-                </a>
                 <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />
-              </Space>}
+                </a>
+              }
               description={item.summary}
             />
             {/* </a> */}
           </List.Item>
         )}
       />
-    </Space>
+    </Container>
   );
 };
 

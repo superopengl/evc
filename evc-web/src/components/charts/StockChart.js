@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { getStockChart } from 'services/stockService';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {Button, Space} from 'antd';
+import { Button, Space } from 'antd';
+import ReactDOM from "react-dom";
 
 const StockChart = props => {
   const { symbol, type: propPeriod } = props;
@@ -22,13 +23,13 @@ const StockChart = props => {
   ]
 
   const getTime = item => {
-    const {date, minute} = item;
-    return minute ? `${date} ${minute}`: date;
+    const { date, minute } = item;
+    return minute ? `${date} ${minute}` : date;
   }
 
-  const formatTimeForRawData = (data) => {
+  const formatTimeForRawData = (data, period) => {
     const minuteOnly = ['1h', '4h', '1d'].includes(period);
-   const formatted =  (data ?? []).filter(x => x.average !== null).map((x, i) => ({
+    const formatted = (data ?? []).filter(x => x.average !== null).map((x, i) => ({
       price: x.average || x.close,
       time: minuteOnly ? x.minute : getTime(x),
       volume: x.volume,
@@ -36,24 +37,33 @@ const StockChart = props => {
     return formatted;
   }
 
+  const loadChartData = async (symbol, period) => {
+    const rawData = await getStockChart(symbol, period);
+    const formatted = formatTimeForRawData(rawData, period);
+    return formatted;
+  }
+
   const loadData = async (period) => {
     try {
       setLoading(true);
-      const rawData = await getStockChart(symbol, period);
-      setData(formatTimeForRawData(rawData));
-    } finally {
+      const data = await loadChartData(symbol, period);
+      ReactDOM.unstable_batchedUpdates(() => {
+        setData(data);
+        setPeriod(period);
+        setLoading(false);
+      });
+    } catch {
       setLoading(false);
     }
   };
 
   React.useEffect(() => {
     loadData(propPeriod);
-  }, [propPeriod]);
+  }, []);
 
   const handleChangePeriod = async p => {
-    if(p !== period) {
+    if (p !== period) {
       loadData(p);
-      setPeriod(p);
     }
   }
 
@@ -113,10 +123,10 @@ const StockChart = props => {
   }
 
   return <>
-    <Space style={{justifyContent: 'flex-end', width: '100%'}}>
+    <Space style={{ justifyContent: 'flex-end', width: '100%' }}>
       {periods.map(p => <Button type="link" key={p} onClick={() => handleChangePeriod(p)} disabled={p === period}>{p}</Button>)}
-      
-      </Space>
+
+    </Space>
     {/* <Area {...config}/> */}
     <DualAxes {...configDual} />
   </>

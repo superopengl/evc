@@ -11,6 +11,8 @@ import { getStockNews } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
 import { Loading } from './Loading';
 import styled from 'styled-components';
+import { MdOpenInNew } from 'react-icons/md';
+
 const { Paragraph, Text, Title } = Typography;
 
 const Container = styled(Space)`
@@ -63,10 +65,10 @@ const StockNewsPanel = (props) => {
             <List.Item.Meta
               title={
                 <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  <Title level={5} style={{margin: 0}}>
-                    {item.headline}
+                  <Title level={5} style={{ margin: 0 }}>
+                    {item.headline} <IconContext.Provider value={{color: '#3273A4'}}><MdOpenInNew/></IconContext.Provider>
                   </Title>
-                <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />
+                  <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />
                 </a>
               }
               description={item.summary}

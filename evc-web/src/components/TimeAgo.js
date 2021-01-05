@@ -26,10 +26,10 @@ export const TimeAgo = props => {
     return defaultContent || null;
   }
   const m = moment(value);
-  const realPrefix = prefix?.trim() ? `${prefix.trim()} ` : null;
   return <StyledSpace size="small" direction="horizontal">
     <Space direction={direction} size="small">
-      {showAgo && <Text strong={strong} type="secondary">{realPrefix}<ReactTimeAgo date={m.toDate()} /></Text>}
+      {prefix}
+      {showAgo && <Text strong={strong} type="secondary"><ReactTimeAgo date={m.toDate()} /></Text>}
       {accurate && <Text strong={strong} type="secondary"><small>{m.format(showTime ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</small></Text>}
     </Space>
     {extra}
@@ -37,7 +37,7 @@ export const TimeAgo = props => {
 }
 
 TimeAgo.propTypes = {
-  prefix: PropTypes.string,
+  prefix: PropTypes.any,
   value: PropTypes.any,
   defaultContent: PropTypes.any,
   direction: PropTypes.string,

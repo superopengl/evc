@@ -7,6 +7,7 @@ import { StockFairValue } from '../entity/StockFairValue';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
+import { StockInformation } from '../entity/StockInformation';
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
   const { symbols, text, tags, page, size, orderField, orderDirection, watchOnly, noCount, overValued, underValued } = queryInfo;
@@ -17,16 +18,16 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
 
   let query = getManager()
     .createQueryBuilder()
-    .from(Stock, 's')
+    .from(StockInformation, 's')
     .where('1 = 1');
 
   if (symbols?.length) {
     query = query.andWhere(`s.symbol IN (:...symbols)`, { symbols: symbols.map(s => s.toUpperCase()) });
   }
-  if (text) {
-    query = query.andWhere('s.symbol ILIKE :text OR s.company ILIKE :text', { text: `%${text}%` });
-    pageNo = 1;
-  }
+  // if (text) {
+  //   query = query.andWhere('s.symbol ILIKE :text OR s.company ILIKE :text', { text: `%${text}%` });
+  //   pageNo = 1;
+  // }
 
   let includesWatch = false;
   if (includesWatchForUserId) {
@@ -45,65 +46,32 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
     }
   }
 
-  query = query
-    .leftJoin(q => q.from(StockPublish, 'pu')
-      .distinctOn(['pu.symbol'])
-      .orderBy('pu.symbol')
-      .addOrderBy('pu.createdAt', 'DESC'),
-      'pu', 'pu.symbol = s.symbol');
   if (tags?.length) {
     // Filter by tags
-    query = query.innerJoin(q => q.from('stock_tags_stock_tag', 'tg')
-      .innerJoin(
-        sq => sq.from('stock_tags_stock_tag', 'stg')
-          .where(`stg."stockTagId" IN (:...tags)`, { tags }),
-        'stg',
-        'stg."stockSymbol" = tg."stockSymbol"'
-      )
-      .groupBy('tg."stockSymbol"')
-      .select([
-        'tg."stockSymbol" as symbol',
-        'array_agg(tg."stockTagId") as tags'
-      ]),
-      'tag', 'tag.symbol = s.symbol');
-  } else {
-    query = query.leftJoin(q => q.from('stock_tags_stock_tag', 'tg')
-      .groupBy('tg."stockSymbol"')
-      .select([
-        'tg."stockSymbol" as symbol',
-        'array_agg(tg."stockTagId") as tags'
-      ]),
-      'tag', 'tag.symbol = s.symbol');
+    query = query.andWhere(`(s.tags && array[:...tags]::uuid[]) IS TRUE`, { tags });
   }
 
   if (overValued && underValued) {
-
+    query = query.andWhere(`s."isOver" IS TRUE OR s."isUnder" IS TRUE`);
   } else if (overValued) {
-
+    query = query.andWhere(`s."isOver" IS TRUE`);
   } else if (underValued) {
-
+    query = query.andWhere(`s."isUnder" IS TRUE`);
   }
 
-  const count = noCount ? null : await query.getCount();
+  // const count = noCount ? null : await query.getCount();
 
-  query = query.orderBy('s.symbol')
-    .addOrderBy(`pu."${orderField || 'createdAt'}"`, orderDirection || 'DESC')
-    .select([
-      'pu.*',
-      's.symbol as symbol',
-      's.company as company',
-      'tag.tags',
-      'pu."createdAt" as "publishedAt"',
-    ]);
+  query = query.select('s.*');
   if (includesWatch) {
     query = query.addSelect('sw."createdAt" as watched');
   }
-  query = query.offset((pageNo - 1) * pageSize)
+  query = query.orderBy('s.symbol')
+    .offset((pageNo - 1) * pageSize)
     .limit(pageSize);
   const data = await query.execute();
 
   return {
-    count,
+    count: data.length,
     page: pageNo,
     data
   };

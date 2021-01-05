@@ -174,15 +174,15 @@ export const listHotStock = handlerWrapper(async (req, res) => {
     .createQueryBuilder()
     .from(StockInformation, 'si')
     .innerJoin(q => q.from(StockHotSearch, 'h')
-      .select('h.symbol, COUNT(1) AS count')
-      .groupBy('h.symbol'), 'h', `si.symbol = h.symbol`
+      .orderBy('h.count', 'DESC')
+      .limit(limit), 'h', `si.symbol = h.symbol`
     )
+    .where(`si."publishedAt" IS NOT NULL`)
+    .orderBy('h.count', 'DESC')
     .select([
       'si.*',
     ])
-    .orderBy(`h.count`, 'DESC')
-    .limit(limit)
-    .getMany();
+    .getRawMany();
 
   res.json(list);
 });

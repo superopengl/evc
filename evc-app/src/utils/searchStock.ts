@@ -7,7 +7,7 @@ import { StockFairValue } from '../entity/StockFairValue';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
-import { StockInformation } from '../entity/StockInformation';
+import { StockLastPublishInformation } from '../entity/StockLastPublishInformation';
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
   const { symbols, text, tags, page, size, orderField, orderDirection, watchOnly, noCount, overValued, underValued } = queryInfo;
@@ -18,7 +18,7 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
 
   let query = getManager()
     .createQueryBuilder()
-    .from(StockInformation, 's')
+    .from(StockLastPublishInformation, 's')
     .where('1 = 1');
 
   if (symbols?.length) {

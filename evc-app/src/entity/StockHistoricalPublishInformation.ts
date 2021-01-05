@@ -1,4 +1,4 @@
-import { ViewColumn, ViewEntity, Connection } from 'typeorm';
+import { ViewEntity, Connection } from 'typeorm';
 import { Stock } from './Stock';
 import { StockPublish } from './StockPublish';
 import { StockSupportShort } from './StockSupportShort';
@@ -7,7 +7,7 @@ import { StockResistanceShort } from './StockResistanceShort';
 import { StockResistanceLong } from './StockResistanceLong';
 import { StockFairValue } from './StockFairValue';
 import { StockLastPrice } from './StockLastPrice';
-
+import { StockPublishInformationBase } from './StockPublishInformationBase';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
@@ -66,61 +66,6 @@ import { StockLastPrice } from './StockLastPrice';
     .addSelect('CASE WHEN slp.price < sss.lo THEN TRUE ELSE FALSE END as "isUnder"')
     .addSelect('CASE WHEN slp.price > srs.hi THEN TRUE ELSE FALSE END as "isOver"')
 })
-export class StockInformation {
-  @ViewColumn()
-  symbol: string;
-
-  @ViewColumn()
-  company: string;
-
-  @ViewColumn()
-  tags: string[];
-
-  @ViewColumn()
-  publishedAt: Date;
-
-  @ViewColumn()
-  supportShortLo: number;
-
-  @ViewColumn()
-  supportShortHi: number;
-
-  @ViewColumn()
-  supportLongLo: number;
-
-  @ViewColumn()
-  supportLongHi: number;
-
-  @ViewColumn()
-  resistanceShortLo: number;
-
-  @ViewColumn()
-  resistanceShortHi: number;
-
-  @ViewColumn()
-  resistanceLongLo: number;
-
-  @ViewColumn()
-  resistanceLongHi: number;
-
-  @ViewColumn()
-  fairValueLo: number;
-
-  @ViewColumn()
-  fairValueHi: number;
-
-  @ViewColumn()
-  rangeLo: number;
-
-  @ViewColumn()
-  rangeHi: number;
-
-  @ViewColumn()
-  lastPrice: number;
-
-  @ViewColumn()
-  isUnder: boolean;
-
-  @ViewColumn()
-  isOver: boolean;
+export class StockHistoricalPublishInformation extends StockPublishInformationBase {
 }
+

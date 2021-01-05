@@ -25,8 +25,8 @@ export const notify = {
   success(title, content = null, duration = 4) {
     return request('success', title, content, duration);
   },
-  info(title, content = null) {
-    return request('info', title, content, 5);
+  info(title, content = null, duration = 10) {
+    return request('info', title, content, duration);
   },
   warn(title, content = null) {
     return request('warn', title, content, 5);

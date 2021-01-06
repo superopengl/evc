@@ -442,17 +442,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/history:
-    get:
-      operationId: getStockHistory
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
   /stock/s/{symbol}/watch:
     post:
       operationId: watchStock

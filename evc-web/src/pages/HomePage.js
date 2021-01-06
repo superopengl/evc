@@ -74,7 +74,7 @@ class HomePage extends React.Component {
           {/* <section><HomeTeamArea /></section> */}
           <HomeFooter />
         </ContentStyled>
-        <CookieConsent location="bottom" overlay expires={999} buttonStyle={{borderRadius: 4}}>
+        <CookieConsent location="top" overlay expires={999} buttonStyle={{borderRadius: 4}} buttonText="I understand">
           This website uses cookies to enhance the user experience.
         </CookieConsent>
       </LayoutStyled>

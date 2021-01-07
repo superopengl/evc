@@ -127,10 +127,6 @@ const AdminStockPublishPanel = (props) => {
   const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
 
   const { symbol } = stock;
-  const handleChangeTags = async (tagIds) => {
-    stock.tags = tagIds.map(t => t.id || t);
-    await updateStock(stock);
-  }
 
   const handlePublishMarketPrice = async (values) => {
     const { price } = values;
@@ -310,7 +306,6 @@ const AdminStockPublishPanel = (props) => {
   }
 
   return (<Container>
-    <StockTagSelect value={stock.tags} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
     <Row gutter={20} style={{ marginTop: 20 }}>
       <ColStyled {...span}>
         <ColInnerCard title="EPS">

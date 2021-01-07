@@ -16,6 +16,7 @@ import { Divider } from 'antd';
 import StockTagFilter from 'components/StockTagFilter';
 import StockInfoCard from 'components/StockInfoCard';
 import { StockSearchInput } from 'components/StockSearchInput';
+import HeaderStockSearch from 'components/HeaderStockSearch';
 
 const { Text, Paragraph } = Typography;
 
@@ -106,10 +107,6 @@ const StockListPage = (props) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
-  const handleValueTypeChange = (e) => {
-    searchByQueryInfo({ ...queryInfo, valueType: e.target.value });
-  }
-
   const handleToggleOverValued = e => {
     const checked = e.target.checked;
     searchByQueryInfo({ ...queryInfo, overValued: checked });
@@ -122,9 +119,6 @@ const StockListPage = (props) => {
   return (
     <LayoutStyled>
       <HomeHeader>
-        <StockSearchInput
-          onChange={handleSelectedStock}
-          style={{ width: '100%', maxWidth: 400 }} />
       </HomeHeader>
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>

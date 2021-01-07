@@ -42,6 +42,7 @@ import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockGuestPublishInformation, StockLastPublishInformation } from '../entity/StockLastPublishInformation';
 import { StockPublishInformationBase } from '../entity/StockPublishInformationBase';
+import { getAllowedSymbols } from '../utils/getAllowedSymbols';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -62,12 +63,23 @@ export const incrementStock = handlerWrapper((req, res) => {
 
 export const getStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const { user: { id, role } } = req as any;
+  const { user } = req as any;
+  const { id, role } = user;
   const symbol = req.params.symbol.toUpperCase();
+  const allowedSymbols = await getAllowedSymbols(user);
 
-  let stock: StockPublishInformationBase;
+  let stock: any;
+  let entityClass: any;
+  if(allowedSymbols === null) {
+    entityClass = StockGuestPublishInformation;
+  } else if(allowedSymbols === '*') {
+    entityClass = StockLastPublishInformation;
+  } else {
+    entityClass = allowedSymbols.includes(symbol) ? StockLastPublishInformation : StockGuestPublishInformation;
+  }
+
   if (role === Role.Client) {
-    const result = await getRepository(StockLastPublishInformation)
+    const result = await getRepository(entityClass)
       .createQueryBuilder('s')
       .where(`s.symbol = :symbol`, { symbol })
       .leftJoin(q => q.from(StockWatchList, 'sw')
@@ -79,7 +91,7 @@ export const getStock = handlerWrapper(async (req, res) => {
       .execute();
     stock = result ? result[0] : null;
   } else {
-    stock = await getRepository(StockLastPublishInformation).findOne({ symbol });
+    stock = await getRepository(entityClass).findOne({ symbol });
   }
   assert(stock, 404);
 

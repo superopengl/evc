@@ -6,14 +6,10 @@ import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/j
 import * as moment from 'moment';
 import { UserStatus } from '../types/UserStatus';
 import { Subscription } from '../entity/Subscription';
-import { getUserSubscription } from '../utils/getUserSubscription';
+import { getUserCurrentSubscription } from '../utils/getUserCurrentSubscription';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
-
-async function attachSubscriptionCredential(user) {
-  const subscription = await getUserSubscription(user.id);
-
-  user.subscribedSymbols = subscription ? subscription.symbols : null;
-}
+import { Role } from '../types/Role';
+import { SubscriptionType } from '../types/SubscriptionType';
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -33,7 +29,6 @@ export const authMiddleware = async (req, res, next) => {
           return;
         }
         user = existingUser;
-        await attachSubscriptionCredential(user);
       }
       // repo.update({id}, { lastNudgedAt: getUtcNow() }).catch(() => { });
       req.user = Object.freeze(user);

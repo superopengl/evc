@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from 'antd';
+import { Typography, Tag } from 'antd';
 import * as tinycolor from 'tinycolor2';
 import { listStockTags, saveStockTag } from 'services/stockTagService';
 import StockTag from './StockTag';
@@ -156,7 +156,7 @@ function convertOptionToTag(option) {
 
 const StockTagSelect = (props) => {
 
-  const { value, onChange } = props;
+  const { value: selectedTagIds, readonly, onChange } = props;
   const [loading, setLoading] = React.useState(true);
   const [options, setOptions] = React.useState([]);
   const [selectedOptions, setSelectedOptions] = React.useState([]);
@@ -167,7 +167,7 @@ const StockTagSelect = (props) => {
       const allTags = await listStockTags();
       const allOptions = convertTagsToOptions(allTags);
       setOptions(allOptions);
-      const selectedOptions = allOptions.filter(x => value.some(t => t.id === x.value));
+      const selectedOptions = allOptions.filter(x => selectedTagIds.some(tagId => tagId === x.value));
       setSelectedOptions(selectedOptions);
     } finally {
       setLoading(false);
@@ -179,9 +179,9 @@ const StockTagSelect = (props) => {
   }, []);
 
   React.useEffect(() => {
-    const selectedOptions = options.filter(x => value.some(t => t.id === x.value));
+    const selectedOptions = options.filter(x => selectedTagIds.some(tagId => tagId === x.value));
     setSelectedOptions(selectedOptions);
-  }, [value]);
+  }, [selectedTagIds]);
 
   // const handleChange = selected => {
   //   setSelectedOptions(selected);
@@ -222,6 +222,10 @@ const StockTagSelect = (props) => {
     onChange(newSelectedOptions.map(convertOptionToTag));
   }
 
+  if(readonly) {
+    return <>{selectedOptions.map(x => <Tag color="#3273A4">{x.label}</Tag>)}</>
+  }
+
   return <CreatableSelect
     isMulti
     closeMenuOnSelect={false}
@@ -255,12 +259,14 @@ const StockTagSelect = (props) => {
 
 StockTagSelect.propTypes = {
   // value: PropTypes.string.isRequired,
-  value: PropTypes.array.isRequired,
+  value: PropTypes.arrayOf(PropTypes.string).isRequired,
+  readonly: PropTypes.bool,
   onChange: PropTypes.func
 };
 
 StockTagSelect.defaultProps = {
   value: [],
+  readonly: true,
   onChange: () => { }
 };
 

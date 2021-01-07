@@ -5,7 +5,7 @@ import { User } from '../entity/User';
 import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
-import { getUserSubscription } from '../utils/getUserSubscription';
+import { getUserCurrentSubscription } from '../utils/getUserCurrentSubscription';
 import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 
@@ -26,7 +26,7 @@ const getAccountForUser = async (userId) => {
     .where({ referredBy: userId, everPaid: true })
     .getCount();
 
-  const subscription = await getUserSubscription(userId);
+  const subscription = await getUserCurrentSubscription(userId);
 
   const balance = await getRepository(UserBalanceTransaction)
     .createQueryBuilder()

@@ -18,6 +18,7 @@ import styled from 'styled-components';
 import { GlobalContext } from '../contexts/GlobalContext';
 import PropTypes from 'prop-types';
 import { StockSearchInput } from './StockSearchInput';
+import HeaderStockSearch from 'components/HeaderStockSearch';
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -109,6 +110,7 @@ const HomeHeaderRaw = props => {
       </HeaderLogo>
       {/* <StockSearchInput style={{ maxWidth: 500 }} /> */}
       <div style={{ flex: '1', padding: '0 2rem' }}>
+        <HeaderStockSearch />
         {props.children}
       </div>
 

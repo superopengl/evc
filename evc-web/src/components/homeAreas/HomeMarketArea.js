@@ -26,7 +26,7 @@ const InnerContainer = styled.div`
 margin-left: auto;
 margin-right: auto;
 width: 100%;
-max-width: 1200px;
+// max-width: 1200px;
 
 .ant-col {
   margin-top: 1.5rem;
@@ -39,16 +39,19 @@ const HomeMarketArea = props => {
   const span = {
     xs: 24,
     sm: 24,
-    md: 8,
-    lg: 8,
-    xl: 8,
-    xxl: 8
+    md: 12,
+    lg: 6,
+    xl: 6,
+    xxl: 6
   };
 
   return (
     <Container>
       <InnerContainer>
         <Row gutter={30}>
+          <Col {...span}>
+            <StockMostSearched onFetch={listHotStock} title="most searched" />
+          </Col>
           <Col {...span}>
             <StockMostPanel onFetch={getMarketMostActive} title="Most Actives" />
           </Col>

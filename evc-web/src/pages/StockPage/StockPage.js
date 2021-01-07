@@ -146,7 +146,6 @@ const StockPage = (props) => {
   return (
     <LayoutStyled>
       <HomeHeader>
-        <HeaderStockSearch />
       </HomeHeader>
       <ContainerStyled>
         {loading ? <Loading /> : <>

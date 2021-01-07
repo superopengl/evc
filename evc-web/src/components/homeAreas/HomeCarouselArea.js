@@ -84,6 +84,10 @@ padding: 8px;
 // border-radius: 2px;
 `;
 
+const SignUpButton = styled(Button)`
+// background-color: white !important;
+`;
+
 const HomeCarouselAreaRaw = props => {
 
   const windowWidth = useWindowWidth();
@@ -113,8 +117,8 @@ const HomeCarouselAreaRaw = props => {
     sm: 24,
     md: 24,
     lg: 24,
-    xl: 12,
-    xxl: 12
+    xl: 24,
+    xxl: 24
   };
 
   return (
@@ -122,8 +126,8 @@ const HomeCarouselAreaRaw = props => {
       <InnerContainer>
         <Space className="top-menu" size="middle" style={{ width: '100%', justifyContent: 'space-between' }}>
           <LogoPlate>
-          <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto" 
-          height="30"></img>
+            <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto"
+              height="30"></img>
 
           </LogoPlate>
 
@@ -134,12 +138,15 @@ const HomeCarouselAreaRaw = props => {
             <LocaleSelector bordered={false} style={{ color: 'white', width: 130 }} size="large" defaultValue="en-US" />
           </Space>
         </Space>
-        <Row gutter={20} style={{ marginTop: 100 }}>
+        <Row gutter={20} style={{ marginTop: 50 }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Title style={{ fontSize: catchPhraseSize, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check</Title>
             <Paragraph level={3} style={{ fontSize: catchPhraseSize * 0.5, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check provides top class invstiment guidence to earn more money on the market! Go go go! Sign up today!</Paragraph>
+            <div style={{ maxWidth: 550, margin: '2rem auto' }}>
+              <StockSearchInput onChange={handleSearchChange} traceSearch={true} />
+            </div>
             <Space align="center" style={{ marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' }} >
-              <Button type="primary" onClick={() => handleSignOn()}>Sign Up with Email</Button>
+              <SignUpButton type="primary" onClick={() => handleSignOn()}>Sign Up with Email</SignUpButton>
               <GoogleSsoButton
                 render={
                   renderProps => (
@@ -154,16 +161,13 @@ const HomeCarouselAreaRaw = props => {
                   )}
               />
             </Space>
+
           </Col>
-          <Col {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          {/* <Col {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <SearchPanel direction="vertical" >
-              <StockSearchInput
-                onChange={handleSearchChange}
-                traceSearch={true}
-                 />
               <StockMostSearched onFetch={listHotStock} title="most searched" />
             </SearchPanel>
-          </Col>
+          </Col> */}
         </Row>
 
         {/* <LogoTextDark /> */}
@@ -173,7 +177,7 @@ const HomeCarouselAreaRaw = props => {
               </Title> */}
 
       </InnerContainer>
-      <SearchResultModal stock={resultStock}/>
+      <SearchResultModal stock={resultStock} />
     </Container>
   );
 }

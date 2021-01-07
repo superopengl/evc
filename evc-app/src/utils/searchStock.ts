@@ -59,9 +59,10 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
     query = query.andWhere(`s."isUnder" IS TRUE`);
   }
 
-  // const count = noCount ? null : await query.getCount();
+  const count = noCount ? null : await query.getCount();
 
   query = query.select('s.*');
+
   if (includesWatch) {
     query = query.addSelect('sw."createdAt" as watched');
   }
@@ -71,7 +72,7 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
   const data = await query.execute();
 
   return {
-    count: data.length,
+    count,
     page: pageNo,
     data
   };

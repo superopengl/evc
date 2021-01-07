@@ -1,8 +1,9 @@
-import { ViewColumn } from 'typeorm';
+import { PrimaryColumn, ViewColumn } from 'typeorm';
 
 
 export abstract class StockPublishInformationBase {
   @ViewColumn()
+  @PrimaryColumn()
   symbol: string;
 
   @ViewColumn()

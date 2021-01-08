@@ -126,12 +126,12 @@ const UserListPage = () => {
               <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Impersonate">
-              <Button shape="circle" onClick={e => handleImpersonante(e, user)} disabled={context.user.email === user.email}>
+              <Button shape="circle" onClick={e => handleImpersonante(e, user)} disabled={context.user.profile.email === user.email}>
                 <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Delete user">
-              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'system@easyvaluecheck.com'} />
+              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@easyvaluecheck.com'} />
             </Tooltip>
           </Space>
         )

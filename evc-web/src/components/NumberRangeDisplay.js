@@ -21,6 +21,7 @@ const NumberPanel = styled.div`
   // .ant-typography {
   //   color: #000000;
   // }
+  font-size: 12px;
 `;
 
 export const NumberRangeDisplay = (props) => {

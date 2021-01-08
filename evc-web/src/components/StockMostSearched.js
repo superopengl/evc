@@ -40,6 +40,11 @@ const StyledTable = styled(Table)`
   .ant-table-cell {
     color: rgba(0,0,0,0.5);
     font-size: 0.8rem;
+    text-align: right;
+
+    &:first-child {
+      text-align: left;
+    }
   }
 }
 
@@ -69,7 +74,7 @@ const CellSpace = styled.div`
 
 const columnDef = [
   {
-    title: '',
+    title: 'symbol',
     render: (text, item, index) => {
       const { symbol, company, publishedAt } = item;
       if (index % 2 === 0) {
@@ -87,20 +92,20 @@ const columnDef = [
     }
   },
   {
-    title: <div style={{ width: '100%', textAlign: 'right' }}>Fair value</div>,
+    title: 'fair value',
     render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
       <NumberRangeDisplay lo={item.fairValueLo} hi={item.fairValueHi} />
     </CellSpace>
   },
   {
-    title: <div style={{ width: '100%', textAlign: 'right' }}>Support</div>,
+    title: 'support',
     render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
       <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi} />
       <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi} />
     </CellSpace>
   },
   {
-    title: <div style={{ width: '100%', textAlign: 'right' }}>Resistance</div>,
+    title: 'resistance',
     render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
       <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} />
       <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi} />

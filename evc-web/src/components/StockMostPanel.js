@@ -37,6 +37,11 @@ const StyledTable = styled(Table)`
   .ant-table-cell {
     color: rgba(0,0,0,0.5);
     font-size: 0.8rem;
+    text-align: right;
+
+    &:first-child {
+      text-align: left;
+    }
   }
 }
 
@@ -59,7 +64,7 @@ const StyledTable = styled(Table)`
 
 const columnDef = [
   {
-    title: 'Symbol',
+    title: 'symbol',
     render: (text, item, index) => {
       const { symbol, companyName } = item;
       if (index % 2 === 0) {
@@ -74,17 +79,17 @@ const columnDef = [
     }
   },
   {
-    title:  <div style={{width: '100%', textAlign: 'right'}}>Last price</div>,
+    title:  'last price',
     dataIndex: 'latestPrice',
     render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><Text>{value?.toFixed(2)}</Text></div>
   },
   {
-    title: <div style={{width: '100%', textAlign: 'right'}}>Change</div>,
+    title: 'change',
     dataIndex: 'change',
     render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><NumberAmount value={value} /></div>
   },
   {
-    title: <div style={{width: '100%', textAlign: 'right'}}>% change</div>,
+    title: '% change',
     dataIndex: 'changePercent',
     render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><NumberAmount postfix="%" digital={2} value={value * 100} /></div>
   },

@@ -168,7 +168,7 @@ const StockPage = (props) => {
             {/* <Text type="secondary">Electronic Technology</Text> */}
             <StockTagSelect value={stock.tags} readonly={!isAdminOrAgent} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
             <StockQuotePanel symbol={stock.symbol} />
-
+            {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
             <Row gutter={20}>
               {!isAdminOrAgent && <Col {...span}>
                 <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />

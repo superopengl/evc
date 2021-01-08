@@ -66,10 +66,10 @@ const StockInfoCard = (props) => {
             {/* <TooltipIcon message="How to use support" /> */}
           </Col>
           <Col span={14}>
-            <Space size="small" direction="vertical">
+            <div style={{display: 'flex', flexDirection: 'column'}}>
               <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} loTrend={stock.supportShortLoTrend} hiTrend={stock.supportShortHiTrend} />
               <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} loTrend={stock.supportLongLoTrend} hiTrend={stock.supportLongHiTrend} />
-            </Space>
+            </div>
           </Col>
         </Row>
         <Row>
@@ -78,10 +78,10 @@ const StockInfoCard = (props) => {
             {/* <TooltipIcon message="How to use resistance" /> */}
           </Col>
           <Col span={14}>
-            <Space size="small" direction="vertical">
+            <div style={{display: 'flex', flexDirection: 'column'}}>
               <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} loTrend={stock.resistanceShortLoTrend} hiTrend={stock.resistanceShortHiTrend} />
               <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} loTrend={stock.resistanceLongLoTrend} hiTrend={stock.resistanceLongHiTrend} />
-            </Space>
+            </div>
           </Col>
         </Row>
         <Row>

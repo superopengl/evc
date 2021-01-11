@@ -383,7 +383,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/chart/{period}:
+  /stock/s/{symbol}/chart/{period}/{interval}:
     get:
       operationId: getStockChart
       parameters:
@@ -392,6 +392,10 @@ paths:
           type: string
           required: true
         - name: period
+          in: path
+          type: string
+          required: true
+        - name: interval
           in: path
           type: string
           required: true

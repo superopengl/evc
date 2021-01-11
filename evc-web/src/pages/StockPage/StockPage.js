@@ -165,15 +165,13 @@ const StockPage = (props) => {
             <StockTagSelect value={stock.tags} readonly={!isAdminOrAgent} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
             <StockQuotePanel symbol={stock.symbol} />
             {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
-
-
             <Row gutter={20} wrap={false}>
               {!isAdminOrAgent && <Col flex="none">
                 <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
               </Col>}
               <Col flex="auto">
                 <Card size="small" type="inner" title="Chart">
-                  <StockChart symbol={stock.symbol} type="1d" />
+                  <StockChart symbol={stock.symbol} period="1d" interval="5m"/>
                 </Card>
               </Col>
             </Row>
@@ -192,8 +190,7 @@ const StockPage = (props) => {
             </Row>
             {stock && <Row >
               <StockNewsPanel symbol={stock.symbol} />
-            </Row>
-            }
+            </Row>}
           </Space>
         </>}
       </ContainerStyled>

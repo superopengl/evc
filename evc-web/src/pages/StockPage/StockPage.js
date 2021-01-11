@@ -121,8 +121,10 @@ const StockPage = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity()
-  }, []);
+    if(symbol) {
+      loadEntity()
+    }
+  }, [symbol]);
 
   const handleToggleWatch = async watching => {
     stock.watched = watching;

@@ -9,10 +9,12 @@ import { StockLastPrice } from '../src/entity/StockLastPrice';
 import { Stock } from '../src/entity/Stock';
 import { combineLatest, Subject } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
+import { assert } from '../src/utils/assert';
 
 const JOB_NAME = 'price-sse';
+const BATCH_SIZE = 50;
 const CLIENT_EVENT_FREQUENCY = 2 * 1000; //2 seconds
-const DB_UPDATE_FREQUENCY = 10 * 1000;  // 10 seconds.
+const DB_UPDATE_FREQUENCY = 2 * 1000;  // 2 seconds.
 const redisPricePublisher = new RedisRealtimePricePubService();
 let symbolSourceMap: Map<string, Subject<StockLastPriceInfo>>;
 
@@ -80,7 +82,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
   }
 }
 
-async function publishPriceEventsToClient(priceList: StockLastPriceInfo[]) {
+function publishPriceEventsToClient(priceList: StockLastPriceInfo[]) {
   for (const p of priceList) {
     // p.symbol = 'GOOG';
     const subject$ = symbolSourceMap.get(p.symbol);
@@ -101,24 +103,52 @@ function handleEventMessage(eventMessage: string) {
   }
 }
 
-start(JOB_NAME, async () => {
+function createSseForSymbols(symbols: string[]) {
+  assert(symbols && symbols.length > 0 && symbols.length <= BATCH_SIZE, 400, 'Wrong size of symbols. Must be between 1 and 100');
+  const symbolParaValue = symbols.join(',');
   let es: EventSource = null;
   try {
-    await initialize();
-
-    const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}`;
-    console.log('Task', JOB_NAME, 'url', url);
+    const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolParaValue}`;
     es = new EventSource(url);
 
     es.onopen = () => {
-      console.log('Task', JOB_NAME, 'opened');
+      console.log(`Task ${JOB_NAME} opened [${symbolParaValue}]`);
     };
     es.onerror = (err) => {
-      console.log(`Task ${JOB_NAME} error`.red, err);
+      console.log(`Task ${JOB_NAME} error [${symbolParaValue}]`.red, err);
     };
     es.onmessage = (e) => handleEventMessage(e.data);
   } catch (err) {
-    console.log(`Task ${JOB_NAME} error`.red, err);
+    console.log(`Task ${JOB_NAME} error [${symbolParaValue}]. Closing`.red, err);
     es?.close();
+    throw err;
+  }
+}
+
+async function sleep(ms): Promise<void> {
+  return new Promise(res => {
+    setTimeout(() => res(), ms);
+  })
+}
+
+start(JOB_NAME, async () => {
+  try {
+    await initialize();
+
+    let batch = [];
+    for (const symbol of symbolSourceMap.keys()) {
+      batch.push(symbol);
+      if (batch.length === BATCH_SIZE) {
+        createSseForSymbols(batch);
+        batch = [];
+        await sleep(50);
+      }
+    }
+
+    if (batch.length) {
+      createSseForSymbols(batch);
+    }
+  } catch {
+    process.exit(1);
   }
 });

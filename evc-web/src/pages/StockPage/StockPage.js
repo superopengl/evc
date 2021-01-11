@@ -38,11 +38,11 @@ import StockTagSelect from 'components/StockTagSelect';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 
 const { Paragraph, Text } = Typography;
-
+const { Header, Content, Sider } = Layout;
 
 const ContainerStyled = styled.div`
   margin: 6rem auto 2rem auto;
-  padding: 0 1rem 2rem 1rem;
+  padding: 0 1rem 4rem 1rem;
   width: 100%;
   // max-width: 1000px;
 
@@ -61,6 +61,7 @@ const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
   height: 100%;
+
 
   .task-count .ant-badge-count {
     background-color: #15be53;
@@ -81,25 +82,19 @@ const span = {
   xs: 24,
   sm: 24,
   md: 12,
-  lg: 8,
-  xl: 8,
-  xxl: 6
+  lg: 12,
+  xl: 12,
+  xxl: 12
 };
 
 const StockPage = (props) => {
   const symbol = props.match.params.symbol;
 
   const context = React.useContext(GlobalContext);
-  const { user, role, setUser } = context;
-  const isProfileMissing = !isProfileComplete(user);
+  const { role } = context;
   const [stock, setStock] = React.useState();
   const [watched, setWatched] = React.useState();
   const [loading, setLoading] = React.useState(true);
-  const [searchResult, setSearchResult] = React.useState();
-  const [taskListByPortfolioMap, setTaskListByPortfolioMap] = React.useState({});
-  const [searchList, setSearchList] = React.useState([]);
-  const [watchList, setWatchList] = React.useState([]);
-  const [newsVisible, setNewsVisible] = React.useState(false);
   const [insiderVisible, setInsiderVisible] = React.useState(false);
 
   const isAdminOrAgent = ['admin', 'agent'].includes(role);
@@ -121,7 +116,7 @@ const StockPage = (props) => {
   }
 
   React.useEffect(() => {
-    if(symbol) {
+    if (symbol) {
       loadEntity()
     }
   }, [symbol]);
@@ -157,7 +152,6 @@ const StockPage = (props) => {
             title={<Space size="middle"><StockName value={stock} />{isClient && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}</Space>}
             extra={[
               <Button key="insider" type="primary" ghost onClick={() => setInsiderVisible(true)}>Insider Transactions <MemberOnlyIcon /></Button>,
-              <Button key="news" type="primary" ghost onClick={() => setNewsVisible(true)}>News</Button>,
               <Button key="sync" type="primary" ghost icon={<SyncOutlined />} onClick={handleRefresh} />,
 
               // <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
@@ -171,15 +165,19 @@ const StockPage = (props) => {
             <StockTagSelect value={stock.tags} readonly={!isAdminOrAgent} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
             <StockQuotePanel symbol={stock.symbol} />
             {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
-            <Row gutter={20}>
-              {!isAdminOrAgent && <Col {...span}>
+
+
+            <Row gutter={20} wrap={false}>
+              {!isAdminOrAgent && <Col flex="none">
                 <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
               </Col>}
-              <Col {...span}>
+              <Col flex="auto">
                 <Card size="small" type="inner" title="Chart">
                   <StockChart symbol={stock.symbol} type="1d" />
                 </Card>
               </Col>
+            </Row>
+            <Row gutter={20} >
               <Col {...span}>
                 <Card size="small" type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
                   调用Advanced Stats中的putCallRatio
@@ -192,20 +190,13 @@ const StockPage = (props) => {
                 </Card>
               </Col>
             </Row>
+            {stock && <Row >
+              <StockNewsPanel symbol={stock.symbol} />
+            </Row>
+            }
           </Space>
         </>}
       </ContainerStyled>
-      <Drawer
-        visible={newsVisible && stock}
-        title="News"
-        destroyOnClose={true}
-        closable={true}
-        maskClosable={true}
-        onClose={() => setNewsVisible(false)}
-        width="80vw"
-      >
-        {stock && <StockNewsPanel symbol={stock.symbol} />}
-      </Drawer>
       <Drawer
         visible={insiderVisible && stock}
         title="Insider Transactions"

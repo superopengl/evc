@@ -12,6 +12,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
+import { BiSpaceBar } from 'react-icons/bi';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -20,6 +21,7 @@ width: 100%;
 
 .ant-list-item {
   align-items: flex-start;
+  border: none;
 }
 `;
 
@@ -29,6 +31,17 @@ border: 1px solid #f0f0f0;
 padding: 4px;
 border-radius: 4px;
 margin-left: 10px;
+`;
+
+const StyledListItem = styled(List.Item)`
+&:hover {
+  cursor: pointer;
+
+  .news-title {
+    color: #3273A4;
+    text-decoration: underline;
+  }
+}
 `;
 
 const StockNewsPanel = (props) => {
@@ -50,31 +63,39 @@ const StockNewsPanel = (props) => {
     loadData();
   }, []);
 
+  const handleOpenNews = (url) => {
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (newWindow) newWindow.opener = null;
+  }
+
   return (
     <Container direction="vertical">
       <List
         loading={loading}
         dataSource={data}
         renderItem={item => (
-          <List.Item
-            extra={
-              item.image ? <NewsImage src={item.image} /> : null
-            }
+          <StyledListItem
+            onClick={() => handleOpenNews(item.url)}
           >
             {/* <a href={item.url} target="_blank" rel="noopener noreferrer"> */}
             <List.Item.Meta
-              title={
-                <a href={item.url} target="_blank" rel="noopener noreferrer">
-                  <Title level={5} style={{ margin: 0 }}>
-                    {item.headline} <IconContext.Provider value={{color: '#3273A4'}}><MdOpenInNew/></IconContext.Provider>
+              avatar={item.image ? <NewsImage src={item.image} /> : null}
+              title={<>
+                <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />
+                <Space size="small" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <Title level={4} style={{ margin: 0 }} className="news-title">
+                    {item.headline}
                   </Title>
-                  <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />
-                </a>
+                  <div style={{ position: 'relative', top: 4 }}>
+                    <IconContext.Provider value={{ color: '#3273A4', size: 20 }}><MdOpenInNew /></IconContext.Provider>
+                  </div>
+                </Space>
+              </>
               }
               description={item.summary}
             />
             {/* </a> */}
-          </List.Item>
+          </StyledListItem>
         )}
       />
     </Container>

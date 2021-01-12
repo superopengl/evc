@@ -8,7 +8,7 @@ export const StockWatchButton = (props) => {
 
   const style = {
     fontSize: size,
-    color: value ? '#fadb14' : '#d9d9d9',
+    color: value ? '#fadb14' : '#8c8c8c',
   };
 
   const handleToggleValue = e => {

@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import { TimeAgo } from './TimeAgo';
 import MoneyAmount from './MoneyAmount';
 import styled from 'styled-components';
+import {DashOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -28,7 +29,7 @@ export const NumberRangeDisplay = (props) => {
   const { lo, hi, loTrend, hiTrend, time } = props;
 
   if (!lo && lo !== 0 && !hi && hi !== 0) {
-    return <Text>None</Text>
+    return <Text type="secondary"><DashOutlined /></Text>
   }
 
   const formatNumber = num => {

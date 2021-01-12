@@ -21,7 +21,7 @@ font-size: 0.8rem;
 `
 
 export const TimeAgo = props => {
-  const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime } = props;
+  const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime, type } = props;
   if (!value) {
     return defaultContent || null;
   }
@@ -29,8 +29,8 @@ export const TimeAgo = props => {
   return <StyledSpace size="small" direction="horizontal">
     <Space direction={direction} size="small">
       {prefix}
-      {showAgo && <Text strong={strong} type="secondary"><ReactTimeAgo date={m.toDate()} /></Text>}
-      {accurate && <Text strong={strong} type="secondary"><small>{m.format(showTime ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</small></Text>}
+      {showAgo && <Text strong={strong} type={type}><ReactTimeAgo date={m.toDate()} /></Text>}
+      {accurate && <Text strong={strong} type={type}>{m.format(showTime ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</Text>}
     </Space>
     {extra}
   </StyledSpace>
@@ -46,6 +46,7 @@ TimeAgo.propTypes = {
   accurate: PropTypes.bool.isRequired,
   showAgo: PropTypes.bool,
   showTime: PropTypes.bool,
+  type: PropTypes.oneOf([null, 'secondary'])
 };
 
 TimeAgo.defaultProps = {
@@ -55,4 +56,5 @@ TimeAgo.defaultProps = {
   accurate: true,
   showAgo: true,
   showTime: true,
+  type: 'secondary'
 };

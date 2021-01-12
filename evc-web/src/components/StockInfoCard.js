@@ -36,10 +36,11 @@ const StyledCard = styled(Card)`
     background: #e8feff;
   }
 }
+
 `;
 
 const TooltipLabel = props => <Tooltip title={props.message}>
-  <Text type="secondary">{props.children}</Text>
+  <Text type="secondary"><small>{props.children}</small></Text>
 </Tooltip>
 
 
@@ -113,10 +114,10 @@ const StockInfoCard = (props) => {
         </tr>
         <tr>
           <td>
-            <Text type="secondary">Published</Text>
+            <Text type="secondary"><small>Published</small></Text>
           </td>
           <td>
-            <TimeAgo value={stock.publishedAt} type={null} direction="horizontal" accurate={true} />
+            <TimeAgo value={stock.publishedAt} type={null} accurate={true} />
           </td>
         </tr>
       </StyledTable>

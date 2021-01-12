@@ -1,4 +1,4 @@
-import { Button, Layout, Modal, Space, Typography, Row, Col, Card, PageHeader, Drawer } from 'antd';
+import { Button, Layout, Modal, Space, Typography, Row, Col, Card, PageHeader, Drawer, Tag } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -149,7 +149,11 @@ const StockPage = (props) => {
           <PageHeader
             ghost={false}
             onBack={() => props.history.goBack()}
-            title={<Space size="middle"><StockName value={stock} />{isClient && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}</Space>}
+            title={<Space size="middle">
+              <StockName value={stock} />
+              {stock?.isOver ? <Tag color="yellow">over valued</Tag> : stock?.isUnder ? <Tag color="cyan">under valued</Tag> : null}
+              {isClient && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
+              </Space>}
             extra={[
               <Button key="insider" type="primary" ghost onClick={() => setInsiderVisible(true)}>Insider Transactions <MemberOnlyIcon /></Button>,
               <Button key="sync" type="primary" ghost icon={<SyncOutlined />} onClick={handleRefresh} />,
@@ -164,17 +168,17 @@ const StockPage = (props) => {
             {/* <Text type="secondary">Electronic Technology</Text> */}
             <StockTagSelect value={stock.tags} readonly={!isAdminOrAgent} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
             <StockQuotePanel symbol={stock.symbol} />
-            {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
             <Row gutter={20} wrap={false}>
-              {!isAdminOrAgent && <Col flex="none">
+              <Col flex="none">
                 <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
-              </Col>}
+              </Col>
               <Col flex="auto">
                 <Card size="small" type="inner" title="Chart">
                   <StockChart symbol={stock.symbol} period="1d" interval="5m"/>
                 </Card>
               </Col>
             </Row>
+            {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
             <Row gutter={20} >
               <Col {...span}>
                 <Card size="small" type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>

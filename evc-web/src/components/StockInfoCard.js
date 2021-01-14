@@ -82,6 +82,8 @@ const StockInfoCard = (props) => {
       actions={actions}
     >
       <StyledTable>
+        <tbody>
+
         <tr>
           <td>
             <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
@@ -120,6 +122,7 @@ const StockInfoCard = (props) => {
             <TimeAgo value={stock.publishedAt} type={null} accurate={true} />
           </td>
         </tr>
+        </tbody>
       </StyledTable>
     </StyledCard>
   );

@@ -1,14 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Blog {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @CreateDateColumn()
   createdAt?: Date;
 
-  @Column()
+  @UpdateDateColumn()
   lastUpdatedAt: Date;
 
   @Column({ type: 'text', array: true, default: '{}' })

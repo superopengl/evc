@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
@@ -8,7 +8,7 @@ export class StockResistanceLong {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @CreateDateColumn()
   createdAt?: Date;
 
   @Column()

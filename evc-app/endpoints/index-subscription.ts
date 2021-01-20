@@ -24,7 +24,7 @@ async function expireSubscriptions() {
     .update(Subscription)
     .set({ status: SubscriptionStatus.Expired })
     .where(`status = :status`, { status: SubscriptionStatus.Alive })
-    .andWhere(`"end" < timezone('UTC', now())`)
+    .andWhere(`"end" < now()`)
     .execute();
 }
 
@@ -32,7 +32,7 @@ async function sendAlertForExpiringSubscriptions() {
   const list = await getRepository(Subscription)
     .createQueryBuilder()
     .where(`status = :status`, { status: SubscriptionStatus.Alive })
-    .andWhere(`DATEADD(day, "alertDays", timezone('UTC', now())) >= "end"`)
+    .andWhere(`DATEADD(day, "alertDays", now()) >= "end"`)
     .execute();
   // TODO: send notificaiton emails to them
 }
@@ -105,7 +105,7 @@ async function handleRecurringPayments() {
     .createQueryBuilder()
     .where(`status = :status`, { status: SubscriptionStatus.Alive })
     .andWhere(`recurring = TRUE`)
-    .andWhere(`DATEADD(day, "alertDays", timezone('UTC', now())) >= "end"`)
+    .andWhere(`DATEADD(day, "alertDays", now()) >= "end"`)
     .leftJoinAndSelect('payments', 'payment')
     .execute();
 

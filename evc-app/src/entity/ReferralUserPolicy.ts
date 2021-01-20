@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, Index, DeleteDateColumn, IsNull, Not } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Index, DeleteDateColumn, IsNull, Not, CreateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
@@ -16,7 +16,7 @@ export class ReferralUserPolicy {
   @PrimaryColumn('uuid')
   userId: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @CreateDateColumn()
   createdAt?: Date;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })

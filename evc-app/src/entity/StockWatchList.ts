@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, CreateDateColumn } from 'typeorm';
 
 
 @Entity()
@@ -7,7 +7,7 @@ export class StockWatchList {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @CreateDateColumn()
   createdAt?: Date;
 
   @Column()

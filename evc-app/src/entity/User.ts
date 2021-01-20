@@ -1,9 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne, IsNull, Not } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne, IsNull, Not, DeleteDateColumn, CreateDateColumn } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
-import { DeleteDateColumn } from 'typeorm-plus'
 import { UserProfile } from './UserProfile';
-
 
 @Entity()
 @Index('user_email_hash_unique', { synchronize: false })
@@ -20,7 +18,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @CreateDateColumn()
   createdAt?: Date;
 
   // @Index('user_email_unique', { unique: true })

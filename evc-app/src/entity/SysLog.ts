@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class SysLog {
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column({ default: () => `timezone('UTC', now())` })
+    @CreateDateColumn()
     createdAt?: Date;
 
     @Column({ default: 'system' })

@@ -2,7 +2,7 @@ export class TaskDoc {
   // @PrimaryGeneratedColumn('uuid')
   // id?: string;
 
-  // @Column({ default: () => `timezone('UTC', now())` })
+  // @Column({ default: () => `now()` })
   createdAt?: Date;
 
   // @Column({ nullable: true })

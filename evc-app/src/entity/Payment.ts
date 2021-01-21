@@ -15,7 +15,7 @@ export class Payment {
   createdAt?: Date;
 
   @UpdateDateColumn()
-  updatedAt?: Date;
+  lastUpdatedAt?: Date;
 
   @Column('uuid')
   userId: string;

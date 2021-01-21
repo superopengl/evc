@@ -46,15 +46,15 @@ const PaymentModal = (props) => {
   const needsSelectSymbols = planType === 'selected_monthly';
 
 
-  const loadPaymentDetail = async (symbols, useBalance) => {
+  const fetchPaymentDetail = async (symbols, useBalance) => {
     if (needsSelectSymbols && !symbols?.length) {
       setPaymentDetail({});
       return;
     }
     try {
       setLoading(true)
-      const result = await calculatePaymentDetail(planType, symbols, useBalance);
-      setPaymentDetail(result);
+      const detail = await calculatePaymentDetail(planType, symbols, useBalance);
+      setPaymentDetail(detail);
     } finally {
       setLoading(false)
     }
@@ -66,7 +66,7 @@ const PaymentModal = (props) => {
 
   React.useEffect(() => {
     if (planType) {
-      loadPaymentDetail(selectedSymbols, willUseBalance);
+      fetchPaymentDetail(selectedSymbols, willUseBalance);
     }
   }, [planType]);
 
@@ -83,7 +83,7 @@ const PaymentModal = (props) => {
 
   const handleUseBalanceChange = checked => {
     setWillUseBalance(checked);
-    loadPaymentDetail(selectedSymbols, checked);
+    fetchPaymentDetail(selectedSymbols, checked);
   }
 
   const handleRecurringChange = checked => {
@@ -92,7 +92,7 @@ const PaymentModal = (props) => {
 
   const handleSymbolsChange = list => {
     setSelectedSymbols([...list]);
-    loadPaymentDetail(list, willUseBalance);
+    fetchPaymentDetail(list, willUseBalance);
   }
 
   const isValidPlan = (!needsSelectSymbols || selectedSymbols?.length > 0) && paymentDetail;
@@ -131,6 +131,12 @@ const PaymentModal = (props) => {
   //   });
   // }
 
+  const shouldShowFullBalanceButton = isValidPlan && !recurring && willUseBalance && paymentDetail.additionalPay === 0;
+  const shouldShowCard = isValidPlan && (paymentDetail.additionalPay > 0 || recurring);
+  const shouldShowPayPal = isValidPlan && !recurring && paymentDetail.additionalPay > 0;
+  const shouldShowAliPay = isValidPlan && !recurring && paymentDetail.additionalPay > 0;
+  const showBalanceCardCombinedRecurringMessage = recurring && willUseBalance;
+
   return (
     <Modal
       visible={modalVisible}
@@ -167,10 +173,10 @@ const PaymentModal = (props) => {
             <Text>Recurring payment?</Text>
             <Switch defaultChecked onChange={handleRecurringChange} />
           </Space>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          {paymentDetail?.totalBalanceAmount > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Prefer to use balance?</Text>
             <Switch defaultChecked onChange={handleUseBalanceChange} />
-          </Space>
+          </Space>}
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Balance total amount:</Text>
             {paymentDetail ? <MoneyAmount value={paymentDetail.totalBalanceAmount} /> : '-'}
@@ -186,18 +192,19 @@ const PaymentModal = (props) => {
           </Space>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text strong>Total payable amount:</Text>
-            {paymentDetail ? <MoneyAmount strong value={paymentDetail.additionalPay} /> : '-'}
+            {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
           </Space>
-          {isValidPlan && <Divider />}
           {isValidPlan && <>
-            {paymentDetail.additionalPay === 0 ? <FullBalancePayButton 
-            onProvision={handleProvisionSubscription} 
-            onCommit={handleSuccessfulPayment} 
-            /> :
-              <>
-                <PayPalCheckoutButton payPalPlanId={''} />
-                <StripeCardPaymentWidget onProvision={handleProvisionSubscription} onCommit={handleSuccessfulPayment} />
-              </>}
+            <Divider />
+            {shouldShowFullBalanceButton && <>
+              <Alert type="info" message="Congratulations! You have enough balance to purchase this plan without any additional pay." showIcon />
+              <FullBalancePayButton onProvision={handleProvisionSubscription} onCommit={handleSuccessfulPayment} />
+            </>}
+            {showBalanceCardCombinedRecurringMessage && <Alert
+              type="info" message="When each plan renew happens, system will try to use your balance as much before charging your card." showIcon />}
+            {shouldShowCard && <StripeCardPaymentWidget onProvision={handleProvisionSubscription} onCommit={handleSuccessfulPayment} />}
+            {shouldShowPayPal && <PayPalCheckoutButton payPalPlanId={''} />}
+            {shouldShowAliPay && <Button block>Alipay</Button>}
           </>}
         </Space>
       </Loading>

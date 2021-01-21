@@ -13,6 +13,7 @@ import { Loading } from './Loading';
 import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
 import { BiSpaceBar } from 'react-icons/bi';
+import ReactDOM from 'react-dom';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -52,8 +53,12 @@ const StockNewsPanel = (props) => {
   const loadData = async () => {
     try {
       setLoading(true);
-      setData(await getStockNews(symbol));
-    } finally {
+      const news = await getStockNews(symbol);
+      ReactDOM.unstable_batchedUpdates(() => {
+        setData(news);
+        setLoading(false);
+      });
+    } catch {
       setLoading(false);
     }
   }

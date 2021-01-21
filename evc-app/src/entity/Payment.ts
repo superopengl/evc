@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
@@ -13,6 +13,9 @@ export class Payment {
 
   @CreateDateColumn()
   createdAt?: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 
   @Column('uuid')
   userId: string;

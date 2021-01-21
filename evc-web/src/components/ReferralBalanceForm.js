@@ -4,7 +4,7 @@ import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { listTask } from 'services/taskService';
 import { listPortfolio } from 'services/portfolioService';
-import { CopyOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons';
+import { CopyOutlined, PlusOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import MyTaskList from 'pages/MyTask/MyTaskList';
@@ -33,6 +33,7 @@ import { notify } from 'util/notify';
 import ReferralLinkInput from './ReferralLinkInput';
 import { saveReferralUserPolicy } from 'services/referralPolicyService';
 import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
+import { TimeAgo } from 'components/TimeAgo';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
@@ -136,14 +137,15 @@ const ReferralBalanceForm = (props) => {
   return (
     <Container>
       <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Title level={4}>Subscription</Title>
-          <Title type="success">{currentSubscription?.title || subscriptionDef.find(s => s.key === 'free').title}</Title>
-        </Space>
-        {currentSubscription && <>
-          {currentSubscription.start}
-          {currentSubscription.end}
-        </>}
+        <div>
+          <Title level={4}>{currentSubscription?.type || subscriptionDef.find(s => s.key === 'free').title}</Title>
+          {currentSubscription?.symbols?.length > 0 && <Text>{currentSubscription.symbols.join(', ')}</Text>}
+        </div>
+        {currentSubscription && <Space>
+          <TimeAgo value={currentSubscription.start} />
+          <ArrowRightOutlined/>
+          <TimeAgo value={currentSubscription.end} />
+        </Space>}
         <Divider></Divider>
         <Title level={4}>User Referral Policy</Title>
         <Paragraph type="secondary">Setting this policy will override the global referral policy.</Paragraph>

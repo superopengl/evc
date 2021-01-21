@@ -1,4 +1,4 @@
-import { Layout, Space, Typography, Table } from 'antd';
+import { Layout, Space, Typography, Table, Tooltip } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
@@ -7,6 +7,8 @@ import { getSubscriptionName } from 'util/getSubscriptionName';
 import { TimeAgo } from 'components/TimeAgo';
 import { CheckOutlined } from '@ant-design/icons';
 import { listMySubscriptionHistory } from 'services/subscriptionService';
+import { DoubleRightOutlined, ArrowRightOutlined, RetweetOutlined } from '@ant-design/icons';
+import { MdAutorenew } from 'react-icons/md';
 
 const { Text, Title } = Typography;
 
@@ -15,7 +17,7 @@ const ContainerStyled = styled.div`
   margin: 6rem auto 2rem auto;
   padding: 0 1rem 4rem;
   width: 100%;
-  // max-width: 1000px;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -62,28 +64,31 @@ const MySubscriptionHistoryPage = () => {
 
   const columnDef = [
     {
-      title: 'Plan',
-      dataIndex: 'type',
       render: (value, item) => <>
-        {getSubscriptionName(value)} {item.status === 'alive' && <Text type="success"><CheckOutlined /></Text>}
-        {item.recurring && <><br/><Text type="secondary"><small>(auto renew)</small></Text></>}
+        {getSubscriptionName(item.type)}
+        {item.symbols?.length > 0 && <div><Text type="secondary"><small>{item.symbols.join(', ')}</small></Text></div>}
       </>
     },
     {
-      title: 'Selected Stocks',
-      dataIndex: 'symbols',
-      render: (value) => value.join(', ')
+      title: 'Status',
+      align: 'center',
+      render: (value, item) => <>
+        {item.recurring && <Tooltip title="Auto renew"><MdAutorenew /></Tooltip>}
+        {item.status === 'alive' && <Tooltip title="Current alive subscription"><Text type="success"><CheckOutlined /></Text></Tooltip>}
+      </>
     },
     {
-      title: 'Start',
-      dataIndex: 'start',
-      render: (value) => <TimeAgo value={value}/>
+      align: 'right',
+      render: (value, item) => {
+        return <Space size="large">
+          <TimeAgo value={item.start} />
+          <ArrowRightOutlined />
+          {/* <DoubleRightOutlined /> */}
+          {item.status === 'alive' && item.recurring ? null : <TimeAgo value={item.end} />}
+        </Space>
+      }
     },
-    {
-      title: 'End',
-      dataIndex: 'end',
-      render: (value, item) => item.status === 'alive' && item.recurring ? null : <TimeAgo value={value} />
-    },
+
   ];
 
 
@@ -91,16 +96,18 @@ const MySubscriptionHistoryPage = () => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-            <Title>Subscription History</Title>
-            <Table
-              loading={loading}
-              style={{width: '100%'}}
-              dataSource={list}
-              columns={columnDef}
-              size="small"
-              pagination={false}
-              rowKey="id"
-            />
+        <Title>Subscription History</Title>
+        <Table
+          showHeader={false}
+          loading={loading}
+          style={{ width: '100%' }}
+          dataSource={list}
+          columns={columnDef}
+          size="small"
+          pagination={false}
+          rowKey="id"
+          bordered={false}
+        />
       </ContainerStyled>
     </LayoutStyled >
   );

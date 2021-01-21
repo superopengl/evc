@@ -4,6 +4,7 @@ import scriptLoader from "react-async-script-loader";
 import { Loading } from "../Loading";
 import { PayPalButton } from "react-paypal-button-v2";
 import PropTypes from 'prop-types';
+import { notify } from "util/notify";
 
 //create button here
 // next create the class and Bind React and ReactDom to window
@@ -14,59 +15,54 @@ const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
 
 export const PayPalCheckoutButton = (props) => {
 
-  const CURRENCY = 'USD';
+  const CURRENCY_USD = 'USD';
   const { payPalPlanId, onSuccess, onApprove } = props;
+  const { onProvision, onCommit } = props;
+  const [loading, setLoading] = React.useState(true);
+  const [paymentId, setPaymentId] = React.useState();
 
 
   const handleTransactionSuccess = async (details, data) => {
-    debugger;
-    onSuccess(details, data);
-    // alert("Transaction completed by " + details.payer.name.given_name);
-
-    // // OPTIONAL: Call your server to save the transaction
-    // return fetch("/paypal-transaction-complete", {
-    //   method: "post",
-    //   body: JSON.stringify({
-    //     orderID: data.orderID
-    //   })
-    // });
+    await onCommit(paymentId, details);
   }
 
-  // const handleCreateOrder = (data, actions) => {
-  //   return actions.order.create({
-  //     purchase_units: [{
-  //       amount: {
-  //         currency_code: CURRENCY,
-  //         value: amount
-  //       }
-  //     }],
-  //     // application_context: {
-  //     //   shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
-  //     // }
-  //   });
-  // }
+  const handleCreateOrder = async (data, actions) => {
+    const payment = await onProvision();
+    const { paymentId, amount} = payment;
+    setPaymentId(paymentId);
 
-  const handleApprove = (data, actions) => {
-    // Capture the funds from the transaction
-    return actions.subscription.get().then((details) => {
-      debugger;
-      onApprove(details);
+    return actions.order.create({
+      purchase_units: [{
+        amount: {
+          currency_code: CURRENCY_USD,
+          value: amount
+        }
+      }],
+      application_context: {
+        shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
+      }
     });
   }
 
-  const handleCreateSubscription = (data, actions) => {
-    return actions.subscription.create({
-      plan_id: payPalPlanId
-    });
+  const handleCheckoutError = err => {
+    notify.error('Error in PayPay checkout', err.message);
   }
 
-  return (<div style={{minWidth: 240, width: '100%', marginLeft:'auto', marginRight: 'auto'}}>
+  const handleCatchError = err => {
+    notify.error('Error in PayPay checkout', err.message);
+  }
+
+  return (<Loading loading={loading} message="Loading PayPay" style={{ minWidth: 240, width: '100%', marginLeft: 'auto', marginRight: 'auto' }}>
     <PayPalButton
       // amount={amount}
-      // createOrder={handleCreateOrder}
-      // onSuccess={handleTransactionSuccess}
-      createSubscription={handleCreateSubscription}
-      onApprove={handleApprove}
+      // currency={CURRENCY_USD}
+      createOrder={handleCreateOrder}
+      catchError={handleCatchError}
+      onError={handleCheckoutError}
+      onSuccess={handleTransactionSuccess}
+      onButtonReady={() => setLoading(false)}
+      // createSubscription={handleCreateSubscription}
+      // onApprove={handleApprove}
       style={{
         layout: 'vertical',
         color: 'gold',
@@ -79,18 +75,19 @@ export const PayPalCheckoutButton = (props) => {
         clientId: PAYPAL_CLIENT_ID,
         disableFunding: 'card',
         // currency: CURRENCY,
-        intent: 'subscription'
+        // intent: 'subscription'
       }}
     // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
     />
-</div>
+  </Loading>
   )
 }
 
 PayPalCheckoutButton.propTypes = {
-  payPalPlanId: PropTypes.string.isRequired,
+  onProvision: PropTypes.func.isRequired,
+  onCommit: PropTypes.func.isRequired,
   onSuccess: PropTypes.func,
-  onApprove: PropTypes.func
+  onApprove: PropTypes.func,
 };
 
 PayPalCheckoutButton.defaultProps = {};

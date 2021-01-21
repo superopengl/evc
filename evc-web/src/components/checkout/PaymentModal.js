@@ -97,19 +97,15 @@ const PaymentModal = (props) => {
 
   const isValidPlan = (!needsSelectSymbols || selectedSymbols?.length > 0) && paymentDetail;
 
-  const handleProvisionSubscription = async () => {
-    try {
-      setLoading(true);
-      const provisionData = await provisionSubscription({
-        plan: planType,
-        recurring: recurring,
-        symbols: selectedSymbols,
-        preferToUseBalance: willUseBalance
-      });
-      return provisionData;
-    } catch {
-      setLoading(false);
-    }
+  const handleProvisionSubscription = async (method) => {
+    const provisionData = await provisionSubscription({
+      plan: planType,
+      recurring: recurring,
+      symbols: selectedSymbols,
+      preferToUseBalance: willUseBalance,
+      method
+    });
+    return provisionData;
   }
 
   const handleSuccessfulPayment = async (paymentId, payload) => {
@@ -150,7 +146,7 @@ const PaymentModal = (props) => {
       onCancel={() => onCancel()}
     >
 
-      <Loading loading={loading} >
+      <Loading loading={loading} message={'In progress. Please do not close the window.'}>
         <Space direction="vertical" style={{ width: '100%' }} >
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
@@ -194,18 +190,18 @@ const PaymentModal = (props) => {
             <Text strong>Total payable amount:</Text>
             {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
           </Space>
-          {isValidPlan && <>
+          {isValidPlan && <Space direction="vertical" style={{ width: '100%' }} size="large">
             <Divider />
             {shouldShowFullBalanceButton && <>
               <Alert type="info" message="Congratulations! You have enough balance to purchase this plan without any additional pay." showIcon />
-              <FullBalancePayButton onProvision={handleProvisionSubscription} onCommit={handleSuccessfulPayment} />
+              <FullBalancePayButton onProvision={() => handleProvisionSubscription('balance')} onCommit={handleSuccessfulPayment} />
             </>}
             {showBalanceCardCombinedRecurringMessage && <Alert
               type="info" message="When each plan renew happens, system will try to use your balance as much before charging your card." showIcon />}
-            {shouldShowCard && <StripeCardPaymentWidget onProvision={handleProvisionSubscription} onCommit={handleSuccessfulPayment} />}
-            {shouldShowPayPal && <PayPalCheckoutButton payPalPlanId={''} />}
-            {shouldShowAliPay && <Button block>Alipay</Button>}
-          </>}
+            {shouldShowCard && <StripeCardPaymentWidget onProvision={() => handleProvisionSubscription('card')} onCommit={handleSuccessfulPayment} />}
+            {shouldShowPayPal && <PayPalCheckoutButton onProvision={() => handleProvisionSubscription('paypal')} onCommit={handleSuccessfulPayment} />}
+            {shouldShowAliPay && <Button size="large" block>Alipay</Button>}
+          </Space>}
         </Space>
       </Loading>
 

@@ -4,7 +4,7 @@ import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import { confirmSubscriptionPayment } from 'services/subscriptionService';
-import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
+import { CardElement, useStripe, useElements, Elements, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY);
@@ -63,6 +63,7 @@ const StripeCardPaymentForm = (props) => {
     <form onSubmit={handleSubmit}>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
         {/* <Text>Please input card information</Text> */}
+        {/* <label>Card Number <CardNumberElement /></label> */}
         <CardElement
           onChange={handleCardInfoChange}
           options={{
@@ -81,7 +82,7 @@ const StripeCardPaymentForm = (props) => {
             },
           }}
         />
-        <Button type="primary" htmlType="submit" block disabled={loading || !stripe || !inputComplete} loading={loading}>
+        <Button type="primary" size="large" htmlType="submit" block disabled={loading || !stripe || !inputComplete} loading={loading}>
           Pay by Card
         </Button>
       </Space>

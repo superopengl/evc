@@ -13,13 +13,12 @@ export async function calculateNewSubscriptionPaymentDetail(
 ) {
   const price = getSubscriptionPrice(subscriptionType, selectedSymbols);
   const totalBalanceAmount = await getUserBalance(entityManager, userId);
-  const { balanceDeductAmount, additionalPay, paymentMethod } = calculateAmountToPay(preferToUseBalance ? totalBalanceAmount : 0, price);
+  const { balanceDeductAmount, additionalPay } = calculateAmountToPay(preferToUseBalance ? totalBalanceAmount : 0, price);
   const result = {
     price,
     totalBalanceAmount,
     balanceDeductAmount,
     additionalPay,
-    paymentMethod,
   };
   return result;
 }

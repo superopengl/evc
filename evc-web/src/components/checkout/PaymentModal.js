@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Modal, Space } from 'antd';
 import StepWizard from 'react-step-wizard';
-import { DoubleRightOutlined, RightOutlined } from '@ant-design/icons';
+import { DoubleRightOutlined, RightOutlined, AlipayCircleOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { StockSearchInput } from '../StockSearchInput';
 import * as _ from 'lodash';
@@ -30,6 +30,20 @@ const ContainerStyled = styled.div`
   padding: 2rem 1rem;
   text-align: center;
   width: 100%;
+`;
+
+const AlipayButton = styled(Button)`
+  border-color: #108fe9;
+  background-color: #108fe9;
+  color: white;
+
+  &:active, &:focus, &:hover {
+    color:  #108fe9;
+    background: white;
+    border-color:  #108fe9;
+
+
+  }
 `;
 
 
@@ -202,7 +216,7 @@ const PaymentModal = (props) => {
             {showBalanceCardCombinedRecurringMessage && <Alert
               type="info" message="When each plan renew happens, system will try to use your balance as much before charging your card." showIcon />}
             {shouldShowCard && <StripeCardPaymentWidget onProvision={() => handleProvisionSubscription('card')} onCommit={handleSuccessfulPayment} />}
-            {shouldShowAliPay && <Button size="large" block style={{fontWeight: 800,fontStyle: 'italic'}}>Alipay</Button>}
+            {shouldShowAliPay && <AlipayButton size="large" icon={<AlipayCircleOutlined />} block style={{fontWeight: 800,fontStyle: 'italic'}}>Alipay</AlipayButton>}
             {shouldShowPayPal && <PayPalCheckoutButton onProvision={() => handleProvisionSubscription('paypal')} onCommit={handleSuccessfulPayment} />}
           </Space>}
         </Space>

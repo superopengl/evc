@@ -141,7 +141,7 @@ const HomeCarouselAreaRaw = props => {
         <Row gutter={20} style={{ marginTop: 50 }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Title style={{ fontSize: catchPhraseSize, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check</Title>
-            <Paragraph level={3} style={{ fontSize: catchPhraseSize * 0.5, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check provides top class invstiment guidence to earn more money on the market! Go go go! Sign up today!</Paragraph>
+            <Paragraph level={3} style={{ fontSize: catchPhraseSize * 0.4, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check provides top class invstiment guidence to earn more money on the market! Go go go! Sign up today!</Paragraph>
             <div style={{ maxWidth: 550, margin: '2rem auto' }}>
               <StockSearchInput onChange={handleSearchChange} traceSearch={true} />
             </div>

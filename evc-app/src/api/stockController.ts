@@ -78,6 +78,7 @@ export const getStock = handlerWrapper(async (req, res) => {
   } else {
     entityClass = allowedSymbols.includes(symbol) ? StockLastPublishInformation : StockGuestPublishInformation;
   }
+  entityClass = StockLastPublishInformation;
 
   if (role === Role.Client) {
     const result = await getRepository(entityClass)

@@ -77,7 +77,7 @@ const StockEpsTimelineEditor = (props, ref) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Sync Last 4 EPS</Button>
+      <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Load Last 4 EPS</Button>
       <StockEpsInput onSave={handleSave} disabled={loading} />
       <List
         dataSource={list}

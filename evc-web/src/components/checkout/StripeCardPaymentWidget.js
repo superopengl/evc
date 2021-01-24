@@ -6,6 +6,8 @@ import * as _ from 'lodash';
 import { confirmSubscriptionPayment } from 'services/subscriptionService';
 import { CardElement, useStripe, useElements, Elements, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import {AiFillCreditCard} from 'react-icons/ai';
+import {CreditCardOutlined} from '@ant-design/icons';
 
 const stripePromise = loadStripe(process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY);
 
@@ -82,7 +84,9 @@ const StripeCardPaymentForm = (props) => {
             },
           }}
         />
-        <Button type="primary" size="large" htmlType="submit" block disabled={loading || !stripe || !inputComplete} loading={loading} style={{fontWeight: 800,fontStyle: 'italic'}}>
+        <Button type="primary" size="large" htmlType="submit" 
+        icon={<CreditCardOutlined />}
+        block disabled={loading || !stripe || !inputComplete} loading={loading} style={{fontWeight: 800,fontStyle: 'italic'}}>
           Pay by Card
         </Button>
       </Space>

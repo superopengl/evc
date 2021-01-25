@@ -17,12 +17,6 @@ import { StockTag } from '../entity/StockTag';
 import { searchStock } from '../utils/searchStock';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { Role } from '../types/Role';
-import { StockPublish } from '../entity/StockPublish';
-import { StockResistanceShort } from '../entity/StockResistanceShort';
-import { StockSupportShort } from '../entity/StockSupportShort';
-import { StockFairValue } from '../entity/StockFairValue';
-import { StockSupportLong } from '../entity/StockSupportLong';
-import { StockResistanceLong } from '../entity/StockResistanceLong';
 import { redisCache } from '../services/redisCache';
 import { StockEps } from '../entity/StockEps';
 import {
@@ -42,7 +36,6 @@ import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLastPublishInformation } from '../entity/StockLastPublishInformation';
 import { StockGuestPublishInformation } from "../entity/StockGuestPublishInformation";
-import { StockPublishInformationBase } from '../entity/StockPublishInformationBase';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 

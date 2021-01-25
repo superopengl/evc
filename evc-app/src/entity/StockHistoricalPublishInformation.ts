@@ -1,10 +1,8 @@
 import { ViewEntity, Connection } from 'typeorm';
 import { Stock } from './Stock';
 import { StockPublish } from './StockPublish';
-import { StockSupportShort } from './StockSupportShort';
-import { StockSupportLong } from './StockSupportLong';
-import { StockResistanceShort } from './StockResistanceShort';
-import { StockResistanceLong } from './StockResistanceLong';
+import { StockSupport } from './StockSupport';
+import { StockResistance } from './StockResistance';
 import { StockFairValue } from './StockFairValue';
 import { StockLastPrice } from './StockLastPrice';
 import { StockPublishInformationBase } from './StockPublishInformationBase';
@@ -32,26 +30,16 @@ import { StockPublishInformationBase } from './StockPublishInformationBase';
       'pu', 'pu.symbol = s.symbol'
     )
     .addSelect('pu."createdAt" as "publishedAt"')
-    .leftJoin(q => q.from(StockSupportShort, 'sss'),
-      'sss', 'sss.id = pu."supportShortId"'
+    .leftJoin(q => q.from(StockSupport, 'spt'),
+      'spt', 'spt.id = pu."supportId"'
     )
-    .addSelect('sss.lo as "supportShortLo"')
-    .addSelect('sss.hi as "supportShortHi"')
-    .leftJoin(q => q.from(StockSupportLong, 'ssl'),
-      'ssl', 'ssl.id = pu."supportLongId"'
+    .addSelect('spt.lo as "supportLo"')
+    .addSelect('spt.hi as "supportHi"')
+    .leftJoin(q => q.from(StockResistance, 'srs'),
+      'srs', 'srs.id = pu."resistanceId"'
     )
-    .addSelect('ssl.lo as "supportLongLo"')
-    .addSelect('ssl.hi as "supportLongHi"')
-    .leftJoin(q => q.from(StockResistanceShort, 'srs'),
-      'srs', 'srs.id = pu."resistanceShortId"'
-    )
-    .addSelect('srs.lo as "resistanceShortLo"')
-    .addSelect('srs.hi as "resistanceShortHi"')
-    .leftJoin(q => q.from(StockResistanceLong, 'srl'),
-      'srl', 'srl.id = pu."resistanceLongId"'
-    )
-    .addSelect('srl.lo as "resistanceLongLo"')
-    .addSelect('srl.hi as "resistanceLongHi"')
+    .addSelect('srs.lo as "resistanceLo"')
+    .addSelect('srs.hi as "resistanceHi"')
     .leftJoin(q => q.from(StockFairValue, 'sfv'),
       'sfv', 'sfv.id = pu."fairValueId"'
     )
@@ -60,12 +48,13 @@ import { StockPublishInformationBase } from './StockPublishInformationBase';
     .leftJoin(q => q.from(StockLastPrice, 'slp'),
       'slp', 'slp.symbol = s.symbol'
     )
-    .addSelect('sss.lo as "rangeLo"')
-    .addSelect('srs.hi as "rangeHi"')
     .addSelect('slp.price as "lastPrice"')
     .addSelect('CASE WHEN slp.price < sfv.lo THEN TRUE ELSE FALSE END as "isUnder"')
     .addSelect('CASE WHEN slp.price > sfv.hi THEN TRUE ELSE FALSE END as "isOver"')
 })
 export class StockHistoricalPublishInformation extends StockPublishInformationBase {
+  constructor() {
+    super();
+  }
 }
 

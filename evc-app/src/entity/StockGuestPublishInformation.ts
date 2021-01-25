@@ -13,4 +13,7 @@ import { StockHistoricalPublishInformation } from './StockHistoricalPublishInfor
     .where(`x.row = 2`)
 })
 export class StockGuestPublishInformation extends StockPublishInformationBase {
+  constructor() {
+    super();
+  }
 }

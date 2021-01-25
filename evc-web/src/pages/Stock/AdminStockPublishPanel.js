@@ -15,10 +15,8 @@ import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 import {
   deleteStock, getStock, updateStock,
-  listStockSupportShort, saveStockSupportShort, deleteStockSupportShort,
-  listStockSupportLong, saveStockSupportLong, deleteStockSupportLong,
-  listStockResistanceShort, saveStockResistanceShort, deleteStockResistanceShort,
-  listStockResistanceLong, saveStockResistanceLong, deleteStockResistanceLong,
+  listStockSupport, saveStockSupport, deleteStockSupport,
+  listStockResistance, saveStockResistance, deleteStockResistance,
   listStockPe, saveStockPe, deleteStockPe,
   listStockEps, saveStockEps, deleteStockEps,
   listStockFairValue, saveStockFairValue, deleteStockFairValue,
@@ -103,10 +101,8 @@ const span = {
 const DEFAULT_SELECTED = {
   source: '',
   publishId: null,
-  resistanceShortId: null,
-  resistanceLongId: null,
-  supportShortId: null,
-  supportLongId: null,
+  resistanceId: null,
+  supportId: null,
   fairValueId: null,
   epsIds: [],
   epId: null,
@@ -118,10 +114,8 @@ const AdminStockPublishPanel = (props) => {
   const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [epsList, setEpsList] = React.useState([]);
   const [peList, setPeList] = React.useState([]);
-  const [supportShortList, setSupportShortList] = React.useState([]);
-  const [supportLongList, setSupportLongList] = React.useState([]);
-  const [resistanceShortList, setResistanceShortList] = React.useState([]);
-  const [resistanceLongList, setResistanceLongList] = React.useState([]);
+  const [supportList, setSupportList] = React.useState([]);
+  const [resistanceList, setResistanceList] = React.useState([]);
   const [valueList, setValueList] = React.useState([]);
   const [publishList, setPublishList] = React.useState([]);
   const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
@@ -149,10 +143,8 @@ const AdminStockPublishPanel = (props) => {
 
   const handlePublish = async () => {
     const payload = {
-      supportShortId: supportShortList[0].id,
-      supportLongId: supportLongList[0].id,
-      resistanceShortId: resistanceShortList[0].id,
-      resistanceLongId: resistanceLongList[0].id,
+      supportId: supportList[0].id,
+      resistanceId: resistanceList[0].id,
       fairValueId: valueList[0].id
     };
     await saveStockPublish(symbol, payload);
@@ -214,51 +206,28 @@ const AdminStockPublishPanel = (props) => {
     });
   }
 
-  const getClassNameOnSelectForSupportShortItem = item => {
-    return `${item.id === selected.supportShortId ? 'current-selected-datepoint' : ''} ${selected.source === 'support_short' ? 'source' : ''}`;
+  const getClassNameOnSelectForSupportItem = item => {
+    return `${item.id === selected.supportId ? 'current-selected-datepoint' : ''} ${selected.source === 'support' ? 'source' : ''}`;
   }
 
-  const getClassNameOnSelectForSupportLongItem = item => {
-    return `${item.id === selected.supportLongId ? 'current-selected-datepoint' : ''} ${selected.source === 'support_long' ? 'source' : ''}`;
-  }
-
-  const updateSelectedBySupportShort = (item) => {
+  const updateSelectedBySupport = (item) => {
     setSelected({
       ...DEFAULT_SELECTED,
-      source: 'support_short',
-      supportShortId: item.id,
+      source: 'support',
+      supportId: item.id,
     });
   }
 
-  const updateSelectedBySupportLong = (item) => {
+
+  const getClassNameOnSelectForResistanceItem = item => {
+    return `${item.id === selected.resistanceId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance' ? 'source' : ''}`;
+  }
+
+  const updateSelectedByResistance = (item) => {
     setSelected({
       ...DEFAULT_SELECTED,
-      source: 'support_long',
-      supportLongId: item.id,
-    });
-  }
-
-  const getClassNameOnSelectForResistanceShortItem = item => {
-    return `${item.id === selected.resistanceShortId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance_short' ? 'source' : ''}`;
-  }
-
-  const getClassNameOnSelectForResistanceLongItem = item => {
-    return `${item.id === selected.resistanceLongId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance_long' ? 'source' : ''}`;
-  }
-
-  const updateSelectedByResistanceShort = (item) => {
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'resistance_short',
-      resistanceShortId: item.id,
-    });
-  }
-
-  const updateSelectedByResistanceLong = (item) => {
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'resistance_long',
-      resistanceLongId: item.id,
+      source: 'resistance',
+      resistanceId: item.id,
     });
   }
 
@@ -268,10 +237,8 @@ const AdminStockPublishPanel = (props) => {
       ...DEFAULT_SELECTED,
       source: 'publish',
       publishId: item.id,
-      supportShortId: item.supportShortId,
-      supportLongId: item.supportLongId,
-      resistanceShortId: item.resistanceShortId,
-      resistanceLongId: item.resistanceLongId,
+      supportId: item.supportId,
+      resistanceId: item.resistanceId,
       fairValueId: item.fairValueId,
       peId: value.peId,
       epsIds: value.epsIds
@@ -284,14 +251,10 @@ const AdminStockPublishPanel = (props) => {
       switch (selected.source) {
         case 'publish':
           return item.id === selected.publishId;
-        case 'support_short':
-          return item.supportShortId === selected.supportShortId;
-        case 'support_long':
-          return item.supportLongId === selected.supportLongId;
-        case 'resistance_short':
-          return item.resistanceShortId === selected.resistanceShortId;
-        case 'resistance_long':
-          return item.resistanceLongId === selected.resistanceLongId;
+        case 'support':
+          return item.supportId === selected.supportId;
+        case 'resistance':
+          return item.resistanceId === selected.resistanceId;
         case 'value':
         case 'eps':
         case 'pe':
@@ -354,55 +317,31 @@ const AdminStockPublishPanel = (props) => {
             onChange={list => setPublishList(list)}
             onSelected={updateSelectedByPublish}
             getClassNameOnSelect={getClassNameOnSelectForPublishItem}
-            disabled={!valueList?.length || !supportShortList?.length || !supportLongList?.length || !resistanceShortList?.length || !resistanceLongList?.length}
+            disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
           />
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
-        <ColInnerCard title="Support (short)">
+        <ColInnerCard title="Support">
           <StockRangeTimelineEditor
-            onLoadList={() => listStockSupportShort(symbol)}
-            onSaveNew={([lo, hi]) => saveStockSupportShort(symbol, lo, hi)}
-            onDelete={id => deleteStockSupportShort(id)}
-            onChange={list => setSupportShortList(list)}
-            onSelected={updateSelectedBySupportShort}
-            getClassNameOnSelect={getClassNameOnSelectForSupportShortItem}
+            onLoadList={() => listStockSupport(symbol)}
+            onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)}
+            onDelete={id => deleteStockSupport(id)}
+            onChange={list => setSupportList(list)}
+            onSelected={updateSelectedBySupport}
+            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
           />
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
-        <ColInnerCard title="Support (long)">
+        <ColInnerCard title="Resistance">
           <StockRangeTimelineEditor
-            onLoadList={() => listStockSupportLong(symbol)}
-            onSaveNew={([lo, hi]) => saveStockSupportLong(symbol, lo, hi)}
-            onDelete={id => deleteStockSupportLong(id)}
-            onChange={list => setSupportLongList(list)}
-            onSelected={updateSelectedBySupportLong}
-            getClassNameOnSelect={getClassNameOnSelectForSupportLongItem}
-          />
-        </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
-        <ColInnerCard title="Resistance (short)">
-          <StockRangeTimelineEditor
-            onLoadList={() => listStockResistanceShort(symbol)}
-            onSaveNew={([lo, hi]) => saveStockResistanceShort(symbol, lo, hi)}
-            onDelete={id => deleteStockResistanceShort(id)}
-            onChange={list => setResistanceShortList(list)}
-            onSelected={updateSelectedByResistanceShort}
-            getClassNameOnSelect={getClassNameOnSelectForResistanceShortItem}
-          />
-        </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
-        <ColInnerCard title="Resistance (long)">
-          <StockRangeTimelineEditor
-            onLoadList={() => listStockResistanceLong(symbol)}
-            onSaveNew={([lo, hi]) => saveStockResistanceLong(symbol, lo, hi)}
-            onDelete={id => deleteStockResistanceLong(id)}
-            onChange={list => setResistanceLongList(list)}
-            onSelected={updateSelectedByResistanceLong}
-            getClassNameOnSelect={getClassNameOnSelectForResistanceLongItem}
+            onLoadList={() => listStockResistance(symbol)}
+            onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)}
+            onDelete={id => deleteStockResistance(id)}
+            onChange={list => setResistanceList(list)}
+            onSelected={updateSelectedByResistance}
+            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
           />
         </ColInnerCard>
       </ColStyled>

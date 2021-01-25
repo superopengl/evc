@@ -100,15 +100,13 @@ const columnDef = [
   {
     title: 'support',
     render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-      <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi} />
-      <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi} />
+      <NumberRangeDisplay lo={item.supportLo} hi={item.supportHi} />
     </CellSpace>
   },
   {
     title: 'resistance',
     render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-      <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} />
-      <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi} />
+      <NumberRangeDisplay lo={item.resistanceLo} hi={item.resistanceHi} />
     </CellSpace>
   },
 ];

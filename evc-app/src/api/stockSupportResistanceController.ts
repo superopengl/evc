@@ -1,12 +1,10 @@
 import { getRepository } from 'typeorm';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { StockSupportShort } from '../entity/StockSupportShort';
-import { StockSupportLong } from '../entity/StockSupportLong';
-import { StockResistanceShort } from '../entity/StockResistanceShort';
-import { StockResistanceLong } from '../entity/StockResistanceLong';
 import { compareTrend } from '../utils/compareTrend';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
+import { StockSupport } from '../entity/StockSupport';
+import { StockResistance } from '../entity/StockResistance';
 
 function factoryListHandler(EntityType) {
   return handlerWrapper(async (req, res) => {
@@ -36,22 +34,11 @@ function facatorySaveHandler(EntityType) {
     const { lo, hi } = normalizeLoHiValues(req.body);
 
     const repo = getRepository(EntityType);
-    const pre = await repo.findOne({
-      where: {
-        symbol
-      },
-      order: {
-        createdAt: 'DESC'
-      }
-    }) as any;
     const entity = new EntityType();
     entity.symbol = symbol;
     entity.author = userId;
     entity.lo = lo;
     entity.hi = hi;
-
-    entity.loTrend = compareTrend(lo, pre?.lo) || pre?.loTrend;
-    entity.hiTrend = compareTrend(hi, pre?.hi) || pre?.hiTrend;
 
     await repo.insert(entity);
 
@@ -59,36 +46,25 @@ function facatorySaveHandler(EntityType) {
   });
 }
 
-function factoryDeleteHandler(EntityType) {
-  return handlerWrapper(async (req, res) => {
-    assertRole(req, 'admin', 'agent');
-    const { id } = req.params;
-    await getRepository(EntityType).delete({ id, published: false });
-    res.json();
-  });
-}
+export const listStockSupport = factoryListHandler(StockSupport);
 
+export const saveStockSupport = facatorySaveHandler(StockSupport);
 
-export const listStockSupportShort = factoryListHandler(StockSupportShort);
+export const deleteStockSupport = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id } = req.params;
+  await getRepository(StockSupport).softDelete(id);
+  res.json();
+});
 
-export const saveStockSupportShort = facatorySaveHandler(StockSupportShort);
+export const listStockResistance = factoryListHandler(StockResistance);
 
-export const deleteStockSupportShort = factoryDeleteHandler(StockSupportShort);
+export const saveStockResistance = facatorySaveHandler(StockResistance);
 
-export const listStockSupportLong = factoryListHandler(StockSupportLong);
+export const deleteStockResistance = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id } = req.params;
+  await getRepository(StockResistance).softDelete(id);
+  res.json();
+});
 
-export const saveStockSupportLong = facatorySaveHandler(StockSupportLong);
-
-export const deleteStockSupportLong = factoryDeleteHandler(StockSupportLong);
-
-export const listStockResistanceShort = factoryListHandler(StockResistanceShort);
-
-export const saveStockResistanceShort = facatorySaveHandler(StockResistanceShort);
-
-export const deleteStockResistanceShort = factoryDeleteHandler(StockResistanceShort);
-
-export const listStockResistanceLong = factoryListHandler(StockResistanceLong);
-
-export const saveStockResistanceLong = facatorySaveHandler(StockResistanceLong);
-
-export const deleteStockResistanceLong = factoryDeleteHandler(StockResistanceLong);

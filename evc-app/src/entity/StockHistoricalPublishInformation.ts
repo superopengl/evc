@@ -63,8 +63,8 @@ import { StockPublishInformationBase } from './StockPublishInformationBase';
     .addSelect('sss.lo as "rangeLo"')
     .addSelect('srs.hi as "rangeHi"')
     .addSelect('slp.price as "lastPrice"')
-    .addSelect('CASE WHEN slp.price < sss.lo THEN TRUE ELSE FALSE END as "isUnder"')
-    .addSelect('CASE WHEN slp.price > srs.hi THEN TRUE ELSE FALSE END as "isOver"')
+    .addSelect('CASE WHEN slp.price < sfv.lo THEN TRUE ELSE FALSE END as "isUnder"')
+    .addSelect('CASE WHEN slp.price > sfv.hi THEN TRUE ELSE FALSE END as "isOver"')
 })
 export class StockHistoricalPublishInformation extends StockPublishInformationBase {
 }

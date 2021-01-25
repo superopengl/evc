@@ -17,14 +17,13 @@ export type ProvisionSubscriptionRequest = {
   subscriptionType: SubscriptionType,
   paymentMethod: PaymentMethod,
   recurring: boolean,
-  symbols: string[],
   preferToUseBalance: boolean,
   alertDays: number,
   ipAddress: string
 }
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {
-  const { userId, subscriptionType, paymentMethod, recurring, symbols, preferToUseBalance, alertDays, ipAddress } = request;
+  const { userId, subscriptionType, paymentMethod, recurring, preferToUseBalance, alertDays, ipAddress } = request;
   const now = getUtcNow();
 
   const months = subscriptionType === SubscriptionType.UnlimitedQuarterly ? 3 : 1;
@@ -37,7 +36,6 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.id = subscriptionId;
     subscription.userId = userId;
     subscription.type = subscriptionType;
-    subscription.symbols = subscriptionType === SubscriptionType.SelectedMonthly ? symbols : [];
     subscription.recurring = recurring;
     subscription.start = now;
     subscription.end = end;
@@ -47,7 +45,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
 
     await m.save(subscription);
 
-    const detail = await calculateNewSubscriptionPaymentDetail(m, userId, subscriptionType, preferToUseBalance, symbols);
+    const detail = await calculateNewSubscriptionPaymentDetail(m, userId, subscriptionType, preferToUseBalance);
     const { balanceDeductAmount, additionalPay } = detail;
     let balanceTransaction: UserBalanceTransaction = null;
     if (balanceDeductAmount > 0) {

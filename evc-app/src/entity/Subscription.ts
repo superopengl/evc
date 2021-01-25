@@ -30,9 +30,6 @@ export class Subscription {
   @Column()
   end: Date;
 
-  @Column('text', { default: '{}', array: true})
-  symbols: string[];
-
   @Column({ default: true })
   recurring: boolean;
 

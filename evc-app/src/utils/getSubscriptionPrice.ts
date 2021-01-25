@@ -5,12 +5,7 @@ import { getUnitPricing } from './getUnitPricing';
 import { assert } from './assert';
 
 
-export function getSubscriptionPrice(type: SubscriptionType, symbols: string[]) {
+export function getSubscriptionPrice(type: SubscriptionType) {
   const unitPrice = getUnitPricing(type);
-  if (type === SubscriptionType.SelectedMonthly) {
-    assert(symbols?.length, 400, 'No stocks selected for the montly selected plan');
-    return unitPrice * _.uniq(symbols).length;
-  } else {
-    return unitPrice;
-  }
+  return unitPrice;
 }

@@ -53,11 +53,11 @@ const ContainerStyled = styled.div`
 
 const span = {
   xs: 24,
-  sm: 12,
-  md: 12,
-  lg: 12,
-  xl: 6,
-  xxl: 6
+  sm: 24,
+  md: 8,
+  lg: 8,
+  xl: 8,
+  xxl: 8
 };
 
 const LayoutStyled = styled(Layout)`

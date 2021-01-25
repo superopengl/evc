@@ -4,8 +4,6 @@ export function getUnitPricing(type: SubscriptionType) {
   switch (type) {
     case SubscriptionType.Free:
       return 0;
-    case SubscriptionType.SelectedMonthly:
-      return 9.99;
     case SubscriptionType.UnlimitedMontly:
       return 39.99;
     case SubscriptionType.UnlimitedQuarterly:

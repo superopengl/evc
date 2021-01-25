@@ -9,9 +9,8 @@ export async function calculateNewSubscriptionPaymentDetail(
   userId: string,
   subscriptionType: SubscriptionType,
   preferToUseBalance: boolean,
-  selectedSymbols: string[]
 ) {
-  const price = getSubscriptionPrice(subscriptionType, selectedSymbols);
+  const price = getSubscriptionPrice(subscriptionType);
   const totalBalanceAmount = await getUserBalance(entityManager, userId);
   const { balanceDeductAmount, additionalPay } = calculateAmountToPay(preferToUseBalance ? totalBalanceAmount : 0, price);
   const result = {

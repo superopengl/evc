@@ -2,7 +2,7 @@ import { getManager } from 'typeorm';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
-import { StockLastPublishInformation } from '../entity/StockLastPublishInformation';
+import { StockLastPublishInformation } from '../entity/views/StockLastPublishInformation';
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
   const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued } = queryInfo;

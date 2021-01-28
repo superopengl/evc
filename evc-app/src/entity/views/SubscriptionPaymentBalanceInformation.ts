@@ -1,11 +1,11 @@
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
-import { PaymentMethod } from '../types/PaymentMethod';
-import { PaymentStatus } from '../types/PaymentStatus';
-import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { SubscriptionType } from '../types/SubscriptionType';
-import { Subscription } from './Subscription';
-import { Payment } from './Payment';
-import { UserBalanceTransaction } from './UserBalanceTransaction';
+import { PaymentMethod } from '../../types/PaymentMethod';
+import { PaymentStatus } from '../../types/PaymentStatus';
+import { SubscriptionStatus } from '../../types/SubscriptionStatus';
+import { SubscriptionType } from '../../types/SubscriptionType';
+import { Subscription } from '../Subscription';
+import { Payment } from '../Payment';
+import { UserBalanceTransaction } from '../UserBalanceTransaction';
 
 
 

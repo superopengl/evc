@@ -66,6 +66,6 @@ export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
     .insert()
     .into(StockEps)
     .values(entites)
-    .onConflict(`(symbol, year, quarter) DO NOTHING`)
+    .onConflict(`(symbol, "reportDate") DO NOTHING`)
     .execute();
 }

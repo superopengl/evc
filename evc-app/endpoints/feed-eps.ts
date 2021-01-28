@@ -17,6 +17,7 @@ async function udpateDatabase(iexBatchResponse) {
         epsInfo.push({
           symbol,
           fiscalPeriod: earning.fiscalPeriod,
+          reportDate: earning.EPSReportDate,
           value: earning.actualEPS,
         });
       }
@@ -28,7 +29,7 @@ async function udpateDatabase(iexBatchResponse) {
 
 async function syncIexToDatabase(symbols: string[]) {
   const types = ['earnings'];
-  const params = { last: 4 };
+  const params = { last: 6 };
   const resp = await singleBatchRequest(symbols, types, params);
   await udpateDatabase(resp);
 }
@@ -60,4 +61,6 @@ start(JOB_NAME, async () => {
     console.log(JOB_NAME, `${++round}/${total}`);
     await syncIexToDatabase(batchSymbols);
   }
+
+  process.exit();
 });

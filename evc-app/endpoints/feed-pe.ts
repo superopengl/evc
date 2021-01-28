@@ -5,29 +5,44 @@ import { connectDatabase } from '../src/db';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { getLastThreeMonthDailyPrice, singleBatchRequest } from '../src/services/iexService';
-import { StockIexEpsInfo, syncManyStockEps, syncStockEps } from '../src/services/stockEpsService';
 import { StockClose } from '../src/entity/StockClose';
 
 
-async function feedHistoricalPeFor(symbol: string) {
-  const historicalDailyPrices = await getLastThreeMonthDailyPrice(symbol);
-  const historicalDailyCloses: StockClose[] = historicalDailyPrices.map(p => {
-    const stockClose = new StockClose();
-    stockClose.symbol = symbol;
-    stockClose.date = p.date;
-    stockClose.close = p.close;
-    return stockClose;
-  });
-
-  if (historicalDailyCloses.length) {
+async function syncManyStockClose(closeEntities: StockClose[]) {
+  if (closeEntities.length) {
     await getManager()
       .createQueryBuilder()
       .insert()
       .into(StockClose)
       .onConflict(`("symbol", "date") DO NOTHING`)
-      .values(historicalDailyCloses)
+      .values(closeEntities)
       .execute();
   }
+}
+
+async function udpateDatabase(iexBatchResponse) {
+  const closeEntities: StockClose[] = [];
+  for (const [symbol, value] of Object.entries(iexBatchResponse)) {
+    const { chart } = value as any;
+    if (symbol && chart?.length) {
+      for (const p of chart) {
+        const stockClose = new StockClose();
+        stockClose.symbol = symbol;
+        stockClose.date = p.date;
+        stockClose.close = p.close;
+        closeEntities.push(stockClose);
+      }
+    }
+  }
+
+  await syncManyStockClose(closeEntities);
+}
+
+async function syncIexToDatabase(symbols: string[]) {
+  const types = ['chart'];
+  const params = { range: '3m' };
+  const resp = await singleBatchRequest(symbols, types, params);
+  await udpateDatabase(resp);
 }
 
 const JOB_NAME = 'stock-historical-pe';
@@ -36,12 +51,26 @@ start(JOB_NAME, async () => {
   const stocks = await getRepository(Stock)
     .createQueryBuilder()
     .select('symbol')
-    // .where(`symbol = 'AAPL'`)
     .getRawMany();
   const symbols = stocks.map(s => s.symbol);
 
+  const batchSize = 100;
+  let round = 0;
+  const total = Math.ceil(symbols.length / batchSize);
+
+  let batchSymbols = [];
   for (const symbol of symbols) {
-    await feedHistoricalPeFor(symbol);
+    batchSymbols.push(symbol);
+    if (batchSymbols.length === batchSize) {
+      console.log(JOB_NAME, `${++round}/${total}`);
+      await syncIexToDatabase(batchSymbols);
+      batchSymbols = [];
+    }
+  }
+
+  if (batchSymbols.length > 0) {
+    console.log(JOB_NAME, `${++round}/${total}`);
+    await syncIexToDatabase(batchSymbols);
   }
 
   process.exit();

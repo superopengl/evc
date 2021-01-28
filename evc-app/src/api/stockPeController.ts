@@ -17,7 +17,7 @@ export const listStockPe = handlerWrapper(async (req, res) => {
       symbol
     },
     order: {
-      createdAt: 'DESC'
+      date: 'DESC'
     },
     take: limit
   });
@@ -36,7 +36,7 @@ export const saveStockPe = handlerWrapper(async (req, res) => {
       symbol
     },
     order: {
-      createdAt: 'DESC'
+      date: 'DESC'
     }
   })
   const entity = new StockPe();
@@ -45,8 +45,6 @@ export const saveStockPe = handlerWrapper(async (req, res) => {
   entity.author = userId;
   entity.lo = lo;
   entity.hi = hi;
-  entity.loTrend = compareTrend(lo, pre?.lo) || pre?.loTrend;
-  entity.hiTrend = compareTrend(hi, pre?.hi) || pre?.hiTrend;
 
   await repo.insert(entity);
 

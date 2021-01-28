@@ -16,4 +16,3 @@ export class StockLastPublishInformation extends StockPublishInformationBase {
     super();
   }
 }
-

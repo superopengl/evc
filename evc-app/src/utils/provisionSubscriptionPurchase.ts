@@ -26,7 +26,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
   const { userId, subscriptionType, paymentMethod, recurring, preferToUseBalance, alertDays, ipAddress } = request;
   const now = getUtcNow();
 
-  const months = subscriptionType === SubscriptionType.UnlimitedQuarterly ? 3 : 1;
+  const months = subscriptionType === SubscriptionType.UnlimitedYearly ? 12 : 1;
   const end = moment(now).add(months, 'month').toDate();
   let payment: Payment = null;
 

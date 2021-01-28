@@ -51,8 +51,8 @@ function extendSubscriptionEndDate(subscription: Subscription) {
     case SubscriptionType.UnlimitedMontly:
       newEnd = moment(end).add(1, 'month').toDate();
       break;
-    case SubscriptionType.UnlimitedQuarterly:
-      newEnd = moment(end).add(3, 'month').toDate();
+    case SubscriptionType.UnlimitedYearly:
+      newEnd = moment(end).add(12, 'month').toDate();
     default:
       throw new Error(`Unkonwn subscription type ${type}`);
   }

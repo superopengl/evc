@@ -18,11 +18,11 @@ export const subscriptionDef = [
     description: "Tracking unlimited stocks per month. Best for professtional investor as a trial.",
   },
   {
-    key: 'unlimited_quarterly',
-    title:'Unlimited Quarterly',
-    unit: 'per quarter',
-    price: 109.99,
+    key: 'unlimited_yearly',
+    title:'Unlimited Yearly',
+    unit: 'per year',
+    price: 399.99,
     icon: <GiPirateCannon/>,
-    description: "Tracking unlimited stocks per quater. Money saver for porfessinal investors.",
+    description: "Tracking unlimited stocks per year. Money saver for porfessinal investors.",
   }
 ];

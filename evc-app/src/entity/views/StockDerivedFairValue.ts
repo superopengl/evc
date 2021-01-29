@@ -14,6 +14,7 @@ group by pe.symbol, pe.date
  */
 
 @ViewEntity({
+  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(StockDailyPe, 'pe')
@@ -41,7 +42,7 @@ group by pe.symbol, pe.date
       'x."ttmEps" * (x.avg + x.stddev) as "fairValueHi"',
     ])
 })
-export class StockDerivedPe {
+export class StockDerivedFairValue {
   @ViewColumn()
   symbol: string;
 

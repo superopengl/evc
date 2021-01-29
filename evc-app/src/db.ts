@@ -5,7 +5,7 @@ import { StockAllPublishInformation } from './entity/views/StockAllPublishInform
 import { StockLastPublishInformation } from './entity/views/StockLastPublishInformation';
 import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
 import { StockGuestPublishInformation } from './entity/views/StockGuestPublishInformation';
-import { StockDailyPe } from './entity/views/StockDailyPe';
+import { StockDailyPe, StockDailyPeRaw, StockDailyPeNa } from './entity/views/StockDailyPe';
 
 export async function connectDatabase(shouldSyncSchema = true) {
    const connection = await createConnection();
@@ -33,7 +33,9 @@ async function syncDatabaseSchema(connection: Connection) {
    ];
    const mviews = [
       StockAllFairValue,
-      StockDailyPe
+      StockDailyPe,
+      StockDailyPeRaw,
+      StockDailyPeNa,
    ];
 
    for (const viewEntity of views) {

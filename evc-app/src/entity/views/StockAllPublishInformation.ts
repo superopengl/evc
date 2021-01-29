@@ -6,6 +6,7 @@ import { StockResistance } from '../StockResistance';
 import { StockFairValue } from '../StockFairValue';
 import { StockLastPrice } from '../StockLastPrice';
 import { StockPublishInformationBase } from './StockPublishInformationBase';
+import { StockLastFairValue } from './StockLastFairValue';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
@@ -40,17 +41,17 @@ import { StockPublishInformationBase } from './StockPublishInformationBase';
     )
     .addSelect('srs.lo as "resistanceLo"')
     .addSelect('srs.hi as "resistanceHi"')
-    .leftJoin(q => q.from(StockFairValue, 'sfv'),
-      'sfv', 'sfv.id = pu."fairValueId"'
+    .leftJoin(q => q.from(StockLastFairValue, 'sfv'),
+      'sfv', 'sfv.symbol = s.symbol'
     )
-    .addSelect('sfv.lo as "fairValueLo"')
-    .addSelect('sfv.hi as "fairValueHi"')
+    .addSelect('sfv."fairValueLo"')
+    .addSelect('sfv."fairValueHi"')
     .leftJoin(q => q.from(StockLastPrice, 'slp'),
       'slp', 'slp.symbol = s.symbol'
     )
     .addSelect('slp.price as "lastPrice"')
-    .addSelect('CASE WHEN slp.price < sfv.lo THEN TRUE ELSE FALSE END as "isUnder"')
-    .addSelect('CASE WHEN slp.price > sfv.hi THEN TRUE ELSE FALSE END as "isOver"')
+    .addSelect('CASE WHEN slp.price < sfv."fairValueLo" THEN TRUE ELSE FALSE END as "isUnder"')
+    .addSelect('CASE WHEN slp.price > sfv."fairValueHi" THEN TRUE ELSE FALSE END as "isOver"')
 })
 export class StockAllPublishInformation extends StockPublishInformationBase {
   constructor() {

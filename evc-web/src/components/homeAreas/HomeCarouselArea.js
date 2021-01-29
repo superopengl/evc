@@ -69,14 +69,6 @@ max-width: 1200px;
 }
 `;
 
-const SearchPanel = styled(Space)`
-background: rgba(255,255,255,0.4);
-padding: 20px;
-border-radius: 4px;
-margin: auto;
-width: 90%;
-`;
-
 const LogoPlate = styled.div`
 margin: 4px 0 0;
 padding: 8px;

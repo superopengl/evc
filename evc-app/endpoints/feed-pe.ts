@@ -40,7 +40,7 @@ async function udpateDatabase(iexBatchResponse) {
 
 async function syncIexToDatabase(symbols: string[]) {
   const types = ['chart'];
-  const params = { range: '3m' };
+  const params = { range: '4m' };
   const resp = await singleBatchRequest(symbols, types, params);
   await udpateDatabase(resp);
 }

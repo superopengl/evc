@@ -5,7 +5,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { v4 as uuidv4 } from 'uuid';
 import { compareTrend } from '../utils/compareTrend';
-import { StockDerivedFairValue } from '../entity/views/StockDerivedFairValue';
+import { StockAllFairValue } from '../entity/views/StockAllFairValue';
 
 
 export const listStockPe = handlerWrapper(async (req, res) => {

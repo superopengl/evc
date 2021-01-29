@@ -1,6 +1,6 @@
 import { Connection, createConnection, getConnectionManager } from 'typeorm';
 import { getManager } from 'typeorm';
-import { StockDerivedFairValue } from './entity/views/StockDerivedFairValue';
+import { StockAllFairValue } from './entity/views/StockAllFairValue';
 import { StockAllPublishInformation } from './entity/views/StockAllPublishInformation';
 import { StockLastPublishInformation } from './entity/views/StockLastPublishInformation';
 import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
@@ -32,7 +32,7 @@ async function syncDatabaseSchema(connection: Connection) {
 
    ];
    const mviews = [
-      StockDerivedFairValue,
+      StockAllFairValue,
       StockDailyPe
    ];
 

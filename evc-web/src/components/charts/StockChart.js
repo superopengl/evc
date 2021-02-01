@@ -147,7 +147,7 @@ const StockChart = props => {
         autoHide: false,
         autoEllipsis: false,
       },
-      tickCount: data.length > 100 ? data.length / 10 : data.length,
+      tickCount: data.length > 30 ? data.length / 10 : data.length,
     },
     yField: ['price', 'volume'],
     // yAxis: {

@@ -21,10 +21,10 @@ const StyledCol = styled(Col)`
 const span = {
   xs: 24,
   sm: 24,
-  md: 12,
-  lg: 12,
-  xl: 6,
-  xxl: 6
+  md: 24,
+  lg: 8,
+  xl: 8,
+  xxl: 8
 };
 
 const Container = styled.div`
@@ -46,7 +46,7 @@ max-width: 1200px;
 
 const { Title, Text } = Typography;
 
-export const HomeSubscriptionArea = props => {
+export const HomePricingArea = props => {
   const { onClick } = props;
   return (
     <Container>
@@ -69,8 +69,8 @@ export const HomeSubscriptionArea = props => {
   )
 }
 
-HomeSubscriptionArea.propTypes = {
+HomePricingArea.propTypes = {
 };
 
-HomeSubscriptionArea.defaultProps = {
+HomePricingArea.defaultProps = {
 };

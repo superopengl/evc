@@ -10,7 +10,7 @@ import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
-import { HomeSubscriptionArea } from 'components/homeAreas/HomeSubscriptionArea';
+import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
 import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
 const { Content } = Layout;
@@ -66,7 +66,7 @@ class HomePage extends React.Component {
             <HomeCarouselArea></HomeCarouselArea>
           </section>
           <HomeMarketArea />
-          <HomeSubscriptionArea />
+          <HomePricingArea />
           {/* <section><HomeSearchArea /></section> */}
           <HashAnchorPlaceholder id="services" />
           <section><HomeServiceArea bgColor="#135200" /></section>

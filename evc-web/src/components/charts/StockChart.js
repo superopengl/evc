@@ -8,7 +8,9 @@ import * as moment from 'moment';
 import { Button, Space, Select } from 'antd';
 import ReactDOM from "react-dom";
 import { Loading } from 'components/Loading';
-
+import Chart from './Chart';
+import { timeParse } from "d3-time-format";
+const parseDate = timeParse("%Y-%m-%d");
 const PERIOD_X_INTERVAL = {
   '1h': {
     '1m': {
@@ -74,6 +76,7 @@ const StockChart = props => {
     interval
   });
   const [data, setData] = React.useState([]);
+  const [chartData, setChartData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const periods = Object.keys(PERIOD_X_INTERVAL);
   const intervals = _.uniq(Object.values(PERIOD_X_INTERVAL).reduce((pre, cur) => [...pre, ...Object.keys(cur)], []));
@@ -104,6 +107,12 @@ const StockChart = props => {
 
   const loadChartData = async (symbol, period, interval) => {
     const rawData = await getStockChart(symbol, period, interval);
+
+    setChartData(rawData.map(x => ({
+      ...x,
+      date: parseDate(x.date),
+    })));
+
     const formatted = formatTimeForRawData(rawData, period);
     return formatted;
   }
@@ -199,7 +208,9 @@ const StockChart = props => {
       </Select>
     </Space> */}
     {/* <Area {...config}/> */}
-    <DualAxes {...chartConfig} />
+    {/* <DualAxes {...chartConfig} /> */}
+    {/* https://github.com/rrag/react-stockcharts-examples2 */}
+   {chartData.length > 0 && <Chart type="hybrid" data={chartData} />}
   </Loading>
 }
 

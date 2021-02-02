@@ -292,6 +292,7 @@ const AdminStockPublishPanel = (props) => {
             onDelete={id => deleteStockPe(id)}
             onSelected={updateSelectedByPe}
             getClassNameOnSelect={getClassNameOnSelectForPeItem}
+            disableInput={true}
           />
         </ColInnerCard>
       </ColStyled>

@@ -20,7 +20,7 @@ const Container = styled.div`
 
 
 export const StockRangeTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, showTime, publishedId } = props;
+  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, disableInput, publishedId } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -64,7 +64,7 @@ export const StockRangeTimelineEditor = (props) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <NumberRangeInput onSave={handleSaveSupport} disabled={loading} />
+      {disableInput && <NumberRangeInput onSave={handleSaveSupport} disabled={loading} />}
       <List
         dataSource={list}
         loading={loading}
@@ -102,6 +102,7 @@ StockRangeTimelineEditor.propTypes = {
   publishedId: PropTypes.string,
   showTime: PropTypes.bool,
   mode: PropTypes.string,
+  disableInput: PropTypes.bool.isRequired,
 };
 
 StockRangeTimelineEditor.defaultProps = {
@@ -111,4 +112,5 @@ StockRangeTimelineEditor.defaultProps = {
   onDelete: () => { },
   onSelected: () => { },
   getClassNameOnSelect: () => false,
+  disableInput: false,
 };

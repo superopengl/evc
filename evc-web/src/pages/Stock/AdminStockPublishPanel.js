@@ -17,8 +17,7 @@ import {
   deleteStock, getStock, updateStock,
   listStockSupport, saveStockSupport, deleteStockSupport,
   listStockResistance, saveStockResistance, deleteStockResistance,
-  listStockPe, saveStockPe, deleteStockPe,
-  listStockEps, saveStockEps, deleteStockEps,
+  listStockPe, listStockEps, saveStockEps, deleteStockEps,
   listStockFairValue, saveStockFairValue, deleteStockFairValue,
   listStockPublish, saveStockPublish, syncStockEps,
 } from 'services/stockService';
@@ -32,6 +31,7 @@ import { StockRangeTimelineEditor } from './StockRangeTimelineEditor';
 import StockEpsTimelineEditor from './StockEpsTimelineEditor';
 import { StockFairValueTimelineEditor } from './StockFairValueTimelineEditor';
 import { StockPublishTimelineEditor } from './StockPublishTimelineEditor';
+import {StockDailyPeList} from './StockDailyPeList';
 import { PageHeader } from 'antd';
 import { Select } from 'antd';
 import { listStockTags } from 'services/stockTagService';
@@ -285,13 +285,12 @@ const AdminStockPublishPanel = (props) => {
       </ColStyled>
       <ColStyled {...span}>
         <ColInnerCard title="PE">
-          <StockRangeTimelineEditor
+          <StockDailyPeList
+            symbol={symbol}
             onLoadList={() => listStockPe(symbol)}
-            onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)}
             onChange={list => setPeList(list)}
-            onDelete={id => deleteStockPe(id)}
             onSelected={updateSelectedByPe}
-            getClassNameOnSelect={getClassNameOnSelectForPeItem}
+            // getClassNameOnSelect={getClassNameOnSelectForPeItem}
             disableInput={true}
           />
         </ColInnerCard>

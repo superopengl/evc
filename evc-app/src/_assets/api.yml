@@ -564,16 +564,6 @@ paths:
       responses:
         200:
           description: OK
-    post:
-      operationId: saveStockPe
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
   /stock/s/{symbol}/value:
     get:
       operationId: getStockFairValue
@@ -631,18 +621,6 @@ paths:
   /stock/resistance/:id:
     delete:
       operationId: deleteStockResistance
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /stock/pe/:id:
-    delete:
-      operationId: deleteStockPe
       parameters:
         - name: id
           in: path

@@ -99,14 +99,6 @@ export async function listStockPe(symbol) {
   return httpGet(`stock/s/${symbol}/pe`);
 }
 
-export async function saveStockPe(symbol, lo, hi) {
-  return httpPost(`stock/s/${symbol}/pe`, { lo, hi });
-}
-
-export async function deleteStockPe(id) {
-  return httpDelete(`stock/pe/${id}`);
-}
-
 export async function listStockFairValue(symbol) {
   return httpGet(`stock/s/${symbol}/value`);
 }

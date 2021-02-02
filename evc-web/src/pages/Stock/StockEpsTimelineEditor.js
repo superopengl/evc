@@ -46,36 +46,6 @@ const StockEpsTimelineEditor = (props, ref) => {
     loadEntity();
   }, []);
 
-  const handleSave = async (range) => {
-    try {
-      setLoading(true);
-      await onSaveNew(range);
-      updateList(await onLoadList());
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleDeleteItem = async (item) => {
-    try {
-      setLoading(true);
-      await onDelete(item.id);
-      updateList(await onLoadList());
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleSyncEps = async () => {
-    try {
-      setLoading(true);
-      await syncStockEps(props.symbol);
-      loadEntity();
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
       {/* <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Load Last 4 EPS</Button> */}

@@ -1,3 +1,4 @@
+import { DateFilterList } from 'aws-sdk/clients/securityhub';
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
@@ -18,7 +19,7 @@ export class StockSpecialFairValue {
   symbol: string;
 
   @Column({ type: 'date' })
-  date?: string;
+  date: string;
 
   @Column('uuid')
   author: string;
@@ -29,6 +30,6 @@ export class StockSpecialFairValue {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   fairValueHi: number;
 
-  @Column({default: false})
-  published: boolean;
+  @Column({nullable: true})
+  published: Date;
 }

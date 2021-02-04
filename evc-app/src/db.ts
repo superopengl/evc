@@ -6,6 +6,8 @@ import { StockLastPublishInformation } from './entity/views/StockLastPublishInfo
 import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
 import { StockGuestPublishInformation } from './entity/views/StockGuestPublishInformation';
 import { StockAllComputedPe } from './entity/views/StockAllComputedPe';
+import { StockAllFairValue } from './entity/views/StockAllFairValue';
+import { StockLastComputedFairValue } from './entity/views/StockLastComputedFairValue';
 
 export async function connectDatabase(shouldSyncSchema = true) {
    const connection = await createConnection();
@@ -29,10 +31,12 @@ async function syncDatabaseSchema(connection: Connection) {
       StockGuestPublishInformation,
       StockLastPublishInformation,
       SubscriptionPaymentBalanceInformation,
+      StockAllFairValue,
    ];
    const mviews = [
       StockAllComputedFairValue,
       StockAllComputedPe,
+      StockLastComputedFairValue,
    ];
 
    for (const viewEntity of views) {

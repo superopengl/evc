@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, List, Tooltip, Descriptions, Table, Tag } from 'antd';
+import { Card, Typography, Space, List, Tooltip, Descriptions, Tag, Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
 import StockInfoCard from './StockInfoCard';
@@ -9,30 +9,37 @@ import { FaCrown } from 'react-icons/fa';
 import { IconContext } from "react-icons";
 import { getStockInsider } from 'services/stockService';
 import { Loading } from './Loading';
+import styled from 'styled-components';
+import INSIDER_LEGEND_INFOS from '../def/insiderLegendDef';
+
 const { Paragraph, Text, Title } = Typography;
 
-const BADGE_INFOS = {
-  'A': {
-    color: '#333333',
-    message: 'Grant, award, or other acquisition of securities from the company (such as an option)'
-  },
-  'P': {
-    color: '#3b5999',
-    message: 'Purchase of securities on an exchange or from another person'
-  },
-  'S': {
-    color: '#108ee9',
-    message: 'Sale of securities on an exchange or to another person'
-  },
-  'M': {
-    color: '#f05000',
-    message: 'Exercise or conversion of derivative security received from the company (such as an option)'
-  },
-  'G': {
-    color: '#87d068',
-    message: 'Gift of securities by or to the insider'
-  },
-};
+const RosterList = styled(List)`
+.ant-list-item {
+  padding-left: 0;
+  padding-right: 0;
+}
+`;
+
+const RosterCard = styled(Card)`
+.ant-card-body {
+  padding: 12px;
+}
+`;
+
+const Container = styled(Space)`
+.ant-descriptions-title {
+  color: #3273A4 !important;
+}
+
+.ant-descriptions-header {
+  margin: 0;
+}
+
+.ant-descriptions-item {
+  padding-bottom: 2px !important;
+}
+`;
 
 const StockInsiderPanel = (props) => {
 
@@ -50,7 +57,7 @@ const StockInsiderPanel = (props) => {
   }
 
   const getBadgeComponent = (transactionType) => {
-    const info = BADGE_INFOS[transactionType];
+    const info = INSIDER_LEGEND_INFOS[transactionType];
     return <Tooltip title={info.message}>
       <Tag color={info.color}>{transactionType}</Tag>
     </Tooltip>
@@ -61,53 +68,62 @@ const StockInsiderPanel = (props) => {
   }, []);
 
   return (
-      <Loading loading={loading}>
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Loading loading={loading}>
+      <Container direction="vertical" size="small" style={{ width: '100%' }}>
         <Title level={3}>Roster</Title>
-        <List
+        <RosterList
+          grid={{
+            gutter: 10,
+            xs: 1,
+            sm: 2,
+            md: 2,
+            lg: 3,
+            xl: 4,
+            xxl: 4
+          }}
           itemLayout="horizontal"
           size="small"
           dataSource={data.roster}
           renderItem={item => (
             <List.Item>
-              <Space style={{ justifyContent: 'space-between', width: '100%' }}>
-                <Text strong>{item.entityName}</Text>
-                <Text type="secondary">{item.position.toLocaleString()}</Text>
-              </Space>
+              <RosterCard card="small">
+                <Descriptions
+                  title={item.entityName}
+                  size="small"
+                  extra={item.position.toLocaleString()}
+                ></Descriptions>
+              </RosterCard>
             </List.Item>
           )}
         />
         <Title level={3}>Summary</Title>
-        <Space direction="vertical" size="small">
-          {Object.entries(BADGE_INFOS).map(([k, v]) => <div key={k}>
-            {getBadgeComponent(k)}
-            {v.message}
-          </div>)}
-        </Space>
-        <List
+        <RosterList
+          grid={{ column: 1 }}
           itemLayout="horizontal"
           size="small"
           dataSource={data.summary}
           renderItem={item => (
             <List.Item>
-              <Descriptions
-                title={<>{item.fullName} {item.reportedTitle && <Text type="secondary"><small>{item.reportedTitle}</small></Text>}</>}
-                size="small"
-                extra={getBadgeComponent(item.transactionCode)}
-              >
-                <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
-                <Descriptions.Item label="Filing date">{item.filingDate}</Descriptions.Item>
-                <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
-                <Descriptions.Item label="Transaction date">{item.transactionDate}</Descriptions.Item>
-                <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
-                <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
-                <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
-              </Descriptions>
+              <Card size="small">
+                <Descriptions
+                  title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{fontWeight: 400, fontSize: '0.8rem'}}>{item.reportedTitle}</Text>}</Space>}
+                  size="small"
+                  extra={getBadgeComponent(item.transactionCode)}
+                >
+                  <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
+                  <Descriptions.Item label="Filing date">{item.filingDate}</Descriptions.Item>
+                  <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
+                  <Descriptions.Item label="Transaction date">{item.transactionDate}</Descriptions.Item>
+                  <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
+                  <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
+                  <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
+                </Descriptions>
+              </Card>
             </List.Item>
           )}
         />
-    </Space>
-      </Loading>
+      </Container>
+    </Loading>
   );
 };
 

@@ -36,7 +36,7 @@ import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
 import StockTagSelect from 'components/StockTagSelect';
 import HeaderStockSearch from 'components/HeaderStockSearch';
-
+import INSIDER_LEGEND_INFOS from '../../def/insiderLegendDef';
 const { Paragraph, Text } = Typography;
 const { Header, Content, Sider } = Layout;
 
@@ -147,14 +147,14 @@ const StockPage = (props) => {
       <ContainerStyled>
         {loading ? <Loading /> : <>
           <PageHeader
-            style={{paddingTop: 0}}
+            style={{ paddingTop: 0 }}
             ghost={false}
             onBack={() => props.history.goBack()}
             title={<Space size="middle">
               <StockName value={stock} />
               {stock?.isOver ? <Tag color="yellow">over valued</Tag> : stock?.isUnder ? <Tag color="cyan">under valued</Tag> : null}
               {isClient && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
-              </Space>}
+            </Space>}
             extra={[
               <Button key="insider" type="primary" ghost onClick={() => setInsiderVisible(true)}>Insider Transactions <MemberOnlyIcon /></Button>,
               <Button key="sync" type="primary" ghost icon={<SyncOutlined />} onClick={handleRefresh} />,
@@ -175,7 +175,7 @@ const StockPage = (props) => {
               </Col>
               <Col flex="auto">
                 <Card size="small" type="inner" title="Chart">
-                  <StockChart symbol={stock.symbol} period="1d" interval="5m"/>
+                  <StockChart symbol={stock.symbol} period="1d" interval="5m" />
                 </Card>
               </Col>
             </Row>
@@ -207,6 +207,15 @@ const StockPage = (props) => {
         maskClosable={true}
         onClose={() => setInsiderVisible(false)}
         width="80vw"
+        footer={
+          <Space direction="vertical" size="small">
+            {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
+                <Tag color={v.color}>{k}</Tag>
+                {v.message}
+              </div>)}
+          </Space>
+        }
+        footerStyle={{padding: 24}}
       >
         {stock && <StockInsiderPanel symbol={stock.symbol} />}
       </Drawer>

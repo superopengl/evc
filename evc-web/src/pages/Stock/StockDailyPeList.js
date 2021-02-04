@@ -68,7 +68,7 @@ export const StockDailyPeList = (props) => {
             <List.Item.Meta
               description={<Space style={{width: '100%', justifyContent: 'space-between'}}>
               {/* <Text type="secondary">{item.year} Q{item.quarter}</Text> */}
-              <TimeAgo value={item.date} showTime={false} direction="horizontal"/>
+              <TimeAgo value={item.date} showTime={false} showAgo={false} direction="horizontal"/>
               {item.pe === null ? 'N/A' : <Space>
                 <MoneyAmount symbol="" value={item.pe}/>
                 <Text>({(+item.peLo).toFixed(2)} ~ {(+item.peHi).toFixed(2)})</Text>

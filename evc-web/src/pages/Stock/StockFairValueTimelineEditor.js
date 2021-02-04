@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { List, Typography, Space, Alert, Modal } from 'antd';
+import { List, Typography, Space, Alert, Table } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { Switch } from 'antd';
 import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
+import { TimeAgo } from 'components/TimeAgo';
 
 const { Text } = Typography;
 
@@ -84,23 +85,71 @@ export const StockFairValueTimelineEditor = (props) => {
     setIsSpecialFairValue(checked);
   }
 
-  const handleDeleteItem = async (item) => {
+  const handleDeleteSpecialFairValue = async (specialFairValueId) => {
     try {
       setLoading(true);
-      await onDelete(item.id);
+      await onDelete(specialFairValueId);
       updateList(await onLoadList());
     } finally {
       setLoading(false);
     }
   }
 
+  const displayNumber = value => {
+    return _.isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value).toFixed(2);
+  }
+
+  const columnDef = [
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      render: (value) => <TimeAgo value={value} showTime={false} showAgo={false} direction="horizontal" />
+    },
+    {
+      title: 'PE',
+      dataIndex: 'pe',
+      render: displayNumber
+    },
+    {
+      title: 'PE (lo)',
+      dataIndex: 'peLo',
+      render: displayNumber
+    },
+    {
+      title: 'PE (hi)',
+      dataIndex: 'peHi',
+      render: displayNumber
+    },
+    {
+      title: 'FV (lo)',
+      dataIndex: 'fairValueLo',
+      render: displayNumber
+    },
+    {
+      title: 'FV (hi)',
+      dataIndex: 'fairValueHi',
+      render: displayNumber
+    },
+    {
+      dataIndex: 'id',
+      render: (value) => value ? <Tag color="gold">special</Tag> : <Tag color="blue">computed</Tag>
+    },
+    {
+      render: (value, item) => {
+        const { id } = item;
+        if (!id) return;
+        return <ConfirmDeleteButton onOk={() => handleDeleteSpecialFairValue(id)} />
+      }
+    }
+  ];
+
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
       <Space direction="vertical" size="middle">
-        {disabled && <Alert type="warning" message="Please setup EPS and EP before setting up Fair Value" showIcon/>}
+        {disabled && <Alert type="warning" message="Please setup EPS and EP before setting up Fair Value" showIcon />}
         <Space>
           <Text>Special Fair Value</Text>
-          <Switch checked={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} disabled={loading || disabled}/>
+          <Switch checked={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} disabled={loading || disabled} />
         </Space>
         <NumberRangeInput
           onSave={handleSave}
@@ -110,26 +159,14 @@ export const StockFairValueTimelineEditor = (props) => {
           allowInputNone={true}
         />
       </Space>
-      <List
+      <Table
+        columns={columnDef}
         dataSource={list}
-        loading={loading}
-        itemLayout="horizontal"
-        rowKey="id"
         size="small"
-        locale={{ emptyText: ' ' }}
-        renderItem={item => (
-          <List.Item
-            onClick={() => onSelected(item)}
-            style={{ position: 'relative' }}
-            className={getClassNameOnSelect(item)}
-            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
-          >
-            <List.Item.Meta
-              description={<NumberRangeDisplay lo={item.lo} hi={item.hi} loTrend={item.loTrend} hiTrend={item.hiTrend} time={item.createdAt} />}
-            />
-            {item.special ? <Tag color="gold">special</Tag> : <Tag color="blue">computed</Tag>}
-          </List.Item>
-        )}
+        rowKey={item => item.id ?? item.date}
+        loading={loading}
+        pagination={false}
+        style={{ width: '100%' }}
       />
     </Space>
   </Container>

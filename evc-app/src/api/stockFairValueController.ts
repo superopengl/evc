@@ -4,6 +4,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { compareTrend } from '../utils/compareTrend';
+import { StockAllFairValue } from '../entity/views/StockAllFairValue';
 
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {
@@ -11,12 +12,12 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const limit = +req.query.limit || 6;
 
-  const list = await getRepository(StockSpecialFairValue).find({
+  const list = await getRepository(StockAllFairValue).find({
     where: {
       symbol
     },
     order: {
-      createdAt: 'DESC'
+      date: 'DESC'
     },
     take: limit
   });
@@ -28,11 +29,12 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
   const { user: { id: userId } } = req as any;
-  const { lo, hi } = normalizeLoHiValues(req.body, true);
+  const { date, lo, hi } = normalizeLoHiValues(req.body, true);
   const repo = getRepository(StockSpecialFairValue);
 
   const entity = new StockSpecialFairValue();
   entity.symbol = symbol;
+  entity.date = date;
   entity.author = userId;
   entity.fairValueLo = lo;
   entity.fairValueHi = hi;
@@ -45,6 +47,6 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
 export const deleteStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  await getRepository(StockSpecialFairValue).delete({ id, published: false });
+  await getRepository(StockSpecialFairValue).softDelete(id);
   res.json();
 });

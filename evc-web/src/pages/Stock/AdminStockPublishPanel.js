@@ -58,12 +58,6 @@ const Container = styled.div`
     padding-right: 0;
   }
 `;
-
-const ColStyled = styled(Col)`
-  margin-bottom: 20px;
-  // background-color: #f3f3f3;
-`;
-
 // const ColInnerCard = styled(Card)`
 // height: 100%;
 // `;
@@ -269,8 +263,8 @@ const AdminStockPublishPanel = (props) => {
   }
 
   return (<Container>
-    <Row gutter={20} style={{ marginTop: 20 }}>
-      <ColStyled {...span}>
+    <Row gutter={[20, 20]} style={{ marginTop: 20 }} wrap={true}>
+      <Col flex="auto">
         <ColInnerCard title="EPS">
           <StockEpsTimelineEditor
             symbol={symbol}
@@ -282,8 +276,8 @@ const AdminStockPublishPanel = (props) => {
             getClassNameOnSelect={getClassNameOnSelectForEpsItem}
           />
         </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
+      </Col>
+      {/* <Col flex="auto">
         <ColInnerCard title="PE">
           <StockDailyPeList
             symbol={symbol}
@@ -294,8 +288,8 @@ const AdminStockPublishPanel = (props) => {
             disableInput={true}
           />
         </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
+      </Col> */}
+      <Col flex="auto">
         <ColInnerCard title="Fair Value">
           <StockFairValueTimelineEditor
             onLoadList={() => listStockFairValue(symbol)}
@@ -308,8 +302,8 @@ const AdminStockPublishPanel = (props) => {
             getClassNameOnSelect={getClassNameOnSelectForValueItem}
           />
         </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
+      </Col>
+      <Col flex="auto">
         <ColInnerCard title="Publish History">
           <StockPublishTimelineEditor
             onLoadList={() => listStockPublish(symbol, true)}
@@ -320,8 +314,8 @@ const AdminStockPublishPanel = (props) => {
             disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
           />
         </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
+      </Col>
+      <Col flex="auto">
         <ColInnerCard title="Support">
           <StockRangeTimelineEditor
             onLoadList={() => listStockSupport(symbol)}
@@ -332,8 +326,8 @@ const AdminStockPublishPanel = (props) => {
             getClassNameOnSelect={getClassNameOnSelectForSupportItem}
           />
         </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
+      </Col>
+      <Col flex="auto">
         <ColInnerCard title="Resistance">
           <StockRangeTimelineEditor
             onLoadList={() => listStockResistance(symbol)}
@@ -344,7 +338,7 @@ const AdminStockPublishPanel = (props) => {
             getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
           />
         </ColInnerCard>
-      </ColStyled>
+      </Col>
     </Row>
 
     <Modal

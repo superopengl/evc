@@ -1,26 +1,36 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
-import { StockDailyPe } from './StockDailyPe';
+import { ViewEntity, Connection, ViewColumn, SelectQueryBuilder } from 'typeorm';
+import { StockAllComputedPe } from './StockAllComputedPe';
 
 /**
  *
 select symbol, date, avg - stddev as "peLo", avg + stddev as "peHi" from
 (
-select pe.symbol, pe.date, avg(back.pe), stddev(back.pe) from stock_daily_pe pe
-inner join stock_daily_pe back on pe.symbol = back.symbol
+select pe.symbol, pe.date, avg(back.pe), stddev(back.pe) from stock_all_computed_pe pe
+inner join stock_all_computed_pe back on pe.symbol = back.symbol
 where back.date between pe."date" - 90 and pe."date"
-and exists(select * from stock_daily_pe sdp where sdp.date = pe."date" - 90)
+and exists(select * from stock_all_computed_pe sdp where sdp.date = pe."date" - 90)
 group by pe.symbol, pe.date
 ) x;
  */
+
+const existsQuery = <T>(builder: SelectQueryBuilder<T>) => `exists (${builder.getQuery()})`;
 
 @ViewEntity({
   materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(q => q.from(StockDailyPe, 'pe')
-    .innerJoin(StockDailyPe, 'back', `pe.symbol = back.symbol`)
+    .from(q => q.from(StockAllComputedPe, 'pe')
+    .innerJoin(StockAllComputedPe, 'back', `pe.symbol = back.symbol`)
     .where(`back.date between pe."date" - 90 and pe."date"`)
-    .andWhere(`exists(select 1 from evc.stock_daily_pe sdp where sdp.date = pe."date" - 90)`)
+    // .andWhere(`exists(select 1 from evc.stock_all_computed_pe sdp where sdp.date = pe."date" - 90)`)
+    .andWhere(
+      existsQuery(
+        connection
+          .getRepository(StockAllComputedPe)
+          .createQueryBuilder('sdp')
+          .where('sdp.date = pe."date" - 90')
+      )
+    )
     .groupBy('pe.symbol')
     .addGroupBy('pe.date')
     .addGroupBy('pe."ttmEps"')
@@ -45,7 +55,7 @@ group by pe.symbol, pe.date
       'x."ttmEps" * (x.avg + x.stddev) as "fairValueHi"',
     ])
 })
-export class StockAllFairValue {
+export class StockAllComputedFairValue {
   @ViewColumn()
   symbol: string;
 

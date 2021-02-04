@@ -6,7 +6,7 @@ import { StockResistance } from '../StockResistance';
 import { StockSpecialFairValue } from '../StockSpecialFairValue';
 import { StockLastPrice } from '../StockLastPrice';
 import { StockPublishInformationBase } from './StockPublishInformationBase';
-import { StockLastFairValue } from './StockLastFairValue';
+import { StockLastComputedFairValue } from './StockLastComputedFairValue';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
@@ -41,7 +41,7 @@ import { StockLastFairValue } from './StockLastFairValue';
     )
     .addSelect('srs.lo as "resistanceLo"')
     .addSelect('srs.hi as "resistanceHi"')
-    .leftJoin(q => q.from(StockLastFairValue, 'sfv'),
+    .leftJoin(q => q.from(StockLastComputedFairValue, 'sfv'),
       'sfv', 'sfv.symbol = s.symbol'
     )
     .addSelect('sfv."fairValueLo"')

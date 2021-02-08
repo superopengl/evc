@@ -1,12 +1,12 @@
 import { Connection, createConnection, getConnectionManager } from 'typeorm';
 import { getManager } from 'typeorm';
-import { StockAllComputedFairValue } from './entity/views/StockAllComputedFairValue';
+import { StockComputedPe90 } from './entity/views/StockComputedPe90';
 import { StockAllPublishInformation } from './entity/views/StockAllPublishInformation';
 import { StockLastPublishInformation } from './entity/views/StockLastPublishInformation';
 import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
 import { StockGuestPublishInformation } from './entity/views/StockGuestPublishInformation';
-import { StockAllComputedPe } from './entity/views/StockAllComputedPe';
-import { StockAllFairValue } from './entity/views/StockAllFairValue';
+import { StockDailyPe } from './entity/views/StockDailyPe';
+import { StockAllFairValue, StockFairValue } from './entity/views/StockAllFairValue';
 import { StockLastComputedFairValue } from './entity/views/StockLastComputedFairValue';
 
 export async function connectDatabase(shouldSyncSchema = true) {
@@ -32,11 +32,12 @@ async function syncDatabaseSchema(connection: Connection) {
       StockLastPublishInformation,
       SubscriptionPaymentBalanceInformation,
       StockAllFairValue,
+      StockComputedPe90,
    ];
    const mviews = [
-      StockAllComputedFairValue,
-      StockAllComputedPe,
+      StockDailyPe,
       StockLastComputedFairValue,
+      StockFairValue,
    ];
 
    for (const viewEntity of views) {

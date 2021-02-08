@@ -1,5 +1,5 @@
 import { ViewEntity, Connection, ViewColumn, SelectQueryBuilder } from 'typeorm';
-import { StockAllComputedPe } from './StockAllComputedPe';
+import { StockDailyPe } from './StockDailyPe';
 
 /**
  *
@@ -16,17 +16,16 @@ group by pe.symbol, pe.date
 const existsQuery = <T>(builder: SelectQueryBuilder<T>) => `exists (${builder.getQuery()})`;
 
 @ViewEntity({
-  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(q => q.from(StockAllComputedPe, 'pe')
-    .innerJoin(StockAllComputedPe, 'back', `pe.symbol = back.symbol`)
+    .from(q => q.from(StockDailyPe, 'pe')
+    .innerJoin(StockDailyPe, 'back', `pe.symbol = back.symbol`)
     .where(`back.date between pe."date" - 90 and pe."date"`)
     // .andWhere(`exists(select 1 from evc.stock_all_computed_pe sdp where sdp.date = pe."date" - 90)`)
     .andWhere(
       existsQuery(
         connection
-          .getRepository(StockAllComputedPe)
+          .getRepository(StockDailyPe)
           .createQueryBuilder('sdp')
           .where('sdp.date = pe."date" - 90')
       )
@@ -55,7 +54,7 @@ const existsQuery = <T>(builder: SelectQueryBuilder<T>) => `exists (${builder.ge
       'x."ttmEps" * (x.avg + x.stddev) as "fairValueHi"',
     ])
 })
-export class StockAllComputedFairValue {
+export class StockComputedPe90 {
   @ViewColumn()
   symbol: string;
 

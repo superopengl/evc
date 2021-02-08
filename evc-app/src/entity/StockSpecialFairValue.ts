@@ -4,16 +4,13 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-@Index(['symbol', 'date'], { unique: true })
+@Index(['symbol', 'createdAt'], { unique: true })
 export class StockSpecialFairValue {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
   @Column()
   symbol: string;
-
-  @Column({ type: 'date' })
-  date: string;
 
   @CreateDateColumn()
   createdAt?: Date;

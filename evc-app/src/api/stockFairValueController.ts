@@ -4,22 +4,17 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { compareTrend } from '../utils/compareTrend';
-import { StockAllFairValue } from '../entity/views/StockAllFairValue';
+import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalFairValue';
 
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
-  const limit = +req.query.limit || 6;
 
-  const list = await getRepository(StockAllFairValue).find({
+  const list = await getRepository(StockHistoricalComputedFairValue).find({
     where: {
       symbol
     },
-    order: {
-      date: 'DESC'
-    },
-    take: limit
   });
 
   res.json(list);
@@ -34,7 +29,6 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
 
   const entity = new StockSpecialFairValue();
   entity.symbol = symbol;
-  entity.date = date;
   entity.author = userId;
   entity.fairValueLo = lo;
   entity.fairValueHi = hi;

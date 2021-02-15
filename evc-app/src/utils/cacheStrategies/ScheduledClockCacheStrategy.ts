@@ -1,6 +1,6 @@
 import * as moment from 'moment-timezone';
 import { getNextTickMoment } from './computeSecondsToNextUpdateTime';
-import { ICacheStrategy } from "./ICacheStrategy";
+import { ICacheStrategy } from './ICacheStrategy';
 
 
 export class ScheduledClockCacheStrategy implements ICacheStrategy {

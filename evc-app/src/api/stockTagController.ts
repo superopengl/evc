@@ -1,7 +1,7 @@
 
 import { getRepository } from 'typeorm';
 import { Blog } from '../entity/Blog';
-import { StockTag } from "../entity/StockTag";
+import { StockTag } from '../entity/StockTag';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';

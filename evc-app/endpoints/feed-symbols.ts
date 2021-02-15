@@ -65,7 +65,7 @@ async function parseStockDataFromFile(filePath): Promise<Array<{ symbol: string,
     }).on('error', err => {
       rej(err);
     });
-  })
+  });
 }
 
 

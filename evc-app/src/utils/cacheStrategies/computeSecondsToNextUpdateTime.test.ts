@@ -11,19 +11,19 @@ describe('getNextTickMoment', () => {
     const result = getNextTickMoment([5, 6], now);
     expect(result.isAfter(now)).toBeTruthy();
     expect(result.format('HH:mm')).toEqual('05:00');
-  })
+  });
 
   it('should update at 6, if now is 5:01', () => {
     const now = createEtTime(5, 1);
     const result = getNextTickMoment([5, 6], now);
     expect(result.isAfter(now)).toBeTruthy();
     expect(result.format('HH:mm')).toEqual('06:00');
-  })
+  });
 
   it('should update at 5, if now is 6:01', () => {
     const now = createEtTime(6, 1);
     const result = getNextTickMoment([5, 6], now);
     expect(result.isAfter(now)).toBeTruthy();
     expect(result.format('HH:mm')).toEqual('05:00');
-  })
+  });
 });

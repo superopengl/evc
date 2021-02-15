@@ -7,7 +7,7 @@ import { StockLastPublishInformation } from '../entity/views/StockLastPublishInf
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
   const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued } = queryInfo;
 
-  let pageNo = page || 1;
+  const pageNo = page || 1;
   const pageSize = size || 50;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 

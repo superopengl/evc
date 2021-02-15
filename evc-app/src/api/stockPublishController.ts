@@ -21,7 +21,7 @@ export const listStockPublish = handlerWrapper(async (req, res) => {
       createdAt: 'DESC'
     },
     take: limit
-  })
+  });
 
   res.json(list);
 });

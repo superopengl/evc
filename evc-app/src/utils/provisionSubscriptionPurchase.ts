@@ -20,7 +20,7 @@ export type ProvisionSubscriptionRequest = {
   preferToUseBalance: boolean,
   alertDays: number,
   ipAddress: string
-}
+};
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {
   const { userId, subscriptionType, paymentMethod, recurring, preferToUseBalance, alertDays, ipAddress } = request;

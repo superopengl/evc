@@ -1,14 +1,14 @@
-import moment = require("moment");
-import { getManager } from "typeorm";
-import { StockEps } from "../entity/StockEps";
-import { getEarnings } from "./iexService";
+import moment = require('moment');
+import { getManager } from 'typeorm';
+import { StockEps } from '../entity/StockEps';
+import { getEarnings } from './iexService';
 
 export type StockIexEpsInfo = {
   symbol: string,
   fiscalPeriod: string,
   reportDate: string,
   value: number,
-}
+};
 
 export const syncStockEps = async (symbol: string, howManyQuarters = 4) => {
   const earnings = await getEarnings(symbol, howManyQuarters);
@@ -27,7 +27,7 @@ export const syncStockEps = async (symbol: string, howManyQuarters = 4) => {
   });
 
   await syncManyStockEps(infoList);
-}
+};
 
 export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
   const entites = epsInfo.map(item => {
@@ -55,4 +55,4 @@ export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
     .values(entites)
     .onConflict(`(symbol, "reportDate") DO NOTHING`)
     .execute();
-}
+};

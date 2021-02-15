@@ -94,7 +94,7 @@ async function renewRecurringSubscription(subscription: Subscription) {
 
     extendSubscriptionEndDate(subscription);
     await m.save(subscription);
-  })
+  });
 }
 
 async function handleRecurringPayments() {

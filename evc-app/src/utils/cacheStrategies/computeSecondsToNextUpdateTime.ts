@@ -6,7 +6,7 @@ export function getNextTickMoment(scheduledEtTimes: number[], now: moment.Moment
   const todayStart = moment(now).tz(ET_TIMEZONE_NAME).startOf('day');
   for (let i = 0; i < scheduledEtTimes.length; i++) {
     const nextTickClock = scheduledEtTimes[i];
-    let nextTickAt = moment(todayStart).set({ hour: nextTickClock });
+    const nextTickAt = moment(todayStart).set({ hour: nextTickClock });
     if (nextTickAt.isAfter(now)) {
       return nextTickAt;
     }

@@ -15,7 +15,7 @@ export const createReferral = async (userId) => {
   entity.userId = userId;
   await getRepository(ReferralCode).insert(entity);
   return entity;
-}
+};
 
 const getAccountForUser = async (userId) => {
   // const user = await getRepository(User).findOne({ id: userId });
@@ -46,7 +46,7 @@ const getAccountForUser = async (userId) => {
   };
 
   return result;
-}
+};
 
 export const getAccount = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');

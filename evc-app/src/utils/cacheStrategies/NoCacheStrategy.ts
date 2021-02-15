@@ -1,4 +1,4 @@
-import { ICacheStrategy } from "./ICacheStrategy";
+import { ICacheStrategy } from './ICacheStrategy';
 
 
 export class NoCacheStrategy implements ICacheStrategy {

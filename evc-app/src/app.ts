@@ -75,7 +75,7 @@ export function createAppInstance() {
   const parseJSON = bodyParser.json({ limit: '4mb' });
   const parseRaw = bodyParser.raw({ type: '*/*' });
   app.use((req, res, next) => {
-    shouldJsonParseRequest(req) ? parseJSON(req, res, next) : parseRaw(req, res, next)
+    shouldJsonParseRequest(req) ? parseJSON(req, res, next) : parseRaw(req, res, next);
   });
 
   app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
@@ -108,7 +108,7 @@ export function createAppInstance() {
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
     next();
-  })
+  });
   // app.use(passport.initialize());
   // app.use(passport.session());
 

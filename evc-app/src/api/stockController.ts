@@ -35,7 +35,7 @@ import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLastPublishInformation } from '../entity/views/StockLastPublishInformation';
-import { StockGuestPublishInformation } from "../entity/views/StockGuestPublishInformation";
+import { StockGuestPublishInformation } from '../entity/views/StockGuestPublishInformation';
 import * as _ from 'lodash';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
@@ -176,7 +176,11 @@ export const createStock = handlerWrapper(async (req, res) => {
   Object.assign(stock, other);
   stock.symbol = stock.symbol.toUpperCase();
   if (tags?.length) {
-    stock.tags = await getRepository(StockTag).find({ id: In(tags) });
+    stock.tags = await getRepository(StockTag).find({
+      where: {
+        id: In(tags)
+      }
+    });
   }
 
   await getRepository(Stock).insert(stock);
@@ -195,7 +199,11 @@ export const updateStock = handlerWrapper(async (req, res) => {
   assert(stock, 404);
   Object.assign(stock, other);
   if (tags?.length) {
-    stock.tags = await getRepository(StockTag).find({ id: In(tags) });
+    stock.tags = await getRepository(StockTag).find({
+      where: {
+        id: In(tags)
+      }
+    });
   }
 
   await repo.save(stock);
@@ -258,7 +266,7 @@ export const getStockEarningToday = handlerWrapper(async (req, res) => {
       year: 'DESC',
       quarter: 'DESC'
     }
-  })
+  });
   res.json(last);
 });
 
@@ -323,7 +331,7 @@ export const getStockPrice = handlerWrapper(async (req, res) => {
   const result = {
     price: data?.price,
     time: data?.time
-  }
+  };
   res.json(result);
 });
 

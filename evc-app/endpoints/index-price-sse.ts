@@ -13,7 +13,7 @@ import { assert } from '../src/utils/assert';
 
 const JOB_NAME = 'price-sse';
 const SYMBOL_BATCH_SIZE = 50;
-const CLIENT_EVENT_FREQUENCY = 5 * 1000; //5 seconds
+const CLIENT_EVENT_FREQUENCY = 5 * 1000; // 5 seconds
 const DB_UPDATE_FREQUENCY = 5 * 1000;  // 5 seconds.
 const redisPricePublisher = new RedisRealtimePricePubService();
 let symbolSourceMap: Map<string, Subject<StockLastPriceInfo>>;
@@ -28,9 +28,9 @@ function createSourceForClientPublish() {
       const event = {
         type: 'price',
         data: p
-      }
+      };
       redisPricePublisher.publish(event);
-    })
+    });
   return source$;
 }
 
@@ -68,7 +68,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
         symbol,
         price,
         updatedAt: new Date(time)
-      }
+      };
     });
 
   if (values.length) {
@@ -128,7 +128,7 @@ function createSseForSymbols(symbols: string[]) {
 async function sleep(ms): Promise<void> {
   return new Promise(res => {
     setTimeout(() => res(), ms);
-  })
+  });
 }
 
 start(JOB_NAME, async () => {

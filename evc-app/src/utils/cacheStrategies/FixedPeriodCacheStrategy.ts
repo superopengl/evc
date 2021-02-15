@@ -1,5 +1,5 @@
 import * as ms from 'ms';
-import { ICacheStrategy } from "./ICacheStrategy";
+import { ICacheStrategy } from './ICacheStrategy';
 
 
 export class FixedPeriodCacheStrategy implements ICacheStrategy {

@@ -84,5 +84,5 @@ RUN npm uninstall -g pnpm
 # Start the portal website
 WORKDIR /usr/portal/app
 # CMD node index.js
-ENTRYPOINT node index.js
+CMD node index.js
 

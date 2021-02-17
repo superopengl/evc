@@ -1,4 +1,4 @@
-FROM node:12-slim
+FROM node:14-slim
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
@@ -63,6 +63,7 @@ ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV REACT_APP_EVC_API_ENDPOINT=/api/v1
 ENV REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID=305430338996-fmmjqqkon9hvngpctccis9t1biqtqile.apps.googleusercontent.com
+ENV NODE_OPTIONS=--max_old_space_size=4096
 
 # Build app
 COPY ./evc-app /usr/portal/app
@@ -79,7 +80,7 @@ RUN pnpm run compile:prod
 RUN cp -rf /usr/portal/web/build /usr/portal/app/www
 RUN rm -rf /usr/portal/web
 
-RUN npm uninstall -g pnpm
+# RUN npm uninstall -g pnpm
 
 # Start the portal website
 WORKDIR /usr/portal/app

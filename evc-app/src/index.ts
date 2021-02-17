@@ -12,12 +12,10 @@ function validateEnvVars() {
     'GIT_HASH',
     'EVC_WEB_DOMAIN_NAME',
     'EVC_API_DOMAIN_NAME',
-    'EVC_S3_BUCKET',
-    'EVC_FILE_PREFIX',
     'EVC_GOOGLE_SSO_CLIENT_SECRET',
   ];
 
-  const missingVars = requiredEnvVars.map(v => process.env[v]).filter(x => !x);
+  const missingVars = requiredEnvVars.filter(x => !process.env[x]);
 
   if (missingVars.length) {
     throw new Error(`Env vars missing: ${missingVars.join(', ')}`);

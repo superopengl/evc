@@ -4,6 +4,8 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
+@Index('idx_resistance_symbol_lo', ['symbol', 'lo'])
+@Index('idx_resistance_symbol_created', ['symbol', 'createdAt'])
 export class StockResistance {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -26,7 +28,4 @@ export class StockResistance {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   hi: number;
-
-  @Column({default: false})
-  published: boolean;
 }

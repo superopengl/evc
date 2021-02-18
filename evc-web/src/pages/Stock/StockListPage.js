@@ -139,6 +139,11 @@ const StockListPage = (props) => {
   const handleToggleUnderValued = () => {
     searchByQueryInfo({ ...queryInfo, page: 1, underValued: !queryInfo.underValued });
   }
+
+  const handleToggleInValued = () => {
+    searchByQueryInfo({ ...queryInfo, page: 1, inValued: !queryInfo.inValued });
+  }
+
   return (
     <LayoutStyled>
       <HomeHeader>
@@ -152,6 +157,9 @@ const StockListPage = (props) => {
             <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
               {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
             </UnderButton>
+            <Button type="default" onClick={handleToggleInValued}>
+              {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
+            </Button>
           </Space>
           <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />

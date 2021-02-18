@@ -34,7 +34,7 @@ import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
-import { StockLastPublishInformation } from '../entity/views/StockLastPublishInformation';
+import { StockLatestStockInformation } from '../entity/views/StockLatestStockInformation';
 import { StockGuestPublishInformation } from '../entity/views/StockGuestPublishInformation';
 import * as _ from 'lodash';
 
@@ -62,7 +62,7 @@ export const getStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
 
   let stock: any;
-  const entityClass = true ? StockLastPublishInformation : StockGuestPublishInformation;
+  const entityClass = true ? StockLatestStockInformation : StockGuestPublishInformation;
 
   if (role === Role.Client) {
     const result = await getRepository(entityClass)

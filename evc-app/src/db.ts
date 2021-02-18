@@ -1,7 +1,7 @@
 import { Connection, createConnection, getConnectionManager } from 'typeorm';
 import { getManager } from 'typeorm';
 import { StockComputedPe90 } from './entity/views/StockComputedPe90';
-import { StockLastPublishInformation } from './entity/views/StockLastPublishInformation';
+import { StockLatestStockInformation } from './entity/views/StockLatestStockInformation';
 import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
 import { StockGuestPublishInformation } from './entity/views/StockGuestPublishInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
@@ -27,7 +27,7 @@ async function syncDatabaseSchema(connection: Connection) {
     * so as to let typeorm always create fresh views when app starts up.
     */
    const views = [
-      StockLastPublishInformation,
+      StockLatestStockInformation,
       StockGuestPublishInformation,
       SubscriptionPaymentBalanceInformation,
       StockComputedPe90,

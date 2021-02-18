@@ -356,7 +356,6 @@ paths:
         - name: symbol
           in: path
           type: string
-          format: uuid
           required: true
       responses:
         200:
@@ -367,11 +366,21 @@ paths:
         - name: symbol
           in: path
           type: string
-          format: uuid
           required: true
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/exists:
+    get:
+      operationId: existsStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/insider:
     get:
       operationId: getStockInsider

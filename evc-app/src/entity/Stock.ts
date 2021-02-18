@@ -9,9 +9,6 @@ export class Stock {
   @Column()
   company: string;
 
-  @Column({nullable: true})
-  sector: string;
-
   @ManyToMany(type => StockTag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: StockTag[];

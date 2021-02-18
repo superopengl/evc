@@ -84,6 +84,17 @@ export const getStock = handlerWrapper(async (req, res) => {
   res.json(stock);
 });
 
+export const existsStock = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const { user } = req as any;
+  const symbol = req.params.symbol.toUpperCase();
+
+  const result = await getRepository(Stock).findOne(symbol);
+  const exists = !!result;
+
+  res.json(exists);
+});
+
 
 export const getWatchList = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
@@ -171,10 +182,10 @@ export const createStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
-  const { tags, ...other } = req.body;
+  const { tags, symbol, company } = req.body;
 
-  Object.assign(stock, other);
-  stock.symbol = stock.symbol.toUpperCase();
+  stock.symbol = symbol.toUpperCase();
+  stock.company = company;
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({
       where: {

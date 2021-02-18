@@ -8,14 +8,18 @@ import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { StockName } from './StockName';
+import { filter, debounceTime } from 'rxjs/operators';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 export const StockSearchInput = (props) => {
   const { onChange, excluding, traceSearch, mode, style, value } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
+  const context = React.useContext(GlobalContext);
 
   const loadEntities = async () => {
+    debugger;
     const stocks = await listStock();
     const sorted = _.chain(stocks)
       .filter(s => !excluding.includes(s.symbol))
@@ -23,9 +27,20 @@ export const StockSearchInput = (props) => {
       .value();
     setList(sorted);
   }
+  
+  const subscribeStockListUpdate = () => {
+    return context.event$.pipe(
+      filter(e => e.type === 'stock.created')
+    )
+    .subscribe(() => loadEntities());
+  }
 
   React.useEffect(() => {
     loadEntities();
+    const subscription = subscribeStockListUpdate();
+    return () => {
+      subscription.unsubscribe();
+    }
   }, []);
 
 

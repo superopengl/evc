@@ -10,6 +10,7 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { createStock, existsStock } from 'services/stockService';
 import PropTypes from 'prop-types';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto 0 auto;
@@ -35,6 +36,7 @@ const CreateStockModal = props => {
   const { visible, onOk, onCancel } = props;
   const [sending, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
+  const context = React.useContext(GlobalContext);
 
   React.useEffect(() => {
     setModalVisible(visible);
@@ -42,6 +44,7 @@ const CreateStockModal = props => {
 
 
   const validateExsitsSymbol = async (rule, symbol) => {
+    return;
     if (!symbol) {
       throw new Error(`Please input stock symbol`);
     }
@@ -65,6 +68,8 @@ const CreateStockModal = props => {
       setLoading(true);
       await createStock(values);
       onOk();
+
+      context.event$.next({ type: 'stock.created' });
     } catch {
       setLoading(false);
     }
@@ -88,7 +93,7 @@ const CreateStockModal = props => {
           <Input placeholder="Apple Inc." maxLength="100" disabled={sending} />
         </Form.Item>
         <Form.Item>
-          <Space style={{width: '100%', justifyContent: 'flex-end'}}>
+          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button block onClick={onCancel}>Cancel</Button>
             <Button block type="primary" htmlType="submit" disabled={sending}>Create Stock</Button>
           </Space>

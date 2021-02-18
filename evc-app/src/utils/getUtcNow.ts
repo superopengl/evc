@@ -5,3 +5,4 @@ export const getUtcNow = (): Date => {
   const utc = new Date(now.getTime() + timezoneOffset);
   return utc;
 };
+

@@ -150,16 +150,19 @@ const StockListPage = (props) => {
       </HomeHeader>
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
-          <Space>
-            <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
-              {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Space>
+              <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
+                {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
             </OverButton>
-            <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
-              {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
+              <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
+                {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
             </UnderButton>
-            <Button type="default" onClick={handleToggleInValued}>
-              {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
+              <Button type="default" onClick={handleToggleInValued}>
+                {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
+            </Space>
+            <Button type="primary" ghost icon={<PlusOutlined/>}>New Stock</Button>
           </Space>
           <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />

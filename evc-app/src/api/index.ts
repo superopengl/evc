@@ -6,6 +6,7 @@ export * from './contactController';
 export * from './statsController';
 export * from './blogController';
 export * from './stockController';
+export * from './stockPleaController';
 export * from './subscriptionController';
 export * from './eventController';
 export * from './debugController';

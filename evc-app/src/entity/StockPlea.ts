@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, Index } from 'typeorm';
 
 
 @Entity()
@@ -13,5 +13,6 @@ export class StockPlea {
   deletedAt: Date;
 
   @Column({ default: 1 })
+  @Index()
   count: number;
 }

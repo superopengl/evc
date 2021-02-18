@@ -19,7 +19,6 @@ export const StockSearchInput = (props) => {
   const context = React.useContext(GlobalContext);
 
   const loadEntities = async () => {
-    debugger;
     const stocks = await listStock();
     const sorted = _.chain(stocks)
       .filter(s => !excluding.includes(s.symbol))

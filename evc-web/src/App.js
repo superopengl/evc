@@ -30,7 +30,7 @@ import PortfolioFormPage from 'pages/Portfolio/PortfolioFormPage';
 import DeclarationPage from 'pages/DeclarationPage';
 import ClientHomePage from 'pages/ClientHome/ClientHomePage';
 import AdminStatsPage from 'pages/AdminStats/AdminStatsPage';
-import AdminBoardPage from 'pages/AdminBoard/AdminBoardPage';
+import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
@@ -105,7 +105,7 @@ class App extends React.Component {
       <GlobalContext.Provider value={this.state}>
         <BrowserRouter basename="/">
           <Switch>
-            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? StockWatchListPage : StockListPage} />
+            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? StockWatchListPage : AdminDashboardPage} />
             <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />

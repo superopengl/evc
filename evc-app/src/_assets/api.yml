@@ -286,6 +286,12 @@ paths:
       responses:
         200:
           description: OK
+  /dashboard:
+    get:
+      operationId: getAdminDashboard
+      responses:
+        200:
+          description: OK          
   /blog/:
     get:
       operationId: listBlog

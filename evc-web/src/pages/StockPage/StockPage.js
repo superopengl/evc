@@ -174,9 +174,7 @@ const StockPage = (props) => {
                 <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
               </Col>
               <Col flex="auto">
-                <Card size="small" type="inner" title="Chart">
-                  <StockChart symbol={stock.symbol} period="1d" interval="5m" />
-                </Card>
+                <StockChart symbol={stock.symbol} period="1d" interval="5m" />
               </Col>
             </Row>
             {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
@@ -210,12 +208,12 @@ const StockPage = (props) => {
         footer={
           <Space direction="vertical" size="small">
             {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
-                <Tag color={v.color}>{k}</Tag>
-                {v.message}
-              </div>)}
+              <Tag color={v.color}>{k}</Tag>
+              {v.message}
+            </div>)}
           </Space>
         }
-        footerStyle={{padding: 24}}
+        footerStyle={{ padding: 24 }}
       >
         {stock && <StockInsiderPanel symbol={stock.symbol} />}
       </Drawer>

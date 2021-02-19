@@ -128,7 +128,8 @@ const HomeHeaderRaw = props => {
             {isGuest && <Menu.Item key="login"><Link to="/login">Log In</Link></Menu.Item>}
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><Link to="/board">Board</Link></Menu.Item>} */}
             {/* {isClient && <Menu.Item key="landing"><Link to="/">Home</Link></Menu.Item>} */}
-            {isAdmin && <Menu.Item key="stocks"><Link to="/">Stocks</Link></Menu.Item>}
+            {isAdmin && <Menu.Item key="dashboard"><Link to="/">Dashboard</Link></Menu.Item>}
+            {isAdmin && <Menu.Item key="stocks"><Link to="/stock">Stocks</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="stock"><Link to="/stock">Stocks</Link></Menu.Item>} */}
             {/* {isClient && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>} */}

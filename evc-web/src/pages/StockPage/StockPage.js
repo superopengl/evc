@@ -1,31 +1,14 @@
-import { Button, Layout, Modal, Space, Typography, Row, Col, Card, PageHeader, Drawer, Tag } from 'antd';
+import { Button, Layout, Space, Typography, Row, Col, Card, PageHeader, Drawer, Tag } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { listTask } from 'services/taskService';
-import { listPortfolio } from 'services/portfolioService';
-import { EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Divider } from 'antd';
-import MyTaskList from 'pages/MyTask/MyTaskList';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
-import { groupBy } from 'lodash';
-import { Empty } from 'antd';
 import { Loading } from 'components/Loading';
-import { Tooltip } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
-import ProfileForm from 'pages/Profile/ProfileForm';
-import { isProfileComplete } from 'util/isProfileComplete';
-import { StockSearchInput } from 'components/StockSearchInput';
-import { searchSingleStock, updateStock, getStock, unwatchStock, watchStock } from 'services/stockService';
-import { List } from 'antd';
-import StockCardClientSearch from 'components/StockCardClientSearch';
-import { reactLocalStorage } from 'reactjs-localstorage';
+import { updateStock, getStock, unwatchStock, watchStock } from 'services/stockService';
 import { StockName } from 'components/StockName';
-import { DeleteOutlined, EditOutlined, LockFilled, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/icons';
+import { LockFilled, SyncOutlined } from '@ant-design/icons';
 import StockInfoCard from 'components/StockInfoCard';
-import { FaCrown } from 'react-icons/fa';
-import { IconContext } from "react-icons";
 import StockInsiderPanel from 'components/StockInsiderPanel';
 import StockNewsPanel from 'components/StockNewsPanel';
 import StockEarningsPanel from 'components/StockEarningsPanel';
@@ -35,10 +18,8 @@ import AdminStockPublishPanel from '../Stock/AdminStockPublishPanel';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
 import StockTagSelect from 'components/StockTagSelect';
-import HeaderStockSearch from 'components/HeaderStockSearch';
 import INSIDER_LEGEND_INFOS from '../../def/insiderLegendDef';
-const { Paragraph, Text } = Typography;
-const { Header, Content, Sider } = Layout;
+const { Text } = Typography;
 
 const ContainerStyled = styled.div`
   margin: 6rem auto 2rem auto;
@@ -70,11 +51,6 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
-const StockPanelContainer = styled.div`
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 4px;
-  padding: 1rem;
-`;
 
 const MemberOnlyIcon = () => <Text type="danger"><LockFilled /></Text>
 

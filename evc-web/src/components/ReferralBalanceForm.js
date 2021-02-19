@@ -1,31 +1,10 @@
 import { Button, Layout, Form, Space, Typography, Switch, Row, Col } from 'antd';
-import HomeHeader from 'components/HomeHeader';
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { listTask } from 'services/taskService';
-import { listPortfolio } from 'services/portfolioService';
-import { CopyOutlined, PlusOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { PlusOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Divider } from 'antd';
-import MyTaskList from 'pages/MyTask/MyTaskList';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
-import { groupBy } from 'lodash';
-import { Empty, List } from 'antd';
-import { Loading } from 'components/Loading';
-import { Tooltip } from 'antd';
-import { GlobalContext } from 'contexts/GlobalContext';
-import ProfileForm from 'pages/Profile/ProfileForm';
-import { isProfileComplete } from 'util/isProfileComplete';
-import { StockSearchInput } from 'components/StockSearchInput';
-import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { SubscriptionCard } from 'components/SubscriptionCard';
-import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
-import { getSubscriptionName } from 'util/getSubscriptionName';
-import { Alert } from 'antd';
-import PaymentModal from 'components/checkout/PaymentModal';
-import { StockName } from 'components/StockName';
-import { adjustBalance, getAccount, getMyAccount, listUserBalanceHistory } from 'services/accountService';
+import { adjustBalance, getAccount, listUserBalanceHistory } from 'services/accountService';
 import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
 import MoneyAmount from './MoneyAmount';
@@ -35,7 +14,7 @@ import { saveReferralUserPolicy } from 'services/referralPolicyService';
 import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
 import { TimeAgo } from 'components/TimeAgo';
 
-const { Paragraph, Text, Title, Link: LinkText } = Typography;
+const { Paragraph, Text, Title } = Typography;
 
 
 const Container = styled.div`
@@ -45,38 +24,13 @@ const Container = styled.div`
 }
 `;
 
-const span = {
-  xs: 24,
-  sm: 12,
-  md: 12,
-  lg: 12,
-  xl: 6,
-  xxl: 6
-};
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
 
-  .task-count .ant-badge-count {
-    background-color: #15be53;
-    color: #eeeeee;
-    // box-shadow: 0 0 0 1px #15be53 inset;
-  }
-`;
 
-const StyledRow = styled(Row)`
-  margin-top: 20px;
-`;
-
-const StyledCol = styled(Col)`
-  margin-bottom: 20px;
-`;
 
 const ReferralBalanceForm = (props) => {
 
-  const { user, onOK } = props;
+  const { user } = props;
   const [loading, setLoading] = React.useState(true);
   const [balanceHistoryVisible, setBalanceHistoryVisible] = React.useState(false);
   const [account, setAccount] = React.useState();

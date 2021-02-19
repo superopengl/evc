@@ -16,59 +16,74 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
   const pleas = await getRepository(StockPlea).find({
     order: {
       count: 'DESC'
-    }
+    },
+    select: [
+      'symbol',
+      'count'
+    ]
   });
 
   const noFairValues = await getManager()
     .createQueryBuilder()
-    .from(StockLastFairValue, 'v')
-    .where('"fairValueLo" IS NULL')
-    .orderBy('symbol', 'ASC')
-    .select('symbol')
-    .limit(50)
-    .execute();
+    .from(q => q
+      .from(StockLastFairValue, 'v')
+      .where('"fairValueLo" IS NULL')
+      .select('symbol'),
+      'sub')
+    .select('array_agg(symbol) as value')
+    .getRawOne();
 
-  const oneSupports = await getRepository(StockSupport)
+  const oneSupports = await getManager()
     .createQueryBuilder()
-    .groupBy('symbol')
-    .having(`COUNT(*) = 1`)
-    .select('symbol')
-    .orderBy('symbol', 'ASC')
-    .limit(50)
-    .execute();
+    .from(q => q
+      .from(StockSupport, 'x')
+      .groupBy('symbol')
+      .having(`COUNT(*) = 1`)
+      .select('symbol'),
+      'sub'
+    )
+    .select('array_agg(symbol) as value')
+    .getRawOne();
 
-  const oneResistances = await getRepository(StockResistance)
+  const oneResistances = await getManager()
     .createQueryBuilder()
-    .groupBy('symbol')
-    .having(`COUNT(*) = 1`)
-    .select('symbol')
-    .orderBy('symbol', 'ASC')
-    .limit(50)
-    .execute();
+    .from(q => q
+      .from(StockResistance, 'x')
+      .groupBy('symbol')
+      .having(`COUNT(*) = 1`)
+      .select('symbol'),
+      'sub'
+    )
+    .select('array_agg(symbol) as value')
+    .getRawOne();
 
   const noSupports = await getManager()
     .createQueryBuilder()
-    .from(StockLatestStockInformation, 'v')
-    .where('supports IS NULL')
-    .orderBy('symbol', 'ASC')
-    .limit(50)
-    .execute();
+    .from(q => q
+      .from(StockLatestStockInformation, 'v')
+      .where('supports IS NULL')
+      .select('symbol'),
+      'sub')
+    .select('array_agg(symbol) as value')
+    .getRawOne();
 
   const noResistances = await getManager()
     .createQueryBuilder()
-    .from(StockLatestStockInformation, 'v')
-    .where('resistances IS NULL')
-    .orderBy('symbol', 'ASC')
-    .limit(50)
-    .execute();
+    .from(q => q
+      .from(StockLatestStockInformation, 'v')
+      .where('resistances IS NULL')
+      .select('symbol'),
+      'sub')
+    .select('array_agg(symbol) as value')
+    .getRawOne();
 
   const data = {
     pleas,
-    noFairValues,
-    noSupports,
-    noResistances,
-    oneSupports,
-    oneResistances,
+    noFairValues : noFairValues.value,
+    noSupports: noSupports.value,
+    noResistances: noResistances.value,
+    oneSupports: oneSupports.value,
+    oneResistances: oneResistances.value,
   };
 
   res.json(data);

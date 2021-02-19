@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Modal } from 'antd';
+import { Typography, Layout, Row, Col, Card, Badge, Alert } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import StockList from '../../components/StockList';
 import { getWatchList } from 'services/stockService';
@@ -11,13 +11,17 @@ import { StarOutlined, StarFilled } from '@ant-design/icons';
 import { notify } from 'util/notify';
 import { getDashboard } from 'services/dashboardService';
 
-const { Paragraph } = Typography;
+const { Text, Title, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
 padding: 0 1rem 4rem 1rem;
 width: 100%;
 // max-width: 600px;
+
+.ant-alert {
+  margin-bottom: 10px;
+}
 `;
 
 const LayoutStyled = styled(Layout)`
@@ -31,19 +35,32 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
+const StyledBadge = styled(Badge)`
+
+  .ant-badge-count {
+    color: #999;
+    background-color: #fff;
+    box-shadow: 0 0 0 1px #d9d9d9 inset;
+  }
+`;
+const StockTile = props => <StyledBadge count={props.count}>
+  <Card size="small">
+    {props.symbol}
+  </Card>
+</StyledBadge>
+
 const AdminDashboardPage = (props) => {
 
-  const [list, setList] = React.useState([]);
+  const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
   const loadList = async () => {
     try {
       setLoading(true);
-      const resp = await getDashboard();
+      const data = await getDashboard();
 
       ReactDOM.unstable_batchedUpdates(() => {
-        const { data } = resp;
-        setList(data ?? []);
+        setData(data);
         setLoading(false);
       });
     } catch {
@@ -65,9 +82,26 @@ const AdminDashboardPage = (props) => {
       </HomeHeader>
       <ContainerStyled>
 
-        xxx
-        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">All Stocks</Link> to find all the stocks our platform supports</Paragraph>
-        <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
+        <Row gutter={[20, 20]}>
+          <Col>
+            {data.pleas?.map(x => <Alert type="info" showIcon key={x.symbol} message={<><Text strong>{x.symbol}</Text> has {x.count} requests.</>} />)}
+          </Col>
+          <Col>
+            {data.noFairValues?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no fair value.</>} />)}
+          </Col>
+          <Col>
+            {data.noSupports?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no support.</>} />)}
+          </Col>
+          <Col>
+            {data.noResistances?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no resistance.</>} />)}
+          </Col>
+          <Col>
+            {data.oneSupports?.map(x => <Alert type="warning" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has only one support.</>} />)}
+          </Col>
+          <Col>
+            {data.oneResistances?.map(x => <Alert type="warning" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has only one resistance.</>} />)}
+          </Col>
+        </Row>
       </ContainerStyled>
     </LayoutStyled>
   );

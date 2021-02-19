@@ -23,15 +23,6 @@ export const submitStockPlea = handlerWrapper((req, res) => {
   res.json();
 });
 
-export const existsStockPlea = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const symbol = req.params.symbol.toUpperCase();
-
-  await getRepository(StockPlea).softDelete(symbol);
-
-  res.json();
-});
-
 export const listStockPleas = handlerWrapper(async (req, res) => {
   const list = await getRepository(StockPlea).find({
     order: {

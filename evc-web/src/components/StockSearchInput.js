@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Select } from 'antd';
-import { searchStock, listStock, getStock, incrementStock } from 'services/stockService';
+import { Select, Button, Typography } from 'antd';
+import { searchStock, listStock, submitStockPlea, incrementStock } from 'services/stockService';
 import Highlighter from "react-highlight-words";
 import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
@@ -10,6 +10,9 @@ import PropTypes from 'prop-types';
 import { StockName } from './StockName';
 import { filter, debounceTime } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { notify } from 'util/notify';
+
+const {Text} = Typography;
 
 export const StockSearchInput = (props) => {
   const { onChange, excluding, traceSearch, mode, style, value } = props;
@@ -44,6 +47,7 @@ export const StockSearchInput = (props) => {
 
 
   const handleChange = async (symbol) => {
+    debugger;
     setText('');
     if (symbol) {
       if (traceSearch) {
@@ -63,6 +67,13 @@ export const StockSearchInput = (props) => {
     setText(text);
   }
 
+  const handleStockPlea = async () => {
+    const symbol = text?.trim().toUpperCase();
+    setText('');
+    await submitStockPlea(symbol);
+    notify.success(<>Successfully submitted the request to support stock <Text strong>{symbol}</Text></>)
+  }
+
   return (
     <Select
       size="large"
@@ -73,6 +84,7 @@ export const StockSearchInput = (props) => {
       placeholder="Search for symbols or companies"
       onChange={handleChange}
       onSearch={handleSearch}
+      open={!!text}
       style={{ textAlign: 'left', width: '100%', ...style }}
       loading={loading}
       // showArrow={false}
@@ -82,6 +94,7 @@ export const StockSearchInput = (props) => {
         const { symbol, company } = option.data;
         return symbol.toLowerCase().includes(match) || company.toLowerCase().includes(match);
       }}
+      notFoundContent={<Button block onClick={handleStockPlea}>Request to support stock <strong style={{marginLeft: 4}}>{text.toUpperCase()}</strong></Button>}
     >
       {list.map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         {/* <Highlighter highlightClassName="search-highlighting"

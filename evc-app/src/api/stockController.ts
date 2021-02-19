@@ -37,6 +37,7 @@ import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLatestStockInformation } from '../entity/views/StockLatestStockInformation';
 import { StockGuestPublishInformation } from '../entity/views/StockGuestPublishInformation';
 import * as _ from 'lodash';
+import { StockPlea } from '../entity/StockPlea';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -227,6 +228,9 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
   const repo = getRepository(Stock);
   await repo.delete(symbol);
+
+  await getRepository(StockPlea).softDelete(symbol);
+
   res.json();
 });
 

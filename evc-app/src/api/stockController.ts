@@ -158,7 +158,6 @@ export const listHotStock = handlerWrapper(async (req, res) => {
       .orderBy('h.count', 'DESC')
       .limit(limit), 'h', `si.symbol = h.symbol`
     )
-    .where(`si."publishedAt" IS NOT NULL`)
     .orderBy('h.count', 'DESC')
     .select([
       'si.*',

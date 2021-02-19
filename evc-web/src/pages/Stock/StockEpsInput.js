@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DatePicker, InputNumber, Space, Button } from 'antd';
+import { DatePicker, InputNumber, Space, Button, Form } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { CheckOutlined } from '@ant-design/icons';
@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { Select } from 'antd';
 
 export const StockEpsInput = (props) => {
-  const { onChange, onSave, value: propValue, disabled} = props;
+  const { onChange, onSave, value: propValue, disabled } = props;
   const [year, setYear] = React.useState(propValue?.year || new Date().getFullYear());
   const [quarter, setQuarter] = React.useState(propValue?.quarter);
   const [value, setValue] = React.useState(propValue?.value);
@@ -36,31 +36,40 @@ export const StockEpsInput = (props) => {
     });
   }
 
-  const handleSave = () => {
-    onSave({
-      year,
-      quarter,
-      value
-    });
+  const handleSave = (values) => {
+    onSave(values);
     setQuarter(null);
     setValue(null);
   }
 
   const isValidValue = () => {
-    return _.isNumber(year) &&  _.isNumber(quarter) &&  _.isNumber(value);
+    return _.isNumber(year) && _.isNumber(quarter) && _.isNumber(value);
+  }
+
+  const handleReportPeriod = () => {
+
   }
 
   return <Space>
     {/* <DatePicker value={year ? moment(`${year}/7/1`) : null} onChange={handleChangeYear} picker="year" disabled={disabled}/> */}
-    <InputNumber value={year} onChange={handleChangeYear} min={1970} max={new Date().getFullYear()} disabled={disabled}/>
+    {/* <InputNumber value={year} onChange={handleChangeYear} min={1970} max={new Date().getFullYear()} disabled={disabled}/>
     <Select value={quarter} onChange={handleChangeQuarter} disabled={disabled} style={{minWidth: '4rem'}}>
       <Select.Option value={1}>Q1</Select.Option>
       <Select.Option value={2}>Q2</Select.Option>
       <Select.Option value={3}>Q3</Select.Option>
       <Select.Option value={4}>Q4</Select.Option>
-    </Select>
-    <InputNumber value={value} onChange={handleChangeValue} disabled={disabled}/>
-    <Button type="primary" icon={<CheckOutlined />} onClick={handleSave} disabled={disabled || !isValidValue()} />
+    </Select> */}
+    <Form layout="inline" onFinish={handleSave}>
+      <Form.Item label="" name="period" rules={[{ required: true, message: ' ' }]}>
+        <DatePicker onChange={handleReportPeriod} picker="quarter" disabled={disabled} />
+      </Form.Item>
+      <Form.Item label="" name="value" rules={[{ required: true, message : ' ' }]}>
+        <InputNumber disabled={disabled} />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" icon={<CheckOutlined />} disabled={disabled} />
+      </Form.Item>
+    </Form>
   </Space>
 }
 

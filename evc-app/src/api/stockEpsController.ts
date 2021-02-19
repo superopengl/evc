@@ -3,6 +3,7 @@ import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockEps } from '../entity/StockEps';
 import * as stockEpsService from '../services/stockEpsService';
+import * as moment from 'moment';
 
 export const listStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -14,8 +15,7 @@ export const listStockEps = handlerWrapper(async (req, res) => {
       symbol
     },
     order: {
-      year: 'DESC',
-      quarter: 'DESC'
+      reportDate: 'DESC',
     },
     take: limit
   });
@@ -26,14 +26,14 @@ export const listStockEps = handlerWrapper(async (req, res) => {
 export const saveStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
-  const { year, quarter, value } = req.body;
+  const { period, value } = req.body;
+  const reportDate = moment(period);
   const entity = new StockEps();
-  Object.assign(entity, {
-    symbol,
-    year,
-    quarter,
-    value
-  });
+  entity.symbol = symbol;
+  entity.reportDate = reportDate.format('YYYY-MM-DD');
+  entity.year = reportDate.year();
+  entity.quarter = reportDate.quarter();
+  entity.value = value;
 
   await getRepository(StockEps).insert(entity);
 

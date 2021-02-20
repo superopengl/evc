@@ -4,16 +4,12 @@ import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Input } from
 import HomeHeader from 'components/HomeHeader';
 import Text from 'antd/lib/typography/Text';
 import {
-  DeleteOutlined, EditOutlined, StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
+  StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
 } from '@ant-design/icons';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
-import { notify } from 'util/notify';
-import cronstrue from 'cronstrue';
-import * as cronParser from 'cron-parser';
 import MoneyAmount from 'components/MoneyAmount';
 import { enableReferralGlobalPolicy, listReferalGlobalPolicies, saveReferralGlobalPolicy } from 'services/referralPolicyService';
 import { Form } from 'antd';
@@ -28,7 +24,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
-const { Title, Link: TextLink } = Typography;
+const { Title } = Typography;
 
 const ContainerStyled = styled.div`
   margin: 6rem 1rem 2rem 1rem;
@@ -51,7 +47,7 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
-const ReferralGlobalPolicyListPage = (props) => {
+const ReferralGlobalPolicyListPage = () => {
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -76,7 +72,7 @@ const ReferralGlobalPolicyListPage = (props) => {
     {
       title: 'End',
       dataIndex: 'end',
-      render: (value, item) => <TimeAgo value={value} accurate={true} />
+      render: (value) => <TimeAgo value={value} accurate={true} />
     },
     {
       title: 'Active',
@@ -196,7 +192,7 @@ const ReferralGlobalPolicyListPage = (props) => {
     console.log(data);
   };
 
-  const handleSelectEvent = (event, e) => {
+  const handleSelectEvent = (event) => {
     const {amount, start, end, description, active} = event;
     setNewPolicy({
       amount,

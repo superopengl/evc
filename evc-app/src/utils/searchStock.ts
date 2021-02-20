@@ -56,7 +56,7 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
   if (inValued) {
     orClause.push(`(s."isOver" IS FALSE AND s."isUnder" IS FALSE)`);
   }
-  if(orClause.length) {
+  if (orClause.length) {
     query = query.andWhere(`(${orClause.join(' OR ')})`);
   }
 

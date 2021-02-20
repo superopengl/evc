@@ -6,7 +6,7 @@ import HomeHeader from 'components/HomeHeader';
 import StockList from '../../components/StockList';
 import { getWatchList } from 'services/stockService';
 import { Link, withRouter } from 'react-router-dom';
-import { StockSearchInput } from 'components/StockSearchInput';
+import { Loading } from 'components/Loading';
 import { StarOutlined, StarFilled } from '@ant-design/icons';
 import { notify } from 'util/notify';
 import { getDashboard } from 'services/dashboardService';
@@ -81,27 +81,28 @@ const AdminDashboardPage = (props) => {
       <HomeHeader>
       </HomeHeader>
       <ContainerStyled>
-
-        <Row gutter={[20, 20]}>
-          <Col>
-            {data.pleas?.map(x => <Alert type="info" showIcon key={x.symbol} message={<><Text strong>{x.symbol}</Text> has {x.count} requests.</>} />)}
-          </Col>
-          <Col>
-            {data.noFairValues?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no fair value.</>} />)}
-          </Col>
-          <Col>
-            {data.noSupports?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no support.</>} />)}
-          </Col>
-          <Col>
-            {data.noResistances?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no resistance.</>} />)}
-          </Col>
-          <Col>
-            {data.oneSupports?.map(x => <Alert type="warning" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has only one support.</>} />)}
-          </Col>
-          <Col>
-            {data.oneResistances?.map(x => <Alert type="warning" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has only one resistance.</>} />)}
-          </Col>
-        </Row>
+        <Loading loading={loading}>
+          <Row gutter={[20, 20]}>
+            <Col>
+              {data.pleas?.map(x => <Alert type="info" showIcon key={x.symbol} message={<><Text strong>{x.symbol}</Text> has {x.count} requests.</>} />)}
+            </Col>
+            <Col>
+              {data.noFairValues?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no fair value.</>} />)}
+            </Col>
+            <Col>
+              {data.noSupports?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no support.</>} />)}
+            </Col>
+            <Col>
+              {data.noResistances?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no resistance.</>} />)}
+            </Col>
+            <Col>
+              {data.oneSupports?.map(x => <Alert type="warning" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has only one support.</>} />)}
+            </Col>
+            <Col>
+              {data.oneResistances?.map(x => <Alert type="warning" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has only one resistance.</>} />)}
+            </Col>
+          </Row>
+        </Loading>
       </ContainerStyled>
     </LayoutStyled>
   );

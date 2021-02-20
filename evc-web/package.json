@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ant-design/charts": "^1.0.17",
     "@ant-design/icons": "^4.5.0",
     "@craco/craco": "^5.9.0",
     "@react-hook/window-size": "^3.0.7",

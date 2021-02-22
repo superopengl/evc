@@ -8,19 +8,19 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(Stock, 's')
-    .leftJoin(StockHistoricalTtmEps, 'eps', `s.symbol = eps.symbol`)
+    .leftJoin(StockHistoricalTtmEps, 'eps', 's.symbol = eps.symbol')
     .leftJoin(q => q
       .from(StockComputedPe90, 'pe')
       .distinctOn(['symbol'])
       .orderBy('symbol')
       .addOrderBy('date', 'DESC'),
-      'pe', `s.symbol = pe.symbol`)
+    'pe', 's.symbol = pe.symbol')
     .select([
-      `s.symbol as symbol`,
-      `eps."reportDate" as "reportDate"`,
-      `eps."ttmEps"`,
-      `pe."fairValueLo" as "fairValueLo"`,
-      `pe."fairValueHi" as "fairValueHi"`,
+      's.symbol as symbol',
+      'eps."reportDate" as "reportDate"',
+      'eps."ttmEps"',
+      'pe."fairValueLo" as "fairValueLo"',
+      'pe."fairValueHi" as "fairValueHi"',
     ])
 })
 export class StockHistoricalComputedFairValue {

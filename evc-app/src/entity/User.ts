@@ -64,7 +64,7 @@ export class User {
   profileId: string;
 
   @Column({ type: 'uuid', nullable: true })
-  @Index({ where: `"everPaid" = TRUE` })
+  @Index({ where: '"everPaid" = TRUE' })
   referredBy: string;
 
   @Column({ default: false })

@@ -7,8 +7,8 @@ import { StockLatestStockInformation } from './StockLatestStockInformation';
     .select('x.*')
     .from(q => q.from(StockLatestStockInformation, 'h')
       .select('*'),
-      // .addSelect('row_number() OVER(PARTITION BY symbol ORDER BY "publishedAt" DESC) AS row'),
-      'x')
+    // .addSelect('row_number() OVER(PARTITION BY symbol ORDER BY "publishedAt" DESC) AS row'),
+    'x')
     // .where(`x.row = 2`)
 })
 export class StockGuestPublishInformation {

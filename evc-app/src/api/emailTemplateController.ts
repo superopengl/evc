@@ -38,7 +38,7 @@ export const saveEmailTemplate = handlerWrapper(async (req, res) => {
     .insert()
     .into(EmailTemplate)
     .values(entity)
-    .onConflict(`(key, locale) DO UPDATE SET subject = excluded.subject, body = excluded.body`)
+    .onConflict('(key, locale) DO UPDATE SET subject = excluded.subject, body = excluded.body')
     .execute();
 
   res.json();

@@ -14,7 +14,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
   const userName = `${givenName || ''} ${surname || ''}`.trim();
   const recipentName = userName || name;
   const recipentContact = email || contact;
-  assert(recipentName && recipentContact && message, 404, `Invalid contact information`);
+  assert(recipentName && recipentContact && message, 404, 'Invalid contact information');
 
   await sendEmail({
     template: 'contact',

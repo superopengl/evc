@@ -7,29 +7,29 @@ const existsQuery = <T>(builder: SelectQueryBuilder<T>) => `exists (${builder.ge
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(StockDailyPe, 'pe')
-    .innerJoin(StockDailyPe, 'back', `pe.symbol = back.symbol`)
-    .where(`back.date between pe."date" - 90 and pe."date"`)
+      .innerJoin(StockDailyPe, 'back', 'pe.symbol = back.symbol')
+      .where('back.date between pe."date" - 90 and pe."date"')
     // .andWhere(`exists(select 1 from evc.stock_all_computed_pe sdp where sdp.date = pe."date" - 90)`)
-    .andWhere(
-      existsQuery(
-        connection
-          .getRepository(StockDailyPe)
-          .createQueryBuilder('sdp')
-          .where('sdp.date = pe."date" - 90')
+      .andWhere(
+        existsQuery(
+          connection
+            .getRepository(StockDailyPe)
+            .createQueryBuilder('sdp')
+            .where('sdp.date = pe."date" - 90')
+        )
       )
-    )
-    .groupBy('pe.symbol')
-    .addGroupBy('pe.date')
-    .addGroupBy('pe."ttmEps"')
-    .addGroupBy('pe.pe')
-    .select([
-      'pe.symbol as symbol',
-      'pe.date as date',
-      'pe."ttmEps" as "ttmEps"',
-      'pe.pe as pe',
-      'avg(back.pe) as avg',
-      'stddev(back.pe) as stddev'
-    ])
+      .groupBy('pe.symbol')
+      .addGroupBy('pe.date')
+      .addGroupBy('pe."ttmEps"')
+      .addGroupBy('pe.pe')
+      .select([
+        'pe.symbol as symbol',
+        'pe.date as date',
+        'pe."ttmEps" as "ttmEps"',
+        'pe.pe as pe',
+        'avg(back.pe) as avg',
+        'stddev(back.pe) as stddev'
+      ])
     , 'x')
     .select([
       'x.symbol',

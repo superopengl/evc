@@ -47,7 +47,7 @@ async function feedOneStock(symbol: string, company: string, tag: StockTag): Pro
   return stock;
 }
 
-async function parseStockDataFromFile(filePath): Promise<Array<{ symbol: string, company: string }>> {
+async function parseStockDataFromFile(filePath): Promise<Array<{ symbol: string; company: string }>> {
   const stocks = [];
   const stream = fs.createReadStream(filePath)
     .pipe(csv())

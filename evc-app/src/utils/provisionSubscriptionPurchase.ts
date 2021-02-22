@@ -13,13 +13,13 @@ import { Payment } from '../entity/Payment';
 import { PaymentMethod } from '../types/PaymentMethod';
 
 export type ProvisionSubscriptionRequest = {
-  userId: string,
-  subscriptionType: SubscriptionType,
-  paymentMethod: PaymentMethod,
-  recurring: boolean,
-  preferToUseBalance: boolean,
-  alertDays: number,
-  ipAddress: string
+  userId: string;
+  subscriptionType: SubscriptionType;
+  paymentMethod: PaymentMethod;
+  recurring: boolean;
+  preferToUseBalance: boolean;
+  alertDays: number;
+  ipAddress: string;
 };
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {

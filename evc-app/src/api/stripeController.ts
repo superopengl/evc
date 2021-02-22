@@ -8,9 +8,9 @@ export const webhookStripe = async (req, res) => {
   const event = await parseStripeWebhookEvent(req);
 
   switch (event.type) {
-    case 'checkout.session.completed':
-      break;
-    default:
+  case 'checkout.session.completed':
+    break;
+  default:
   }
 
   res.json({ received: true });

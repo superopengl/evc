@@ -17,7 +17,7 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
     .where('1 = 1');
 
   if (symbols?.length) {
-    query = query.andWhere(`s.symbol IN (:...symbols)`, { symbols: symbols.map(s => s.toUpperCase()) });
+    query = query.andWhere('s.symbol IN (:...symbols)', { symbols: symbols.map(s => s.toUpperCase()) });
   }
   // if (text) {
   //   query = query.andWhere('s.symbol ILIKE :text OR s.company ILIKE :text', { text: `%${text}%` });
@@ -31,30 +31,30 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
     if (watchOnly) {
       query = query.innerJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :userId', { userId }),
-        'sw',
-        'sw.symbol = s.symbol');
+      'sw',
+      'sw.symbol = s.symbol');
     } else {
       query = query.leftJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :userId', { userId }),
-        'sw',
-        'sw.symbol = s.symbol');
+      'sw',
+      'sw.symbol = s.symbol');
     }
   }
 
   if (tags?.length) {
     // Filter by tags
-    query = query.andWhere(`(s.tags && array[:...tags]::uuid[]) IS TRUE`, { tags });
+    query = query.andWhere('(s.tags && array[:...tags]::uuid[]) IS TRUE', { tags });
   }
 
   const orClause = [];
   if (overValued) {
-    orClause.push(`s."isOver" IS TRUE`);
+    orClause.push('s."isOver" IS TRUE');
   }
   if (underValued) {
-    orClause.push(`s."isUnder" IS TRUE`);
+    orClause.push('s."isUnder" IS TRUE');
   }
   if (inValued) {
-    orClause.push(`(s."isOver" IS FALSE AND s."isUnder" IS FALSE)`);
+    orClause.push('(s."isOver" IS FALSE AND s."isUnder" IS FALSE)');
   }
   if (orClause.length) {
     query = query.andWhere(`(${orClause.join(' OR ')})`);

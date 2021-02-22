@@ -22,7 +22,7 @@
     "build:prod": "rm -rf www && npm run compile",
     "clean": "ts-clean && rm -rf www",
     "compile": "tsc",
-    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "lint": "eslint --fix -c .eslintrc.js --ext .ts  .",
     "link-web": "rm -rf www && ln -sfn \"$(pwd)/../evc-web/build\" www",
     "migrate:up": "npm run typeorm migration:run",
     "migrate:down": "npm run typeorm migration:revert",
@@ -35,12 +35,17 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.20",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/eslint-plugin-tslint": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "eslint": "^7.20.0",
+    "eslint-plugin-jsdoc": "^32.1.0",
+    "eslint-plugin-no-null": "^1.0.2",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
     "ts-clean": "^1.0.3",
     "ts-jest": "^26.5.1",
     "ts-node": "^9.1.1",
-    "tslint": "^6.1.3",
     "typescript": "^4.1.5"
   },
   "dependencies": {

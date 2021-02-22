@@ -9,32 +9,32 @@ import { StockEps } from '../StockEps';
       .from(StockEps, 'eps')
       .select([
         'symbol',
-        `"reportDate"`
+        '"reportDate"'
       ])
       .distinctOn(['symbol', '"reportDate"'])
       .orderBy('"reportDate"', 'DESC'),
-      'r'
+    'r'
     )
     .leftJoin(q => q
       .from(q => q
         .from(StockEps, 'sc')
         .select([
-          `sc.symbol as symbol`,
-          `sc.value as "epsValue"`,
-          `rank() over (partition by sc.symbol order by sc."reportDate" desc)`
+          'sc.symbol as symbol',
+          'sc.value as "epsValue"',
+          'rank() over (partition by sc.symbol order by sc."reportDate" desc)'
         ]),
-        'x')
+      'x')
       .select([
         'x.symbol as symbol',
         'sum(x."epsValue") as "ttmEps"',
       ])
       .where('rank <= 4')
-      .groupBy(`symbol`),
-      'sum', 'r.symbol = sum.symbol')
+      .groupBy('symbol'),
+    'sum', 'r.symbol = sum.symbol')
     .select([
-      `r.symbol as symbol`,
-      `r."reportDate" as "reportDate"`,
-      `sum."ttmEps" as "ttmEps"`,
+      'r.symbol as symbol',
+      'r."reportDate" as "reportDate"',
+      'sum."ttmEps" as "ttmEps"',
     ])
 })
 export class StockHistoricalTtmEps {

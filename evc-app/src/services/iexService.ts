@@ -102,7 +102,7 @@ export async function getNews(symbol: string) {
     }));
 }
 
-function getChartParam(period, interval): { chartInterval: number, chartLast?: number } {
+function getChartParam(period, interval): { chartInterval: number; chartLast?: number } {
   const def = {
     '1h': {
       '1m': {
@@ -172,22 +172,22 @@ export async function getChart(symbol: string, period: string, interval: string)
   const param = getChartParam(period, interval);
 
   switch (period) {
-    case '1h':
-    case '4h':
-    case '1d':
-      apiPath = `/stock/${symbol}/intraday-prices`;
-      break;
-    case '5d':
-      apiPath = `/stock/${symbol}/chart/5dm`;
-      break;
-    case '1m':
-      apiPath = `/stock/${symbol}/chart/1mm`;
-      break;
-    case '1y':
-      apiPath = `/stock/${symbol}/chart/1y`;
-      break;
-    default:
-      assert(false, 400, `Unsupported period ${period}`);
+  case '1h':
+  case '4h':
+  case '1d':
+    apiPath = `/stock/${symbol}/intraday-prices`;
+    break;
+  case '5d':
+    apiPath = `/stock/${symbol}/chart/5dm`;
+    break;
+  case '1m':
+    apiPath = `/stock/${symbol}/chart/1mm`;
+    break;
+  case '1y':
+    apiPath = `/stock/${symbol}/chart/1y`;
+    break;
+  default:
+    assert(false, 400, `Unsupported period ${period}`);
   }
 
   return await requestAndCache(

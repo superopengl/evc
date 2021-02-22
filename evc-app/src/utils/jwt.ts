@@ -12,7 +12,7 @@ const cookieName = 'jwt';
 const isProd = process.env.NODE_ENV === 'prod';
 
 export function attachJwtCookie(user, res) {
-  assert(user.id, 500, `User has no id`);
+  assert(user.id, 500, 'User has no id');
   const payload = sanitizeUser(user);
   payload.expires = moment(getUtcNow()).add(30, 'minutes').toDate();
 

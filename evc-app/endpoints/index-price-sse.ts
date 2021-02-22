@@ -76,7 +76,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
       .createQueryBuilder()
       .insert()
       .into(StockLastPrice)
-      .onConflict(`(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"`)
+      .onConflict('(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"')
       .values(values)
       .execute();
   }

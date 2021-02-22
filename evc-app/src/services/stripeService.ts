@@ -37,8 +37,7 @@ export async function parseStripeWebhookEvent(req) {
   try {
     const event = endpointSecret ? await getStripe().webhooks.constructEvent(body, sig, endpointSecret) : JSON.parse(body);
     return event;
-  }
-  catch (err) {
+  } catch (err) {
     assert(false, 400, `Webhook Error: ${err.message}`);
   }
 }

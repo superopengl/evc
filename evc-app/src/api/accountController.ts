@@ -31,7 +31,7 @@ const getAccountForUser = async (userId) => {
   const balance = await getRepository(UserBalanceTransaction)
     .createQueryBuilder()
     .where({ userId })
-    .select(`SUM(amount) AS amount`)
+    .select('SUM(amount) AS amount')
     .getRawOne();
 
 

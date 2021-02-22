@@ -25,7 +25,7 @@ export const saveConfig = handlerWrapper(async (req, res) => {
     .insert()
     .into(Config)
     .values(item)
-    .onConflict(`(key) DO UPDATE SET value = excluded.value`)
+    .onConflict('(key) DO UPDATE SET value = excluded.value')
     .execute();
 
   res.json();

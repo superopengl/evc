@@ -13,8 +13,12 @@
     "docker:run": "docker run -p 80:80 --env-file ./devops/.env.prod evc",
     "docker:push": "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 115607939215.dkr.ecr.us-east-1.amazonaws.com; docker tag evc:latest 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest; docker push 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest",
     "ecs:update": "aws ecs update-service --cluster evc-cluster --service evc-portal --force-new-deployment  --region us-east-1",
-    "release": "npm run docker:build && npm run docker:push && npm run ecs:update"
+    "release": "npm run docker:build && npm run docker:push && npm run ecs:update",
+    "perf:100": "loadtest -c 100 --rps 200 https://easyvaluecheck.com"
   },
   "author": "mr.shaojun@gmail.com",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "loadtest": "^5.1.2"
+  }
 }

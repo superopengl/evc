@@ -7,15 +7,20 @@ import { Translation } from '../entity/Translation';
 import { Locale } from '../types/Locale';
 import { EmailSignature } from '../entity/EmailSignature';
 import { EmailTemplate } from '../entity/EmailTemplate';
+import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const listEmailTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const list = await getRepository(EmailTemplate).find({
-    order: {
-      key: 'ASC',
-      locale: 'ASC'
-    }
-  });
+  const meta = getRepository(EmailTemplate).metadata;
+  const allTypes = Object.values(EmailTemplateType);
+
+  const list = await getManager().query(`
+    select et.*, k.key 
+    from (select unnest($1::text[]) as key) as k
+    left join ${meta.schema}.${meta.tableName} et on et.key = k.key
+  `, [allTypes])
+
+
   res.json(list);
 });
 

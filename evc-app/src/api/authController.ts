@@ -20,6 +20,8 @@ import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
 import { ReferralCode } from '../entity/ReferralCode';
+import { EmailTemplate } from '../entity/EmailTemplate';
+import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -60,7 +62,7 @@ function createUserAndProfileEntity(payload): { user: User; profile: UserProfile
   const { email, password, role, referralCode, ...other } = payload;
   const thePassword = password || uuidv4();
   validatePasswordStrength(thePassword);
-  assert([Role.Client, Role.Agent].includes(role), 400, `Unsupported role ${role}`);
+  assert([Role.Client, Role.Admin].includes(role), 400, `Unsupported role ${role}`);
 
   const profileId = uuidv4();
   const userId = uuidv4();
@@ -113,7 +115,7 @@ export const signup = handlerWrapper(async (req, res) => {
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
   sendEmail({
-    template: 'signup',
+    template: EmailTemplateType.SignUp,
     to: email,
     vars: {
       email,
@@ -139,7 +141,7 @@ async function setUserToResetPasswordStatus(user: User) {
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
     to: user.profile.email,
-    template: 'resetPassword',
+    template: EmailTemplateType.ResetPassword,
     vars: {
       toWhom: getEmailRecipientName(user),
       url
@@ -215,16 +217,22 @@ export const impersonate = handlerWrapper(async (req, res) => {
   res.json(sanitizeUser(user));
 });
 
-export const handleInviteUser = async (user) => {
+export const handleInviteUser = async (user, profile) => {
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
+  await getManager().transaction(async m => {
+    await m.save(profile);
+    user.profile = profile;
+    await m.save(user);
+  })
+
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  const email = user.profile.email;
+  const email = profile.email;
   await sendEmail({
     to: email,
-    template: 'inviteUser',
+    template: EmailTemplateType.InviteUser,
     vars: {
       toWhom: getEmailRecipientName(user),
       email,
@@ -232,8 +240,6 @@ export const handleInviteUser = async (user) => {
     },
     shouldBcc: false
   });
-
-  await getRepository(User).save(user);
 };
 
 export const inviteUser = handlerWrapper(async (req, res) => {
@@ -243,12 +249,12 @@ export const inviteUser = handlerWrapper(async (req, res) => {
   const existingUser = await getActiveUserByEmail(email);
   assert(!existingUser, 400, 'User exists');
 
-  const user = createUserAndProfileEntity({
+  const { user, profile } = createUserAndProfileEntity({
     email,
     role: role || 'client'
   });
 
-  await handleInviteUser(user);
+  await handleInviteUser(user, profile);
 
   res.json();
 });
@@ -293,7 +299,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
     sendEmail({
       to: user.profile.email,
-      template: 'googleSsoWelcome',
+      template: EmailTemplateType.GoogleSsoWelcome,
       vars: {
         toWhom: getEmailRecipientName(user),
       },

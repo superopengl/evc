@@ -19,6 +19,7 @@ import { computeEmailHash } from '../utils/computeEmailHash';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { Payment } from '../entity/Payment';
+import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
@@ -63,9 +64,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
       user.emailHash = newEmailHash;
       user.profile.email = email;
 
-      await getManager().save([user.profile, user]);
-
-      await handleInviteUser(user);
+      await handleInviteUser(user, user.profile);
     }
   }
 
@@ -142,7 +141,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await repo.softDelete(id);
     await sendEmail({
       to: user.profile.email,
-      template: 'deleteUser',
+      template: EmailTemplateType.DeleteUser,
       vars: {
         toWhom: getEmailRecipientName(user),
       },

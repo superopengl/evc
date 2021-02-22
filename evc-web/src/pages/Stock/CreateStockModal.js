@@ -94,7 +94,7 @@ const CreateStockModal = props => {
       maskClosable={false}
       footer={null}
     >
-      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
+      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }} initialValues={{symbol: props.defaultSymbol?.toUpperCase()}}>
         <Form.Item label="Symbol" name="symbol"
           rules={[{ required: true, validator: validateExsitsSymbol, whitespace: true, max: 10 }]}
         >
@@ -116,10 +116,13 @@ const CreateStockModal = props => {
 
 CreateStockModal.propTypes = {
   visible: PropTypes.bool.isRequired,
+  defaultSymbol: PropTypes.string,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
 };
 
-CreateStockModal.defaultProps = {};
+CreateStockModal.defaultProps = {
+  defaultSymbol: ''
+};
 
 export default withRouter(CreateStockModal);

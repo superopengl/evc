@@ -19,6 +19,9 @@ const modifyVars = {
 };
 
 module.exports = {
+  eslint: {
+    enable: false,
+  },
   plugins: [
     {
       plugin: CracoLessPlugin,

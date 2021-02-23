@@ -24,27 +24,22 @@ const LogoContainer = styled.div`
 `;
 
 const { Title } = Typography;
-class ForgotPasswordPage extends React.Component {
+const ForgotPasswordPage = props => {
 
-  constructor(props) {
-    super(props);
+  const [sending, setLoading] = React.useState(false);
 
-    this.state = {
-      sending: false
-    }
+
+  const goBack = () => {
+    props.history.goBack();
   }
 
-  goBack = () => {
-    this.props.history.goBack();
-  }
-
-  handleSubmit = async values => {
-    if (this.state.sending) {
+  const handleSubmit = async values => {
+    if (sending) {
       return;
     }
 
     try {
-      this.setState({ sending: true });
+      setLoading(true);
       const { email } = values;
 
       await forgotPassword(email);
@@ -54,36 +49,33 @@ class ForgotPasswordPage extends React.Component {
         <>An email with the reset password link was sent out to your registration email <strong>{email}</strong></>
       );
       // Go back to home page
-      this.setState({ sending: false }, () => this.props.history.push('/'));
+      props.history.push('/');
     } catch (e) {
-      this.setState({ sending: false });
+      setLoading(false);
     }
   }
 
-  render() {
-    const { sending } = this.state;
 
-    return <LayoutStyled>
-      <ContainerStyled>
-        <LogoContainer><Logo /></LogoContainer>
-        <Title level={2}>Forgot Password</Title>
-        <Form layout="vertical" onFinish={this.handleSubmit} style={{ textAlign: 'left' }}>
-          <Form.Item label="Registration email" name="email" rules={[{ required: true, whitespace: true, max: 100, type: 'email', message: 'Please input valid email address' }]}>
-            <Input placeholder="abc@xyz.com" type="email" allowClear={true} maxLength="100" disabled={sending} autoFocus={true} />
-          </Form.Item>
-          <Form.Item style={{ marginTop: '2rem' }}>
-            <Button block type="primary" htmlType="submit" disabled={sending}>Send reset link to email</Button>
-          </Form.Item>
-          <Form.Item >
-            <Button block type="link" onClick={() => this.goBack()}>Cancel</Button>
-          </Form.Item>
-          <Form.Item>
-            <Link to="/"><Button block type="link">Go to home page</Button></Link>
-          </Form.Item>
-        </Form>
-      </ContainerStyled>
-    </LayoutStyled>;
-  }
+  return <LayoutStyled>
+    <ContainerStyled>
+      <LogoContainer><Logo /></LogoContainer>
+      <Title level={2}>Forgot Password</Title>
+      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
+        <Form.Item label="Registration email" name="email" rules={[{ required: true, whitespace: true, max: 100, type: 'email', message: 'Please input valid email address' }]}>
+          <Input placeholder="abc@xyz.com" type="email" allowClear={true} maxLength="100" disabled={sending} autoFocus={true} />
+        </Form.Item>
+        <Form.Item style={{ marginTop: '2rem' }}>
+          <Button block type="primary" htmlType="submit" disabled={sending}>Send reset link to email</Button>
+        </Form.Item>
+        <Form.Item >
+          <Button block type="link" onClick={() => goBack()}>Cancel</Button>
+        </Form.Item>
+        <Form.Item>
+          <Link to="/"><Button block type="link">Go to home page</Button></Link>
+        </Form.Item>
+      </Form>
+    </ContainerStyled>
+  </LayoutStyled>;
 }
 
 ForgotPasswordPage.propTypes = {};

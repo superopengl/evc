@@ -20,7 +20,7 @@ const modifyVars = {
 
 module.exports = {
   eslint: {
-    enable: false,
+    enable: true,
   },
   plugins: [
     {

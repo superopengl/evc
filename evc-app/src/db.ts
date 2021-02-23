@@ -8,13 +8,19 @@ import { StockDailyPe } from './entity/views/StockDailyPe';
 import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalFairValue';
 import { StockLastFairValue } from './entity/views/StockLastFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
+import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 
 export async function connectDatabase(shouldSyncSchema = true) {
   const connection = await createConnection();
   if (shouldSyncSchema) {
     await syncDatabaseSchema(connection);
   }
+  await initializeData();
   return connection;
+}
+
+async function initializeData() {
+  await initializeEmailTemplates();
 }
 
 async function syncDatabaseSchema(connection: Connection) {

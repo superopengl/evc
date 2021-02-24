@@ -130,7 +130,7 @@ const App = props => {
           <RoleRoute visible={isAdmin} loading={loading} exact path="/config" component={ConfigListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
           <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
-          <RoleRoute visible={!isClient} loading={loading} path="/stock" exact component={StockListPage} />
+          <RoleRoute visible={!isGuest} loading={loading} path="/stock" exact component={StockListPage} />
           <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />
           {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
           <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />

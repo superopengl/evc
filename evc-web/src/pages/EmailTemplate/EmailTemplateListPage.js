@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Card, Input, Form, Tooltip, Tag, Drawer, List, Row } from 'antd';
+import { Typography, Layout, Button, Divider, Input, Form, Tooltip, Tag, Drawer, List, Row } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
   EditOutlined
@@ -16,7 +16,9 @@ import 'react-quill/dist/quill.snow.css';
 const { Title, Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 6rem auto 2rem auto;
 `;
 
 const StyledTitleRow = styled.div`
@@ -30,10 +32,6 @@ const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
   height: 100%;
-
-  .ant-list-item {
-    padding: 0;
-  }
 
   .ant-drawer-body {
    
@@ -54,24 +52,32 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
-const StyledLabel = props => <Text style={{width: '3rem'}} type="secondary">
+const StyledLabel = props => <Text style={{ width: '3rem' }} type="secondary">
   <small>{props.children}</small>
-  </Text>
+</Text>
 
 const modules = {
   toolbar: [
-    [{ 'header': [1, 2, false] }],
+    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+    [{ size: [] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' },
+    { 'indent': '-1' }, { 'indent': '+1' }],
+    [{ 'align': [] }, { 'color': [] }, { 'background': [] }],
     ['link', 'image'],
     ['clean']
   ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  }
 };
 
 const formats = [
   'header',
   'bold', 'italic', 'underline', 'strike', 'blockquote',
   'list', 'bullet', 'indent',
+  'color', 'background',
   'link', 'image'
 ];
 
@@ -152,42 +158,23 @@ const EmailTemplateListPage = () => {
             size="large"
             dataSource={list}
             footer={null}
-            grid={{
-              gutter: 20,
-              xs: 1,
-              sm: 1,
-              md: 2,
-              lg: 2,
-              xl: 3,
-              xxl: 3
-            }}
             renderItem={item => <List.Item
               key={item.key}
-
+              extra={<Tooltip key="edit" placement="bottom" title="Edit">
+                <Button shape="circle" icon={<EditOutlined />}
+                  onClick={() => handleEdit(item)} ></Button>
+              </Tooltip>}
             >
-              <Card
-                title={<>{item.key} {getLocaleTag(item.locale)}</>}
-                extra={
-                  <Tooltip key="edit" placement="bottom" title="Edit">
-                    <Button type="link" icon={<EditOutlined />}
-                      onClick={() => handleEdit(item)} />
-                  </Tooltip>
-
-                }
-              >
-                <Row>
-                  <StyledLabel>Vars:</StyledLabel> 
-                  {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}</Row>
-                <Row>
-                  <StyledLabel>Subject:</StyledLabel>
-                  <Text>{item.subject || 'Email subject'}</Text></Row>
-                <Row>
-                  <StyledLabel>Body:</StyledLabel>
-                  <div style={{position:'relative', top: 2}}>
-                    <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
-                  </div>
-                  </Row>
-              </Card>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <Title level={3}>{item.key} {getLocaleTag(item.locale)}</Title>
+                {item.key !== 'signature' && <Row>
+                  <StyledLabel>vars:</StyledLabel>
+                  {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
+                </Row>}
+                <Divider dashed style={{ margin: '10px 0' }} />
+                {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
+                <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
+              </Space>
             </List.Item>}
           />
         </Space>

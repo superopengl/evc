@@ -9,6 +9,7 @@ import { StockHistoricalComputedFairValue } from './entity/views/StockHistorical
 import { StockLastFairValue } from './entity/views/StockLastFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
+import { initializeConfig } from './utils/initializeConfig';
 
 export async function connectDatabase(shouldSyncSchema = true) {
   const connection = await createConnection();
@@ -20,6 +21,7 @@ export async function connectDatabase(shouldSyncSchema = true) {
 }
 
 async function initializeData() {
+  await initializeConfig();
   await initializeEmailTemplates();
 }
 

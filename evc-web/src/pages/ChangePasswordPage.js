@@ -1,11 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Typography, Input, Button, Form } from 'antd';
+import { Input, Button, Form } from 'antd';
 import { changePassword } from 'services/userService';
-import HomeHeader from 'components/HomeHeader';
 import { notify } from 'util/notify';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 const ContainerStyled = styled.div`
   margin: 4rem auto 2rem auto;
@@ -16,26 +14,13 @@ const ContainerStyled = styled.div`
 `;
 
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
-
-const { Title, Text } = Typography;
-const ChangePasswordPage = props => {
+const ChangePasswordPage = () => {
 
 
-  const [sending, setLoading] = React.useState(false);
-  const context = React.useContext(GlobalContext);
-  const { user } = context;
-
-  const goBack = () => {
-    props.history.goBack();
-  }
+  const [loading, setLoading] = React.useState(false);
 
   const handleSubmit = async values => {
-    if (sending) {
+    if (loading) {
       return;
     }
 
@@ -46,9 +31,6 @@ const ChangePasswordPage = props => {
       await changePassword(password, newPassword);
 
       notify.success('Successfully changed password');
-
-      // Go back to home page
-      props.history.goBack();
     } catch (e) {
       setLoading(false);
     }
@@ -56,7 +38,7 @@ const ChangePasswordPage = props => {
 
   const validateConfirmPasswordRule = ({ getFieldValue }) => {
     return {
-      async validator(value) {
+      async validator() {
         if (getFieldValue('newPassword') !== getFieldValue('confirmPassword')) {
           throw new Error('The confirm password does not match');
         }
@@ -67,25 +49,18 @@ const ChangePasswordPage = props => {
 
   return (
     <ContainerStyled>
-      <Title level={2}>Change Password</Title>
-      <Text code>{user.profile.email}</Text>
-      <br />
-      <br />
       <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
         <Form.Item label="Old Password" name="password" rules={[{ required: true, message: ' ' }]}>
-          <Input.Password placeholder="Old Password" maxLength="50" autoComplete="current-password" disabled={sending} visibilityToggle={false} autoFocus={true} />
+          <Input.Password placeholder="Old Password" maxLength="50" autoComplete="current-password" disabled={loading} visibilityToggle={false} autoFocus={true} />
         </Form.Item>
         <Form.Item label="New Password (at least 8 letters)" name="newPassword" rules={[{ required: true, min: 8, message: ' ' }]}>
-          <Input.Password placeholder="New Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
+          <Input.Password placeholder="New Password" maxLength="50" autoComplete="new-password" disabled={loading} visibilityToggle={false} />
         </Form.Item>
         <Form.Item label="Confirm New Password" name="confirmPassword" rules={[{ required: true, min: 8, message: ' ' }, validateConfirmPasswordRule]}>
-          <Input.Password placeholder="Confirm New Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
+          <Input.Password placeholder="Confirm New Password" maxLength="50" autoComplete="new-password" disabled={loading} visibilityToggle={false} />
         </Form.Item>
         <Form.Item style={{ marginTop: '2rem' }}>
-          <Button block type="primary" htmlType="submit" disabled={sending}>Change Password</Button>
-        </Form.Item>
-        <Form.Item>
-          <Button block type="link" onClick={() => goBack()}>Cancel</Button>
+          <Button block type="primary" htmlType="submit" disabled={loading}>Change Password</Button>
         </Form.Item>
       </Form>
     </ContainerStyled>

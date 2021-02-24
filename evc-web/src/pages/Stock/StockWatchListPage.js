@@ -10,7 +10,7 @@ import { StockSearchInput } from 'components/StockSearchInput';
 import { StarOutlined, StarFilled } from '@ant-design/icons';
 import { notify } from 'util/notify';
 
-const { Paragraph } = Typography;
+const { Paragraph, Link: TextLink } = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -41,11 +41,12 @@ const StockWatchListPage = (props) => {
       const resp = await getWatchList();
       if (!resp?.data?.length) {
         // Go to /stock page if nothing gets watched.
-        notify.info(
-          'Empty Watchlist',
-          <Paragraph>You are not watching any stock. Showing all stocks. Clicking <StarOutlined style={{ fontSize: 18, color: '#d9d9d9' }} /> icon to add stock to your watchlist.</Paragraph>
-        );
-        props.history.push('/stock');
+        Modal.info({
+          title: 'Empty Watchlist',
+          content: <>You are not watching any stock. On the All Stocks, clicking <StarOutlined style={{ fontSize: 18, color: '#8c8c8c' }} /> icon to add stock to your watchlist.</>,
+          onOk: () => props.history.push('/stock'),
+          okText: 'Go To All Stocks Page'
+        });
         return;
       }
       ReactDOM.unstable_batchedUpdates(() => {
@@ -61,10 +62,6 @@ const StockWatchListPage = (props) => {
   React.useEffect(() => {
     loadList();
   }, []);
-
-  const handleSelectedStock = (symbol) => {
-    props.history.push(`/stock/${symbol}`);
-  }
 
   return (
     <LayoutStyled>

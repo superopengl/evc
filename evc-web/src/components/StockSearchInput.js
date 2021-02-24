@@ -47,7 +47,6 @@ export const StockSearchInput = (props) => {
 
 
   const handleChange = async (symbol) => {
-    debugger;
     setText('');
     if (symbol) {
       if (traceSearch) {

@@ -11,7 +11,8 @@ import { EmailTemplate } from '../entity/EmailTemplate';
 import * as handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
 import { getConfigValue } from './configService';
-import { EmailSentOutLog } from '../entity/EmailSentOutLog';
+import { EmailLog } from '../entity/EmailLog';
+import errorToJson from 'error-to-json';
 
 let emailTransporter = null;
 
@@ -81,23 +82,23 @@ export async function sendEmail(req: EmailRequest, throws = false) {
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
 
-  let log: EmailSentOutLog = null;
-  const emailLogRepo = getRepository(EmailSentOutLog);
+  let log: EmailLog = null;
+  const emailLogRepo = getRepository(EmailLog);
   try {
     const option = await composeEmailOption(req);
-    log = new EmailSentOutLog();
+    log = new EmailLog();
     log.email = option.to;
     log.templateKey = req.template;
     log.vars = req.vars;
-    log.result = 'error';
 
     await getEmailer().sendMail(option);
 
-    log.result = 'sent';
     await emailLogRepo.insert(log);
     console.log('Sent out email to'.green, to);
   } catch (err) {
+    console.log('Sent out email error'.red, errorToJson(err));
     if(log) {
+      log.error = err;
       await emailLogRepo.insert(log);
     }else {
       logError(err, req, null, 'Sending email error', to, template, vars);

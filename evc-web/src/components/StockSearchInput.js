@@ -93,7 +93,7 @@ export const StockSearchInput = (props) => {
         const { symbol, company } = option.data;
         return symbol.toLowerCase().includes(match) || company.toLowerCase().includes(match);
       }}
-      notFoundContent={<Button block onClick={handleStockPlea}>Request to support stock <strong style={{marginLeft: 4}}>{text.toUpperCase()}</strong></Button>}
+      notFoundContent={<Button type="primary" block onClick={handleStockPlea}>Request to support stock <strong style={{marginLeft: 4}}>{text.toUpperCase()}</strong></Button>}
     >
       {list.map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         {/* <Highlighter highlightClassName="search-highlighting"

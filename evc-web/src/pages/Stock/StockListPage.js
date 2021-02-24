@@ -11,6 +11,7 @@ import { CheckSquareOutlined, BorderOutlined, PlusOutlined } from '@ant-design/i
 import StockTagFilter from 'components/StockTagFilter';
 import CreateStockModal from './CreateStockModal';
 import * as queryString from 'query-string';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -82,6 +83,9 @@ const StockListPage = (props) => {
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [createModalVisible, setCreateModalVisible] = React.useState(create);
+  const context = React.useContext(GlobalContext);
+
+  const isAdmin = context.role === 'admin';
 
   const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
@@ -154,12 +158,11 @@ const StockListPage = (props) => {
                 {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
             </Space>
-            <Button type="primary" ghost icon={<PlusOutlined/>} onClick={() => setCreateModalVisible(true)}>New Stock</Button>
+            {isAdmin && <Button type="primary" ghost icon={<PlusOutlined/>} onClick={() => setCreateModalVisible(true)}>New Stock</Button>}
           </Space>
           <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
           <Pagination
-            total={85}
             current={queryInfo.page}
             pageSize={queryInfo.size}
             total={total}

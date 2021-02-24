@@ -27,6 +27,8 @@ const ChangePasswordPage = props => {
 
 
   const [sending, setLoading] = React.useState(false);
+  const context = React.useContext(GlobalContext);
+  const { user } = context;
 
   const goBack = () => {
     props.history.goBack();
@@ -64,44 +66,30 @@ const ChangePasswordPage = props => {
 
 
   return (
-    <GlobalContext.Consumer>
-      {
-        context => {
-          const { user } = context;
-
-          return (
-            <LayoutStyled>
-              <HomeHeader></HomeHeader>
-              <ContainerStyled>
-                <Title level={2}>Change Password</Title>
-                <Text code>{user.profile.email}</Text>
-                <br />
-                <br />
-                <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
-                  <Form.Item label="Old Password" name="password" rules={[{ required: true, message: ' ' }]}>
-                    <Input.Password placeholder="Old Password" maxLength="50" autoComplete="current-password" disabled={sending} visibilityToggle={false} autoFocus={true} />
-                  </Form.Item>
-                  <Form.Item label="New Password (at least 8 letters)" name="newPassword" rules={[{ required: true, min: 8, message: ' ' }]}>
-                    <Input.Password placeholder="New Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
-                  </Form.Item>
-                  <Form.Item label="Confirm New Password" name="confirmPassword" rules={[{ required: true, min: 8, message: ' ' }, validateConfirmPasswordRule]}>
-                    <Input.Password placeholder="Confirm New Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
-                  </Form.Item>
-                  <Form.Item style={{ marginTop: '2rem' }}>
-                    <Button block type="primary" htmlType="submit" disabled={sending}>Change Password</Button>
-                  </Form.Item>
-                  <Form.Item>
-                    <Button block type="link" onClick={() => goBack()}>Cancel</Button>
-                  </Form.Item>
-                </Form>
-              </ContainerStyled>
-            </LayoutStyled>
-          )
-        }
-
-      }
-    </GlobalContext.Consumer>
-  );
+    <ContainerStyled>
+      <Title level={2}>Change Password</Title>
+      <Text code>{user.profile.email}</Text>
+      <br />
+      <br />
+      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
+        <Form.Item label="Old Password" name="password" rules={[{ required: true, message: ' ' }]}>
+          <Input.Password placeholder="Old Password" maxLength="50" autoComplete="current-password" disabled={sending} visibilityToggle={false} autoFocus={true} />
+        </Form.Item>
+        <Form.Item label="New Password (at least 8 letters)" name="newPassword" rules={[{ required: true, min: 8, message: ' ' }]}>
+          <Input.Password placeholder="New Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
+        </Form.Item>
+        <Form.Item label="Confirm New Password" name="confirmPassword" rules={[{ required: true, min: 8, message: ' ' }, validateConfirmPasswordRule]}>
+          <Input.Password placeholder="Confirm New Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
+        </Form.Item>
+        <Form.Item style={{ marginTop: '2rem' }}>
+          <Button block type="primary" htmlType="submit" disabled={sending}>Change Password</Button>
+        </Form.Item>
+        <Form.Item>
+          <Button block type="link" onClick={() => goBack()}>Cancel</Button>
+        </Form.Item>
+      </Form>
+    </ContainerStyled>
+  )
 }
 
 ChangePasswordPage.propTypes = {};

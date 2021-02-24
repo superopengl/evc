@@ -44,16 +44,16 @@ const LayoutStyled = styled(Layout)`
 
 const ProfileForm = (props) => {
   const { user, initial, onOk } = props;
-  const [sending, setSending] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [profile] = React.useState(user.profile || user);
 
   const handleSave = async (values) => {
-    if (sending) {
+    if (loading) {
       return;
     }
 
     try {
-      setSending(true);
+      setLoading(true);
 
       await saveProfile(user.id, values);
 
@@ -62,7 +62,7 @@ const ProfileForm = (props) => {
       Object.assign(profile, values);
       onOk(user);
     } finally {
-      setSending(false);
+      setLoading(false);
     }
   }
 
@@ -96,7 +96,7 @@ const ProfileForm = (props) => {
         <LocaleSelector />
       </Form.Item>
       <Form.Item style={{ marginTop: '1rem' }}>
-        <Button block type="primary" htmlType="submit" disabled={sending}>Save</Button>
+        <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
       </Form.Item>
     </Form>
   );

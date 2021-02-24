@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import * as queryString from 'query-string';
 import ProfileForm from './ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { notify } from 'util/notify';
 
 const { Title, Paragraph, Link } = Typography;
 
@@ -37,19 +38,10 @@ const ProfilePage = props => {
 
   const handlePostSave = (updatedUser) => {
     setUser(updatedUser);
-    props.history.goBack();
   }
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
-      <ContainerStyled>
-        <StyledTitleRow>
-          <Title level={2} style={{ margin: 'auto' }}>Profile</Title>
-        </StyledTitleRow>
         <ProfileForm user={user} onOk={updatedUser => handlePostSave(updatedUser)}/>
-      </ContainerStyled>
-    </LayoutStyled >
   );
 };
 

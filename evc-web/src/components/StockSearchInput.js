@@ -83,7 +83,7 @@ export const StockSearchInput = (props) => {
       placeholder="Search for symbols or companies"
       onChange={handleChange}
       onSearch={handleSearch}
-      open={!!text}
+      // open={!!text}
       style={{ textAlign: 'left', width: '100%', ...style }}
       loading={loading}
       // showArrow={false}

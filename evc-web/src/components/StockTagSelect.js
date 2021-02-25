@@ -1,51 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Tag } from 'antd';
+import { Tag } from 'antd';
 import * as tinycolor from 'tinycolor2';
 import { listStockTags, saveStockTag } from 'services/stockTagService';
 import StockTag from './StockTag';
-import styled from 'styled-components';
-import CreatableSelect, { makeCreatableSelect } from 'react-select/creatable';
-import Select, { components } from 'react-select';
-import chroma from 'chroma-js';
+import CreatableSelect from 'react-select/creatable';
 import { v4 as uuidv4 } from 'uuid';
 
-const { Text } = Typography;
-
-const SelectStyled = styled(Select)`
-.ant-select-selector {
-  flex-direction: column;
-}
-
-.ant-select-selection-item {
-  width: 100%;
-  justify-content: space-between;
-  border: none;
-  background: transparent;
-}
-
-.ant-select-selection-item-content {
-  width: 100%;
-}
-`;
-
-const getFontColor = (backgroundColor) => {
-  return tinycolor(backgroundColor).isLight() ? '#000000' : '#ffffff';
-}
-
-const Input = props => {
-  if (props.isHidden) {
-    return <components.Input {...props} />;
-  }
-  return (
-    <div style={{ padding: 6 }}>
-      <div style={{ border: `1px dotted #999999`, padding: 0, margin: 0 }}>
-        <components.Input {...props} />
-      </div>
-
-    </div>
-  );
-};
 
 const Option = props => {
   const { data, innerProps } = props;
@@ -54,12 +15,6 @@ const Option = props => {
   </div>;
 }
 
-const MultiValueLabel = props => {
-  return (
-    <StockTag color={props.data.color}>{props.data.label}</StockTag>
-    // <components.MultiValueLabel {...props} />
-  );
-};
 
 const colourStyles = {
   // control: styles => ({ ...styles, backgroundColor: 'white' }),
@@ -104,7 +59,7 @@ const colourStyles = {
       minWidth: '180px'
     }
   },
-  multiValue: (styles, { data }) => {
+  multiValue: (styles, { }) => {
     return {
       ...styles,
       // width: '100%',
@@ -113,15 +68,14 @@ const colourStyles = {
       // backgroundColor: data.color,
     };
   },
-  multiValueLabel: (styles, { data }) => ({
+  multiValueLabel: (styles, { }) => ({
     ...styles,
     // width: '100%',
     // color: getFontColor(data.color),
     // backgroundColor: data.color,
     borderRadius: '4px 0 0 4px',
   }),
-  multiValueRemove: (styles, { data }) => {
-    const color = chroma(data.color);
+  multiValueRemove: (styles, { }) => {
     return {
       ...styles,
       // backgroundColor: data.color,

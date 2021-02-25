@@ -2,8 +2,8 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, Unique, CreateDateColumn
 
 
 @Entity()
-@Unique('idx_stock_tag_name', ['name'])
-export class StockTag {
+@Unique('idx_user_tag_name', ['name'])
+export class UserTag {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -14,4 +14,3 @@ export class StockTag {
   @Index()
   name: string;
 }
-

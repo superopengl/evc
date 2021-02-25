@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Space } from 'antd';
-import * as tinycolor from 'tinycolor2';
-import chroma from 'chroma-js';
 import { listStockTags } from 'services/stockTagService';
 import StockTag from './StockTag';
 import { Loading } from './Loading';
 
-const { Text } = Typography;
 
 
 const StockTagFilter = (props) => {

@@ -39,7 +39,6 @@ dependencies:
   serve-static: 1.14.1
   stripe: 8.137.0
   swagger-routes-express: 3.3.0
-  tinycolor2: 1.4.2
   typeorm: 0.2.31
   typeorm-plus: 0.1.2
   ua-parser-js: 0.7.24
@@ -6218,10 +6217,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-fcwX4mndzpLQKBS1DVYhGAcYaYt7vsHNIvQV+WXMvnow5cgjPphq5CaayLaGsjRdSCKZFNGt7/GYAuXaNOiYCA==
-  /tinycolor2/1.4.2:
-    dev: false
-    resolution:
-      integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
   /tmpl/1.0.4:
     dev: true
     resolution:
@@ -7044,7 +7039,6 @@ specifiers:
   serve-static: ^1.14.1
   stripe: ^8.137.0
   swagger-routes-express: ^3.3.0
-  tinycolor2: ^1.4.2
   ts-clean: ^1.0.3
   ts-jest: ^26.5.1
   ts-node: ^9.1.1

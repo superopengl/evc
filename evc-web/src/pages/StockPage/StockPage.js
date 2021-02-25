@@ -17,8 +17,10 @@ import StockQuotePanel from 'components/StockQuotePanel';
 import AdminStockPublishPanel from '../Stock/AdminStockPublishPanel';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
-import StockTagSelect from 'components/StockTagSelect';
+import TagSelect from 'components/TagSelect';
 import INSIDER_LEGEND_INFOS from '../../def/insiderLegendDef';
+import { listStockTags, saveStockTag } from 'services/stockTagService';
+
 const { Text } = Typography;
 
 const ContainerStyled = styled.div`
@@ -143,7 +145,11 @@ const StockPage = (props) => {
           />
           <Space direction="vertical" style={{ width: '100%' }}>
             {/* <Text type="secondary">Electronic Technology</Text> */}
-            <StockTagSelect value={stock.tags} readonly={!isAdminOrAgent} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
+            <TagSelect value={stock.tags} readonly={!isAdminOrAgent}
+              onChange={tags => handleChangeTags(tags.map(t => t.id))}
+              onList={listStockTags}
+              onSave={saveStockTag}
+            />
             <StockQuotePanel symbol={stock.symbol} />
             <Row gutter={20} wrap={false}>
               <Col flex="none">

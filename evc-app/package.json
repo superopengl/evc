@@ -89,7 +89,6 @@
     "serve-static": "^1.14.1",
     "stripe": "^8.137.0",
     "swagger-routes-express": "^3.3.0",
-    "tinycolor2": "^1.4.2",
     "typeorm": "^0.2.31",
     "typeorm-plus": "^0.1.2",
     "ua-parser-js": "^0.7.24",

@@ -8,10 +8,11 @@ import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { CheckSquareOutlined, BorderOutlined, PlusOutlined } from '@ant-design/icons';
-import StockTagFilter from 'components/StockTagFilter';
+import TagFilter from 'components/TagFilter';
 import CreateStockModal from './CreateStockModal';
 import * as queryString from 'query-string';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { listStockTags } from 'services/stockTagService';
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -160,7 +161,7 @@ const StockListPage = (props) => {
             </Space>
             {isAdmin && <Button type="primary" ghost icon={<PlusOutlined/>} onClick={() => setCreateModalVisible(true)}>New Stock</Button>}
           </Space>
-          <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
+          <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} onList={listStockTags} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
           <Pagination
             current={queryInfo.page}

@@ -1,35 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Divider } from 'antd';
+import { Typography, Layout, Button, Table, Input } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
-  DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  IdcardOutlined, SearchOutlined,
-  UserOutlined,
   PlusOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space, Alert } from 'antd';
-import { listAllUsers, deleteUser, setPasswordForUser } from 'services/userService';
-import { inviteUser, impersonate } from 'services/authService';
-import { TimeAgo } from 'components/TimeAgo';
-import { FaTheaterMasks } from 'react-icons/fa';
-import { reactLocalStorage } from 'reactjs-localstorage';
-import { GlobalContext } from 'contexts/GlobalContext';
-import PortfolioList from 'pages/Portfolio/PortfolioList';
-import ProfileForm from 'pages/Profile/ProfileForm';
-import { BiDollar } from 'react-icons/bi';
-import ReferralBalanceForm from 'components/ReferralBalanceForm';
+import { Space } from 'antd';
 import * as _ from 'lodash';
-import { subscriptionDef } from 'def/subscriptionDef';
-import Highlighter from "react-highlight-words";
-import HighlightingText from 'components/HighlightingText';
-import CheckboxButton from 'components/CheckboxButton';
-import { flushTranslation, listAllTranslationsForEdit, saveTranslation, newLocaleResource } from 'services/translationService';
-import { notify } from 'util/notify';
 import { listConfig, saveConfig } from 'services/configService';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title } = Typography;
 
 const ContainerStyled = styled.div`
   width: 100%;

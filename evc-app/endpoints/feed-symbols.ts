@@ -8,7 +8,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'csv-parser';
 import { v4 as uuidv4 } from 'uuid';
-import * as tinycolor from 'tinycolor2';
 import { getRepository } from 'typeorm';
 import { Stock } from '../src/entity/Stock';
 import { StockTag } from '../src/entity/StockTag';
@@ -22,7 +21,6 @@ async function feedOneStockTag(tagName: string): Promise<StockTag> {
     tag = new StockTag();
     tag.id = uuidv4();
     tag.name = tagName;
-    tag.color = tinycolor.random().toHexString();
     await repo.insert(tag);
   }
 

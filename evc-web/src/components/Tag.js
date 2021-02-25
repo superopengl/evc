@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tag } from 'antd';
+import { Tag as AntdTag } from 'antd';
 import styled from 'styled-components';
 
 
-const ClicableTag = styled(Tag)`
+const ClicableTag = styled(AntdTag)`
   &:hover {
     cursor: pointer;
   }
 `;
 
-const StockTag = (props) => {
+const Tag = (props) => {
 
   const { children, clickable, checked, color: propColor, style: propStyle, onClick, ...other } = props;
 
@@ -22,7 +22,7 @@ const StockTag = (props) => {
     ...propStyle,
   }
 
-  const TagComponent = clickable ? ClicableTag : Tag;
+  const TagComponent = clickable ? ClicableTag : AntdTag;
 
   const colorProp = checked ? {color: '#15be53'} : null;
 
@@ -39,7 +39,7 @@ const StockTag = (props) => {
   );
 };
 
-StockTag.propTypes = {
+Tag.propTypes = {
   // value: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
   checked: PropTypes.bool,
@@ -47,10 +47,10 @@ StockTag.propTypes = {
   onClick: PropTypes.func,
 };
 
-StockTag.defaultProps = {
+Tag.defaultProps = {
   checked: false,
   clickable: false,
   onClick: () => { }
 };
 
-export default StockTag;
+export default Tag;

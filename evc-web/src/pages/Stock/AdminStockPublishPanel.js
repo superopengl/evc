@@ -1,44 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Space, Form, Input, Modal, Layout, InputNumber, Row, Col, Card } from 'antd';
-import { Logo } from 'components/Logo';
-import { signUp } from 'services/authService';
-import { GlobalContext } from 'contexts/GlobalContext';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import { withRouter } from 'react-router-dom';
+import { Typography, Button, Form, Modal, InputNumber, Row, Col, Card } from 'antd';
 import PropTypes from 'prop-types';
-import { Alert } from 'antd';
-import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
-import { LocaleSelector } from 'components/LocaleSelector';
-import { CountrySelector } from 'components/CountrySelector';
 import {
-  deleteStock, getStock, updateStock,
   listStockSupport, saveStockSupport, deleteStockSupport,
   listStockResistance, saveStockResistance, deleteStockResistance,
-  listStockPe, listStockEps, saveStockEps, deleteStockEps,
+  listStockEps, saveStockEps, deleteStockEps,
   listStockFairValue, saveStockFairValue, deleteStockFairValue,
-  syncStockEps,
 } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSourceService';
-import { Divider } from 'antd';
 
-import { DeleteOutlined, EditOutlined, EllipsisOutlined, SaveOutlined, SyncOutlined } from '@ant-design/icons';
 import { StockRangeTimelineEditor } from './StockRangeTimelineEditor';
 import StockEpsTimelineEditor from './StockEpsTimelineEditor';
 import { StockFairValueTimelineEditor } from './StockFairValueTimelineEditor';
-import { StockPublishTimelineEditor } from './StockPublishTimelineEditor';
-import {StockDailyPeList} from './StockDailyPeList';
-import { PageHeader } from 'antd';
-import { Select } from 'antd';
-import { listStockTags } from 'services/stockTagService';
-import StockTag from 'components/StockTag';
-import StockTagSelect from 'components/StockTagSelect';
-import { Drawer } from 'antd';
-const { Title, Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 
 const Container = styled.div`
@@ -73,24 +52,8 @@ const ColInnerCard = props => (
   </Card>
 )
 
-const LogoContainer = styled.div`
-  margin-bottom: 2rem;
-`;
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
 
-const span = {
-  xs: 24,
-  sm: 24,
-  md: 12,
-  lg: 12,
-  xl: 6,
-  xxl: 6
-};
 
 const DEFAULT_SELECTED = {
   source: '',
@@ -103,15 +66,15 @@ const DEFAULT_SELECTED = {
 };
 
 const AdminStockPublishPanel = (props) => {
-  const [stock, setStock] = React.useState(props.stock);
+  const [stock] = React.useState(props.stock);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [epsList, setEpsList] = React.useState([]);
-  const [peList, setPeList] = React.useState([]);
-  const [supportList, setSupportList] = React.useState([]);
-  const [resistanceList, setResistanceList] = React.useState([]);
+  const [peList] = React.useState([]);
+  const [, setSupportList] = React.useState([]);
+  const [, setResistanceList] = React.useState([]);
   const [valueList, setValueList] = React.useState([]);
-  const [publishList, setPublishList] = React.useState([]);
+  const [] = React.useState([]);
   const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
 
   const { symbol } = stock;
@@ -151,17 +114,7 @@ const AdminStockPublishPanel = (props) => {
     });
   }
 
-  const getClassNameOnSelectForPeItem = item => {
-    return `${item.id === selected.peId ? 'current-selected-datepoint' : ''} ${selected.source === 'pe' ? 'source' : ''}`;
-  }
 
-  const updateSelectedByPe = (item) => {
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'pe',
-      peId: item.id
-    });
-  }
 
   const getClassNameOnSelectForValueItem = item => {
     const shouldHighlight = () => {
@@ -216,42 +169,8 @@ const AdminStockPublishPanel = (props) => {
     });
   }
 
-  const updateSelectedByPublish = (item) => {
-    const value = valueList.find(x => x.id === item.fairValueId);
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'publish',
-      publishId: item.id,
-      supportId: item.supportId,
-      resistanceId: item.resistanceId,
-      fairValueId: item.fairValueId,
-      peId: value.peId,
-      epsIds: value.epsIds
-    });
-  }
 
 
-  const getClassNameOnSelectForPublishItem = item => {
-    const shouldHighlight = () => {
-      switch (selected.source) {
-        case 'publish':
-          return item.id === selected.publishId;
-        case 'support':
-          return item.supportId === selected.supportId;
-        case 'resistance':
-          return item.resistanceId === selected.resistanceId;
-        case 'value':
-        case 'eps':
-        case 'pe':
-          return item.fairValueId === selected.fairValueId;
-        default:
-      }
-
-      return false;
-    };
-
-    return `${shouldHighlight() ? 'current-selected-datepoint' : ''} ${selected.source === 'publish' ? 'source' : ''}`;
-  }
 
   return (<Container>
     <Row gutter={[20, 20]} style={{ marginTop: 20 }} wrap={true}>

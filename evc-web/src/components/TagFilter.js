@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { listStockTags } from 'services/stockTagService';
-import StockTag from './StockTag';
+import Tag from './Tag';
 import { Loading } from './Loading';
 
 
 
-const StockTagFilter = (props) => {
+const TagFilter = (props) => {
 
-  const { onChange, value, loading: propLoading } = props;
+  const { onChange, onList, value, loading: propLoading } = props;
   const [loading, setLoading] = React.useState(propLoading);
   const [selected, setSelected] = React.useState(value);
   const [allTags, setAllTags] = React.useState([]);
@@ -16,7 +15,7 @@ const StockTagFilter = (props) => {
   const loadList = async () => {
     try {
       setLoading(true);
-      const list = await listStockTags();
+      const list = await onList();
       setAllTags(list);
     } finally {
       setLoading(false);
@@ -45,7 +44,7 @@ const StockTagFilter = (props) => {
   return (
     <Loading loading={loading}>
       <div style={{padding: '1rem 0'}}>
-        {allTags.map((t, i) => <StockTag
+        {allTags.map((t, i) => <Tag
           key={i}
           color={t.color}
           clickable={true}
@@ -54,23 +53,24 @@ const StockTagFilter = (props) => {
           onClick={() => toggleSelected(t)}
         >
           {t.name}
-        </StockTag>)}
+        </Tag>)}
       </div>
     </Loading>
   );
 };
 
-StockTagFilter.propTypes = {
+TagFilter.propTypes = {
   // value: PropTypes.string.isRequired,
   value: PropTypes.array,
   loading: PropTypes.bool,
   onChange: PropTypes.func,
+  onList: PropTypes.func.isRequired,
 };
 
-StockTagFilter.defaultProps = {
+TagFilter.defaultProps = {
   value: [],
   loading: true,
   onChange: () => { }
 };
 
-export default StockTagFilter;
+export default TagFilter;

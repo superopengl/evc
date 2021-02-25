@@ -801,7 +801,7 @@ paths:
           description: OK
   /usertag:
     get:
-      operationId: listUserags
+      operationId: listUserTags
       responses:
         200:
           description: OK

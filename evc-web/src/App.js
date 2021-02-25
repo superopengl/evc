@@ -40,6 +40,7 @@ import TranslationListPage from 'pages/Translation/TranslationListPage';
 import StockPage from 'pages/StockPage/StockPage';
 import ReactDOM from 'react-dom';
 import ClientSettingsPage from 'pages/ClientSettings/ClientSettingsPage';
+import AdminSettingsPage from 'pages/AdminSettings/AdminSettingsPage';
 
 
 const App = props => {
@@ -134,7 +135,7 @@ const App = props => {
           <RoleRoute visible={!isGuest} loading={loading} path="/stock" exact component={StockListPage} />
           <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />
           {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
-          <RoleRoute visible={isClient} loading={loading} path="/settings" component={ClientSettingsPage} />
+          <RoleRoute visible={!isGuest} loading={loading} path="/settings" component={isGuest ? ClientSettingsPage : AdminSettingsPage} />
           <RoleRoute visible={isClient} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
           <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
           <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />

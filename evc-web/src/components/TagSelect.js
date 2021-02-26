@@ -211,7 +211,7 @@ TagSelect.propTypes = {
 
 TagSelect.defaultProps = {
   value: [],
-  readonly: true,
+  readonly: false,
   onChange: () => { }
 };
 

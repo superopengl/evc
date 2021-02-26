@@ -24,6 +24,8 @@ import { subscriptionDef } from 'def/subscriptionDef';
 import Highlighter from "react-highlight-words";
 import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
+import TagSelect from 'components/TagSelect';
+import { listUserTags, saveUserTag } from 'services/userTagService';
 
 
 const { Title, Text, Paragraph } = Typography;
@@ -356,6 +358,9 @@ const UserListPage = () => {
               <Radio.Button value="client">Client</Radio.Button>
               <Radio.Button value="admin">Admin</Radio.Button>
             </Radio.Group>
+          </Form.Item>
+          <Form.Item label="Tags" name="tags">
+            <TagSelect onList={listUserTags} onSave={saveUserTag}/>
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Invite</Button>

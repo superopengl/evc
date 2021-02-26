@@ -159,7 +159,7 @@ const StockListPage = (props) => {
                 {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
             </Space>
-            {isAdmin && <Button type="primary" ghost icon={<PlusOutlined/>} onClick={() => setCreateModalVisible(true)}>New Stock</Button>}
+            {isAdmin && <Button type="primary" icon={<PlusOutlined/>} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
           </Space>
           <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} onList={listStockTags} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />

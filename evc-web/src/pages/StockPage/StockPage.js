@@ -146,7 +146,7 @@ const StockPage = (props) => {
           <Space direction="vertical" style={{ width: '100%' }}>
             {/* <Text type="secondary">Electronic Technology</Text> */}
             <TagSelect value={stock.tags} readonly={!isAdminOrAgent}
-              onChange={tags => handleChangeTags(tags.map(t => t.id))}
+              onChange={tagIds => handleChangeTags(tagIds)}
               onList={listStockTags}
               onSave={saveStockTag}
             />

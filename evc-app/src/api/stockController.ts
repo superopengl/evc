@@ -182,7 +182,7 @@ export const createStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
-  const { tags, symbol, company } = req.body;
+  const { symbol, company, tags } = req.body;
 
   stock.symbol = symbol.toUpperCase();
   stock.company = company;
@@ -194,7 +194,7 @@ export const createStock = handlerWrapper(async (req, res) => {
     });
   }
 
-  await getRepository(Stock).insert(stock);
+  await getRepository(Stock).save(stock);
 
   res.json();
 });

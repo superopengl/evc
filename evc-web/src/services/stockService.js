@@ -40,7 +40,7 @@ export async function createStock(stock) {
 }
 
 export async function updateStock(stock) {
-  return httpPost(`stock/${stock.symbol}`, stock);
+  return httpPost(`stock/s/${stock.symbol}`, stock);
 }
 
 export async function getWatchList() {

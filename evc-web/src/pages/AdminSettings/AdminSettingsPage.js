@@ -9,7 +9,6 @@ import { Route, Switch } from 'react-router-dom';
 import ChangePasswordPage from 'pages/ChangePasswordPage';
 import UserTagPage from 'pages/UserTag/UserTagPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';
-import UserListPage from 'pages/User/UserListPage';
 
 const {Text} = Typography;
 
@@ -46,7 +45,6 @@ const AdminSettingsPage = props => {
               </Menu.Item>
               <Menu.Item key="profile"><Link to={`${path}`}>Profile</Link></Menu.Item>
               <Menu.Item key="stocktag"><Link to={`${path}/stocktag`}>Stock Tags</Link></Menu.Item>
-              <Menu.Item key="user"><Link to={`${path}/user`}>Users</Link></Menu.Item>
               <Menu.Item key="usertag"><Link to={`${path}/usertag`}>User Tags</Link></Menu.Item>
               <Menu.Item key="change_password"><Link to={`${path}/change_password`}>Change Password</Link></Menu.Item>
             </Menu>
@@ -55,7 +53,6 @@ const AdminSettingsPage = props => {
             <Switch>
               <Route path={`${path}`} exact component={ProfilePage} />
               <Route path={`${path}/stocktag`} exact component={StockTagPage} />
-              <Route path={`${path}/user`} exact component={UserListPage} />
               <Route path={`${path}/usertag`} exact component={UserTagPage} />
               <Route path={`${path}/change_password`} exact component={ChangePasswordPage} />
             </Switch>

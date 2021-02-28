@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Button } from 'antd';
-
-const { Text } = Typography;
+import { Button } from 'antd';
 
 
 const CheckboxButton = (props) => {

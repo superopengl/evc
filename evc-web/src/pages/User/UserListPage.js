@@ -4,7 +4,7 @@ import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Dr
 import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  IdcardOutlined, SearchOutlined,
+  SearchOutlined,
   UserOutlined,
   ClearOutlined
 } from '@ant-design/icons';
@@ -22,7 +22,6 @@ import { BiDollar } from 'react-icons/bi';
 import ReferralBalanceForm from 'components/ReferralBalanceForm';
 import * as _ from 'lodash';
 import { subscriptionDef } from 'def/subscriptionDef';
-import Highlighter from "react-highlight-words";
 import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
 import TagSelect from 'components/TagSelect';

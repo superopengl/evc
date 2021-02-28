@@ -1,21 +1,19 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Select, Button, Typography } from 'antd';
-import { searchStock, listStock, submitStockPlea, incrementStock } from 'services/stockService';
-import Highlighter from "react-highlight-words";
+import { listStock, submitStockPlea, incrementStock } from 'services/stockService';
 import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { StockName } from './StockName';
-import { filter, debounceTime } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 
 const {Text} = Typography;
 
 export const StockSearchInput = (props) => {
-  const { onChange, excluding, traceSearch, mode, style, value } = props;
+  const { onChange, excluding, traceSearch, mode, style } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');

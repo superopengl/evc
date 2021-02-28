@@ -45,12 +45,6 @@ const App = () => {
   const [loading, setLoading] = React.useState(true);
 
   const role = user?.role || 'guest';
-  // const setNotifyCount = (value) => {
-  //   setState({
-  //     ...state,
-  //     notifyCount: value
-  //   });
-  // }
 
   const [contextValue, setContextValue] = React.useState({
     event$,

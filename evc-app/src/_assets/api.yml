@@ -159,7 +159,7 @@ paths:
           description: OK
   /user/search:
     post:
-      operationId: searchUsers
+      operationId: searchUserList
       # security:
       #   - authAdminOrAgent: []
       responses:
@@ -214,6 +214,18 @@ paths:
   /user/:id/balance:
     post:
       operationId: adjustBalance
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /user/:id/tags:
+    post:
+      operationId: setUserTags
       parameters:
         - name: id
           in: path
@@ -291,7 +303,7 @@ paths:
       operationId: getAdminDashboard
       responses:
         200:
-          description: OK          
+          description: OK
   /blog/:
     get:
       operationId: listBlog
@@ -375,7 +387,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
     delete:
       operationId: deleteStock
       parameters:
@@ -396,13 +408,13 @@ paths:
           required: true
       responses:
         200:
-          description: OK         
+          description: OK
   /stock/plea:
     get:
       operationId: listStockPleas
       responses:
         200:
-          description: OK               
+          description: OK
   /stock/plea/{symbol}:
     post:
       operationId: submitStockPlea
@@ -413,7 +425,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK                    
+          description: OK
   /stock/s/{symbol}/insider:
     get:
       operationId: getStockInsider
@@ -820,7 +832,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /referral_policy/global:
     get:
       operationId: listReferralGlobalPolicy

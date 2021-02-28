@@ -71,8 +71,8 @@ export const getStock = handlerWrapper(async (req, res) => {
       .where('s.symbol = :symbol', { symbol })
       .leftJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :id', { id }),
-      'sw',
-      'sw.symbol = s.symbol')
+        'sw',
+        'sw.symbol = s.symbol')
       .select('s.*')
       .addSelect('sw."createdAt" as watched')
       .execute();
@@ -215,6 +215,8 @@ export const updateStock = handlerWrapper(async (req, res) => {
         id: In(tags)
       }
     });
+  } else {
+    stock.tags = [];
   }
 
   await repo.save(stock);
@@ -255,7 +257,7 @@ export const getStockInsider = handlerWrapper(async (req, res) => {
 
   res.json({
     roster: _.chain(roster).orderBy(['position'], ['desc']).take(10).value(),
-    summary: summary.map(x => _.pick(x, [
+    summary: summary?.map(x => _.pick(x, [
       'fullName',
       'reportedTitle',
       'conversionOrExercisePrice',

@@ -59,8 +59,8 @@ const StockInsiderPanel = (props) => {
 
   const getBadgeComponent = (transactionType) => {
     const info = INSIDER_LEGEND_INFOS[transactionType];
-    return <Tooltip title={info.message}>
-      <Tag color={info.color}>{transactionType}</Tag>
+    return <Tooltip title={info?.message ?? transactionType}>
+      <Tag color={info?.color ?? '#888888'}>{transactionType}</Tag>
     </Tooltip>
   }
 

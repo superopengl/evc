@@ -73,6 +73,7 @@ const StockPage = (props) => {
   const [stock, setStock] = React.useState();
   const [watched, setWatched] = React.useState();
   const [loading, setLoading] = React.useState(true);
+  const [stockTags, setStockTags] = React.useState([]);
 
   const isAdminOrAgent = ['admin', 'agent'].includes(role);
   const isClient = role === 'client';
@@ -82,8 +83,10 @@ const StockPage = (props) => {
       setLoading(true);
       // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
       const stock = await getStock(symbol);
+      const tags = await listStockTags();
       ReactDOM.unstable_batchedUpdates(() => {
         setStock(stock);
+        setStockTags(tags);
         setWatched(stock.watched);
         setLoading(false);
       });
@@ -145,7 +148,7 @@ const StockPage = (props) => {
             {/* <Text type="secondary">Electronic Technology</Text> */}
             <TagSelect value={stock.tags} readonly={!isAdminOrAgent}
               onChange={tagIds => handleChangeTags(tagIds)}
-              onList={listStockTags}
+              tags={stockTags}
               onSave={saveStockTag}
             />
             <StockQuotePanel symbol={stock.symbol} />

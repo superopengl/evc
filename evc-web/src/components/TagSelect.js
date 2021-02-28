@@ -108,7 +108,14 @@ const TagSelect = (props) => {
   const [selectedOptions, setSelectedOptions] = React.useState(initSelectedOptions);
 
   React.useEffect(() => {
-    if(!selectedTagIds || !selectedTagIds.length) {
+    const allOptions = convertTagsToOptions(tags);
+    setOptions(allOptions);
+    const selectedOptions = allOptions.filter(x => selectedTagIds?.some(tagId => tagId === x.value));
+    setSelectedOptions(selectedOptions);
+  }, [tags]);
+
+  React.useEffect(() => {
+    if (!selectedTagIds || !selectedTagIds.length) {
       setSelectedOptions([]);
     } else {
       const selectedOptions = options.filter(x => selectedTagIds.some(tagId => tagId === x.value));

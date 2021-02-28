@@ -7,7 +7,6 @@ import LogInPage from 'pages/LogInPage';
 import ResetPasswordPage from 'pages/ResetPasswordPage';
 import { GlobalContext } from './contexts/GlobalContext';
 import ForgotPasswordPage from 'pages/ForgotPasswordPage';
-import ChangePasswordPage from 'pages/ChangePasswordPage';
 import SignUpPage from 'pages/SignUpPage';
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import Error404 from 'pages/Error404';
@@ -17,22 +16,17 @@ import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import MessagePage from 'pages/Message/MessagePage';
 import UserListPage from 'pages/User/UserListPage';
-import ImpersonatePage from 'pages/Impersonate/ImpersonatePage';
-import { countUnreadMessage } from 'services/messageService';
 import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
-import ProfilePage from 'pages/Profile/ProfilePage';
 import StockListPage from 'pages/Stock/StockListPage';
 import StockWatchListPage from 'pages/Stock/StockWatchListPage';
 import { ContactWidget } from 'components/ContactWidget';
-import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import { getEventSource } from 'services/eventSourceService';
 import { Subject } from 'rxjs';
 import DebugPage from 'pages/Debug/DebugPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';
 import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
-import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 import MySubscriptionHistoryPage from 'pages/MySubscription/MySubscriptionHistoryPage';
 import ConfigListPage from 'pages/Config/ConfigListPage';
 import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
@@ -43,7 +37,7 @@ import ClientSettingsPage from 'pages/ClientSettings/ClientSettingsPage';
 import AdminSettingsPage from 'pages/AdminSettings/AdminSettingsPage';
 
 
-const App = props => {
+const App = () => {
 
 
   const event$ = new Subject();
@@ -127,7 +121,6 @@ const App = props => {
           <RoleRoute visible={isAdmin} loading={loading} exact path="/user" component={UserListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/stocktag" component={StockTagPage} />
           {/* <RoleRoute visible={isAdmin} loading={loading} exact path="/recurring" component={RecurringListPage} /> */}
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/impersonate" component={ImpersonatePage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/translation" component={TranslationListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/config" component={ConfigListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />

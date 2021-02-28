@@ -83,6 +83,7 @@ const StockListPage = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const [tags, setTags] = React.useState([]);
   const [createModalVisible, setCreateModalVisible] = React.useState(create);
   const context = React.useContext(GlobalContext);
 
@@ -109,15 +110,20 @@ const StockListPage = (props) => {
       } else {
         setQueryInfo(queryInfo);
       }
+      // Not remember the search text in local storage
+      reactLocalStorage.setObject(LOCAL_STORAGE_QUERY_KEY, { ...queryInfo, text: '' });
     } catch {
       setLoading(false);
     }
-    // Not remember the search text in local storage
-    reactLocalStorage.setObject(LOCAL_STORAGE_QUERY_KEY, { ...queryInfo, text: '' });
+  }
+
+  const load = async () => {
+    searchByQueryInfo(queryInfo);
+    setTags(await listStockTags());
   }
 
   React.useEffect(() => {
-    searchByQueryInfo(queryInfo);
+    load();
   }, []);
 
 
@@ -159,9 +165,9 @@ const StockListPage = (props) => {
                 {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
             </Space>
-            {isAdmin && <Button type="primary" icon={<PlusOutlined/>} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
+            {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
           </Space>
-          <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} onList={listStockTags} />
+          {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
           <Pagination
             current={queryInfo.page}

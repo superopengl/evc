@@ -29,3 +29,4 @@ export class StockPe {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   hi: number;
 }
+

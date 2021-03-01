@@ -29,7 +29,7 @@ export const syncStockEps = async (symbol: string, howManyQuarters = 4) => {
   await syncManyStockEps(infoList);
 };
 
-export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
+export async function syncManyStockEps(epsInfo: StockIexEpsInfo[]) {
   const entites = epsInfo.map(item => {
     const { symbol, fiscalPeriod, reportDate, value: value } = item;
     const matches = /Q([1-4]) ([0-9]{4})/.exec(fiscalPeriod);

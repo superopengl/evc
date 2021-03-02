@@ -10,6 +10,7 @@ import { StockLastFairValue } from './entity/views/StockLastFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 import { initializeConfig } from './utils/initializeConfig';
+import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 
 export async function connectDatabase(shouldSyncSchema = true) {
   const connection = await createConnection();
@@ -45,6 +46,7 @@ async function syncDatabaseSchema(connection: Connection) {
     StockDailyPe,
     StockHistoricalTtmEps,
     StockHistoricalComputedFairValue,
+    StockPutCallRatio90,
   ];
 
   for (const viewEntity of views) {

@@ -180,7 +180,7 @@ const AdminStockPublishPanel = (props) => {
             symbol={symbol}
             onLoadList={() => listStockEps(symbol)}
             onSaveNew={values => saveStockEps(symbol, values)}
-            onDelete={id => deleteStockEps(id)}
+            onDelete={(symbol, reportDate) => deleteStockEps(symbol, reportDate)}
             onChange={list => setEpsList(list)}
             onSelected={updateSelectedByEps}
             getClassNameOnSelect={getClassNameOnSelectForEpsItem}

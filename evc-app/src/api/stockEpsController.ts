@@ -4,6 +4,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { StockEps } from '../entity/StockEps';
 import * as stockEpsService from '../services/stockEpsService';
 import * as moment from 'moment';
+import { refreshMaterializedView } from '../db';
 
 export const listStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -41,13 +42,21 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
 
   await getRepository(StockEps).insert(entity);
 
+  await refreshMaterializedView();
+
   res.json();
 });
 
 export const deleteStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { id } = req.params;
-  await getRepository(StockEps).delete(id);
+  const { symbol, reportDate } = req.params;
+  await getRepository(StockEps).delete({
+    symbol,
+    reportDate
+  });
+
+  await refreshMaterializedView();
+
   res.json();
 });
 

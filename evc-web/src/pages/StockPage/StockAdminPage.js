@@ -1,11 +1,11 @@
-import { Button, Space, Typography, Row, Col, Card, PageHeader, Tag } from 'antd';
+import { Button, Space, Row, Col, Card, PageHeader, Tag } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { updateStock, getStock, unwatchStock, watchStock } from 'services/stockService';
 import { StockName } from 'components/StockName';
-import { LockFilled, SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined } from '@ant-design/icons';
 import StockInfoCard from 'components/StockInfoCard';
 import StockInsiderPanel from 'components/StockInsiderPanel';
 import StockNewsPanel from 'components/StockNewsPanel';
@@ -19,11 +19,8 @@ import TagSelect from 'components/TagSelect';
 import { listStockTags, saveStockTag } from 'services/stockTagService';
 import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import PropTypes from "prop-types";
+import {MemberOnlyIcon} from 'components/MemberOnlyIcon';
 
-const { Text } = Typography;
-
-
-const MemberOnlyIcon = () => <Text type="danger"><LockFilled /></Text>
 
 const span = {
   xs: 24,

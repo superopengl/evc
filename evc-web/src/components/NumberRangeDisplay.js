@@ -1,17 +1,12 @@
 
 import React from 'react';
-import { DatePicker, Typography, Space, Button } from 'antd';
-import * as moment from 'moment';
+import { DatePicker, Typography, Space } from 'antd';
 import PropTypes from 'prop-types';
-import { SaveOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { TimeAgo } from './TimeAgo';
-import MoneyAmount from './MoneyAmount';
 import styled from 'styled-components';
-import {DashOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
-const { RangePicker } = DatePicker;
 
 const NumberPanel = styled.div`
   width: 100%;
@@ -26,7 +21,7 @@ const NumberPanel = styled.div`
 `;
 
 export const NumberRangeDisplay = (props) => {
-  const { lo, hi, loTrend, hiTrend, time } = props;
+  const { lo, hi, loTrend, hiTrend, time, accurateTime } = props;
 
   if (!lo && lo !== 0 && !hi && hi !== 0) {
     return props.empty;
@@ -53,7 +48,7 @@ export const NumberRangeDisplay = (props) => {
   const isCompactMode = displayLo === displayHi && loTrend === hiTrend;
 
   return <Space size="small" direction="horizontal">
-    {time && <TimeAgo value={time} accurate={true} showAgo={false} />}
+    {time && <TimeAgo value={time} accurate={accurateTime} showAgo={false} />}
     <NumberPanel>
       {displayLo === null && displayHi === null ? <Text>None</Text> :
         isCompactMode ? getComponent(displayLo, loTrend) :
@@ -70,6 +65,7 @@ NumberRangeDisplay.propTypes = {
   loTrend: PropTypes.oneOf([-1, 0, 1]),
   hiTrend: PropTypes.oneOf([-1, 0, 1]),
   time: PropTypes.any,
+  accurateTime: PropTypes.bool,
   empty: PropTypes.any,
 };
 
@@ -78,5 +74,6 @@ NumberRangeDisplay.defaultProps = {
   hi: null,
   loTrend: 0,
   hiTrend: 0,
-  empty: null
+  empty: null,
+  accurateTime: true,
 };

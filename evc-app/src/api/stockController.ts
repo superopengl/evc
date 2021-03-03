@@ -85,8 +85,7 @@ export const getStock = handlerWrapper(async (req, res) => {
       stock = result ? result[0] : null;
       break;
     }
-    case Role.Free:
-    default: {
+    case Role.Free: {
       const result = await getRepository(StockLatestFreeInformation)
         .createQueryBuilder('s')
         .where('s.symbol = :symbol', { symbol })
@@ -100,7 +99,19 @@ export const getStock = handlerWrapper(async (req, res) => {
       stock = result ? result[0] : null;
       break;
     }
+    default:
+      assert(false, 500, 'Impossible code path');
   }
+
+  assert(stock, 404);
+
+  res.json(stock);
+});
+
+export const getStockPreview = handlerWrapper(async (req, res) => {
+  const symbol = req.params.symbol.toUpperCase();
+
+  const stock = await getRepository(StockLatestFreeInformation).findOne({ symbol });
 
   assert(stock, 404);
 

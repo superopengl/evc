@@ -20,6 +20,7 @@ import ReactDOM from "react-dom";
 import TagSelect from 'components/TagSelect';
 import INSIDER_LEGEND_INFOS from '../../def/insiderLegendDef';
 import { listStockTags, saveStockTag } from 'services/stockTagService';
+import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 
 const { Text } = Typography;
 
@@ -164,8 +165,7 @@ const StockPage = (props) => {
             <Row gutter={20} >
               <Col {...span}>
                 <Card size="small" type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
-                  调用Advanced Stats中的putCallRatio
-                  做成实时图表，最好能显示近一年平均值，两者方便对比。
+                  <StockPutCallRatioChart symbol={stock.symbol}/>
                 </Card>
               </Col>
               <Col {...span}>

@@ -19,11 +19,7 @@ export const INSIDER_LEGEND_INFOS = {
   'G': {
     color: '#87d068',
     message: 'Gift of securities by or to the insider'
-  },
-  'F': {
-    color: '#f304c7',
-    message: 'Payment of exercise price or tax liability by delivering or withholding securities'
-  },
+  }
 };
 
 export default INSIDER_LEGEND_INFOS;

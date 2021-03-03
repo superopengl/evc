@@ -29,9 +29,6 @@ const ClientSettingsPage = props => {
   const context = React.useContext(GlobalContext);
   const { user, setUser, role } = context;
   const { path } = props.match;
-  if (role !== 'member') {
-    return null;
-  }
 
   return (
     <LayoutStyled>

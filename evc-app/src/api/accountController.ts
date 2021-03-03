@@ -57,7 +57,7 @@ export const getAccount = handlerWrapper(async (req, res) => {
 });
 
 export const getMyAccount = handlerWrapper(async (req, res) => {
-  assertRole(req, 'member');
+  assertRole(req, 'member', 'free');
   const { user: { id } } = req as any;
   const result = await getAccountForUser(id);
 

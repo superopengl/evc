@@ -6,6 +6,7 @@ import { StockIexEpsInfo, syncManyStockEps } from '../src/services/stockEpsServi
 import { StockAdvancedStatsInfo, syncManyStockPutCallRatio } from '../src/services/sockPutCallRatioService';
 import { StockCloseInfo, syncManyStockClose } from '../src/services/sockCloseService';
 import * as moment from 'moment';
+import { refreshMaterializedView } from '../src/db';
 
 
 async function udpateDatabase(iexBatchResponse) {
@@ -47,6 +48,8 @@ async function udpateDatabase(iexBatchResponse) {
   await syncManyStockEps(epsInfo);
   await syncManyStockPutCallRatio(advancedStatsInfo);
   await syncManyStockClose(quoteInfo);
+  
+  await refreshMaterializedView();
 }
 
 async function syncIexToDatabase(symbols: string[]) {

@@ -1,11 +1,11 @@
 import { Connection, createConnection, getConnectionManager } from 'typeorm';
 import { getManager } from 'typeorm';
 import { StockComputedPe90 } from './entity/views/StockComputedPe90';
-import { StockLatestStockInformation } from './entity/views/StockLatestStockInformation';
+import { StockLatestPaidInformation } from './entity/views/StockLatestPaidInformation';
 import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
-import { StockGuestPublishInformation } from './entity/views/StockGuestPublishInformation';
+import { StockLatestFreeInformation } from './entity/views/StockLatestFreeInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
-import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalFairValue';
+import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalComputedFairValue';
 import { StockLastFairValue } from './entity/views/StockLastFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
@@ -36,8 +36,8 @@ async function syncDatabaseSchema(connection: Connection) {
    * so as to let typeorm always create fresh views when app starts up.
    */
   const views = [
-    StockLatestStockInformation,
-    StockGuestPublishInformation,
+    StockLatestPaidInformation,
+    StockLatestFreeInformation,
     SubscriptionPaymentBalanceInformation,
     StockComputedPe90,
     StockLastFairValue,

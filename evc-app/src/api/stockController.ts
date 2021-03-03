@@ -34,8 +34,8 @@ import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
-import { StockLatestStockInformation } from '../entity/views/StockLatestStockInformation';
-import { StockGuestPublishInformation } from '../entity/views/StockGuestPublishInformation';
+import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
+import { StockLatestFreeInformation } from '../entity/views/StockLatestFreeInformation';
 import * as _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
 import { StockPutCallRatio90 } from '../entity/views/StockPutCallRatio90';
@@ -64,23 +64,44 @@ export const getStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
 
   let stock: any;
-  const entityClass = true ? StockLatestStockInformation : StockGuestPublishInformation;
 
-  if (role === Role.Member) {
-    const result = await getRepository(entityClass)
-      .createQueryBuilder('s')
-      .where('s.symbol = :symbol', { symbol })
-      .leftJoin(q => q.from(StockWatchList, 'sw')
-        .where('sw."userId" = :id', { id }),
-        'sw',
-        'sw.symbol = s.symbol')
-      .select('s.*')
-      .addSelect('sw."createdAt" as watched')
-      .execute();
-    stock = result ? result[0] : null;
-  } else {
-    stock = await getRepository(entityClass).findOne({ symbol });
+  switch (role) {
+    case Role.Admin:
+    case Role.Agent: {
+      stock = await getRepository(StockLatestPaidInformation).findOne({ symbol });
+      break;
+    }
+    case Role.Member: {
+      const result = await getRepository(StockLatestPaidInformation)
+        .createQueryBuilder('s')
+        .where('s.symbol = :symbol', { symbol })
+        .leftJoin(q => q.from(StockWatchList, 'sw')
+          .where('sw."userId" = :id', { id }),
+          'sw',
+          'sw.symbol = s.symbol')
+        .select('s.*')
+        .addSelect('sw."createdAt" as watched')
+        .execute();
+      stock = result ? result[0] : null;
+      break;
+    }
+    case Role.Free:
+    default: {
+      const result = await getRepository(StockLatestFreeInformation)
+        .createQueryBuilder('s')
+        .where('s.symbol = :symbol', { symbol })
+        .leftJoin(q => q.from(StockWatchList, 'sw')
+          .where('sw."userId" = :id', { id }),
+          'sw',
+          'sw.symbol = s.symbol')
+        .select('s.*')
+        .addSelect('sw."createdAt" as watched')
+        .execute();
+      stock = result ? result[0] : null;
+      break;
+    }
   }
+
   assert(stock, 404);
 
   res.json(stock);
@@ -146,7 +167,7 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 
   const list = await getManager()
     .createQueryBuilder()
-    .from(StockGuestPublishInformation, 'si')
+    .from(StockLatestFreeInformation, 'si')
     .innerJoin(q => q.from(StockHotSearch, 'h')
       .orderBy('h.count', 'DESC')
       .limit(limit), 'h', 'si.symbol = h.symbol'

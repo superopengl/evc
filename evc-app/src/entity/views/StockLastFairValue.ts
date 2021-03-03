@@ -1,6 +1,6 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockSpecialFairValue } from '../StockSpecialFairValue';
-import { StockHistoricalComputedFairValue } from './StockHistoricalFairValue';
+import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
 
 
 @ViewEntity({

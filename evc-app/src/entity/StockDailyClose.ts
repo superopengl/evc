@@ -5,7 +5,7 @@ import { Stock } from './Stock';
 
 @Entity()
 @Index(['symbol', 'date'], { unique: true })
-export class StockClose {
+export class StockDailyClose {
   @PrimaryColumn()
   symbol: string;
 

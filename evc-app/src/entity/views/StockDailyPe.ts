@@ -1,6 +1,6 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockEps } from '../StockEps';
-import { StockClose } from '../StockClose';
+import { StockDailyClose } from '../StockDailyClose';
 
 
 @ViewEntity({
@@ -8,7 +8,7 @@ import { StockClose } from '../StockClose';
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(q => q.from(StockEps, 'eps')
-      .innerJoin(q => q.from(StockClose, 'sc'), 'sc', 'sc.symbol = eps.symbol')
+      .innerJoin(q => q.from(StockDailyClose, 'sc'), 'sc', 'sc.symbol = eps.symbol')
       .where('eps."reportDate" <= sc.date')
       .select([
         'sc.symbol',

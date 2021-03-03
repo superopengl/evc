@@ -1,5 +1,5 @@
 import { getManager } from 'typeorm';
-import { StockClose } from '../entity/StockClose';
+import { StockDailyClose } from '../entity/StockDailyClose';
 
 export type StockCloseInfo = {
   symbol: string;
@@ -14,7 +14,7 @@ export async function syncManyStockClose(info: StockCloseInfo[]) {
       return null;
     }
 
-    const entity = new StockClose();
+    const entity = new StockDailyClose();
     entity.symbol = symbol;
     entity.close = close;
     entity.date = date;
@@ -24,7 +24,7 @@ export async function syncManyStockClose(info: StockCloseInfo[]) {
   await getManager()
     .createQueryBuilder()
     .insert()
-    .into(StockClose)
+    .into(StockDailyClose)
     .values(entites)
     .onConflict('(symbol, date) DO NOTHING')
     .execute();

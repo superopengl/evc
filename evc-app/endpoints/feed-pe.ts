@@ -5,15 +5,15 @@ import { connectDatabase } from '../src/db';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { getLastThreeMonthDailyPrice, singleBatchRequest } from '../src/services/iexService';
-import { StockClose } from '../src/entity/StockClose';
+import { StockDailyClose } from '../src/entity/StockDailyClose';
 
 
-async function syncManyStockClose(closeEntities: StockClose[]) {
+async function syncManyStockClose(closeEntities: StockDailyClose[]) {
   if (closeEntities.length) {
     await getManager()
       .createQueryBuilder()
       .insert()
-      .into(StockClose)
+      .into(StockDailyClose)
       .onConflict('("symbol", "date") DO NOTHING')
       .values(closeEntities)
       .execute();
@@ -21,12 +21,12 @@ async function syncManyStockClose(closeEntities: StockClose[]) {
 }
 
 async function udpateDatabase(iexBatchResponse) {
-  const closeEntities: StockClose[] = [];
+  const closeEntities: StockDailyClose[] = [];
   for (const [symbol, value] of Object.entries(iexBatchResponse)) {
     const { chart } = value as any;
     if (symbol && chart?.length) {
       for (const p of chart) {
-        const stockClose = new StockClose();
+        const stockClose = new StockDailyClose();
         stockClose.symbol = symbol;
         stockClose.date = p.date;
         stockClose.close = p.close;

@@ -15,7 +15,6 @@ export class StockDailyPutCallRatio {
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
   stock: Stock;
   
-
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   putCallRatio: number;
 

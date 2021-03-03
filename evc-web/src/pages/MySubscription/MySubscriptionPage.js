@@ -1,5 +1,4 @@
-import { Button, Layout, Modal, Space, Typography, Row, Col } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+import { Button, Modal, Space, Typography, Row, Col } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { WarningOutlined } from '@ant-design/icons';
@@ -18,8 +17,6 @@ const { Paragraph, Text, Title } = Typography;
 
 
 const ContainerStyled = styled.div`
-  margin: 6rem auto 2rem auto;
-  padding: 0 1rem 4rem;
   width: 100%;
   max-width: 1000px;
   display: flex;
@@ -40,17 +37,6 @@ const span = {
   xxl: 8
 };
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-
-  .task-count .ant-badge-count {
-    background-color: #15be53;
-    color: #eeeeee;
-    // box-shadow: 0 0 0 1px #15be53 inset;
-  }
-`;
 
 const StyledRow = styled(Row)`
   margin-top: 20px;

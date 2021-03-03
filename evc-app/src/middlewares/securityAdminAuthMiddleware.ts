@@ -24,6 +24,6 @@ import * as _ from 'lodash';
 // export const authAnyRole = createRoleBasedAuthCheckFunction();
 // export const authAdmin = createRoleBasedAuthCheckFunction('admin');
 // export const authGuest = createRoleBasedAuthCheckFunction('guest');
-// export const authLoggedInUser = createRoleBasedAuthCheckFunction('admin', 'client', 'agent');
+// export const authLoggedInUser = createRoleBasedAuthCheckFunction('admin', 'member', 'agent');
 // export const authAdminOrAgent = createRoleBasedAuthCheckFunction('admin', 'agent');
-// export const authClient = createRoleBasedAuthCheckFunction('client');
+// export const authClient = createRoleBasedAuthCheckFunction('member');

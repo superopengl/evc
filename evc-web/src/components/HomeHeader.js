@@ -56,7 +56,8 @@ const HomeHeaderRaw = props => {
 
   const { user, role, setUser, notifyCount } = context;
   const isAdmin = role === 'admin';
-  const isClient = role === 'client';
+  const isFree = role === 'free';
+  const isMember = role === 'member';
   const isAgent = role === 'agent';
   const isGuest = role === 'guest';
   const canChangePassword = !isGuest && user?.loginType === 'local';
@@ -103,19 +104,19 @@ const HomeHeaderRaw = props => {
             onClick={handleClick}
             selectedKeys={[current]}
             mode="horizontal" style={{ border: 0 }}>
-            {isClient && <Menu.Item key="favorite"><Link to="/">My Watch List</Link></Menu.Item>}
-            {isClient && <Menu.Item key="stock"><Link to="/stock">All Stocks</Link></Menu.Item>}
+            {(isMember || isFree) && <Menu.Item key="favorite"><Link to="/">My Watch List</Link></Menu.Item>}
+            {(isMember || isFree) && <Menu.Item key="stock"><Link to="/stock">All Stocks</Link></Menu.Item>}
             {isGuest && <Menu.Item key="services"><HashLink to="/#services">Services</HashLink></Menu.Item>}
             {/* {isGuest && <Menu.Item key="blog"><HashLink to="/blogs">Blog</HashLink></Menu.Item>} */}
             {isGuest && <Menu.Item key="signup"><Link to="/signup">Sign Up</Link></Menu.Item>}
             {isGuest && <Menu.Item key="login"><Link to="/login">Log In</Link></Menu.Item>}
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><Link to="/board">Board</Link></Menu.Item>} */}
-            {/* {isClient && <Menu.Item key="landing"><Link to="/">Home</Link></Menu.Item>} */}
+            {/* {isMember && <Menu.Item key="landing"><Link to="/">Home</Link></Menu.Item>} */}
             {isAdmin && <Menu.Item key="dashboard"><Link to="/">Dashboard</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="stocks"><Link to="/stock">Stocks</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="stock"><Link to="/stock">Stocks</Link></Menu.Item>} */}
-            {/* {isClient && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
+            {/* {isMember && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="clients"><Link to="/clients">Users</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="admin"><Link to="/admin">Admin</Link></Menu.Item>} */}
             {isAdmin && <Menu.SubMenu key="settings_old" title="Settings">
@@ -165,15 +166,15 @@ const HomeHeaderRaw = props => {
             mode="inline"
             style={{ border: 0 }}
           >
-            {isClient && <Menu.Item key="favorite"><LoginOutlined /> <Link to="/">My Watch List</Link></Menu.Item>}
-            {isClient && <Menu.Item key="stock"><LoginOutlined /> <Link to="/stock">All Stocks</Link></Menu.Item>}
+            {(isMember || isFree) && <Menu.Item key="favorite"><LoginOutlined /> <Link to="/">My Watch List</Link></Menu.Item>}
+            {(isMember || isFree) && <Menu.Item key="stock"><LoginOutlined /> <Link to="/stock">All Stocks</Link></Menu.Item>}
             {isGuest && <Menu.Item key="login"><LoginOutlined /> <Link to="/login">Log In</Link></Menu.Item>}
             {isGuest && <Menu.Item key="signup"><UserAddOutlined /> <Link to="/signup">Sign Up</Link></Menu.Item>}
             {/* {isAdmin && <Menu.Item key="admin"><SettingOutlined /> <Link to="/admin">Admin</Link></Menu.Item>} */}
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><DashboardOutlined /> <Link to="/board">Board</Link></Menu.Item>} */}
-            {isClient && <Menu.Item key="landing"><DashboardOutlined /> <Link to="/">Home</Link></Menu.Item>}
+            {/* {isMember && <Menu.Item key="landing"><DashboardOutlined /> <Link to="/">Home</Link></Menu.Item>} */}
             {/* {!isGuest && <Menu.Item key="stock"><SnippetsOutlined /> <Link to="/stock">Stocks</Link></Menu.Item>} */}
-            {/* {isClient && <Menu.Item key="portfolio"><IdcardOutlined /> <Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
+            {/* {isMember && <Menu.Item key="portfolio"><IdcardOutlined /> <Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="task_template"><ToolOutlined /> <Link to="/task_template">Task Template</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="doc_template"><ReconciliationOutlined /> <Link to="/doc_template">Doc Template</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="recurring"><CalendarOutlined /> <Link to="/recurring">Recurring</Link></Menu.Item>} */}
@@ -186,8 +187,8 @@ const HomeHeaderRaw = props => {
             {isAdmin && <Menu.Item key="email_template"><TeamOutlined /> <Link to="/email_template">Email Template</Link></Menu.Item>}
             {(isAdmin || isAgent) && <Menu.Item key="stats"><DashboardOutlined /> <Link to="/stats">Statistics</Link></Menu.Item>}
             {!isGuest && <Menu.Item key="profile"><UserOutlined /> <Link to="/profile">Profile</Link></Menu.Item>}
-            {isClient && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}
-            {isClient && <Menu.Item key="subscription"><Link to="/subscription">Subscription</Link></Menu.Item>}
+            {isMember && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}
+            {isMember && <Menu.Item key="subscription"><Link to="/subscription">Subscription</Link></Menu.Item>}
             {canChangePassword && <Menu.Item key="changePassword"><SecurityScanOutlined /> <Link to="/change_password">Change Password</Link></Menu.Item>}
             {isGuest && <Menu.Item key="home"><HomeOutlined /> <HashLink to="/#home" onClick={onClose}>Home</HashLink></Menu.Item>}
             {isGuest && <Menu.Item key="services"><HeartOutlined /> <HashLink to="/#services" onClick={onClose}>Services</HashLink></Menu.Item>}

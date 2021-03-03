@@ -87,13 +87,15 @@ const App = () => {
 
   const isAdmin = role === 'admin';
   const isGuest = role === 'guest';
-  const isClient = role === 'client';
+  const isMember = role === 'member';
+  const isFree = role === 'free';
+  const isLoggedIn = isAdmin || isMember || isFree;
 
   return (
     <GlobalContext.Provider value={contextValue}>
       <BrowserRouter basename="/">
         <Switch>
-          <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? StockWatchListPage : AdminDashboardPage} />
+          <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : (isMember || isFree) ? StockWatchListPage : AdminDashboardPage} />
           <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
           <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
@@ -101,8 +103,8 @@ const App = () => {
           <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
           {/* <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/stats" component={AdminStatsPage} /> */}
           {/* <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/board" component={AdminBoardPage} /> */}
-          {/* <RoleRoute visible={isClient} loading={loading} exact path="/landing" component={ClientDashboardPage} /> */}
-          {/* <RoleRoute visible={isClient} loading={loading} exact path="/portfolios" component={PortfolioListPage} />
+          {/* <RoleRoute visible={isMember} loading={loading} exact path="/landing" component={ClientDashboardPage} /> */}
+          {/* <RoleRoute visible={isMember} loading={loading} exact path="/portfolios" component={PortfolioListPage} />
             <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/:id" component={PortfolioFormPage} />
             <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/new/:type" component={PortfolioFormPage} /> */}
           <RoleRoute loading={loading} path="/reset_password" exact component={ResetPasswordPage} />
@@ -117,11 +119,11 @@ const App = () => {
           <RoleRoute visible={isAdmin} loading={loading} exact path="/translation" component={TranslationListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/config" component={ConfigListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
-          <RoleRoute visible={!isGuest} loading={loading} path="/stock" exact component={StockListPage} />
-          <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />
-          {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
-          <RoleRoute visible={!isGuest} loading={loading} path="/settings" component={isGuest ? ClientSettingsPage : AdminSettingsPage} />
-          <RoleRoute visible={isClient} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
+          <RoleRoute visible={isLoggedIn} loading={loading} path="/stock" exact component={StockListPage} />
+          <RoleRoute visible={isLoggedIn} loading={loading} path="/stock/:symbol" exact component={StockPage} />
+          {/* <RoleRoute visible={isAdmin || isAgent || isMember} loading={loading} path="/stock" exact component={StockListPage} /> */}
+          <RoleRoute visible={isLoggedIn} loading={loading} path="/settings" component={isGuest ? ClientSettingsPage : AdminSettingsPage} />
+          <RoleRoute visible={isMember || isFree} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
           <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
           <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
           {/* <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} /> */}
@@ -130,7 +132,7 @@ const App = () => {
 
         </Switch>
       </BrowserRouter>
-      {(isClient || isGuest) && <ContactWidget />}
+      {(isMember || isGuest) && <ContactWidget />}
     </GlobalContext.Provider>
   );
 }

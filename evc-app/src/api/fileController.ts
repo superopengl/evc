@@ -9,7 +9,7 @@ import { getS3ObjectStream, uploadToS3 } from '../utils/uploadToS3';
 import { v4 as uuidv4 } from 'uuid';
 
 export const downloadFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client', 'agent');
+  assertRole(req, 'admin', 'member', 'agent');
   const { taskId, fileId } = req.params;
   const { user: { id: userId, role } } = req as any;
 
@@ -17,7 +17,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
   const file = await fileRepo.findOne(fileId);
   assert(file, 404);
 
-  if (role === 'client') {
+  if (role === 'member') {
     // // Only record the read by client
     const now = getUtcNow();
 
@@ -53,7 +53,7 @@ export const searchFileList = handlerWrapper(async (req, res) => {
 
 
 export const uploadFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client', 'agent');
+  assertRole(req, 'admin', 'member', 'agent');
   const { file } = (req as any).files;
   assert(file, 404, 'No file to upload');
   const { name, data, mimetype, md5 } = file;

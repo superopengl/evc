@@ -61,7 +61,7 @@ async function listMessageForAdmin(pagenation, unreadOnly) {
 }
 
 export const listMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member');
   const { user: { id, role } } = req as any;
   const { page, size, unreadOnly } = req.body;
   assert(page >= 0 && size > 0, 400, 'Invalid page and size parameter');
@@ -73,7 +73,7 @@ export const listMessage = handlerWrapper(async (req, res) => {
 
   let list: Promise<any>;
   switch (role) {
-  case 'client':
+  case 'member':
     list = await listMessageForClient(id, pagenation, unreadOnly);
     break;
   case 'agent':
@@ -90,13 +90,13 @@ export const listMessage = handlerWrapper(async (req, res) => {
 });
 
 export const getMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member');
   const { id } = req.params;
   const { user: { id: userId, role } } = req as any;
   const repo = getRepository(Message);
   const query: any = { id };
-  const isClient = role === 'client';
-  if (isClient) {
+  const isMember = role === 'member';
+  if (isMember) {
     query.clientUserId = userId;
   }
 
@@ -116,7 +116,7 @@ export const getMessage = handlerWrapper(async (req, res) => {
   const item = result[0];
   assert(item, 404);
 
-  if (isClient) {
+  if (isMember) {
     await repo.update(query, { readAt: getUtcNow() });
   }
 
@@ -124,13 +124,13 @@ export const getMessage = handlerWrapper(async (req, res) => {
 });
 
 export const getMessageUnreadCount = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member');
   const repo = getRepository(Message);
   const { user: { role, id } } = req as any;
   const query: any = {
     readAt: IsNull()
   };
-  if (role === 'client') {
+  if (role === 'member') {
     query.clientUserId = id;
   }
 

@@ -62,7 +62,7 @@ function createUserAndProfileEntity(payload): { user: User; profile: UserProfile
   const { email, password, role, referralCode, ...other } = payload;
   const thePassword = password || uuidv4();
   validatePasswordStrength(thePassword);
-  assert([Role.Client, Role.Admin].includes(role), 400, `Unsupported role ${role}`);
+  assert([Role.Free, Role.Agent, Role.Admin].includes(role), 400, `Unsupported role ${role}`);
 
   const profileId = uuidv4();
   const userId = uuidv4();
@@ -106,7 +106,7 @@ export const signup = handlerWrapper(async (req, res) => {
   const { user, profile } = await createNewLocalUser({
     password: uuidv4(), // Temp password to fool the functions beneath
     ...payload,
-    role: 'client'
+    role: Role.Free
   });
 
   const { id, resetPasswordToken } = user;
@@ -251,7 +251,7 @@ export const inviteUser = handlerWrapper(async (req, res) => {
 
   const { user, profile } = createUserAndProfileEntity({
     email,
-    role: role || 'client'
+    role: role || Role.Free
   });
 
   await handleInviteUser(user, profile);
@@ -286,7 +286,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   if (isNewUser) {
     const { user: newUser, profile } = createUserAndProfileEntity({
       email,
-      role: 'client'
+      role: Role.Free
     });
 
     user = Object.assign(newUser, extra);

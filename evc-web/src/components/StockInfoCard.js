@@ -51,7 +51,7 @@ const StockInfoCard = (props) => {
   const [watched, setWatched] = React.useState(stock?.watched);
   const context = React.useContext(GlobalContext);
   const { user, role, setUser, notifyCount } = context;
-  const isClient = role === 'client';
+  const isClient = role === 'member' || role === 'free';
 
 
   const handleToggleWatch = async watching => {

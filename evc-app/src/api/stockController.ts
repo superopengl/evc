@@ -58,7 +58,7 @@ export const incrementStock = handlerWrapper((req, res) => {
 });
 
 export const getStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   const { user } = req as any;
   const { id, role } = user;
   const symbol = req.params.symbol.toUpperCase();
@@ -66,7 +66,7 @@ export const getStock = handlerWrapper(async (req, res) => {
   let stock: any;
   const entityClass = true ? StockLatestStockInformation : StockGuestPublishInformation;
 
-  if (role === Role.Client) {
+  if (role === Role.Member) {
     const result = await getRepository(entityClass)
       .createQueryBuilder('s')
       .where('s.symbol = :symbol', { symbol })
@@ -87,7 +87,7 @@ export const getStock = handlerWrapper(async (req, res) => {
 });
 
 export const existsStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   const { user } = req as any;
   const symbol = req.params.symbol.toUpperCase();
 
@@ -99,16 +99,8 @@ export const existsStock = handlerWrapper(async (req, res) => {
 
 
 export const getWatchList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
-  // const list = await getRepository(Stock)
-  //   .createQueryBuilder('s')
-  //   .innerJoin(
-  //     q => q.from(StockWatchList, 'w').where(`w."userId" = :userId`, { userId }),
-  //     'w',
-  //     `s.symbol = w.symbol`
-  //   )
-  //   .getMany();
 
   const list = await searchStock({
     orderField: 'symbol',
@@ -123,7 +115,7 @@ export const getWatchList = handlerWrapper(async (req, res) => {
 });
 
 export const watchStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
   await getRepository(StockWatchList).insert({ userId, symbol });
@@ -131,7 +123,7 @@ export const watchStock = handlerWrapper(async (req, res) => {
 });
 
 export const unwatchStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
   await getRepository(StockWatchList).delete({ userId, symbol });
@@ -169,10 +161,10 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 });
 
 export const searchStockList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client', 'admin', 'agent');
+  assertRole(req, 'member', 'admin', 'agent', 'free');
   const { user: { id, role } } = req as any;
   const query = req.body as StockSearchParams;
-  const includesWatchForUserId = role === 'client' ? id : null;
+  const includesWatchForUserId = role === 'member' ? id : null;
 
   const list = await searchStock(query, includesWatchForUserId);
 
@@ -226,7 +218,7 @@ export const updateStock = handlerWrapper(async (req, res) => {
 });
 
 export const deleteStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client');
+  assertRole(req, 'admin', 'member');
   const symbol = req.params.symbol.toUpperCase();
   const repo = getRepository(Stock);
   await repo.delete(symbol);

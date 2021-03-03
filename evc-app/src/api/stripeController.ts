@@ -17,7 +17,7 @@ export const webhookStripe = async (req, res) => {
 };
 
 export const fetchCheckoutSession = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const session = await createStripeCheckoutSession();
   res.json(session.id);
 });

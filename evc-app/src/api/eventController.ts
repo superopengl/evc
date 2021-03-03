@@ -8,7 +8,7 @@ const subscriber = new RedisRealtimePriceSubService();
 const publisher = new RedisRealtimePricePubService();
 
 export const subscribeEvent = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   // const { user: { id: userId } } = req as any;
   if (!isProd) {
     res.setHeader('Access-Control-Allow-Origin', process.env.EVC_WEB_DOMAIN_NAME);

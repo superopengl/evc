@@ -30,7 +30,7 @@ const PortfolioList = props => {
 
   const loadList = async () => {
     setLoading(true);
-    const data = context.user.role === 'client' ? await listPortfolio() : await listPortfolioForUser(userId);
+    const data = context.user.role === 'member' ? await listPortfolio() : await listPortfolioForUser(userId);
     setList(data);
     setLoading(false);
   }
@@ -56,7 +56,7 @@ const PortfolioList = props => {
   const handleSubmitPortfolio = async (portfolio, userId) => {
     try {
       setLoading(true);
-      if(context.user.role === 'client') {
+      if(context.user.role === 'member') {
         await savePortfolio(portfolio);
       } else {
         await newPortfolioForUser(portfolio, userId);

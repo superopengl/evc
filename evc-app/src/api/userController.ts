@@ -120,7 +120,10 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   });
 
   if (user) {
+    const {profileId} = user;
     await repo.softDelete(id);
+    await getRepository(UserProfile).delete(profileId);
+
     await sendEmail({
       to: user.profile.email,
       template: EmailTemplateType.DeleteUser,

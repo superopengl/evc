@@ -130,11 +130,11 @@ const StockAdminPage = (props) => {
                 <StockPutCallRatioChart symbol={stock.symbol} />
               </Card>
             </Col>
-            <Col {...span}>
+            {/* <Col {...span}>
               <Card size="small" type="inner" title={<>Earnings Today</>}>
                 <StockEarningsPanel symbol={stock.symbol} />
               </Card>
-            </Col>
+            </Col> */}
           </Row>
           {stock && <Row gutter={20}>
             <Col span={12}>

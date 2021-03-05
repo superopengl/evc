@@ -2,11 +2,8 @@
 import * as jwt from 'jsonwebtoken';
 import { getUtcNow } from './getUtcNow';
 import * as moment from 'moment';
-import { UserRole } from 'aws-sdk/clients/workmail';
 import { assert } from './assert';
 import { sanitizeUser } from './sanitizeUser';
-import { getRepository } from 'typeorm';
-import { User } from '../entity/User';
 
 const cookieName = 'jwt';
 const isProd = process.env.NODE_ENV === 'prod';

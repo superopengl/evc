@@ -63,10 +63,11 @@ const HomeHeaderRaw = props => {
   const canChangePassword = !isGuest && user?.loginType === 'local';
 
   const handleLogout = async () => {
+    await logout();
     reactLocalStorage.clear();
     setVisible(false);
     setUser(null);
-    await logout();
+    // debugger;
     history.push('/');
   }
 

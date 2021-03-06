@@ -4,6 +4,7 @@ import { StockDailyPe } from './StockDailyPe';
 const existsQuery = <T>(builder: SelectQueryBuilder<T>) => `exists (${builder.getQuery()})`;
 
 @ViewEntity({
+  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(StockDailyPe, 'pe')

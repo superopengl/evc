@@ -15,11 +15,11 @@ const views = [
   StockLatestPaidInformation,
   StockLatestFreeInformation,
   SubscriptionPaymentBalanceInformation,
-  StockComputedPe90,
   StockLastFairValue,
 ];
 const mviews = [
   StockDailyPe,
+  StockComputedPe90,
   StockHistoricalTtmEps,
   StockHistoricalComputedFairValue,
   StockPutCallRatio90,

@@ -17,6 +17,10 @@ import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import { TimeAgo } from 'components/TimeAgo';
 import { Typography, Skeleton } from 'antd';
 import { MemberOnlyIcon } from 'components/MemberOnlyIcon';
+import StockRosterPanel from 'components/StockRosterPanel';
+import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
+import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
+import { MemberOnlyCard } from 'components/MemberOnlyCard';
 
 const { Text } = Typography;
 
@@ -25,6 +29,7 @@ const StockFreePage = (props) => {
 
   const context = React.useContext(GlobalContext);
   const { role } = context;
+  const [hasPaid, setHasPaid] = React.useState(false);
   const [stock, setStock] = React.useState();
   const [watched, setWatched] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -53,6 +58,10 @@ const StockFreePage = (props) => {
   React.useEffect(() => {
     loadEntity();
   }, [symbol]);
+
+  React.useEffect(() => {
+    setHasPaid(['admin', 'agent', 'member'].includes(role));
+  }, [role]);
 
   const handleToggleWatch = async watching => {
     stock.watched = watching;
@@ -96,15 +105,30 @@ const StockFreePage = (props) => {
                   <TimeAgo value={fv.date} showAgo={false} accurate={false} />
                 </div>
               </div>)}
+
+
             </Space>
           </Col>
           <Col flex="1 0 auto">
             <StockChart symbol={stock.symbol} period="1d" interval="5m" />
           </Col>
-          <Col span={24}>
-            <Card size="small" type="inner" title={<>News</>}>
+          <Col span={18}>
+            <MemberOnlyCard title={<>News</>}>
               <StockNewsPanel symbol={stock.symbol} />
-            </Card>
+            </MemberOnlyCard>
+          </Col>
+          <Col span={6}>
+          <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true}>
+              <StockPutCallRatioChart symbol={stock.symbol} />
+            </MemberOnlyCard>
+            <MemberOnlyCard title={<>Roster</>}>
+              <StockRosterPanel symbol={stock.symbol} />
+            </MemberOnlyCard>
+            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true}>
+              <StockInsiderTransactionPanel symbol={stock.symbol} />
+            </MemberOnlyCard>
+          </Col>
+          <Col flex="auto">
           </Col>
         </Row>
 

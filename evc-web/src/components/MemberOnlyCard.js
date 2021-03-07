@@ -13,12 +13,11 @@ margin-bottom: 20px;
 `;
 
 export const MemberOnlyCard = (props) => {
-  const { paidOnly, message } = props;
+  const { paidOnly, message, children, ...otherProps } = props;
   const context = React.useContext(GlobalContext);
   const { role } = context;
   const shouldBlock = paidOnly && !['admin', 'agent', 'member'].includes(role);
 
-  const { children, ...otherProps } = props;
   const bodyStyle = shouldBlock ? {
     backgroundColor: 'rgb(0, 21, 41)',
     paddingLeft: 0,

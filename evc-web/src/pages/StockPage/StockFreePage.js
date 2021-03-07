@@ -94,10 +94,12 @@ const StockFreePage = (props) => {
               <StockQuotePanel symbol={stock.symbol} />
               {stock.fairValues?.map((fv, i) => <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 {i === 0 ?
-                  <Space>
-                    <Skeleton.Input size="small" style={{ width: '9rem' }} shape="round" active={true} />
+                  <Space style={{backgroundColor: 'rgb(0, 21, 41)', color: 'rgba(255,255,255,0.75)'}}>
                     <MemberOnlyIcon />
-                  </Space> :
+                    <i>Latest fair value is only accessible to paid user</i>
+                  </Space> 
+                  // <MemberOnlyCard title={<>Fair Value</>} paidOnly={true}>                  </MemberOnlyCard>
+                  :
                   <NumberRangeDisplay lo={fv.lo} hi={fv.hi} />}
                 <div><Text type={i === 0 ? 'danger' : 'secondary'}>
                   <small>{i === 0 ? 'Latest' : 'Historical'} fair value at </small>
@@ -118,7 +120,7 @@ const StockFreePage = (props) => {
             </MemberOnlyCard>
           </Col>
           <Col span={6}>
-          <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true}>
+            <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true}>
               <StockPutCallRatioChart symbol={stock.symbol} />
             </MemberOnlyCard>
             <MemberOnlyCard title={<>Roster</>}>

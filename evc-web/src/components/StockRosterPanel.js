@@ -57,8 +57,8 @@ const StockRosterPanel = (props) => {
         dataSource={data.roster}
         renderItem={item => (
           <List.Item>
-            <Space style={{width: '100%', justifyContent: 'space-between'}}>
-              <Text>{item.entityName}</Text>
+            <Space style={{width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0,0,0,0.1)'}}>
+              <Text style={{color: '#3273A4'}} strong>{item.entityName}</Text>
               <Text>{item.position.toLocaleString()}</Text>
             </Space>
           </List.Item>

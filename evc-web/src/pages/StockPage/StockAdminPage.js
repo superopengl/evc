@@ -1,4 +1,4 @@
-import { Button, Space, Row, Col, Card, PageHeader, Tag } from 'antd';
+import { Button, Space, Row, Col, Card, PageHeader, Tag, Divider } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -21,6 +21,7 @@ import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import PropTypes from "prop-types";
 import { MemberOnlyIcon } from 'components/MemberOnlyIcon';
 import StockRosterPanel from 'components/StockRosterPanel';
+import {MemberOnlyCard} from 'components/MemberOnlyCard';
 
 
 const span = {
@@ -109,48 +110,46 @@ const StockAdminPage = (props) => {
           ]}
         />
         <Space direction="vertical" style={{ width: '100%' }}>
+          {/* <Divider /> */}
           {/* <Text type="secondary">Electronic Technology</Text> */}
           <TagSelect value={stock.tags} readonly={!isAdminOrAgent}
             onChange={tagIds => handleChangeTags(tagIds)}
             tags={stockTags}
             onSave={saveStockTag}
           />
-          <StockQuotePanel symbol={stock.symbol} />
           <Row gutter={20} wrap={false}>
             <Col flex="none">
-              <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
+              <StockQuotePanel symbol={stock.symbol} />
+              {/* <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} /> */}
             </Col>
             <Col flex="auto">
               <StockChart symbol={stock.symbol} period="1d" interval="5m" />
             </Col>
           </Row>
-          <Row gutter={20} >
-            <Col {...span}>
-              <Card size="small" type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
-                <StockPutCallRatioChart symbol={stock.symbol} />
-              </Card>
-            </Col>
-            {/* <Col {...span}>
-              <Card size="small" type="inner" title={<>Earnings Today</>}>
+          <AdminStockPublishPanel stock={stock} />
+          {/* <Col {...span}>
+              <Card title={<>Earnings Today</>}>
                 <StockEarningsPanel symbol={stock.symbol} />
               </Card>
             </Col> */}
-          </Row>
-          {stock && <Row gutter={20}>
+          <Row gutter={20}>
             <Col span={12}>
-              <Card size="small" type="inner" title={<>News</>}>
+              <MemberOnlyCard title={<>News</>}>
                 <StockNewsPanel symbol={stock.symbol} />
-              </Card>
+              </MemberOnlyCard>
             </Col>
             <Col span={12}>
-              <Card size="small" type="inner" title={<>Roster</>} style={{marginBottom: 20}}>
+              <MemberOnlyCard title={<>Option Put-Call Ratio</>}>
+                <StockPutCallRatioChart symbol={stock.symbol} />
+              </MemberOnlyCard>
+              <MemberOnlyCard title={<>Roster</>} style={{ marginBottom: 20 }}>
                 <StockRosterPanel symbol={stock.symbol} />
-              </Card>
-              <Card size="small" type="inner" title={<>Insider Transactions</>}>
+              </MemberOnlyCard>
+              <MemberOnlyCard title={<>Insider Transactions</>}>
                 <StockInsiderTransactionPanel symbol={stock.symbol} />
-              </Card>
+              </MemberOnlyCard>
             </Col>
-          </Row>}
+          </Row>
         </Space>
       </>}
     </>

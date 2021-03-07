@@ -79,24 +79,24 @@ const columnDef = [
       };
     }
   },
-  {
-    title: 'fair value',
-    render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-      <NumberRangeDisplay lo={item.fairValueLo} hi={item.fairValueHi} />
-    </CellSpace>
-  },
-  {
-    title: 'support',
-    render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-      <NumberRangeDisplay lo={item.supportLo} hi={item.supportHi} />
-    </CellSpace>
-  },
-  {
-    title: 'resistance',
-    render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-      <NumberRangeDisplay lo={item.resistanceLo} hi={item.resistanceHi} />
-    </CellSpace>
-  },
+  // {
+  //   title: 'fair value',
+  //   render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
+  //     <NumberRangeDisplay lo={item.fairValueLo} hi={item.fairValueHi} />
+  //   </CellSpace>
+  // },
+  // {
+  //   title: 'support',
+  //   render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
+  //     <NumberRangeDisplay lo={item.supportLo} hi={item.supportHi} />
+  //   </CellSpace>
+  // },
+  // {
+  //   title: 'resistance',
+  //   render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
+  //     <NumberRangeDisplay lo={item.resistanceLo} hi={item.resistanceHi} />
+  //   </CellSpace>
+  // },
 ];
 
 

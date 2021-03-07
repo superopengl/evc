@@ -19,8 +19,19 @@ import StockRosterPanel from 'components/StockRosterPanel';
 import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
 import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import { MemberOnlyCard } from 'components/MemberOnlyCard';
-
+import styled from 'styled-components';
+import * as moment from 'moment';
 const { Text } = Typography;
+
+const OldFairValueContainer = styled(Space)`
+color: rgba(255, 255, 255, 0.75);
+width: 100%;
+align-items: center;
+
+.ant-typography {
+  color: rgba(255, 255, 255, 0.75);
+}
+`;
 
 const StockDisplayPanel = (props) => {
   const { stock } = props;
@@ -61,21 +72,19 @@ const StockDisplayPanel = (props) => {
           <Col flex="0 0 auto">
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
               <StockQuotePanel symbol={stock.symbol} />
-              {stock.fairValues?.map((fv, i) => <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
-                {i === 0 ?
-                  <Space style={{ backgroundColor: 'rgb(0, 21, 41)', color: 'rgba(255,255,255,0.75)' }}>
-                    <MemberOnlyIcon />
-                    <i>Latest fair value is only accessible to paid user</i>
-                  </Space>
-                  // <MemberOnlyCard title={<>Fair Value</>} paidOnly={true}>                  </MemberOnlyCard>
-                  :
-                  <NumberRangeDisplay lo={fv.lo} hi={fv.hi} />}
-                <div><Text type={i === 0 ? 'danger' : 'secondary'}>
-                  <small>{i === 0 ? 'Latest' : 'Historical'} fair value at </small>
-                </Text>
-                  <TimeAgo value={fv.date} showAgo={false} accurate={false} />
-                </div>
-              </div>)}
+              <MemberOnlyCard
+                title="Fair Value"
+                message={<>The latest fair value <br/><strong style={{color: 'white'}}>at {moment(stock.fairValues[0].date, 'YYYY-MM-DD').format('D MMM YYYY')}</strong><br/> is only accessible to paid user</>}
+                paidOnly={true}
+                blockedComponent={
+                  <OldFairValueContainer direction="vertical">
+                    {stock.fairValues?.filter(fv => fv.lo).map((fv, i) => <Space key={i}>
+                      <NumberRangeDisplay lo={fv.lo} hi={fv.hi} />
+                      <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
+                    </Space>)}
+                  </OldFairValueContainer>
+                } />
+
             </Space>
           </Col>
           <Col flex="1 0 auto">

@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, List, Descriptions } from 'antd';
+import { Typography, Space, List } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { getStockInsider } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import ReactDOM from 'react-dom';
-import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Text } = Typography;
 
@@ -18,19 +17,11 @@ const RosterList = styled(List)`
 }
 `;
 
-const RosterCard = styled(Card)`
-.ant-card-body {
-  padding: 12px;
-}
-`;
-
-
 const StockRosterPanel = (props) => {
 
   const { symbol } = props;
   const [data, setData] = React.useState({});
   const [loading, setLoading] = React.useState(true);
-  const context = React.useContext(GlobalContext);
 
   const loadData = async () => {
     try {

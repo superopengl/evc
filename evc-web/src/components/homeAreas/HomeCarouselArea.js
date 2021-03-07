@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Space, Row, Col, Modal } from 'antd';
+import { Typography, Button, Space, Row, Col, Modal, Drawer } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -10,7 +10,6 @@ import { StockSearchInput } from 'components/StockSearchInput';
 import { LocaleSelector } from 'components/LocaleSelector';
 import ReactDOM from 'react-dom';
 import StockFreePage from 'pages/StockPage/StockFreePage';
-import StockGuestPage from 'pages/StockPage/StockGuestPage';
 
 const { Title, Paragraph } = Typography;
 
@@ -165,22 +164,19 @@ const HomeCarouselAreaRaw = props => {
               </Title> */}
 
       </InnerContainer>
-      <Modal
+      <Drawer
         visible={stockModalVisible}
+        placement="bottom"
         closable={true}
         maskClosable={true}
         destroyOnClose={true}
-        onOk={() => setStockModalVisible(false)}
-        onCancel={() => setStockModalVisible(false)}
+        onClose={() => setStockModalVisible(false)}
         footer={null}
-        size="large"
-        title="Stock preview"
-        centered
-        width={'90vw'}
-        style={{ top: 20 }}
+        title={null}
+        height="95vh"
       >
-        <StockGuestPage symbol={resultStockSymbol} />
-      </Modal>
+        <StockFreePage symbol={resultStockSymbol} />
+      </Drawer>
     </Container>
   );
 }

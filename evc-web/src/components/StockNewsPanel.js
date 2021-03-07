@@ -1,21 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image, Tooltip, Modal, Tabs } from 'antd';
+import { List, Typography, Space, Image } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
-import StockInfoCard from './StockInfoCard';
-import { StockName } from './StockName';
-import { FaCrown } from 'react-icons/fa';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
-import { Loading } from './Loading';
 import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
-import { BiSpaceBar } from 'react-icons/bi';
 import ReactDOM from 'react-dom';
 
-const { Paragraph, Text, Title } = Typography;
+const { Title } = Typography;
 
 const Container = styled(Space)`
 width: 100%;

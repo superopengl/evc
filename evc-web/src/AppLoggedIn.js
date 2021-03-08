@@ -45,6 +45,7 @@ import ChangePasswordModal from 'pages/ChangePasswordModal';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
 import { Logo } from 'components/Logo';
+import ProfileModal from 'pages/Profile/ProfileModal';
 
 const { Text, Link: LinkText } = Typography;
 
@@ -109,6 +110,7 @@ const AppLoggedIn = props => {
 
   const context = React.useContext(GlobalContext);
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
+  const [profileVisible, setProfileVisible] = React.useState(false);
 
   const { user, role, setUser } = context;
   if (!user) {
@@ -136,18 +138,18 @@ const AppLoggedIn = props => {
   }
 
   const avatarMenu = <Menu>
-      <Menu.Item key="email" disabled={true}>
-        <Text code>{user.profile.email}</Text>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="profile">Profile</Menu.Item>
-      <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>Change Password</Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="logout" danger onClick={handleLogout}>Log Out</Menu.Item>
+    <Menu.Item key="email" disabled={true}>
+      <Text code>{user.profile.email}</Text>
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>Profile</Menu.Item>
+    <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>Change Password</Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="logout" danger onClick={handleLogout}>Log Out</Menu.Item>
   </Menu>
 
   return <StyledLayout
-    title={<>EasyValueCheck</>}
+    title="EasyValueCheck"
     logo="/favicon-32x32.png"
     route={{ routes }}
     location={{ pathname: '/' }}
@@ -168,10 +170,10 @@ const AppLoggedIn = props => {
     rightContentRender={() => (
       <Dropdown overlay={avatarMenu} trigger={['click']}>
         <a onClick={e => e.preventDefault()}>
-        <Avatar size={40} 
-        icon={<UserOutlined style={{ fontSize: 20 }} />} 
-        style={{ backgroundColor: isAdmin ? '#222222' : isAgent ? '#3273A4' : '#15be53' }} 
-        />
+          <Avatar size={40}
+            icon={<UserOutlined style={{ fontSize: 20 }} />}
+            style={{ backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#15be53' }}
+          />
         </a>
       </Dropdown>
     )}
@@ -200,6 +202,11 @@ const AppLoggedIn = props => {
       visible={changePasswordVisible}
       onOk={() => setChangePasswordVisible(false)}
       onCancel={() => setChangePasswordVisible(false)}
+    />
+    <ProfileModal
+      visible={profileVisible}
+      onOk={() => setProfileVisible(false)}
+      onCancel={() => setProfileVisible(false)}
     />
   </StyledLayout>
 }

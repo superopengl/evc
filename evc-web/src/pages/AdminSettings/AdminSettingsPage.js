@@ -4,7 +4,7 @@ import { Typography, Layout, Menu, Space } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { Link, withRouter } from 'react-router-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
-import ProfilePage from 'pages/Profile/ProfilePage';
+import ProfileModal from 'pages/Profile/ProfileModal';
 import { Route, Switch } from 'react-router-dom';
 import UserTagPage from 'pages/UserTag/UserTagPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';
@@ -49,7 +49,7 @@ const AdminSettingsPage = props => {
           </Layout.Sider>
           <Layout.Content style={{ padding: 20 }}>
             <Switch>
-              <Route path={`${path}`} exact component={ProfilePage} />
+              <Route path={`${path}`} exact component={ProfileModal} />
               <Route path={`${path}/stocktag`} exact component={StockTagPage} />
               <Route path={`${path}/usertag`} exact component={UserTagPage} />
             </Switch>

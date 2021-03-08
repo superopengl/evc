@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StarOutlined, StarFilled } from '@ant-design/icons';
 import { Tooltip } from 'antd';
+
 export const StockWatchButton = (props) => {
 
   const { onChange, value, size } = props;
@@ -14,6 +15,9 @@ export const StockWatchButton = (props) => {
   const handleToggleValue = e => {
     e.stopPropagation();
     onChange(!value);
+    if(value) {
+
+    }
   }
 
   return (

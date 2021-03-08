@@ -74,12 +74,12 @@ const StockDisplayPanel = (props) => {
               <StockQuotePanel symbol={stock.symbol} />
               <MemberOnlyCard
                 title="Fair Value"
-                message={<>The latest fair value <br/><strong style={{color: 'white'}}>at {moment(stock.fairValues[0].date, 'YYYY-MM-DD').format('D MMM YYYY')}</strong><br/> is only accessible to paid user</>}
+                message="The latest fair value is only accessible to paid user"
                 paidOnly={true}
                 blockedComponent={
                   <OldFairValueContainer direction="vertical">
-                    {stock.fairValues?.filter(fv => fv.lo).map((fv, i) => <Space key={i}>
-                      <NumberRangeDisplay lo={fv.lo} hi={fv.hi} />
+                    {stock.fairValues?.map((fv, i) => <Space key={i}>
+                      {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{color: 'white', fontWeight: 900}}>XXXX ~ XXXX</Text>}
                       <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
                     </Space>)}
                   </OldFairValueContainer>

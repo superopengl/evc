@@ -10,6 +10,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import { listStockTags } from 'services/stockTagService';
 import StockDisplayPanel from 'components/StockDisplayPanel';
+import { notify } from 'util/notify';
 
 
 const StockFreePage = (props) => {
@@ -55,8 +56,10 @@ const StockFreePage = (props) => {
     stock.watched = watching;
     if (watching) {
       await watchStock(stock.symbol);
+      notify.success('Stock watchlist', <>Added <strong>{stock.symbol}</strong> to your watchlist.</>, 3);
     } else {
       await unwatchStock(stock.symbol);
+      notify.info('Stock watchlist', <>Removed <strong>{stock.symbol}</strong> to your watchlist.</>, 3);
     }
     setWatched(watching);
   }

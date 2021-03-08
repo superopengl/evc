@@ -34,6 +34,15 @@ const Container = styled(Space)`
 }
 `;
 
+const span = {
+  xs: 1,
+  sm: 1,
+  md: 1,
+  lg: 2,
+  xl: 2,
+  xxl: 3
+};
+
 const StockInsiderTransactionPanel = (props) => {
 
   const { symbol } = props;
@@ -82,12 +91,13 @@ const StockInsiderTransactionPanel = (props) => {
           grid={{ column: 1 }}
           itemLayout="horizontal"
           size="small"
-          dataSource={data.summary}
+          dataSource={data.summary.reverse()}
           renderItem={item => (
             <List.Item>
               <Descriptions
                 title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
                 size="small"
+                column={span}
                 extra={getBadgeComponent(item.transactionCode)}
               >
                 <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>

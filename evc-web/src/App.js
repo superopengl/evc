@@ -13,26 +13,11 @@ import Error404 from 'pages/Error404';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
-import UserListPage from 'pages/User/UserListPage';
-import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
-import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
-import StockListPage from 'pages/Stock/StockListPage';
-import StockWatchListPage from 'pages/Stock/StockWatchListPage';
 import { ContactWidget } from 'components/ContactWidget';
 import { getEventSource } from 'services/eventSourceService';
 import { Subject } from 'rxjs';
-import DebugPage from 'pages/Debug/DebugPage';
-import StockTagPage from 'pages/StockTag/StockTagPage';
-import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
-import MySubscriptionHistoryPage from 'pages/MySubscription/MySubscriptionHistoryPage';
-import ConfigListPage from 'pages/Config/ConfigListPage';
-import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
-import TranslationListPage from 'pages/Translation/TranslationListPage';
-import StockPage from 'pages/StockPage/StockPage';
 import ReactDOM from 'react-dom';
-import ClientSettingsPage from 'pages/ClientSettings/ClientSettingsPage';
-import AdminSettingsPage from 'pages/AdminSettings/AdminSettingsPage';
 import AppLoggedIn from 'AppLoggedIn';
 
 

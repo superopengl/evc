@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Table, Input } from 'antd';
-import HomeHeader from 'components/HomeHeader';
 import {
   PlusOutlined
 } from '@ant-design/icons';
@@ -14,7 +13,6 @@ import { notify } from 'util/notify';
 const { Title } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
 `;
 
 const StyledTitleRow = styled.div`
@@ -23,12 +21,6 @@ const StyledTitleRow = styled.div`
  align-items: center;
  width: 100%;
 `
-
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
 
 const NEW_ITEM = Object.freeze({
   isNew: true,
@@ -159,8 +151,6 @@ const TranslationListPage = () => {
   }
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
@@ -178,7 +168,6 @@ const TranslationListPage = () => {
           />
         </Space>
       </ContainerStyled>
-    </LayoutStyled >
   );
 };
 

@@ -14,8 +14,6 @@ const { Title } = Typography;
 
 const ContainerStyled = styled.div`
   width: 100%;
-  max-width: 1000px;
-  margin: 6rem auto 2rem auto;
 `;
 
 const StyledTitleRow = styled.div`
@@ -126,8 +124,6 @@ const ConfigListPage = () => {
   }
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
@@ -142,7 +138,6 @@ const ConfigListPage = () => {
           />
         </Space>
       </ContainerStyled>
-    </LayoutStyled >
   );
 };
 

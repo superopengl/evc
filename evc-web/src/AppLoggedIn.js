@@ -1,38 +1,21 @@
 import React from 'react';
 import 'antd/dist/antd.less';
 import 'react-image-lightbox/style.css';
-import HomePage from 'pages/HomePage';
-import LogInPage from 'pages/LogInPage';
-import ResetPasswordPage from 'pages/ResetPasswordPage';
 import { GlobalContext } from './contexts/GlobalContext';
-import ForgotPasswordPage from 'pages/ForgotPasswordPage';
-import SignUpPage from 'pages/SignUpPage';
-import TermAndConditionPage from 'pages/TermAndConditionPage';
-import Error404 from 'pages/Error404';
-import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
-import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import UserListPage from 'pages/User/UserListPage';
 import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
-import BlogsPage from 'pages/BlogsPage';
 import StockListPage from 'pages/Stock/StockListPage';
 import StockWatchListPage from 'pages/Stock/StockWatchListPage';
-import { ContactWidget } from 'components/ContactWidget';
-import { getEventSource } from 'services/eventSourceService';
-import { Subject } from 'rxjs';
-import DebugPage from 'pages/Debug/DebugPage';
-import StockTagPage from 'pages/StockTag/StockTagPage';
+import TagsSettingPage from 'pages/TagsSettingPage/TagsSettingPage';
 import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
 import MySubscriptionHistoryPage from 'pages/MySubscription/MySubscriptionHistoryPage';
 import ConfigListPage from 'pages/Config/ConfigListPage';
 import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
 import TranslationListPage from 'pages/Translation/TranslationListPage';
 import StockPage from 'pages/StockPage/StockPage';
-import ReactDOM from 'react-dom';
-import ClientSettingsPage from 'pages/ClientSettings/ClientSettingsPage';
-import AdminSettingsPage from 'pages/AdminSettings/AdminSettingsPage';
-import ProLayout, { PageContainer, SettingDrawer } from '@ant-design/pro-layout';
+import ProLayout, {  } from '@ant-design/pro-layout';
 import {
   UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
   DashboardOutlined, TagsOutlined, DollarOutlined
@@ -40,11 +23,10 @@ import {
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { Avatar, Space, Dropdown, Drawer, Layout, Menu, Typography } from 'antd';
+import { Avatar, Space, Dropdown, Menu, Typography } from 'antd';
 import ChangePasswordModal from 'pages/ChangePasswordModal';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
-import { Logo } from 'components/Logo';
 import ProfileModal from 'pages/Profile/ProfileModal';
 
 const { Text, Link: LinkText } = Typography;
@@ -54,8 +36,9 @@ const StyledLayout = styled(ProLayout)`
   background-color: white;
 }
 
-.ant-layout-sider  {
-  background-color: #00293d;
+.ant-dropdown-menu-item {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
 }
 `;
 
@@ -100,7 +83,21 @@ const ROUTES = [
     path: '/settings',
     name: 'Settings',
     icon: <SettingOutlined />,
-    roles: ['admin', 'agent', 'member', 'free'],
+    roles: ['admin', 'agent'],
+    routes: [
+      {
+        path: '/config',
+        name: 'Configuration',
+      },
+      {
+        path: '/email_template',
+        name: 'Email Templates',
+      },
+      {
+        path: '/translation',
+        name: 'Translations',
+      }
+    ]
   },
 ];
 
@@ -121,9 +118,7 @@ const AppLoggedIn = props => {
   const isMember = role === 'member';
   const isAgent = role === 'agent';
   const isGuest = role === 'guest';
-  const canChangePassword = !isGuest && user?.loginType === 'local';
 
-  const isLoggedIn = isAdmin || isMember || isFree;
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
 
@@ -188,14 +183,13 @@ const AppLoggedIn = props => {
     <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
     <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
     <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
-    <RoleRoute visible={isAdmin} exact path="/stocktag" component={StockTagPage} />
+    <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
     <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
     <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
     <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
     <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
     <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
     <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
-    <RoleRoute visible={true} path="/settings" component={(isMember || isFree) ? ClientSettingsPage : AdminSettingsPage} />
     <RoleRoute visible={isMember || isFree} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
     <Redirect to={isAdmin || isAgent ? '/dashboard' : '/stock'} />
     <ChangePasswordModal

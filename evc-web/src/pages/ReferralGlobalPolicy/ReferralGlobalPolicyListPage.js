@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Input } from 'antd';
-import HomeHeader from 'components/HomeHeader';
 import Text from 'antd/lib/typography/Text';
 import {
   StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
@@ -27,8 +26,6 @@ const DnDCalendar = withDragAndDrop(Calendar);
 const { Title } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
-
   .active-referral {
     background-color: rgba(21,190,83, 0.1);
   }
@@ -41,11 +38,6 @@ const StyledTitleRow = styled.div`
  width: 100%;
 `
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
 
 const ReferralGlobalPolicyListPage = () => {
 
@@ -203,8 +195,6 @@ const ReferralGlobalPolicyListPage = () => {
   }
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
@@ -248,7 +238,6 @@ const ReferralGlobalPolicyListPage = () => {
           />
         </Space>
 
-      </ContainerStyled>
       <Drawer
         title="New Global Referral Policy"
         visible={newPolicy}
@@ -258,7 +247,7 @@ const ReferralGlobalPolicyListPage = () => {
         width={400}
         onClose={() => setNewPolicy()}
         footer={null}
-      >
+        >
         <Form layout="vertical" onFinish={handleSave} initialValues={newPolicy}>
           <Form.Item label="Amount per Referral" name="amount" rules={[{ required: true, type: 'number', min: 0, message: ' ' }]}>
             <InputNumber />
@@ -277,7 +266,7 @@ const ReferralGlobalPolicyListPage = () => {
           </Form.Item>
         </Form>
       </Drawer>
-    </LayoutStyled >
+        </ContainerStyled>
 
   );
 };

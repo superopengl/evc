@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -15,7 +15,6 @@ import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
-import PortfolioList from 'pages/Portfolio/PortfolioList';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { BiDollar } from 'react-icons/bi';
 import ReferralBalanceForm from 'components/ReferralBalanceForm';
@@ -58,7 +57,6 @@ const LOCAL_STORAGE_KEY = 'user_query';
 const UserListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
-  const [portfolioModalVisible, setPortfolioModalVisible] = React.useState(false);
   const [referralBalanceModal, setReferralBalanceModal] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
@@ -119,7 +117,7 @@ const UserListPage = () => {
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Tooltip placement="bottom" title="Referral & balance">
               <Button shape="circle" icon={<BiDollar style={{ position: 'relative', top: 2 }} />}
-                disabled={user.role !== 'member'}
+                disabled={!['member', 'free'].includes(user.role)}
                 onClick={e => openReferralBalanceModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Update profile">
@@ -416,32 +414,19 @@ const UserListPage = () => {
           </Form.Item>
         </Form>
       </Modal>
-      <Modal
-        visible={portfolioModalVisible}
-        destroyOnClose={true}
-        maskClosable={false}
-        closable={true}
-        onOk={() => setPortfolioModalVisible(false)}
-        onCancel={() => setPortfolioModalVisible(false)}
-        title={<>Portoflios for <Text code>{currentUser?.email}</Text></>}
-        footer={null}
-        width={600}
-      >
-        {currentUser && <PortfolioList userId={currentUser.id} />}
-      </Modal>
-      <Modal
+      <Drawer
         visible={profileModalVisible}
         destroyOnClose={true}
-        maskClosable={false}
+        maskClosable={true}
         title="Update Profile"
-        onOk={() => setProfileModalVisible(false)}
-        onCancel={() => setProfileModalVisible(false)}
+        onClose={() => setProfileModalVisible(false)}
         footer={null}
+        width={400}
       >
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
-      </Modal>
+      </Drawer>
       <Drawer
         visible={referralBalanceModal}
         destroyOnClose={true}

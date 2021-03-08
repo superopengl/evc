@@ -8,6 +8,7 @@ const modifyVars = {
   '@warning-color': '#fa8c16',
   '@error-color': '#d7183f',
   '@layout-header-background': '#00293d',
+  '@heading-color': '#00293d',
   '@font-size-base': '14px',
   // '@height-base': '40px',
   // '@height-lg': '48px',

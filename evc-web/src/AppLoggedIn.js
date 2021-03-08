@@ -34,16 +34,29 @@ import ClientSettingsPage from 'pages/ClientSettings/ClientSettingsPage';
 import AdminSettingsPage from 'pages/AdminSettings/AdminSettingsPage';
 import ProLayout, { PageContainer, SettingDrawer } from '@ant-design/pro-layout';
 import {
-  UnorderedListOutlined, EyeOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined
+  UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
+  DashboardOutlined, TagsOutlined, DollarOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { Avatar, Badge, Button, Drawer, Layout, Menu, Typography } from 'antd';
+import { Avatar, Space, Dropdown, Drawer, Layout, Menu, Typography } from 'antd';
+import ChangePasswordModal from 'pages/ChangePasswordModal';
+import HeaderStockSearch from 'components/HeaderStockSearch';
+import styled from 'styled-components';
+import { Logo } from 'components/Logo';
 
-const { Text } = Typography;
+const { Text, Link: LinkText } = Typography;
 
+const StyledLayout = styled(ProLayout)`
+.ant-layout {
+  background-color: white;
+}
+
+.ant-layout-sider  {
+  background-color: #00293d;
+}
+`;
 
 const ROUTES = [
   {
@@ -53,16 +66,16 @@ const ROUTES = [
     roles: ['admin', 'agent']
   },
   {
+    path: '/watchlist',
+    name: 'Watchlist',
+    icon: <StarOutlined />,
+    roles: ['member', 'free']
+  },
+  {
     path: '/stock',
     name: 'Stocks',
     icon: <UnorderedListOutlined />,
     roles: ['admin', 'agent', 'member', 'free']
-  },
-  {
-    path: '/watchlist',
-    name: 'Watchlist',
-    icon: <EyeOutlined />,
-    roles: ['member', 'free']
   },
   {
     path: '/user',
@@ -71,10 +84,22 @@ const ROUTES = [
     roles: ['admin', 'agent']
   },
   {
+    path: '/tags',
+    name: 'Tags',
+    icon: <TagsOutlined />,
+    roles: ['admin', 'agent'],
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    icon: <DollarOutlined />,
+    roles: ['member', 'free'],
+  },
+  {
     path: '/settings',
     name: 'Settings',
     icon: <SettingOutlined />,
-    roles: ['admin', 'agent', 'member', 'free']
+    roles: ['admin', 'agent', 'member', 'free'],
   },
 ];
 
@@ -83,6 +108,7 @@ const AppLoggedIn = props => {
   const { history } = props;
 
   const context = React.useContext(GlobalContext);
+  const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
 
   const { user, role, setUser } = context;
   if (!user) {
@@ -97,7 +123,9 @@ const AppLoggedIn = props => {
 
   const isLoggedIn = isAdmin || isMember || isFree;
 
-  const routes = ROUTES.filter(x => x.roles.includes(role));
+  const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
+
+
 
   const handleLogout = async () => {
     await logout();
@@ -107,10 +135,24 @@ const AppLoggedIn = props => {
     history.push('/');
   }
 
-  return <ProLayout
+  const avatarMenu = <Menu>
+      <Menu.Item key="email" disabled={true}>
+        <Text code>{user.profile.email}</Text>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="profile">Profile</Menu.Item>
+      <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>Change Password</Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="logout" danger onClick={handleLogout}>Log Out</Menu.Item>
+  </Menu>
+
+  return <StyledLayout
+    title={<>EasyValueCheck</>}
+    logo="/favicon-32x32.png"
     route={{ routes }}
     location={{ pathname: '/' }}
     navTheme="dark"
+    siderWidth={230}
     fixSiderbar={true}
     fixedHeader={true}
     headerRender={true}
@@ -119,18 +161,25 @@ const AppLoggedIn = props => {
         {dom}
       </Link>
     )}
+    headerContentRender={() => (
+      <HeaderStockSearch />
+
+    )}
     rightContentRender={() => (
-      <Menu
-        mode="horizontal"
-        style={{ border: 0 }}
-      >
-        <Menu.SubMenu key="me" title={<Avatar size={40} icon={<UserOutlined style={{ fontSize: 20 }} />} style={{ backgroundColor: isAdmin ? '#222222' : isAgent ? '#3273A4' : '#15be53' }} />}>
-          <Menu.Item key="email" disabled={true}>
-            <Text code>{user.profile.email}</Text>
-          </Menu.Item>
-          <Menu.Item key="logout" onClick={handleLogout}>Log Out</Menu.Item>
-        </Menu.SubMenu>
-      </Menu>
+      <Dropdown overlay={avatarMenu} trigger={['click']}>
+        <a onClick={e => e.preventDefault()}>
+        <Avatar size={40} 
+        icon={<UserOutlined style={{ fontSize: 20 }} />} 
+        style={{ backgroundColor: isAdmin ? '#222222' : isAgent ? '#3273A4' : '#15be53' }} 
+        />
+        </a>
+      </Dropdown>
+    )}
+    menuFooterRender={props => (
+      props?.collapsed ? null : <Space direction="vertical">
+        <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
+        <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
+      </Space>
     )}
   >
     <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
@@ -147,8 +196,12 @@ const AppLoggedIn = props => {
     <RoleRoute visible={true} path="/settings" component={(isMember || isFree) ? ClientSettingsPage : AdminSettingsPage} />
     <RoleRoute visible={isMember || isFree} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
     <Redirect to={isAdmin || isAgent ? '/dashboard' : '/stock'} />
-    <RoleRoute component={Error404} />
-  </ProLayout>
+    <ChangePasswordModal
+      visible={changePasswordVisible}
+      onOk={() => setChangePasswordVisible(false)}
+      onCancel={() => setChangePasswordVisible(false)}
+    />
+  </StyledLayout>
 }
 
 export default withRouter(AppLoggedIn);

@@ -73,7 +73,7 @@ export const StockSearchInput = (props) => {
 
   return (
     <Select
-      size="large"
+      size="middle"
       mode={mode}
       showSearch
       allowClear={true}

@@ -95,7 +95,7 @@ const App = () => {
     <GlobalContext.Provider value={contextValue}>
       <BrowserRouter basename="/">
         <Switch>
-          <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />
+          <RoleRoute visible={true} loading={loading} path="/" exact component={isGuest ? HomePage : AppLoggedIn} />
           <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
           <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
           <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />

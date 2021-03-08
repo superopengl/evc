@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Space, Pagination, Button } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+import { Layout, Space, Pagination, Button } from 'antd';
 import StockList from '../../components/StockList';
 import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
@@ -15,10 +14,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { listStockTags } from 'services/stockTagService';
 
 const ContainerStyled = styled.div`
-margin: 6rem auto 2rem auto;
-padding: 0 1rem 4rem 1rem;
 width: 100%;
-// max-width: 600px;
 `;
 
 const OverButton = styled(Button)`
@@ -53,16 +49,6 @@ border-color: #13c2c2;
   background: #bffbff;
 }`;
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-
-  .ant-list-item {
-    padding-left: 0;
-    padding-right: 0;
-  }
-`;
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -148,9 +134,6 @@ const StockListPage = (props) => {
   }
 
   return (
-    <LayoutStyled>
-      <HomeHeader>
-      </HomeHeader>
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
@@ -186,14 +169,13 @@ const StockListPage = (props) => {
             }}
           />
         </Space>
+        <CreateStockModal
+          visible={createModalVisible}
+          defaultSymbol={create}
+          onOk={() => setCreateModalVisible(false)}
+          onCancel={() => setCreateModalVisible(false)}
+        />
       </ContainerStyled>
-      <CreateStockModal
-        visible={createModalVisible}
-        defaultSymbol={create}
-        onOk={() => setCreateModalVisible(false)}
-        onCancel={() => setCreateModalVisible(false)}
-      />
-    </LayoutStyled>
   );
 };
 

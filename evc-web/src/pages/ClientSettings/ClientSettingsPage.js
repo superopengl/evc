@@ -7,7 +7,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfilePage from 'pages/Profile/ProfilePage';
 import { Route, Switch } from 'react-router-dom';
-import ChangePasswordPage from 'pages/ChangePasswordPage';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 import { DollarCircleFilled, DollarOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
@@ -76,31 +75,6 @@ const ClientSettingsPage = props => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        {/* <Layout style={{ height: '100%' }}>
-          <Layout.Sider collapsible collapsed={collapsed} theme="dark" onCollapse={c => setCollapsed(c)}
-            style={{
-              paddingTop: 20,
-              overflow: 'auto',
-              height: '100vh',
-              position: 'fixed',
-              left: 0,
-            }}>
-            <Menu theme="dark">
-              <Menu.Item key="profile" icon={<UserOutlined />}><Link to={`${path}`}>Profile</Link></Menu.Item>
-              <Menu.Item key="account" icon={<DollarOutlined />}><Link to={`${path}/account`}>Account</Link></Menu.Item>
-              <Menu.Item key="subscription" icon={<DollarCircleFilled />}><Link to={`${path}/subscription`}>Subscription</Link></Menu.Item>
-              <Menu.Item key="change_password" icon={<SafetyCertificateOutlined />}><Link to={`${path}/change_password`}>Change Password</Link></Menu.Item>
-            </Menu>
-          </Layout.Sider>
-          <StyledLayoutContent className={collapsed ? 'collapsed' : 'expand'}>
-            <Switch>
-              <Route path={`${path}`} exact component={ProfilePage} />
-              <Route path={`${path}/account`} exact component={MyAccountPage} />
-              <Route path={`${path}/subscription`} exact component={MySubscriptionPage} />
-              <Route path={`${path}/change_password`} exact component={ChangePasswordPage} />
-            </Switch>
-          </StyledLayoutContent>
-        </Layout> */}
         <ProLayout
           route={routes}
           navTheme="dark"
@@ -118,7 +92,6 @@ const ClientSettingsPage = props => {
             <Route path={`${path}`} exact component={ProfilePage} />
             <Route path={`${path}/account`} exact component={MyAccountPage} />
             <Route path={`${path}/subscription`} exact component={MySubscriptionPage} />
-            <Route path={`${path}/change_password`} exact component={ChangePasswordPage} />
           </Switch>
 
           </div>

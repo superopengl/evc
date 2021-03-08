@@ -6,7 +6,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfilePage from 'pages/Profile/ProfilePage';
 import { Route, Switch } from 'react-router-dom';
-import ChangePasswordPage from 'pages/ChangePasswordPage';
 import UserTagPage from 'pages/UserTag/UserTagPage';
 import StockTagPage from 'pages/StockTag/StockTagPage';
 
@@ -46,7 +45,6 @@ const AdminSettingsPage = props => {
               <Menu.Item key="profile"><Link to={`${path}`}>Profile</Link></Menu.Item>
               <Menu.Item key="stocktag"><Link to={`${path}/stocktag`}>Stock Tags</Link></Menu.Item>
               <Menu.Item key="usertag"><Link to={`${path}/usertag`}>User Tags</Link></Menu.Item>
-              <Menu.Item key="change_password"><Link to={`${path}/change_password`}>Change Password</Link></Menu.Item>
             </Menu>
           </Layout.Sider>
           <Layout.Content style={{ padding: 20 }}>
@@ -54,7 +52,6 @@ const AdminSettingsPage = props => {
               <Route path={`${path}`} exact component={ProfilePage} />
               <Route path={`${path}/stocktag`} exact component={StockTagPage} />
               <Route path={`${path}/usertag`} exact component={UserTagPage} />
-              <Route path={`${path}/change_password`} exact component={ChangePasswordPage} />
             </Switch>
           </Layout.Content>
         </Layout>

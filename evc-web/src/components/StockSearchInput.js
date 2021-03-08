@@ -13,7 +13,7 @@ import { notify } from 'util/notify';
 const { Text } = Typography;
 
 export const StockSearchInput = (props) => {
-  const { onChange, excluding, traceSearch, mode, style } = props;
+  const { onChange, excluding, traceSearch, mode, style, size } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
@@ -73,12 +73,12 @@ export const StockSearchInput = (props) => {
 
   return (
     <Select
-      size="middle"
+      size={size}
       mode={mode}
       showSearch
       allowClear={true}
       // autoFocus={true}
-      placeholder="Search for symbols or companies"
+      placeholder="Symbols or companies"
       onChange={handleChange}
       onSearch={handleSearch}
       // open={!!text}
@@ -111,6 +111,7 @@ StockSearchInput.propTypes = {
   onChange: PropTypes.func,
   excluding: PropTypes.array.isRequired,
   traceSearch: PropTypes.bool,
+  size: PropTypes.string,
   mode: PropTypes.string,
 };
 
@@ -118,5 +119,6 @@ StockSearchInput.defaultProps = {
   excluding: [],
   onChange: () => { },
   traceSearch: false,
-  mode: ''
+  mode: '',
+  size: 'middle'
 };

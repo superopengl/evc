@@ -131,7 +131,7 @@ const HomeCarouselAreaRaw = props => {
             <Title style={{ fontSize: catchPhraseSize, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check</Title>
             <Paragraph level={3} style={{ fontSize: catchPhraseSize * 0.4, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check provides top class invstiment guidence to earn more money on the market! Go go go! Sign up today!</Paragraph>
             <div style={{ maxWidth: 550, margin: '2rem auto' }}>
-              <StockSearchInput onChange={handleSearchChange} traceSearch={true} />
+              <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>
             <Space align="center" style={{ marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' }} >
               <SignUpButton type="primary" onClick={() => handleSignOn()}>Sign Up with Email</SignUpButton>

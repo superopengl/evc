@@ -28,6 +28,7 @@ import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
+import AboutDrawer from 'pages/About/AboutDrawer';
 
 const { Link: LinkText } = Typography;
 
@@ -123,6 +124,7 @@ const AppLoggedIn = props => {
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
   const [contactVisible, setContactVisible] = React.useState(false);
+  const [aboutVisible, setAboutVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
 
   const { user, role, setUser } = context;
@@ -204,7 +206,7 @@ const AppLoggedIn = props => {
     menuFooterRender={props => (
       props?.collapsed ? null : <Space direction="vertical" style={{width: '100%'}}>
         <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
-        <LinkText href="/about" target="_blank">About</LinkText>
+        <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
         <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
         <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
       </Space>
@@ -244,6 +246,10 @@ const AppLoggedIn = props => {
     >
       <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
     </Modal>
+    <AboutDrawer 
+      visible={aboutVisible}
+      onClose={() => setAboutVisible(false)}
+    />
   </StyledLayout>
 }
 

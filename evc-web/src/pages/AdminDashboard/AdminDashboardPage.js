@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Collapse, Tag, Badge, Tabs } from 'antd';
+import { Typography, Collapse, Tag, Badge } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
 import { CaretRightOutlined } from '@ant-design/icons';
 
-const { Paragraph , Title} = Typography;
+const { Paragraph} = Typography;
 
 const ContainerStyled = styled.div`
 width: 100%;

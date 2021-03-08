@@ -7,17 +7,19 @@ import PropTypes from "prop-types";
 
 const { Text } = Typography;
 
-const StyledSpace = styled(Space)`
+const StyledSpace = styled.div`
+display: flex;
+flex-direction: column;
 // font-size: 20px;
-padding: 1rem;
-color: rgba(255,255,255,0.75);
+padding: 16px;
+color: rgba(255,255,255,0.65);
 width: 100%;
 justify-content: center;
 align-items: center;
 text-align: center;
 
 .ant-typography {
-  color:rgba(255,255,255,0.75);
+  color:rgba(255,255,255,0.65);
 }
 
 .anticon {
@@ -25,7 +27,7 @@ text-align: center;
 }
 `;
 
-export const MemberOnlyPanel = (props) => <StyledSpace direction="vertical">
+export const MemberOnlyPanel = (props) => <StyledSpace>
   <LockFilled />
   <Text><i>{props.message}</i></Text>
   <Link to="/settings/subscription"><Button type="link">Click to upgrade</Button></Link>

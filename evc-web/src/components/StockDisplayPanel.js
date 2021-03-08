@@ -23,7 +23,9 @@ import styled from 'styled-components';
 import * as moment from 'moment';
 const { Text } = Typography;
 
-const OldFairValueContainer = styled(Space)`
+const OldFairValueContainer = styled.div`
+display: flex;
+flex-direction: column;
 color: rgba(255, 255, 255, 0.75);
 width: 100%;
 align-items: center;
@@ -77,7 +79,7 @@ const StockDisplayPanel = (props) => {
                 message="The latest fair value is only accessible to paid user"
                 paidOnly={true}
                 blockedComponent={
-                  <OldFairValueContainer direction="vertical">
+                  <OldFairValueContainer >
                     {stock.fairValues?.map((fv, i) => <Space key={i}>
                       {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{color: 'white', fontWeight: 900}}>XXXX ~ XXXX</Text>}
                       <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />

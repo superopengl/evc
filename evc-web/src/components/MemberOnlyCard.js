@@ -19,7 +19,7 @@ export const MemberOnlyCard = (props) => {
   const shouldBlock = paidOnly && !['admin', 'agent', 'member'].includes(role);
 
   const bodyStyle = shouldBlock ? {
-    backgroundColor: 'rgb(0, 21, 41)',
+    backgroundColor: 'rgb(0, 41, 61)',
     paddingLeft: 0,
     paddingRight: 0,
   } : {
@@ -28,7 +28,7 @@ export const MemberOnlyCard = (props) => {
     };
   const headStyle = shouldBlock ?
     {
-      backgroundColor: 'rgba(0, 21, 41, 0.8)',
+      backgroundColor: 'rgba(0, 41, 61, 0.8)',
       color: 'rgba(255,255,255,0.75)'
     } :
     {

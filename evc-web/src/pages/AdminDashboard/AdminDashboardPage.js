@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Tag, Badge, Tabs } from 'antd';
+import { Typography, Collapse, Tag, Badge, Tabs } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
+import { CaretRightOutlined } from '@ant-design/icons';
 
-const { Paragraph } = Typography;
+const { Paragraph , Title} = Typography;
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -14,12 +15,13 @@ width: 100%;
 .ant-alert {
   margin-bottom: 10px;
 }
+
 `;
 
 
 const StyledTag = styled(Tag)`
 margin-bottom: 8px;
-font-size: 1rem;
+// font-size: 1rem;
 
 &:hover {
   color: #18b0d7;
@@ -41,7 +43,7 @@ const LinkTag = props => {
 
 const AdminDashboardPage = () => {
 
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState({});
   const [loading, setLoading] = React.useState(false);
 
   const loadList = async () => {
@@ -65,64 +67,77 @@ const AdminDashboardPage = () => {
   return (
       <ContainerStyled>
         <Loading loading={loading}>
-          <Tabs type="card">
-            <Tabs.TabPane
+          <Collapse 
+          // ghost
+          bordered={true}
+          defaultActiveKey={['plea']}
+          accordion
+          expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+          >
+            <Collapse.Panel
               key="plea"
-              tab={<>Unsupported Stock Requests <CounterBadge count={data.pleas?.length} color="#18b0d7" /></>}
+              header={<>Unsupported Stock Requests </>}
+              extra={<CounterBadge count={data.pleas?.length} color="#18b0d7" />}
             >
               {data.pleas?.map(x => <Paragraph key={x.symbol}>
                 <strong>{x.symbol}</strong> has {x.count} requests. <Link to={`/stock?create=${x.symbol}`}>Click to create</Link>
               </Paragraph>)}
-            </Tabs.TabPane>
-            <Tabs.TabPane
+            </Collapse.Panel>
+            <Collapse.Panel
               key="invalidEps"
-              tab={<>No fair value (invalid EPS) <CounterBadge count={data.noFairValuesByInvalidTtmEps?.length} /></>}
+              header={<>No fair value (invalid EPS)</>}
+              extra={<CounterBadge count={data.noFairValuesByInvalidTtmEps?.length} />}
             >
               <Paragraph>
                 {data.noFairValuesByInvalidTtmEps?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
               </Paragraph>
-            </Tabs.TabPane>
-            <Tabs.TabPane
+            </Collapse.Panel>
+            <Collapse.Panel
               key="noEps"
-              tab={<>No fair value (no EPS data) <CounterBadge count={data.noFairValuesByMissingEpsData?.length} /></>}
+              header={<>No fair value (no EPS data)</>}
+              extra={<CounterBadge count={data.noFairValuesByMissingEpsData?.length} />}
             >
               <Paragraph>
                 {data.noFairValuesByMissingEpsData?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
               </Paragraph>
-            </Tabs.TabPane>
-            <Tabs.TabPane
+            </Collapse.Panel>
+            <Collapse.Panel
               key="noSupport"
-              tab={<>No support <CounterBadge count={data.noSupports?.length} /></>}
+              header={<>No support</>}
+              extra={<CounterBadge count={data.noSupports?.length} />}
             >
               <Paragraph>
                 {data.noSupports?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
               </Paragraph>
-            </Tabs.TabPane>
-            <Tabs.TabPane
+            </Collapse.Panel>
+            <Collapse.Panel
               key="noResistance"
-              tab={<>No resistance <CounterBadge count={data.noResistances?.length} /></>}
+              header={<>No resistance</>}
+              extra={<CounterBadge count={data.noResistances?.length} />}
             >
               <Paragraph>
                 {data.noResistances?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
               </Paragraph>
-            </Tabs.TabPane>
-            <Tabs.TabPane
+            </Collapse.Panel>
+            <Collapse.Panel
               key="onSupport"
-              tab={<>One support <CounterBadge count={data.oneSupports?.length} /></>}
+              header={<>One support</>}
+              extra={<CounterBadge count={data.oneSupports?.length} />}
             >
               <Paragraph>
                 {data.oneSupports?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
               </Paragraph>
-            </Tabs.TabPane>
-            <Tabs.TabPane
+            </Collapse.Panel>
+            <Collapse.Panel
               key="oneResistance"
-              tab={<>One resistance <CounterBadge count={data.oneResistances?.length} /></>}
+              header={<>One resistance</>}
+              extra={<CounterBadge count={data.oneResistances?.length} />}
             >
               <Paragraph>
                 {data.oneResistances?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
               </Paragraph>
-            </Tabs.TabPane>
-          </Tabs>
+            </Collapse.Panel>
+          </Collapse>
         </Loading>
       </ContainerStyled>
   );

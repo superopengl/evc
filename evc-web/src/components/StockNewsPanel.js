@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image, Skeleton } from 'antd';
+import { List, Typography, Space, Image, Skeleton, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';

@@ -1,12 +1,14 @@
-import { Drawer } from 'antd';
 import React from 'react';
+import { Drawer, Skeleton, Typography } from 'antd';
 import { getStock } from 'services/stockService';
 import { StockName } from 'components/StockName';
 import ReactDOM from "react-dom";
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import StockDisplayPanel from './StockDisplayPanel';
 import { Loading } from 'components/Loading';
 
+const {Text} = Typography;
 
 export const StockGuestPreviewDrawer = (props) => {
   const { symbol, visible: propVisible, onClose } = props;
@@ -42,7 +44,7 @@ export const StockGuestPreviewDrawer = (props) => {
       destroyOnClose={true}
       onClose={onClose}
       footer={null}
-      title={stock ? <StockName value={stock} /> : 'Loading'}
+      title={stock ? <>Preview <StockName value={stock} /> - <Link to="/signup">More Information after Sign Up</Link></> : <Skeleton.Input active />}
       height="95vh"
     >
       {stock ? <StockDisplayPanel stock={stock} /> : <Loading loading={true} />}

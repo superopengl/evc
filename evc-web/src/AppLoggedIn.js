@@ -17,7 +17,7 @@ import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
 import {
   UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, TagsOutlined, DollarOutlined} from '@ant-design/icons';
+  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined} from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -204,7 +204,9 @@ const AppLoggedIn = props => {
       </div>
     )}
     menuFooterRender={props => (
-      props?.collapsed ? null : <Space direction="vertical" style={{width: '100%'}}>
+      props?.collapsed ? 
+      <QuestionOutlined style={{color: 'rgba(255,255,255,0.65'}} onClick={() => setCollapsed(!collapsed)}/> : 
+      <Space direction="vertical" style={{width: '100%'}}>
         <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
         <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
         <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>

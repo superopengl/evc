@@ -629,7 +629,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/value:
+  /stock/s/{symbol}/fairvalue:
     get:
       operationId: getStockFairValue
       parameters:
@@ -689,7 +689,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/value/:id:
+  /stock/fairvalue/:id:
     delete:
       operationId: deleteStockFairValue
       parameters:

@@ -6,35 +6,22 @@ import { StockEps } from '../StockEps';
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q
-      .from(StockEps, 'eps')
+      .from(StockEps, 'r')
+      .leftJoin(StockEps, 'x', 'x.symbol = r.symbol AND x."reportDate" <= r."reportDate"')
       .select([
-        'symbol',
-        '"reportDate"'
+        `r.symbol as symbol`,
+        `r."reportDate" as "reportDate"`,
+        `x.value as "epsValue"`,
+        `rank() over (partition by r.symbol, r."reportDate" order by x."reportDate" desc)`
       ])
-      .distinctOn(['symbol', '"reportDate"'])
-      .orderBy('"reportDate"', 'DESC'),
-    'r'
-    )
-    .leftJoin(q => q
-      .from(q => q
-        .from(StockEps, 'sc')
-        .select([
-          'sc.symbol as symbol',
-          'sc.value as "epsValue"',
-          'rank() over (partition by sc.symbol order by sc."reportDate" desc)'
-        ]),
-      'x')
-      .select([
-        'x.symbol as symbol',
-        'sum(x."epsValue") as "ttmEps"',
-      ])
-      .where('rank <= 4')
-      .groupBy('symbol'),
-    'sum', 'r.symbol = sum.symbol')
+      , 'k')
+    .where(`rank <= 4`)
+    .groupBy(`symbol, "reportDate"`)
+    .having(`count(*) >= 4`)
     .select([
-      'r.symbol as symbol',
-      'r."reportDate" as "reportDate"',
-      'sum."ttmEps" as "ttmEps"',
+      `symbol`,
+      `"reportDate"`,
+      `sum("epsValue") as "ttmEps"`
     ])
 })
 export class StockHistoricalTtmEps {

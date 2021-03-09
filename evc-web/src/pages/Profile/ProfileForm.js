@@ -38,9 +38,9 @@ const ProfileForm = (props) => {
       {!initial && <Form.Item
         label="Email"
         name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
-        <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} 
-        disabled={isBuiltinAdmin || true}
-        maxLength="100" />
+        <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true}
+          disabled={isBuiltinAdmin || true}
+          maxLength="100" />
       </Form.Item>}
       <Form.Item label="Given Name" name="givenName" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="Given name" autoComplete="given-name" allowClear={true} maxLength="100" autoFocus />
@@ -57,9 +57,9 @@ const ProfileForm = (props) => {
       <Form.Item label="Residence country" name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
         <CountrySelector />
       </Form.Item>
-      <Form.Item label="Language" name="locale" 
-      rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}
-      help="Requires refreshing page to pick up the change."
+      <Form.Item label="Language" name="locale"
+        rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}
+        help="Requires refreshing page to pick up the change."
       >
         <LocaleSelector />
       </Form.Item>

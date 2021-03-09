@@ -1,19 +1,14 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Modal } from 'antd';
+import { List, Typography, Space, Button } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined,FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import MoneyAmount from 'components/MoneyAmount';
-import { NumberRangeInput } from 'components/NumberRangeInput';
-import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { syncStockEps } from 'services/stockService';
-import { TimeAgo } from 'components/TimeAgo';
 const {Text} = Typography;
 
 const Container = styled.div`
@@ -103,7 +98,7 @@ const StockEpsTimelineEditor = (props, ref) => {
             <List.Item.Meta
               description={<Space style={{width: '100%', justifyContent: 'space-between'}}>
                 {/* <Text type="secondary">{item.year} Q{item.quarter}</Text> */}
-                <Text type="secondary"><small>{moment(item.reportDate).format('DD MMM YYYY')}</small></Text>
+                <Text type="secondary"><small>{moment(item.reportDate).format('D MMM YYYY')}</small></Text>
                 <MoneyAmount symbol="" value={item.value}/>
               </Space>}
             />

@@ -83,7 +83,7 @@ const App = () => {
   const isGuest = role === 'guest';
   const isMember = role === 'member';
   const isFree = role === 'free';
-  const isLoggedIn = isAdmin || isMember || isFree;
+  const isLoggedIn = !isGuest;
 
   const locale = localeDic[user?.profile?.locale] ?? enUS;
 
@@ -92,7 +92,6 @@ const App = () => {
       <ConfigProvider locale={locale}>
         <BrowserRouter basename="/">
           <Switch>
-            <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />
             <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
@@ -100,7 +99,8 @@ const App = () => {
             <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
             <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
             <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
-            <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />
+            {isGuest && <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />}
+            {isLoggedIn && <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />}
             {/* <Redirect to="/" /> */}
             <RoleRoute loading={loading} component={Error404} />
           </Switch>

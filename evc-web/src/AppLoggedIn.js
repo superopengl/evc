@@ -207,7 +207,7 @@ const AppLoggedIn = props => {
     menuFooterRender={props => (
       props?.collapsed ? 
       <QuestionOutlined style={{color: 'rgba(255,255,255,0.65'}} onClick={() => setCollapsed(!collapsed)}/> : 
-      <Space direction="vertical" style={{width: '100%'}}>
+      <Space direction="vertical" style={{width: 188}}>
         <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
         <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
         <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>

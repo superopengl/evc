@@ -17,7 +17,8 @@ import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
 import {
   UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined} from '@ant-design/icons';
+  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined
+} from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -29,6 +30,7 @@ import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
+import { Route, Switch } from 'react-router-dom';
 
 const { Link: LinkText } = Typography;
 
@@ -190,44 +192,47 @@ const AppLoggedIn = props => {
     //   ]
     // }}
     headerContentRender={() => (
-        <HeaderStockSearch />
+      <HeaderStockSearch />
     )}
     rightContentRender={() => (
-      <div style={{marginLeft: 16}}>
-      <Dropdown overlay={avatarMenu} trigger={['click']}>
-        <a onClick={e => e.preventDefault()}>
-          <Avatar size={40}
-            icon={<UserOutlined style={{ fontSize: 20 }} />}
-            style={{ backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#15be53' }}
-          />
-        </a>
-      </Dropdown>
+      <div style={{ marginLeft: 16 }}>
+        <Dropdown overlay={avatarMenu} trigger={['click']}>
+          <a onClick={e => e.preventDefault()}>
+            <Avatar size={40}
+              icon={<UserOutlined style={{ fontSize: 20 }} />}
+              style={{ backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#15be53' }}
+            />
+          </a>
+        </Dropdown>
       </div>
     )}
     menuFooterRender={props => (
-      props?.collapsed ? 
-      <QuestionOutlined style={{color: 'rgba(255,255,255,0.65'}} onClick={() => setCollapsed(!collapsed)}/> : 
-      <Space direction="vertical" style={{width: 188}}>
-        <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
-        <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
-        <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
-        <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
-      </Space>
+      props?.collapsed ?
+        <QuestionOutlined style={{ color: 'rgba(255,255,255,0.65' }} onClick={() => setCollapsed(!collapsed)} /> :
+        <Space direction="vertical" style={{ width: 188 }}>
+          <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
+          <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
+          <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
+          <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
+        </Space>
     )}
   >
-    <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
-    <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
-    <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
-    <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
-    <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
-    <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
-    <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
-    <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
-    <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
-    <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
-    <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
-    <RoleRoute visible={isMember || isFree} path="/account" exact component={MySubscriptionPage} />
-    <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
+    <Switch>
+      <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
+      <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
+      <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
+      <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
+      <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
+      <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
+      <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
+      <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
+      <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
+      <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
+      <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
+      <RoleRoute visible={isMember || isFree} path="/account" exact component={MySubscriptionPage} />
+      <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
+    </Switch>
+
     <ChangePasswordModal
       visible={changePasswordVisible}
       onOk={() => setChangePasswordVisible(false)}
@@ -249,7 +254,7 @@ const AppLoggedIn = props => {
     >
       <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
     </Modal>
-    <AboutDrawer 
+    <AboutDrawer
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}
     />

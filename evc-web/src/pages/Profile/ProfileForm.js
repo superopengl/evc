@@ -57,7 +57,10 @@ const ProfileForm = (props) => {
       <Form.Item label="Residence country" name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
         <CountrySelector />
       </Form.Item>
-      <Form.Item label="Language" name="locale" rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}>
+      <Form.Item label="Language" name="locale" 
+      rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}
+      help="Requires refreshing page to pick up the change."
+      >
         <LocaleSelector />
       </Form.Item>
       <Form.Item style={{ marginTop: '1rem' }}>

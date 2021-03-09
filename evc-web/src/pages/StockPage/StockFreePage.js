@@ -11,6 +11,8 @@ import PropTypes from "prop-types";
 import { listStockTags } from 'services/stockTagService';
 import StockDisplayPanel from 'components/StockDisplayPanel';
 import { notify } from 'util/notify';
+import AdminStockPublishPanel from 'components/AdminStockPublishPanel';
+import TagSelect from 'components/TagSelect';
 
 
 const StockFreePage = (props) => {
@@ -18,11 +20,10 @@ const StockFreePage = (props) => {
 
   const context = React.useContext(GlobalContext);
   const { role } = context;
-  const [, setHasPaid] = React.useState(false);
   const [stock, setStock] = React.useState();
   const [watched, setWatched] = React.useState();
   const [loading, setLoading] = React.useState(true);
-  const [, setStockTags] = React.useState([]);
+  const [stockTags, setStockTags] = React.useState([]);
 
   const loadEntity = async () => {
     if (!symbol) {
@@ -48,9 +49,9 @@ const StockFreePage = (props) => {
     loadEntity();
   }, [symbol]);
 
-  React.useEffect(() => {
-    setHasPaid(['admin', 'agent', 'member'].includes(role));
-  }, [role]);
+  const isMemberOrFree = ['member', 'free'].includes(role);
+  const isAdminOrAgent = ['admin', 'agent'].includes(role);
+  const isGuest = role === 'guest';
 
   const handleToggleWatch = async watching => {
     stock.watched = watching;
@@ -68,17 +69,28 @@ const StockFreePage = (props) => {
     <>
       {(loading || !stock) ? <Loading /> : <>
         <PageHeader
-          style={{ paddingTop: 0 }}
+          style={{ 
+            backgroundColor: 'rgba(0,41,61,0.04)',
+            margin: -30,
+            marginBottom: 0,
+            padding: 30,
+            paddingBottom: 0
+           }}
           ghost={false}
           onBack={() => props.history.goBack()}
           title={<Space size="middle">
             <StockName value={stock} />
             {stock?.isOver ? <Tag color="yellow">over valued</Tag> : stock?.isUnder ? <Tag color="cyan">under valued</Tag> : null}
-            <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />
+            {isMemberOrFree && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
           </Space>}
-        />
+        >
+          {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={!isAdminOrAgent} />}
 
-        {stock && <StockDisplayPanel stock={stock}/>}
+          {isAdminOrAgent && <AdminStockPublishPanel stock={stock} />}
+
+        </PageHeader>
+
+        {stock && <StockDisplayPanel stock={stock} />}
       </>}
     </>
   );

@@ -12,7 +12,7 @@ import StockNewsPanel from 'components/StockNewsPanel';
 import StockEarningsPanel from 'components/StockEarningsPanel';
 import StockChart from 'components/charts/StockChart';
 import StockQuotePanel from 'components/StockQuotePanel';
-import AdminStockPublishPanel from '../Stock/AdminStockPublishPanel';
+import AdminStockPublishPanel from 'components/AdminStockPublishPanel';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
 import TagSelect from 'components/TagSelect';

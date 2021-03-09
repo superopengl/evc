@@ -1,4 +1,4 @@
-import { Space, Row, Col } from 'antd';
+import { Space, Row, Col, Divider } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -21,6 +21,7 @@ import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import styled from 'styled-components';
 import * as moment from 'moment';
+import AdminStockPublishPanel from 'components/AdminStockPublishPanel';
 const { Text } = Typography;
 
 const OldFairValueContainer = styled.div`
@@ -43,6 +44,11 @@ const StockDisplayPanel = (props) => {
   const [hasPaid, setHasPaid] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [stockTags, setStockTags] = React.useState([]);
+
+  const isAdminOrAgent = ['admin', 'agent'].includes(role);
+  const isMember = role === 'member';
+  const isFree = role === 'free';
+  const isGuest = role === 'guest';
 
   const loadEntity = async () => {
     try {
@@ -69,12 +75,13 @@ const StockDisplayPanel = (props) => {
   return (
     <>
       {(loading || !stock) ? <Loading /> : <>
-        {hasPaid && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
-        <Row gutter={[20, 20]} wrap={true} style={{ marginTop: 20 }}>
+        {/* {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={!isAdminOrAgent} />} */}
+        {/* {isAdminOrAgent && <AdminStockPublishPanel stock={stock} />} */}
+        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 20 }}>
           <Col flex="0 0 auto">
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
               <StockQuotePanel symbol={stock.symbol} />
-              <MemberOnlyCard
+              {!hasPaid && <MemberOnlyCard
                 title="Fair Value"
                 message="The latest fair value is only accessible to paid user"
                 paidOnly={true}
@@ -85,7 +92,7 @@ const StockDisplayPanel = (props) => {
                       <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
                     </Space>)}
                   </OldFairValueContainer>
-                } />
+                } />}
 
             </Space>
           </Col>
@@ -96,6 +103,9 @@ const StockDisplayPanel = (props) => {
             <MemberOnlyCard title={<>News</>}>
               <StockNewsPanel symbol={stock.symbol} />
             </MemberOnlyCard>
+            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true}>
+              <StockInsiderTransactionPanel symbol={stock.symbol} />
+            </MemberOnlyCard>
           </Col>
           <Col span={6}>
             <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true}>
@@ -103,9 +113,6 @@ const StockDisplayPanel = (props) => {
             </MemberOnlyCard>
             <MemberOnlyCard title={<>Roster</>}>
               <StockRosterPanel symbol={stock.symbol} />
-            </MemberOnlyCard>
-            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true}>
-              <StockInsiderTransactionPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
           <Col flex="auto">

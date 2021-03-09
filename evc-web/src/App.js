@@ -19,7 +19,16 @@ import { getEventSource } from 'services/eventSourceService';
 import { Subject } from 'rxjs';
 import ReactDOM from 'react-dom';
 import AppLoggedIn from 'AppLoggedIn';
+import { ConfigProvider } from 'antd';
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
+import zhTW from 'antd/lib/locale/zh_TW';
 
+const localeDic = {
+  'en-US': enUS,
+  'zh-CN': zhCN,
+  'zh-TW': zhTW
+}
 
 const App = () => {
 
@@ -76,24 +85,28 @@ const App = () => {
   const isFree = role === 'free';
   const isLoggedIn = isAdmin || isMember || isFree;
 
+  const locale = localeDic[user?.profile?.locale] ?? enUS;
+
   return (
     <GlobalContext.Provider value={contextValue}>
-      <BrowserRouter basename="/">
-        <Switch>
-          <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />
-          <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-          <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
-          <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
-          <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
-          <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
-          <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
-          <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
-          <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />
-          {/* <Redirect to="/" /> */}
-          <RoleRoute loading={loading} component={Error404} />
-        </Switch>
-      </BrowserRouter>
-      {(isMember || isGuest) && <ContactWidget />}
+      <ConfigProvider locale={locale}>
+        <BrowserRouter basename="/">
+          <Switch>
+            <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />
+            <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
+            <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
+            <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
+            <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
+            <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
+            <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
+            <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
+            <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />
+            {/* <Redirect to="/" /> */}
+            <RoleRoute loading={loading} component={Error404} />
+          </Switch>
+        </BrowserRouter>
+        {(isMember || isGuest) && <ContactWidget />}
+      </ConfigProvider>
     </GlobalContext.Provider>
   );
 }

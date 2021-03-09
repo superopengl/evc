@@ -15,9 +15,9 @@ import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSourceService';
 
-import { StockRangeTimelineEditor } from './StockRangeTimelineEditor';
-import StockEpsTimelineEditor from './StockEpsTimelineEditor';
-import { StockFairValueTimelineEditor } from './StockFairValueTimelineEditor';
+import { StockRangeTimelineEditor } from '../pages/Stock/StockRangeTimelineEditor';
+import StockEpsTimelineEditor from '../pages/Stock/StockEpsTimelineEditor';
+import { StockFairValueTimelineEditor } from '../pages/Stock/StockFairValueTimelineEditor';
 const { Paragraph } = Typography;
 
 
@@ -37,12 +37,26 @@ const Container = styled.div`
     padding-left: 0;
     padding-right: 0;
   }
+
+  .ant-card-head, .ant-card {
+    background-color: transparent;
+  }
 `;
 // const ColInnerCard = styled(Card)`
 // height: 100%;
 // `;
 
-const ColInnerCard = MemberOnlyCard;
+const ColInnerCard = props => {
+  const {children, ...other} = props
+return <Card 
+type="inner"
+bordered={false}
+size="small"
+{...other}
+>
+  {props.children}
+  </Card>
+};
 
 
 

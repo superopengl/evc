@@ -42,7 +42,7 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
 
   await getRepository(StockEps).insert(entity);
 
-  await refreshMaterializedView();
+  refreshMaterializedView();
 
   res.json();
 });
@@ -55,7 +55,7 @@ export const deleteStockEps = handlerWrapper(async (req, res) => {
     reportDate
   });
 
-  await refreshMaterializedView();
+  refreshMaterializedView();
 
   res.json();
 });

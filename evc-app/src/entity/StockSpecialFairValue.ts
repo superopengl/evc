@@ -4,7 +4,7 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-@Index(['symbol', 'createdAt'], { unique: true })
+@Index(['symbol', 'reportDate'], { unique: true })
 export class StockSpecialFairValue {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -21,12 +21,12 @@ export class StockSpecialFairValue {
   @Column('uuid')
   author: string;
 
+  @Column('date')
+  reportDate: string;
+
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   fairValueLo: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   fairValueHi: number;
-
-  @Column({ nullable: true })
-  published: Date;
 }

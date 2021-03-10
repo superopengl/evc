@@ -21,7 +21,7 @@ import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import styled from 'styled-components';
 import * as moment from 'moment';
-import AdminStockPublishPanel from 'components/AdminStockPublishPanel';
+import StockAdminPanel from 'components/StockAdminPanel';
 const { Text } = Typography;
 
 const OldFairValueContainer = styled.div`

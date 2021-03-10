@@ -12,7 +12,7 @@ import StockNewsPanel from 'components/StockNewsPanel';
 import StockEarningsPanel from 'components/StockEarningsPanel';
 import StockChart from 'components/charts/StockChart';
 import StockQuotePanel from 'components/StockQuotePanel';
-import AdminStockPublishPanel from 'components/AdminStockPublishPanel';
+import StockAdminPanel from 'components/StockAdminPanel';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
 import TagSelect from 'components/TagSelect';
@@ -126,7 +126,7 @@ const StockAdminPage = (props) => {
               <StockChart symbol={stock.symbol} period="1d" interval="5m" />
             </Col>
           </Row>
-          <AdminStockPublishPanel stock={stock} />
+          <StockAdminPanel stock={stock} />
           {/* <Col {...span}>
               <Card title={<>Earnings Today</>}>
                 <StockEarningsPanel symbol={stock.symbol} />

@@ -133,7 +133,7 @@ const EmailTemplateListPage = () => {
           renderItem={item => <List.Item
             key={item.key}
             extra={<Tooltip key="edit" placement="bottom" title="Edit">
-              <Button shape="circle" icon={<EditOutlined />}
+              <Button type="link" icon={<EditOutlined />}
                 onClick={() => handleEdit(item)} ></Button>
             </Tooltip>}
           >

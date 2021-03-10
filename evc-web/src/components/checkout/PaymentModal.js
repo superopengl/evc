@@ -184,7 +184,7 @@ const PaymentModal = (props) => {
               <FullBalancePayButton onProvision={() => handleProvisionSubscription('balance')} onCommit={handleSuccessfulPayment} />
             </>}
             {showBalanceCardCombinedRecurringMessage && <Alert
-              type="info" message="When each plan renew happens, system will try to use your balance as much before charging your card." showIcon />}
+              type="info" description="When each plan renew happens, system will try to use your balance as much before charging your card." showIcon />}
             {shouldShowCard && <StripeCardPaymentWidget onProvision={() => handleProvisionSubscription('card')} onCommit={handleSuccessfulPayment} />}
             {shouldShowAliPay && <AlipayButton size="large" icon={<AlipayCircleOutlined />} block style={{fontWeight: 800,fontStyle: 'italic'}}>Alipay</AlipayButton>}
             {shouldShowPayPal && <PayPalCheckoutButton onProvision={() => handleProvisionSubscription('paypal')} onCommit={handleSuccessfulPayment} />}

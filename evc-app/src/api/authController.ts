@@ -1,5 +1,5 @@
 
-import { getRepository, getConnection, Not, getManager } from 'typeorm';
+import { getRepository, getConnection, getManager } from 'typeorm';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
@@ -19,12 +19,15 @@ import { createReferral } from './accountController';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
-import { ReferralCode } from '../entity/ReferralCode';
-import { EmailTemplate } from '../entity/EmailTemplate';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
-  const { user } = (req as any);
+  let { user } = (req as any);
+  if (user) {
+    const email = user.profile.email;
+    user = await getActiveUserByEmail(email);
+    attachJwtCookie(user, res);
+  }
   res.json(user || null);
 });
 
@@ -122,7 +125,7 @@ export const signup = handlerWrapper(async (req, res) => {
       url
     },
     shouldBcc: true
-  }, true).catch(() => {});
+  }, true).catch(() => { });
 
   const info = {
     id,

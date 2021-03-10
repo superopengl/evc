@@ -11,6 +11,7 @@ import { now } from 'moment';
 import { getUtcNow } from './getUtcNow';
 import { User } from '../entity/User';
 import { handleReferralKickbackWhenPaid } from '../services/referralService';
+import { Role } from '../types/Role';
 
 
 export async function commitSubscription(
@@ -45,6 +46,12 @@ export async function commitSubscription(
     });
 
     await m.save(subscription);
+
+    await m.getRepository(User).update({
+      id: userId
+    }, {
+      role: Role.Member
+    });
 
     if (payment.method !== PaymentMethod.Balance) {
       await handleReferralKickbackWhenPaid(m, userId);

@@ -1,10 +1,7 @@
-import * as iex from 'iexcloud_api_wrapper';
-import { Connection, getManager, getRepository } from 'typeorm';
-import errorToJson from 'error-to-json';
-import { connectDatabase } from '../src/db';
+import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { getLastThreeMonthDailyPrice, singleBatchRequest } from '../src/services/iexService';
+import { singleBatchRequest } from '../src/services/iexService';
 import { StockDailyClose } from '../src/entity/StockDailyClose';
 
 

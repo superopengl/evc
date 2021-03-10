@@ -28,7 +28,7 @@ import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
-import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
+import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ const { Link: LinkText } = Typography;
 
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
-  background-color: white;
+  // background-color: white;
 }
 
 .ant-pro-global-header {
@@ -229,7 +229,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
-      <RoleRoute visible={isMember || isFree} path="/account" exact component={MySubscriptionPage} />
+      <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>
 

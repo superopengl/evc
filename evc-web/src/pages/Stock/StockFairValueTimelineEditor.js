@@ -167,7 +167,7 @@ export const StockFairValueTimelineEditor = (props) => {
   }
 
   const displayNumber = value => {
-    return _.isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value).toFixed(2);
+    return _.isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value).toLocaleString();
   }
 
   const handleSaveCell = (row) => {
@@ -187,14 +187,29 @@ export const StockFairValueTimelineEditor = (props) => {
       </small></Text>
     },
     {
-      title: 'PE',
+      title: 'TtmEPS',
+      dataIndex: 'ttmEps',
       render: (value, item) => {
-        const { pe, peLo, peHi } = item;
-        return pe ? <>{displayNumber(pe)} ({displayNumber(peLo)} ~ {displayNumber(peHi)})</> : displayNumber()
+        return displayNumber(value)
+      },
+    },
+    {
+      title: 'PE',
+      dataIndex: 'pe',
+      render: (value, item) => {
+        return displayNumber(value)
       },
     },
     {
       title: 'Computed',
+      render: (value, item) => {
+        const { fairValueLo, fairValueHi } = item;
+        return fairValueLo ? <>{displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}</> : displayNumber()
+      },
+      editable: true,
+    },
+    {
+      title: 'Special',
       render: (value, item) => {
         const { fairValueLo, fairValueHi } = item;
         return fairValueLo ? <>{displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}</> : displayNumber()

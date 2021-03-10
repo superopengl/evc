@@ -77,7 +77,7 @@ const StockDisplayPanel = (props) => {
       {(loading || !stock) ? <Loading /> : <>
         {/* {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={!isAdminOrAgent} />} */}
         {/* {isAdminOrAgent && <AdminStockPublishPanel stock={stock} />} */}
-        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 20 }}>
+        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 30 }}>
           <Col flex="0 0 auto">
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
               <StockQuotePanel symbol={stock.symbol} />

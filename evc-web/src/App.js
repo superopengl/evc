@@ -32,7 +32,6 @@ const localeDic = {
 
 const App = () => {
 
-
   const event$ = new Subject();
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);

@@ -18,6 +18,8 @@ import ReactDOM from 'react-dom';
 import ReferralLinkInput from 'components/ReferralLinkInput';
 import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
 import MySubscriptionHistoryDrawer from './MySubscriptionHistoryDrawer';
+import { getAuthUser } from 'services/authService';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -62,16 +64,21 @@ const MyAccountPage = (props) => {
   const [balanceHistoryVisible, setBalanceHistoryVisible] = React.useState(false);
   const [subscriptionHistoryVisible, setSubscriptionHistoryVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
+  const context = React.useContext(GlobalContext);
 
-  const loadEntity = async () => {
+  const load = async (refreshAuthUser = false) => {
     try {
       setLoading(true);
       const account = await getMyAccount();
       const subscription = await getMyCurrentSubscription();
+      const user = refreshAuthUser ? await getAuthUser() : null;
 
       ReactDOM.unstable_batchedUpdates(() => {
         setAccount(account);
         changeToNewSubscription(subscription);
+        if (refreshAuthUser) {
+          context.setUser(user);
+        }
         setLoading(false);
       })
     } catch {
@@ -80,7 +87,7 @@ const MyAccountPage = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity();
+    load(false);
   }, []);
 
   const handleFetchMyBalanceHistoryList = async () => {
@@ -90,6 +97,16 @@ const MyAccountPage = (props) => {
 
   const currentPlanKey = currentSubscription?.type || 'free';
   const isCurrentFree = currentPlanKey === 'free';
+
+  const handleCancelSubscription = async () => {
+    try {
+      setLoading(true);
+      await cancelSubscription(currentSubscription.id);
+      load(true);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handleCancelCurrentPlan = () => {
     Modal.confirm({
@@ -102,13 +119,7 @@ const MyAccountPage = (props) => {
         danger: true
       },
       onOk: async () => {
-        try {
-          setLoading(true);
-          await cancelSubscription(currentSubscription.id);
-          loadEntity();
-        } finally {
-          setLoading(false);
-        }
+        await handleCancelSubscription();
       },
       cancelText: 'No, keep the current plan',
     });
@@ -144,7 +155,7 @@ const MyAccountPage = (props) => {
 
   const handlePaymentOk = () => {
     setModalVisible(false);
-    loadEntity();
+    load();
   }
 
   const handleCancelPayment = () => {
@@ -162,52 +173,46 @@ const MyAccountPage = (props) => {
         danger: true
       },
       onOk: async () => {
-        try {
-          setLoading(true);
-          await cancelSubscription(currentSubscription.id);
-          loadEntity();
-        } finally {
-          setLoading(false);
-        }
+        await handleCancelSubscription();
       },
-      cancelText: 'No, keep using it',
+      cancelText: 'No, keep it',
     });
   }
 
 
   return (
     <ContainerStyled>
-      <Loading loading={loading} style={{width: '100%'}}>
+      <Loading loading={loading} style={{ width: '100%' }}>
         <Space direction="vertical" size="large" style={{ width: '100%', alignItems: 'stretch', justifyContent: 'center' }}>
           <Card title={null} size="middle">
-          <PageHeader
-            style={{ padding: '16px 0' }}
-            title={<Title>Subscription</Title>}
-            extra={[
-              <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History</Button>,
-              isCurrentFree ? null : <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate</Button>
-            ].filter(x => !!x)}
-          />
-          <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
-          <StyledRow gutter={[30, 30]} style={{ maxWidth: 800 }}>
-            {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
-              <SubscriptionCard
-                title={s.title}
-                icon={s.icon}
-                description={s.description}
-                onClick={() => handleChangePlan(s)}
-                price={s.price}
-                active={s.key === currentPlanKey}
-                unit={s.unit} />
-            </StyledCol>)}
+            <PageHeader
+              style={{ padding: '16px 0' }}
+              title={<Title>Subscription</Title>}
+              extra={[
+                <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History</Button>,
+                isCurrentFree ? null : <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate</Button>
+              ].filter(x => !!x)}
+            />
+            <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
+            <StyledRow gutter={[30, 30]} style={{ maxWidth: 800 }}>
+              {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
+                <SubscriptionCard
+                  title={s.title}
+                  icon={s.icon}
+                  description={s.description}
+                  onClick={() => handleChangePlan(s)}
+                  price={s.price}
+                  active={s.key === currentPlanKey}
+                  unit={s.unit} />
+              </StyledCol>)}
 
-          {currentSubscription && <Col span={24}>
-            <Title>{getSubscriptionName(currentSubscription.type)}</Title>
-            <Space size="small">{currentSubscription.symbols?.map((s, i) => <Tag key={i}>{s}</Tag>)}</Space>
-            <Text>Started <TimeAgo value={currentSubscription.start} /></Text>
-            <Text>Next payment <TimeAgo value={currentSubscription.end} /></Text>
-          </Col>}
-          </StyledRow>
+              {currentSubscription && <Col span={24}>
+                <Title>{getSubscriptionName(currentSubscription.type)}</Title>
+                <Space size="small">{currentSubscription.symbols?.map((s, i) => <Tag key={i}>{s}</Tag>)}</Space>
+                <Text>Started <TimeAgo value={currentSubscription.start} /></Text>
+                <Text>Next payment <TimeAgo value={currentSubscription.end} /></Text>
+              </Col>}
+            </StyledRow>
           </Card>
           <Card title={null} size="middle">
 

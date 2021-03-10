@@ -1,36 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Form, Input, Checkbox, Switch, Divider } from 'antd';
-import { signUp } from 'services/authService';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
-import { notify } from 'util/notify';
+import { withRouter } from 'react-router-dom';
+import { Typography, Button, Switch, Divider } from 'antd';
+import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Modal, Space } from 'antd';
-import StepWizard from 'react-step-wizard';
-import { DoubleRightOutlined, RightOutlined, AlipayCircleOutlined } from '@ant-design/icons';
+import { AlipayCircleOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { StockSearchInput } from '../StockSearchInput';
 import * as _ from 'lodash';
 import MoneyAmount from '../MoneyAmount';
-import { StripeCheckout } from '../StripeCheckout';
-import { Row, Col } from 'antd';
 import { Loading } from '../Loading';
 import { calculatePaymentDetail, confirmSubscriptionPayment, provisionSubscription } from 'services/subscriptionService';
 import FullBalancePayButton from './FullBalancePayButton';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 import ReactDOM from 'react-dom';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Title, Text, Paragraph } = Typography;
 
-const ContainerStyled = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
-  width: 100%;
-`;
 
 const AlipayButton = styled(Button)`
   border-color: #108fe9;
@@ -41,12 +29,8 @@ const AlipayButton = styled(Button)`
     color:  #108fe9;
     background: white;
     border-color:  #108fe9;
-
-
   }
 `;
-
-
 
 const PaymentModal = (props) => {
 
@@ -56,7 +40,7 @@ const PaymentModal = (props) => {
   const [recurring, setRecurring] = React.useState(true);
   const [paymentDetail, setPaymentDetail] = React.useState();
   const [willUseBalance, setWillUseBalance] = React.useState(false);
-
+  const context = React.useContext(GlobalContext);
 
   const fetchPaymentDetail = async (useBalance) => {
     try {
@@ -110,6 +94,8 @@ const PaymentModal = (props) => {
     try {
       setLoading(true);
       await confirmSubscriptionPayment(paymentId, payload);
+      // Needs to refresh auth user because the role may have changed based on subscription change.
+      context.setUser(await getAuthUser());
     } finally {
       setLoading(false);
     }
@@ -180,7 +166,7 @@ const PaymentModal = (props) => {
           {isValidPlan && <Divider />}
           {isValidPlan && <Space direction="vertical" style={{ width: '100%' }} size="middle">
             {shouldShowFullBalanceButton && <>
-              <Alert type="info" message="Congratulations! You have enough balance to purchase this plan without any additional pay." showIcon />
+              <Alert type="info" description="Congratulations! You have enough balance to purchase this plan without any additional pay." showIcon />
               <FullBalancePayButton onProvision={() => handleProvisionSubscription('balance')} onCommit={handleSuccessfulPayment} />
             </>}
             {showBalanceCardCombinedRecurringMessage && <Alert

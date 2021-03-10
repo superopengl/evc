@@ -118,6 +118,11 @@ const ROUTES = [
   },
 ];
 
+function getSanitizedPathName (pathname) {
+  const match = /\/[^/]+/.exec(pathname);
+  return match ? match[0] ?? pathname : pathname;
+}
+
 const AppLoggedIn = props => {
 
   const { history } = props;
@@ -128,7 +133,7 @@ const AppLoggedIn = props => {
   const [contactVisible, setContactVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
-  const [pathname, setPathname] = React.useState(props.location.pathname);
+  const [pathname, setPathname] = React.useState(getSanitizedPathName(props.location.pathname));
 
   const { user, role, setUser } = context;
   if (!user) {

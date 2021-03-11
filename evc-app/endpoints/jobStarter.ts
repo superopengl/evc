@@ -9,11 +9,11 @@ import { v4 as uuidv4 } from 'uuid';
 export const start = async (jobName: string, jobFunc: () => Promise<any>) => {
   let connection: Connection = null;
   const eventId = uuidv4();
-  await logDataEvent({ eventId, eventType: jobName, status: 'started', by: 'task' })
   try {
     dotenv.config();
     connection = await connectDatabase();
     console.log('Task', jobName, 'started');
+    await logDataEvent({ eventId, eventType: jobName, status: 'started', by: 'task' })
     await jobFunc();
     console.log('Task', jobName, 'done');
     await logDataEvent({ eventId, eventType: jobName, status: 'done', by: 'task' })

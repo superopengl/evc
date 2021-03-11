@@ -42,7 +42,7 @@ async function syncIexToDatabase(symbols: string[]) {
   await udpateDatabase(resp);
 }
 
-const JOB_NAME = 'stock-historical-pe';
+const JOB_NAME = 'stock-historical-close-pe';
 
 start(JOB_NAME, async () => {
   const stocks = await getRepository(Stock)

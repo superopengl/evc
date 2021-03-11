@@ -101,7 +101,7 @@ const StockInfoCard = (props) => {
             <td style={{ verticalAlign: 'top' }}>
               <TooltipLabel message="How to use support">Support</TooltipLabel>
             </td>
-            <td style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+            <td style={{ display: 'flex', flexDirection: 'column' }}>
               {stock.supports?.length > 0 && stock.supports.map((s, i) => <NumberRangeDisplay key={i} lo={s.lo} hi={s.hi} />)}
             </td>
           </tr>

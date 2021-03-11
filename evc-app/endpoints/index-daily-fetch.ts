@@ -49,8 +49,6 @@ async function udpateDatabase(iexBatchResponse) {
   await syncManyStockEps(epsInfo);
   await syncManyStockPutCallRatio(advancedStatsInfo);
   await syncManyStockClose(quoteInfo);
-
-  await executeWithDataEvents('refresh materialized views', 'daily fetch', refreshMaterializedView);
 }
 
 
@@ -88,4 +86,6 @@ start(JOB_NAME, async () => {
     console.log(JOB_NAME, `${++round}/${total}`);
     await syncIexToDatabase(batchSymbols);
   }
+
+  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
 });

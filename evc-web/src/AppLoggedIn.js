@@ -31,6 +31,8 @@ import ContactForm from 'components/ContactForm';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
+import {GiReceiveMoney, GiRadarSweep} from 'react-icons/gi';
+import {BiDollar} from 'react-icons/bi';
 
 const { Link: LinkText } = Typography;
 
@@ -71,7 +73,7 @@ const ROUTES = [
   {
     path: '/stock',
     name: 'Stock Radar',
-    icon: <UnorderedListOutlined />,
+    icon:  <div style={{marginRight: 10, display: 'inline-block', position: 'relative', top: 2}}><GiRadarSweep /></div>,
     roles: ['admin', 'agent', 'member', 'free']
   },
   {
@@ -95,7 +97,13 @@ const ROUTES = [
   {
     path: '/account',
     name: 'Account',
-    icon: <DollarOutlined />,
+    icon: <div style={{marginRight: 10, display: 'inline-block', position: 'relative', top: 2}}><BiDollar /></div>,
+    roles: ['member', 'free'],
+  },
+  {
+    path: '/referral',
+    name: 'Earn Commission',
+    icon: <div style={{marginRight: 10, display: 'inline-block'}}><GiReceiveMoney /></div>,
     roles: ['member', 'free'],
   },
   {

@@ -4,11 +4,10 @@ import styled from 'styled-components';
 import { Space, Table, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { withRouter } from 'react-router-dom';
-import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { timer } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 
-const { Text, Title } = Typography;
+const { Text, Title ,  Link: TextLink } = Typography;
 
 const Container = styled.div`
 `;
@@ -60,49 +59,43 @@ const CellSpace = styled.div`
   text-align: right;
 `;
 
-const columnDef = [
-  {
-    title: 'symbol',
-    render: (text, item, index) => {
-      const { symbol, company, publishedAt } = item;
-      if (index % 2 === 0) {
-        return <Text style={{ fontSize: '1rem', color: '#3273A4' }} strong>{symbol}</Text>;
-      }
-      return {
-        props: {
-          colSpan: 4,
-        },
-        children: <Space style={{width: '100%', justifyContent: 'space-between'}}>
-          <Text type="secondary"><small>{company}</small></Text>
-          <TimeAgo direction="horizontal" value={publishedAt} showAgo={false} prefix={<Text type="secondary"><small>published:</small></Text>} />
-        </Space>
-      };
-    }
-  },
-  // {
-  //   title: 'fair value',
-  //   render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-  //     <NumberRangeDisplay lo={item.fairValueLo} hi={item.fairValueHi} />
-  //   </CellSpace>
-  // },
-  // {
-  //   title: 'support',
-  //   render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-  //     <NumberRangeDisplay lo={item.supportLo} hi={item.supportHi} />
-  //   </CellSpace>
-  // },
-  // {
-  //   title: 'resistance',
-  //   render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
-  //     <NumberRangeDisplay lo={item.resistanceLo} hi={item.resistanceHi} />
-  //   </CellSpace>
-  // },
-];
 
+const StyledSymbolTextLink = styled(TextLink)`
+&.ant-typography {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #3273A4;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+`;
 
 const StockMostSearched = (props) => {
 
-  const { title, onFetch } = props;
+  const columnDef = [
+    {
+      title: 'symbol',
+      render: (text, item, index) => {
+        const { symbol, company, publishedAt } = item;
+        if (index % 2 === 0) {
+          return <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
+        }
+        return {
+          props: {
+            colSpan: 4,
+          },
+          children: <Space style={{width: '100%', justifyContent: 'space-between'}}>
+            <Text type="secondary"><small>{company}</small></Text>
+            <TimeAgo direction="horizontal" value={publishedAt} showAgo={false} prefix={<Text type="secondary"><small>published:</small></Text>} />
+          </Space>
+        };
+      }
+    },
+  ];
+
+  const { title, onFetch, onSymbolClick } = props;
 
   const [list, setList] = React.useState([]);
 

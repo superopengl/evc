@@ -9,6 +9,9 @@ import styled from 'styled-components';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
 import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
+import { StockGuestPreviewDrawer } from 'components/StockGuestPreviewDrawer';
+
+
 const { Content } = Layout;
 
 const LayoutStyled = styled(Layout)`
@@ -22,16 +25,19 @@ const ContentStyled = styled(Content)`
 `;
 
 
-const HomePage = () => {
+const HomePage = (props) => {
+
+  const [selectedSymbol, setSelectedSymbol] = React.useState();
+
   return (
     <LayoutStyled>
       {/* <BarStyled></BarStyled> */}
       <ContentStyled>
         <HashAnchorPlaceholder id="home" />
         <section>
-          <HomeCarouselArea></HomeCarouselArea>
+          <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
         </section>
-        <HomeMarketArea />
+        <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
         <section id="pricing"><HomePricingArea /></section>
         {/* <section><HomeSearchArea /></section> */}
         <HashAnchorPlaceholder id="services" />
@@ -40,6 +46,11 @@ const HomePage = () => {
         {/* <section><HomeTeamArea /></section> */}
         <HomeFooter />
       </ContentStyled>
+      <StockGuestPreviewDrawer
+        symbol={selectedSymbol}
+        visible={!!selectedSymbol}
+        onClose={() => setSelectedSymbol()}
+      />
       <CookieConsent location="top" overlay expires={999} buttonStyle={{ borderRadius: 4 }} buttonText="I understand">
         This website uses cookies to enhance the user experience.
         </CookieConsent>

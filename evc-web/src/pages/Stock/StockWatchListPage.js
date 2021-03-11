@@ -28,9 +28,9 @@ const StockWatchListPage = (props) => {
         // Go to /stock page if nothing gets watched.
         Modal.info({
           title: 'Empty Watchlist',
-          content: <>You are not watching any stock. On the All Stocks, clicking <StarOutlined style={{ fontSize: 18, color: '#8c8c8c' }} /> icon to add stock to your watchlist.</>,
+          content: <>You are not watching any stock. On the Stock Radar page, clicking <StarOutlined style={{ fontSize: 18, color: '#8c8c8c' }} /> icon to add stock to your watchlist.</>,
           onOk: () => props.history.push('/stock'),
-          okText: 'Go To All Stocks Page'
+          okText: 'Go To Stock Radar Page'
         });
         return;
       }
@@ -50,7 +50,7 @@ const StockWatchListPage = (props) => {
 
   return (
       <ContainerStyled>
-        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">All Stocks</Link> to find all the stocks our platform supports</Paragraph>
+        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">Stock Radar</Link> to find all the stocks our platform supports</Paragraph>
         <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
       </ContainerStyled>
   );

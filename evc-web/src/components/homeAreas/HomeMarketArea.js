@@ -10,6 +10,8 @@ import { BiDollar } from 'react-icons/bi';
 import { listHotStock, getMarketGainers, getMarketMostActive, getMarketLosers } from 'services/stockService';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';
+import { propTypes } from 'mgr-pdf-viewer-react/dist/mgr-pdf-viewer-react';
+import PropTypes from 'prop-types';
 
 const { Title, Paragraph } = Typography;
 
@@ -45,21 +47,23 @@ const HomeMarketArea = props => {
     xxl: 6
   };
 
+  const {onSymbolClick} = props;
+
   return (
     <Container>
       <InnerContainer>
         <Row gutter={30}>
           <Col flex="auto">
-            <StockMostSearched onFetch={listHotStock} title="Most searched" />
+            <StockMostSearched onFetch={listHotStock} title="Most searched" onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketMostActive} title="Most Actives" />
+            <StockMostPanel onFetch={getMarketMostActive} title="Most Actives" onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketGainers} title="Gainers" />
+            <StockMostPanel onFetch={getMarketGainers} title="Gainers" onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketLosers} title="Losers" />
+            <StockMostPanel onFetch={getMarketLosers} title="Losers" onSymbolClick={onSymbolClick} />
           </Col>
         </Row>
       </InnerContainer>
@@ -67,8 +71,12 @@ const HomeMarketArea = props => {
   );
 }
 
-HomeMarketArea.propTypes = {};
+HomeMarketArea.propTypes = {
+  onSymbolClick: PropTypes.func,
+};
 
-HomeMarketArea.defaultProps = {};
+HomeMarketArea.defaultProps = {
+  onSymbolClick: () => { }
+};
 
 export default HomeMarketArea;

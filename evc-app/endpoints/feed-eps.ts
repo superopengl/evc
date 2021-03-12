@@ -1,7 +1,5 @@
-import * as iex from 'iexcloud_api_wrapper';
-import { Connection, getManager, getRepository } from 'typeorm';
-import errorToJson from 'error-to-json';
-import { connectDatabase, refreshMaterializedView } from '../src/db';
+import { getRepository } from 'typeorm';
+import { refreshMaterializedView } from '../src/db';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { singleBatchRequest } from '../src/services/iexService';

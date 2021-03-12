@@ -1,9 +1,4 @@
-import * as iex from 'iexcloud_api_wrapper';
-import { Connection, getManager } from 'typeorm';
-import errorToJson from 'error-to-json';
-import { connectDatabase } from '../src/db';
 import { start } from './jobStarter';
-import { executeSqlStatement } from './executeSqlStatement';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'csv-parser';

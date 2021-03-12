@@ -25,12 +25,12 @@ const mviews = [
   StockPutCallRatio90,
 ];
 
-export async function connectDatabase(shouldSyncSchema = true) {
+export async function connectDatabase(shouldSyncSchema = false) {
   const connection = await createConnection();
   if (shouldSyncSchema) {
     await syncDatabaseSchema(connection);
+    await initializeData();
   }
-  await initializeData();
   return connection;
 }
 
@@ -48,7 +48,6 @@ async function syncDatabaseSchema(connection: Connection) {
    * As a result, we have to drop all views/materialized views before hand,
    * so as to let typeorm always create fresh views when app starts up.
    */
-
 
   await dropView();
 

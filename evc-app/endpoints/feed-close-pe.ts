@@ -5,17 +5,23 @@ import { singleBatchRequest } from '../src/services/iexService';
 import { StockDailyClose } from '../src/entity/StockDailyClose';
 import { refreshMaterializedView } from '../src/db';
 import { executeWithDataEvents } from '../src/services/dataLogService';
-
+import * as _ from 'lodash';
 
 async function syncManyStockClose(closeEntities: StockDailyClose[]) {
   if (closeEntities.length) {
-    await getManager()
-      .createQueryBuilder()
-      .insert()
-      .into(StockDailyClose)
-      .onConflict('("symbol", "date") DO NOTHING')
-      .values(closeEntities)
-      .execute();
+    const chunks = _.chunk(closeEntities, 1000);
+    let round = 0;
+    for(const chunk of chunks) {
+      round++;
+      console.log(`Bulk inserting ${round}/${chunks.length} (1000 per run)`);
+      await getManager()
+        .createQueryBuilder()
+        .insert()
+        .into(StockDailyClose)
+        .onConflict('("symbol", "date") DO NOTHING')
+        .values(chunk)
+        .execute();
+    }
   }
 }
 

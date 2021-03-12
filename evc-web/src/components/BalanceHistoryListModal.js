@@ -41,7 +41,7 @@ const BalanceHistoryListModal = (props) => {
 
   return (
     <StyledDrawer
-      title="Balance History"
+      title="Balance Transactions"
       visible={visible}
       closable={true}
       maskClosable={true}

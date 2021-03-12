@@ -11,8 +11,8 @@ export const Logo = () =>
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'contain',
       backgroundPosition: 'center',
-      width: 80,
-      height: 80,
+      width: 64,
+      height: 64,
       borderRadius: 4,
       cursor: 'pointer',
     }}></div>

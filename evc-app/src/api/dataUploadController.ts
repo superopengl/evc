@@ -10,7 +10,9 @@ import { redisCache } from '../services/redisCache';
 import * as parse from 'csv-parse/lib/sync';
 import { StockSupport } from '../entity/StockSupport';
 import { StockResistance } from '../entity/StockResistance';
-import { UnusalOptionActivities } from '../entity/UnusalOptionActivities';
+import { UnusalOptionActivityStocks } from '../entity/UnusalOptionActivityStocks';
+import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
+import { UnusalOptionActivityIndices } from '../entity/UnusalOptionActivityIndices';
 
 function handleCsvUpload(onRow: (row: object) => Promise<void>) {
   return handlerWrapper(async (req, res) => {
@@ -74,13 +76,30 @@ export const uploadResistanceCsv = handleCsvUpload(async row => {
     .execute();
 })
 
-export const uploadUnusalOptionActivityCsv = handleCsvUpload(async row => {
+export const uploadUoaStocksCsv = handleCsvUpload(async row => {
   await getManager()
     .createQueryBuilder()
     .insert()
-    .into(UnusalOptionActivities)
-    .values(row as UnusalOptionActivities)
-    .onConflict(`(symbol, lo, hi) DO NOTHING`)
+    .into(UnusalOptionActivityStocks)
+    .values(row as UnusalOptionActivityStocks)
+    .execute();
+})
+
+export const uploadUoaEtfsCsv = handleCsvUpload(async row => {
+  await getManager()
+    .createQueryBuilder()
+    .insert()
+    .into(UnusalOptionActivityEtfs)
+    .values(row as UnusalOptionActivityEtfs)
+    .execute();
+})
+
+export const uploadUoaIndicesCsv = handleCsvUpload(async row => {
+  await getManager()
+    .createQueryBuilder()
+    .insert()
+    .into(UnusalOptionActivityIndices)
+    .values(row as UnusalOptionActivityIndices)
     .execute();
 })
 

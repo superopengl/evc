@@ -84,7 +84,14 @@ const StockInfoCard = (props) => {
   >
     <StyledTable>
       <tbody>
-
+        <tr>
+          <td>
+          <TooltipLabel message={null}>Price</TooltipLabel>
+          </td>
+          <td>
+            {stock.lastPrice}
+          </td>
+        </tr>
         <tr>
           <td>
             <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>

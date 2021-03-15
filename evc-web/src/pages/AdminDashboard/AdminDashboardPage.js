@@ -1,14 +1,11 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Collapse, Tag, Badge, Button, Space, Modal } from 'antd';
+import { Typography, Collapse, Tag, Badge } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { MemberOnlyCard } from 'components/MemberOnlyCard';
-import { refreshMaterializedViews } from 'services/dataService';
-import { AdminOperationCard } from 'components/AdminOperationCard';
 
 const { Text, Paragraph } = Typography;
 
@@ -67,63 +64,10 @@ const AdminDashboardPage = () => {
     loadList();
   }, []);
 
-  const handleUploadSupportCsv = async () => {
-
-  }
-
   return (
     <ContainerStyled>
       <Loading loading={loading}>
-        <AdminOperationCard
-          operationKey="refresh-mv"
-          content="Refresh Materialized Views. This operation should only be executed by data admins."
-          buttonText="Refresh Materialized Views"
-          inProgressMessage="Refreshing materialized views. It may take minutes to complete."
-          type="button"
-          onOk={refreshMaterializedViews}
-        />
-        <AdminOperationCard
-          operationKey="upload-support-csv"
-          content={<>Bulk upload support values from CSV file. The CSV file must have a header row with three columns <Text code>symbol</Text>, <Text code>lo</Text>, <Text code>hi</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once. A sample is as below.
-              <pre><small>
-                {`symbol,lo,hi
-AAPL,120,150
-AAPL,160,180
-GOOG,1000,2000
-GOOG,2100,2200`}
-             </small> </pre>
-          </>}
-          buttonText="Upload Support"
-          inProgressMessage="Uploading support data. It may take minutes to complete."
-          type="upload"
-          uploadAction="/admin/data/upload/support"
-          onOk={handleUploadSupportCsv}
-        />
-        <AdminOperationCard
-          operationKey="upload-resistance-csv"
-          content={<>Bulk upload resistance values from CSV file. The CSV file must have a header row with three columns <Text code>symbol</Text>, <Text code>lo</Text>, <Text code>hi</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once. A sample is as below.
-            <pre><small>
-              {`symbol,lo,hi
-AAPL,120,150
-AAPL,160,180
-GOOG,1000,2000
-GOOG,2100,2200`}
-           </small> </pre>
-        </>}
-          buttonText="Upload Resistance"
-          inProgressMessage="Uploading resistance data. It may take minutes to complete."
-          type="upload"
-          uploadAction="/admin/data/upload/resistance"
-          onOk={handleUploadSupportCsv}
-        />
-        <MemberOnlyCard>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Text>Upload unusual options activity</Text>
-            <Button type="primary">Import Unusual Options Activity from CSV</Button>
-          </Space>
-        </MemberOnlyCard>
-
-        <Collapse
+         <Collapse
           // ghost
           bordered={false}
           defaultActiveKey={['plea']}

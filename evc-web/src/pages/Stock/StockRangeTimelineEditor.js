@@ -20,7 +20,7 @@ const Container = styled.div`
 
 
 export const StockRangeTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, disableInput, publishedId } = props;
+  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, disableInput } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -79,7 +79,6 @@ export const StockRangeTimelineEditor = (props) => {
           <List.Item
             onClick={() => onSelected(item)}
             style={{ position: 'relative' }}
-            className={getClassNameOnSelect(item)}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             <List.Item.Meta
@@ -98,7 +97,6 @@ StockRangeTimelineEditor.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onSelected: PropTypes.func,
-  getClassNameOnSelect: PropTypes.func,
   publishedId: PropTypes.string,
   showTime: PropTypes.bool,
   mode: PropTypes.string,
@@ -111,6 +109,5 @@ StockRangeTimelineEditor.defaultProps = {
   onChange: () => { },
   onDelete: () => { },
   onSelected: () => { },
-  getClassNameOnSelect: () => false,
   disableInput: false,
 };

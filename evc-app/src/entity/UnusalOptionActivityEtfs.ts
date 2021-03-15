@@ -3,11 +3,12 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-export class UnusalOptionActivities {
-  @PrimaryColumn()
+export class UnusalOptionActivityEtfs {
+  @Column()
+  @Index()
   symbol: string;
 
-  @PrimaryColumn('date')
+  @Column('date')
   @Index()
   time: string;
 

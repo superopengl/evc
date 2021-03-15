@@ -33,6 +33,7 @@ import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
 import {GiReceiveMoney, GiRadarSweep} from 'react-icons/gi';
 import {BiDollar} from 'react-icons/bi';
+import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
 
 const { Link: LinkText } = Typography;
 
@@ -123,6 +124,10 @@ const ROUTES = [
       {
         path: '/translation',
         name: 'Translations',
+      },
+      {
+        path: '/data',
+        name: 'Data Source',
       },
       {
         path: '/referral_policy',
@@ -252,6 +257,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
+      <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
       <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>

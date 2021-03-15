@@ -14,6 +14,33 @@ const { Text } = Typography;
 const StyledTable = styled.table`
 border: none;
 width: 100%;
+font-size: 0.8rem;
+
+.text-color-level-0 {
+  color: rgba(0,0,0,1);
+
+  .ant-typography {
+    color: rgba(0,0,0,1);
+  }
+}
+
+.text-color-level-1 {
+  color: rgba(0,0,0,0.55);
+  font-size: 0.7rem;
+
+  .ant-typography {
+    color: rgba(0,0,0,0.55);
+  }
+}
+
+.text-color-level-2 {
+  color: rgba(0,0,0,0.35);
+  font-size: 0.6rem;
+
+  .ant-typography {
+    color: rgba(0,0,0,0.35);
+  }
+}
 `;
 
 const StyledCard = styled(Card)`
@@ -38,12 +65,12 @@ const StyledCard = styled(Card)`
 `;
 
 const TooltipLabel = props => <Tooltip title={props.message}>
-  <Text type="secondary"><small>{props.children}</small></Text>
+  <Text type="secondary">{props.children}</Text>
 </Tooltip>
 
 const HiddenNumber = props => {
   const list = new Array(props.count || 1).fill(null);
-  return list.map((x, i) => <Text key={i}><small>XXX.XX ~ XXX.XX</small></Text>)
+  return list.map((x, i) => <Text className={`text-color-level-${i}`} key={i}>XXX.XX ~ XXX.XX</Text>)
 }
 
 const StockInfoCard = (props) => {
@@ -88,7 +115,7 @@ const StockInfoCard = (props) => {
           <td>
           <TooltipLabel message={null}>Price</TooltipLabel>
           </td>
-          <td>
+          <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
             {stock.lastPrice}
           </td>
         </tr>
@@ -96,7 +123,7 @@ const StockInfoCard = (props) => {
           <td>
             <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
           </td>
-          <td>
+          <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
             {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} empty={<Text type="warning"><small>N/A Cannot calculate</small></Text>} />}
           </td>
         </tr>
@@ -104,16 +131,16 @@ const StockInfoCard = (props) => {
           <td style={{ verticalAlign: 'top' }}>
             <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
           </td>
-          <td style={{ display: 'flex', flexDirection: 'column' }}>
-            {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay key={i} lo={r.lo} hi={r.hi} />) : null}
+          <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
           </td>
         </tr>
         <tr>
           <td style={{ verticalAlign: 'top' }}>
             <TooltipLabel message="How to use support">Support</TooltipLabel>
           </td>
-          <td style={{ display: 'flex', flexDirection: 'column' }}>
-            {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay key={i} lo={s.lo} hi={s.hi} />) : null}
+          <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
           </td>
         </tr>
       </tbody>

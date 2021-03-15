@@ -26,7 +26,7 @@ background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #15be53 50%, #15be53 75%, #f0f0f0 75%, #f0f0f0 100%);
 // background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
 margin: 0 auto 0;
-padding: 0 2rem 2rem 2rem;
+padding: 2rem;
 width: 100%;
 // height: 100%;
 .signup-panel .ant-typography {
@@ -64,12 +64,7 @@ max-width: 1200px;
 }
 `;
 
-const LogoPlate = styled.div`
-margin: 4px 0 0;
-padding: 8px;
-// background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95), rgba(255,255,255,0.75));
-// border-radius: 2px;
-`;
+
 
 const SignUpButton = styled(Button)`
 // background-color: white !important;
@@ -107,18 +102,6 @@ const HomeCarouselAreaRaw = props => {
   return (
     <Container>
       <InnerContainer>
-        <Space className="top-menu" size="middle" style={{ width: '100%', justifyContent: 'space-between' }}>
-          <LogoPlate>
-            <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto"
-              height="30"></img>
-          </LogoPlate>
-          <Space>
-            <Button size="large" type="link" href="#pricing">Pricing</Button>
-            <Link to="/signup"><Button size="large" type="link">Sign Up</Button></Link>
-            <Link to="/login"><Button size="large" type="link">Login</Button></Link>
-            <LocaleSelector bordered={false} style={{ color: 'white', width: 130 }} size="large" defaultValue="en-US" />
-          </Space>
-        </Space>
         <Row gutter={20} style={{ marginTop: 50 }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Title style={{ fontSize: catchPhraseSize, marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check</Title>

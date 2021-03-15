@@ -18,9 +18,6 @@ export class StockSpecialFairValue {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @Column('uuid')
-  author: string;
-
   @Column('date')
   reportDate: string;
 

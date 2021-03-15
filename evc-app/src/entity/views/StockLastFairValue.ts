@@ -21,7 +21,6 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
     .select([
       's.symbol as symbol',
       's."reportDate" as "reportDate"',
-      'sp."author" as "specialAuthor"',
       'sp."createdAt" as "specialCreatedAt"',
       's."ttmEps" as "ttmEps"',
       's."fairValueLo" as "computedFairValueLo"',
@@ -39,9 +38,6 @@ export class StockLastFairValue {
 
   @ViewColumn()
   specialCreatedAt: Date;
-
-  @ViewColumn()
-  specialAuthor: string;
 
   @ViewColumn()
   ttmEps: number;

@@ -132,10 +132,6 @@ const ROUTES = [
         path: '/cash_back',
         name: 'Cash Back',
       },
-      {
-        path: '/data',
-        name: 'Data Upload',
-      },
     ]
   },
 ];

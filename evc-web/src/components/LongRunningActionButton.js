@@ -36,6 +36,7 @@ export const LongRunningActionButton = props => {
 
   const load = async () => {
     const result = await getOperationStatus(operationKey);
+
     if (result) {
       setLoading(true);
       startPingStatus();
@@ -83,8 +84,13 @@ export const LongRunningActionButton = props => {
           startPingStatus();
           break;
         }
+        case 'error': {
+          notify.error('Failed to upload file', info.file.response);
+          ping$?.unsubscribe();
+          setLoading(false);
+          break;
+        }
         case 'removed':
-        case 'error':
         case 'done':
         default: {
           ping$?.unsubscribe();

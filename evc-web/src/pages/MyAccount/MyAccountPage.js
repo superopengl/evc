@@ -184,15 +184,16 @@ const MyAccountPage = (props) => {
     <ContainerStyled>
       <Loading loading={loading} style={{ width: '100%' }}>
         <Space direction="vertical" size="large" style={{ width: '100%', alignItems: 'stretch', justifyContent: 'center' }}>
-          <Card title={null} size="middle">
-            <PageHeader
-              style={{ padding: '16px 0' }}
-              title={<Title>Subscription</Title>}
-              extra={[
-                <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History</Button>,
-                isCurrentFree ? null : <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate</Button>
-              ].filter(x => !!x)}
-            />
+          <Card
+            bordered={false}
+            title="Subscription"
+            extra={
+              <Space>
+                <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History</Button>
+                {!isCurrentFree && <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate</Button>}
+              </Space>
+            }
+          >
             <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
             <StyledRow gutter={[30, 30]} style={{ maxWidth: 800 }}>
               {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
@@ -207,36 +208,49 @@ const MyAccountPage = (props) => {
               </StyledCol>)}
 
               {currentSubscription && <Col span={24}>
-                <Title>{getSubscriptionName(currentSubscription.type)}</Title>
-                <Space size="small">{currentSubscription.symbols?.map((s, i) => <Tag key={i}>{s}</Tag>)}</Space>
-                <Text>Started <TimeAgo value={currentSubscription.start} /></Text>
-                <Text>Next payment <TimeAgo value={currentSubscription.end} /></Text>
+                {/* <Title level={4}>{getSubscriptionName(currentSubscription.type)}</Title> */}
+                <Space direction="vertical">
+                  <Text>Started <TimeAgo value={currentSubscription.start} direction="horizontal" /></Text>
+                  <Text>Next payment <TimeAgo value={currentSubscription.end} direction="horizontal" /></Text>
+                </Space>
               </Col>}
             </StyledRow>
           </Card>
-          <Card title={null} size="middle">
-
-            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Title>Balance</Title>
+          <Card
+            bordered={false}
+            title="Balance"
+            extra={
               <Title><MoneyAmount type="success" value={account.balance} /></Title>
-            </Space>
-
+            }
+          >
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">The money can be used deduct future payment.</Paragraph>
 
               <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Balance Transactions</Button>
             </Space>
           </Card>
-          <Card title={null} size="middle">
-
-            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Title>Referral Link</Title>
+          <Card
+            bordered={false}
+            title="Referral Link"
+            extra={
               <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
-            </Space>
+            }
+          >
             <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
             <ReferralLinkInput value={account?.referralUrl} />
           </Card>
-
+          <Card
+            bordered={false}
+            title="Cash Back"
+            extra={
+              <Space>
+                <Button type="secondary">Cash Back History</Button>
+                <Button type="primary">Request Cash Back</Button>
+              </Space>
+            }
+          >
+            <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
+          </Card>
         </Space>
       </Loading>
       <PaymentModal

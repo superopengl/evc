@@ -300,9 +300,6 @@ const UserListPage = () => {
   return (
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>User Management</Title>
-          </StyledTitleRow>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Input.Search
               placeholder="Input search text"

@@ -81,7 +81,7 @@ const ROUTES = [
     roles: ['admin', 'agent', 'member', 'free']
   },
   {
-    path: '/unsual_options_activiy',
+    path: '/unsual_options_activity',
     name: 'Unusual Options Activity',
     icon: <AlertOutlined />,
     roles: ['admin', 'agent', 'member']
@@ -276,9 +276,9 @@ const AppLoggedIn = props => {
     <Switch>
       <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
       <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
+      <RoleRoute visible={!isFree} exact path="/unsual_options_activity" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
-      <RoleRoute visible={isAdmin} exact path="/unsual_options_activiy" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
       <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />

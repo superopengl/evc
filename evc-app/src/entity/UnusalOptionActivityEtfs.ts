@@ -1,16 +1,15 @@
-import { Entity, Column, PrimaryColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
 export class UnusalOptionActivityEtfs {
+  @PrimaryGeneratedColumn()
+  id: number;
+  
   @Column()
   @Index()
   symbol: string;
-
-  @Column('date')
-  @Index()
-  time: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   price: number;
@@ -22,7 +21,7 @@ export class UnusalOptionActivityEtfs {
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   strike: number;
 
-  @PrimaryColumn('date')
+  @Column('date')
   @Index()
   expDate: string;
 
@@ -49,4 +48,8 @@ export class UnusalOptionActivityEtfs {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   iv: number;
+
+  @Column('date')
+  @Index()
+  time: string;
 }

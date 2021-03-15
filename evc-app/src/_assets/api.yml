@@ -989,36 +989,51 @@ paths:
       responses:
         200:
           description: OK
-  /admin/data/upload/support:
+  /admin/data/support:
     post:
       operationId: uploadSupportCsv
       responses:
         200:
           description: OK
-  /admin/data/upload/resistance:
+  /admin/data/resistance:
     post:
       operationId: uploadResistanceCsv
       responses:
         200:
           description: OK
-  /admin/data/upload/uoa/stocks:
+  /admin/data/uoa/stocks:
+    get:
+      operationId: listUoaStocks
+      responses:
+        200:
+          description: OK
     post:
       operationId: uploadUoaStocksCsv
       responses:
         200:
           description: OK
-  /admin/data/upload/uoa/etfs:
+  /admin/data/uoa/etfs:
+    get:
+      operationId: listUoaEtfs
+      responses:
+        200:
+          description: OK
     post:
       operationId: uploadUoaEtfsCsv
       responses:
         200:
-          description: OK          
-  /admin/data/upload/uoa/indices:
+          description: OK
+  /admin/data/uoa/indices:
+    get:
+      operationId: listUoaIndices
+      responses:
+        200:
+          description: OK
     post:
       operationId: uploadUoaIndicesCsv
       responses:
         200:
-          description: OK    
+          description: OK
   /admin/operation/:operation/status:
     get:
       operationId: getOperationStatus

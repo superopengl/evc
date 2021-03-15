@@ -1,9 +1,12 @@
-import { Entity, Column, PrimaryColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
 export class UnusalOptionActivityStocks {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @Column()
   @Index()
   symbol: string;
@@ -22,7 +25,7 @@ export class UnusalOptionActivityStocks {
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   strike: number;
 
-  @PrimaryColumn('date')
+  @Column('date')
   @Index()
   expDate: string;
 

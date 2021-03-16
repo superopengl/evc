@@ -22,7 +22,6 @@ export async function syncManyStockPutCallRatio(info: StockAdvancedStatsInfo[]) 
     entity.symbol = symbol;
     entity.putCallRatio = putCallRatio;
     entity.date = date;
-    entity.rawResponse = rawResponse;
     return entity;
   }).filter(x => !!x);
 

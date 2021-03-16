@@ -79,6 +79,4 @@ async function feedInitStockList() {
   }
 }
 
-start('sync_all_symbols', async () => {
-  await feedInitStockList();
-});
+start('sync_all_symbols', feedInitStockList);

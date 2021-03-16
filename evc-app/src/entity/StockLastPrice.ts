@@ -10,6 +10,12 @@ export class StockLastPrice {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   price: number;
 
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  change: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  changePercent: number;
+
   @Column()
   updatedAt?: Date;
 }

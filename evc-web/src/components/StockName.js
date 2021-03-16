@@ -14,7 +14,7 @@ export const StockName = (props) => {
   return (
   <Space direction={direction} {...other} size="small" style={{fontSize: size}}>
     <Text strong>{symbol}</Text>
-    <Text type="secondary" style={{fontSize: size}}>({company})</Text>
+    <Text type="secondary" style={{fontSize: size, fontWeight: 300}}>({company})</Text>
   </Space>
   );
 };

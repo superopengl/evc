@@ -3,10 +3,10 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-export class UnusalOptionActivityStocks {
+export class UnusalOptionActivityIndex {
   @PrimaryGeneratedColumn()
   id: number;
-
+  
   @Column()
   @Index()
   symbol: string;
@@ -53,3 +53,4 @@ export class UnusalOptionActivityStocks {
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   iv: number;
 }
+

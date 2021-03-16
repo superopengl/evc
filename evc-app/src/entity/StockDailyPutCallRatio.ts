@@ -17,7 +17,4 @@ export class StockDailyPutCallRatio {
   
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   putCallRatio: number;
-
-  @Column('json')
-  rawResponse: any;
 }

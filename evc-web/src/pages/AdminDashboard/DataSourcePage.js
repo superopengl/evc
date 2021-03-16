@@ -93,6 +93,29 @@ BA,245.34,Put,240,03/12/21,2,1.75,1.8,1.85,1.75,13246,292,45.36,53.66,03/10/21`}
 
       <Card
         bordered={false}
+        title="Put Call Ratio"
+        extra={
+          <Space>
+            <LongRunningActionButton
+              operationKey="upload-putCallRatio-csv"
+              buttonText="Put Call Ratio"
+              type="upload"
+              uploadAction="/admin/data/put_call_ratio"
+            />
+          </Space>
+        }>
+        Bulk upload from CSV file. The CSV file must have a header row as below.
+          <Text><pre><small>
+          {`symbol,date,putCallRatio
+AAPL,MM/DD/YY,0.3
+AAPL,MM/DD/YY,0.5
+GOOG,MM/DD/YY,0.75
+GOOG,MM/DD/YY,0.85`}
+        </small> </pre></Text>
+      </Card>
+
+      <Card
+        bordered={false}
         title="Refresh Materialized Views"
         extra={<LongRunningActionButton
           operationKey="refresh-mv"

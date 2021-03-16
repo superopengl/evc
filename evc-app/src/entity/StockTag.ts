@@ -13,5 +13,8 @@ export class StockTag {
   @Column()
   @Index()
   name: string;
+
+  @Column({ default: false })
+  officialOnly: boolean;
 }
 

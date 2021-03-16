@@ -2,6 +2,7 @@
 import { getRepository } from 'typeorm';
 import { Blog } from '../entity/Blog';
 import { StockTag } from '../entity/StockTag';
+import { Role } from '../types/Role';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
@@ -16,7 +17,13 @@ export const saveStockTag = handlerWrapper(async (req, res) => {
 
 export const listStockTags = handlerWrapper(async (req, res) => {
   // assertRole(req, 'member', 'admin', 'agent', 'free');
-  const list = await getRepository(StockTag).find({order: {name: 'ASC'}});
+  const role = (req as any).user?.role;
+  const includesOfficialOnlyTag = [Role.Admin, Role.Agent].includes(role);
+  const query = includesOfficialOnlyTag ? {} : { where: { officialOnly: false } };
+  const list = await getRepository(StockTag).find({
+    ...query,
+    order: { name: 'ASC' }
+  });
   res.json(list);
 });
 

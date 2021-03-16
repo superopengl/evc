@@ -14,6 +14,7 @@ import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
 import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
 import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
 import { searchUnusalOptionsActivity } from '../utils/searchUnusalOptionsActivity';
+import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 
 function handleCsvUpload(onRow: (row: object) => Promise<void>) {
   return handlerWrapper(async (req, res) => {
@@ -74,6 +75,16 @@ export const uploadResistanceCsv = handleCsvUpload(async row => {
     .into(StockResistance)
     .values(row as StockResistance)
     .onConflict(`(symbol, lo, hi) DO NOTHING`)
+    .execute();
+})
+
+export const uploadPutCallRatioCsv = handleCsvUpload(async row => {
+  await getManager()
+    .createQueryBuilder()
+    .insert()
+    .into(StockDailyPutCallRatio)
+    .values(row as StockDailyPutCallRatio)
+    .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
     .execute();
 })
 

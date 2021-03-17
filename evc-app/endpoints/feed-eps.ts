@@ -4,8 +4,6 @@ import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { syncStockEps } from '../src/services/stockEpsService';
 import { executeWithDataEvents } from '../src/services/dataLogService';
-import { from, interval } from 'rxjs';
-import { delay, concatMap, take, map } from 'rxjs/operators';
 import * as sleep from 'sleep-promise';
 
 const JOB_NAME = 'stock-eps';

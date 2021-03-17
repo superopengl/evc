@@ -84,7 +84,7 @@ export const StockSearchInput = (props) => {
       onChange={handleChange}
       onSearch={handleSearch}
       // open={!!text}
-      style={{ textAlign: 'left', width: '100%', ...style }}
+      style={{ textAlign: 'left', width: '100%', minWidth: 100, ...style }}
       loading={loading}
       // showArrow={false}
       suffixIcon={<SearchOutlined size="large" />}

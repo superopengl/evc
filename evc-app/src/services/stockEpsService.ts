@@ -1,7 +1,8 @@
 import moment = require('moment');
 import { getManager } from 'typeorm';
 import { StockEps } from '../entity/StockEps';
-import { getEarnings } from './iexService';
+import { getEarnings } from './alphaVantageService';
+
 
 export type StockIexEpsInfo = {
   symbol: string;
@@ -18,9 +19,9 @@ export const syncStockEps = async (symbol: string, howManyQuarters = 4) => {
   const infoList = earnings.map(e => {
     const data: StockIexEpsInfo = {
       symbol,
-      fiscalPeriod: e.fiscalPeriod,
-      reportDate: e.EPSReportDate,
-      value: e.actualEPS,
+      fiscalPeriod: moment(e.fiscalDateEnding, 'YYYY-MM-DD').format('[Q]Q YYYY'),
+      reportDate: e.reportedDate,
+      value: e.reportedEPS,
     };
 
     return data;

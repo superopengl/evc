@@ -1,5 +1,7 @@
 import { getManager } from 'typeorm';
 import { StockDailyClose } from '../entity/StockDailyClose';
+import { getHistoricalClose } from './alphaVantageService';
+
 
 export type StockCloseInfo = {
   symbol: string;
@@ -27,5 +29,28 @@ export async function syncManyStockClose(info: StockCloseInfo[]) {
     .into(StockDailyClose)
     .values(entites)
     .onConflict('(symbol, date) DO NOTHING')
+    .execute();
+}
+
+export async function syncStockHistoricalClose(symbol: string, days = 200) {
+  const data = await getHistoricalClose(symbol, days);
+  if (!data.length) {
+    return;
+  }
+  const closeEntities = [];
+  for (const p of data) {
+    const stockClose = new StockDailyClose();
+    stockClose.symbol = symbol;
+    stockClose.date = p.date;
+    stockClose.close = p.close;
+    closeEntities.push(stockClose);
+  }
+
+  await getManager()
+    .createQueryBuilder()
+    .insert()
+    .into(StockDailyClose)
+    .onConflict('("symbol", "date") DO NOTHING')
+    .values(closeEntities)
     .execute();
 }

@@ -58,6 +58,18 @@ export const refreshMaterializedViews = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+export const flushCache = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { operation } = req.query;
+  assert(operation, 400, 'operation query param is required');
+  const key = `operation.status.${operation}`;
+  await redisCache.set(key, 'in-progress');
+  redisCache.flush().finally(() => {
+    redisCache.del(key);
+  });
+  res.json();
+});
+
 export const uploadSupportCsv = handleCsvUpload(async row => {
   await getManager()
     .createQueryBuilder()

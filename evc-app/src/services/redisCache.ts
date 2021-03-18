@@ -55,6 +55,14 @@ class RedisCache {
       });
     });
   }
+
+  async flush() {
+    return new Promise((res, rej) => {
+      this.redisCache.flushall((err, reply) => {
+        return err ? rej(err) : res(reply);
+      });
+    });
+  }
 }
 
 export const redisCache = new RedisCache(process.env.REDIS_URL);

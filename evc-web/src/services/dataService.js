@@ -4,6 +4,10 @@ export async function refreshMaterializedViews() {
   return httpPost(`admin/refresh_mv?operation=refresh-mv`);
 }
 
+export async function flushCache() {
+  return httpPost(`admin/flush_cache?operation=flush-cache`);
+}
+
 export async function getOperationStatus(operation) {
   if(!operation) {
     throw new Error(`operation is not specified.`);

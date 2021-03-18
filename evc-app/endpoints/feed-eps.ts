@@ -33,8 +33,8 @@ start(JOB_NAME, async () => {
       await sleep(sleepTime);
     } catch (e) {
       const errorJson = errorToJson(e);
-      const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${errorJson}`
-      console.error(msg);
+      const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${JSON.stringify(errorJson)}`
+      console.error(msg, e);
       failed.push(msg);
     }
   }

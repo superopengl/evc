@@ -32,7 +32,7 @@ export async function getHistoricalClose(symbol: string, days = 1) {
       date,
       close: value['4. close']
     }))
-    .filter(x => _.isFinite(+(x.value)))
+    .filter(x => _.isFinite(+(x.close)))
     .take(days)
     .value();
 

@@ -37,9 +37,9 @@ start(JOB_NAME, async () => {
       await sleep(sleepTime);
     } catch (e) {
       const errorJson = errorToJson(e);
-      const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${errorJson}`
-      console.error(msg);
-      failed.push(msg);
+      const msg = `${JOB_NAME} ${symbol} ${++count}/${symbols.length} failed`
+      console.error(msg.red, errorJson);
+      failed.push(msg + JSON.stringify(errorJson));
     }
   }
 

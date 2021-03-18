@@ -39,6 +39,14 @@ import { StockLatestFreeInformation } from '../entity/views/StockLatestFreeInfor
 import * as _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
 import { StockPutCallRatio90 } from '../entity/views/StockPutCallRatio90';
+import { StockDailyClose } from '../entity/StockDailyClose';
+import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
+import { StockResistance } from '../entity/StockResistance';
+import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
+import { StockSupport } from '../entity/StockSupport';
+import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
+import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
+import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -248,10 +256,27 @@ export const updateStock = handlerWrapper(async (req, res) => {
 export const deleteStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'member');
   const symbol = req.params.symbol.toUpperCase();
-  const repo = getRepository(Stock);
-  await repo.delete(symbol);
 
-  await getRepository(StockPlea).softDelete(symbol);
+  const tables = [
+    UnusalOptionActivityEtfs,
+    UnusalOptionActivityIndex,
+    UnusalOptionActivityStock,
+    StockPlea,
+    StockHotSearch,
+    StockWatchList,
+    StockSupport,
+    StockResistance,
+    StockDailyClose,
+    StockSpecialFairValue,
+    StockDailyPutCallRatio,
+    StockEps,
+    StockLastPrice,
+    Stock,
+  ];
+
+  for (const table of tables) {
+    await getRepository(table).delete({symbol});
+  }
 
   res.json();
 });

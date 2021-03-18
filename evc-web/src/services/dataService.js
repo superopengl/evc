@@ -1,4 +1,4 @@
-import { httpGet, httpPost } from './http';
+import { httpDelete, httpGet, httpPost } from './http';
 
 export async function refreshMaterializedViews() {
   return httpPost(`admin/refresh_mv?operation=refresh-mv`);

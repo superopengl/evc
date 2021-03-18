@@ -1006,7 +1006,7 @@ paths:
       operationId: uploadPutCallRatioCsv
       responses:
         200:
-          description: OK          
+          description: OK
   /admin/data/uoa/stock:
     get:
       operationId: listUoaStocks

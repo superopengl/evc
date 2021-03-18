@@ -1,7 +1,6 @@
-import { ViewEntity, Connection, ViewColumn, SelectQueryBuilder } from 'typeorm';
+import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { existsQuery } from '../../utils/existsQuery';
 import { StockDailyPe } from './StockDailyPe';
-
-const existsQuery = <T>(builder: SelectQueryBuilder<T>) => `exists (${builder.getQuery()})`;
 
 @ViewEntity({
   materialized: true,

@@ -1,8 +1,6 @@
 
-import { getManager, getRepository } from 'typeorm';
-import { assertRole } from '../utils/assert';
+import { getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import * as _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
 import { getTableName } from '../utils/getTableName';
@@ -23,11 +21,3 @@ export const submitStockPlea = handlerWrapper((req, res) => {
   res.json();
 });
 
-export const listStockPleas = handlerWrapper(async (req, res) => {
-  const list = await getRepository(StockPlea).find({
-    order: {
-      count: 'DESC'
-    }
-  });
-  res.json(list);
-});

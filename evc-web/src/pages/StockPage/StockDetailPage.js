@@ -1,4 +1,4 @@
-import { Space, PageHeader, Tag, Button, Modal } from 'antd';
+import { Space, PageHeader, Tag, Button, Modal, Typography } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -17,6 +17,7 @@ import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
 import StockEditTagModal from 'components/StockEditTagModal';
 import { updateStock } from 'services/stockService';
 
+const { Paragraph } = Typography;
 
 const StockDetailPage = (props) => {
   const { symbol } = props;
@@ -74,7 +75,14 @@ const StockDetailPage = (props) => {
       title: `Permanately delete ${symbol} from EVC`,
       closable: true,
       maskClosable: true,
-      content: 'This operation is not revertable. All the associabled data (supports, resistances, fair values) with this stock will be deleted. If you want to add this stock back, you can choose add new stock and manually fetch EPS, close data again.',
+      content: <>
+        <Paragraph>
+          This operation is not revertable. All the associabled data (supports, resistances, fair values) with this stock will be deleted. System may take several minutes to update all views.
+          </Paragraph>
+        <Paragraph>
+          If you want to add this stock back, you can choose add new stock and manually fetch EPS, close data again.
+        </Paragraph>
+      </>,
       okButtonProps: {
         type: 'primary',
         danger: true

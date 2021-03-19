@@ -12,6 +12,7 @@ import CreateStockModal from './CreateStockModal';
 import * as queryString from 'query-string';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { listStockTags } from 'services/stockTagService';
+import PropTypes from 'prop-types';
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -63,6 +64,8 @@ const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
 const StockListPage = (props) => {
 
+  const {onItemClick} = props;
+
   const { create } = queryString.parse(props.location.search);
 
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
@@ -74,6 +77,7 @@ const StockListPage = (props) => {
   const context = React.useContext(GlobalContext);
 
   const isAdmin = context.role === 'admin';
+  const isGuest = context.role === 'guest';
 
   const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
@@ -113,6 +117,14 @@ const StockListPage = (props) => {
   }, []);
 
 
+  const handleItemClick = stock => {
+    if(onItemClick) {
+      onItemClick(stock.symbol);
+    } else {
+      props.history.push(`/stock/${stock.symbol}`)
+    }
+  }
+
   const handleTagFilterChange = (tags) => {
     searchByQueryInfo({ ...queryInfo, page: 1, tags });
   }
@@ -135,7 +147,7 @@ const StockListPage = (props) => {
 
   return (
       <ContainerStyled>
-        <Space size="small" direction="vertical" style={{ width: '100%' }}>
+        <Space direction="vertical" style={{ width: '100%' }}>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Space>
               <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
@@ -150,8 +162,8 @@ const StockListPage = (props) => {
             </Space>
             {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
           </Space>
-          {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
-          <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
+          {(tags && !isGuest) && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
+          <StockList data={list} loading={loading} onItemClick={handleItemClick} />
           <Pagination
             current={queryInfo.page}
             pageSize={queryInfo.size}
@@ -179,8 +191,12 @@ const StockListPage = (props) => {
   );
 };
 
-StockListPage.propTypes = {};
+StockListPage.propTypes = {
+  onItemClick: PropTypes.func
+};
 
-StockListPage.defaultProps = {};
+StockListPage.defaultProps = {
+  onItemClick: () => {}
+};
 
 export default withRouter(StockListPage);

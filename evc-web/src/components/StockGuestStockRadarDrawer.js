@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 const { Text } = Typography;
 
 export const StockGuestStockRadarDrawer = (props) => {
-  const { visible: propVisible, onClose } = props;
+  const { visible: propVisible, onClose, onSymbolClick } = props;
 
   const [visible, setVisible] = React.useState(propVisible);
 
@@ -38,7 +38,7 @@ export const StockGuestStockRadarDrawer = (props) => {
       height="85vh"
     >
 
-      <StockListPage />
+      <StockListPage onItemClick={onSymbolClick}/>
     </Drawer>
   );
 };

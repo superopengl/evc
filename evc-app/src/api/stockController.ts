@@ -14,7 +14,7 @@ import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockTag } from '../entity/StockTag';
-import { searchStock } from '../utils/searchStock';
+import { searchStock, searchStockForGuest } from '../utils/searchStock';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { Role } from '../types/Role';
 import { redisCache } from '../services/redisCache';
@@ -200,12 +200,20 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 });
 
 export const searchStockList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'member', 'admin', 'agent', 'free');
-  const { user: { id, role } } = req as any;
+  const { user } = req as any;
   const query = req.body as StockSearchParams;
-  const includesWatchForUserId = role === 'member' ? id : null;
+  let list: { count: number, page: number, data: any } = null;
+  
+  if (user) {
+    // For logged in users
+    const { id, role } = user;
+    const includesWatchForUserId = role === 'member' ? id : null;
 
-  const list = await searchStock(query, includesWatchForUserId);
+    list = await searchStock(query, includesWatchForUserId);
+  } else {
+    // For guest users
+    list = await searchStockForGuest(query);
+  }
 
   res.json(list);
 });
@@ -239,7 +247,7 @@ export const createStock = handlerWrapper(async (req, res) => {
 
   await getRepository(Stock).save(stock);
 
-  initilizedNewStockData(symbol).catch(err => {});
+  initilizedNewStockData(symbol).catch(err => { });
 
   res.json();
 });
@@ -294,7 +302,7 @@ export const deleteStock = handlerWrapper(async (req, res) => {
     await getRepository(table).delete({ symbol });
   }
 
-  refreshMaterializedView().catch(() => {});
+  refreshMaterializedView().catch(() => { });
 
   res.json();
 });

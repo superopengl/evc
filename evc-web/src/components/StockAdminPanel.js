@@ -19,6 +19,7 @@ import { StockRangeTimelineEditor } from '../pages/Stock/StockRangeTimelineEdito
 import StockEpsTimelineEditor from '../pages/Stock/StockEpsTimelineEditor';
 import { StockFairValueEditor } from '../pages/Stock/StockFairValueEditor';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import StockDataInfoPanel from './StockDataInfoPanel';
 const { Text, Paragraph } = Typography;
 
 
@@ -53,14 +54,14 @@ const Container = styled.div`
 // `;
 
 const ColInnerCard = props => {
-  const {children, ...other} = props
-return <Card 
-type="inner"
-bordered={false}
-size="small"
-{...other}
->
-  {props.children}
+  const { children, ...other } = props
+  return <Card
+    type="inner"
+    bordered={false}
+    size="small"
+    {...other}
+  >
+    {props.children}
   </Card>
 };
 
@@ -147,7 +148,14 @@ const StockAdminPanel = (props) => {
 
 
   return (<Container>
-    <Row gutter={[20, 20]} style={{ marginTop: 20 }} wrap={true}>
+    <Row gutter={[30, 30]} style={{ marginTop: 20 }} wrap={true}>
+      <Col flex="auto">
+        <ColInnerCard title="Data Info">
+          <StockDataInfoPanel
+            symbol={symbol}
+          />
+        </ColInnerCard>
+      </Col>
       <Col flex="auto">
         <ColInnerCard title="EPS">
           <StockEpsTimelineEditor
@@ -184,12 +192,12 @@ const StockAdminPanel = (props) => {
       </Col>
       <Col span={24}>
         <MemberOnlyCard title="Fair Value" extra={<Tooltip
-         placement="leftTop"
-         trigger="click"
-        title={<>
-          It requires at least 4 sequential EPS values and 90 days of close prices (for PE calculation) to compute fair value automatically.<br/>
-          If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br/>
-          Minus or zero <strong>TtmEps</strong> values are not valid to compute out PE90 nor fair values. In this case, <strong>PE90</strong> will always be <Text type="danger">n/a</Text> and a special fair values need to be input manually.<br/>
+          placement="leftTop"
+          trigger="click"
+          title={<>
+            It requires at least 4 sequential EPS values and 90 days of close prices (for PE calculation) to compute fair value automatically.<br />
+          If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br />
+          Minus or zero <strong>TtmEps</strong> values are not valid to compute out PE90 nor fair values. In this case, <strong>PE90</strong> will always be <Text type="danger">n/a</Text> and a special fair values need to be input manually.<br />
           If the <strong>TtmEps</strong> has positive value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.</>}
         >
           <QuestionCircleOutlined />

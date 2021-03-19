@@ -398,6 +398,17 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/data_info:
+    get:
+      operationId: getStockDataInfo
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/exists:
     get:
       operationId: existsStock

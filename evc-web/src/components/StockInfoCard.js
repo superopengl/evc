@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Tooltip, Button } from 'antd';
+import { Card, Typography, Space, Tooltip, Skeleton } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
@@ -8,6 +8,7 @@ import { StockName } from './StockName';
 import { unwatchStock, watchStock } from 'services/stockService';
 import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
+import { LockFilled, LockOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -15,6 +16,13 @@ const StyledTable = styled.table`
 border: none;
 width: 100%;
 font-size: 0.8rem;
+
+.hidden-info{
+  color: rgba(0,0,0,0.35);
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 4px;
+  padding: 0 8px;
+}
 
 .text-color-level-0 {
   color: rgba(0,0,0,1);
@@ -83,7 +91,7 @@ const TooltipLabel = props => <Tooltip title={props.message}>
 
 const HiddenNumber = props => {
   const list = new Array(props.count || 1).fill(null);
-  return list.map((x, i) => <Text className={`text-color-level-${i}`} key={i}>XXX.XX ~ XXX.XX</Text>)
+  return list.map((x, i) => <Text className={`hidden-info`} key={i}><LockFilled/> paid member only</Text>)
 }
 
 const StockInfoCard = (props) => {
@@ -94,6 +102,7 @@ const StockInfoCard = (props) => {
   const context = React.useContext(GlobalContext);
   const { role } = context;
   const isMember = role === 'member';
+  const isGuest = role === 'guest';
   const shouldHideData = ['guest', 'free'].includes(role);
 
   const handleToggleWatch = async watching => {
@@ -163,7 +172,7 @@ const StockInfoCard = (props) => {
 
   return shouldHideData ?
     <Tooltip
-      title={<>Data is visible after subscripton upgrade. <Link to="/account" onClick={e => e.stopPropagation()}>Click to upgrade</Link></>}
+      title={<>Data is visible for paid member. {isGuest ? <Link to="/signup" onClick={e => e.stopPropagation()}>Click to sign up</Link> : <Link to="/account" onClick={e => e.stopPropagation()}>Click to upgrade</Link>}</>}
     >
       {cardComponent}
     </Tooltip> :

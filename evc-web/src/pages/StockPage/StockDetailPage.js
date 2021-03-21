@@ -125,8 +125,8 @@ const StockDetailPage = (props) => {
             {isMemberOrFree && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
           </Space>}
           extra={[
-            <Button type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button>,
-            isAdminOrAgent ? <Button type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null
+            <Button key="tag" type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button>,
+            isAdminOrAgent ? <Button key="delete" type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null
           ].filter(x => !!x)}
         >
           {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}

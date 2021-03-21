@@ -15,6 +15,10 @@ export async function getStock(symbol) {
   return httpGet(`stock/s/${symbol}`);
 }
 
+export async function getStockEvcInfo(symbol) {
+  return httpGet(`stock/s/${symbol}/evc_info`);
+}
+
 export async function getStockDataInfo(symbol) {
   return httpGet(`stock/s/${symbol}/data_info`);
 }

@@ -483,6 +483,17 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/evc_info:
+    get:
+      operationId: getStockEvcInfo
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/price:
     get:
       operationId: getStockPrice

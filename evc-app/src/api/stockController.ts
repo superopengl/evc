@@ -192,20 +192,18 @@ export const listStock = handlerWrapper(async (req, res) => {
 
 export const listHotStock = handlerWrapper(async (req, res) => {
   const { size } = req.query;
-  const limit = +size || 6;
+  const limit = +size || 10;
 
-  const list = await getManager()
-    .createQueryBuilder()
-    .from(StockLatestFreeInformation, 'si')
-    .innerJoin(q => q.from(StockHotSearch, 'h')
-      .orderBy('h.count', 'DESC')
-      .limit(limit), 'h', 'si.symbol = h.symbol'
-    )
-    .orderBy('h.count', 'DESC')
+  const list = await getRepository(StockHotSearch)
+    .createQueryBuilder('h')
+    .innerJoin(Stock, 's', 's.symbol = h.symbol')
     .select([
-      'si.*',
+      `h.symbol as symbol`,
+      `s.company as company`
     ])
-    .getRawMany();
+    .orderBy('count', 'DESC')
+    .limit(limit)
+    .execute();
 
   res.set('Cache-Control', `public, max-age=300`);
   res.json(list);
@@ -239,29 +237,38 @@ const initilizedNewStockData = async (symbol) => {
   await refreshMaterializedView();
 }
 
-async function addAndInitializeStock(symbol, companyName) {
+async function addAndInitializeStock(symbol, companyName): Promise<boolean> {
   const stock = new Stock();
-  stock.symbol = 'XXX'; // symbol.toUpperCase();
+  stock.symbol = symbol.toUpperCase();
   stock.company = companyName;
 
   console.log(`Try auto-adding stock ${symbol}`);
 
   try {
+    const has = await getRepository(Stock).findOne(stock.symbol);
+    if (has) {
+      return false;
+    }
     await getRepository(Stock).insert(stock);
     await syncStockEps(symbol, 5);
     await syncStockHistoricalClose(symbol, 200);
 
     console.log(`Auto-added stock ${symbol} together with its EPS and its historical close prices`);
+    return true;
   } catch {
     // Does nothing
   }
+  return false;
 }
 
 async function addAndInitlizedStockList(list: { symbol: string, companyName: string }[]) {
+  let hasAddedNew = false;
   for (const item of list) {
-    await addAndInitializeStock(item.symbol, item.companyName);
+    hasAddedNew = hasAddedNew || await addAndInitializeStock(item.symbol, item.companyName);
   }
-  await refreshMaterializedView();
+  if (hasAddedNew) {
+    await refreshMaterializedView();
+  }
 }
 
 

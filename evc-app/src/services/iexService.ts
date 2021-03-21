@@ -67,16 +67,16 @@ async function requestAndCache(apiPath: string, cacheStrategy: ICacheStrategy, o
 // }
 
 export async function getMarketMostActive() {
-  return await requestAndCache('/stock/market/list/mostactive', new FixedPeriodCacheStrategy('5 minute'));
+  return await requestIexApi('/stock/market/list/mostactive');
 }
 
 export async function getMarketGainers() {
   // Cannot add listLimit=5 query param because iex API has a bug that adding listLimit will return nothing.
-  return await requestAndCache('/stock/market/list/gainers', new FixedPeriodCacheStrategy('5 minute'));
+  return await requestIexApi('/stock/market/list/gainers');
 }
 
 export async function getMarketLosers() {
-  return await requestAndCache('/stock/market/list/losers', new FixedPeriodCacheStrategy('5 minute'));
+  return await requestIexApi('/stock/market/list/losers');
 }
 
 export async function getInsiderRoster(symbol: string) {

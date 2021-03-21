@@ -53,6 +53,6 @@ export async function initializeEmailTemplates() {
     .insert()
     .into(EmailTemplate)
     .values(entities)
-    .onConflict(`(key, locale) DO NOTHING`)
+    .orIgnore()
     .execute();
 }

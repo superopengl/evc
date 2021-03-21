@@ -30,7 +30,7 @@ export async function syncManyStockPutCallRatio(info: StockAdvancedStatsInfo[]) 
     .insert()
     .into(StockDailyPutCallRatio)
     .values(entites)
-    .onConflict('(symbol, date) DO NOTHING')
+    .orIgnore()
     .execute();
 }
 

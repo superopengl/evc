@@ -28,7 +28,7 @@ export async function syncManyStockClose(info: StockCloseInfo[]) {
     .insert()
     .into(StockDailyClose)
     .values(entites)
-    .onConflict('(symbol, date) DO NOTHING')
+    .orIgnore()
     .execute();
 }
 
@@ -50,7 +50,7 @@ export async function syncStockHistoricalClose(symbol: string, days = 200) {
     .createQueryBuilder()
     .insert()
     .into(StockDailyClose)
-    .onConflict('("symbol", "date") DO NOTHING')
+    .orIgnore()
     .values(closeEntities)
     .execute();
 }

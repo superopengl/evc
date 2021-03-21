@@ -1,4 +1,4 @@
-import { Connection, createConnection, getManager } from 'typeorm';
+import { Connection, createConnection, getManager, getRepository } from 'typeorm';
 import { StockComputedPe90 } from './entity/views/StockComputedPe90';
 import { StockLatestPaidInformation } from './entity/views/StockLatestPaidInformation';
 import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
@@ -11,15 +11,17 @@ import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 import { initializeConfig } from './utils/initializeConfig';
 import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
+import "reflect-metadata";
+import { Object } from 'aws-sdk/clients/appflow';
 
 const views = [
   StockLatestPaidInformation,
   StockLatestFreeInformation,
   SubscriptionPaymentBalanceInformation,
-  StockLastFairValue,
-  StockDataInformation,
 ];
 const mviews = [
+  StockDataInformation,
+  StockLastFairValue,
   StockDailyPe,
   StockComputedPe90,
   StockHistoricalTtmEps,
@@ -58,6 +60,7 @@ async function syncDatabaseSchema(connection: Connection) {
   await connection.synchronize(false);
   await connection.runMigrations();
 
+  await createIndexOnMaterilializedView();
   // await refreshMaterializedView();
 }
 
@@ -72,6 +75,46 @@ async function dropMaterializedView() {
   for (const viewEntity of mviews) {
     const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
     await getManager().query(`DROP MATERIALIZED VIEW IF EXISTS "${schema}"."${tableName}" CASCADE`);
+  }
+}
+
+async function createIndexOnMaterilializedView() {
+  const list: {tableEntity: any, fields: string[]} [] = [
+    {
+      tableEntity: StockDataInformation,
+      fields: ['symbol'],
+    },
+    {
+      tableEntity: StockLastFairValue,
+      fields: ['symbol'],
+    },
+    {
+      tableEntity: StockComputedPe90,
+      fields: ['symbol', 'date'],
+    },
+    {
+      tableEntity: StockDailyPe,
+      fields: ['symbol', 'date'],
+    },
+    {
+      tableEntity: StockHistoricalComputedFairValue,
+      fields: ['symbol', '"reportDate"'],
+    },
+    {
+      tableEntity: StockHistoricalTtmEps,
+      fields: ['symbol', '"reportDate"'],
+    },
+    {
+      tableEntity: StockPutCallRatio90,
+      fields: ['symbol', 'date'],
+    },
+  ];
+  
+  for(const item of list) {
+    const {schema, tableName} = getRepository(item.tableEntity).metadata;
+    const idxName = `${tableName}_${item.fields.map(x => x.replace(/"/g, '')).join('_')}`;
+    const fields = item.fields.join(',');
+    await getManager().query(`CREATE INDEX ${idxName} ON "${schema}"."${tableName}" (${fields})`);
   }
 }
 

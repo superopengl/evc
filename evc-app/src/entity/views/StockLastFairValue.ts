@@ -4,6 +4,7 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
 
 
 @ViewEntity({
+  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(StockHistoricalComputedFairValue, 's')
@@ -16,8 +17,8 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
       .where('sp."deletedAt" IS NULL')
       .distinctOn(['symbol'])
       .orderBy('symbol')
-      .addOrderBy('"createdAt"', 'DESC'),
-    'sp', 'sp.symbol = s.symbol AND s."reportDate" <= sp."createdAt"::date')
+      .addOrderBy('"reportDate"', 'DESC'),
+    'sp', 'sp.symbol = s.symbol AND s."reportDate" <= sp."reportDate"')
     .select([
       's.symbol as symbol',
       's."reportDate" as "reportDate"',

@@ -9,7 +9,7 @@ import { StockDailyPe } from './StockDailyPe';
     .from(q => q.from(StockDailyPe, 'pe')
       .innerJoin(StockDailyPe, 'back', 'pe.symbol = back.symbol')
       .where('back.date between pe."date" - 90 and pe."date"')
-    // .andWhere(`exists(select 1 from evc.stock_all_computed_pe sdp where sdp.date = pe."date" - 90)`)
+      // .andWhere(`exists(select 1 from evc.stock_all_computed_pe sdp where sdp.date = pe."date" - 90)`)
       .andWhere(
         existsQuery(
           connection
@@ -30,7 +30,7 @@ import { StockDailyPe } from './StockDailyPe';
         'avg(back.pe) as avg',
         'stddev(back.pe) as stddev'
       ])
-    , 'x')
+      , 'x')
     .select([
       'x.symbol',
       'x.date',

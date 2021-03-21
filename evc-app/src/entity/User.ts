@@ -55,6 +55,7 @@ export class User {
   resetPasswordToken?: string;
 
   @DeleteDateColumn()
+  @Index()
   deletedAt: Date;
 
   @OneToOne(() => UserProfile)

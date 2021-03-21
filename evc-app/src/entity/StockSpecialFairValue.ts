@@ -16,6 +16,7 @@ export class StockSpecialFairValue {
   createdAt?: Date;
 
   @DeleteDateColumn()
+  @Index()
   deletedAt?: Date;
 
   @Column('date')

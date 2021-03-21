@@ -7,6 +7,7 @@ import { compareTrend } from '../utils/compareTrend';
 import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalComputedFairValue';
 import * as _ from 'lodash';
 import moment = require('moment');
+import { refreshMaterializedView } from '../db';
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -40,6 +41,8 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
   entity.fairValueHi = hi;
 
   await repo.insert(entity);
+
+  refreshMaterializedView().catch(() => {});
 
   res.json();
 });

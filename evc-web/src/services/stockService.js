@@ -147,10 +147,6 @@ export async function getStockQuote(symbol) {
   return httpGet(`/stock/s/${symbol}/quote`);
 }
 
-export async function getStockChart(symbol, period, interval) {
-  return httpGet(`/stock/s/${symbol}/chart/${period}/${interval}`);
-}
-
 export async function getStockPutCallRatioChart(symbol) {
   return httpGet(`/stock/s/${symbol}/chart/putcallratio`);
 }

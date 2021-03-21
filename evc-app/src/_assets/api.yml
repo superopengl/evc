@@ -453,25 +453,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/chart/{period}/{interval}:
-    get:
-      operationId: getStockChart
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-        - name: period
-          in: path
-          type: string
-          required: true
-        - name: interval
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
   /stock/s/{symbol}/quote:
     get:
       operationId: getStockQuote

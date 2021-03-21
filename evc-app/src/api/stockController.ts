@@ -1,17 +1,9 @@
 
-import { getManager, getRepository, Like, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { getManager, getRepository, In } from 'typeorm';
 import { Stock } from '../entity/Stock';
-import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
-import * as moment from 'moment';
 import { StockHotSearch } from '../entity/StockHotSearch';
-import { logError } from '../utils/logger';
-import * as geoip from 'geoip-lite';
-import * as uaParser from 'ua-parser-js';
-import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockTag } from '../entity/StockTag';
 import { searchStock, searchStockForGuest } from '../utils/searchStock';
@@ -22,16 +14,13 @@ import { StockEps } from '../entity/StockEps';
 import {
   getNews,
   getInsiderRoster,
-  getInsiderSummary,
   getInsiderTransactions,
   getMarketGainers,
   getMarketLosers,
   getMarketMostActive,
   getQuote,
-  getChart
 } from '../services/iexService';
 import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
-import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
@@ -416,11 +405,6 @@ export const getStockNews = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   res.set('Cache-Control', `public, max-age=600`);
   res.json(await getNews(symbol));
-});
-
-export const getStockChart = handlerWrapper(async (req, res) => {
-  const { symbol, period, interval } = req.params;
-  res.json(await getChart(symbol, period, interval));
 });
 
 export const getPutCallRatioChart = handlerWrapper(async (req, res) => {

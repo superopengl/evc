@@ -45,7 +45,7 @@ async function launchApp() {
   loadEnv();
 
   console.log('Connecting database');
-  const shouldSyncSchema = isNonProd;
+  const shouldSyncSchema = false && isNonProd;
   await connectDatabase(shouldSyncSchema);
 
   const app = createAppInstance();

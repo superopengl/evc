@@ -172,22 +172,22 @@ export async function getChart(symbol: string, period: string, interval: string)
   const param = getChartParam(period, interval);
 
   switch (period) {
-  case '1h':
-  case '4h':
-  case '1d':
-    apiPath = `/stock/${symbol}/intraday-prices`;
-    break;
-  case '5d':
-    apiPath = `/stock/${symbol}/chart/5dm`;
-    break;
-  case '1m':
-    apiPath = `/stock/${symbol}/chart/1mm`;
-    break;
-  case '1y':
-    apiPath = `/stock/${symbol}/chart/1y`;
-    break;
-  default:
-    assert(false, 400, `Unsupported period ${period}`);
+    case '1h':
+    case '4h':
+    case '1d':
+      apiPath = `/stock/${symbol}/intraday-prices`;
+      break;
+    case '5d':
+      apiPath = `/stock/${symbol}/chart/5dm`;
+      break;
+    case '1m':
+      apiPath = `/stock/${symbol}/chart/1mm`;
+      break;
+    case '1y':
+      apiPath = `/stock/${symbol}/chart/1y`;
+      break;
+    default:
+      assert(false, 400, `Unsupported period ${period}`);
   }
 
   return await requestAndCache(
@@ -210,6 +210,12 @@ export async function getLastThreeMonthDailyPrice(symbol: string) {
 
 export async function getQuote(symbol: string) {
   return await requestIexApi(`/stock/${symbol}/quote`);
+}
+
+export async function isUSMarketOpen(): Promise<boolean> {
+  const result = await requestIexApi(`/stock/AAPL/quote`);
+  const { isUSMarketOpen } = result;
+  return !!isUSMarketOpen;
 }
 
 export async function singleBatchRequest(symbols: string[], types: string[], params: {}) {

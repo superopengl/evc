@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { singleBatchRequest } from '../src/services/iexService';
+import { isUSMarketOpen, singleBatchRequest } from '../src/services/iexService';
 import { StockIexEpsInfo, syncManyStockEps } from '../src/services/stockEpsService';
 import { StockAdvancedStatsInfo, syncManyStockPutCallRatio } from '../src/services/stockPutCallRatioService';
 import { StockCloseInfo, syncManyStockClose } from '../src/services/stockCloseService';
@@ -62,6 +62,13 @@ async function syncIexToDatabase(symbols: string[]) {
 const JOB_NAME = 'daily-putCallRatio';
 
 start(JOB_NAME, async () => {
+
+  const isMarketOpen = await isUSMarketOpen();
+  if (isMarketOpen) {
+    console.warn('Market is still open');
+    return;
+  }
+  
   const stocks = await getRepository(Stock)
     .createQueryBuilder()
     .select('symbol')

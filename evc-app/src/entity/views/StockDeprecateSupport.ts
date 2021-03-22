@@ -2,7 +2,7 @@ import { ViewEntity, Connection, PrimaryColumn, ViewColumn } from 'typeorm';
 import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
 import { StockSupport } from '../StockSupport';
-import { StockLastFairValue } from './StockLastFairValue';
+import { StockLatestFairValue } from './StockLatestFairValue';
 import { StockWatchList } from '../StockWatchList';
 import { Stock } from '../Stock';
 
@@ -11,7 +11,7 @@ import { Stock } from '../Stock';
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(StockSupport, 'sp')
     .innerJoin(Stock, 's', 'sp.symbol = s.symbol')
-    .innerJoin(StockLastFairValue, 'fv', 'fv.symbol = sp.symbol AND fv."fairValueHi" < sp.lo')
+    .innerJoin(StockLatestFairValue, 'fv', 'fv.symbol = sp.symbol AND fv."fairValueHi" < sp.lo')
     .leftJoin(StockWatchList, 'wh', 'sp.symbol = wh.symbol AND wh.belled IS TRUE')
     .select([
       `sp.id as "supportId"`,

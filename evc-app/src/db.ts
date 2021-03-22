@@ -5,23 +5,25 @@ import { SubscriptionPaymentBalanceInformation } from './entity/views/Subscripti
 import { StockLatestFreeInformation } from './entity/views/StockLatestFreeInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
 import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalComputedFairValue';
-import { StockLastFairValue } from './entity/views/StockLastFairValue';
+import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 import { initializeConfig } from './utils/initializeConfig';
 import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockDeprecateSupport } from './entity/views/StockDeprecateSupport';
+import { StockDeprecateResistance } from './entity/views/StockDeprecateResistance';
 
 const views = [
   StockLatestPaidInformation,
   StockLatestFreeInformation,
   SubscriptionPaymentBalanceInformation,
   StockDeprecateSupport,
+  StockDeprecateResistance,
 ];
 const mviews = [
   StockDataInformation,
-  StockLastFairValue,
+  StockLatestFairValue,
   StockDailyPe,
   StockComputedPe90,
   StockHistoricalTtmEps,
@@ -85,7 +87,7 @@ async function createIndexOnMaterilializedView() {
       fields: ['symbol'],
     },
     {
-      tableEntity: StockLastFairValue,
+      tableEntity: StockLatestFairValue,
       fields: ['symbol'],
     },
     {

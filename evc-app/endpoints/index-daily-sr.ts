@@ -6,8 +6,10 @@ import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
 import { StockPutCallRatio90 } from '../src/entity/views/StockPutCallRatio90';
 import { StockSupport } from '../src/entity/StockSupport';
-import { StockLastFairValue } from '../src/entity/views/StockLastFairValue';
+import { StockLatestFairValue } from '../src/entity/views/StockLatestFairValue';
 import { StockDeprecateSupport } from '../src/entity/views/StockDeprecateSupport';
+import { StockDeprecateResistance } from '../src/entity/views/StockDeprecateResistance';
+import { StockResistance } from '../src/entity/StockResistance';
 
 async function scrubSupports() {
   const list = await getRepository(StockDeprecateSupport).find();
@@ -23,14 +25,14 @@ async function scrubSupports() {
 }
 
 async function scrubResistances() {
-  const list = await getRepository(StockDeprecateSupport).find();
+  const list = await getRepository(StockDeprecateResistance).find();
 
   // Delete resistance
-  const ids = list.map(x => x.supportId);
+  const ids = list.map(x => x.resistanceId);
   const result = await getManager()
     .createQueryBuilder()
     .delete()
-    .from(StockSupport)
+    .from(StockResistance)
     .whereInIds(ids)
     .execute();
 }

@@ -91,6 +91,7 @@ export const getStock = handlerWrapper(async (req, res) => {
           'sw.symbol = s.symbol')
         .select('s.*')
         .addSelect('sw."createdAt" as watched')
+        .addSelect('sw.belled as belled')
         .execute();
       stock = result ? result[0] : null;
       break;
@@ -105,6 +106,7 @@ export const getStock = handlerWrapper(async (req, res) => {
           'sw.symbol = s.symbol')
         .select('s.*')
         .addSelect('sw."createdAt" as watched')
+        .addSelect('sw.belled as belled')
         .execute();
       stock = result ? result[0] : null;
       break;
@@ -164,6 +166,22 @@ export const unwatchStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
   await getRepository(StockWatchList).delete({ userId, symbol });
+  res.json();
+});
+
+export const bellStock = handlerWrapper(async (req, res) => {
+  assertRole(req, 'member');
+  const symbol = req.params.symbol.toUpperCase();
+  const { user: { id: userId } } = req as any;
+  await getRepository(StockWatchList).update({ userId, symbol }, {belled: true});
+  res.json();
+});
+
+export const unbellStock = handlerWrapper(async (req, res) => {
+  assertRole(req, 'member');
+  const symbol = req.params.symbol.toUpperCase();
+  const { user: { id: userId } } = req as any;
+  await getRepository(StockWatchList).update({ userId, symbol }, {belled: false});
   res.json();
 });
 

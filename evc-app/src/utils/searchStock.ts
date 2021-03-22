@@ -97,7 +97,8 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
   query = query.select('s.*');
 
   if (includesWatch) {
-    query = query.addSelect('sw."createdAt" as watched');
+    query = query.addSelect('sw."createdAt" as watched')
+      .addSelect('sw.belled as belled');
   }
   query = query.orderBy('s.symbol')
     .offset((pageNo - 1) * pageSize)

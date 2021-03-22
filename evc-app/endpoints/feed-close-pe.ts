@@ -1,12 +1,10 @@
-import { getManager, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { isUSMarketOpen, singleBatchRequest } from '../src/services/iexService';
-import { StockDailyClose } from '../src/entity/StockDailyClose';
+import { isUSMarketOpen } from '../src/services/iexService';
 import { refreshMaterializedView } from '../src/db';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
-import { getHistoricalClose } from '../src/services/alphaVantageService';
 import * as sleep from 'sleep-promise';
 import errorToJson from 'error-to-json';
 import {syncStockHistoricalClose} from '../src/services/stockCloseService';

@@ -59,6 +59,14 @@ export async function unwatchStock(symbol) {
   return httpPost(`stock/s/${symbol}/unwatch`);
 }
 
+export async function bellStock(symbol) {
+  return httpPost(`stock/s/${symbol}/bell`);
+}
+
+export async function unbellStock(symbol) {
+  return httpPost(`stock/s/${symbol}/unbell`);
+}
+
 export async function listStockSupport(symbol) {
   return httpGet(`stock/s/${symbol}/support`);
 }

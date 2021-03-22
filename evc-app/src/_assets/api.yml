@@ -530,6 +530,28 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/bell:
+    post:
+      operationId: bellStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/unbell:
+    post:
+      operationId: unbellStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/inc:
     get:
       operationId: incrementStock

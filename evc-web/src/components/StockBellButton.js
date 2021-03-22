@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StarOutlined, StarFilled } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
 import { Tooltip } from 'antd';
+import {BsBellFill, BsBell} from 'react-icons/bs';
 
-export const StockWatchButton = (props) => {
+export const StockBellButton = (props) => {
 
   const { onChange, value, size } = props;
 
@@ -22,22 +23,22 @@ export const StockWatchButton = (props) => {
 
   return (
     value ?
-      <Tooltip title="Click to unwatch">
-        <StarFilled style={style} onClick={handleToggleValue} />
+      <Tooltip title="Click to turn off alert email">
+        <Icon style={style} component={() => <BsBellFill/>} onClick={handleToggleValue} />
       </Tooltip> :
-      <Tooltip title="Click to add to my watchlist">
-        <StarOutlined style={style} onClick={handleToggleValue} />
+      <Tooltip title="Click to turn on alert email">
+        <Icon style={style} component={() => <BsBell/>} onClick={handleToggleValue} />
       </Tooltip>
   );
 };
 
-StockWatchButton.propTypes = {
+StockBellButton.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.any,
   size: PropTypes.number,
 };
 
-StockWatchButton.defaultProps = {
+StockBellButton.defaultProps = {
   onChange: () => { },
   value: false,
   size: 18,

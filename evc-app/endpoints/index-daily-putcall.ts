@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { refreshMaterializedView } from '../src/db';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
+import { StockPutCallRatio90 } from '../src/entity/views/StockPutCallRatio90';
 
 async function udpateDatabase(iexBatchResponse) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
@@ -56,5 +57,5 @@ start(JOB_NAME, async () => {
     await syncIexForSymbols(batchSymbols);
   }
 
-  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+  await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView(StockPutCallRatio90));
 });

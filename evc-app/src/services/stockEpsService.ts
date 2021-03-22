@@ -4,7 +4,7 @@ import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';
 
 
-export type StockIexEpsInfo = {
+type StockIexEpsInfo = {
   symbol: string;
   fiscalPeriod: string;
   reportDate: string;

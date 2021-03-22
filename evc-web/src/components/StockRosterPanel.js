@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Space, List } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { getStockInsider } from 'services/stockService';
+import { getStockRoster } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import ReactDOM from 'react-dom';
@@ -20,13 +20,13 @@ const RosterList = styled(List)`
 const StockRosterPanel = (props) => {
 
   const { symbol } = props;
-  const [data, setData] = React.useState({});
+  const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const data = await getStockInsider(symbol);
+      const data = await getStockRoster(symbol) ?? [];
       ReactDOM.unstable_batchedUpdates(() => {
         setData(data);
         setLoading(false);
@@ -54,7 +54,7 @@ const StockRosterPanel = (props) => {
         }}
         itemLayout="horizontal"
         size="small"
-        dataSource={data.roster}
+        dataSource={data}
         renderItem={item => (
           <List.Item>
             <Space style={{width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0,0,0,0.1)'}}>

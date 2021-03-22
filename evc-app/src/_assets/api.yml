@@ -408,7 +408,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/s/{symbol}/exists:
     get:
       operationId: existsStock
@@ -433,7 +433,18 @@ paths:
           description: OK
   /stock/s/{symbol}/insider:
     get:
-      operationId: getStockInsider
+      operationId: getStockInsiderTransaction
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/roster:
+    get:
+      operationId: getStockRoster
       parameters:
         - name: symbol
           in: path
@@ -474,7 +485,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/s/{symbol}/price:
     get:
       operationId: getStockPrice
@@ -551,7 +562,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/s/{symbol}/inc:
     get:
       operationId: incrementStock

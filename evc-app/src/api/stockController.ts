@@ -59,6 +59,7 @@ export const incrementStock = handlerWrapper((req, res) => {
 });
 
 export const getStockDataInfo = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
   const symbol = req.params.symbol.toUpperCase();
 
   const result = await getRepository(StockDataInformation).findOne(symbol);
@@ -173,7 +174,7 @@ export const bellStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'member');
   const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
-  await getRepository(StockWatchList).update({ userId, symbol }, {belled: true});
+  await getRepository(StockWatchList).update({ userId, symbol }, { belled: true });
   res.json();
 });
 
@@ -181,7 +182,7 @@ export const unbellStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'member');
   const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
-  await getRepository(StockWatchList).update({ userId, symbol }, {belled: false});
+  await getRepository(StockWatchList).update({ userId, symbol }, { belled: false });
   res.json();
 });
 
@@ -380,17 +381,12 @@ export const getLosers = handlerWrapper(async (req, res) => {
   res.json(data);
 });
 
-export const getStockInsider = handlerWrapper(async (req, res) => {
+export const getStockInsiderTransaction = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'member');
   const { symbol } = req.params;
-  const [roster, summary] = await Promise.all([
-    getInsiderRoster(symbol),
-    getInsiderTransactions(symbol)
-  ]);
-
-  res.set('Cache-Control', `public, max-age=600`);
-  res.json({
-    roster: _.chain(roster).orderBy(['position'], ['desc']).take(10).value(),
-    summary: summary?.map(x => _.pick(x, [
+  const result = await getInsiderTransactions(symbol)
+  const list = _.chain(result)
+    .map(x => _.pick(x, [
       'fullName',
       'reportedTitle',
       'conversionOrExercisePrice',
@@ -401,8 +397,21 @@ export const getStockInsider = handlerWrapper(async (req, res) => {
       'transactionPrice',
       'transactionShares',
       'transactionValue',
-    ])),
-  });
+    ]))
+    .reverse()
+    .value();
+
+  res.set('Cache-Control', `public, max-age=3600`);
+  res.json(list);
+});
+
+export const getStockRoster = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const result = await getInsiderRoster(symbol);
+  const list = _.chain(result).orderBy(['position'], ['desc']).take(10).value();
+
+  res.set('Cache-Control', `public, max-age=3600`);
+  res.json(list);
 });
 
 export const getStockEarningToday = handlerWrapper(async (req, res) => {

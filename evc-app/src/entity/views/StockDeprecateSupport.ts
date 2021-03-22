@@ -1,0 +1,51 @@
+import { ViewEntity, Connection, PrimaryColumn, ViewColumn } from 'typeorm';
+import { StockLatestPaidInformation } from './StockLatestPaidInformation';
+import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
+import { StockSupport } from '../StockSupport';
+import { StockLastFairValue } from './StockLastFairValue';
+import { StockWatchList } from '../StockWatchList';
+import { Stock } from '../Stock';
+
+
+@ViewEntity({
+  expression: (connection: Connection) => connection.createQueryBuilder()
+    .from(StockSupport, 'sp')
+    .innerJoin(Stock, 's', 'sp.symbol = s.symbol')
+    .innerJoin(StockLastFairValue, 'fv', 'fv.symbol = sp.symbol AND fv."fairValueHi" < sp.lo')
+    .leftJoin(StockWatchList, 'wh', 'sp.symbol = wh.symbol AND wh.belled IS TRUE')
+    .select([
+      `sp.id as "supportId"`,
+      `sp.symbol as symbol`,
+      `s.company as company`,
+      `sp.lo as "supportLo"`,
+      `sp.hi as "supportHi"`,
+      `fv."fairValueLo" as "fairValueLo"`,
+      `fv."fairValueHi" as "fairValueHi"`,
+      `wh."userId" as "userId"`,
+    ])
+})
+export class StockDeprecateSupport {
+  @ViewColumn()
+  supportId: string;
+
+  @ViewColumn()
+  symbol: string;
+
+  @ViewColumn()
+  company: string;
+
+  @ViewColumn()
+  supportLo: number;
+
+  @ViewColumn()
+  supportHi: number;
+
+  @ViewColumn()
+  fairValueLo: number;
+
+  @ViewColumn()
+  fairValueHi: number;
+
+  @ViewColumn()
+  bellingUserId: string;
+}

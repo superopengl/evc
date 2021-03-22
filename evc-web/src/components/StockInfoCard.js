@@ -8,7 +8,7 @@ import { StockName } from './StockName';
 import { unwatchStock, watchStock, bellStock, unbellStock } from 'services/stockService';
 import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
-import { LockFilled, LockOutlined } from '@ant-design/icons';
+import { LockFilled } from '@ant-design/icons';
 import { StockBellButton } from './StockBellButton';
 
 const { Text } = Typography;
@@ -146,14 +146,6 @@ const StockInfoCard = (props) => {
       <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{stock.lastPrice ?? 'N/A'}</Text>
       <StyledTable style={{ flexGrow: 1 }}>
         <tbody>
-          {/* <tr>
-          <td>
-            <TooltipLabel message={null}>Price</TooltipLabel>
-          </td>
-          <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            {stock.lastPrice}
-          </td>
-        </tr> */}
           <tr>
             <td>
               <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>

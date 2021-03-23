@@ -29,7 +29,7 @@ export const ContactWidget = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
 
   return <>
-    <Affix style={{ position: 'fixed', bottom: 30, right: 30 }}>
+    <Affix style={{ position: 'fixed', bottom: 80, right: 20 }}>
       <AffixContactButton type="primary" shape="circle" size="large" onClick={() => setModalVisible(true)}>
         <AiOutlineMessage size={36} />
       </AffixContactButton>

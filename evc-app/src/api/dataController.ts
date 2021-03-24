@@ -17,8 +17,9 @@ import { searchUnusalOptionsActivity } from '../utils/searchUnusalOptionsActivit
 import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 import { getUtcNow } from '../utils/getUtcNow';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
-function handleCsvUpload(onRow: (row: object) => Promise<void>, onFinish: () => Promise<void> = async () => { }) {
+function handleCsvUpload(onRows: (rows: []) => Promise<void>, onFinish: () => Promise<void> = async () => { }) {
   return handlerWrapper(async (req, res) => {
     assertRole(req, 'admin', 'agent');
 
@@ -33,12 +34,15 @@ function handleCsvUpload(onRow: (row: object) => Promise<void>, onFinish: () => 
     const key = `operation.status.${operation}`;
     try {
       await redisCache.set(key, 'in-progress');
-      const rows = parse(data, {
+      const list = parse(data, {
         columns: true,
         skip_empty_lines: true
       });
-      for (const row of rows) {
-        await onRow(row);
+
+      const chunks = _.chunk(list, 1000);
+
+      for (const rows of chunks) {
+        await onRows(rows);
       }
 
       await onFinish();
@@ -74,32 +78,32 @@ export const flushCache = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const uploadSupportCsv = handleCsvUpload(async row => {
+export const uploadSupportCsv = handleCsvUpload(async rows => {
   await getManager()
     .createQueryBuilder()
     .insert()
     .into(StockSupport)
-    .values(row as StockSupport)
+    .values(rows as StockSupport[])
     .orIgnore()
     .execute();
 })
 
-export const uploadResistanceCsv = handleCsvUpload(async row => {
+export const uploadResistanceCsv = handleCsvUpload(async rows => {
   await getManager()
     .createQueryBuilder()
     .insert()
     .into(StockResistance)
-    .values(row as StockResistance)
+    .values(rows as StockResistance[])
     .orIgnore()
     .execute();
 })
 
-export const uploadPutCallRatioCsv = handleCsvUpload(async row => {
+export const uploadPutCallRatioCsv = handleCsvUpload(async rows => {
   await getManager()
     .createQueryBuilder()
     .insert()
     .into(StockDailyPutCallRatio)
-    .values(row as StockDailyPutCallRatio)
+    .values(rows as StockDailyPutCallRatio[])
     .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
     .execute();
 })
@@ -117,36 +121,36 @@ async function cleanUpOldUoaData(table) {
 }
 
 export const uploadUoaStockCsv = handleCsvUpload(
-  async row => {
+  async rows => {
     await getManager()
       .createQueryBuilder()
       .insert()
       .into(UnusalOptionActivityStock)
-      .values(row as UnusalOptionActivityStock)
+      .values(rows as UnusalOptionActivityStock[])
       .execute();
   },
   () => cleanUpOldUoaData(UnusalOptionActivityStock)
 );
 
 export const uploadUoaEtfsCsv = handleCsvUpload(
-  async row => {
+  async rows => {
     await getManager()
       .createQueryBuilder()
       .insert()
       .into(UnusalOptionActivityEtfs)
-      .values(row as UnusalOptionActivityEtfs)
+      .values(rows as UnusalOptionActivityEtfs[])
       .execute();
   },
   () => cleanUpOldUoaData(UnusalOptionActivityEtfs)
 );
 
 export const uploadUoaIndexCsv = handleCsvUpload(
-  async row => {
+  async rows => {
     await getManager()
       .createQueryBuilder()
       .insert()
       .into(UnusalOptionActivityIndex)
-      .values(row as UnusalOptionActivityIndex)
+      .values(rows as UnusalOptionActivityIndex[])
       .execute();
   },
   () => cleanUpOldUoaData(UnusalOptionActivityIndex)

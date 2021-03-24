@@ -19,6 +19,7 @@ import {
   getMarketLosers,
   getMarketMostActive,
   getQuote,
+  getStockLogoUrl,
 } from '../services/iexService';
 import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { StockLastPrice } from '../entity/StockLastPrice';
@@ -287,6 +288,7 @@ export const createStock = handlerWrapper(async (req, res) => {
   const { symbol: reqSymbol, company, tags } = req.body;
 
   const symbol = reqSymbol.toUpperCase();
+  const logoTask = getStockLogoUrl(symbol);
 
   stock.symbol = symbol;
   stock.company = company;
@@ -297,6 +299,7 @@ export const createStock = handlerWrapper(async (req, res) => {
       }
     });
   }
+  stock.logoUrl = await logoTask;
 
   await getRepository(Stock).save(stock);
 

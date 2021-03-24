@@ -2,6 +2,7 @@ import * as alphavantage from 'alphavantage';
 import * as queryString from 'query-string';
 import * as _ from 'lodash';
 import * as fetch from 'node-fetch';
+import * as parse from 'csv-parse/lib/sync';
 
 // const alphaApi = alphavantage({key: process.env.ALPHAVANTAGE_API_KEY});
 
@@ -39,8 +40,23 @@ export async function getHistoricalClose(symbol: string, days = 1) {
   return result;
 }
 
+export async function getEarningsCalendarForAll(): Promise<{symbol: string, reportDate: string}[]> {
+  const data = await requestAlphaVantageApi({
+    function: 'EARNINGS_CALENDAR',
+    horizon: '12month',
+    // symbol: 'AAPL'
+  }, 'text');
 
-async function requestAlphaVantageApi(query?: object) {
+  const rows = parse(data, {
+    columns: true,
+    skip_empty_lines: true
+  });
+
+  return rows;
+}
+
+
+async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 'json') {
   const queryParams = queryString.stringify({
     ...query,
     apikey: process.env.ALPHAVANTAGE_API_KEY
@@ -53,5 +69,5 @@ async function requestAlphaVantageApi(query?: object) {
     // 404 Sandbox doesn't return data
     return null;
   }
-  return resp.json();
+  return format === 'json' ? resp.json() : resp.text();
 }

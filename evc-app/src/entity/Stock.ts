@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable, PrimaryGeneratedColumn } from 'typeorm';
 import { StockTag } from './StockTag';
 
 @Entity()
@@ -9,8 +9,10 @@ export class Stock {
   @Column()
   company: string;
 
+  @Column({ nullable: true })
+  logoUrl: string;
+
   @ManyToMany(type => StockTag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: StockTag[];
 }
-

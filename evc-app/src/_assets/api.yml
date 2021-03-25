@@ -755,6 +755,12 @@ paths:
       responses:
         200:
           description: OK
+  /stock/data/earnings_calendar:
+    get:
+      operationId: getEarningsCalendar
+      responses:
+        200:
+          description: OK          
   /subscription:
     get:
       operationId: getMyCurrnetSubscription

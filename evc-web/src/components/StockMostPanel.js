@@ -62,9 +62,6 @@ const StyledSymbolTextLink = styled(TextLink)`
 }
 `;
 
-
-
-
 const StockMostPanel = (props) => {
   const columnDef = [
     {

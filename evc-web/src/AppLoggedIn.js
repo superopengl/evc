@@ -121,8 +121,8 @@ const ROUTES = [
     roles: ['admin', 'agent']
   },
   {
-    path: '/cash_back',
-    name: 'Cash Back',
+    path: '/comission',
+    name: 'Commission Withdrawal',
     icon: <Icon component={() => <FaMoneyBillWave />} />,
     roles: ['admin', 'agent']
   },
@@ -300,7 +300,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
-      <RoleRoute visible={isAdmin} exact path="/cash_back" component={AdminCashBackRequestListPage} />
+      <RoleRoute visible={isAdmin} exact path="/comission" component={AdminCashBackRequestListPage} />
       <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>

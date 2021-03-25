@@ -48,7 +48,7 @@ const EarnCommissionModal = props => {
       <ReferralLinkInput value={account?.referralUrl} />
       <Space style={{width: '100%', justifyContent: 'flex-end', marginTop: 20}}>
         <Link to="/account"><Button type="primary" ghost onClick={onOk}>Subscription Deduction</Button></Link>
-        <Link to="/account"><Button type="primary" onClick={onOk}>Go to Cash Back</Button></Link>
+        <Link to="/account"><Button type="primary" onClick={onOk}>Go to Commission Withdrawal</Button></Link>
       </Space>
     </Modal>
   )

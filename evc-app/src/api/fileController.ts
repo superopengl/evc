@@ -9,25 +9,18 @@ import { getS3ObjectStream, uploadToS3 } from '../utils/uploadToS3';
 import { v4 as uuidv4 } from 'uuid';
 
 export const downloadFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'member', 'agent');
-  const { taskId, fileId } = req.params;
+  assertRole(req, 'admin', 'agent', 'member', 'free');
+  const { id } = req.params;
   const { user: { id: userId, role } } = req as any;
 
   const fileRepo = getRepository(File);
-  const file = await fileRepo.findOne(fileId);
+  const query = ['admin', 'agent'].includes(role) ? { id } : { id, createdBy: userId };
+  const file = await fileRepo.findOne(query);
   assert(file, 404);
-
-  if (role === 'member') {
-    // // Only record the read by client
-    const now = getUtcNow();
-
-    file.lastReadAt = now;
-    await fileRepo.save(file);
-  }
 
   const { fileName, mime } = file;
 
-  const stream = getS3ObjectStream(fileId, fileName);
+  const stream = getS3ObjectStream(id, fileName);
   res.setHeader('Content-type', mime);
   res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
 
@@ -51,9 +44,9 @@ export const searchFileList = handlerWrapper(async (req, res) => {
   res.json(files);
 });
 
-
 export const uploadFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'member', 'agent');
+  assertRole(req, 'admin', 'agent', 'member');
+  const { user } = req as any;
   const { file } = (req as any).files;
   assert(file, 404, 'No file to upload');
   const { name, data, mimetype, md5 } = file;
@@ -63,6 +56,7 @@ export const uploadFile = handlerWrapper(async (req, res) => {
 
   const entity: File = {
     id,
+    createdBy: user.id,
     fileName: name,
     mime: mimetype,
     location,

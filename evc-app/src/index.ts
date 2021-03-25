@@ -10,6 +10,8 @@ function validateEnvVars() {
   const requiredEnvVars = [
     'AWS_DEFAULT_REGION',
     'GIT_HASH',
+    'EVC_S3_BUCKET',
+    'EVC_S3_FILE_PREFIX',
     'EVC_WEB_DOMAIN_NAME',
     'EVC_API_DOMAIN_NAME',
     'EVC_GOOGLE_SSO_CLIENT_SECRET',

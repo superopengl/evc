@@ -60,7 +60,9 @@ export const SubscriptionCard = props => {
       <Card.Meta
         title={<div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#15be53' }}><sup><small>$</small></sup> {price}</Text> */}
-          <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }} type="success" value={price} />
+          <div>
+            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }} type="success" value={price} />
+            </div>
           <Text>{unit}</Text>
         </div>}
         description={description}

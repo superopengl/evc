@@ -20,6 +20,7 @@ import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
 import MySubscriptionHistoryDrawer from './MySubscriptionHistoryDrawer';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
+import CashBackRequestForm from 'pages/Profile/CashBackRequestForm';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -63,6 +64,7 @@ const MyAccountPage = (props) => {
   const [planType, setPlanType] = React.useState();
   const [balanceHistoryVisible, setBalanceHistoryVisible] = React.useState(false);
   const [subscriptionHistoryVisible, setSubscriptionHistoryVisible] = React.useState(false);
+  const [cashBackVisible, setCashBackVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
   const context = React.useContext(GlobalContext);
 
@@ -241,15 +243,15 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title="Cash Back"
+            title="Commission Withdrawal"
             extra={
               <Space>
-                <Button type="secondary">Cash Back History</Button>
-                <Button type="primary">Request Cash Back</Button>
+                <Button type="secondary">All Applications</Button>
+                <Button type="primary" onClick={() => setCashBackVisible(true)}>New Application</Button>
               </Space>
             }
           >
-            <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
+            <Paragraph type="secondary">Ongoing applications</Paragraph>
           </Card>
         </Space>
       </Loading>
@@ -269,6 +271,18 @@ const MyAccountPage = (props) => {
         visible={subscriptionHistoryVisible}
         onClose={() => setSubscriptionHistoryVisible(false)}
       />
+      <Modal
+        title="Commission Withdrawal Application"
+        visible={cashBackVisible}
+        closable={true}
+        maskClosable={false}
+        destroyOnClose={true}
+        footer={null}
+        onOk={() => setCashBackVisible(false)}
+        onCancel={() => setCashBackVisible(false)}
+        >
+        <CashBackRequestForm onOk={() => setCashBackVisible(false)} />
+      </Modal>
     </ContainerStyled>
   );
 };

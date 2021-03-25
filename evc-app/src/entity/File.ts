@@ -7,8 +7,8 @@ export class File {
   @CreateDateColumn()
   createdAt?: Date;
 
-  @Column({ default: 'system' })
-  createdBy?: string;
+  @Column('uuid')
+  createdBy: string;
 
   @Column()
   fileName: string;
@@ -21,11 +21,5 @@ export class File {
 
   @Column()
   md5: string;
-
-  @Column({ nullable: true })
-  lastReadAt?: Date;
-
-  // @Column({ nullable: true })
-  // signedAt?: Date;
 }
 

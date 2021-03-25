@@ -23,16 +23,25 @@ const defs = [
         name: 'daily-eps',
         description: 'Daily EPS',
         startTimeNY: ['0:30', '13:30'],
+        // AlphaVantage
+    },
+    {
+        name: 'daily-earnings-calendar',
+        description: 'Daily earings calendar',
+        startTimeNY: ['0:30', '13:30'],
+        // AlphaVantage
     },
     {
         name: 'daily-close',
         description: 'Daily close',
         startTimeNY: '16:30',
+        // AlphaVantage
     },
     {
         name: 'daily-putcall',
         description: 'Daily putCallRatio',
         startTimeNY: '16:10',
+        // IEX
     }
 ];
 

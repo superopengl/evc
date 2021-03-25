@@ -1,17 +1,42 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button, Form, Input, Radio } from 'antd';
+import { Button, Form, Input, Radio, Typography, Checkbox } from 'antd';
 import PropTypes from 'prop-types';
 import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 import { FileUploader } from 'components/FileUploader';
+import { QuestionCircleFilled, SettingOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
+import styled from 'styled-components';
+import { Image } from 'antd';
+import { Divider } from 'antd';
+import { InputNumber } from 'antd';
+import { createCommissionWithdrawal } from 'services/commissionService';
 
-const CashBackRequestForm = (props) => {
+const { Text } = Typography;
+
+const PayPalHelpIconButton = () =>
+  <Tooltip
+    trigger="click"
+    overlayClassName="paypal-help-tooltip"
+    placement="topRight"
+    title={
+      <>
+        <div><strong>How to find PayPal Personal Information?</strong></div>
+        Find and click the setting menu (<SettingOutlined /> icon) on your PayPal homepage. Go to Account {'>'} Profile. You should be able to see a page like below.
+        <Image src="/images/paypal-personal-info.jpg" />
+      </>
+    }
+  >
+    <Button type="link" style={{ color: 'black' }} icon={<QuestionCircleFilled />} />
+  </Tooltip>
+
+
+const CommissionWithdrawalForm = (props) => {
   const { onOk } = props;
   const [loading, setLoading] = React.useState(false);
-  const [request, setRequest] = React.useState({files: []});
 
   const handleSave = async (values) => {
     if (loading) {
@@ -21,9 +46,9 @@ const CashBackRequestForm = (props) => {
     try {
       setLoading(true);
 
-      // await createCashBackRequest(values);
+      const newId = await createCommissionWithdrawal(values);
 
-      notify.success('Successfully saved profile!')
+      notify.success(<>Successfully submitted the commission withdrawal application (<Text code>{newId}</Text>). We will notify you by email if this application is handled.</>)
 
       onOk();
     } finally {
@@ -35,18 +60,23 @@ const CashBackRequestForm = (props) => {
     setLoading(uploading);
   }
 
-  const handleRemove = (fileId) => {
-    request.files = request.files.filter(d => d.fileId !== fileId);
-  }
-
-  const handleAdd = (fileId) => {
-    request.files = [...request.files, { fileId, isByClient: true }];
-  }
-
   return (
-    <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={request}>
+    <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }}>
+      <Form.Item label="Amount (USD $)" name="amount" rules={[{
+        validator: (_, value) =>
+          value > 0 ? Promise.resolve() : Promise.reject(' '),
+      }]}>
+        <InputNumber
+          autoFocus
+          min={1}
+          max={1000}
+          step={10}
+        // formatter={value => `USD$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+        // parser={value => value.replace(/USD\$\s?|(,*)/g, '')}
+        />
+      </Form.Item>
       <Form.Item label="Given Name" name="givenName" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
-        <Input placeholder="Given name" autoComplete="given-name" allowClear={true} maxLength="100" autoFocus />
+        <Input placeholder="Given name" autoComplete="given-name" allowClear={true} maxLength="100" />
       </Form.Item>
       <Form.Item label="Surname" name="surname" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="Surname" autoComplete="family-name" allowClear={true} maxLength="100" />
@@ -76,14 +106,21 @@ const CashBackRequestForm = (props) => {
       <Form.Item label="PayPal Account (email that you use for PayPal)" name="payPalAccount" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" />
       </Form.Item>
-      <Form.Item label="Screenshots of PayPal personal information" name="files" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}
-        extra="Must be consistent with the name in the identity. Up to 3 photos."
+      <Form.Item
+        label={<>Screenshots of PayPal personal information <PayPalHelpIconButton /></>}
+        name="files" rules={[{
+          validator: (_, value) => {
+            return value?.length > 0 ? Promise.resolve() : Promise.reject('You have to agree to continue.')
+          }
+        }]}
       >
-        <FileUploader
-          onRemove={handleRemove}
-          onAdd={handleAdd}
-          onUploadingChange={handleUploadingChange}
-        />
+        <FileUploader onUploadingChange={handleUploadingChange} />
+      </Form.Item>
+      <Form.Item name="agree" valuePropName="checked" rules={[{
+        validator: (_, value) =>
+          value ? Promise.resolve() : Promise.reject('You have to agree to continue.'),
+      }]}>
+        <Checkbox>I declare that the information above is provided by myself and true and reliable. I am aware that EVC has the final rights to cancel or refuse the commission withdrawal at any time at its sole discretion upon any false or inconsistent personal information provided above.</Checkbox>
       </Form.Item>
       <Form.Item style={{ marginTop: '1rem' }}>
         <Button block type="primary" htmlType="submit" disabled={loading}>Submit</Button>
@@ -92,13 +129,10 @@ const CashBackRequestForm = (props) => {
   );
 }
 
-CashBackRequestForm.propTypes = {
-  user: PropTypes.any.isRequired,
-  initial: PropTypes.bool
+CommissionWithdrawalForm.propTypes = {
 };
 
-CashBackRequestForm.defaultProps = {
-  initial: false
+CommissionWithdrawalForm.defaultProps = {
 };
 
-export default withRouter(CashBackRequestForm);
+export default withRouter(CommissionWithdrawalForm);

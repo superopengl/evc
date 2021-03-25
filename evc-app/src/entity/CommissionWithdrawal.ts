@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, OneToMany } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
-
 @Entity()
 export class CommissionWithdrawal {
   @PrimaryGeneratedColumn('uuid')
@@ -40,12 +39,16 @@ export class CommissionWithdrawal {
   identityNumber: string;
 
   @Column()
-  payPalEmail: string;
+  payPalAccount: string;
+
+  @Column('uuid', { array: true })
+  files: string[];
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
 
   @Column({ default: 'submitted' })
+  @Index()
   status: 'submitted' | 'rejected' | 'done';
 
   @Column('uuid', { nullable: true })

@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Typography, Space } from 'antd';
+import { Upload, Typography } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
-import { getFile, searchFile } from 'services/fileService';
-import { FileIcon } from './FileIcon';
+import { searchFile } from 'services/fileService';
 import { saveAs } from 'file-saver';
 import { AiOutlineUpload } from 'react-icons/ai';
-import { Badge } from 'antd';
-import { Popover } from 'antd';
-import { TimeAgo } from './TimeAgo';
+import ReactDOM from 'react-dom';
 
 const { Dragger } = Upload;
 const { Text } = Typography;
@@ -44,14 +41,15 @@ const Container = styled.div`
 
 
 export const FileUploader = (props) => {
-  const { onUploadingChange, showUploadList } = props;
+  const { onChange, onUploadingChange, showUploadList } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
   const loadFileList = async () => {
     const { value } = props;
-    if (value && value.length) {
+    if (value?.length) {
+      try {
       setLoading(true);
       const list = await searchFile(value);
       const fileList = list.map(x => ({
@@ -60,8 +58,14 @@ export const FileUploader = (props) => {
         status: 'done',
         url: x.location,
       }));
-      setFileList(fileList);
+      ReactDOM.unstable_batchedUpdates(() => {
+        setFileList(fileList);
+        setLoading(false);
+      })
+    }catch{
       setLoading(false);
+
+    }
     }
   }
 
@@ -79,9 +83,7 @@ export const FileUploader = (props) => {
     const { file, fileList } = info;
     setFileList(fileList);
 
-    if (file.status === 'done') {
-      props.onAdd(_.get(file, 'response.id', file.uid));
-    }
+    onChange(fileList.filter(f => f.status === 'done').map(f => _.get(f, 'response.id', f.uid)));
 
     const uploading = file.status === 'uploading';
     setLoading(uploading);
@@ -94,7 +96,7 @@ export const FileUploader = (props) => {
   }
 
   const handleRemove = file => {
-    props.onRemove(file.uid);
+    onChange(fileList.map(f => _.get(f, 'response.id', f.uid)));
   }
 
   const { size, disabled } = props;
@@ -123,7 +125,8 @@ export const FileUploader = (props) => {
         {disabled ? <Text type="secondary">File upload is disabled</Text>
           : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
             <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-          Click or drag file to this area to upload. Up to 3 files.
+          Click or drag file to this area to upload. 
+          <br/>Must be consistent with the name in the identity. Up to 3 photos.
         </div>}
       </Dragger>
       {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
@@ -137,13 +140,15 @@ FileUploader.propTypes = {
   size: PropTypes.number,
   disabled: PropTypes.bool,
   showUploadList: PropTypes.any,
+  onChange: PropTypes.func,
 };
 
 FileUploader.defaultProps = {
   disabled: false,
   showUploadList: {
     showPreviewIcon: true,
-    showDownloadIcon: true,
+    showDownloadIcon: false,
     showRemoveIcon: true,
   },
+  onChange: () => {}
 };

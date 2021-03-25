@@ -55,7 +55,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /file:
     post:
       operationId: uploadFile
@@ -756,7 +756,7 @@ paths:
       operationId: getEarningsCalendar
       responses:
         200:
-          description: OK          
+          description: OK
   /subscription:
     get:
       operationId: getMyCurrnetSubscription
@@ -904,6 +904,44 @@ paths:
   /referral_policy/:id/enable:
     post:
       operationId: enableReferralGlobalPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /commission_withdrawal:
+    get:
+      operationId: listMyCommissionWithdrawal
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: createCommissionWithdrawal
+      responses:
+        200:
+          description: OK
+  /commission_withdrawal/search:
+    post:
+      operationId: searchCommissionWithdrawal
+      responses:
+        200:
+          description: OK          
+  /commission_withdrawal/:id:
+    get:
+      operationId: getCommissionWithdrawal
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: changeCommissionWithdrawalStatus
       parameters:
         - name: id
           in: path

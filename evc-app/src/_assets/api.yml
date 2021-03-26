@@ -153,6 +153,14 @@ paths:
       responses:
         200:
           description: OK
+  /user:
+    get:
+      operationId: listAllUsers
+      # security:
+      #   - authAdminOrAgent: []
+      responses:
+        200:
+          description: OK
   /user/search:
     post:
       operationId: searchUserList
@@ -754,6 +762,14 @@ paths:
   /stock/data/earnings_calendar:
     get:
       operationId: getEarningsCalendar
+      parameters:
+        - name: week
+          in: query
+          type: integer
+          minimum: 0
+          maximum: 52
+          default: 0
+          required: false
       responses:
         200:
           description: OK
@@ -928,7 +944,7 @@ paths:
       operationId: searchCommissionWithdrawal
       responses:
         200:
-          description: OK          
+          description: OK
   /commission_withdrawal/:id:
     get:
       operationId: getCommissionWithdrawal

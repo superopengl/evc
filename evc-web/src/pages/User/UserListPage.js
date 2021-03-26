@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space, Pagination } from 'antd';
-import { listAllUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
+import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
 import { inviteUser, impersonate } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
@@ -76,6 +76,7 @@ const UserListPage = () => {
     {
       title: 'Email',
       dataIndex: 'email',
+      fixed: 'left',
       render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
     {
@@ -112,6 +113,7 @@ const UserListPage = () => {
       // title: 'Action',
       // fixed: 'right',
       // width: 200,
+      fixed: 'right',
       render: (text, user) => {
         return (
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
@@ -183,7 +185,7 @@ const UserListPage = () => {
   const searchByQueryInfo = async (queryInfo) => {
     try {
       setLoading(true);
-      const resp = await listAllUsers(queryInfo);
+      const resp = await searchUsers(queryInfo);
       const { count, page, data } = resp;
       ReactDOM.unstable_batchedUpdates(() => {
         setTotal(count);
@@ -329,7 +331,9 @@ const UserListPage = () => {
           <Table columns={columnDef}
             dataSource={list}
             size="small"
-
+            scroll={{
+              x: 'max-content'
+            }}
             // scroll={{x: 1000}}
             rowKey="id"
             loading={loading}

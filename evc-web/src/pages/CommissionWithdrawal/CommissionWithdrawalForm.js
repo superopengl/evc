@@ -1,17 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button, Form, Input, Radio, Typography, Checkbox } from 'antd';
-import PropTypes from 'prop-types';
-import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
-import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 import { FileUploader } from 'components/FileUploader';
 import { QuestionCircleFilled, SettingOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
-import styled from 'styled-components';
 import { Image } from 'antd';
-import { Divider } from 'antd';
 import { InputNumber } from 'antd';
 import { createCommissionWithdrawal } from 'services/commissionService';
 

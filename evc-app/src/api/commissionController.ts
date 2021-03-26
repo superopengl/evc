@@ -1,17 +1,16 @@
 
-import { getRepository, getManager, MoreThan } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert, assertRole } from '../utils/assert';
-import { User } from '../entity/User';
-import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
-import { getUtcNow } from '../utils/getUtcNow';
 import { v4 as uuidv4 } from 'uuid';
 import { CommissionWithdrawal } from '../entity/CommissionWithdrawal';
 import * as moment from 'moment';
+import { User } from '../entity/User';
+import { UserProfile } from '../entity/UserProfile';
 
 export const searchCommissionWithdrawal = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { userId, after, before, status, page, size } = req.body;
+  const { id, userId, after, before, status, page, size } = req.body;
 
   const pageNo = +page || 1;
   const pageSize = +size || 60;
@@ -19,26 +18,35 @@ export const searchCommissionWithdrawal = handlerWrapper(async (req, res) => {
 
   let query = getRepository(CommissionWithdrawal)
     .createQueryBuilder('x')
+    .innerJoin(User, 'u', 'u.id = x."userId"')
+    .innerJoin(UserProfile, 'p', 'u."profileId" = p.id')
     .where(`1=1`)
 
+  if (id) {
+    query = query.where(`x.id = :id`, { id });
+  }
   if (userId) {
-    query = query.andWhere(`"userId" = :userId`, { userId });
+    query = query.andWhere(`x."userId" = :userId`, { userId });
   }
   if (after) {
-    query = query.andWhere(`"createdAt" >= :date`, { date: moment(after).startOf('day') })
+    query = query.andWhere(`x."createdAt" >= :after`, { after: moment(after).startOf('day') })
   }
   if (before) {
-    query = query.andWhere(`"createdAt" <= :date`, { date: moment(before).startOf('day') })
+    query = query.andWhere(`x."createdAt" <= :before`, { before: moment(before).endOf('day') })
   }
   if (status) {
-    query = query.andWhere(`status = :status`, { status })
+    query = query.andWhere(`x.status = :status`, { status })
   }
 
   const count = await query.getCount();
   const data = await query
-    .orderBy('"createdAt"', 'DESC')
+    .orderBy('x."createdAt"', 'DESC')
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
+    .select([
+      'x.*',
+      'email',
+    ])
     .execute();
 
   res.json({
@@ -72,7 +80,7 @@ export const createCommissionWithdrawal = handlerWrapper(async (req, res) => {
     entity,
     req.body,
     {
-      id:  uuidv4(),
+      id: uuidv4(),
       userId,
     }
   );
@@ -96,7 +104,7 @@ export const getCommissionWithdrawal = handlerWrapper(async (req, res) => {
 export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, comment } = req.body;
 
   const application = await getRepository(CommissionWithdrawal).findOne(id);
   assert(application, 404);
@@ -105,6 +113,7 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
     case 'submitted':
       if (['rejected', 'done'].includes(status)) {
         application.status = status;
+        application.comment = comment;
         await getManager().save(application);
       } else {
         assert(false, 400, `Unknown target status ${status}`);

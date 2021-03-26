@@ -39,7 +39,7 @@ import { BiDollar } from 'react-icons/bi';
 import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
 import UnusualOptionsActivityPage from 'pages/AdminDashboard/UnusualOptionsActivityPage';
 import EarnCommissionModal from 'pages/EarnCommissionModal';
-import AdminCashBackRequestListPage from 'pages/AdminDashboard/AdminCashBackRequestListPage';
+import AdminCommissionWithdrawalListPage from 'pages/CommissionWithdrawal/AdminCommissionWithdrawalListPage';
 import EarningCalendarPage from 'pages/AdminDashboard/EarningCalendarPage';
 
 const { Link: LinkText } = Typography;
@@ -300,7 +300,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
-      <RoleRoute visible={isAdmin} exact path="/comission" component={AdminCashBackRequestListPage} />
+      <RoleRoute visible={isAdmin} exact path="/comission" component={AdminCommissionWithdrawalListPage} />
       <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>

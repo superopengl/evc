@@ -387,8 +387,10 @@ export const getLosers = handlerWrapper(async (req, res) => {
 
 export const getEarningsCalendar = handlerWrapper(async (req, res) => {
   const week = +(req.query.week) ?? 0;
+  console.log('query', req.query.week, 'week', week);
   const NY_TIMEZONE = 'America/New_York';
   const theWeek = moment.tz(NY_TIMEZONE).add(week, 'week');
+  console.log('theWeek', theWeek.toDate());
 
   const data = await getRepository(Stock)
     .createQueryBuilder('s')

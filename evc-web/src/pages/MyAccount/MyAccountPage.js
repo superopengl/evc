@@ -20,7 +20,8 @@ import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
 import MySubscriptionHistoryDrawer from './MySubscriptionHistoryDrawer';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
-import CommissionWithdrawalForm from 'pages/Profile/CommissionWithdrawalForm';
+import CommissionWithdrawalForm from 'pages/CommissionWithdrawal/CommissionWithdrawalForm';
+import MyCommissionWithdrawalHistoryDrawer from 'pages/CommissionWithdrawal/MyCommissionWithdrawalHistoryDrawer';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -64,6 +65,7 @@ const MyAccountPage = (props) => {
   const [planType, setPlanType] = React.useState();
   const [balanceHistoryVisible, setBalanceHistoryVisible] = React.useState(false);
   const [subscriptionHistoryVisible, setSubscriptionHistoryVisible] = React.useState(false);
+  const [commissionWithdrawalHistoryVisible, setCommissionWithdrawalHistoryVisible] = React.useState(false);
   const [cashBackVisible, setCashBackVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
   const context = React.useContext(GlobalContext);
@@ -246,7 +248,7 @@ const MyAccountPage = (props) => {
             title="Commission Withdrawal"
             extra={
               <Space>
-                <Button type="secondary">All Applications</Button>
+                <Button type="secondary" onClick={() => setCommissionWithdrawalHistoryVisible(true)}>All Applications</Button>
                 <Button type="primary" onClick={() => setCashBackVisible(true)}>New Application</Button>
               </Space>
             }
@@ -280,9 +282,13 @@ const MyAccountPage = (props) => {
         footer={null}
         onOk={() => setCashBackVisible(false)}
         onCancel={() => setCashBackVisible(false)}
-        >
+      >
         <CommissionWithdrawalForm onOk={() => setCashBackVisible(false)} />
       </Modal>
+      <MyCommissionWithdrawalHistoryDrawer
+        visible={commissionWithdrawalHistoryVisible}
+        onClose={() => setCommissionWithdrawalHistoryVisible(false)}
+      />
     </ContainerStyled>
   );
 };

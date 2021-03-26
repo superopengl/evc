@@ -39,6 +39,7 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
       width="80vw"
       destroyOnClose={true}
       maskClosable={true}
+      closable={true}
       {...props}
     >
       <List

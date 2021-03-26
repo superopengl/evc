@@ -222,6 +222,16 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
+            title="Referral Link"
+            extra={
+              <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
+            }
+          >
+            <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
+            <ReferralLinkInput value={account?.referralUrl} />
+          </Card>
+          <Card
+            bordered={false}
             title="Balance"
             extra={
               <Title><MoneyAmount type="success" value={account.balance} /></Title>
@@ -235,21 +245,11 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title="Referral Link"
-            extra={
-              <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
-            }
-          >
-            <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
-            <ReferralLinkInput value={account?.referralUrl} />
-          </Card>
-          <Card
-            bordered={false}
             title="Commission Withdrawal"
             extra={
               <Space>
                 <Button type="secondary" onClick={() => setCommissionWithdrawalHistoryVisible(true)}>All Applications</Button>
-                <Button type="primary" onClick={() => setCashBackVisible(true)}>New Application</Button>
+                <Button type="primary" onClick={() => setCashBackVisible(true)} disabled={account.balance <= 0}>New Application</Button>
               </Space>
             }
           >

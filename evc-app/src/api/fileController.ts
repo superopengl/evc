@@ -24,6 +24,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
   res.setHeader('Content-type', mime);
   res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
 
+  res.set('Cache-Control', `public, max-age=31536000`);
   stream.pipe(res);
 });
 
@@ -32,6 +33,8 @@ export const getFile = handlerWrapper(async (req, res) => {
   const repo = getRepository(File);
   const file = await repo.findOne(id);
   assert(file, 404);
+
+  res.set('Cache-Control', `public, max-age=31536000`);
   res.json(file);
 });
 

@@ -74,6 +74,7 @@ export const adjustCredit = handlerWrapper(async (req, res) => {
     entity.id = uuidv4();
     entity.userId = id;
     entity.amount = amount;
+    entity.type = 'adjust';
 
     await getRepository(UserCreditTransaction).insert(entity);
   }

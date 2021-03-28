@@ -50,8 +50,8 @@ const CreditHistoryListModal = (props) => {
       width={400}
       footer={
         <>
-          <Text strong level={5}>Sub Total</Text>
-          <MoneyAmount style={{ fontSize: '1.5rem', marginLeft: '1rem' }} type="success" strong value={_.sum(data, x => x.amount)} />
+          <Text strong>Sub Total</Text>
+          <MoneyAmount style={{ fontSize: '1.5rem', marginLeft: '1rem' }} type="success" strong value={_.sum(data, x => +(x.amount) || 0)} />
         </>
 
       }

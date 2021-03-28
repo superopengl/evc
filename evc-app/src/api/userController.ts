@@ -190,15 +190,15 @@ export const listMyCreditHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id } } = req as any;
   const list = await getRepository(UserCreditTransaction)
-    .createQueryBuilder('ubt')
-    .where('ubt."userId" = :id', { id })
-    .andWhere('ubt.amount != 0')
-    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."creditTransactionId"')
+    .createQueryBuilder('uc')
+    .where('uc."userId" = :id', { id })
+    .andWhere('uc.amount != 0')
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
-    .orderBy('ubt."createdAt"', 'DESC')
+    .orderBy('uc."createdAt"', 'DESC')
     .select([
-      'ubt."createdAt" as "createdAt"',
-      'ubt.amount as amount',
+      'uc."createdAt" as "createdAt"',
+      'uc.amount as amount',
       'py.id as "paymentId"',
       'sub.type as type'
     ])
@@ -210,17 +210,18 @@ export const listUserCreditHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const list = await getRepository(UserCreditTransaction)
-    .createQueryBuilder('ubt')
-    .where('ubt."userId" = :id', { id })
-    .leftJoin(q => q.from(User, 'u'), 'u', 'ubt."referredUserId" = u.id')
+    .createQueryBuilder('uc')
+    .where('uc."userId" = :id', { id })
+    .leftJoin(q => q.from(User, 'u'), 'u', 'uc."referredUserId" = u.id')
     .leftJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
-    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."creditTransactionId"')
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
-    .orderBy('ubt."createdAt"', 'DESC')
+    .orderBy('uc."createdAt"', 'DESC')
     .select([
-      'ubt."createdAt" as "createdAt"',
-      'ubt.amount as amount',
-      'ubt."amountBeforeRollback" as "amountBeforeRollback"',
+      'uc."createdAt" as "createdAt"',
+      'uc.amount as amount',
+      'uc."amountBeforeRollback" as "amountBeforeRollback"',
+      'uc.type as "creditType"',
       'p.email as "referredUserEmail"',
       'py.id as "paymentId"',
       'sub.type as type'

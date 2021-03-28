@@ -1,10 +1,10 @@
-import { List, Drawer, Space, Input, Button } from 'antd';
+import { List, Drawer, Space, Input, Button, Modal } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { changeCommissionWithdrawalStatus, listMyCommissionWithdrawal } from 'services/commissionService';
 import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import PropTypes from 'prop-types';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { CloseOutlined, CheckOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 const AdminEditCommissionWithdrawalDrawer = (props) => {
   const { value, onClose } = props;
@@ -31,11 +31,31 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
   }
 
   const handleReject = async () => {
-    await handleChangeStatus('rejected');
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title: 'Reject the withdrawal application',
+      maskClosable: true,
+      closable: false,
+      onOk: () => handleChangeStatus('rejected'),
+      okText: 'Reject',
+      okButtonProps: {
+        danger: true
+      }
+    })
   }
 
   const handleApprove = async () => {
-    await handleChangeStatus('done');
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      title: 'Complete the withdrawal application',
+      content: <><strong>${item.amount}</strong> will be deducted from the user's balance.</>,
+      maskClosable: true,
+      closable: false,
+      onOk: () => handleChangeStatus('done'),
+      okText: 'Complete',
+      okButtonProps: {
+      }
+    })
   }
 
   const disabled = loading || item?.status === 'rejected' || item?.status === 'done';
@@ -60,7 +80,7 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
           onChange={e => setComment(e.target.value)} />
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Button danger type="primary" disabled={disabled} loading={loading} icon={<CloseOutlined />} onClick={handleReject}>Reject</Button>
-          <Button type="primary" disabled={disabled} loading={loading} icon={<CheckOutlined />} onClick={handleApprove}>Approve and Complete</Button>
+          <Button type="primary" disabled={disabled} loading={loading} icon={<CheckOutlined />} onClick={handleApprove}>Complete</Button>
         </Space>
       </Space>}
     >

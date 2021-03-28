@@ -5,7 +5,7 @@ import { Space, Button, Typography, Modal } from 'antd';
 import { changePassword } from 'services/userService';
 import { notify } from 'util/notify';
 import ReactDOM from 'react-dom';
-import { getMyAccount, listMyBalanceHistory } from 'services/accountService';
+import { getMyAccount, listMyCreditHistory } from 'services/accountService';
 import ReferralLinkInput from 'components/ReferralLinkInput';
 
 const { Paragraph, Text, Title } = Typography;
@@ -44,7 +44,7 @@ const EarnCommissionModal = props => {
       destroyOnClose={true}
       footer={null}
       {...props}>
-      <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
+      <Paragraph type="secondary">Share this link to invite friends to earn credit.</Paragraph>
       <ReferralLinkInput value={account?.referralUrl} />
       <Space style={{width: '100%', justifyContent: 'flex-end', marginTop: 20}}>
         <Link to="/account"><Button type="primary" ghost onClick={onOk}>Subscription Deduction</Button></Link>

@@ -13,10 +13,10 @@ import { TimeAgo } from 'components/TimeAgo';
 import { PageHeader } from 'antd';
 import { Tag } from 'antd';
 import MoneyAmount from 'components/MoneyAmount';
-import { getMyAccount, listMyBalanceHistory } from 'services/accountService';
+import { getMyAccount, listMyCreditHistory } from 'services/accountService';
 import ReactDOM from 'react-dom';
 import ReferralLinkInput from 'components/ReferralLinkInput';
-import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
+import CreditHistoryListModal from 'components/CreditHistoryListModal';
 import MySubscriptionHistoryDrawer from './MySubscriptionHistoryDrawer';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -63,7 +63,7 @@ const MyAccountPage = (props) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [currentSubscription, changeToNewSubscription] = React.useState();
   const [planType, setPlanType] = React.useState();
-  const [balanceHistoryVisible, setBalanceHistoryVisible] = React.useState(false);
+  const [creditHistoryVisible, setCreditHistoryVisible] = React.useState(false);
   const [subscriptionHistoryVisible, setSubscriptionHistoryVisible] = React.useState(false);
   const [commissionWithdrawalHistoryVisible, setCommissionWithdrawalHistoryVisible] = React.useState(false);
   const [cashBackVisible, setCashBackVisible] = React.useState(false);
@@ -94,8 +94,8 @@ const MyAccountPage = (props) => {
     load(false);
   }, []);
 
-  const handleFetchMyBalanceHistoryList = async () => {
-    const data = await listMyBalanceHistory();
+  const handleFetchMyCreditHistoryList = async () => {
+    const data = await listMyCreditHistory();
     return (data || []).filter(x => x.amount);
   }
 
@@ -227,20 +227,20 @@ const MyAccountPage = (props) => {
               <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
             }
           >
-            <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
+            <Paragraph type="secondary">Share this link to invite friends to earn credit.</Paragraph>
             <ReferralLinkInput value={account?.referralUrl} />
           </Card>
           <Card
             bordered={false}
             title="Credit"
             extra={
-              <Title><MoneyAmount type="success" value={account.balance} /></Title>
+              <Title><MoneyAmount type="success" value={account.credit} /></Title>
             }
           >
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">The credit can be used for future payment.</Paragraph>
 
-              <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Credit History</Button>
+              <Button key={0} onClick={() => setCreditHistoryVisible(true)}>Credit History</Button>
             </Space>
           </Card>
           <Card
@@ -249,7 +249,7 @@ const MyAccountPage = (props) => {
             extra={
               <Space>
                 <Button type="secondary" onClick={() => setCommissionWithdrawalHistoryVisible(true)}>All Applications</Button>
-                <Button type="primary" onClick={() => setCashBackVisible(true)} disabled={account.balance <= 0}>New Application</Button>
+                <Button type="primary" onClick={() => setCashBackVisible(true)} disabled={account.credit <= 0}>New Application</Button>
               </Space>
             }
           >
@@ -262,12 +262,12 @@ const MyAccountPage = (props) => {
         planType={planType}
         onOk={handlePaymentOk}
         onCancel={handleCancelPayment}
-      // balance={list.balance}
+      // credit={list.credit}
       />
-      <BalanceHistoryListModal
-        visible={balanceHistoryVisible}
-        onOk={() => setBalanceHistoryVisible(false)}
-        onFetch={handleFetchMyBalanceHistoryList}
+      <CreditHistoryListModal
+        visible={creditHistoryVisible}
+        onOk={() => setCreditHistoryVisible(false)}
+        onFetch={handleFetchMyCreditHistoryList}
       />
       <MySubscriptionHistoryDrawer
         visible={subscriptionHistoryVisible}

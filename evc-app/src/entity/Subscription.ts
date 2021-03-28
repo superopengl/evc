@@ -40,7 +40,7 @@ export class Subscription {
   status: SubscriptionStatus;
 
   @Column({default: true})
-  preferToUseBalance: boolean;
+  preferToUseCredit: boolean;
 
   @OneToMany(() => Payment, payment => payment.subscription, {cascade: true})
   payments: Payment[];

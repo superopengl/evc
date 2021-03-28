@@ -86,14 +86,14 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
-  const { plan, recurring, preferToUseBalance, alertDays, method } = req.body;
+  const { plan, recurring, preferToUseCredit, alertDays, method } = req.body;
 
   const payment = await provisionSubscriptionPurchase({
     userId,
     subscriptionType: plan,
     paymentMethod: method,
     recurring,
-    preferToUseBalance,
+    preferToUseCredit,
     alertDays,
     ipAddress: req.ip
   });
@@ -137,7 +137,7 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 
   switch (method) {
     case PaymentMethod.Credit:
-      // Immidiately commit the subscription purchase if it can be paied fully by balance
+      // Immidiately commit the subscription purchase if it can be paied fully by credit
       await commitSubscription(paymentId, null);
       break;
     case PaymentMethod.Card:
@@ -162,8 +162,8 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
-  const { type, preferToUseBalance } = req.body;
-  const result = await calculateNewSubscriptionPaymentDetail(null, userId, type, preferToUseBalance);
+  const { type, preferToUseCredit } = req.body;
+  const result = await calculateNewSubscriptionPaymentDetail(null, userId, type, preferToUseCredit);
   res.json(result);
 });
 

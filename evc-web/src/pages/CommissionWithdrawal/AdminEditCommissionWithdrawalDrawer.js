@@ -48,7 +48,7 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
     Modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title: 'Complete the withdrawal application',
-      content: <><strong>${item.amount}</strong> will be deducted from the user's balance.</>,
+      content: <><strong>${item.amount}</strong> will be deducted from the user's credit.</>,
       maskClosable: true,
       closable: false,
       onOk: () => handleChangeStatus('done'),

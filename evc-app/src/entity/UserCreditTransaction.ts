@@ -3,8 +3,8 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Payment } from './Payment';
 
 @Entity()
-@Index('idx_userBalanceTransaction_user_createdAt', ['userId', 'createdAt'])
-export class UserBalanceTransaction {
+@Index('idx_userCreditTransaction_user_createdAt', ['userId', 'createdAt'])
+export class UserCreditTransaction {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 

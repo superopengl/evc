@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 
 
-const FullBalancePayButton = (props) => {
+const FullCreditPayButton = (props) => {
   const { onProvision, onCommit } = props;
   const [loading, setLoading] = React.useState(false);
 
-  const handleFullBalancePay = async () => {
+  const handleFullCreditPay = async () => {
     try {
       setLoading(true);
       const { paymentId } = await onProvision();
@@ -19,19 +19,19 @@ const FullBalancePayButton = (props) => {
   }
 
   return (
-    <Button type="primary" block onClick={handleFullBalancePay}
+    <Button type="primary" block onClick={handleFullCreditPay}
       disabled={loading}
       loading={loading}
     >Purchase without paying</Button>
   );
 }
 
-FullBalancePayButton.propTypes = {
+FullCreditPayButton.propTypes = {
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
 };
 
-FullBalancePayButton.defaultProps = {
+FullCreditPayButton.defaultProps = {
 };
 
-export default FullBalancePayButton;
+export default FullCreditPayButton;

@@ -101,7 +101,6 @@ const columnDef = [
 
 const UnusualOptionsActivityPanel = (props) => {
 
-  const [data, setData] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const [queryInfo, setQueryInfo] = React.useState(DEFAULT_QUERY_INFO);
   const [total, setTotal] = React.useState(0);
@@ -152,6 +151,7 @@ const UnusualOptionsActivityPanel = (props) => {
         columns={columnDef}
         dataSource={list}
         loading={loading}
+        rowKey="id"
         pagination={false}
         style={{marginBottom: '2rem', height: 'calc(100vh - 320px)'}}
         scroll={{y: 'calc(100vh - 400px)'}}

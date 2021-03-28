@@ -1,6 +1,6 @@
 import { SubscriptionType } from '../types/SubscriptionType';
 import { getSubscriptionPrice } from './getSubscriptionPrice';
-import { getUserBalance } from './getUserBalance';
+import { getUserCredit } from './getUserCredit';
 import { calculateAmountToPay } from './calculateAmountToPay';
 import { EntityManager } from 'typeorm';
 
@@ -8,15 +8,15 @@ export async function calculateNewSubscriptionPaymentDetail(
   entityManager: EntityManager,
   userId: string,
   subscriptionType: SubscriptionType,
-  preferToUseBalance: boolean,
+  preferToUseCredit: boolean,
 ) {
   const price = getSubscriptionPrice(subscriptionType);
-  const totalBalanceAmount = await getUserBalance(entityManager, userId);
-  const { balanceDeductAmount, additionalPay } = calculateAmountToPay(preferToUseBalance ? totalBalanceAmount : 0, price);
+  const totalCreditAmount = await getUserCredit(entityManager, userId);
+  const { creditDeductAmount, additionalPay } = calculateAmountToPay(preferToUseCredit ? totalCreditAmount : 0, price);
   const result = {
     price,
-    totalBalanceAmount,
-    balanceDeductAmount,
+    totalCreditAmount,
+    creditDeductAmount,
     additionalPay,
   };
   return result;

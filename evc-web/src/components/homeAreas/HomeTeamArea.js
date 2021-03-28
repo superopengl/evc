@@ -92,7 +92,7 @@ class HomeTeamArea extends React.Component {
             the bookkeeping, corporate accounting, and taxation matters.
             </p>
             <p>
-              I am into the work-life balance style
+              I am into the work-life credit style
               of our firm. When not in the office, you can find me spending time with my family.
             </p>
           </section>

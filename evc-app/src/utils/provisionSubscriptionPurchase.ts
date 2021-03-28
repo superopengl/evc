@@ -6,7 +6,7 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { getSubscriptionPrice } from './getSubscriptionPrice';
-import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { calculateNewSubscriptionPaymentDetail } from './calculateNewSubscriptionPaymentDetail';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
@@ -17,13 +17,13 @@ export type ProvisionSubscriptionRequest = {
   subscriptionType: SubscriptionType;
   paymentMethod: PaymentMethod;
   recurring: boolean;
-  preferToUseBalance: boolean;
+  preferToUseCredit: boolean;
   alertDays: number;
   ipAddress: string;
 };
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {
-  const { userId, subscriptionType, paymentMethod, recurring, preferToUseBalance, alertDays, ipAddress } = request;
+  const { userId, subscriptionType, paymentMethod, recurring, preferToUseCredit, alertDays, ipAddress } = request;
   const now = getUtcNow();
 
   const months = subscriptionType === SubscriptionType.UnlimitedYearly ? 12 : 1;
@@ -39,20 +39,20 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.recurring = recurring;
     subscription.start = now;
     subscription.end = end;
-    subscription.preferToUseBalance = preferToUseBalance;
+    subscription.preferToUseCredit = preferToUseCredit;
     subscription.alertDays = alertDays;
     subscription.status = SubscriptionStatus.Provisioning;
 
     await m.save(subscription);
 
-    const detail = await calculateNewSubscriptionPaymentDetail(m, userId, subscriptionType, preferToUseBalance);
-    const { balanceDeductAmount, additionalPay } = detail;
-    let balanceTransaction: UserBalanceTransaction = null;
-    if (balanceDeductAmount > 0) {
-      balanceTransaction = new UserBalanceTransaction();
-      balanceTransaction.userId = userId;
-      balanceTransaction.amount = -1 * balanceDeductAmount;
-      await m.save(balanceTransaction);
+    const detail = await calculateNewSubscriptionPaymentDetail(m, userId, subscriptionType, preferToUseCredit);
+    const { creditDeductAmount, additionalPay } = detail;
+    let creditTransaction: UserCreditTransaction = null;
+    if (creditDeductAmount > 0) {
+      creditTransaction = new UserCreditTransaction();
+      creditTransaction.userId = userId;
+      creditTransaction.amount = -1 * creditDeductAmount;
+      await m.save(creditTransaction);
     }
 
     const paymentId = uuidv4();
@@ -64,7 +64,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.status = PaymentStatus.Pending;
     payment.ipAddress = ipAddress;
     payment.auto = false;
-    payment.balanceTransaction = balanceTransaction;
+    payment.creditTransaction = creditTransaction;
     payment.subscription = subscription;
 
     await m.save(payment);

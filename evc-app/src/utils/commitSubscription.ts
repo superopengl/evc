@@ -53,7 +53,7 @@ export async function commitSubscription(
       role: Role.Member
     });
 
-    if (payment.method !== PaymentMethod.Balance) {
+    if (payment.method !== PaymentMethod.Credit) {
       await handleReferralKickbackWhenPaid(m, userId);
     }
   });

@@ -104,7 +104,7 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
     subscriptionId: payment.subscription.id,
   };
   switch (method) {
-    case PaymentMethod.Balance:
+    case PaymentMethod.Credit:
     case PaymentMethod.PayPal:
       // No need to do anything extra
       break;
@@ -136,7 +136,7 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
   const { method } = payment;
 
   switch (method) {
-    case PaymentMethod.Balance:
+    case PaymentMethod.Credit:
       // Immidiately commit the subscription purchase if it can be paied fully by balance
       await commitSubscription(paymentId, null);
       break;

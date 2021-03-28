@@ -171,10 +171,10 @@ const EmailTemplateListPage = () => {
           <Form.Item label="Locale" name="locale" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <LocaleSelector disabled={currentItem || loading} />
           </Form.Item>
-          <Form.Item label="Subject" name="subject" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+          <Form.Item label="Subject" name="subject" rules={[{ required: false, whitespace: true, message: ' ' }]}>
             <Input allowClear disabled={loading} />
           </Form.Item>
-          <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+          <Form.Item label="Body" name="body" rules={[{ required: false, whitespace: true, message: ' ' }]}>
             <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}
               style={{
                 padding: 0,

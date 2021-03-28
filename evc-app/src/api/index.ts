@@ -24,4 +24,4 @@ export * from './configController';
 export * from './dashboardController';
 export * from './userTagController';
 export * from './dataController';
-export * from './commissionController';
+export * from './commissionWithdrawalController';

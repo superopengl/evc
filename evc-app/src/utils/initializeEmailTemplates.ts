@@ -38,6 +38,21 @@ export async function initializeEmailTemplates() {
   contactEmailDef.locale = Locale.Engish;
   contactEmailDef.vars = ['website', 'name', 'contact', 'message'];
 
+  const commissionWithdrawalSubmittedEmailDef = new EmailTemplate();
+  commissionWithdrawalSubmittedEmailDef.key = EmailTemplateType.CommissionWithdrawalSubmitted;
+  commissionWithdrawalSubmittedEmailDef.locale = Locale.Engish;
+  commissionWithdrawalSubmittedEmailDef.vars = ['website', 'toWhom', 'referenceId'];
+
+  const commissionWithdrawalCompletedEmailDef = new EmailTemplate();
+  commissionWithdrawalCompletedEmailDef.key = EmailTemplateType.CommissionWithdrawalCompleted;
+  commissionWithdrawalCompletedEmailDef.locale = Locale.Engish;
+  commissionWithdrawalCompletedEmailDef.vars = ['website', 'toWhom', 'referenceId', 'comment'];
+
+  const commissionWithdrawalRejectedEmailDef = new EmailTemplate();
+  commissionWithdrawalRejectedEmailDef.key = EmailTemplateType.CommissionWithdrawalRejected;
+  commissionWithdrawalRejectedEmailDef.locale = Locale.Engish;
+  commissionWithdrawalRejectedEmailDef.vars = ['website', 'toWhom', 'referenceId', 'comment'];
+
   const entities = [
     signatureDef,
     signUpEmailDef,
@@ -45,7 +60,10 @@ export async function initializeEmailTemplates() {
     inviteUserEmailDef,
     googleSsoWelcomeEmailDef,
     deleteUserEmailDef,
-    contactEmailDef
+    contactEmailDef,
+    commissionWithdrawalSubmittedEmailDef,
+    commissionWithdrawalCompletedEmailDef,
+    commissionWithdrawalRejectedEmailDef,
   ];
 
   await getManager()
@@ -53,6 +71,6 @@ export async function initializeEmailTemplates() {
     .insert()
     .into(EmailTemplate)
     .values(entities)
-    .orIgnore()
+    .onConflict(`(key, locale) DO NOTHING`)
     .execute();
 }

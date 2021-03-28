@@ -13,6 +13,9 @@ import { htmlToText } from 'html-to-text';
 import { getConfigValue } from './configService';
 import { EmailLog } from '../entity/EmailLog';
 import errorToJson from 'error-to-json';
+import { EmailTemplateType } from '../types/EmailTemplateType';
+import { User } from '../entity/User';
+import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 
 let emailTransporter = null;
 
@@ -97,15 +100,38 @@ export async function sendEmail(req: EmailRequest, throws = false) {
     console.log('Sent out email to'.green, to);
   } catch (err) {
     console.log('Sent out email error'.red, errorToJson(err));
-    if(log) {
+    if (log) {
       log.error = err;
       await emailLogRepo.insert(log);
-    }else {
+    } else {
       logError(err, req, null, 'Sending email error', to, template, vars);
     }
     if (throws) {
       throw err;
     }
+  }
+}
+
+export async function sendEmailToUserIdWithoutWait(userId: string, template: EmailTemplateType, vars: object) {
+  try {
+    const user = await getRepository(User).findOne(userId, { relations: ['profile'] });
+    if (!user) {
+      return;
+    }
+    const toWhom = getEmailRecipientName(user);
+    const { profile: { email } } = user;
+    const request: EmailRequest = {
+      to: email,
+      template,
+      vars: {
+        ...vars,
+        toWhom
+      }
+    };
+    await sendEmail(request, false);
+  } catch (err) {
+    console.log('Sent out email error'.red, errorToJson(err));
+    logError(err, null, null, 'Sending email error', userId, template, vars);
   }
 }
 

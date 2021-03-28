@@ -9,6 +9,8 @@ import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
 import { getUtcNow } from '../utils/getUtcNow';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
+import { sendEmail, sendEmailToUserIdWithoutWait } from '../services/emailService';
+import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const searchCommissionWithdrawal = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -76,13 +78,14 @@ export const listMyCommissionWithdrawal = handlerWrapper(async (req, res) => {
 
 export const createCommissionWithdrawal = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
-  const { user: { id: userId } } = req as any;
+  const { user: { id: userId, profile: { email } } } = req as any;
   const entity = new CommissionWithdrawal();
+  const id = uuidv4();
   Object.assign(
     entity,
     req.body,
     {
-      id: uuidv4(),
+      id,
       userId,
     }
   );
@@ -105,6 +108,12 @@ export const createCommissionWithdrawal = handlerWrapper(async (req, res) => {
     }
   });
 
+  sendEmailToUserIdWithoutWait(
+    userId,
+    EmailTemplateType.CommissionWithdrawalSubmitted,
+    { referenceId: id }
+  );
+
   assert(hasEnoughCredit, 400, 'No enough credit');
 
   res.json(entity.id);
@@ -122,7 +131,7 @@ export const getCommissionWithdrawal = handlerWrapper(async (req, res) => {
   res.json(entity);
 });
 
-async function approveAndAdjustCredit(withdrawal: CommissionWithdrawal, comment) {
+async function completeAndAdjustCredit(withdrawal: CommissionWithdrawal, comment) {
   const { amount, userId } = withdrawal;
 
   assert(amount > 0, 400, `Amount must be a positive number`);
@@ -142,6 +151,7 @@ async function approveAndAdjustCredit(withdrawal: CommissionWithdrawal, comment)
       credit.id = uuidv4();
       credit.userId = userId;
       credit.amount = -amount;
+      credit.type = 'withdrawal';
 
       withdrawal.status = 'done';
       withdrawal.comment = comment;
@@ -169,8 +179,26 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
         withdrawal.comment = comment;
         withdrawal.handledAt = getUtcNow();
         await getManager().save(withdrawal);
+
+        sendEmailToUserIdWithoutWait(
+          withdrawal.userId,
+          EmailTemplateType.CommissionWithdrawalRejected,
+          { 
+            referenceId: withdrawal.id, 
+            comment: withdrawal.comment 
+          }
+        );
       } else if (status === 'done') {
-        await approveAndAdjustCredit(withdrawal, comment);
+        await completeAndAdjustCredit(withdrawal, comment);
+
+        sendEmailToUserIdWithoutWait(
+          withdrawal.userId,
+          EmailTemplateType.CommissionWithdrawalCompleted,
+          { 
+            referenceId: withdrawal.id, 
+            comment: withdrawal.comment 
+          }
+        );
       } else {
         assert(false, 400, `Unknown target status ${status}`);
       }

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Tooltip, Space, Pagination, Button } from 'antd';
+import { Divider, Space, Pagination, Button, Modal } from 'antd';
 import StockList from '../../components/StockList';
 import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
@@ -13,10 +13,7 @@ import * as queryString from 'query-string';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { listStockTags } from 'services/stockTagService';
 import PropTypes from 'prop-types';
-
-const ContainerStyled = styled.div`
-width: 100%;
-`;
+import {TagFilterButton} from 'components/TagFilterButton';
 
 const OverButton = styled(Button)`
 color: rgba(0, 0, 0, 0.85);
@@ -62,7 +59,7 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
-const StockListPage = (props) => {
+const StockRadarPage = (props) => {
 
   const { onItemClick } = props;
 
@@ -125,8 +122,8 @@ const StockListPage = (props) => {
     }
   }
 
-  const handleTagFilterChange = (tags) => {
-    searchByQueryInfo({ ...queryInfo, page: 1, tags });
+  const handleTagFilterChange = async (tags) => {
+    await searchByQueryInfo({ ...queryInfo, page: 1, tags });
   }
 
   const handlePaginationChange = (page, pageSize) => {
@@ -147,9 +144,10 @@ const StockListPage = (props) => {
 
 
 
+
   return (
     <>
-      <Space direction="vertical" style={{ width: '100%' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Space>
             <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
@@ -161,12 +159,14 @@ const StockListPage = (props) => {
             <Button type="default" onClick={handleToggleInValued}>
               {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
+            <Divider type="vertical" />
+           {tags && <TagFilterButton value={queryInfo.tags} group={true} onChange={handleTagFilterChange} tags={tags}/>}
           </Space>
           {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
         </Space>
-        {(tags) && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
-
       </Space>
+
+        <Divider />
       <StockList data={list} loading={loading} onItemClick={handleItemClick} />
       <Pagination
         current={queryInfo.page}
@@ -174,7 +174,7 @@ const StockListPage = (props) => {
         total={total}
         defaultCurrent={queryInfo.page}
         defaultPageSize={queryInfo.size}
-        pageSizeOptions={[10, 30, 60]}
+        pageSizeOptions={[10, 30, 60, 120]}
         showSizeChanger
         showQuickJumper
         showTotal={total => `Total ${total}`}
@@ -194,11 +194,11 @@ const StockListPage = (props) => {
   );
 };
 
-StockListPage.propTypes = {
+StockRadarPage.propTypes = {
   onItemClick: PropTypes.func
 };
 
-StockListPage.defaultProps = {
+StockRadarPage.defaultProps = {
 };
 
-export default withRouter(StockListPage);
+export default withRouter(StockRadarPage);

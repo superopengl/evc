@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer, Button, Typography, Alert, Space } from 'antd';
-import StockListPage from 'pages/Stock/StockListPage';
+import StockRadarPage from 'pages/Stock/StockRadarPage';
 import PropTypes from "prop-types";
 
 const { Text } = Typography;
@@ -38,7 +38,7 @@ export const StockGuestStockRadarDrawer = (props) => {
       height="85vh"
     >
 
-      <StockListPage onItemClick={onSymbolClick}/>
+      <StockRadarPage onItemClick={onSymbolClick}/>
     </Drawer>
   );
 };

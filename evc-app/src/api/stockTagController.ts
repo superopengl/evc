@@ -18,12 +18,18 @@ export const saveStockTag = handlerWrapper(async (req, res) => {
 export const listStockTags = handlerWrapper(async (req, res) => {
   // assertRole(req, 'member', 'admin', 'agent', 'free');
   const role = (req as any).user?.role;
-  const includesOfficialOnlyTag = [Role.Admin, Role.Agent].includes(role);
-  const query = includesOfficialOnlyTag ? {} : { where: { officialOnly: false } };
+  const isAdminOrAgent = [Role.Admin, Role.Agent].includes(role);
+  const query = isAdminOrAgent ? {} : { where: { officialOnly: false } };
   const list = await getRepository(StockTag).find({
     ...query,
-    order: { name: 'ASC' }
+    order: {
+      sortGroup: 'ASC',
+      name: 'ASC'
+    }
   });
+  if (!isAdminOrAgent) {
+    res.set('Cache-Control', `public, max-age=3600`);
+  }
   res.json(list);
 });
 

@@ -11,10 +11,12 @@ export class StockTag {
   createdAt?: Date;
 
   @Column()
-  @Index()
   name: string;
 
   @Column({ default: false })
   officialOnly: boolean;
+
+  @Column({default: 999999})
+  sortGroup: number;
 }
 

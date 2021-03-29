@@ -173,7 +173,7 @@ const AdminCommissionWithdrawalListPage = () => {
     {
 
       title: <>
-        <div>Application ID</div>
+        <div>Reference No.</div>
         <Input maxLength={36} onPressEnter={handleIdChange} onBlur={handleIdChange} allowClear />
       </>,
       dataIndex: 'id',

@@ -66,6 +66,10 @@ tr {
 `;
 
 const StyledCard = styled(Card)`
+.ant-card-head-title {
+  text-align: left;
+}
+
 &.over-valued {
   .ant-card-head {
     background: #ffffb8;

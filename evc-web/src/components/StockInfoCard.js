@@ -9,7 +9,7 @@ import { unwatchStock, watchStock, bellStock, unbellStock } from 'services/stock
 import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 import { LockFilled } from '@ant-design/icons';
-import { StockBellButton } from './StockBellButton';
+import { StockNoticeButton } from './StockNoticeButton';
 
 const { Text } = Typography;
 
@@ -139,7 +139,7 @@ const StockInfoCard = (props) => {
     type="inner"
     title={title ?? <StockName value={stock} />}
     extra={<Space>
-      {isMember && showBell && <StockBellButton value={belled} onChange={handleToggleBell} />}
+      {isMember && showBell && <StockNoticeButton value={belled} onChange={handleToggleBell} />}
       {isMember && showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
     </Space>}
     onClick={props.onClick}

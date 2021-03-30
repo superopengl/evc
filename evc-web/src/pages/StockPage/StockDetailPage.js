@@ -16,7 +16,7 @@ import TagSelect from 'components/TagSelect';
 import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
 import StockEditTagModal from 'components/StockEditTagModal';
 import { updateStock } from 'services/stockService';
-import { StockBellButton } from 'components/StockBellButton';
+import { StockNoticeButton } from 'components/StockNoticeButton';
 
 const { Paragraph } = Typography;
 
@@ -137,7 +137,7 @@ const StockDetailPage = (props) => {
 
           </Space>}
           extra={[
-            isMember ? <StockBellButton key="bell" size={20} value={belled} onChange={handleToggleBell} /> : null,
+            isMember ? <StockNoticeButton key="bell" size={20} value={belled} onChange={handleToggleBell} /> : null,
             isMemberOrFree ? <StockWatchButton key="watch" size={20} value={watched} onChange={handleToggleWatch} /> : null,
             isAdminOrAgent ? <Button key="tag" type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button> : null,
             isAdminOrAgent ? <Button key="delete" type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null

@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 
 
 const MyCommissionWithdrawalHistoryDrawer = (props) => {
-  const { visible } = props;
+  const { visible, onClose } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -39,6 +39,7 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
       maskClosable={true}
       closable={true}
       visible={visible}
+      onClose={onClose}
     >
       <List
         title={false}

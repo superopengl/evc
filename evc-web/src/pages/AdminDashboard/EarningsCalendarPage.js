@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Switch } from 'antd';
+import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Switch, Radio } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
@@ -42,7 +42,8 @@ const StyledTable = styled(Table)`
 }
 `;
 
-const EarningCalendarPage = props => {
+const EarningsCalendarPage = props => {
+  const { onSymbolClick } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [week, setWeek] = React.useState(0);
@@ -70,8 +71,8 @@ const EarningCalendarPage = props => {
     load(week);
   }, []);
 
-  const handleLogoClick = (symbol) => {
-    props.history.push(`/stock/${symbol}`);
+  const handleItemClick = (symbol) => {
+    onSymbolClick(symbol);
   }
 
   const handleWeekChange = async (change) => {
@@ -87,10 +88,10 @@ const EarningCalendarPage = props => {
       }}
       dataSource={list}
       renderItem={item => <Tooltip title={item.company} placement="top">
-        <SymbolLogoCard size="small" onClick={() => handleLogoClick(item.symbol)} >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <Text style={{ color: '#3273A4' }} strong>{item.symbol}</Text>
-            {showLogo ? <Image src={item.logoUrl} width={64} height="auto" preview={false} /> : <Text type="secondary">{item.company}</Text>}
+        <SymbolLogoCard size="small" onClick={() => handleItemClick(item.symbol)} >
+          <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <Text style={{ color: '#3273A4' }} strong>{item.symbol}</Text>
+            {showLogo ? <Image src={item.logoUrl} width={64} height="auto" preview={false} /> : <Text type="secondary"><small>{item.company}</small></Text>}
           </div>
         </SymbolLogoCard>
       </Tooltip>}
@@ -145,8 +146,8 @@ const EarningCalendarPage = props => {
     }
   ];
 
-  const handleToggleLogo = (checked) => {
-    setShowLogo(checked);
+  const handleToggleLogo = (e) => {
+    setShowLogo(e.target.value === 'logo');
   }
 
   return (
@@ -158,11 +159,10 @@ const EarningCalendarPage = props => {
           <Button type="primary" shape="circle" icon={<RightOutlined />} disabled={week >= 52 || loading} onClick={() => handleWeekChange(1)}></Button>
         </Space>
         <Space size="small">
-          Show logos
-        <Switch
-            style={{ marginLeft: 10 }}
-            defaultChecked={showLogo}
-            onChange={handleToggleLogo} />
+          <Radio.Group defaultValue="logo" buttonStyle="solid" onChange={handleToggleLogo}>
+            <Radio.Button value="logo">Show logo</Radio.Button>
+            <Radio.Button value="name">Company name</Radio.Button>
+          </Radio.Group>
         </Space>
       </Space>
       <StyledTable
@@ -179,8 +179,12 @@ const EarningCalendarPage = props => {
   );
 };
 
-EarningCalendarPage.propTypes = {};
+EarningsCalendarPage.propTypes = {
+  onSymbolClick: PropTypes.func,
+};
 
-EarningCalendarPage.defaultProps = {};
+EarningsCalendarPage.defaultProps = {
+  onSymbolClick: () => { }
+};
 
-export default withRouter(EarningCalendarPage);
+export default withRouter(EarningsCalendarPage);

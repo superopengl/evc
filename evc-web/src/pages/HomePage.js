@@ -14,6 +14,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { StockGuestStockRadarDrawer } from 'components/StockGuestStockRadarDrawer';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { HomeStockRadarArea } from 'components/homeAreas/HomeStockRadarArea';
+import { HomeEarningsCalendarArea } from 'components/homeAreas/HomeEarningsCalendarArea';
 
 const { Content } = Layout;
 
@@ -61,6 +62,7 @@ const HomePage = (props) => {
   const [selectedSymbol, setSelectedSymbol] = React.useState();
 
   const handleStockListSymbolClick = (symbol) => {
+    debugger;
     setSelectedSymbol(symbol);
   }
 
@@ -106,6 +108,9 @@ const HomePage = (props) => {
         </section>
         <section id="stock-radar">
           <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
+        </section>
+        <section id="earnings-calendars">
+          <HomeEarningsCalendarArea onSymbolClick={handleStockListSymbolClick} />
         </section>
         {/* <HashAnchorPlaceholder id="team" /> */}
         {/* <section><HomeTeamArea /></section> */}

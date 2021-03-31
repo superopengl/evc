@@ -85,12 +85,12 @@ const columnDef = [
   {
     title: 'Volume / Open Interest',
     dataIndex: 'voloi',
-    render: (value) => `${value} %`,
+    render: (value) => value,
   },
   {
     title: 'IV',
     dataIndex: 'iv',
-    render: (value) => value,
+    render: (value) => `${value} %`,
   },
   {
     title: 'Trade Date',

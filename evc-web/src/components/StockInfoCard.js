@@ -171,7 +171,7 @@ const StockInfoCard = (props) => {
     actions={actions}
   >
     <div align="start" style={{ display: 'flex', width: '100%', justifyContent: 'stretch' }}>
-      <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{stock.lastPrice ?? 'N/A'}</Text>
+      <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{stock.lastPrice ? (+stock.lastPrice).toFixed(2) : 'N/A'}</Text>
       <StyledTable style={{ flexGrow: 1 }}>
         <tbody>
           <tr>

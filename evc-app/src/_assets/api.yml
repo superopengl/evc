@@ -402,6 +402,17 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/guest_info:
+    get:
+      operationId: getStockForGuest
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/data_info:
     get:
       operationId: getStockDataInfo
@@ -416,6 +427,17 @@ paths:
   /stock/s/{symbol}/exists:
     get:
       operationId: existsStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/next_report_date:
+    get:
+      operationId: getStockNextReportDate
       parameters:
         - name: symbol
           in: path

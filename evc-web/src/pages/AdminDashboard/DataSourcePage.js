@@ -1,8 +1,9 @@
 import React from 'react';
-import { Typography, Space, Card } from 'antd';
+import { Typography, Space, Card, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { refreshMaterializedViews, flushCache } from 'services/dataService';
 import { LongRunningActionButton } from 'components/LongRunningActionButton';
+import { notify } from 'util/notify';
 
 const { Text } = Typography;
 
@@ -14,6 +15,12 @@ const DataSourcePage = () => {
   React.useEffect(() => {
     loadList();
   }, []);
+
+  const handlePutCallRatioUploadComplete = () => {
+    notify.info('Successfully uploaded put call ratio csv file', <>
+    You need to execute <Button type="primary" size="small">Refresh Materialized Views</Button> before all users can see the data.
+    </>);
+  }
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -93,6 +100,7 @@ DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/2
               buttonText="Put Call Ratio"
               type="upload"
               uploadAction="/admin/data/put_call_ratio"
+              onComplete={handlePutCallRatioUploadComplete}
             />
           </Space>
         }>

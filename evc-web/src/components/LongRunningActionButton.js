@@ -15,7 +15,7 @@ const { Text, Paragraph } = Typography;
 
 
 export const LongRunningActionButton = props => {
-  const { operationKey, confirmMessage, onOk, buttonText, type, uploadAction } = props;
+  const { operationKey, confirmMessage, onOk, buttonText, onComplete, type, uploadAction } = props;
 
   const [loading, setLoading] = React.useState(false);
   let ping$;
@@ -30,6 +30,7 @@ export const LongRunningActionButton = props => {
         if (!result) {
           ping$.unsubscribe();
           setLoading(false);
+          onComplete();
         }
       });
   }
@@ -116,6 +117,7 @@ LongRunningActionButton.propTypes = {
   confirmMessage: PropTypes.any,
   buttonText: PropTypes.string.isRequired,
   onOk: PropTypes.func.isRequired,
+  onComplete: PropTypes.func,
   uploadAction: PropTypes.string,
   type: PropTypes.oneOf(['button', 'upload'])
 };
@@ -123,5 +125,6 @@ LongRunningActionButton.propTypes = {
 LongRunningActionButton.defaultProps = {
   type: 'button',
   confirmMessage: 'This operation may take several minutes to complete. In the mean time, there is no functional impact when in progress.',
-  onOk: () => { }
+  onOk: () => { },
+  onComplete: () => {}
 };

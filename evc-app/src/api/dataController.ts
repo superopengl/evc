@@ -33,6 +33,11 @@ const formatUoaUploadRow = row => {
   return row;
 }
 
+const formatPutCallRatioUploadRow = row => {
+  row.date = moment(row.date, 'MM/DD/YY').toDate();
+  return row;
+}
+
 function handleCsvUpload(onRows: (rows: []) => Promise<void>, onFinish: () => Promise<void> = async () => { }) {
   return handlerWrapper(async (req, res) => {
     assertRole(req, 'admin', 'agent');
@@ -113,11 +118,12 @@ export const uploadResistanceCsv = handleCsvUpload(async rows => {
 })
 
 export const uploadPutCallRatioCsv = handleCsvUpload(async rows => {
+  const formattedRows = rows.map(formatPutCallRatioUploadRow);
   await getManager()
     .createQueryBuilder()
     .insert()
     .into(StockDailyPutCallRatio)
-    .values(rows as StockDailyPutCallRatio[])
+    .values(formattedRows as StockDailyPutCallRatio[])
     .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
     .execute();
 })

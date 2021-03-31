@@ -157,7 +157,7 @@ const TagSelect = (props) => {
   }
 
   if (readonly) {
-    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color="#3273A4">{x.label}</AntdTag>)}</>
+    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color="#00293d">{x.label}</AntdTag>)}</>
   }
 
   return <CreatableSelect

@@ -10,6 +10,7 @@ import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 import { LockFilled } from '@ant-design/icons';
 import { StockNoticeButton } from './StockNoticeButton';
+import { Divider } from 'antd';
 
 const { Text } = Typography;
 
@@ -90,13 +91,35 @@ const StyledCard = styled(Card)`
 
 `;
 
+const StyledGuestCover = styled.div`
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+// background-color: rgba(255,255,255,0.7);
+background-color: rgba(0,0,0,0.3);
+display: flex;
+flex-direction: column;
+
+  &, .ant-typography {
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: #eeeeee;
+  }
+  // transform: rotate(-15deg);
+`;
+
 const TooltipLabel = props => <Tooltip title={props.message}>
   <Text type="secondary">{props.children}</Text>
 </Tooltip>
 
 const HiddenNumber = props => {
   const list = new Array(props.count || 1).fill(null);
-  return list.map((x, i) => <Text className={`hidden-info`} key={i}><span style={{filter: 'blur(4px)'}}>123.40 ~ 567.89</span></Text>)
+  return list.map((x, i) => <Text className={`hidden-info`} key={i}><span style={{ filter: 'blur(4px)' }}>123.40 ~ 567.89</span></Text>)
 }
 
 const StockInfoCard = (props) => {
@@ -132,7 +155,7 @@ const StockInfoCard = (props) => {
   const { isOver, isUnder } = stock;
   const className = isOver ? 'over-valued' : isUnder ? 'under-valued' : null;
 
-  const cardComponent = <StyledCard
+  return <StyledCard
     size="small"
     className={className}
     bordered={false}
@@ -178,17 +201,14 @@ const StockInfoCard = (props) => {
       </StyledTable>
     </div>
 
+    {shouldHideData && <StyledGuestCover>
+      <LockFilled />
+      <Text>Full feature is available after pay</Text>
+        {/* {isGuest ?
+        <Link to="/signup" onClick={e => e.stopPropagation()}>Click to sign up</Link> :
+        <Link to="/account" onClick={e => e.stopPropagation()}>Click to upgrade</Link>} */}
+    </StyledGuestCover>}
   </StyledCard>
-
-  return shouldHideData ?
-    <Tooltip
-      title={<>Data is visible for paid member. {isGuest ? <Link to="/signup" onClick={e => e.stopPropagation()}>Click to sign up</Link> : <Link to="/account" onClick={e => e.stopPropagation()}>Click to upgrade</Link>}</>}
-    >
-      {cardComponent}
-    </Tooltip> :
-    <>{cardComponent}</>
-
-
 };
 
 StockInfoCard.propTypes = {

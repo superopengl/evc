@@ -36,7 +36,7 @@ margin-bottom: 0rem;
 width: 100%;
 text-align: center;
 padding: 4rem 2rem;
-background: #ffffff;
+// background: #5dd982;
 background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
 `;
 
@@ -60,18 +60,10 @@ export const HomeStockRadarArea = props => {
     <Container>
       <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
         <Title>Stock Radar - Preview</Title>
-        <Alert
-          message={<>
-          <Text style={{ fontStyle: 'italic', marginLeft: 12 }} type="success">
+          <Title level={5} style={{ fontStyle: 'italic'}}>
             This is Stock Radar preview. 
-            Full feature is available after sign up! 
-          </Text>
-            <big> 😉 </big>
-            <Link to="/signup">Sign Up Now</Link>
-          </>}
-          type="success" 
-          style={{marginBottom: 20}}
-          />
+            Full feature is available after <Link to="/signup"><Button>Sign Up</Button></Link>
+          </Title>
       </Space>
       <InnerContainer>
         <StockRadarPage onItemClick={onSymbolClick} />

@@ -20,6 +20,8 @@ const modifyVars = {
   '@heading-4-size': 'ceil(@font-size-base * 1.4)',
 };
 
+// menu sider rgb(0, 41, 61)
+
 module.exports = {
   eslint: {
     enable: true,

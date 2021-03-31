@@ -68,7 +68,7 @@ export const saveStockSupport = facatorySaveHandler(StockSupport);
 export const deleteStockSupport = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  await getRepository(StockSupport).softDelete(id);
+  await getRepository(StockSupport).delete(id);
   res.json();
 });
 
@@ -95,7 +95,7 @@ export const saveStockResistance = facatorySaveHandler(StockResistance);
 export const deleteStockResistance = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  await getRepository(StockResistance).softDelete(id);
+  await getRepository(StockResistance).delete(id);
   res.json();
 });
 

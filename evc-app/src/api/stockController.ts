@@ -43,6 +43,7 @@ import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import * as moment from 'moment-timezone';
 import * as _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
+import { existsQuery } from '../utils/existsQuery';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -277,44 +278,49 @@ const initilizedNewStockData = async (symbol) => {
   await refreshMaterializedView();
 }
 
-async function addAndInitializeStock(symbol, companyName): Promise<boolean> {
+async function addAndInitializeStock(symbol, companyName, stockTags) {
   const stock = new Stock();
   stock.symbol = symbol.toUpperCase();
   stock.company = companyName;
-
-  const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
-  if (stockTag) {
-    stock.tags = [stockTag];
-  }
+  stock.tags = stockTags;
 
   console.log(`Try auto-adding stock ${symbol}`);
-
   try {
-    const has = await getRepository(Stock).findOne(stock.symbol);
-    if (has) {
-      return false;
-    }
     await getRepository(Stock).save(stock);
     await syncStockEps(symbol, 5);
     await syncStockHistoricalClose(symbol, 200);
     await getAndFeedStockQuote(symbol);
 
     console.log(`Auto-added stock ${symbol} together with its EPS and its historical close prices`);
-    return true;
   } catch {
     // Does nothing
   }
-  return false;
 }
 
 async function addAndInitlizedStockList(list: { symbol: string, companyName: string }[]) {
-  let hasAddedNew = false;
-  for (const item of list) {
-    hasAddedNew = hasAddedNew || await addAndInitializeStock(item.symbol, item.companyName);
+  const symbols = list.map(x => x.symbol);
+  const existingOnes = await getRepository(Stock)
+    .find({
+      where: {
+        symbol: In(symbols)
+      },
+      select: [
+        'symbol'
+      ]
+    });
+
+  const newOnes = _.differenceBy(list, existingOnes, 'symbol');
+  if (!newOnes.length) {
+    return;
   }
-  if (hasAddedNew) {
-    await refreshMaterializedView();
+
+  const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
+  const tags = stockTag ? [stockTag] : [];
+
+  for (const item of newOnes) {
+    await addAndInitializeStock(item.symbol, item.companyName, tags);
   }
+  await refreshMaterializedView();
 }
 
 

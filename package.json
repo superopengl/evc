@@ -14,6 +14,7 @@
     "docker:push": "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 115607939215.dkr.ecr.us-east-1.amazonaws.com; docker tag evc:latest 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest; docker push 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest",
     "ecs:update:portal": "aws ecs update-service --cluster evc --service evc-portal --force-new-deployment --region us-east-1",
     "ecs:update:daemon": "aws ecs update-service --cluster evc --service evc-daemon-price --force-new-deployment --region us-east-1",
+    "sync:schema": "aws ecs run-task --cluster evc --task-definition evc-sync-schema:2 --region us-east-1 --launch-type \"FARGATE\" --network-configuration \"awsvpcConfiguration={subnets=[subnet-cfd34dee],securityGroups=[sg-6add9660],assignPublicIp=ENABLED}\"",
     "flush": "aws cloudfront create-invalidation --distribution-id E3CEI7BQGY3KY1 --paths \"/*\"",
     "release": "pnpm docker:build && pnpm docker:push && pnpm ecs:update:portal && pnpm ecs:update:daemon && pnpm flush",
     "perf:100": "loadtest -c 100 --rps 200 https://easyvaluecheck.com"

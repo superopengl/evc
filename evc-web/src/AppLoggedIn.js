@@ -115,7 +115,7 @@ const ROUTES = [
   },
   {
     path: '/data',
-    name: 'Data Upload',
+    name: 'Data Management',
     icon: <UploadOutlined />,
     roles: ['admin', 'agent']
   },

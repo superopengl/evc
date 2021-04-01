@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image, Skeleton, Tooltip } from 'antd';
+import { List, Typography, Space, Image, Skeleton, Table } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
@@ -8,10 +8,11 @@ import { TimeAgo } from 'components/TimeAgo';
 import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
 import ReactDOM from 'react-dom';
+import Icon from '@ant-design/icons';
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
-const Container = styled(Space)`
+const Container = styled.div`
 width: 100%;
 
 .ant-list-item {
@@ -72,7 +73,7 @@ const StockNewsPanel = (props) => {
   if (loading) {
     return <List
       dataSource={[0, 0, 0]}
-      renderItem={item => (
+      renderItem={() => (
         <List.Item>
           <List.Item.Meta
             avatar={<Skeleton.Image />}

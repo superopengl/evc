@@ -16,7 +16,7 @@ import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSourceService';
 
 import { StockRangeTimelineEditor } from '../pages/Stock/StockRangeTimelineEditor';
-import StockEpsTimelineEditor from '../pages/Stock/StockEpsTimelineEditor';
+import StockEpsAdminEditor from '../pages/Stock/StockEpsAdminPanel';
 import { StockFairValueEditor } from '../pages/Stock/StockFairValueEditor';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import StockDataInfoPanel from './StockDataInfoPanel';
@@ -59,6 +59,11 @@ const ColInnerCard = props => {
     type="inner"
     bordered={false}
     size="small"
+    bodyStyle={{
+      maxHeight: 400,
+      overflow:'auto',
+
+    }}
     {...other}
   >
     {props.children}
@@ -109,7 +114,7 @@ const StockAdminPanel = (props) => {
       </Col>
       <Col flex="auto">
         <ColInnerCard title="EPS">
-          <StockEpsTimelineEditor
+          <StockEpsAdminEditor
             symbol={symbol}
             onLoadList={() => listStockEps(symbol)}
             onSaveNew={values => saveStockEps(symbol, values)}

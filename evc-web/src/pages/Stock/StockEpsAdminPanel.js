@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { List, Typography, Space, Button } from 'antd';
+import { List, Typography, Space, Button, Tooltip } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
@@ -9,7 +9,8 @@ import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { syncStockEps } from 'services/stockService';
-const {Text} = Typography;
+import { SyncOutlined } from '@ant-design/icons';
+const { Text } = Typography;
 
 const Container = styled.div`
   .current-published {
@@ -18,7 +19,7 @@ const Container = styled.div`
 `;
 
 
-const StockEpsTimelineEditor = (props) => {
+const StockEpsAdminEditor = (props) => {
   const { onLoadList, onSaveNew, onDelete, onChange, onSelected } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -73,15 +74,19 @@ const StockEpsTimelineEditor = (props) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Fetch Last 4 EPS</Button>
-      <StockEpsInput onSave={handleSave} disabled={loading} />
+      <Space size="small" style={{ width: '100%', justifyContent: 'space-between' }}>
+        <StockEpsInput onSave={handleSave} disabled={loading} />
+        <Tooltip title="Fetch last 4 EPS from IEX API">
+          <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading} icon={<SyncOutlined />}></Button>
+        </Tooltip>
+      </Space>
       <List
         dataSource={list}
         loading={loading}
         itemLayout="horizontal"
         rowKey="id"
         size="small"
-        locale={{emptyText: ' '}}
+        locale={{ emptyText: ' ' }}
         renderItem={(item) => (
           <List.Item
             onClick={() => onSelected(item)}
@@ -95,10 +100,10 @@ const StockEpsTimelineEditor = (props) => {
               : item === currentItem ? <FlagOutlined /> : null}
             </div> */}
             <List.Item.Meta
-              description={<Space style={{width: '100%', justifyContent: 'space-between'}}>
+              description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
                 {/* <Text type="secondary">{item.year} Q{item.quarter}</Text> */}
                 <Text type="secondary"><small>{moment(item.reportDate).format('D MMM YYYY')}</small></Text>
-                <MoneyAmount symbol="" value={item.value}/>
+                <MoneyAmount symbol="" value={item.value} />
               </Space>}
             />
           </List.Item>
@@ -108,7 +113,7 @@ const StockEpsTimelineEditor = (props) => {
   </Container>
 }
 
-StockEpsTimelineEditor.propTypes = {
+StockEpsAdminEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
@@ -118,10 +123,10 @@ StockEpsTimelineEditor.propTypes = {
   symbol: PropTypes.string.isRequired,
 };
 
-StockEpsTimelineEditor.defaultProps = {
+StockEpsAdminEditor.defaultProps = {
   showTime: true,
-  onChange: () => {},
+  onChange: () => { },
   onSelected: () => { },
 };
 
-export default StockEpsTimelineEditor;
+export default StockEpsAdminEditor;

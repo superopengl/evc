@@ -13,7 +13,7 @@ import { Skeleton } from 'antd';
 const { Text } = Typography;
 
 const TooltipLabel = props => <Tooltip title={props.message}>
-  <Text type="secondary"><small>{props.children}</small></Text>
+  <Text type="secondary">{props.children}</Text>
 </Tooltip>
 
 const StockEvcInfoPanel = (props) => {
@@ -40,22 +40,22 @@ const StockEvcInfoPanel = (props) => {
   }, []);
 
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Space direction="vertical" style={{ width: '100%' }}>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
         {loading ? <Skeleton.Input size="small" style={{width: 150}} active/> : <NumberRangeDisplay className="number" lo={data.fairValueLo} hi={data.fairValueHi} empty={<Text type="warning"><small>N/A Cannot calculate</small></Text>} />}
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="How to use support">Support</TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{width: 150}} active/> : <Space direction="vertical" size="small" style={{ alignItems: 'flex-end' }}>
+        {loading ? <Skeleton.Input size="small" style={{width: 150}} active/> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
           {data.supports?.map((s, i) => <NumberRangeDisplay className="number" key={i} lo={s.lo} hi={s.hi} />)}
-        </Space>}
+        </div>}
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{width: 150}} active/> : <Space direction="vertical" size="small" style={{ alignItems: 'flex-end' }}>
+        {loading ? <Skeleton.Input size="small" style={{width: 150}} active/> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
           {data.resistances?.map((r, i) => <NumberRangeDisplay className="number" key={i} lo={r.lo} hi={r.hi} />)}
-        </Space>}
+        </div>}
       </Space>
     </Space>
   );

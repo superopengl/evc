@@ -9,12 +9,19 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
     .createQueryBuilder()
     .from(q => q
       .from(Stock, 's')
-      .leftJoin(StockHistoricalTtmEps, 'eps', 's.symbol = eps.symbol')
+      .leftJoin(q => q
+        .from(StockHistoricalTtmEps, 'subeps')
+        .select([
+          'symbol',
+          'UNNEST(ARRAY["reportDate", "reportDate" + 30, "reportDate" + 60]) as "reportDate"'
+        ]),
+        'eps', 's.symbol = eps.symbol')
       .leftJoin(StockComputedPe90, 'pe', 's.symbol = pe.symbol AND pe.date <= eps."reportDate"')
+      .where('eps."reportDate" <= CURRENT_DATE')
       .select([
         's.symbol as symbol',
         'eps."reportDate" as "reportDate"',
-        'eps."ttmEps"',
+        'pe."ttmEps" as "ttmEps"',
         'pe.pe as pe',
         'pe.date as "peDate"',
         'pe."peLo" as "peLo"',

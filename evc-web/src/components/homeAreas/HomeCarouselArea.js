@@ -1,15 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Space, Row, Col, Modal, Drawer } from 'antd';
-import { Link, withRouter } from 'react-router-dom';
+import { Typography, Button, Space, Row, Col } from 'antd';
+import { withRouter } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
-import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { StockSearchInput } from 'components/StockSearchInput';
-import { LocaleSelector } from 'components/LocaleSelector';
-import { StockGuestPreviewDrawer } from 'components/StockGuestPreviewDrawer';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 const { Title, Paragraph } = Typography;

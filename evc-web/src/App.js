@@ -12,7 +12,6 @@ import Error404 from 'pages/Error404';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
-import BlogsPage from 'pages/BlogsPage';
 import { ContactWidget } from 'components/ContactWidget';
 import { getEventSource } from 'services/eventSourceService';
 import { Subject } from 'rxjs';
@@ -90,7 +89,6 @@ const App = () => {
       <ConfigProvider locale={locale}>
         <BrowserRouter basename="/">
           <Switch>
-            <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />

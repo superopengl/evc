@@ -2,44 +2,43 @@ import React from 'react';
 import 'antd/dist/antd.less';
 import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
-import UserListPage from 'pages/User/UserListPage';
 import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
-import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import StockRadarPage from 'pages/Stock/StockRadarPage';
 import StockWatchListPage from 'pages/Stock/StockWatchListPage';
-import TagsSettingPage from 'pages/TagsSettingPage/TagsSettingPage';
-import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
-import ConfigListPage from 'pages/Config/ConfigListPage';
-import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
-import TranslationListPage from 'pages/Translation/TranslationListPage';
 import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
 import Icon, {
   UploadOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined, AlertOutlined,
-  LeftCircleOutlined, RightCircleOutlined
-} from '@ant-design/icons';
+  DashboardOutlined, QuestionOutlined, AlertOutlined} from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { Avatar, Space, Dropdown, Menu, Typography, Modal, Button } from 'antd';
-import ChangePasswordModal from 'pages/ChangePasswordModal';
+import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
-import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
-import { Route, Switch } from 'react-router-dom';
-import { GiReceiveMoney, GiRadarSweep, GiPayMoney } from 'react-icons/gi';
+import { Switch } from 'react-router-dom';
+import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
 import { BsCalendar } from 'react-icons/bs';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
-import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
-import UnusualOptionsActivityPage from 'pages/AdminDashboard/UnusualOptionsActivityPage';
 import EarnCommissionModal from 'pages/EarnCommissionModal';
-import AdminCommissionWithdrawalListPage from 'pages/CommissionWithdrawal/AdminCommissionWithdrawalListPage';
-import EarningsCalendarPage from 'pages/AdminDashboard/EarningsCalendarPage';
+import loadable from '@loadable/component'
+
+const AdminCommissionWithdrawalListPage = loadable(() => import('pages/CommissionWithdrawal/AdminCommissionWithdrawalListPage'));
+const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
+const ReferralGlobalPolicyListPage = loadable(() => import('pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage'));
+const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
+const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
+const TranslationListPage = loadable(() => import('pages/Translation/TranslationListPage'));
+const UserListPage = loadable(() => import('pages/User/UserListPage'));
+const MyAccountPage = loadable(() => import('pages/MyAccount/MyAccountPage'));
+const ChangePasswordModal = loadable(() => import('pages/ChangePasswordModal'));
+const UnusualOptionsActivityPage = loadable(() => import('pages/AdminDashboard/UnusualOptionsActivityPage'));
+const DataSourcePage = loadable(() => import('pages/AdminDashboard/DataSourcePage'));
+const EarningsCalendarPage = loadable(() => import('pages/AdminDashboard/EarningsCalendarPage'));
 
 const { Link: LinkText } = Typography;
 
@@ -292,7 +291,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
 
       <RoleRoute visible={true} exact path="/earnings_calendar" component={() => <EarningsCalendarPage onSymbolClick={symbol => props.history.push(`/stock/${symbol}`)} />} />
-      <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
+      {/* <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} /> */}
       <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />

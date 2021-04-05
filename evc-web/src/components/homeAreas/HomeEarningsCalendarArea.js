@@ -74,3 +74,5 @@ HomeEarningsCalendarArea.propTypes = {
 HomeEarningsCalendarArea.defaultProps = {
   onSymbolClick: () => { }
 };
+
+export default HomeEarningsCalendarArea;

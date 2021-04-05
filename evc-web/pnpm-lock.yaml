@@ -2,6 +2,7 @@ dependencies:
   '@ant-design/charts': 1.1.1_react-dom@17.0.2+react@17.0.2
   '@ant-design/icons': 4.6.2_react-dom@17.0.2+react@17.0.2
   '@ant-design/pro-layout': 6.16.0_3afa11b47cae6a95b7c5ede31aafb0f4
+  '@loadable/component': 5.14.1_react@17.0.2
   '@react-hook/window-size': 3.0.7_react@17.0.2
   '@stripe/react-stripe-js': 1.4.0_f30f2f0cafa8e941d254d17589e43ca8
   '@stripe/stripe-js': 1.13.2
@@ -2132,6 +2133,19 @@ packages:
       node: '>= 10.14.2'
     resolution:
       integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==
+  /@loadable/component/5.14.1_react@17.0.2:
+    dependencies:
+      '@babel/runtime': 7.13.10
+      hoist-non-react-statics: 3.3.2
+      react: 17.0.2
+      react-is: 16.13.1
+    dev: false
+    engines:
+      node: '>=8'
+    peerDependencies:
+      react: '>=16.3.0'
+    resolution:
+      integrity: sha512-UQBZfZrp1FLTf8RNhljXNHFNY4QhAA1L2+GOEeABBFre9TD0aFyQh3Sai5QxcOfy+FTbjIfti5iHaNRR7yUzEQ==
   /@nodelib/fs.scandir/2.1.4:
     dependencies:
       '@nodelib/fs.stat': 2.0.4
@@ -15187,6 +15201,7 @@ specifiers:
   '@ant-design/icons': ^4.5.0
   '@ant-design/pro-layout': ^6.14.5
   '@craco/craco': ^6.1.1
+  '@loadable/component': ^5.14.1
   '@react-hook/window-size': ^3.0.7
   '@stripe/react-stripe-js': ^1.2.2
   '@stripe/stripe-js': ^1.12.1

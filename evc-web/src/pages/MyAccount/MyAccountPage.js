@@ -1,4 +1,4 @@
-import { Card, Button, Modal, Space, Typography, Row, Col, Divider } from 'antd';
+import { Card, Button, Modal, Space, Typography, Row, Col } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { WarningOutlined } from '@ant-design/icons';
@@ -6,22 +6,21 @@ import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { getSubscriptionName } from 'util/getSubscriptionName';
-import PaymentModal from 'components/checkout/PaymentModal';
 import { cancelSubscription, getMyCurrentSubscription } from 'services/subscriptionService';
 import { TimeAgo } from 'components/TimeAgo';
-import { PageHeader } from 'antd';
-import { Tag } from 'antd';
 import MoneyAmount from 'components/MoneyAmount';
 import { getMyAccount, listMyCreditHistory } from 'services/accountService';
 import ReactDOM from 'react-dom';
 import ReferralLinkInput from 'components/ReferralLinkInput';
-import CreditHistoryListModal from 'components/CreditHistoryListModal';
-import MySubscriptionHistoryDrawer from './MySubscriptionHistoryDrawer';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
-import CommissionWithdrawalForm from 'pages/CommissionWithdrawal/CommissionWithdrawalForm';
-import MyCommissionWithdrawalHistoryDrawer from 'pages/CommissionWithdrawal/MyCommissionWithdrawalHistoryDrawer';
+import loadable from '@loadable/component'
+
+const PaymentModal = loadable(() => import('components/checkout/PaymentModal'));
+const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListModal'));
+const MySubscriptionHistoryDrawer = loadable(() => import('./MySubscriptionHistoryDrawer'));
+const CommissionWithdrawalForm = loadable(() => import('pages/CommissionWithdrawal/CommissionWithdrawalForm'));
+const MyCommissionWithdrawalHistoryDrawer = loadable(() => import('pages/CommissionWithdrawal/MyCommissionWithdrawalHistoryDrawer'));
 
 const { Paragraph, Text, Title } = Typography;
 

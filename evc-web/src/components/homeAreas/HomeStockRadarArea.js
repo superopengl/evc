@@ -79,3 +79,5 @@ HomeStockRadarArea.propTypes = {
 HomeStockRadarArea.defaultProps = {
   onSymbolClick: () => { }
 };
+
+export default HomeStockRadarArea;

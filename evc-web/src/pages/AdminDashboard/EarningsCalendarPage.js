@@ -21,6 +21,8 @@ cursor: pointer;
   background-color: rgb(250,250,250);
 }
 
+// margin: 4px 0;
+
 .ant-card-body {
   padding: 8px;
 }
@@ -87,7 +89,7 @@ const EarningsCalendarPage = props => {
         <SymbolLogoCard size="small" onClick={() => handleItemClick(item.symbol)} >
           <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <Text style={{ color: '#3273A4' }} strong>{item.symbol}</Text>
-            {showLogo ? <Image src={item.logoUrl} width={64} height="auto" preview={false} /> : <Text type="secondary"><small>{item.company}</small></Text>}
+            {showLogo ? <Image src={item.logoUrl} width={64} height="auto" preview={false} style={{width: 64}}/> : <Text type="secondary"><small>{item.company}</small></Text>}
           </div>
         </SymbolLogoCard>
       </Tooltip>}

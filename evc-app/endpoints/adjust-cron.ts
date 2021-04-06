@@ -27,7 +27,7 @@ const defs = [
     },
     {
         name: 'daily-earnings-calendar',
-        description: 'Daily earings calendar',
+        description: 'Daily earnings calendar',
         startTimeNY: ['0:30', '13:30'],
         // AlphaVantage
     },

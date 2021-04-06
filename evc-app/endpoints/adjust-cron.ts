@@ -42,7 +42,7 @@ const defs = [
         description: 'Daily putCallRatio',
         startTimeNY: '16:10',
         // IEX
-    }
+    },
 ];
 
 function getDescription(data) {

@@ -21,9 +21,9 @@ import * as _ from 'lodash';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
-  .map(x => x.replace(/[\/ ]/g, ''))
-  .map((w, i) => i === 0 ? w.toLowerCase() : _.capitalize(w))
-  .join('');
+    .map(x => x.replace(/[\/ ]/g, ''))
+    .map((w, i) => i === 0 ? w.toLowerCase() : _.capitalize(w))
+    .join('');
 }
 
 const formatUoaUploadRow = row => {
@@ -97,22 +97,64 @@ export const flushCache = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const uploadSupportCsv = handleCsvUpload(async rows => {
+function parseLoHi(strData) {
+  assert(strData?.trim(), 400, `Empty lo-hi pair value`)
+  const [loStr, hiStr] = strData.split('-');
+  const lo = +(loStr?.trim());
+  let hi = +(hiStr?.trim());
+  if(_.isNaN(hi)) {
+    hi = lo;
+  }
+  assert(_.isFinite(lo) && _.isFinite(hi), 400, `Invalid lo-hi pair value ${strData}`);
+  return { lo, hi };
+}
+
+function formatSupportResistanceRowsToEntites(rows) {
+  const supports: StockSupport[] = [];
+  const resistances: StockResistance[] = [];
+  let currentSymbol;
+  for (const row of rows) {
+    const { symbol, support, resistance } = row;
+    currentSymbol = symbol || currentSymbol;
+    const supportData = support?.trim();
+    const resistanceData = resistance?.trim();
+    assert(currentSymbol, 400, 'Cannot find symbol');
+    assert(supportData || resistanceData, 400, 'Neither support nor resistance is provided');
+    if (supportData) {
+      const { lo, hi } = parseLoHi(supportData);
+      const entity = new StockSupport();
+      entity.symbol = currentSymbol;
+      entity.lo = lo;
+      entity.hi = hi;
+      supports.push(entity);
+    }
+    if (resistanceData) {
+      const { lo, hi } = parseLoHi(resistanceData);
+      const entity = new StockResistance();
+      entity.symbol = currentSymbol;
+      entity.lo = lo;
+      entity.hi = hi;
+      resistances.push(entity);
+    }
+  }
+
+  return { supports, resistances };
+}
+
+export const uploadSupportResistanceCsv = handleCsvUpload(async rows => {
+  const { supports, resistances } = formatSupportResistanceRowsToEntites(rows);
   await getManager()
     .createQueryBuilder()
     .insert()
     .into(StockSupport)
-    .values(rows as StockSupport[])
+    .values(supports)
     .orIgnore()
     .execute();
-})
-
-export const uploadResistanceCsv = handleCsvUpload(async rows => {
   await getManager()
     .createQueryBuilder()
     .insert()
     .into(StockResistance)
-    .values(rows as StockResistance[])
+    .values(resistances)
     .orIgnore()
     .execute();
 })

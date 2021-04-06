@@ -5,7 +5,7 @@ import { refreshMaterializedViews, flushCache } from 'services/dataService';
 import { LongRunningActionButton } from 'components/LongRunningActionButton';
 import { notify } from 'util/notify';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const DataSourcePage = () => {
 
@@ -31,26 +31,26 @@ const DataSourcePage = () => {
         extra={
           <Space>
             <LongRunningActionButton
-              operationKey="upload-support-csv"
-              buttonText="Support"
+              operationKey="upload-support-resistance-csv"
+              buttonText="Support / Resistance"
               type="upload"
-              uploadAction="/admin/data/support"
-            />
-            <LongRunningActionButton
-              operationKey="upload-resistance-csv"
-              buttonText="Resistance"
-              type="upload"
-              uploadAction="/admin/data/resistance"
+              uploadAction="/admin/data/sr"
             />
           </Space>
         }>
-        Bulk upload from CSV file. The CSV file must have a header row with three columns <Text code>symbol</Text>, <Text code>lo</Text>, <Text code>hi</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once. A sample is as below.
+          <Paragraph>
+            Bulk upload from CSV file. The CSV file must have a header row with three columns <Text code>Symbol</Text>, <Text code>Support</Text>, <Text code>Resistance</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once.
+          </Paragraph>
+          <Paragraph>
+            Missing <Text code>Symbol</Text> column value will carry over the the cloest symbol value from top. The <Text code>Symbol</Text> value in the first data line is required). See below sample. 
+          </Paragraph>
+         
           <Text><pre><small>
-          {`Symbol,lo,hi
-AAPL,120,150
-AAPL,160,180
-GOOG,1000,2000
-GOOG,2100,2200`}
+          {`Symbol,Support,Resistance
+AAPL,120,150-160
+,,180-190
+GOOG,1000-1100,2000
+,2100-2200,2200-2300`}
         </small> </pre></Text>
       </Card>
 
@@ -80,7 +80,12 @@ GOOG,2100,2200`}
           </Space>
         }
       >
+        <Paragraph>
         Bulk upload from CSV file. The CSV file must have a header row as below.
+        </Paragraph>
+        <Paragraph>
+          The csv uploads for Unusual Options Activity do not handle duplicate records. Duplicated upload will cause the same data appear multiple time.
+        </Paragraph>
           <Text><pre><small>
           {`Symbol,Price,Type,Strike,"Exp Date",DTE,Bid,Midpoint,Ask,Last,Volume,"Open Int",Vol/OI,IV,Time
 CCJ,16.5,Call,35,09/17/21,172,0.36,0.37,0.38,0.38,15103,256,59,74.80%,03/29/21
@@ -104,7 +109,7 @@ DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/2
             />
           </Space>
         }>
-        Bulk upload from CSV file. The CSV file must have a header row as below.
+        Bulk upload Put Call Ratio data from CSV file. The CSV file must have a header row as below (double quote <Text code>"</Text> is required). <Text code>Symbol</Text> and <Text code>Date</Text> are used as the primary key. Duplicate records will be ignored during the upload.
           <Text><pre><small>
           {`Symbol,Date,"Put Call Ratio"
 AAPL,09/17/21,0.3

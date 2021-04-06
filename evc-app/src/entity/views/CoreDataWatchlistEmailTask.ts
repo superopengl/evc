@@ -10,7 +10,7 @@ import { CoreDataPreviousSnapshot } from '../CoreDataPreviousSnapshot';
     .createQueryBuilder()
     .from(StockWatchList, 'swt')
     .where(`belled IS TRUE`)
-    .innerJoin(User, 'u', 'u.id = swt."userId"')
+    .innerJoin(User, 'u', 'u.id = swt."userId" AND u."deletedAt" IS NUll')
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .innerJoin(CoreDataLatestSnapshot, 'lts', 'lts.symbol = swt.symbol')
     .leftJoin(CoreDataPreviousSnapshot, 'pre', 'lts.symbol = pre.symbol')

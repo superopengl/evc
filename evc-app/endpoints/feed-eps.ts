@@ -108,17 +108,21 @@ start(JOB_NAME, async () => {
     }
   }
 
-  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
-
-  // Scrub supports and resistance
-  await scrubSupports();
-  await scrubResistances();
-
-  // Send watchlist emails if core data change detected.
-  await sendCoreDataChangedEmails();
-  await promoteLatestSnapshotToPreviousSnapshot();
-
   for (const err of failed) {
     console.error(err);
   }
+
+  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+
+  // Scrub supports and resistance
+  console.log(`Scrubing supports`)
+  await scrubSupports();
+  console.log(`Scrubing resistance`)
+  await scrubResistances();
+
+  // Send watchlist emails if core data change detected.
+  console.log(`Sending watchlist core change emails`)
+  await sendCoreDataChangedEmails();
+  await promoteLatestSnapshotToPreviousSnapshot();
+
 });

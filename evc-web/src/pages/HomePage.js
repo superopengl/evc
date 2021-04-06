@@ -114,7 +114,6 @@ const HomePage = (props) => {
           <HomeEarningsCalendarArea onSymbolClick={handleStockListSymbolClick} />
         </section>
         {/* <HashAnchorPlaceholder id="team" /> */}
-        {/* <section><HomeTeamArea /></section> */}
         <HomeFooter />
       </ContentStyled>
       <StockGuestPreviewDrawer

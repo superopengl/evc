@@ -88,7 +88,6 @@ const App = () => {
 
   React.useEffect(() => {
     if (user !== contextValue.user) {
-      debugger;
       startEventSource();
 
       setContextValue({

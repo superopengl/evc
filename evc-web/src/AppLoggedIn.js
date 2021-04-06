@@ -2,31 +2,30 @@ import React from 'react';
 import 'antd/dist/antd.less';
 import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
-import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
-import StockRadarPage from 'pages/Stock/StockRadarPage';
-import StockWatchListPage from 'pages/Stock/StockWatchListPage';
 import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
 import Icon, {
   UploadOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
   DashboardOutlined, QuestionOutlined, AlertOutlined} from '@ant-design/icons';
-import { Link, withRouter, Redirect } from 'react-router-dom';
-import { logout } from 'services/authService';
-import { reactLocalStorage } from 'reactjs-localstorage';
-import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
-import HeaderStockSearch from 'components/HeaderStockSearch';
-import styled from 'styled-components';
-import ProfileModal from 'pages/Profile/ProfileModal';
-import ContactForm from 'components/ContactForm';
-import AboutDrawer from 'pages/About/AboutDrawer';
-import { Switch } from 'react-router-dom';
-import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
-import { BsCalendar } from 'react-icons/bs';
-import { FaMoneyBillWave } from 'react-icons/fa';
-import { BiDollar } from 'react-icons/bi';
-import EarnCommissionModal from 'pages/EarnCommissionModal';
-import loadable from '@loadable/component'
-
+  import { Link, withRouter, Redirect } from 'react-router-dom';
+  import { logout } from 'services/authService';
+  import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
+  import HeaderStockSearch from 'components/HeaderStockSearch';
+  import styled from 'styled-components';
+  import ProfileModal from 'pages/Profile/ProfileModal';
+  import ContactForm from 'components/ContactForm';
+  import AboutDrawer from 'pages/About/AboutDrawer';
+  import { Switch } from 'react-router-dom';
+  import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
+  import { BsCalendar } from 'react-icons/bs';
+  import { FaMoneyBillWave } from 'react-icons/fa';
+  import { BiDollar } from 'react-icons/bi';
+  import EarnCommissionModal from 'pages/EarnCommissionModal';
+  import loadable from '@loadable/component'
+  
+const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
+const StockWatchListPage = loadable(() => import('pages/Stock/StockWatchListPage'));
+const StockRadarPage = loadable(() => import('pages/Stock/StockRadarPage'));
 const AdminCommissionWithdrawalListPage = loadable(() => import('pages/CommissionWithdrawal/AdminCommissionWithdrawalListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ReferralGlobalPolicyListPage = loadable(() => import('pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage'));
@@ -188,7 +187,6 @@ const AppLoggedIn = props => {
     await logout();
     // reactLocalStorage.clear();
     setUser(null);
-    // debugger;
     history.push('/');
   }
 

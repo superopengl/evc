@@ -12,6 +12,8 @@ import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
 import { Link } from 'react-router-dom';
 import { LocaleSelector } from 'components/LocaleSelector';
 import loadable from '@loadable/component'
+import { getDefaultLocale } from 'util/getDefaultLocale';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
@@ -61,6 +63,7 @@ position: absolute;
 const HomePage = (props) => {
 
   const [selectedSymbol, setSelectedSymbol] = React.useState();
+  const context = React.useContext(GlobalContext);
 
   const handleStockListSymbolClick = (symbol) => {
     debugger;
@@ -73,6 +76,10 @@ const HomePage = (props) => {
       block: "start",
       inline: "nearest"
     });
+  }
+
+  const handleLocaleChange = locale => {
+    context.setLocale(locale);
   }
 
   return (
@@ -92,7 +99,7 @@ const HomePage = (props) => {
               <Button size="large" type="link" onClick={() => scrollToElement('#pricing')}>Pricing</Button>
               {/* <Link to="/signup"><Button size="large" type="link">Sign Up</Button></Link> */}
               <Link to="/login"><Button size="large" type="link">Login</Button></Link>
-              <LocaleSelector bordered={false} style={{ color: 'white', width: 100 }} size="large" defaultValue="en-US" />
+              <LocaleSelector bordered={false} style={{ color: 'white', width: 100 }} size="large" defaultValue={getDefaultLocale()} onChange={handleLocaleChange}/>
             </Space>
           </HeadMenu>
         </div>

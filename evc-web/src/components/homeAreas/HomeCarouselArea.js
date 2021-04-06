@@ -2,14 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Space, Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { useWindowWidth } from '@react-hook/window-size'
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { StockSearchInput } from 'components/StockSearchInput';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 
 const { Title, Paragraph } = Typography;
-
 
 const Container = styled.div`
 // border-bottom: 1px solid #f0f0f0;
@@ -68,13 +67,7 @@ const SignUpButton = styled(Button)`
 
 const HomeCarouselAreaRaw = props => {
 
-  const {onSymbolClick} = props;
-
-  const windowWidth = useWindowWidth();
-
-  const catchPhraseSize = windowWidth < 576 ? 32 :
-    windowWidth < 992 ? 40 :
-      48;
+  const { onSymbolClick } = props;
 
   const handleSignOn = () => {
     props.history.push('/signup')
@@ -101,7 +94,9 @@ const HomeCarouselAreaRaw = props => {
         <Row gutter={20} style={{ marginTop: 50 }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Title style={{ fontSize: 'clamp(32px, 3vw, 48px)', color: 'black', marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check</Title>
-            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 20px)', marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check provides top class invstiment guidence to earn more money on the market! Go go go! Sign up today!</Paragraph>
+            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 20px)', marginLeft: 'auto', marginRight: 'auto' }}>
+              <FormattedMessage id="home.catchPhrase" />
+            </Paragraph>
             <div style={{ maxWidth: 550, margin: '2rem auto' }}>
               <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>

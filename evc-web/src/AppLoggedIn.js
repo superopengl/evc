@@ -186,7 +186,7 @@ const AppLoggedIn = props => {
 
   const handleLogout = async () => {
     await logout();
-    reactLocalStorage.clear();
+    // reactLocalStorage.clear();
     setUser(null);
     // debugger;
     history.push('/');

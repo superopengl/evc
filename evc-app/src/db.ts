@@ -14,6 +14,8 @@ import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockDeprecateSupport } from './entity/views/StockDeprecateSupport';
 import { StockDeprecateResistance } from './entity/views/StockDeprecateResistance';
 import { redisCache } from './services/redisCache';
+import { CoreDataWatchlistEmailTask } from './entity/views/CoreDataWatchlistEmailTask';
+import { CoreDataLatestSnapshot } from './entity/views/CoreDataLatestSnapshot';
 
 const views = [
   StockLatestPaidInformation,
@@ -21,6 +23,8 @@ const views = [
   SubscriptionPaymentCreditInformation,
   StockDeprecateSupport,
   StockDeprecateResistance,
+  CoreDataLatestSnapshot,
+  CoreDataWatchlistEmailTask
 ];
 const mviews = [
   StockDataInformation,

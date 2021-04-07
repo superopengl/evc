@@ -1,9 +1,8 @@
 import React from 'react';
-import { Layout, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import styled from 'styled-components';
 // import GitInfo from 'react-git-info/macro';
 
-const { Footer } = Layout;
 // const gitInfo = GitInfo();
 // const gitVersion = gitInfo.commit.shortHash;
 const gitVersion = process.env.REACT_APP_GIT_HASH;

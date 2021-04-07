@@ -59,6 +59,10 @@ const StyledLayout = styled(ProLayout)`
   color: rgba(255,255,255,0.85);;
   font-weight: 400;
 }
+
+.anticon {
+  color: white;
+}
 `;
 
 const LayoutStyled = styled(Layout)`
@@ -101,7 +105,7 @@ position: absolute;
 `;
 
 const scrollToElement = (selector) => {
-  document.querySelector(selector).scrollIntoView({
+  document.querySelector(selector)?.scrollIntoView({
     behavior: 'smooth',
     block: "start",
     inline: "nearest"
@@ -125,34 +129,35 @@ const HomePage = (props) => {
 
   const ROUTES = [
     {
-      path: '/member',
+      path: '/#member',
       name: 'Pro Member',
-      onClick: () => {
-        debugger;
-        scrollToElement('#pro-member')
-      }
     },
     {
-      path: '/stock-radar',
+      path: '/#stock-radar',
       name: 'Stock Radar',
-      onClick: () => scrollToElement('#stock-radar')
     },
     {
-      path: '/pricing',
+      path: '/#pricing',
       name: 'Pricing',
-      onClick: () => scrollToElement('#pricing')
     },
     {
-      path: '/signin',
-      name: 'Sign In',
-      onClick: () => props.history.push('/signin')
+      path: '/signup',
+      name: 'Sign Up',
     },
     {
       path: '/login',
       name: 'Log In',
-      onClick: () => props.history.push('/login')
     }
   ];
+
+  const handleMenuClick = (path) => {
+    const isAnchor = path.includes('#');
+    if (isAnchor) {
+      scrollToElement(path.replace(/\//, ''))
+    } else {
+      props.history.push(path);
+    }
+  }
 
   return <StyledLayout
     title={null}
@@ -162,11 +167,21 @@ const HomePage = (props) => {
     route={{ routes: ROUTES }}
     location={{ pathname: '/non' }}
     fixedHeader={true}
-    menuItemRender={(item, dom) => {
-      return <div onClick={() => item.onClick()}>{dom}</div>
-    }}
-    rightContentRender={() => {
-      return <LocaleSelector bordered={false} style={{ color: 'white', width: 100, textAlign: 'right' }} defaultValue={getDefaultLocale()} onChange={handleLocaleChange} />
+    menuItemRender={(item, dom) => <div onClick={() => handleMenuClick(item.path)}>{dom}</div>}
+    rightContentRender={props => {
+      let style = {
+        color: 'white', 
+        width: 100, 
+        textAlign: 'right'
+      };
+      if(props.collapsed) {
+        style = {
+          ...style,
+          display: 'flex', 
+          alignItems: 'center',
+        }
+      }
+      return <LocaleSelector bordered={false} style={style} defaultValue={getDefaultLocale()} onChange={handleLocaleChange} />
     }}
   >
     <section>

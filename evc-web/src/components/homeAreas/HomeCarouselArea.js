@@ -90,7 +90,7 @@ const HomeCarouselAreaRaw = props => {
   return (
     <Container>
       <InnerContainer>
-        <Row gutter={20} style={{ marginTop: 50 }}>
+        <Row gutter={20} style={{ marginTop: 90 }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Title style={{ fontSize: 'clamp(32px, 3vw, 48px)', color: 'black', marginLeft: 'auto', marginRight: 'auto' }}>Easy Value Check</Title>
             <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 20px)', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -100,7 +100,7 @@ const HomeCarouselAreaRaw = props => {
               <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>
             <Space align="center" style={{ marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' }} >
-              <SignUpButton type="primary" onClick={() => handleSignOn()}>Sign Up with Email</SignUpButton>
+              <SignUpButton type="primary" onClick={() => handleSignOn()}><FormattedMessage id="button.signUpWithEmail" /></SignUpButton>
               <GoogleSsoButton
                 render={
                   renderProps => (
@@ -111,7 +111,9 @@ const HomeCarouselAreaRaw = props => {
                       // icon={<GoogleOutlined />}
                       onClick={renderProps.onClick}
                       disabled={renderProps.disabled}
-                    >Continue with Google</Button>
+                    >
+                      <FormattedMessage id="button.continueWithGoogle" />
+                      </Button>
                   )}
               />
             </Space>

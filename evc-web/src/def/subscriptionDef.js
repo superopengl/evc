@@ -1,28 +1,29 @@
 import React from 'react';
 import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'react-icons/gi';
+import { FormattedMessage } from 'react-intl';
 export const subscriptionDef = [
   {
     key: 'free',
-    title:'Free',
-    unit: 'forever',
+    title: <FormattedMessage id="text.proMemberFree" />,
+    unit: <FormattedMessage id="text.proMemberFreePriceUnit" />,
     price: 0,
-    icon: <GiCurvyKnife/>,
-    description: "Search history data. Forever free. Goot to start with for students and trail users.",
+    icon: <GiCurvyKnife />,
+    description: <FormattedMessage id="text.proMemberFreeDescription" />,
   },
   {
     key: 'unlimited_monthly',
-    title:'Unlimited Monthly',
-    unit: 'USD per month',
+    title: <FormattedMessage id="text.proMemberMonthly" />,
+    unit: <FormattedMessage id="text.proMemberMonthlyPriceUnit" />,
     price: 29,
-    icon: <GiSawedOffShotgun/>,
-    description: "Tracking unlimited stocks per month. Best for professtional investor as a trial.",
+    icon: <GiSawedOffShotgun />,
+    description: <FormattedMessage id="text.proMemberMonthlyDescription" />,
   },
   {
     key: 'unlimited_yearly',
-    title:'Unlimited Yearly',
-    unit: 'USD per year',
+    title: <FormattedMessage id="text.proMemberAnnually" />,
+    unit: <FormattedMessage id="text.proMemberAnnuallyPriceUnit" />,
     price: 319,
-    icon: <GiPirateCannon/>,
-    description: "Tracking unlimited stocks per year. Money saver for porfessinal investors.",
+    icon: <GiPirateCannon />,
+    description: <FormattedMessage id="text.proMemberAnnuallyDescription" />,
   }
 ];

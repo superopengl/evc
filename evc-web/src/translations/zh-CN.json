@@ -25,5 +25,14 @@
   "placeholder.searchSymbol": "搜索股票代码",
   "button.signUpWithEmail": "电子邮箱注册",
   "button.continueWithGoogle": "Google登录",
+  "text.proMemberFree": "免费",
+  "text.proMemberFreePriceUnit": "永久免费",
+  "text.proMemberFreeDescription": "查看所有历史核心数据",
+  "text.proMemberMonthly": "Pro月会员",
+  "text.proMemberMonthlyPriceUnit": "美元每月",
+  "text.proMemberMonthlyDescription": "查看所有核心数据（链接至Pro会员页面），有效期一个月，按月支付",
+  "text.proMemberAnnually": "Pro年会员",
+  "text.proMemberAnnuallyPriceUnit": "美元每年",
+  "text.proMemberAnnuallyDescription": "查看所有核心数据（链接至Pro会员页面），有效期一年，按年支付。支付11个月，享受12个月服务，节省$29美元",
   "": ""
 }

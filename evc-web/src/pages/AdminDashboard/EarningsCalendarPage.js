@@ -10,11 +10,12 @@ import {
   LeftOutlined,
   RightOutlined,
 } from '@ant-design/icons';
+import { CardNumberElement } from '@stripe/react-stripe-js';
 
 const { Text } = Typography;
 
 
-const SymbolLogoCard = styled(Card)`
+const SymbolLogo = styled.div`
 cursor: pointer;
 
 &:hover {
@@ -86,12 +87,14 @@ const EarningsCalendarPage = props => {
       }}
       dataSource={list}
       renderItem={item => <Tooltip title={item.company} placement="top">
-        <SymbolLogoCard size="small" onClick={() => handleItemClick(item.symbol)} >
-          <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <Text style={{ color: '#3273A4' }} strong>{item.symbol}</Text>
-            {showLogo ? <Image src={item.logoUrl} width={64} height="auto" preview={false} style={{width: 64}}/> : <Text type="secondary"><small>{item.company}</small></Text>}
-          </div>
-        </SymbolLogoCard>
+        <SymbolLogo>
+          <Card size="small" onClick={() => handleItemClick(item.symbol)} >
+            <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+              <Text style={{ color: '#3273A4' }} strong>{item.symbol}</Text>
+              {showLogo ? <Image src={item.logoUrl} width={64} height="auto" preview={false} style={{ width: 64 }} /> : <Text type="secondary"><small>{item.company}</small></Text>}
+            </div>
+          </Card>
+        </SymbolLogo>
       </Tooltip>}
     />
   }
@@ -171,7 +174,7 @@ const EarningsCalendarPage = props => {
         bordered={true}
         pagination={false}
         rowKey="key"
-        scroll={{x: 500}}
+        scroll={{ x: 500 }}
         style={{ marginBottom: '2rem' }}
       />
     </Space>

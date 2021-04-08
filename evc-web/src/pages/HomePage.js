@@ -85,14 +85,17 @@ const HomePage = (props) => {
 
   const ROUTES = [
     {
+      key: '0',
       path: '/#member',
       name: <FormattedMessage id="menu.proMember" />,
     },
     {
+      key: '1',
       path: '/#stock-radar',
       name: <FormattedMessage id="menu.stockRadar" />,
     },
     {
+      key: '2',
       path: '/#pricing',
       name: <FormattedMessage id="menu.pricing" />,
     },

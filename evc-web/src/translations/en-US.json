@@ -27,12 +27,14 @@
   "button.continueWithGoogle": "Continue with Google",
   "text.proMemberFree": "Free",
   "text.proMemberFreePriceUnit": "Forever",
-  "text.proMemberFreeDescription": "View all historical core data",
   "text.proMemberMonthly": "Pro Members Monthly",
   "text.proMemberMonthlyPriceUnit": "USD / Month",
-  "text.proMemberMonthlyDescription": "Subscribe to view all core data, valid for one month, monthly payment",
   "text.proMemberAnnually": "Pro Members Annually",
   "text.proMemberAnnuallyPriceUnit": "USD / Year",
-  "text.proMemberAnnuallyDescription": "Subscribe to view all core data, valid for one year, annual payment. Get 12-month Pro Member services with 11-month payment, $29 USD saved",
+  "text.pricingDescriptionFree": "View all historical core data",
+  "text.pricingDescriptionCoreData": "View all core data",
+  "text.pricingDescriptionOneMonth": "Valid for one month, monthly payment",
+  "text.pricingDescriptionOneYear": "Valid for one year, annual payment",
+  "text.pricingDescriptionOneYearSave": "Get 12-month Pro Member services with 11-month payment, $29 USD saved",
   "": ""
 }

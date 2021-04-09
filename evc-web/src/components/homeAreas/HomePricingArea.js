@@ -9,13 +9,14 @@ import { VscRocket } from 'react-icons/vsc';
 import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
 
+const { Title, Paragraph } = Typography;
 
 const StyledRow = styled(Row)`
-  margin-top: 10px;
 `;
 
 const StyledCol = styled(Col)`
-  margin-bottom: 20px;
+display: flex;
+justify-content: center;
 `;
 
 const span = {
@@ -32,8 +33,8 @@ justify-content: center;
 margin-bottom: 0rem;
 width: 100%;
 text-align: center;
-padding: 2rem;
-background: #fafafa;
+padding: 4rem 1rem;
+// background: #fafafa;
 // background: rgb(240, 242, 245);
 `;
 
@@ -41,29 +42,29 @@ const InnerContainer = styled.div`
 margin-left: auto;
 margin-right: auto;
 width: 100%;
-max-width: 1200px;
+max-width: 900px;
 `;
 
 
-const { Title, Text } = Typography;
 
 export const HomePricingArea = props => {
-  const { onClick } = props;
   return (
     <Container>
       <InnerContainer>
-        <StyledRow gutter={20}>
-          <StyledRow gutter={20}>
-            {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
-              <SubscriptionCard
-                title={s.title}
-                icon={s.icon}
-                description={s.description}
-                price={s.price}
-                interactive={false}
-                unit={s.unit} />
-            </StyledCol>)}
-          </StyledRow>
+        <Title>Choose the plan that's right for you</Title>
+        <Paragraph type="secondary">
+        Membership plans start at USD $29.00 / month
+        </Paragraph>
+        <StyledRow gutter={[40, 40]}>
+          {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
+            <SubscriptionCard
+              title={s.title}
+              icon={s.icon}
+              description={s.description}
+              price={s.price}
+              interactive={false}
+              unit={s.unit} />
+          </StyledCol>)}
         </StyledRow>
       </InnerContainer>
     </Container>

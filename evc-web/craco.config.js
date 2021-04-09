@@ -8,7 +8,8 @@ const modifyVars = {
   '@warning-color': '#fa8c16',
   '@error-color': '#d7183f', // rgb(215,24,63)
   '@layout-header-background': '#00293d',
-  '@heading-color': '#00293d',
+  // '@heading-color': '#00293d',
+  '@typography-title-font-weight': 400,
   '@font-size-base': '14px',
   // '@height-base': '40px',
   // '@height-lg': '48px',
@@ -22,7 +23,7 @@ const modifyVars = {
 
 // menu sider rgb(0, 41, 61)
 
-module.exports = {
+module.exports = { 
   eslint: {
     enable: true,
   },

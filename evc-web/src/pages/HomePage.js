@@ -16,6 +16,7 @@ import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
+import HomeFeatureArea from 'components/homeAreas/HomeFeatureArea';
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
@@ -28,10 +29,10 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-menu-item:hover {
   .ant-pro-menu-item-title {
-    // color: white;
+    color: rgba(255,255,255, 0.7);
     // font-weight: 500;
   }
-  // background-color: inherit;
+  background-color: transparent !important;
 }
 
 .ant-layout-content {
@@ -54,19 +55,20 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
-  background-color: rgba(21,190,83,0.60);
+  background-color: rgba(21,190,83,0.7);
   // background-color: rgba(255,255,255,0.6);
   // background-color: rgba(0, 41, 61, 0.6); 
+// background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
 }
 
 .ant-pro-global-header-collapsed-button {
-  color: rgba(255,255,255,0.75);
+  // color: rgba(255,255,255,0.75);
   color: rgba(0,0,0,0.75);
 }
 
 .ant-pro-menu-item-title {
-  color: rgba(255,255,255,0.75);;
-  color: rgba(0,0,0,0.75);;
+  // color: rgba(255,255,255,0.75);
+  color: rgba(0,0,0,0.75);
   font-weight: 500;
 }
 `;
@@ -107,6 +109,11 @@ const HomePage = (props) => {
     },
     {
       key: '2',
+      path: '/#earnings-calendars',
+      name: <FormattedMessage id="menu.earningsCalendar" />,
+    },
+    {
+      key: '3',
       path: '/#pricing',
       name: <FormattedMessage id="menu.pricing" />,
     },
@@ -131,8 +138,8 @@ const HomePage = (props) => {
 
   return <StyledLayout
     title={null}
-    // logo="/favicon-32x32.png"
-    logo="/images/logo-transparent.png"
+    logo="/favicon-32x32.png"
+    // logo="/images/logo-transparent.png"
     layout="top"
     navTheme="dark"
     route={{ routes: ROUTES }}
@@ -147,30 +154,37 @@ const HomePage = (props) => {
 
       const dropdown = <Dropdown overlay={menu} trigger={['click']}>
         {/* <GlobalOutlined /> */}
-        <Icon style={{ fontSize: 20, color: 'rgba(255,255,255,0.75)' }} component={() => <IoLanguage />} />
+        <Icon style={{ fontSize: 20, color: 'rgba(0,0,0,0.75)' }} component={() => <IoLanguage />} />
       </Dropdown>
       return props.collapsed ? <div style={{ display: 'flex', alignItems: 'center', }}>
         {dropdown}
       </div> : dropdown
     }}
   >
+    
     <section>
       <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>
-    <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
-    <section id="pricing">
-      <HomePricingArea />
-    </section>
-    {/* <section><HomeSearchArea /></section> */}
     <section>
-      <HomeServiceArea bgColor="#135200" />
+    <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>
+    {/* <section>
+      <HomeFeatureArea />
+    </section> */}
     <section id="stock-radar">
       <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
     </section>
     <section id="earnings-calendars">
       <HomeEarningsCalendarArea onSymbolClick={handleStockListSymbolClick} />
     </section>
+    <section id="pricing">
+      <HomePricingArea />
+    </section>
+    {/* <section><HomeSearchArea /></section> */}
+    {/* <section>
+      <HomeServiceArea bgColor="#135200" />
+    </section> */}
+
     <HomeFooter />
 
     <StockGuestPreviewDrawer

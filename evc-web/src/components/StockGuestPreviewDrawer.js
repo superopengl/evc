@@ -52,7 +52,7 @@ export const StockGuestPreviewDrawer = (props) => {
         <Alert
           message={<><big>😉</big><Text style={{fontStyle: 'italic', marginLeft: 12}} type="success">More information is available to signed up users</Text></>}
           action={
-            <Button type="primary" size="large" style={{width: 140}}>Sign Up Now</Button>
+            <Button type="primary" style={{width: 140}}>Sign Up Now</Button>
           }
           type="success" />
       </Space>}

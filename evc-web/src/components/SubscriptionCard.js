@@ -5,17 +5,19 @@ import { LoadingOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { IconContext } from "react-icons";
 import MoneyAmount from './MoneyAmount';
+import { Divider } from 'antd';
 
 const { Title, Text } = Typography;
 
   const StyledCard = styled(Card)`
-padding: 30px;
+padding: 10px;
 text-align: center;
-height: 380px;
+height: 100%;
 & .ant-card-head {
   color: #333333;
 }
 position: relative;
+max-width: 300px;
 
 &.subscription-active {
 // box-shadow: 0 5px 3px rgba(255,197,61,0.8);
@@ -46,8 +48,8 @@ export const SubscriptionCard = props => {
     <StyledCard
       className={classNameArray.join(' ')}
       title={<>
-        {icon}
-        <div style={{marginTop: 20, textTransform: 'uppercase', fontSize: 18}}>{title}</div>
+        {/* {icon} */}
+        <div style={{textTransform: 'uppercase', fontSize: 14}}>{title}</div>
       </>}
       hoverable={interactive && !active}
       onClick={onClick}
@@ -60,9 +62,10 @@ export const SubscriptionCard = props => {
         title={<div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#15be53' }}><sup><small>$</small></sup> {price}</Text> */}
           <div>
-            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }} type="success" value={price} />
+            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }}  value={price} />
             </div>
-          <Text>{unit}</Text>
+          <Text style={{fontSize: 14}} type="secondary">{unit}</Text>
+          <Divider />
         </div>}
         description={description}
       ></Card.Meta>

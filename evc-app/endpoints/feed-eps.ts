@@ -14,7 +14,7 @@ import { StockDeprecateSupport } from '../src/entity/views/StockDeprecateSupport
 import { CoreDataPreviousSnapshot } from '../src/entity/CoreDataPreviousSnapshot';
 import { CoreDataLatestSnapshot } from '../src/entity/views/CoreDataLatestSnapshot';
 import { CoreDataWatchlistEmailTask } from '../src/entity/views/CoreDataWatchlistEmailTask';
-import { sendEmail } from '../src/services/emailService';
+import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
 
 const JOB_NAME = 'feed-eps';
@@ -58,7 +58,7 @@ async function sendCoreDataChangedEmails() {
 async function sendEmailByRow(item: CoreDataWatchlistEmailTask) {
   const { email, givenName, surname, symbol } = item;
   const name = `${givenName || ''} ${surname || ''}`.trim() || 'Client';
-  await sendEmail({
+  await enqueueEmail({
     to: email,
     template: EmailTemplateType.WatchlistCoreDataChangedEmail,
     shouldBcc: false,

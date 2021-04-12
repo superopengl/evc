@@ -11,10 +11,10 @@ export class EmailTemplate {
   @PrimaryColumn({ default: Locale.Engish })
   locale: Locale;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   subject: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   body: string;
 
   @Column('text', { array: true, default: '{}' })

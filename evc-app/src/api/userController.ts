@@ -6,7 +6,7 @@ import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
-import { sendEmail } from '../services/emailService';
+import { enqueueEmail } from '../services/emailService';
 import { handleInviteUser } from './authController';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { Subscription } from '../entity/Subscription';
@@ -138,7 +138,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await repo.softDelete(id);
     await getRepository(UserProfile).delete(profileId);
 
-    await sendEmail({
+    await enqueueEmail({
       to: user.profile.email,
       template: EmailTemplateType.DeleteUser,
       vars: {

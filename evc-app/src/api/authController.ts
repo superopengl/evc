@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmail } from '../services/emailService';
+import { sendEmail, enqueueEmail } from '../services/emailService';
 import { getUtcNow } from '../utils/getUtcNow';
 import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
@@ -125,7 +125,7 @@ export const signup = handlerWrapper(async (req, res) => {
       url
     },
     shouldBcc: true
-  }, true).catch(() => { });
+  });
 
   const info = {
     id,
@@ -142,7 +142,7 @@ async function setUserToResetPasswordStatus(user: User) {
   user.status = UserStatus.ResetPassword;
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await sendEmail({
+  await enqueueEmail({
     to: user.profile.email,
     template: EmailTemplateType.ResetPassword,
     vars: {
@@ -233,7 +233,7 @@ export const handleInviteUser = async (user, profile) => {
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   const email = profile.email;
-  await sendEmail({
+  await enqueueEmail({
     to: email,
     template: EmailTemplateType.InviteUser,
     vars: {
@@ -300,7 +300,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
     await createReferral(user.id);
 
-    sendEmail({
+    enqueueEmail({
       to: user.profile.email,
       template: EmailTemplateType.GoogleSsoWelcome,
       vars: {

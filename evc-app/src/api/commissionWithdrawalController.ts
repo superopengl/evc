@@ -9,7 +9,7 @@ import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
 import { getUtcNow } from '../utils/getUtcNow';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
-import { sendEmail, sendEmailToUserIdWithoutWait } from '../services/emailService';
+import { enqueueEmail, enqueueEmailToUserId } from '../services/emailService';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const searchCommissionWithdrawal = handlerWrapper(async (req, res) => {
@@ -108,7 +108,7 @@ export const createCommissionWithdrawal = handlerWrapper(async (req, res) => {
     }
   });
 
-  sendEmailToUserIdWithoutWait(
+  enqueueEmailToUserId(
     userId,
     EmailTemplateType.CommissionWithdrawalSubmitted,
     { referenceId: id }
@@ -180,7 +180,7 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
         withdrawal.handledAt = getUtcNow();
         await getManager().save(withdrawal);
 
-        sendEmailToUserIdWithoutWait(
+        enqueueEmailToUserId(
           withdrawal.userId,
           EmailTemplateType.CommissionWithdrawalRejected,
           { 
@@ -191,7 +191,7 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
       } else if (status === 'done') {
         await completeAndAdjustCredit(withdrawal, comment);
 
-        sendEmailToUserIdWithoutWait(
+        enqueueEmailToUserId(
           withdrawal.userId,
           EmailTemplateType.CommissionWithdrawalCompleted,
           { 

@@ -25,7 +25,7 @@ const StyledTable = styled(Table)`
 
 .ant-table-thead {
   .ant-table-cell {
-    color: rgba(0,0,0,0.5);
+    color: rgba(0,0,0,0.3);
     font-size: 0.8rem;
     text-align: right;
 
@@ -64,7 +64,8 @@ const StyledSymbolTextLink = styled(TextLink)`
 &.ant-typography {
   font-size: 0.9rem;
   font-weight: bold;
-  color: #3273A4;
+  // color: #3273A4;
+  color: rgba(0,0,0,0.85);
 
   &:hover {
     text-decoration: underline;
@@ -95,7 +96,7 @@ const StockMostSearched = (props) => {
     },
   ];
 
-  const { title, onFetch, onSymbolClick } = props;
+  const { title, titleStyle, onFetch, onSymbolClick } = props;
 
   const [list, setList] = React.useState([]);
 
@@ -124,7 +125,7 @@ const StockMostSearched = (props) => {
 
   return (
     <Container>
-      {title && <Title level={5}>{title}</Title>}
+      {title && <Title level={5} style={{...titleStyle}}>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         columns={columnDef}
@@ -142,6 +143,7 @@ const StockMostSearched = (props) => {
 
 StockMostSearched.propTypes = {
   title: PropTypes.string,
+  titleStyle: PropTypes.any,
   onFetch: PropTypes.func.isRequired,
 };
 

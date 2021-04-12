@@ -23,11 +23,12 @@ const {Text, Title, Paragraph } = Typography;
 const Container = styled.div`
 // border-bottom: 1px solid #f0f0f0;
 // background: #092b00;
-// background-image: linear-gradient(160deg, #3273A4, #15be53);
-// background-image: linear-gradient(#135200, #15be53);
-background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
-// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
-// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #15be53 50%, #15be53 75%, #f0f0f0 75%, #f0f0f0 100%);
+// background-image: linear-gradient(160deg, #3273A4, #17b649);
+// background-image: linear-gradient(#135200, #17b649);
+background-image: linear-gradient(-55deg, #1cabd3, #1cabd3 25%, #5fdef1 25%, #5fdef1 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
+// background-image: linear-gradient(-45deg, #1cabd3, #1cabd3 50%, #17b649 50%, #17b649 100%);
+// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #1cabd3 25%, #1cabd3 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
+// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #1cabd3 25%, #1cabd3 50%, #17b649 50%, #17b649 75%, #f0f0f0 75%, #f0f0f0 100%);
 // background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
 margin: 0 auto 0;
 padding: 1rem 1rem 4rem;
@@ -86,6 +87,11 @@ max-width: 1200px;
 const SignUpButton = styled(Button)`
 // background-color: white !important;
 width: 195px;
+`;
+
+const StyledGoogleButton = styled(Button)`
+background-color: rgba(255,255,255,0.8) !important;
+
 `;
 
 const HomeCarouselAreaRaw = props => {
@@ -149,20 +155,21 @@ const HomeCarouselAreaRaw = props => {
         <Row gutter={[30, 30]} style={{ marginTop: 90, marginBottom: 50, alignItems: 'center' }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* <Image src="/images/logo-transparent.png" width={120} style={{marginBottom: 20}} preview={false}/> */}
-            <Title style={{ fontSize: 'clamp(22px, 3vw, 32px)', color: 'black' }} strong> Easy Value Check</Title>
-            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)' }}>
+            <Image src="/images/logo-transparent-big.png" style={{width: 240}} preview={false} />
+            <Title style={{ fontSize: 'clamp(22px, 3vw, 32px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight:'bolder' }}>EASY VALUE CHECK</Title>
+            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(255,255,255,0.9)', textTransform: 'uppercase' }}>
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
 
-            <div style={{ width: 400, margin: '1rem 0 2rem' }}>
-              <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true} />
+            <div style={{ width: 400, margin: '10px 0 2rem' }}>
+              <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true}/>
             </div>
             <Space align="center" style={{ width: '100%', justifyContent: 'center' }} >
               <SignUpButton type="primary" onClick={() => handleSignOn()}><FormattedMessage id="button.signUpWithEmail" /></SignUpButton>
               <GoogleSsoButton
                 render={
                   renderProps => (
-                    <Button
+                    <StyledGoogleButton
                       type="secondary"
                       block
                       icon={<GoogleLogoSvg size={16} />}
@@ -172,7 +179,7 @@ const HomeCarouselAreaRaw = props => {
                       disabled={renderProps.disabled}
                     >
                       <FormattedMessage id="button.continueWithGoogle" />
-                    </Button>
+                    </StyledGoogleButton>
                   )}
               />
             </Space>
@@ -186,8 +193,8 @@ const HomeCarouselAreaRaw = props => {
         renderItem={item => (
           <List.Item>
             <Space size="large">
-            <Text style={{fontSize: 30}}>{item.icon}</Text>
-            <Text style={{fontSize: 14}}>{item.description}</Text>
+            <Text style={{fontSize: 30, color: 'rgba(255,255,255,0.9)'}}>{item.icon}</Text>
+            <Text style={{fontSize: 14, color: 'rgba(255,255,255,0.9)'}}>{item.description}</Text>
             </Space>
           </List.Item>
         )}

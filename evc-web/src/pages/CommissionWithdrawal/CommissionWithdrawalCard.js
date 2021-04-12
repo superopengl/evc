@@ -43,7 +43,7 @@ const CommissionWithdrawalCard = (props) => {
 
   return (
     <Descriptions
-      style={{ width: '100%', backgroundColor: value.status === 'rejected' ? 'rgb(215,24,63, 0.05)' : value.status === 'done' ? 'rgb(21,190,83, 0.05)' : 'white' }}
+      style={{ width: '100%', backgroundColor: value.status === 'rejected' ? 'rgb(215,24,63, 0.05)' : value.status === 'done' ? 'rgb(23,182,73, 0.05)' : 'white' }}
       labelStyle={{ verticalAlign: 'top', backgroundColor: 'rgba(0,0,0,0.03)' }}
       contentStyle={{ verticalAlign: 'top' }}
       bordered

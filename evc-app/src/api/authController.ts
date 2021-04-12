@@ -146,7 +146,7 @@ async function setUserToResetPasswordStatus(user: User) {
     to: user.profile.email,
     template: EmailTemplateType.ResetPassword,
     vars: {
-      toWhom: getEmailRecipientName(user),
+      toWhom: getEmailRecipientName(user.profile),
       url
     },
     shouldBcc: false
@@ -237,7 +237,7 @@ export const handleInviteUser = async (user, profile) => {
     to: email,
     template: EmailTemplateType.InviteUser,
     vars: {
-      toWhom: getEmailRecipientName(user),
+      toWhom: getEmailRecipientName(user.profile),
       email,
       url
     },
@@ -304,7 +304,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
       to: user.profile.email,
       template: EmailTemplateType.GoogleSsoWelcome,
       vars: {
-        toWhom: getEmailRecipientName(user),
+        toWhom: getEmailRecipientName(user.profile),
       },
       shouldBcc: false
     });

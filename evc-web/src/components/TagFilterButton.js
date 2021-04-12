@@ -31,7 +31,7 @@ export const TagFilterButton = (props) => {
 
   return (
     <>
-      <Badge count={selectedTags.length} showZero={false} style={{ backgroundColor: "#15be53" }}>
+      <Badge count={selectedTags.length} showZero={false} style={{ backgroundColor: "#17b649" }}>
         <Button onClick={() => setVisible(true)}>Tags Filter</Button>
       </Badge>
       <Modal

@@ -36,18 +36,18 @@ const HomeMarketArea = props => {
   return (
     <Container>
       <InnerContainer>
-        <Row gutter={30}>
+        <Row gutter={[40, 40]}>
           <Col flex="auto">
-            <StockMostSearched onFetch={listHotStock} title="Most searched" onSymbolClick={onSymbolClick} />
+            <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{color: '#17b649', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketMostActive} title="Most actives" onSymbolClick={onSymbolClick} />
+            <StockMostPanel onFetch={getMarketMostActive} title="Most actives" titleStyle={{color: '#52d074', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketGainers} title="Gainers" onSymbolClick={onSymbolClick} />
+            <StockMostPanel onFetch={getMarketGainers} title="Gainers" titleStyle={{color: '#5fdef1', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketLosers} title="Losers" onSymbolClick={onSymbolClick} />
+            <StockMostPanel onFetch={getMarketLosers} title="Losers" titleStyle={{color: '#1cabd3', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
         </Row>
       </InnerContainer>

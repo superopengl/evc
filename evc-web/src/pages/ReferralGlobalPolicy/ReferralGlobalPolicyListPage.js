@@ -27,7 +27,7 @@ const { Title } = Typography;
 
 const ContainerStyled = styled.div`
   .active-referral {
-    background-color: rgba(21,190,83, 0.1);
+    background-color: rgba(23,182,73, 0.1);
   }
 `;
 

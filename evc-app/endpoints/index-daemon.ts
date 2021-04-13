@@ -4,7 +4,7 @@ import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService
 import { StockLastPriceInfo } from '../src/types/StockLastPriceInfo';
 import 'colors';
 import { start } from './jobStarter';
-import { getManager, getRepository, IsNull } from 'typeorm';
+import { getManager, getRepository, IsNull, LessThan } from 'typeorm';
 import { StockLastPrice } from '../src/entity/StockLastPrice';
 import { Stock } from '../src/entity/Stock';
 import { combineLatest, Subject } from 'rxjs';
@@ -166,7 +166,8 @@ export async function startEmailDaemon() {
   while (true) {
     const emailTasks = await getRepository(EmailSentOutTask).find({
       where: {
-        sentAt: IsNull()
+        sentAt: IsNull(),
+        failedCount: LessThan(5)
       },
       order: {
         id: 'ASC'
@@ -194,6 +195,7 @@ export async function startEmailDaemon() {
           await sleep(sleepTimeMs);
         } catch (err) {
           console.log(`Failed to send out email ${task.id}`, errorToJson(err));
+          await getRepository(EmailSentOutTask).increment({id: task.id}, 'failedCount', 1);
         }
       }
       console.log(`Email daemon ${emailTasks.length} emails to send out, ${okCounter} succedded.`);

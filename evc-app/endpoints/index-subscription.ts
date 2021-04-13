@@ -20,8 +20,22 @@ import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
 import { PaymentMethod } from '../src/types/PaymentMethod';
 import { logError } from '../src/utils/logger';
 import { SysLog } from '../src/entity/SysLog';
+import { assert } from '../src/utils/assert';
 
 const JOB_NAME = 'daily-subscription';
+
+function getSubscriptionName(type: SubscriptionType) {
+  switch (type) {
+    case SubscriptionType.Free:
+      return 'Free'
+    case SubscriptionType.UnlimitedMontly:
+      return 'Pro Member Monthly'
+    case SubscriptionType.UnlimitedYearly:
+      return 'Pro Member Annually'
+    default:
+      assert(false, 500, `Unsupported subscription type ${type}`);
+  }
+};
 
 async function enqueueEmailTasks(template: EmailTemplateType, list: UserOngoingSubscriptionInformation[]) {
   for (const item of list) {
@@ -30,44 +44,48 @@ async function enqueueEmailTasks(template: EmailTemplateType, list: UserOngoingS
       template: template,
       shouldBcc: true,
       vars: {
-        name: getEmailRecipientName(item),
+        toWhom: getEmailRecipientName(item),
         subscriptionId: item.subscriptionId,
-        subscriptionType: item.subscriptionType,
-        start: item.start,
-        end: item.end,
+        subscriptionType: getSubscriptionName(item.subscriptionType),
+        start: moment(item.start).format('D MMM YYYY'),
+        end: moment(item.end).format('D MMM YYYY'),
       }
     };
     await enqueueEmail(emailReq);
   }
 }
 
-async function enqueueRecurringSucceededEmail(info: UserOngoingSubscriptionInformation, subscription: Subscription) {
+async function enqueueRecurringSucceededEmail(info: UserOngoingSubscriptionInformation, subscription: Subscription, paidAmount: number, creditDeduction: number) {
   const emailReq: EmailRequest = {
     to: info.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPaySucceeded,
     shouldBcc: true,
     vars: {
-      name: getEmailRecipientName(info),
+      toWhom: getEmailRecipientName(info),
       subscriptionId: info.subscriptionId,
-      subscriptionType: info.subscriptionType,
-      start: subscription.start,
-      end: subscription.end,
+      subscriptionType: getSubscriptionName(info.subscriptionType),
+      start: moment(subscription.start).format('D MMM YYYY'),
+      end: moment(subscription.end).format('D MMM YYYY'),
+      paidAmount,
+      creditDeduction
     }
   };
   await enqueueEmail(emailReq);
 }
 
-async function enqueueRecurringFailedEmail(info: UserOngoingSubscriptionInformation, subscription: Subscription) {
+async function enqueueRecurringFailedEmail(info: UserOngoingSubscriptionInformation, subscription: Subscription, paidAmount: number, creditDeduction: number) {
   const emailReq: EmailRequest = {
     to: info.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPayFailed,
     shouldBcc: true,
     vars: {
-      name: getEmailRecipientName(info),
+      toWhom: getEmailRecipientName(info),
       subscriptionId: info.subscriptionId,
-      subscriptionType: info.subscriptionType,
-      start: subscription.start,
-      end: subscription.end,
+      subscriptionType: getSubscriptionName(info.subscriptionType),
+      start: moment(subscription.start).format('D MMM YYYY'),
+      end: moment(subscription.end).format('D MMM YYYY'),
+      paidAmount,
+      creditDeduction
     }
   };
   await enqueueEmail(emailReq);
@@ -80,7 +98,7 @@ async function expireSubscriptions() {
     await tran.startTransaction();
     const list = await getRepository(UserOngoingSubscriptionInformation)
       .createQueryBuilder()
-      .where('end < now()')
+      .where('"end" < now()')
       .getMany();
 
     if (list.length) {
@@ -106,7 +124,7 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
   const list = await getRepository(UserOngoingSubscriptionInformation)
     .createQueryBuilder()
     .where('recurring = FALSE')
-    .andWhere('DATEADD(day, "alertDays", now()) >= "end"')
+    .andWhere(`now() between "end" - "alertDays" * INTERVAL '1 day' and "end"`)
     .getMany();
 
   enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);
@@ -140,16 +158,16 @@ async function renewRecurringSubscription(info: UserOngoingSubscriptionInformati
   const { subscriptionId, userId } = info;
   const subscription = await getRepository(Subscription).findOne(subscriptionId, { relations: ['payments'] })
 
+  const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
+    userId,
+    subscription.type,
+    true
+  );
   const { rawRequest, rawResponse, status } = await handlePayWithCard(subscription);
   const tran = getConnection().createQueryRunner();
 
   try {
     await tran.startTransaction();
-    const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
-      userId,
-      subscription.type,
-      true
-    );
     let creditTransaction: UserCreditTransaction = null;
     if (creditDeductAmount) {
       creditTransaction = new UserCreditTransaction();
@@ -173,10 +191,10 @@ async function renewRecurringSubscription(info: UserOngoingSubscriptionInformati
     await getManager().save(subscription);
 
     await tran.commitTransaction();
-    await enqueueRecurringSucceededEmail(info, subscription);
+    await enqueueRecurringSucceededEmail(info, subscription, additionalPay, creditDeductAmount);
   } catch (err) {
     await tran.rollbackTransaction();
-    await enqueueRecurringFailedEmail(info, subscription);
+    await enqueueRecurringFailedEmail(info, subscription, additionalPay, creditDeductAmount);
   }
 }
 

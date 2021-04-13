@@ -100,7 +100,7 @@ export async function sendEmail(req: EmailRequest) {
     await emailLogRepo.insert(log);
     console.log('Sent out email to'.green, to);
   } catch (err) {
-    console.log('Sent out email error'.red, errorToJson(err));
+    console.log('Sent out email error'.red, err.message);
     if (log) {
       log.error = err;
       await emailLogRepo.insert(log);

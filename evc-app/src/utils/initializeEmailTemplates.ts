@@ -61,13 +61,22 @@ export async function initializeEmailTemplates() {
   const SubscriptionExpiredDef = new EmailTemplate();
   SubscriptionExpiredDef.key = EmailTemplateType.SubscriptionExpired;
   SubscriptionExpiredDef.locale = Locale.Engish;
-  SubscriptionExpiredDef.vars = ['website', 'toWhom', 'name', 'subscriptionId', 'subscriptionType', 'start', 'end'];
+  SubscriptionExpiredDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end'];
 
   const SubscriptionExpiringDef = new EmailTemplate();
   SubscriptionExpiringDef.key = EmailTemplateType.SubscriptionExpiring;
   SubscriptionExpiringDef.locale = Locale.Engish;
-  SubscriptionExpiringDef.vars = ['website', 'toWhom', 'name', 'subscriptionId', 'subscriptionType', 'start', 'end'];
+  SubscriptionExpiringDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end'];
 
+  const SubscriptionRecurringAutoPaySucceededDef = new EmailTemplate();
+  SubscriptionRecurringAutoPaySucceededDef.key = EmailTemplateType.SubscriptionRecurringAutoPaySucceeded;
+  SubscriptionRecurringAutoPaySucceededDef.locale = Locale.Engish;
+  SubscriptionRecurringAutoPaySucceededDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end', 'paidAmount', 'creditDeduction'];
+
+  const SubscriptionRecurringAutoPayFailedDef = new EmailTemplate();
+  SubscriptionRecurringAutoPayFailedDef.key = EmailTemplateType.SubscriptionRecurringAutoPayFailed;
+  SubscriptionRecurringAutoPayFailedDef.locale = Locale.Engish;
+  SubscriptionRecurringAutoPayFailedDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end', 'paidAmount', 'creditDeduction'];
 
   const entities = [
     signatureDef,
@@ -83,6 +92,8 @@ export async function initializeEmailTemplates() {
     WatchlistCoreDataChangedEmailDef,
     SubscriptionExpiredDef,
     SubscriptionExpiringDef,
+    SubscriptionRecurringAutoPaySucceededDef,
+    SubscriptionRecurringAutoPayFailedDef,
   ];
 
   await getManager()

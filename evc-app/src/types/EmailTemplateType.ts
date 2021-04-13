@@ -14,8 +14,8 @@ export enum EmailTemplateType {
   SubscriptionStarted = 'subscription_started',
   SubscriptionRecurringAutoPaySucceeded = 'subscription_recurring_autopay_succeeded',
   SubscriptionRecurringAutoPayFailed = 'subscription_recurring_autopay_failed',
-  SubscriptionExpired = 'subscription_exired',
-  SubscriptionExpiring = 'subscription_exiring',
+  SubscriptionExpired = 'subscription_expired',
+  SubscriptionExpiring = 'subscription_expiring',
 }
 
 

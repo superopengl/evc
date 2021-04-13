@@ -28,6 +28,7 @@ import { UserProfile } from '../UserProfile';
       's.end as end',
       's.type as type',
       's.recurring as recurring',
+      's."alertDays" as "alertDays"',
     ])
 })
 export class UserOngoingSubscriptionInformation {
@@ -58,4 +59,7 @@ export class UserOngoingSubscriptionInformation {
 
   @ViewColumn()
   recurring: boolean;
+
+  @ViewColumn()
+  alertDays: number;
 }

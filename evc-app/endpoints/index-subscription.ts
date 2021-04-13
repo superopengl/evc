@@ -21,6 +21,9 @@ import { PaymentMethod } from '../src/types/PaymentMethod';
 import { logError } from '../src/utils/logger';
 import { SysLog } from '../src/entity/SysLog';
 import { assert } from '../src/utils/assert';
+import { chargeStripeForPayment } from '../src/services/stripeService';
+import { getUtcNow } from '../src/utils/getUtcNow';
+import { Subscription } from 'rxjs';
 
 const JOB_NAME = 'daily-subscription';
 
@@ -130,12 +133,19 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
   enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);
 }
 
-async function handlePayWithCard(subscription: Subscription) {
+async function getPreviousStripePaymentInfo(subscription: Subscription) {
   // TODO: Call API to pay by card
-  const rawRequest = {};
-  const rawResponse = {};
-  const status = PaymentStatus.Paid;
-  return { rawRequest, rawResponse, status };
+  const lastPaidPayment = await getManager().getRepository(Payment).findOne({
+    where: {
+      subscriptionId: subscription.id,
+      status: PaymentStatus.Paid,
+    },
+    order: {
+      paidAt: 'DESC'
+    }
+  });
+  const { stripeCustomerId, stripePaymentMethodId } = lastPaidPayment;
+  return { stripeCustomerId, stripePaymentMethodId };
 }
 
 function extendSubscriptionEndDate(subscription: Subscription) {
@@ -152,43 +162,59 @@ function extendSubscriptionEndDate(subscription: Subscription) {
   }
 
   subscription.end = newEnd;
+  subscription.status = SubscriptionStatus.Alive;
 }
 
 async function renewRecurringSubscription(info: UserOngoingSubscriptionInformation) {
   const { subscriptionId, userId } = info;
-  const subscription = await getRepository(Subscription).findOne(subscriptionId, { relations: ['payments'] })
+  const subscription = await getRepository(Subscription).findOne(subscriptionId)
 
+  const tran = getConnection().createQueryRunner();
   const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
     userId,
     subscription.type,
     true
   );
-  const { rawRequest, rawResponse, status } = await handlePayWithCard(subscription);
-  const tran = getConnection().createQueryRunner();
+  const { stripeCustomerId, stripePaymentMethodId } = await getPreviousStripePaymentInfo(subscription);
+  assert(stripeCustomerId, 500, `Cannot get previous stripeCustomerId for subscription ${subscription.id}`)
+  assert(stripePaymentMethodId, 500, `Cannot get previous stripePaymentMethodId for subscription ${subscription.id}`)
+
+  let creditTransaction: UserCreditTransaction = null;
+  if (creditDeductAmount) {
+    creditTransaction = new UserCreditTransaction();
+    creditTransaction.userId = userId;
+    creditTransaction.amount = -1 * creditDeductAmount;
+    creditTransaction.type = 'recurring';
+  }
+
+  const payment = new Payment();
+  payment.subscription = subscription;
+  payment.userId = userId;
+  payment.creditTransaction = creditTransaction;
+  payment.amount = additionalPay;
+  payment.method = additionalPay ? PaymentMethod.Card : PaymentMethod.Credit;
+  payment.status = PaymentStatus.Pending;
+  payment.stripeCustomerId = stripeCustomerId;
+  payment.stripePaymentMethodId = stripePaymentMethodId;
+  payment.auto = true;
+
+  if (additionalPay) {
+    const rawResponse = await chargeStripeForPayment(payment, false);
+    assert(rawResponse.status === 'succeeded', 500, `Failed to auto charge stripe for subscription ${subscription.id}`);
+    payment.rawResponse = rawResponse;
+  }
+  payment.status = PaymentStatus.Paid;
+  payment.paidAt = getUtcNow();
+
+  extendSubscriptionEndDate(subscription);
 
   try {
     await tran.startTransaction();
-    let creditTransaction: UserCreditTransaction = null;
+
     if (creditDeductAmount) {
-      creditTransaction = new UserCreditTransaction();
-      creditTransaction.userId = userId;
-      creditTransaction.amount = -1 * creditDeductAmount;
-      creditTransaction.type = 'recurring';
       await tran.manager.save(creditTransaction);
     }
-
-    const payment = new Payment();
-    payment.subscription = subscription;
-    payment.userId = userId;
-    payment.creditTransaction = creditTransaction;
-    payment.amount = additionalPay;
-    payment.method = PaymentMethod.Card;
-    payment.rawResponse = rawResponse;
-    payment.status = status;
-    payment.auto = true;
     await tran.manager.save(payment);
-
-    extendSubscriptionEndDate(subscription);
     await tran.manager.save(subscription);
 
     await tran.commitTransaction();
@@ -203,7 +229,7 @@ async function handleRecurringPayments() {
   const list = await getRepository(UserOngoingSubscriptionInformation)
     .createQueryBuilder()
     .where('recurring = TRUE')
-    .andWhere('"end"::date = CURRENT_DATE')
+    .andWhere('"end" <= now()')
     // .leftJoinAndSelect('payments', 'payment')
     .getMany();
 

@@ -14,7 +14,7 @@ const Container = styled.div`
 
 const StyledTable = styled(Table)`
 .ant-typography {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .ant-table-cell {

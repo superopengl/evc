@@ -89,26 +89,21 @@ async function previsionStripePayment(payment: Payment): Promise<string> {
   return intent.client_secret;
 }
 
-export async function chargeStripe(payment: Payment, newStripePaymentMethodId?: string) {
+export async function chargeStripeForPayment(payment: Payment, onSessionPayment: boolean) {
   const { method, stripeCustomerId, stripePaymentMethodId } = payment;
 
   assert(method === PaymentMethod.Card, 400, 'Payment method not match');
   assert(stripeCustomerId, 400, 'Stripe customer ID is missing');
-  assert(stripePaymentMethodId || newStripePaymentMethodId, 400, 'Stripe payment method ID is missing');
+  assert(stripePaymentMethodId, 400, 'Stripe payment method ID is missing');
 
   const paymentIntent = await getStripe().paymentIntents.create({
     amount: Math.ceil(payment.amount * 100),
     currency: 'usd',
     customer: stripeCustomerId,
-    payment_method: stripePaymentMethodId || newStripePaymentMethodId,
-    off_session: !newStripePaymentMethodId,
+    payment_method: stripePaymentMethodId,
+    off_session: !onSessionPayment,
     confirm: true
   });
-
-  if (newStripePaymentMethodId) {
-    payment.stripePaymentMethodId = newStripePaymentMethodId;
-    await getManager().save(payment);
-  }
 
   return paymentIntent;
 }

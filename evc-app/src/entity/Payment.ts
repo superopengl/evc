@@ -7,6 +7,7 @@ import { UserCreditTransaction } from './UserCreditTransaction';
 
 @Entity()
 @Index(['userId', 'createdAt'])
+@Index(['subscriptionId', 'paidAt'])
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -38,6 +39,10 @@ export class Payment {
   @Column()
   status: PaymentStatus;
 
+  @Column({nullable: true})
+  @Index()
+  paidAt?: Date;
+
   @Column({ nullable: true })
   ipAddress: string;
 
@@ -47,8 +52,12 @@ export class Payment {
   @Column({ default: 1 })
   attempt: number;
 
-  @ManyToOne(() => Subscription, subscription => subscription.payments)
+  @ManyToOne(() => Subscription, subscription => subscription.payments, {onDelete: 'CASCADE'})
+  @JoinColumn({name: 'subscriptionId', referencedColumnName: 'id'})
   subscription: Subscription;
+
+  @Column()
+  subscriptionId: string;
 
   @OneToOne(() => UserCreditTransaction, { nullable: true, cascade: true })
   @JoinColumn({name: 'creditTransactionId', referencedColumnName: 'id'})

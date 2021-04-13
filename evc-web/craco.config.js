@@ -12,6 +12,7 @@ const modifyVars = {
   // '@heading-color': '#00293d',
   '@typography-title-font-weight': 400,
   '@font-size-base': '14px',
+  '@card-head-font-size': '18px',
   // '@height-base': '40px',
   // '@height-lg': '48px',
   // '@height-sm': '32px',

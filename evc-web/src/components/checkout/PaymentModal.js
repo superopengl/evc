@@ -139,8 +139,8 @@ const PaymentModal = (props) => {
           <Paragraph>{newPlanDef.description}</Paragraph>
           <Divider />
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Text>Recurring payment?</Text>
-            <Switch defaultChecked onChange={handleRecurringChange} />
+            <Text>Recurring payment? (Auto renew subscription at the end day)</Text>
+            <Switch defaultChecked={recurring} onChange={handleRecurringChange} />
           </Space>
           {paymentDetail?.totalCreditAmount > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Prefer to use credit?</Text>

@@ -220,7 +220,7 @@ export const listUserCreditHistory = handlerWrapper(async (req, res) => {
     .select([
       'uc."createdAt" as "createdAt"',
       'uc.amount as amount',
-      'uc."amountBeforeRollback" as "amountBeforeRollback"',
+      'uc."revertedCreditTransactionId" as "revertedCreditTransactionId"',
       'uc.type as "creditType"',
       'p.email as "referredUserEmail"',
       'py.id as "paymentId"',

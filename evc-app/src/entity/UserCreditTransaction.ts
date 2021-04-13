@@ -15,14 +15,14 @@ export class UserCreditTransaction {
   userId: string;
 
   @Column('uuid', {nullable: true})
-  referredUserId: string;
+  referredUserId?: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   amount: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
-  amountBeforeRollback: number;
+  @Column('uuid', { nullable: true })
+  revertedCreditTransactionId?: string;
 
   @Column()
-  type: 'adjust' | 'withdrawal' | 'recurring' | 'user-pay'
+  type: 'adjust' | 'withdrawal' | 'recurring' | 'user-pay' | 'revert'
 }

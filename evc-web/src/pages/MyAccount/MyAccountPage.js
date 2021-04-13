@@ -19,7 +19,7 @@ import { Descriptions } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
 const PaymentModal = loadable(() => import('components/checkout/PaymentModal'));
-const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListModal'));
+const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
 const MySubscriptionHistoryDrawer = loadable(() => import('./MySubscriptionHistoryDrawer'));
 const CommissionWithdrawalForm = loadable(() => import('pages/CommissionWithdrawal/CommissionWithdrawalForm'));
 const MyCommissionWithdrawalHistoryDrawer = loadable(() => import('pages/CommissionWithdrawal/MyCommissionWithdrawalHistoryDrawer'));

@@ -11,7 +11,7 @@ import MoneyAmount from './MoneyAmount';
 import { notify } from 'util/notify';
 import ReferralLinkInput from './ReferralLinkInput';
 import { saveReferralUserPolicy } from 'services/referralPolicyService';
-import CreditHistoryListModal from 'components/CreditHistoryListModal';
+import CreditHistoryListDrawer from 'components/CreditHistoryListDrawer';
 import { TimeAgo } from 'components/TimeAgo';
 
 const { Paragraph, Text, Title } = Typography;
@@ -154,7 +154,7 @@ const ReferralCreditForm = (props) => {
         </Form>
 
       </Space>
-      <CreditHistoryListModal visible={creditHistoryVisible}
+      <CreditHistoryListDrawer visible={creditHistoryVisible}
         onOk={() => setCreditHistoryVisible(false)}
         onFetch={handleFetchMyCreditHistoryList}
       />

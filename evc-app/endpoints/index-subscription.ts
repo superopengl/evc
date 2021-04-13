@@ -17,6 +17,9 @@ import { EmailTemplateType } from '../src/types/EmailTemplateType';
 import { UserOngoingSubscriptionInformation } from '../src/entity/views/UserOngoingSubscriptionInformation';
 import { EmailRequest } from '../src/types/EmailRequest';
 import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
+import { PaymentMethod } from '../src/types/PaymentMethod';
+import { logError } from '../src/utils/logger';
+import { SysLog } from '../src/entity/SysLog';
 
 const JOB_NAME = 'daily-subscription';
 
@@ -36,6 +39,38 @@ async function enqueueEmailTasks(template: EmailTemplateType, list: UserOngoingS
     };
     await enqueueEmail(emailReq);
   }
+}
+
+async function enqueueRecurringSucceededEmail(info: UserOngoingSubscriptionInformation, subscription: Subscription) {
+  const emailReq: EmailRequest = {
+    to: info.email,
+    template: EmailTemplateType.SubscriptionRecurringAutoPaySucceeded,
+    shouldBcc: true,
+    vars: {
+      name: getEmailRecipientName(info),
+      subscriptionId: info.subscriptionId,
+      subscriptionType: info.subscriptionType,
+      start: subscription.start,
+      end: subscription.end,
+    }
+  };
+  await enqueueEmail(emailReq);
+}
+
+async function enqueueRecurringFailedEmail(info: UserOngoingSubscriptionInformation, subscription: Subscription) {
+  const emailReq: EmailRequest = {
+    to: info.email,
+    template: EmailTemplateType.SubscriptionRecurringAutoPayFailed,
+    shouldBcc: true,
+    vars: {
+      name: getEmailRecipientName(info),
+      subscriptionId: info.subscriptionId,
+      subscriptionType: info.subscriptionType,
+      start: subscription.start,
+      end: subscription.end,
+    }
+  };
+  await enqueueEmail(emailReq);
 }
 
 async function expireSubscriptions() {
@@ -101,58 +136,68 @@ function extendSubscriptionEndDate(subscription: Subscription) {
   subscription.end = newEnd;
 }
 
-async function renewRecurringSubscription(subscription: Subscription) {
-  const { userId } = subscription;
+async function renewRecurringSubscription(info: UserOngoingSubscriptionInformation) {
+  const { subscriptionId, userId } = info;
+  const subscription = await getRepository(Subscription).findOne(subscriptionId, { relations: ['payments'] })
 
   const { rawRequest, rawResponse, status } = await handlePayWithCard(subscription);
-  await getManager().transaction(async m => {
-    try {
-      const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
-        m,
-        userId,
-        subscription.type,
-        true
-      );
+  const tran = getConnection().createQueryRunner();
 
-      let creditTransaction: UserCreditTransaction = null;
-      if (creditDeductAmount) {
-        creditTransaction = new UserCreditTransaction();
-        creditTransaction.userId = userId;
-        creditTransaction.amount = -1 * creditDeductAmount;
-        creditTransaction.type = 'recurring';
-        await m.save(creditTransaction);
-      }
-      const payment = new Payment();
-      payment.subscription = subscription;
-      payment.creditTransaction = creditTransaction;
-      payment.amount = additionalPay;
-      // payment.method = paymentMethod;
-      payment.rawResponse = rawResponse;
-      payment.status = status;
-      payment.auto = true;
-      await m.save(payment);
-
-      extendSubscriptionEndDate(subscription);
-      await m.save(subscription);
-
-      // TODO: send successfully repaied email
-    } catch (err) {
-      // TODO: send failed repaying email
+  try {
+    await tran.startTransaction();
+    const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
+      userId,
+      subscription.type,
+      true
+    );
+    let creditTransaction: UserCreditTransaction = null;
+    if (creditDeductAmount) {
+      creditTransaction = new UserCreditTransaction();
+      creditTransaction.userId = userId;
+      creditTransaction.amount = -1 * creditDeductAmount;
+      creditTransaction.type = 'recurring';
+      await getManager().save(creditTransaction);
     }
-  });
+
+    const payment = new Payment();
+    payment.subscription = subscription;
+    payment.creditTransaction = creditTransaction;
+    payment.amount = additionalPay;
+    payment.method = PaymentMethod.Card;
+    payment.rawResponse = rawResponse;
+    payment.status = status;
+    payment.auto = true;
+    await getManager().save(payment);
+
+    extendSubscriptionEndDate(subscription);
+    await getManager().save(subscription);
+
+    await tran.commitTransaction();
+    await enqueueRecurringSucceededEmail(info, subscription);
+  } catch (err) {
+    await tran.rollbackTransaction();
+    await enqueueRecurringFailedEmail(info, subscription);
+  }
 }
 
 async function handleRecurringPayments() {
-  const list: Subscription[] = await getRepository(Subscription)
+  const list = await getRepository(UserOngoingSubscriptionInformation)
     .createQueryBuilder()
-    .where('status = :status', { status: SubscriptionStatus.Alive })
-    .andWhere('recurring = TRUE')
+    .where('recurring = TRUE')
     .andWhere('"end"::date = CURRENT_DATE')
-    .leftJoinAndSelect('payments', 'payment')
-    .execute();
+    // .leftJoinAndSelect('payments', 'payment')
+    .getMany();
 
-  for (const subscription of list) {
-    await renewRecurringSubscription(subscription);
+  for (const item of list) {
+    try {
+      await renewRecurringSubscription(item);
+    } catch (err) {
+      const sysLog = new SysLog();
+      sysLog.level = 'autopay_falied';
+      sysLog.message = 'Recurring auto pay failed';
+      sysLog.req = item;
+      await getRepository(SysLog).insert(sysLog);
+    }
   }
 }
 

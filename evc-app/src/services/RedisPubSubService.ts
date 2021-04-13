@@ -1,8 +1,4 @@
-import * as aws from 'aws-sdk';
-import { awsConfig } from '../utils/awsConfig';
 import { Subject, Subscription } from 'rxjs';
-import { SysLog } from '../entity/SysLog';
-import { logError } from '../utils/logger';
 import * as redis from 'redis';
 import * as _ from 'lodash';
 

@@ -38,16 +38,16 @@ const HomeMarketArea = props => {
       <InnerContainer>
         <Row gutter={[40, 40]}>
           <Col flex="auto">
-            <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{color: '#17b649', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{color: '#57BB60', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketMostActive} title="Most actives" titleStyle={{color: '#52d074', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostPanel onFetch={getMarketMostActive} title="Most actives" titleStyle={{color: '#7DD487', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketGainers} title="Gainers" titleStyle={{color: '#5fdef1', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostPanel onFetch={getMarketGainers} title="Gainers" titleStyle={{color: '#55B0D4', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col flex="auto">
-            <StockMostPanel onFetch={getMarketLosers} title="Losers" titleStyle={{color: '#1cabd3', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostPanel onFetch={getMarketLosers} title="Losers" titleStyle={{color: '#89DFF1', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
         </Row>
       </InnerContainer>

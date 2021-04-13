@@ -55,10 +55,10 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
-  // background-color: rgba(23,182,73,0.6);
+  background-color: rgba(87,187,96,0.7);
   // background-color: rgba(255,255,255,0.6);
   // background-color: rgba(0, 41, 61, 0.6); 
-background-image: linear-gradient(125deg, #17b649, #17b649 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
+// background-image: linear-gradient(125deg, #57BB60, #57BB60 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
 }
 
 .ant-pro-global-header-collapsed-button {
@@ -137,9 +137,10 @@ const HomePage = (props) => {
   }
 
   return <StyledLayout
-    title={null}
     logo="/images/logo-transparent.png"
+    title={null}
     // logo="/images/logo-transparent.png"
+    siderWidth={270}
     layout="top"
     navTheme="dark"
     route={{ routes: ROUTES }}

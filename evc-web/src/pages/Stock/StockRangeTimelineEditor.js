@@ -16,7 +16,7 @@ const {Text} = Typography;
 
 const Container = styled.div`
   .current-published {
-    background-color: rgba(23,182,73, 0.1);
+    background-color: rgba(87,187,96, 0.1);
   }
 `;
 

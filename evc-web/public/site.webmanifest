@@ -13,8 +13,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#17b649",
-    "background_color": "#17b649",
+    "theme_color": "#57BB60",
+    "background_color": "#57BB60",
     "start_url": "https://easyvaluecheck.com",
     "display": "standalone"
 }

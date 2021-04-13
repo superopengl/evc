@@ -13,7 +13,7 @@ const { Text, Title, Link: TextLink } = Typography;
 const StyledTable = styled(Table)`
 
 .ant-typography {
-  font-size: 0.8rem;
+  // font-size: 0.9rem;
 }
 
 .ant-table-cell {
@@ -73,7 +73,7 @@ const StockMostPanel = (props) => {
           return <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
         }
         return {
-          children: <Text type="secondary"><small>{companyName}</small></Text>,
+          children: <Text type="secondary">{companyName}</Text>,
           props: {
             colSpan: 4,
           },
@@ -132,7 +132,7 @@ const StockMostPanel = (props) => {
 
   return (
     <>
-      {title && <Title level={5} style={{...titleStyle}}>{title}</Title>}
+      {title && <Title level={4} style={{...titleStyle}} strong>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         loading={loading}

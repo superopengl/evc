@@ -36,7 +36,7 @@ const StyledListItem = styled(List.Item)`
 }
 &:hover {
   .news-title {
-    color: #1cabd3;
+    color: #55B0D4;
     text-decoration: underline;
   }
 }

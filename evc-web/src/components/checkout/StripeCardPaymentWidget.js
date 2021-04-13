@@ -3,9 +3,9 @@ import { Space, Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
+import { CardElement, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import {CreditCardOutlined} from '@ant-design/icons';
+import { CreditCardOutlined } from '@ant-design/icons';
 
 const stripePromise = loadStripe(process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY);
 
@@ -13,20 +13,24 @@ const StripeCardPaymentForm = (props) => {
 
   const { onProvision, onCommit } = props;
   const [loading, setLoading] = React.useState(false);
-  const [inputComplete, setInputComplete] = React.useState(false);
+  const [cardNumberComplete, setCardNumberComplete] = React.useState(false);
+  const [cardExpiryComplete, setCardExpiryComplete] = React.useState(false);
+  const [cardCvcComplete, setCardCvcComplete] = React.useState(false);
   const stripe = useStripe();
   const elements = useElements();
+
+  const isInfoComplete = stripe && elements && cardNumberComplete && cardExpiryComplete && cardCvcComplete;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!stripe || !elements || !inputComplete) {
+    if (!isInfoComplete) {
       return;
     }
 
     try {
       setLoading(true);
-      const cardElement = elements.getElement('card');
+      const cardNumberElement = elements.getElement('cardNumber');
 
       const paymentInfo = await onProvision();
       const { clientSecret, paymentId } = paymentInfo;
@@ -35,7 +39,7 @@ const StripeCardPaymentForm = (props) => {
       const rawResponse = await stripe.confirmCardSetup(clientSecret,
         {
           payment_method: {
-            card: cardElement,
+            card: cardNumberElement,
           }
         });
 
@@ -53,39 +57,62 @@ const StripeCardPaymentForm = (props) => {
     }
   };
 
-  const handleCardInfoChange = (element) => {
-    setInputComplete(element.complete)
+  const handleCardNumberChange = (element) => {
+    setCardNumberComplete(element.complete)
   }
 
+  const handleCardExpiryChange = (element) => {
+    setCardExpiryComplete(element.complete)
+  }
+
+  const handleCardCvcChange = (element) => {
+    setCardCvcComplete(element.complete)
+  }
+
+  const options = {
+    style: {
+      base: {
+        fontSize: '16px',
+        color: '#3e9448',
+        textAlign: 'center',
+        '::placeholder': {
+          color: 'rgba(0,0,0,0.2)',
+        },
+      },
+      invalid: {
+        color: '#d7183f',
+      },
+    },
+  };
   return (
     <form onSubmit={handleSubmit}>
-      <Space direction="vertical" style={{ width: '100%' }} size="large">
-        {/* <Text>Please input card information</Text> */}
-        {/* <label>Card Number <CardNumberElement /></label> */}
-        <CardElement
-          onChange={handleCardInfoChange}
-          options={{
-            hidePostalCode: true,
-            style: {
-              base: {
-                fontSize: '16px',
-                // color: '#424770',
-                '::placeholder': {
-                  color: 'rgba(0,0,0,0.2)',
-                },
-              },
-              invalid: {
-                color: '#d7183f',
-              },
-            },
-          }}
-        />
-        <Button type="primary" size="large" htmlType="submit" 
-        icon={<CreditCardOutlined />}
-        block disabled={loading || !stripe || !inputComplete} loading={loading} style={{fontWeight: 800,fontStyle: 'italic'}}>
-          Pay by Card
-        </Button>
+      {/* <Text>Please input card information</Text> */}
+      {/* <label>Card Number <CardNumberElement /></label> */}
+      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        <div style={{ width: 340 }}>
+          <CardNumberElement
+            onChange={handleCardNumberChange}
+            options={options}
+          />
+        </div>
+        <div style={{ width: 100 }}>
+          <CardExpiryElement
+            onChange={handleCardExpiryChange}
+            options={options}
+          />
+        </div>
+        <div style={{ width: 100 }}>
+          <CardCvcElement
+            onChange={handleCardCvcChange}
+            options={options}
+          />
+        </div>
       </Space>
+      <Button type="primary" size="large" htmlType="submit"
+        icon={<CreditCardOutlined />}
+        block disabled={loading || !isInfoComplete} loading={loading} style={{ fontWeight: 800, fontStyle: 'italic' }}>
+        Pay by Card
+        </Button>
     </form>
   )
 }

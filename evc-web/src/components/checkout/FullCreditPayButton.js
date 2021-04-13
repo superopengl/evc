@@ -22,7 +22,7 @@ const FullCreditPayButton = (props) => {
     <Button type="primary" block onClick={handleFullCreditPay}
       disabled={loading}
       loading={loading}
-    >Purchase without paying</Button>
+    >Purchase with credits</Button>
   );
 }
 

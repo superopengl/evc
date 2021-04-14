@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
 import UnusualOptionsActivityPanel from './UnusualOptionsActivityPanel';
+import { FormattedMessage } from 'react-intl';
 
 const { Text, Paragraph } = Typography;
 
@@ -43,7 +44,7 @@ const UnusualOptionsActivityPage = () => {
   // }, []);
 
   return (
-    <Card title="Unusual Options Activity">
+    <Card >
       <Tabs defaultActiveKey="stock" type="card">
         <Tabs.TabPane tab="Stock" key="stocks">
           <UnusualOptionsActivityPanel type="stock" />

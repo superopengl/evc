@@ -212,7 +212,8 @@ const AppLoggedIn = props => {
 
   return <StyledLayout
     title="Easy Value Check"
-    logo="/header-logo.png"
+    logo="/favicon-32x32.png"
+    // logo="/header-logo.png"
     route={{ routes }}
     location={{ pathname }}
     navTheme="dark"

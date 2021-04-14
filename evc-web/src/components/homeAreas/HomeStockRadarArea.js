@@ -4,6 +4,7 @@ import { Typography, Button, Space } from 'antd';
 import styled from 'styled-components';
 import StockRadarPage from 'pages/Stock/StockRadarPage';
 import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 const { Title, Text } = Typography;
 
@@ -36,12 +37,14 @@ export const HomeStockRadarArea = props => {
   return (
     <Container>
       <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
-        <Title>Stock Radar - Preview</Title>
+        <Title><FormattedMessage id="menu.stockRadar" /> - Preview</Title>
           <Text type="secondary">
             This is Stock Radar preview. 
             Full feature is available after sign up
           </Text>
-          <Link to="/signup"><Button type="primary" style={{minWidth: 140}}>Sign Up Now</Button></Link>
+          <Link to="/signup"><Button type="primary" style={{minWidth: 140}}>
+            <FormattedMessage id="menu.signUpNow"/>
+            </Button></Link>
       </Space>
       <InnerContainer>
         <StockRadarPage onItemClick={onSymbolClick} />

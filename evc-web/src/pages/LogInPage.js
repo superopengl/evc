@@ -9,6 +9,8 @@ import { login } from 'services/authService';
 import { countUnreadMessage } from 'services/messageService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto 0 auto;
@@ -21,6 +23,7 @@ const ContainerStyled = styled.div`
   padding: 2rem 1rem;
   text-align: center;
   max-width: 400px;
+  min-width: 300px;
   background-color: #ffffff;
   height: 100%;
 `;
@@ -33,6 +36,7 @@ const { Title } = Typography;
 const LogInPage = props => {
   const [sending, setLoading] = React.useState(false);
   const context = React.useContext(GlobalContext);
+  const intl = useIntl();
   const { setUser } = context;
 
 
@@ -64,7 +68,7 @@ const LogInPage = props => {
     <LayoutStyled>
       <ContainerStyled>
         <LogoContainer><Logo /></LogoContainer>
-        <Title level={2}>Log In</Title>
+        <Title level={2}><FormattedMessage id="menu.login" /></Title>
         <GoogleSsoButton
           render={
             renderProps => (
@@ -77,7 +81,9 @@ const LogInPage = props => {
                 style={{ marginTop: '1.5rem' }}
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled}
-              >Continue with Google</Button>
+              >
+                <FormattedMessage id="menu.continueWithGoogle"/>
+                </Button>
             )}
         />
         <Divider>or</Divider>
@@ -85,13 +91,13 @@ const LogInPage = props => {
           <Form.Item label="" name="name"
             rules={[{ required: true, validator: validateName, whitespace: true, max: 100, message: 'Please input valid email address' }]}
           >
-            <Input placeholder="Email address" type="email" autoComplete="email" allowClear={true} maxLength="100" disabled={sending} autoFocus={true} />
+            <Input placeholder={intl.formatMessage({id: "placeholder.emailAddress"})} type="email" autoComplete="email" allowClear={true} maxLength="100" disabled={sending} autoFocus={true} />
           </Form.Item>
           <Form.Item label="" name="password" autoComplete="current-password" rules={[{ required: true, message: 'Please input password' }]}>
-            <Input.Password placeholder="Password" autoComplete="current-password" maxLength="50" disabled={sending} />
+            <Input.Password placeholder={intl.formatMessage({id: "placeholder.password"})} autoComplete="current-password" maxLength="50" disabled={sending} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={sending}>Log In</Button>
+            <Button block type="primary" htmlType="submit" disabled={sending}><FormattedMessage id="menu.login" /></Button>
           </Form.Item>
 
           {/* <Form.Item>
@@ -99,10 +105,15 @@ const LogInPage = props => {
           </Form.Item> */}
           <Form.Item>
             <Link to="/forgot_password">
-              <Button block type="link">Forgot password? Click here to reset</Button>
+              <Button block type="link">
+                <FormattedMessage id="text.forgotPasswordClickHereToReset"/>
+              </Button>
             </Link>
             {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-        <Link to="/signup"><Button size="small" block type="link">Not a user? Click to Sign Up</Button></Link>
+        <Link to="/signup"><Button size="small" block type="link">
+        <FormattedMessage id="text.notAUserClickToSignUp"/>
+          
+          </Button></Link>
           </Form.Item>
         </Form>
       </ContainerStyled>

@@ -8,6 +8,7 @@ import { countUnreadMessage } from 'services/messageService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 
 const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
@@ -31,7 +32,7 @@ const GoogleSsoButton = props => {
 
   return <GoogleLogin
     clientId={process.env.REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID}
-    buttonText="Log In with Google"
+    buttonText={<FormattedMessage id="menu.continueWithGoogle"/>}
     // isSignedIn={true}
     render={render}
     style={{width: '100%'}}

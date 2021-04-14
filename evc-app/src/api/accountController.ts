@@ -8,6 +8,7 @@ import { ReferralCode } from '../entity/ReferralCode';
 import { getUserCurrentSubscription } from '../utils/getUserCurrentSubscription';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
+import { getCurrentReferralAmountForReferrer } from '../services/referralService';
 
 export const createReferral = async (userId) => {
   const entity = new ReferralCode();
@@ -35,11 +36,11 @@ const getAccountForUser = async (userId) => {
     .getRawOne();
 
 
-  const referralPolicy = await getRepository(ReferralUserPolicy).findOne(userId);
+  const referralCommission = await getCurrentReferralAmountForReferrer(userId);
 
   const result = {
     subscription,
-    referralPolicy,
+    referralCommission,
     referralUrl,
     referralCount,
     credit: +credit?.amount || 0

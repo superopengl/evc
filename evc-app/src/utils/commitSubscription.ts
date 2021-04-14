@@ -7,7 +7,7 @@ import { Payment } from '../entity/Payment';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { getUtcNow } from './getUtcNow';
 import { User } from '../entity/User';
-import { handleReferralKickbackWhenPaid } from '../services/referralService';
+import { handleReferralCommissionWhenPaid } from '../services/referralService';
 import { Role } from '../types/Role';
 
 
@@ -41,7 +41,7 @@ export async function commitSubscription(
     });
 
     if (payment.method !== PaymentMethod.Credit) {
-      await handleReferralKickbackWhenPaid(m, userId);
+      await handleReferralCommissionWhenPaid(m, userId);
     }
   });
 }

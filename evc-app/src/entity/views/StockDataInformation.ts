@@ -1,11 +1,7 @@
 import { ViewEntity, Connection, PrimaryColumn, ViewColumn } from 'typeorm';
-import { StockLatestPaidInformation } from './StockLatestPaidInformation';
-import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
 import { Stock } from '../Stock';
 import { StockEps } from '../StockEps';
 import { StockDailyClose } from '../StockDailyClose';
-import { StockDailyPutCallRatio } from '../StockDailyPutCallRatio';
-import { StockDailyPe } from './StockDailyPe';
 import { StockComputedPe90 } from './StockComputedPe90';
 
 

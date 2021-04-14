@@ -44,6 +44,7 @@ import * as moment from 'moment-timezone';
 import * as _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
 import { existsQuery } from '../utils/existsQuery';
+import { getCompanyName } from '../services/alphaVantageService';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -273,7 +274,7 @@ const initilizedNewStockData = async (symbol) => {
   if (!symbol) {
     return;
   }
-  await syncStockEps(symbol, 5);
+  await syncStockEps(symbol);
   await syncStockHistoricalClose(symbol, 200);
   await refreshMaterializedView();
 }
@@ -287,7 +288,7 @@ async function addAndInitializeStock(symbol, companyName, stockTags) {
   console.log(`Try auto-adding stock ${symbol}`);
   try {
     await getRepository(Stock).save(stock);
-    await syncStockEps(symbol, 5);
+    await syncStockEps(symbol);
     await syncStockHistoricalClose(symbol, 200);
     await getAndFeedStockQuote(symbol);
 
@@ -328,13 +329,17 @@ export const createStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
-  const { symbol: reqSymbol, company, tags } = req.body;
+  const { symbol: reqSymbol, tags } = req.body;
+
+  assert(reqSymbol, 400, 'symbol is not specified');
+  const companyName = await getCompanyName(reqSymbol);
+  assert(companyName, 400, 'Cannot recoganize the symbol to get company name.');
 
   const symbol = reqSymbol.toUpperCase();
   const logoTask = getStockLogoUrl(symbol);
 
   stock.symbol = symbol;
-  stock.company = company;
+  stock.company = companyName
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({
       where: {
@@ -344,7 +349,7 @@ export const createStock = handlerWrapper(async (req, res) => {
   }
   stock.logoUrl = await logoTask;
 
-  await getRepository(Stock).save(stock);
+  await getRepository(Stock).insert(stock);
 
   initilizedNewStockData(symbol).catch(err => { });
 

@@ -89,11 +89,11 @@ const CreateStockModal = props => {
         <Form.Item label="Symbol" name="symbol"
           rules={[{ required: true, validator: validateExsitsSymbol, whitespace: true, max: 10 }]}
         >
-          <Input placeholder="AAPL" allowClear={true} maxLength="10" disabled={sending} autoFocus={true} />
+          <Input placeholder="Stock symbol" allowClear={true} maxLength="10" disabled={sending} autoFocus={true} />
         </Form.Item>
-        <Form.Item label="Company Name" name="company" rules={[{ required: true, max: 100, message: 'Please input company name' }]}>
+        {/* <Form.Item label="Company Name" name="company" rules={[{ required: true, max: 100, message: 'Please input company name' }]}>
           <Input placeholder="Apple Inc." maxLength="100" disabled={sending} />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label="Tags" name="tags">
           <TagSelect tags={stockTags} onSave={saveStockTag} readonly={false} />
         </Form.Item>

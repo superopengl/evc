@@ -11,7 +11,7 @@ type StockIexEpsInfo = {
   value: number;
 };
 
-export const syncStockEps = async (symbol: string, howManyQuarters = 4) => {
+export const syncStockEps = async (symbol: string, howManyQuarters = 8) => {
   const earnings = await getEarnings(symbol, howManyQuarters);
   if (!earnings?.length) {
     return;

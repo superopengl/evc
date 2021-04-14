@@ -156,8 +156,8 @@ const HomeCarouselAreaRaw = props => {
         <Row gutter={[30, 30]} style={{ marginTop: 90, marginBottom: 50, alignItems: 'center' }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* <Image src="/images/logo-transparent.png" width={120} style={{marginBottom: 20}} preview={false}/> */}
-            <Image src="/images/logo-transparent-big.png" style={{width: 240}} preview={false} />
-            <Title style={{ fontSize: 'clamp(22px, 3vw, 32px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight:'bolder' }}>EASY VALUE CHECK</Title>
+            <Image src="/images/logo-transparent.png" style={{width: 180}} preview={false} />
+            <Title style={{ fontSize: 'clamp(22px, 3vw, 28px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight:'bolder' }}>EASY VALUE CHECK</Title>
             <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(255,255,255,1)', textTransform: 'uppercase' }}>
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
@@ -190,7 +190,7 @@ const HomeCarouselAreaRaw = props => {
         itemLayout="horizontal"
         dataSource={data}
         // bordered
-        size="small"
+        size="large"
         renderItem={item => (
           <List.Item>
             <Space size="large">

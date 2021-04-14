@@ -200,18 +200,21 @@ const MyAccountPage = (props) => {
             }
           >
             <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
-            <StyledRow gutter={[30, 30]} style={{ maxWidth: 800 }}>
-              {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
-                <SubscriptionCard
-                  title={s.title}
-                  icon={s.icon}
-                  description={s.description}
-                  onClick={() => handleChangePlan(s)}
-                  price={s.price}
-                  active={s.key === currentPlanKey}
-                  unit={s.unit} />
-              </StyledCol>)}
-
+            <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+              <StyledRow gutter={[30, 30]} style={{ maxWidth: 800 }}>
+                {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
+                  <SubscriptionCard
+                    title={s.title}
+                    icon={s.icon}
+                    description={s.description}
+                    onClick={() => handleChangePlan(s)}
+                    price={s.price}
+                    active={s.key === currentPlanKey}
+                    unit={s.unit} />
+                </StyledCol>)}
+              </StyledRow>
+            </div>
+            <StyledRow style={{ marginTop: 30 }}>
               {currentSubscription && <Col span={24}>
                 {/* <Title level={4}>{getSubscriptionName(currentSubscription.type)}</Title> */}
                 <Title level={5}>Subscription period</Title>
@@ -246,7 +249,7 @@ const MyAccountPage = (props) => {
             }
           >
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Paragraph type="secondary">The credit can be used for future payment.</Paragraph>
+              <Paragraph type="secondary">You can earn <MoneyAmount value={account.referralCommission} /> for each referral after the referred user has purchased a plan. The credit can be used for future payment.</Paragraph>
 
               <Button key={0} onClick={() => setCreditHistoryVisible(true)}>Credit History</Button>
             </Space>

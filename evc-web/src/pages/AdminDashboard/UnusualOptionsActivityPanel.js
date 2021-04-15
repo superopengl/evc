@@ -30,6 +30,8 @@ const columnDef = [
   {
     title: 'Symbol',
     dataIndex: 'symbol',
+    fixed: 'left',
+    width: 80,
     render: (value) => value,
   },
   {
@@ -40,6 +42,7 @@ const columnDef = [
   {
     title: 'Type',
     dataIndex: 'type',
+    width: 50,
     render: (value) => value,
   },
   {
@@ -50,21 +53,25 @@ const columnDef = [
   {
     title: 'Expiration Date',
     dataIndex: 'expDate',
+    width: 100,
     render: (value) => moment(value).format('D MMM YYYY'),
   },
   {
     title: 'Days To Expiration',
     dataIndex: 'dte',
+    width: 80,
     render: (value) => value,
   },
   {
     title: 'Midpoint',
     dataIndex: 'midpoint',
+    width: 80,
     render: (value) => value,
   },
   {
     title: 'Ask',
     dataIndex: 'ask',
+    width: 50,
     render: (value) => value,
   },
   {
@@ -80,11 +87,13 @@ const columnDef = [
   {
     title: 'Open Interest',
     dataIndex: 'openInt',
+    width: 80,
     render: (value) => value,
   },
   {
     title: 'Volume / Open Interest',
     dataIndex: 'voloi',
+    width: 80,
     render: (value) => value,
   },
   {
@@ -95,6 +104,7 @@ const columnDef = [
   {
     title: 'Trade Date',
     dataIndex: 'time',
+    width: 100,
     render: (value) => moment(value).format('D MMM YYYY'),
   }
 ];
@@ -153,8 +163,11 @@ const UnusualOptionsActivityPanel = (props) => {
         loading={loading}
         rowKey="id"
         pagination={false}
-        style={{marginBottom: '2rem', height: 'calc(100vh - 320px)'}}
-        scroll={{y: 'calc(100vh - 400px)'}}
+        style={{ marginBottom: '2rem', height: 'calc(100vh - 320px)' }}
+        scroll={{ 
+          x: 'max-content',
+          y: 'calc(100vh - 400px)' 
+        }}
       ></Table>
       <Pagination
         current={queryInfo.page}

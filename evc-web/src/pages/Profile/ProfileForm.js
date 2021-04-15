@@ -1,16 +1,22 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button, Form, Input } from 'antd';
+import { Typography, Button, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 
+const { Link } = Typography;
+
 const ProfileForm = (props) => {
   const { user, initial, onOk } = props;
   const [loading, setLoading] = React.useState(false);
   const [profile] = React.useState(user.profile || user);
+
+  const handleRefreshPage = () => {
+    window.location.reload(false);
+  }
 
   const handleSave = async (values) => {
     if (loading) {
@@ -22,7 +28,12 @@ const ProfileForm = (props) => {
 
       await saveProfile(user.id, values);
 
-      notify.success('Successfully saved profile!')
+      const hasLocaleChanged = profile.locale !== values.locale;
+
+      notify.success(
+        'Successfully saved profile!',
+        hasLocaleChanged ? <>You have changed locale. Please <Link onClick={handleRefreshPage}>Refresh</Link> the page to catch up the locale change</> : null
+      );
 
       Object.assign(profile, values);
       onOk(user);

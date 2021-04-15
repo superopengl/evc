@@ -38,7 +38,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .from(StockLatestFairValue, 'v')
       .where('"fairValueLo" IS NULL')
       .andWhere('"ttmEps" <= 0')
-      .select('symbol'),
+      .select('symbol')
+      .orderBy('symbol'),
       'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
@@ -49,7 +50,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .from(StockLatestFairValue, 'v')
       .where('"fairValueLo" IS NULL')
       .andWhere('"ttmEps" IS NULL')
-      .select('symbol'),
+      .select('symbol')
+      .orderBy('symbol'),
       'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
@@ -60,7 +62,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .from(StockSupport, 'x')
       .groupBy('symbol')
       .having('COUNT(*) = 1')
-      .select('symbol'),
+      .select('symbol')
+      .orderBy('symbol'),
       'sub'
     )
     .select('array_agg(symbol) as value')
@@ -72,7 +75,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .from(StockResistance, 'x')
       .groupBy('symbol')
       .having('COUNT(*) = 1')
-      .select('symbol'),
+      .select('symbol')
+      .orderBy('symbol'),
       'sub'
     )
     .select('array_agg(symbol) as value')
@@ -83,7 +87,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .from(q => q
       .from(StockLatestPaidInformation, 'v')
       .where('supports IS NULL')
-      .select('symbol'),
+      .select('symbol')
+      .orderBy('symbol'),
       'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
@@ -93,7 +98,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .from(q => q
       .from(StockLatestPaidInformation, 'v')
       .where('resistances IS NULL')
-      .select('symbol'),
+      .select('symbol')
+      .orderBy('symbol'),
       'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();

@@ -110,7 +110,7 @@ const StockEpsAdminEditor = (props) => {
               description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
                 {/* <Text type="secondary">{item.year} Q{item.quarter}</Text> */}
                 <Text type="secondary"><small>{moment(item.reportDate).format('D MMM YYYY')}</small></Text>
-                <MoneyAmount symbol="" value={item.value} />
+                <MoneyAmount symbol="" value={item.value} digital={4} />
               </Space>}
             />
           </List.Item>

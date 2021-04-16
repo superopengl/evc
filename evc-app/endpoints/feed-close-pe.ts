@@ -5,7 +5,7 @@ import { isUSMarketOpen } from '../src/services/iexService';
 import { refreshMaterializedView } from '../src/db';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
-import * as sleep from 'sleep-promise';
+import * as delay from 'delay';
 import errorToJson from 'error-to-json';
 import {syncStockHistoricalClose} from '../src/services/stockCloseService';
 
@@ -38,7 +38,7 @@ start(JOB_NAME, async () => {
     try {
       await syncStockHistoricalClose(symbol, 10);
       console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
-      await sleep(sleepTime);
+      await delay(sleepTime);
     } catch (e) {
       const errorJson = errorToJson(e);
       const msg = `${JOB_NAME} ${symbol} ${++count}/${symbols.length} failed`

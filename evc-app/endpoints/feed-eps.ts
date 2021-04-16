@@ -4,7 +4,7 @@ import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { syncStockEps } from '../src/services/stockEpsService';
 import { executeWithDataEvents } from '../src/services/dataLogService';
-import * as sleep from 'sleep-promise';
+import * as delay from 'delay';
 import errorToJson from 'error-to-json';
 import { isUSMarketOpen } from '../src/services/iexService';
 import { StockResistance } from '../src/entity/StockResistance';
@@ -99,7 +99,7 @@ start(JOB_NAME, async () => {
     try {
       await syncStockEps(symbol);
       console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
-      await sleep(sleepTime);
+      await delay(sleepTime);
     } catch (e) {
       const errorJson = errorToJson(e);
       const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${JSON.stringify(errorJson)}`

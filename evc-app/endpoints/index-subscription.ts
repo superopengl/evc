@@ -21,7 +21,7 @@ import { PaymentMethod } from '../src/types/PaymentMethod';
 import { logError } from '../src/utils/logger';
 import { SysLog } from '../src/entity/SysLog';
 import { assert } from '../src/utils/assert';
-import { chargeStripeForPayment } from '../src/services/stripeService';
+import { chargeStripeForCardPayment } from '../src/services/stripeService';
 import { getUtcNow } from '../src/utils/getUtcNow';
 import { RevertableCreditTransactionInformation } from '../src/entity/views/RevertableCreditTransactionInformation';
 
@@ -199,7 +199,7 @@ async function renewRecurringSubscription(info: AliveSubscriptionInformation) {
   payment.auto = true;
 
   if (additionalPay) {
-    const rawResponse = await chargeStripeForPayment(payment, false);
+    const rawResponse = await chargeStripeForCardPayment(payment, false);
     assert(rawResponse.status === 'succeeded', 500, `Failed to auto charge stripe for subscription ${subscription.id}`);
     payment.rawResponse = rawResponse;
   }

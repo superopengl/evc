@@ -15,7 +15,7 @@ import { calculateNewSubscriptionPaymentDetail } from '../utils/calculateNewSubs
 import { provisionSubscriptionPurchase } from '../utils/provisionSubscriptionPurchase';
 import { commitSubscription } from '../utils/commitSubscription';
 import * as _ from 'lodash';
-import { createStripeClientSecret, chargeStripeForPayment } from '../services/stripeService';
+import { createStripeClientSecretForCardPayment, chargeStripeForCardPayment, chargeStripeForAlipay } from '../services/stripeService';
 import { Role } from '../types/Role';
 
 async function getUserSubscriptionHistory(userId) {
@@ -108,13 +108,16 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
     case PaymentMethod.PayPal:
       // No need to do anything extra
       break;
-    case PaymentMethod.Card:
-      const clientSecret = await createStripeClientSecret(payment);
+    case PaymentMethod.Card: {
+      const clientSecret = await createStripeClientSecretForCardPayment(payment);
       result.clientSecret = clientSecret;
       break;
-    case PaymentMethod.AliPay:
-      assert(false, 501);
+    }
+    case PaymentMethod.AliPay: {
+      const clientSecret = await chargeStripeForAlipay(payment);
+      result.clientSecret = clientSecret;
       break;
+    }
     default:
       assert(false, 500, `Unknown payment method ${method}`);
   }
@@ -131,7 +134,7 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
   const payment = await getRepository(Payment).findOne({
     id: paymentId,
     userId,
-  }, {relations: ['subscription']});
+  }, { relations: ['subscription'] });
 
   assert(payment, 404);
   const { method } = payment;
@@ -144,7 +147,7 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
     case PaymentMethod.Card:
       const { stripePaymentMethodId } = req.body;
       payment.stripePaymentMethodId = stripePaymentMethodId;
-      const rawResponse = await chargeStripeForPayment(payment, true);
+      const rawResponse = await chargeStripeForCardPayment(payment, true);
       payment.rawResponse = rawResponse;
       await commitSubscription(payment);
       break;

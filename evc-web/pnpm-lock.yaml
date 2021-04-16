@@ -17,7 +17,6 @@ dependencies:
   moment-timezone: 0.5.33
   query-string: 6.14.1
   react: 17.0.2
-  react-async-script-loader: 0.3.0_react@17.0.2
   react-big-calendar: 0.32.0_react-dom@17.0.2+react@17.0.2
   react-chat-elements: 10.14.0_9bdd65c2b60ce8638444b80b396a481b
   react-cookie-consent: 6.2.3_react@17.0.2
@@ -7088,10 +7087,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-0nRXAQJabHdabFRXk+1QL8DGSaE=
-  /hoist-non-react-statics/1.2.0:
-    dev: false
-    resolution:
-      integrity: sha1-qkSM8JhtVcxAdzsXF0t90GbLfPs=
   /hoist-non-react-statics/3.3.2:
     dependencies:
       react-is: 16.13.1
@@ -11844,15 +11839,6 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-0sF4ny9v/B7s6aoehwze9vJNWcmCemAUYBVasscVr92+UYiEqDXOxfKjXN685mDaMRNF3WdhHQs76oTODMocFA==
-  /react-async-script-loader/0.3.0_react@17.0.2:
-    dependencies:
-      hoist-non-react-statics: 1.2.0
-      react: 17.0.2
-    dev: false
-    peerDependencies:
-      react: ^15.5.4
-    resolution:
-      integrity: sha1-x0KzyiXgi6Yat+tkNx+BQCdpK4Y=
   /react-big-calendar/0.32.0_react-dom@17.0.2+react@17.0.2:
     dependencies:
       '@babel/runtime': 7.13.10
@@ -15264,7 +15250,6 @@ specifiers:
   prop-types: ^15.7.2
   query-string: ^6.14.0
   react: ^17.0.1
-  react-async-script-loader: ^0.3.0
   react-big-calendar: ^0.32.0
   react-chat-elements: ^10.14.0
   react-cookie-consent: ^6.2.3

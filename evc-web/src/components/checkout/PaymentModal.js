@@ -1,12 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Typography, Button, Switch, Divider, Steps, Card } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Modal, Space } from 'antd';
-import Icon, { AlipayCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import Icon, { LeftOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import * as _ from 'lodash';
 import MoneyAmount from '../MoneyAmount';
@@ -20,20 +19,7 @@ import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';
 import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
 
-const { Title, Text, Paragraph } = Typography;
-
-
-const AlipayButton = styled(Button)`
-  border-color: #108fe9;
-  background-color: #108fe9;
-  color: white;
-
-  &:active, &:focus, &:hover {
-    color:  #108fe9;
-    background: white;
-    border-color:  #108fe9;
-  }
-`;
+const { Title, Text } = Typography;
 
 const PaymentModal = (props) => {
 
@@ -173,27 +159,23 @@ const PaymentModal = (props) => {
         </>}
         {showCreditCardCombinedRecurringMessage && <Alert
           type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />}
-        <div style={{ display: shouldShowCard ? 'block' : 'none' }}>
-          <StripeCardPaymentWidget
+          {shouldShowCard && <StripeCardPaymentWidget
             onProvision={() => handleProvisionSubscription('card')}
             onCommit={handleSuccessfulPayment}
             onLoading={setLoading}
-          />
-        </div>
-        <div style={{ display: shouldShowAliPay ? 'block' : 'none' }}>
-          <StripeAlipayPaymentWidget
+          />}
+          {shouldShowAliPay && <StripeAlipayPaymentWidget
             onProvision={() => handleProvisionSubscription('alipay')}
             onCommit={handleSuccessfulPayment}
             onLoading={setLoading}
-          />
-        </div>
-        <div style={{ display: shouldShowPayPal ? 'block' : 'none' }}>
-          <PayPalCheckoutButton
+          />}
+          {shouldShowPayPal && <PayPalCheckoutButton
             onProvision={() => handleProvisionSubscription('paypal')}
             onCommit={handleSuccessfulPayment}
             onLoading={setLoading}
-          />
-        </div>
+          />}
+        <Divider/>
+        <Button block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button>
       </Space>
     }
   ];
@@ -206,7 +188,7 @@ const PaymentModal = (props) => {
       title="Subscribe plan"
       destroyOnClose={true}
       footer={null}
-      width={600}
+      width={520}
       onOk={() => onCancel()}
       onCancel={() => onCancel()}
     >

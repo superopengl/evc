@@ -123,7 +123,10 @@ export async function chargeStripeForAlipay(payment: Payment): Promise<string> {
     amount: Math.ceil(amount * 100),
     currency: isProd ? 'usd' : 'aud', // Stripe Alipay only allow local currency.
     payment_method_types: ['alipay'],
-  }) 
+  });
+
+  payment.stripeAlipayPaymentIntentId = paymentIntent.id;
+  await getManager().save(payment);
 
   return paymentIntent.client_secret;
 }

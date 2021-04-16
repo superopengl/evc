@@ -156,14 +156,39 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
       await commitSubscription(payment);
       break;
     case PaymentMethod.AliPay:
-      assert(false, 501, `AliPay is under development`);
+      assert(false, 404, `AliPay should use this API to commit payment`);
       break;
     default:
       assert(false, 500, `Unknown payment method ${method}`);
   }
 
-
   res.json();
+});
+
+
+export const confirmSubscriptionAlipayPayment = handlerWrapper(async (req, res) => {
+  const { id: paymentId } = req.params;
+  const { user } = req as any;
+  const userId = user.id;
+
+  const payment = await getRepository(Payment).findOne({
+    id: paymentId,
+    userId,
+  }, { relations: ['subscription'] });
+
+  assert(payment, 404);
+  assert(payment.method === PaymentMethod.AliPay, 400, 'Not an Alipay payment');
+
+  const { payment_intent, payment_intent_client_secret, redirect_status } = req.query;
+  assert(payment.stripeAlipayPaymentIntentId === payment_intent, 400, 'Invalid payment confirmation');
+
+  if (redirect_status === 'succeeded') {
+    await commitSubscription(payment);
+  }
+
+  const accountUrl = `${process.env.EVC_WEB_DOMAIN_NAME}/account`;
+
+  res.redirect(accountUrl);
 });
 
 export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {

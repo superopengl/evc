@@ -24,12 +24,16 @@ const AlipayButton = styled(Button)`
 
 const StripeAlipayPaymentForm = (props) => {
 
-  const { onProvision, onCommit } = props;
+  const { onProvision, onCommit, onLoading } = props;
 
   const [loading, setLoading] = React.useState(false);
   const stripe = useStripe();
 
   const isInfoComplete = stripe;
+
+  React.useEffect(() => {
+    onLoading(loading);
+  }, [loading]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -76,13 +80,14 @@ const StripeAlipayPaymentForm = (props) => {
 }
 
 const StripeAlipayPaymentWidget = props => (<Elements stripe={stripePromise}>
-  <StripeAlipayPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} />
+  <StripeAlipayPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} onLoading={props.onLoading} />
 </Elements>)
 
 
 StripeAlipayPaymentWidget.propTypes = {
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
+  onLoading: PropTypes.func.isRequired,
 };
 
 StripeAlipayPaymentWidget.defaultProps = {

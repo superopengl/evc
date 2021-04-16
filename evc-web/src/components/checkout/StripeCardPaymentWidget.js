@@ -9,13 +9,17 @@ import { stripePromise } from 'services/stripeService';
 
 const StripeCardPaymentForm = (props) => {
 
-  const { onProvision, onCommit } = props;
+  const { onProvision, onCommit, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
   const [cardNumberComplete, setCardNumberComplete] = React.useState(false);
   const [cardExpiryComplete, setCardExpiryComplete] = React.useState(false);
   const [cardCvcComplete, setCardCvcComplete] = React.useState(false);
   const stripe = useStripe();
   const elements = useElements();
+
+  React.useEffect(() => {
+    onLoading(loading);
+  }, [loading]);
 
   const isInfoComplete = stripe && elements && cardNumberComplete && cardExpiryComplete && cardCvcComplete;
 
@@ -116,13 +120,14 @@ const StripeCardPaymentForm = (props) => {
 }
 
 const StripeCardPaymentWidget = props => (<Elements stripe={stripePromise}>
-  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} />
+  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} onLoading={props.onLoading}/>
 </Elements>)
 
 
 StripeCardPaymentWidget.propTypes = {
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
+  onLoading: PropTypes.func.isRequired,
 };
 
 StripeCardPaymentWidget.defaultProps = {

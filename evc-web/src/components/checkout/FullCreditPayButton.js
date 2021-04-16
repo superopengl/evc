@@ -5,8 +5,12 @@ import * as _ from 'lodash';
 
 
 const FullCreditPayButton = (props) => {
-  const { onProvision, onCommit } = props;
+  const { onProvision, onCommit, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    onLoading(loading);
+  }, [loading]);
 
   const handleFullCreditPay = async () => {
     try {
@@ -29,6 +33,7 @@ const FullCreditPayButton = (props) => {
 FullCreditPayButton.propTypes = {
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
+  onLoading: PropTypes.func.isRequired,
 };
 
 FullCreditPayButton.defaultProps = {

@@ -30,7 +30,7 @@ const span = {
 
 const Container = styled.div`
 justify-content: center;
-margin-bottom: 0rem;
+margin-bottom: 6rem;
 width: 100%;
 text-align: center;
 padding: 4rem 1rem;

@@ -97,13 +97,13 @@ const StripeCardPaymentForm = (props) => {
             options={options}
           />
         </div>
-        <div style={{ width: 100 }}>
+        <div style={{ width: 90 }}>
           <CardExpiryElement
             onChange={handleCardExpiryChange}
             options={options}
           />
         </div>
-        <div style={{ width: 100 }}>
+        <div style={{ width: 90 }}>
           <CardCvcElement
             onChange={handleCardCvcChange}
             options={options}
@@ -112,7 +112,8 @@ const StripeCardPaymentForm = (props) => {
       </Space>
       <Button type="primary" size="large" htmlType="submit"
         icon={<CreditCardOutlined />}
-        block disabled={loading || !isInfoComplete} loading={loading} style={{ fontWeight: 800, fontStyle: 'italic' }}>
+        block 
+        disabled={loading || !isInfoComplete} loading={loading} style={{ fontWeight: 800, fontStyle: 'italic' }}>
         Pay by Card
         </Button>
     </form>

@@ -157,11 +157,12 @@ const PaymentModal = (props) => {
       </Space>
     },
     {
-      component: <Space direction="vertical" style={{ width: '100%' }} size="large">
+      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text strong>Total payable amount:</Text>
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
         </Space>
+        <Divider><Text type="secondary"><small>Payment method</small></Text></Divider>
         {shouldShowFullCreditButton && <>
           <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon />
           <FullCreditPayButton
@@ -172,21 +173,27 @@ const PaymentModal = (props) => {
         </>}
         {showCreditCardCombinedRecurringMessage && <Alert
           type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />}
-        {shouldShowCard && <StripeCardPaymentWidget
-          onProvision={() => handleProvisionSubscription('card')}
-          onCommit={handleSuccessfulPayment}
-          onLoading={setLoading}
-          />}
-        {shouldShowAliPay && <StripeAlipayPaymentWidget
-          onProvision={() => handleProvisionSubscription('alipay')}
-          onCommit={handleSuccessfulPayment}
-          onLoading={setLoading}
-          />}
-        {shouldShowPayPal && <PayPalCheckoutButton
-          onProvision={() => handleProvisionSubscription('paypal')}
-          onCommit={handleSuccessfulPayment}
-          onLoading={setLoading}
-          />}
+        <div style={{ display: shouldShowCard ? 'block' : 'none' }}>
+          <StripeCardPaymentWidget
+            onProvision={() => handleProvisionSubscription('card')}
+            onCommit={handleSuccessfulPayment}
+            onLoading={setLoading}
+          />
+        </div>
+        <div style={{ display: shouldShowAliPay ? 'block' : 'none' }}>
+          <StripeAlipayPaymentWidget
+            onProvision={() => handleProvisionSubscription('alipay')}
+            onCommit={handleSuccessfulPayment}
+            onLoading={setLoading}
+          />
+        </div>
+        <div style={{ display: shouldShowPayPal ? 'block' : 'none' }}>
+          <PayPalCheckoutButton
+            onProvision={() => handleProvisionSubscription('paypal')}
+            onCommit={handleSuccessfulPayment}
+            onLoading={setLoading}
+          />
+        </div>
       </Space>
     }
   ];

@@ -10,7 +10,6 @@ import { notify } from "util/notify";
 
 const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
 
-
 export const PayPalCheckoutButton = (props) => {
 
   const CURRENCY_USD = 'USD';

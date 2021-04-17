@@ -2,7 +2,7 @@
 import React from 'react';
 import { DatePicker, Typography, Space } from 'antd';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
+import {isNumber} from 'lodash';
 import { TimeAgo } from './TimeAgo';
 import styled from 'styled-components';
 
@@ -20,7 +20,7 @@ export const NumberRangeDisplay = (props) => {
   }
 
   const formatNumber = num => {
-    return _.isNumber(+num) ? +num : null;
+    return isNumber(+num) ? +num : null;
   }
 
   const getTextPropsByTrend = (trend) => {

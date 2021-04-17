@@ -18,7 +18,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { BiDollar } from 'react-icons/bi';
 import ReferralCreditForm from 'components/ReferralCreditForm';
-import * as _ from 'lodash';
+import { keyBy } from 'lodash';
 import { subscriptionDef } from 'def/subscriptionDef';
 import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
@@ -28,19 +28,12 @@ import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
 `;
 
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
-
-const subscriptionDefMap = _.keyBy(subscriptionDef, 'key');
+const subscriptionDefMap = keyBy(subscriptionDef, 'key');
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -300,70 +293,70 @@ const UserListPage = () => {
   }
 
   return (
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Input.Search
-              placeholder="Input search text"
-              enterButton={<SearchOutlined />}
-              onSearch={value => handleSearch(value)}
-              onPressEnter={e => handleSearch(e.target.value)}
-              onChange={e => handleSearchTextChange(e.target.value)}
-              loading={loading}
-              value={queryInfo?.text}
-              allowClear
-            />
-            <Space>
-              <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-              <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}></Button>
-              <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-            </Space>
-          </Space>
-          <Space>
-            {subscriptionDef.map((x, i) => <CheckboxButton key={i}
-              onChange={checked => handleSubscriptionChange(x.key, checked)}
-              value={queryInfo.subscription.includes(x.key)}
-            >
-              {x.title}
-            </CheckboxButton>)}
-          </Space>
-          {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
-          <Table columns={columnDef}
-            dataSource={list}
-            size="small"
-            scroll={{
-              x: 'max-content'
-            }}
-            // scroll={{x: 1000}}
-            rowKey="id"
+    <ContainerStyled>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Input.Search
+            placeholder="Input search text"
+            enterButton={<SearchOutlined />}
+            onSearch={value => handleSearch(value)}
+            onPressEnter={e => handleSearch(e.target.value)}
+            onChange={e => handleSearchTextChange(e.target.value)}
             loading={loading}
-            pagination={queryInfo}
-          // pagination={queryInfo}
-          // onChange={handleTableChange}
-          // onRow={(record, index) => ({
-          //   onDoubleClick: e => {
-          //     setCurrentId(record.id);
-          //     setFormVisible(true);
-          //   }
-          // })}
+            value={queryInfo?.text}
+            allowClear
           />
-          <Pagination
-            current={queryInfo.page}
-            pageSize={queryInfo.size}
-            total={total}
-            defaultCurrent={queryInfo.page}
-            defaultPageSize={queryInfo.size}
-            pageSizeOptions={[10, 30, 60]}
-            showSizeChanger
-            showQuickJumper
-            showTotal={total => `Total ${total}`}
-            disabled={loading}
-            onChange={handlePaginationChange}
-            onShowSizeChange={(current, size) => {
-              searchByQueryInfo({ ...queryInfo, page: current, size });
-            }}
-          />
+          <Space>
+            <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
+            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}></Button>
+            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
+          </Space>
         </Space>
+        <Space>
+          {subscriptionDef.map((x, i) => <CheckboxButton key={i}
+            onChange={checked => handleSubscriptionChange(x.key, checked)}
+            value={queryInfo.subscription.includes(x.key)}
+          >
+            {x.title}
+          </CheckboxButton>)}
+        </Space>
+        {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
+        <Table columns={columnDef}
+          dataSource={list}
+          size="small"
+          scroll={{
+            x: 'max-content'
+          }}
+          // scroll={{x: 1000}}
+          rowKey="id"
+          loading={loading}
+          pagination={queryInfo}
+        // pagination={queryInfo}
+        // onChange={handleTableChange}
+        // onRow={(record, index) => ({
+        //   onDoubleClick: e => {
+        //     setCurrentId(record.id);
+        //     setFormVisible(true);
+        //   }
+        // })}
+        />
+        <Pagination
+          current={queryInfo.page}
+          pageSize={queryInfo.size}
+          total={total}
+          defaultCurrent={queryInfo.page}
+          defaultPageSize={queryInfo.size}
+          pageSizeOptions={[10, 30, 60]}
+          showSizeChanger
+          showQuickJumper
+          showTotal={total => `Total ${total}`}
+          disabled={loading}
+          onChange={handlePaginationChange}
+          onShowSizeChange={(current, size) => {
+            searchByQueryInfo({ ...queryInfo, page: current, size });
+          }}
+        />
+      </Space>
       <Modal
         visible={setPasswordVisible}
         destroyOnClose={true}
@@ -442,7 +435,7 @@ const UserListPage = () => {
 
         </Space>}
       </Drawer>
-      </ContainerStyled>
+    </ContainerStyled>
 
   );
 };

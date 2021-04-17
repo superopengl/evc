@@ -7,7 +7,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt, listMySubscriptionHistory } from 'services/subscriptionService';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import MoneyAmount from 'components/MoneyAmount';
-import {sortBy} from 'lodash';
+import {orderBy} from 'lodash';
 import * as moment from 'moment';
 
 const { Text, Link } = Typography;
@@ -94,7 +94,7 @@ const MySubscriptionHistoryDrawer = (props) => {
           bordered={false}
           rowKey="id"
           showHeader={false}
-          dataSource={sortBy(payments, x => moment(x.paidAt).toDate()).reverse()}
+          dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'desc')}
           pagination={false}
           style={{ width: '100%' }}
         />

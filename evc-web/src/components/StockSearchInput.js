@@ -2,7 +2,6 @@
 import React from 'react';
 import { Select, Button, Typography } from 'antd';
 import { listStock, submitStockPlea, incrementStock } from 'services/stockService';
-import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { StockName } from './StockName';
@@ -24,10 +23,8 @@ export const StockSearchInput = (props) => {
 
   const loadEntities = async () => {
     const stocks = await listStock();
-    const sorted = _.chain(stocks)
-      .filter(s => !excluding.includes(s.symbol))
+    const sorted = stocks.filter(s => !excluding.includes(s.symbol));
       // .orderBy(['symbol'], ['asc'])
-      .value();
     setList(sorted);
   }
 

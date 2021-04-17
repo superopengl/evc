@@ -1,5 +1,5 @@
 import * as axios from 'axios';
-import * as _ from 'lodash';
+import { get } from 'lodash';
 import { notify } from 'util/notify';
 import * as FormData from 'form-data';
 
@@ -50,13 +50,13 @@ export async function request(method, path, queryParams, body, responseType = 'j
 
     return response.data;
   } catch (e) {
-    const code = _.get(e, 'response.status', null);
+    const code = get(e, 'response.status', null);
     if (code === 401) {
       notify.error('Session timeout.');
       window.location = '/';
       return;
     }
-    const errorMessage = responseType === 'blob' ? e.message :  _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
+    const errorMessage = responseType === 'blob' ? e.message : get(e, 'response.data.message') || get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);
     console.error(e.response);
     throw e;
@@ -75,13 +75,13 @@ export async function uploadFile(fileBlob) {
 
     return response.data;
   } catch (e) {
-    const code = _.get(e, 'response.status', null);
+    const code = get(e, 'response.status', null);
     if (code === 401) {
       notify.error('Session timeout.');
       window.location = '/';
       return;
     }
-    const errorMessage = _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
+    const errorMessage = get(e, 'response.data.message') || get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);
     console.error(e.response);
     throw e;

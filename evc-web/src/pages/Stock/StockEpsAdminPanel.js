@@ -3,7 +3,6 @@ import React from 'react';
 import { List, Typography, Space, Button, Tooltip, Alert } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
 import MoneyAmount from 'components/MoneyAmount';
 import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';

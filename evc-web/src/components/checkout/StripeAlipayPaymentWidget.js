@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
 import { useStripe, Elements } from '@stripe/react-stripe-js';
 import styled from 'styled-components';
 import { AlipayCircleOutlined } from '@ant-design/icons';

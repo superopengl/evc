@@ -3,7 +3,6 @@ import React from 'react';
 import { Popover, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { CloseOutlined } from '@ant-design/icons';
-import * as _ from 'lodash';
 
 export const ConfirmDeleteButton = (props) => {
   const [visible, setVisible] = React.useState(false);

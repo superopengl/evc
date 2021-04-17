@@ -21,16 +21,16 @@ import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
 
 const { Title, Text } = Typography;
 
-const PaymentModal = (props) => {
+const PaymentStepperWidget = (props) => {
 
-  const { visible, planType, onOk, onCancel } = props;
+  const { planType, onComplete, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
-  const [modalVisible, setModalVisible] = React.useState(visible);
   const [recurring, setRecurring] = React.useState(true);
   const [paymentDetail, setPaymentDetail] = React.useState();
   const [willUseCredit, setWillUseCredit] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
   const context = React.useContext(GlobalContext);
+
 
   const fetchPaymentDetail = async (useCredit) => {
     try {
@@ -46,11 +46,12 @@ const PaymentModal = (props) => {
   }
 
   React.useEffect(() => {
-    setModalVisible(visible);
-    if(visible) {
-      fetchPaymentDetail(willUseCredit);
-    }
-  }, [visible]);
+    onLoading(loading);
+  }, [loading]);
+
+  // React.useEffect(() => {
+  //   fetchPaymentDetail(willUseCredit);
+  // }, []);
 
   React.useEffect(() => {
     if (planType) {
@@ -92,7 +93,7 @@ const PaymentModal = (props) => {
     } finally {
       setLoading(false);
     }
-    onOk();
+    onComplete();
   }
 
   // const handleCommitSubscription = async (data) => {
@@ -142,9 +143,9 @@ const PaymentModal = (props) => {
           <Text strong>Total payable amount:</Text>
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
         </Space>
-        <Button type="primary" block 
-        size="large"
-        style={{ marginTop: 20 }} disabled={!isValidPlan} onClick={() => handleStepChange(1)}>Checkout</Button>
+        <Button type="primary" block
+          size="large"
+          style={{ marginTop: 20 }} disabled={!isValidPlan} onClick={() => handleStepChange(1)}>Checkout</Button>
       </Space>
     },
     {
@@ -164,74 +165,59 @@ const PaymentModal = (props) => {
         </>}
         {showCreditCardCombinedRecurringMessage && <Alert
           type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />}
-          {shouldShowCard && <StripeCardPaymentWidget
-            onProvision={() => handleProvisionSubscription('card')}
-            onCommit={handleSuccessfulPayment}
-            onLoading={setLoading}
-          />}
-          {shouldShowAliPay && <StripeAlipayPaymentWidget
-            onProvision={() => handleProvisionSubscription('alipay')}
-            onCommit={handleSuccessfulPayment}
-            onLoading={setLoading}
-          />}
-          {shouldShowPayPal && <PayPalCheckoutButton
-            onProvision={() => handleProvisionSubscription('paypal')}
-            onCommit={handleSuccessfulPayment}
-            onLoading={setLoading}
-          />}
-        <Divider/>
+        {shouldShowCard && <StripeCardPaymentWidget
+          onProvision={() => handleProvisionSubscription('card')}
+          onCommit={handleSuccessfulPayment}
+          onLoading={setLoading}
+        />}
+        {shouldShowAliPay && <StripeAlipayPaymentWidget
+          onProvision={() => handleProvisionSubscription('alipay')}
+          onCommit={handleSuccessfulPayment}
+          onLoading={setLoading}
+        />}
+        {shouldShowPayPal && <PayPalCheckoutButton
+          onProvision={() => handleProvisionSubscription('paypal')}
+          onCommit={handleSuccessfulPayment}
+          onLoading={setLoading}
+        />}
+        <Divider />
         <Button size="large" block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button>
       </Space>
     }
   ];
 
   return (
-    <Modal
-      visible={modalVisible}
-      closable={!loading}
-      maskClosable={false}
-      title="Subscribe plan"
-      destroyOnClose
-      footer={null}
-      width={520}
-      onOk={() => onCancel()}
-      onCancel={() => onCancel()}
-    >
-      <Loading loading={loading} message={'In progress. Please do not close the window.'}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }} >
-          <Card>
-            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Title level={3}>{newPlanDef.title}</Title>
-              <div><Text strong type="success"><big>$ {newPlanDef.price}</big></Text> {newPlanDef.unit}</div>
-            </Space>
-            <div style={{ display: 'flex' }}>
-              {newPlanDef.description}
-            </div>
-
-          </Card>
-          <Steps current={currentStep} onChange={handleStepChange} style={{ margin: '40px 0 0' }}>
-            <Steps.Step title="Options" icon={<Icon component={() => <BsCardChecklist />} />} />
-            <Steps.Step title="Checkout" icon={<Icon component={() => <FaCashRegister />} />} />
-          </Steps>
-          <div style={{ width: '100%' }}>
-            {stepDef[currentStep].component}
+    <Loading loading={loading} message={'In progress. Please do not close the window.'}>
+      <Space direction="vertical" size="large" style={{ width: '100%' }} >
+        <Card>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Title level={3}>{newPlanDef.title}</Title>
+            <div><Text strong type="success"><big>$ {newPlanDef.price}</big></Text> {newPlanDef.unit}</div>
+          </Space>
+          <div style={{ display: 'flex' }}>
+            {newPlanDef.description}
           </div>
-        </Space>
-      </Loading>
 
-
-    </Modal>);
+        </Card>
+        <Steps current={currentStep} onChange={handleStepChange} style={{ margin: '40px 0 0' }}>
+          <Steps.Step title="Options" icon={<Icon component={() => <BsCardChecklist />} />} />
+          <Steps.Step title="Checkout" icon={<Icon component={() => <FaCashRegister />} />} />
+        </Steps>
+        <div style={{ width: '100%' }}>
+          {stepDef[currentStep].component}
+        </div>
+      </Space>
+    </Loading>
+  )
 }
 
-PaymentModal.propTypes = {
-  planType: PropTypes.string,
-  visible: PropTypes.bool.isRequired,
-  onOk: PropTypes.func,
-  onCancel: PropTypes.func,
+PaymentStepperWidget.propTypes = {
+  planType: PropTypes.string.isRequired,
+  onComplete: PropTypes.func.isRequired,
+  onLoading: PropTypes.func.isRequired,
 };
 
-PaymentModal.defaultProps = {
-  visible: false,
+PaymentStepperWidget.defaultProps = {
 };
 
-export default withRouter(PaymentModal);
+export default withRouter(PaymentStepperWidget);

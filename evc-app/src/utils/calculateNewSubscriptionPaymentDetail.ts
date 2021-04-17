@@ -2,7 +2,6 @@ import { SubscriptionType } from '../types/SubscriptionType';
 import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { getUserCreditBalance } from './getUserCreditBalance';
 import { calculateAmountToPay } from './calculateAmountToPay';
-import { EntityManager } from 'typeorm';
 
 export async function calculateNewSubscriptionPaymentDetail(
   userId: string,

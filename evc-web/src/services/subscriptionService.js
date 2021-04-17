@@ -1,5 +1,9 @@
-import { httpGet, httpPost } from './http';
+import { httpGet, httpPost, request } from './http';
 
+export async function downloadReceipt(paymentId) {
+  const path = `subscription/${paymentId}/receipt`;
+  return request('GET', path, null, null, 'blob');
+}
 
 export async function cancelSubscription(id) {
   return httpPost(`subscription/${id}/cancel`);

@@ -24,6 +24,7 @@ const FullCreditPayButton = (props) => {
 
   return (
     <Button type="primary" block onClick={handleFullCreditPay}
+      size="large"
       disabled={loading}
       loading={loading}
     >Purchase with credits</Button>

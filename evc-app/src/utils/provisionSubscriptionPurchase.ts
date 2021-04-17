@@ -19,11 +19,10 @@ export type ProvisionSubscriptionRequest = {
   recurring: boolean;
   preferToUseCredit: boolean;
   alertDays: number;
-  ipAddress: string;
 };
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {
-  const { userId, subscriptionType, paymentMethod, recurring, preferToUseCredit, alertDays, ipAddress } = request;
+  const { userId, subscriptionType, paymentMethod, recurring, preferToUseCredit, alertDays } = request;
   const now = getUtcNow();
 
   const months = subscriptionType === SubscriptionType.UnlimitedYearly ? 12 : 1;
@@ -33,6 +32,14 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
   const tran = getConnection().createQueryRunner();
   try {
     tran.startTransaction();
+
+    const detail = await calculateNewSubscriptionPaymentDetail(userId, subscriptionType, preferToUseCredit);
+    const { totalCreditAmount, creditDeductAmount, additionalPay } = detail;
+
+    if(paymentMethod === PaymentMethod.Credit) {
+      assert(totalCreditAmount > 0 && totalCreditAmount >= creditDeductAmount && additionalPay === 0, 400, 'No enough credit');
+    }
+
     const subscriptionId = uuidv4();
     const subscription = new Subscription();
     subscription.id = subscriptionId;
@@ -46,8 +53,6 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.status = SubscriptionStatus.Provisioning;
     await tran.manager.save(subscription);
 
-    const detail = await calculateNewSubscriptionPaymentDetail(userId, subscriptionType, preferToUseCredit);
-    const { creditDeductAmount, additionalPay } = detail;
     let creditTransaction: UserCreditTransaction = null;
     if (creditDeductAmount > 0) {
       creditTransaction = new UserCreditTransaction();
@@ -61,10 +66,11 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment = new Payment();
     payment.id = paymentId;
     payment.userId = userId;
+    payment.start = now;
+    payment.end = end;
     payment.amount = additionalPay;
     payment.method = paymentMethod;
     payment.status = PaymentStatus.Pending;
-    payment.ipAddress = ipAddress;
     payment.auto = false;
     payment.creditTransaction = creditTransaction;
     payment.subscription = subscription;
@@ -74,7 +80,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     tran.commitTransaction();
   } catch (err) {
     tran.rollbackTransaction();
-    assert(false, 500, 'Failed to provisoin subscription purchase');
+    assert(false, 500, `Failed to provisoin subscription purchase: ${err.message}`);
   }
 
   return payment;

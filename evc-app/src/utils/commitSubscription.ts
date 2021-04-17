@@ -11,9 +11,7 @@ import { handleReferralCommissionWhenPaid } from '../services/referralService';
 import { Role } from '../types/Role';
 
 
-export async function commitSubscription(
-  payment: Payment
-) {
+export async function commitSubscription(payment: Payment) {
   await getManager().transaction(async (m) => {
     payment.status = PaymentStatus.Paid;
     payment.paidAt = getUtcNow();

@@ -19,6 +19,7 @@ export class Payment {
   lastUpdatedAt?: Date;
 
   @Column('uuid')
+  @Index()
   userId: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
@@ -40,14 +41,18 @@ export class Payment {
   rawResponse: object;
 
   @Column()
+  @Index()
   status: PaymentStatus;
 
   @Column({nullable: true})
   @Index()
   paidAt?: Date;
 
-  @Column({ nullable: true })
-  ipAddress: string;
+  @Column()
+  start: Date;
+
+  @Column()
+  end: Date;
 
   @Column({ default: false })
   auto: boolean;

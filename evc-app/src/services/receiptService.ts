@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { assert } from '../utils/assert';
 import { getRepository } from 'typeorm';
+import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 
 const receiptTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/receipt_template.html`);
 const compiledTemplate = handlebars.compile(receiptTemplateHtml.toString());
@@ -27,44 +28,41 @@ function getPaymentMethodName(paymentMethod: PaymentMethod) {
   return _.capitalize(paymentMethod);
 }
 
-function getSubscriptionDescription(payment: Payment) {
-  const { subscription } = payment;
-  const {type} = subscription;
+function getSubscriptionDescription(receipt: ReceiptInformation) {
+  const type = receipt.subscriptionType;
 
   const subscriptionName = type === SubscriptionType.UnlimitedMontly ? 'Pro Member Monthly' :
     type === SubscriptionType.UnlimitedYearly ? 'Pro Member Annually' :
       null;
   assert(subscriptionName, 400, `Unsupported subscription type for receipt ${type}`);
 
-  const start = moment(payment.paidAt).format('D MMM YYYY');
-  const end = moment(subscription.end).format('D MMM YYYY');
+  const start = moment(receipt.start).format('D MMM YYYY');
+  const end = moment(receipt.end).format('D MMM YYYY');
 
   return `${subscriptionName} (${start} - ${end})`;
 }
 
-function getVars(payment: Payment, user: User) {
-  const creditDeduction = payment.creditTransaction?.amount || 0;
-  const payableAmount = payment.amount || 0;
-  const subscriptionPrice = creditDeduction + payableAmount;
+function getVars(receipt: ReceiptInformation) {
+  const subscriptionPrice = (+receipt.payable || 0) + (+receipt.deduction || 0);
   return {
-    receiptNo: `${moment(payment.paidAt).format('YYYYMMDD')}-${`${user.seqId}`.padStart(6, '0')}`,
-    date: moment(payment.paidAt).format('D MMM YYYY'),
-    subscriptionDescription: getSubscriptionDescription(payment),
+    receiptNumber: receipt.receiptNumber,
+    date: moment(receipt.paidAt).format('D MMM YYYY'),
+    subscriptionDescription: getSubscriptionDescription(receipt),
     subscriptionPrice: subscriptionPrice.toFixed(2),
-    creditDeduction: creditDeduction.toFixed(2),
-    payableAmount: payableAmount.toFixed(2),
-    paymentMethod: getPaymentMethodName(payment.method)
+    creditDeduction: (+receipt.deduction || 0).toFixed(2),
+    payableAmount: (+receipt.payable || 0).toFixed(2),
+    paymentMethod: getPaymentMethodName(receipt.method)
   };
 }
 
-export async function generateReceiptPdfStream(payment: Payment): Promise<{ pdfStream: Readable, fileName: string }> {
-  const user = await getRepository(User).findOne(payment.userId);
-  const vars = getVars(payment, user);
+export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream: Readable, fileName: string }> {
+  const user = await getRepository(User).findOne(receipt.userId);
+  const vars = getVars(receipt);
   const html = compiledTemplate(vars);
   const options = { format: 'A4' };
 
   const pdfStream = await generatePdfStream(html, options);
-  const fileName = `Receipt_${vars.receiptNo}.pdf`;
+  const fileName = `Receipt_${vars.receiptNumber}.pdf`;
 
   return { pdfStream, fileName };
 }

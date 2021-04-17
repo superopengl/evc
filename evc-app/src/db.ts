@@ -17,6 +17,8 @@ import { redisCache } from './services/redisCache';
 import { CoreDataWatchlistEmailTask } from './entity/views/CoreDataWatchlistEmailTask';
 import { CoreDataLatestSnapshot } from './entity/views/CoreDataLatestSnapshot';
 import { AliveSubscriptionInformation } from './entity/views/AliveSubscriptionInformation';
+import { ReceiptInformation } from './entity/views/ReceiptInformation';
+import { RevertableCreditTransactionInformation } from './entity/views/RevertableCreditTransactionInformation';
 
 const views = [
   StockLatestPaidInformation,
@@ -27,6 +29,8 @@ const views = [
   CoreDataLatestSnapshot,
   CoreDataWatchlistEmailTask,
   AliveSubscriptionInformation,
+  ReceiptInformation,
+  RevertableCreditTransactionInformation,
 ];
 const mviews = [
   StockDataInformation,

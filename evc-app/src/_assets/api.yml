@@ -308,37 +308,9 @@ paths:
       responses:
         200:
           description: OK
-  /blog/:
+  /revenue:
     get:
-      operationId: listBlog
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: saveBlog
-      responses:
-        200:
-          description: OK
-  /blog/:id:
-    get:
-      operationId: getBlog
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-    delete:
-      operationId: deleteBlog
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
+      operationId: getRevenueChart
       responses:
         200:
           description: OK

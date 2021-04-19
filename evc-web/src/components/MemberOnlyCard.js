@@ -21,15 +21,15 @@ export const MemberOnlyCard = (props) => {
   const bodyStyle = shouldBlock ? {
     ...propBodyStyle,
     overflow:'auto',
-    backgroundColor: 'rgb(0, 41, 61)',
+    // backgroundColor: 'rgb(0, 41, 61)',
   } : {
     ...propBodyStyle,
     overflow:'auto'
   };
   const headStyle = shouldBlock ?
     {
-      backgroundColor: 'rgba(0, 41, 61, 0.8)',
-      color: 'rgba(255,255,255,0.75)'
+      // backgroundColor: 'rgba(0, 41, 61, 0.8)',
+      // color: 'rgba(255,255,255,0.75)'
     } :
     {
       // backgroundColor: 'rgba(0, 41, 61, 0.1)',

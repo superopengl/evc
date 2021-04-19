@@ -28,12 +28,12 @@ const { Text } = Typography;
 const OldFairValueContainer = styled.div`
 display: flex;
 flex-direction: column;
-color: rgba(255, 255, 255, 0.75);
+// color: rgba(255, 255, 255, 0.75);
 width: 100%;
 align-items: center;
 
 .ant-typography {
-  color: rgba(255, 255, 255, 0.75);
+  // color: rgba(255, 255, 255, 0.75);
 }
 `;
 
@@ -86,11 +86,11 @@ const StockDisplayPanel = (props) => {
               message="The latest fair value is only accessible to paid user"
               paidOnly={true}
               style={{ marginTop: 30 }}
-              bodyStyle={{height: 303}}
+              bodyStyle={{height: 243}}
               blockedComponent={
                 <OldFairValueContainer >
                   {stock.fairValues?.map((fv, i) => <Space key={i}>
-                    {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ color: 'white', fontWeight: 900, filter: 'blur(4px)' }}>XXXX ~ XXXX</Text>}
+                    {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ fontWeight: 900, filter: 'blur(4px)' }}>XXXX ~ XXXX</Text>}
                     <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
                   </Space>)}
                 </OldFairValueContainer>

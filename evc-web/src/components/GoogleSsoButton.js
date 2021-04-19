@@ -4,7 +4,6 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { ssoGoogle } from 'services/authService';
-import { countUnreadMessage } from 'services/messageService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';

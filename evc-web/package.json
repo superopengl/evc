@@ -43,9 +43,7 @@
     "reactjs-localstorage": "^1.0.1",
     "rxjs": "^6.6.3",
     "styled-components": "^5.2.1",
-    "tfn": "^1.0.0",
-    "uuid": "^8.3.2",
-    "validator": "^13.5.2"
+    "uuid": "^8.3.2"
   },
   "scripts": {
     "start": "cross-env PORT=6007 REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco start",

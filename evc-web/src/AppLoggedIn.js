@@ -38,7 +38,7 @@ const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTe
 const TranslationListPage = loadable(() => import('pages/Translation/TranslationListPage'));
 const UserListPage = loadable(() => import('pages/User/UserListPage'));
 const MyAccountPage = loadable(() => import('pages/MyAccount/MyAccountPage'));
-const ChangePasswordModal = loadable(() => import('pages/ChangePasswordModal'));
+const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const UnusualOptionsActivityPage = loadable(() => import('pages/AdminDashboard/UnusualOptionsActivityPage'));
 const DataSourcePage = loadable(() => import('pages/AdminDashboard/DataSourcePage'));
 const EarningsCalendarPage = loadable(() => import('pages/AdminDashboard/EarningsCalendarPage'));
@@ -312,7 +312,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
-      <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
+      {/* <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} /> */}
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
       <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />

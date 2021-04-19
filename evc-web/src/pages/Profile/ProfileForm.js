@@ -10,7 +10,7 @@ import { CountrySelector } from 'components/CountrySelector';
 const { Link } = Typography;
 
 const ProfileForm = (props) => {
-  const { user, initial, onOk } = props;
+  const { user, initial, onOk, refreshAfterLocaleChange } = props;
   const [loading, setLoading] = React.useState(false);
   const [profile] = React.useState(user.profile || user);
 
@@ -28,14 +28,16 @@ const ProfileForm = (props) => {
 
       await saveProfile(user.id, values);
 
-      const hasLocaleChanged = profile.locale !== values.locale;
+      if (refreshAfterLocaleChange) {
+        const hasLocaleChanged = profile.locale !== values.locale;
 
-      notify.success(
-        'Successfully saved profile!',
-        hasLocaleChanged ? <>You have changed locale. Please <Link onClick={handleRefreshPage}>Refresh</Link> the page to catch up the locale change</> : null
-      );
+        notify.success(
+          'Successfully saved profile!',
+          hasLocaleChanged ? <>You have changed locale. Please <Link onClick={handleRefreshPage}>Refresh</Link> the page to catch up the locale change</> : null
+        );
 
-      Object.assign(profile, values);
+        Object.assign(profile, values);
+      }
       onOk(user);
     } finally {
       setLoading(false);
@@ -83,11 +85,13 @@ const ProfileForm = (props) => {
 
 ProfileForm.propTypes = {
   user: PropTypes.any.isRequired,
-  initial: PropTypes.bool
+  initial: PropTypes.bool,
+  refreshAfterLocaleChange: PropTypes.bool,
 };
 
 ProfileForm.defaultProps = {
-  initial: false
+  initial: false,
+  refreshAfterLocaleChange: true
 };
 
 export default withRouter(ProfileForm);

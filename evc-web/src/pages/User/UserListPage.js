@@ -419,7 +419,7 @@ const UserListPage = () => {
       >
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
-        {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
+        {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
       </Drawer>
       <Drawer
         visible={referralCreditModal}

@@ -86,6 +86,7 @@ RUN rm -rf /usr/portal/web
 
 # Start the portal website
 WORKDIR /usr/portal/app
+RUN pnpm install -g phantomjs-prebuilt
 # CMD node index.js
 CMD node index.js
 

@@ -1,15 +1,12 @@
 import * as fs from 'fs';
-import { Payment } from '../entity/Payment';
 import * as pdf from 'html-pdf';
 import * as handlebars from 'handlebars';
 import { Readable } from 'node:stream';
 import * as moment from 'moment';
-import { User } from '../entity/User';
 import { PaymentMethod } from '../types/PaymentMethod';
 import * as _ from 'lodash';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { assert } from '../utils/assert';
-import { getRepository } from 'typeorm';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 
 const receiptTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/receipt_template.html`);
@@ -56,7 +53,6 @@ function getVars(receipt: ReceiptInformation) {
 }
 
 export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream: Readable, fileName: string }> {
-  const user = await getRepository(User).findOne(receipt.userId);
   const vars = getVars(receipt);
   const html = compiledTemplate(vars);
   const options = { format: 'A4' };

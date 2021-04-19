@@ -54,6 +54,8 @@ RUN pnpm install
 
 WORKDIR /usr/portal/app
 RUN pnpm install
+RUN npm install phantomjs-prebuilt@2.1.16 --update-binary
+RUN npm link phantomjs-prebuilt
 
 # Env vars in build time
 ARG NODE_ENV
@@ -61,8 +63,8 @@ ARG REACT_APP_GIT_HASH
 ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
-ENV REACT_APP_EVC_API_ENDPOINT=/api/v1
 ENV NODE_OPTIONS=--max_old_space_size=4096
+ENV REACT_APP_EVC_API_ENDPOINT=/api/v1
 ENV REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID=305430338996-fmmjqqkon9hvngpctccis9t1biqtqile.apps.googleusercontent.com
 ENV REACT_APP_EVC_PAYPAL_CLIENT_ID=AZLE-y40u_19t0Ncqt-zpqH4vQqslvQet_86rfsDZiSBgpLRX_5ztdhzSSjKVFFb1Jqby3Pyi8o9Znid
 ENV REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY=pk_test_51Hp56jEBt7ChgqJqBRoTJ8V2IPcwYDAMdJhp9XbNTPDHoyOhpOt3HBPIv8iV39mHoUMUQ9NN7gKxZIVDVzJhGWWx00MK1EEkKD
@@ -86,8 +88,6 @@ RUN rm -rf /usr/portal/web
 
 # Start the portal website
 WORKDIR /usr/portal/app
-RUN npm install phantomjs-prebuilt@2.1.16 --update-binary
-RUN npm link phantomjs-prebuilt
+
 # CMD node index.js
 CMD node index.js
-

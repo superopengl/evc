@@ -16,7 +16,6 @@ import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';
-import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
 
 const { Title, Text } = Typography;
 
@@ -111,7 +110,6 @@ const PaymentStepperWidget = (props) => {
   const shouldShowFullCreditButton = isValidPlan && !recurring && willUseCredit && paymentDetail.additionalPay === 0;
   const shouldShowCard = isValidPlan && (paymentDetail.additionalPay > 0 || recurring);
   const shouldShowPayPal = isValidPlan && !recurring && paymentDetail.additionalPay > 0;
-  const shouldShowAliPay = isValidPlan && !recurring && paymentDetail.additionalPay > 0;
   const showCreditCardCombinedRecurringMessage = recurring && willUseCredit;
 
   const stepDef = [
@@ -169,11 +167,11 @@ const PaymentStepperWidget = (props) => {
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
         />}
-        {shouldShowAliPay && <StripeAlipayPaymentWidget
+        {/* {shouldShowAliPay && <StripeAlipayPaymentWidget
           onProvision={() => handleProvisionSubscription('alipay')}
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
-        />}
+        />} */}
         {shouldShowPayPal && <PayPalCheckoutButton
           onProvision={() => handleProvisionSubscription('paypal')}
           onCommit={handleSuccessfulPayment}

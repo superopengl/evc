@@ -790,29 +790,6 @@ paths:
       responses:
         200:
           description: OK
-  /subscription/payment/:id/confirm:
-    get:
-      operationId: confirmSubscriptionAlipayPayment
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: confirmSubscriptionPayment
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
   /subscription/:id/cancel:
     post:
       operationId: cancelSubscription

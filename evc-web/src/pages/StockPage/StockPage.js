@@ -17,11 +17,6 @@ const ContainerStyled = styled.div`
 const StockPage = (props) => {
   const symbol = props.match.params.symbol;
 
-  const context = React.useContext(GlobalContext);
-  const { role } = context;
-
-  const isAdminOrAgent = ['admin', 'agent'].includes(role);
-
   return (
       <ContainerStyled>
         <StockDetailPage symbol={symbol} />

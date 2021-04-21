@@ -10,7 +10,7 @@ import { MdOpenInNew } from 'react-icons/md';
 import ReactDOM from 'react-dom';
 import Icon from '@ant-design/icons';
 
-const { Title, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
 width: 100%;
@@ -102,9 +102,9 @@ const StockNewsPanel = (props) => {
                 <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ width: '100%' }}>
                   <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />
                   <Space size="small" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <Title level={5} style={{ margin: 0 }} className="news-title">
+                    <Text strong style={{ margin: 0 }} className="news-title">
                       {item.headline}
-                    </Title>
+                    </Text>
                     <div style={{ position: 'relative', top: 4 }}>
                       <IconContext.Provider value={{ color: '#3273A4', size: 20 }}><MdOpenInNew /></IconContext.Provider>
                     </div>
@@ -112,7 +112,9 @@ const StockNewsPanel = (props) => {
                 </a>
               </>
               }
-              description={item.summary}
+              description={<Paragraph ellipsis={{rows: 3, expandable: false, symbol: 'more'}}>
+                {item.summary}
+              </Paragraph>}
             />
           </StyledListItem>
         )}

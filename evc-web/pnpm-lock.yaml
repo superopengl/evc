@@ -39,9 +39,8 @@ dependencies:
   reactjs-localstorage: 1.0.1
   rxjs: 6.6.7
   styled-components: 5.2.3_84d21352b10017addcdab28b8d95ead5
-  tfn: 1.0.0
   uuid: 8.3.2
-  validator: 13.5.2
+  validator: 13.6.0
 devDependencies:
   '@craco/craco': 6.1.1_react-scripts@4.0.2
   '@testing-library/jest-dom': 5.11.10
@@ -13965,10 +13964,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
-  /tfn/1.0.0:
-    dev: false
-    resolution:
-      integrity: sha1-9A8oZcouR9brrr02pPFKTxSTtTI=
   /throat/5.0.0:
     dev: true
     resolution:
@@ -14558,12 +14553,12 @@ packages:
       spdx-expression-parse: 3.0.1
     resolution:
       integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==
-  /validator/13.5.2:
+  /validator/13.6.0:
     dev: false
     engines:
       node: '>= 0.10'
     resolution:
-      integrity: sha512-mD45p0rvHVBlY2Zuy3F3ESIe1h5X58GPfAtslBjY7EtTqGquZTj+VX/J4RnHWN8FKq0C9WRVt1oWAcytWRuYLQ==
+      integrity: sha512-gVgKbdbHgtxpRyR8K0O6oFZPhhB5tT1jeEHZR0Znr9Svg03U0+r9DXWMrnRAB+HtCStDQKlaIZm42tVsVjqtjg==
   /value-equal/1.0.1:
     dev: false
     resolution:
@@ -15275,6 +15270,5 @@ specifiers:
   rollup-plugin-typescript2: ^0.30.0
   rxjs: ^6.6.3
   styled-components: ^5.2.1
-  tfn: ^1.0.0
   uuid: ^8.3.2
-  validator: ^13.5.2
+  validator: ^13.6.0

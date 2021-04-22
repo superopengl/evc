@@ -46,6 +46,15 @@ const span = {
   xxl: 12
 };
 
+const spanRow1Col1 = {
+  xs: 24,
+  sm: 24,
+  md: 24,
+  lg: 8,
+  xl: 8,
+  xxl: 8
+}
+
 const StockDisplayPanel = (props) => {
   const { stock } = props;
 
@@ -87,54 +96,67 @@ const StockDisplayPanel = (props) => {
       {(loading || !stock) ? <Loading /> : <>
         {/* {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={!isAdminOrAgent} />} */}
         {/* {isAdminOrAgent && <AdminStockPublishPanel stock={stock} />} */}
-        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 30 }}>
-          <Col flex="0 0 auto">
-            <StockQuotePanel symbol={stock.symbol} />
-            <MemberOnlyCard
-              title="EVC Core Info"
-              message="The latest fair value is only accessible to paid user"
-              paidOnly={true}
-              style={{ marginTop: 30 }}
-              bodyStyle={{ height: 243 }}
-              blockedComponent={
-                <OldFairValueContainer >
-                  {stock.fairValues?.map((fv, i) => <Space key={i}>
-                    {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ fontWeight: 900, filter: 'blur(4px)' }}>XXXX ~ XXXX</Text>}
-                    <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
-                  </Space>)}
-                </OldFairValueContainer>
-              }>
-              <StockEvcInfoPanel symbol={stock.symbol} />
-            </MemberOnlyCard>
+        <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 10, xxl: 8 }}>
+            <Row gutter={[30, 30]}>
+              <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
+                <StockQuotePanel symbol={stock.symbol} />
+              </Col>
+              <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
+                <MemberOnlyCard
+                  title="EVC Core Info"
+                  message="The latest fair value is only accessible to paid user"
+                  paidOnly={true}
+                  bodyStyle={{ height: 243 }}
+                  blockedComponent={
+                    <OldFairValueContainer >
+                      {stock.fairValues?.map((fv, i) => <Space key={i}>
+                        {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ fontWeight: 900, filter: 'blur(4px)' }}>XXXX ~ XXXX</Text>}
+                        <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
+                      </Space>)}
+                    </OldFairValueContainer>
+                  }>
+                  <StockEvcInfoPanel symbol={stock.symbol} />
+                </MemberOnlyCard>
+              </Col>
+            </Row>
           </Col>
-          <Col flex="1 0 auto">
-            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true} bodyStyle={{ height: 500 }}>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
+            <StockChart symbol={stock.symbol} period="1d" interval="5m" />
+
+          </Col>
+        </Row>
+        <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 10, xxl: 8 }}>
+            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true} bodyStyle={{ height: 1080 }}>
               <StockInsiderTransactionPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
+            <Row gutter={[30, 30]}>
+              <Col span={24}>
+                <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true} bodyStyle={{ height: 500 }}>
+                  <StockPutCallRatioChart symbol={stock.symbol} />
+                </MemberOnlyCard>
+              </Col>
+              <Col span={24}>
+                <Row gutter={[30, 30]} wrap={true}>
+                  <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 12 }}>
+                    <MemberOnlyCard title={<>Roster</>} bodyStyle={{ height: 500 }}>
+                      <StockRosterPanel symbol={stock.symbol} />
+                    </MemberOnlyCard>
+                  </Col>
+                  <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 12 }}>
+                    <MemberOnlyCard title={<>News</>} bodyStyle={{ height: 500 }}>
+                      <StockNewsPanel symbol={stock.symbol} />
+                    </MemberOnlyCard>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Col>
         </Row>
-        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 30 }}>
-          <Col {...span}>
-            <StockChart symbol={stock.symbol} period="1d" interval="5m" />
-          </Col>
-          <Col {...span}>
-            <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true} bodyStyle={{ height: 500 }}>
-              <StockPutCallRatioChart symbol={stock.symbol} />
-            </MemberOnlyCard>
-          </Col>
-        </Row>
-        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 30 }}>
-          <Col {...span}>
-            <MemberOnlyCard title={<>Roster</>} bodyStyle={{ height: 500 }}>
-              <StockRosterPanel symbol={stock.symbol} />
-            </MemberOnlyCard>
-          </Col>
-          <Col {...span}>
-            <MemberOnlyCard title={<>News</>} bodyStyle={{ height: 500 }}>
-              <StockNewsPanel symbol={stock.symbol} />
-            </MemberOnlyCard>
-          </Col>
-        </Row>
+
 
       </>}
     </>

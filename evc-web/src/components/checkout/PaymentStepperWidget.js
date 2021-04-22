@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Switch, Divider, Steps, Card } from 'antd';
+import { Typography, Button, Switch, Divider, Steps, Card, Image } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
@@ -16,6 +16,13 @@ import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';
+import { CardIcon } from 'components/CardIcon';
+import VisaIcon from 'payment-icons/min/flat/visa.svg';
+import MasterIcon from 'payment-icons/min/flat/mastercard.svg';
+import MaestroIcon from 'payment-icons/min/flat/maestro.svg';
+import AmexIcon from 'payment-icons/min/flat/amex.svg';
+import JcbIcon from 'payment-icons/min/flat/jcb.svg';
+import PayPalIcon from 'payment-icons/min/flat/paypal.svg';
 
 const { Title, Text } = Typography;
 
@@ -140,9 +147,22 @@ const PaymentStepperWidget = (props) => {
           <Text strong>Total payable amount:</Text>
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
         </Space>
-        <Button type="primary" block
-          size="large"
-          style={{ marginTop: 20 }} disabled={!isValidPlan} onClick={() => handleStepChange(1)}>Checkout</Button>
+        <Space>
+          {shouldShowCard && [VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
+          {shouldShowPayPal && <CardIcon src={PayPalIcon} />}
+        </Space>
+        {shouldShowFullCreditButton ? <>
+          <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon style={{marginBottom: 20}} />
+          <FullCreditPayButton
+            onProvision={() => handleProvisionSubscription('credit')}
+            onCommit={handleSuccessfulPayment}
+            onLoading={setLoading}
+          />
+        </> :
+          <Button type="primary" block
+            size="large"
+            style={{ marginTop: 20 }} disabled={!isValidPlan} onClick={() => handleStepChange(1)}>Checkout</Button>
+        }
       </Space>
     },
     {
@@ -152,14 +172,14 @@ const PaymentStepperWidget = (props) => {
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
         </Space>
         <Divider><Text type="secondary"><small>Payment method</small></Text></Divider>
-        {shouldShowFullCreditButton && <>
+        {/* {shouldShowFullCreditButton && <>
           <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon />
           <FullCreditPayButton
             onProvision={() => handleProvisionSubscription('credit')}
             onCommit={handleSuccessfulPayment}
             onLoading={setLoading}
           />
-        </>}
+        </>} */}
         {showCreditCardCombinedRecurringMessage && <Alert
           type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />}
         {shouldShowCard && <StripeCardPaymentWidget

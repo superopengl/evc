@@ -19,6 +19,7 @@
     "markdown-it": "^11.0.1",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
+    "payment-icons": "^1.2.1",
     "query-string": "^6.14.0",
     "react": "^17.0.1",
     "react-big-calendar": "^0.32.0",

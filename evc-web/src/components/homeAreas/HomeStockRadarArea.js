@@ -37,7 +37,7 @@ export const HomeStockRadarArea = props => {
   return (
     <Container>
       <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
-        <Title><FormattedMessage id="menu.stockRadar" /> - Preview</Title>
+        <Title><FormattedMessage id="menu.stockRadar" /></Title>
           <Text type="secondary">
             This is Stock Radar preview. 
             Full feature is available after sign up

@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { listMyCommissionWithdrawal } from 'services/commissionService';
 import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import ReactDOM from 'react-dom';
+import { FormattedMessage } from 'react-intl';
 
 
 const MyCommissionWithdrawalHistoryDrawer = (props) => {
@@ -33,7 +34,7 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
 
   return (
     <Drawer
-      title="Commission Withdrawal Applications"
+      title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
       width="80vw"
       destroyOnClose={true}
       maskClosable={true}

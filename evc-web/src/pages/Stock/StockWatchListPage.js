@@ -6,6 +6,7 @@ import StockList from '../../components/StockList';
 import { getWatchList } from 'services/stockService';
 import { Link, withRouter } from 'react-router-dom';
 import { StarOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 
 const { Paragraph } = Typography;
 
@@ -50,7 +51,7 @@ const StockWatchListPage = (props) => {
 
   return (
       <ContainerStyled>
-        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">Stock Radar</Link> to find all the stocks our platform supports</Paragraph>
+        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock"><FormattedMessage id="menu.stockRadar"/></Link> to find all the stocks our platform supports</Paragraph>
         <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} showBell={true}/>
       </ContainerStyled>
   );

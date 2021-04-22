@@ -7,6 +7,7 @@ import { notify } from 'util/notify';
 import ReactDOM from 'react-dom';
 import { getMyAccount, listMyCreditHistory } from 'services/accountService';
 import ReferralLinkInput from 'components/ReferralLinkInput';
+import { FormattedMessage } from 'react-intl';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -37,14 +38,14 @@ const EarnCommissionModal = props => {
 
   return (
     <Modal
-      title="Earn Commission"
+      title={<FormattedMessage id="menu.earnCommission"/>}
       width={680}
       closable={true}
       maskClosable={true}
       destroyOnClose={true}
       footer={null}
       {...props}>
-      <Paragraph type="secondary">Share this link to invite friends to earn credit.</Paragraph>
+      <Paragraph type="secondary"><FormattedMessage id="text.shareReferralLink"/></Paragraph>
       <ReferralLinkInput value={account?.referralUrl} />
       <Space style={{width: '100%', justifyContent: 'flex-end', marginTop: 20}}>
         <Link to="/account"><Button type="primary" ghost onClick={onOk}>Subscription Deduction</Button></Link>

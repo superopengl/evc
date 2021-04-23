@@ -5,7 +5,7 @@ import { RoleRoute } from 'components/RoleRoute';
 import StockPage from 'pages/StockPage/StockPage';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
-  UploadOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
+  BarChartOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
   DashboardOutlined, QuestionOutlined, AlertOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
@@ -35,7 +35,7 @@ const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSetting
 const ReferralGlobalPolicyListPage = loadable(() => import('pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
-const TranslationListPage = loadable(() => import('pages/Translation/TranslationListPage'));
+const MarketPage = loadable(() => import('pages/Market/MarketPage'));
 const UserListPage = loadable(() => import('pages/User/UserListPage'));
 const MyAccountPage = loadable(() => import('pages/MyAccount/MyAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
@@ -84,6 +84,12 @@ const ROUTES = [
     path: '/stock',
     name: <FormattedMessage id="menu.stockRadar" />,
     icon: <Icon component={() => <GiRadarSweep />} />,
+    roles: ['admin', 'agent', 'member', 'free']
+  },
+  {
+    path: '/market',
+    name: <FormattedMessage id="menu.market" />,
+    icon: <BarChartOutlined />,
     roles: ['admin', 'agent', 'member', 'free']
   },
   {
@@ -303,6 +309,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
       <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
       <RoleRoute visible={!isFree} exact path="/unsual_options_activity" component={UnusualOptionsActivityPage} />
+      <RoleRoute visible={true} path="/market" exact component={MarketPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockRadarPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
 

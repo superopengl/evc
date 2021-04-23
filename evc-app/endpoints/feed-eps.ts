@@ -19,7 +19,7 @@ import { EmailTemplateType } from '../src/types/EmailTemplateType';
 
 const JOB_NAME = 'feed-eps';
 
-const MAX_CALL_TIMES_PER_MINUTE = 50;
+const MAX_CALL_TIMES_PER_MINUTE = 290; // 300 calls/min
 
 async function scrubSupports() {
   const list = await getRepository(StockDeprecateSupport).find();

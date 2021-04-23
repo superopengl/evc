@@ -16,7 +16,7 @@
     "ecs:update:daemon": "aws ecs update-service --cluster evc --service evc-daemon --force-new-deployment --region us-east-1",
     "sync:schema": "aws ecs run-task --cluster evc --task-definition evc-sync-schema:2 --region us-east-1 --launch-type \"FARGATE\" --network-configuration \"awsvpcConfiguration={subnets=[subnet-cfd34dee],securityGroups=[sg-6add9660],assignPublicIp=ENABLED}\"",
     "flush": "aws cloudfront create-invalidation --distribution-id E3CEI7BQGY3KY1 --paths \"/*\"",
-    "release": "pnpm docker:build && pnpm docker:push && pnpm sync:schema && pnpm ecs:update:portal && pnpm ecs:update:daemon && pnpm flush",
+    "release": "pnpm docker:build && pnpm docker:push && pnpm ecs:update:portal && pnpm ecs:update:daemon && pnpm flush",
     "perf:100": "loadtest -c 100 --rps 200 https://easyvaluecheck.com"
   },
   "author": "mr.shaojun@gmail.com",

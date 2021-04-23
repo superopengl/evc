@@ -121,31 +121,31 @@ const HomeCarouselAreaRaw = props => {
   const data = [
     {
       icon: <Icon component={() => <RiLineChartLine />} />,
-      description: <FormattedMessage id="text.slogan1"/>,
+      description: <FormattedMessage id="text.slogan1" />,
     },
     {
       icon: <Icon component={() => <BsArrowBarDown />} />,
-      description: <FormattedMessage id="text.slogan2"/>,
+      description: <FormattedMessage id="text.slogan2" />,
     },
     {
       icon: <Icon component={() => <BsArrowBarUp />} />,
-      description: <FormattedMessage id="text.slogan3"/>,
+      description: <FormattedMessage id="text.slogan3" />,
     },
     {
       icon: <Icon component={() => <AiOutlineSwap />} />,
-      description: <FormattedMessage id="text.slogan4"/>,
+      description: <FormattedMessage id="text.slogan4" />,
     },
     {
       icon: <Icon component={() => <BsCalendar />} />,
-      description: <FormattedMessage id="text.slogan5"/>,
+      description: <FormattedMessage id="text.slogan5" />,
     },
     {
       icon: <Icon component={() => <GiRadarSweep />} />,
-      description: <FormattedMessage id="text.slogan6"/>,
+      description: <FormattedMessage id="text.slogan6" />,
     },
     {
       icon: <Icon component={() => <AiOutlineNotification />} />,
-      description: <FormattedMessage id="text.slogan7"/>,
+      description: <FormattedMessage id="text.slogan7" />,
     },
   ];
 
@@ -156,34 +156,40 @@ const HomeCarouselAreaRaw = props => {
         <Row gutter={[30, 30]} style={{ marginTop: 90, marginBottom: 50, alignItems: 'center' }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* <Image src="/images/logo-transparent.png" width={120} style={{marginBottom: 20}} preview={false}/> */}
-            <Image src="/images/logo-transparent.png" style={{ width: 180 }} preview={false} />
+            <Image src="/images/logo-transparent.png" style={{ width: 140 }} preview={false} />
             <Title style={{ fontSize: 'clamp(22px, 3vw, 28px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight: 'bolder' }}>EASY VALUE CHECK</Title>
             <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(255,255,255,1)', textTransform: 'uppercase' }}>
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
 
-            <div style={{ width: 400, margin: '10px 0 10px' }}>
+            <div style={{ maxWidth: 400, width: '100%', margin: '10px 0 10px' }}>
               <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>
-            <Space align="center" style={{ width: '100%', justifyContent: 'center' }} >
-              <SignUpButton type="primary" onClick={() => handleSignOn()}><FormattedMessage id="button.signUpWithEmail" /></SignUpButton>
-              <GoogleSsoButton
-                render={
-                  renderProps => (
-                    <StyledGoogleButton
-                      type="secondary"
-                      block
-                      icon={<GoogleLogoSvg size={16} />}
-                      // icon={<GoogleOutlined />}
-                      style={{ width: 195 }}
-                      onClick={renderProps.onClick}
-                      disabled={renderProps.disabled}
-                    >
-                      <FormattedMessage id="button.continueWithGoogle" />
-                    </StyledGoogleButton>
-                  )}
-              />
-            </Space>
+              <Row gutter={[10, 10]}>
+                <Col flex="auto">
+                  <SignUpButton type="primary" onClick={() => handleSignOn()}>
+                    <FormattedMessage id="button.signUpWithEmail" />
+                  </SignUpButton>
+                </Col>
+                <Col flex="auto">
+                  <GoogleSsoButton
+                    render={
+                      renderProps => (
+                        <StyledGoogleButton
+                          type="secondary"
+                          block
+                          icon={<GoogleLogoSvg size={16} />}
+                          // icon={<GoogleOutlined />}
+                          style={{ width: 195 }}
+                          onClick={renderProps.onClick}
+                          disabled={renderProps.disabled}
+                        >
+                          <FormattedMessage id="button.continueWithGoogle" />
+                        </StyledGoogleButton>
+                      )}
+                  />
+                </Col>
+              </Row>
           </Col>
           <Col {...span}>
             <StyledList

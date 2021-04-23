@@ -90,9 +90,9 @@ const ReferralCreditForm = (props) => {
 
   return (
     <Container>
-      <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
+      <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch' }}>
         <div>
-          <Title level={4}>{currentSubscription?.type || subscriptionDef.find(s => s.key === 'free').title}</Title>
+          <Title level={4}>{subscriptionDef.find(s => s.key === currentSubscription?.type)?.title}</Title>
           {currentSubscription?.symbols?.length > 0 && <Text>{currentSubscription.symbols.join(', ')}</Text>}
         </div>
         {currentSubscription && <Space>

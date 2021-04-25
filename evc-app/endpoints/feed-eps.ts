@@ -16,6 +16,8 @@ import { CoreDataLatestSnapshot } from '../src/entity/views/CoreDataLatestSnapsh
 import { CoreDataWatchlistEmailTask } from '../src/entity/views/CoreDataWatchlistEmailTask';
 import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
+import { getUtcNow } from '../src/utils/getUtcNow';
+import * as moment from 'moment';
 
 const JOB_NAME = 'feed-eps';
 
@@ -97,9 +99,14 @@ start(JOB_NAME, async () => {
   const failed = [];
   for await (const symbol of symbols) {
     try {
+      const startTime = moment();
       await syncStockEps(symbol);
       console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
-      await delay(sleepTime);
+      const timeSpan = moment().diff(startTime, 'milliseconds');
+      const sleepMs = sleepTime - timeSpan;
+      if(sleepMs > 0) {
+        await delay(sleepMs);
+      }
     } catch (e) {
       const errorJson = errorToJson(e);
       const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${JSON.stringify(errorJson)}`

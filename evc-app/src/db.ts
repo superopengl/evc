@@ -1,9 +1,5 @@
 import { Connection, createConnection, getManager, getRepository } from 'typeorm';
 import { StockComputedPe90 } from './entity/views/StockComputedPe90';
-import { StockLatestPaidInformation } from './entity/views/StockLatestPaidInformation';
-import { SubscriptionPaymentCreditInformation } from './entity/views/SubscriptionPaymentCreditInformation';
-import { StockLatestFreeInformation } from './entity/views/StockLatestFreeInformation';
-import { StockDailyPe } from './entity/views/StockDailyPe';
 import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalComputedFairValue';
 import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
@@ -11,40 +7,8 @@ import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 import { initializeConfig } from './utils/initializeConfig';
 import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
-import { StockDeprecateSupport } from './entity/views/StockDeprecateSupport';
-import { StockDeprecateResistance } from './entity/views/StockDeprecateResistance';
 import { redisCache } from './services/redisCache';
-import { CoreDataWatchlistEmailTask } from './entity/views/CoreDataWatchlistEmailTask';
-import { CoreDataLatestSnapshot } from './entity/views/CoreDataLatestSnapshot';
-import { UserCurrentSubscriptionWithProfile } from './entity/views/UserCurrentSubscriptionWithProfile';
-import { ReceiptInformation } from './entity/views/ReceiptInformation';
-import { RevertableCreditTransaction } from './entity/views/RevertableCreditTransaction';
-import { RevenueChartInformation } from './entity/views/RevenueChartInformation';
-import { UserCurrentSubscription } from './entity/views/UserCurrentSubscription';
-
-const views = [
-  StockLatestPaidInformation,
-  StockLatestFreeInformation,
-  SubscriptionPaymentCreditInformation,
-  StockDeprecateSupport,
-  StockDeprecateResistance,
-  CoreDataLatestSnapshot,
-  CoreDataWatchlistEmailTask,
-  UserCurrentSubscriptionWithProfile,
-  ReceiptInformation,
-  RevertableCreditTransaction,
-  RevenueChartInformation,
-  UserCurrentSubscription,
-];
-const mviews = [
-  StockPutCallRatio90,
-  StockDailyPe,
-  StockComputedPe90,
-  StockHistoricalTtmEps,
-  StockHistoricalComputedFairValue,
-  StockLatestFairValue,
-  StockDataInformation,
-];
+import { StockDailyPe } from './entity/views/StockDailyPe';
 
 export async function connectDatabase(shouldSyncSchema = false) {
   const connection = await createConnection();
@@ -70,9 +34,7 @@ async function syncDatabaseSchema(connection: Connection) {
    * so as to let typeorm always create fresh views when app starts up.
    */
 
-  await dropView();
-
-  await dropMaterializedView();
+  await dropAllViewsAndMatviews();
 
   await connection.synchronize(false);
   await connection.runMigrations();
@@ -81,49 +43,58 @@ async function syncDatabaseSchema(connection: Connection) {
   // await refreshMaterializedView();
 }
 
-async function dropView() {
-  for (const viewEntity of views) {
-    const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
-    await getManager().query(`DROP VIEW IF EXISTS "${schema}"."${tableName}" CASCADE`);
-  }
-}
+async function dropAllViewsAndMatviews() {
+  const list = await getManager().query(`
+select format('DROP VIEW IF EXISTS "%I"."%I" cascade;', schemaname, viewname) as sql
+from pg_catalog.pg_views 
+where schemaname = 'evc'
+union 
+select format('DROP MATERIALIZED VIEW IF EXISTS "%I"."%I" cascade;', schemaname, matviewname) as sql
+from pg_catalog.pg_matviews 
+where schemaname = 'evc'
+  `);
 
-async function dropMaterializedView() {
-  for (const viewEntity of mviews) {
-    const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
-    await getManager().query(`DROP MATERIALIZED VIEW IF EXISTS "${schema}"."${tableName}" CASCADE`);
+  for(const item of list) {
+    await getManager().query(item.sql);
   }
 }
 
 async function createIndexOnMaterilializedView() {
-  const list: { tableEntity: any, fields: string[] }[] = [
+  const list: { tableEntity: any, fields: string[], unique?: boolean }[] = [
     {
       tableEntity: StockDataInformation,
       fields: ['symbol'],
+      unique: true,
     },
     {
       tableEntity: StockLatestFairValue,
       fields: ['symbol'],
-    },
-    {
-      tableEntity: StockComputedPe90,
-      fields: ['symbol', 'date'],
+      unique: true,
     },
     {
       tableEntity: StockDailyPe,
       fields: ['symbol', 'date'],
+      unique: true,
+    },
+    {
+      tableEntity: StockComputedPe90,
+      fields: ['symbol', 'date'],
+      unique: true,
     },
     {
       tableEntity: StockHistoricalComputedFairValue,
       fields: ['symbol', '"reportDate"'],
+      unique: true,
     },
     {
       tableEntity: StockHistoricalTtmEps,
       fields: ['symbol', '"reportDate"'],
+      unique: true,
     },
     {
       tableEntity: StockPutCallRatio90,
       fields: ['symbol', 'date'],
+      unique: true,
     },
   ];
 
@@ -131,7 +102,7 @@ async function createIndexOnMaterilializedView() {
     const { schema, tableName } = getRepository(item.tableEntity).metadata;
     const idxName = `${tableName}_${item.fields.map(x => x.replace(/"/g, '')).join('_')}`;
     const fields = item.fields.join(',');
-    await getManager().query(`CREATE INDEX ${idxName} ON "${schema}"."${tableName}" (${fields})`);
+    await getManager().query(`CREATE ${item.unique ? 'UNIQUE' : ''} INDEX ${idxName} ON "${schema}"."${tableName}" (${fields})`);
   }
 }
 
@@ -143,10 +114,16 @@ export async function refreshMaterializedView(mviewEnitity?: any) {
     return;
   }
   try {
-    const targetViews = mviewEnitity ? [mviewEnitity] : mviews;
-    for (const viewEntity of targetViews) {
+    const matviews = await getManager().query(`
+select schemaname as schema, matviewname as "tableName"
+from pg_catalog.pg_matviews 
+where schemaname = 'evc'
+      `);
+
+    const list = mviewEnitity ? [getManager().getRepository(mviewEnitity).metadata] : matviews;
+    for (const item of list) {
       await redisCache.setex(REFRESHING_MV_CACHE_KEY, 5 * 60, true);
-      const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
+      const { schema, tableName } = item;
       await getManager().query(`REFRESH MATERIALIZED VIEW CONCURRENTLY "${schema}"."${tableName}" `);
     }
   } finally {

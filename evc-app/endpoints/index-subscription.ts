@@ -41,32 +41,32 @@ function getSubscriptionName(type: SubscriptionType) {
 };
 
 async function enqueueEmailTasks(template: EmailTemplateType, list: AliveSubscriptionInformation[]) {
-  for (const item of list) {
+  for (const activeOne of list) {
     const emailReq: EmailRequest = {
-      to: item.email,
+      to: activeOne.email,
       template: template,
       shouldBcc: true,
       vars: {
-        toWhom: getEmailRecipientName(item),
-        subscriptionId: item.subscriptionId,
-        subscriptionType: getSubscriptionName(item.subscriptionType),
-        start: moment(item.start).format('D MMM YYYY'),
-        end: moment(item.end).format('D MMM YYYY'),
+        toWhom: getEmailRecipientName(activeOne),
+        subscriptionId: activeOne.subscriptionId,
+        subscriptionType: getSubscriptionName(activeOne.type),
+        start: moment(activeOne.start).format('D MMM YYYY'),
+        end: moment(activeOne.end).format('D MMM YYYY'),
       }
     };
     await enqueueEmail(emailReq);
   }
 }
 
-async function enqueueRecurringSucceededEmail(info: AliveSubscriptionInformation, subscription: Subscription, paidAmount: number, creditDeduction: number) {
+async function enqueueRecurringSucceededEmail(activeOne: AliveSubscriptionInformation, subscription: Subscription, paidAmount: number, creditDeduction: number) {
   const emailReq: EmailRequest = {
-    to: info.email,
+    to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPaySucceeded,
     shouldBcc: true,
     vars: {
-      toWhom: getEmailRecipientName(info),
-      subscriptionId: info.subscriptionId,
-      subscriptionType: getSubscriptionName(info.subscriptionType),
+      toWhom: getEmailRecipientName(activeOne),
+      subscriptionId: activeOne.subscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.type),
       start: moment(subscription.start).format('D MMM YYYY'),
       end: moment(subscription.end).format('D MMM YYYY'),
       paidAmount,
@@ -76,15 +76,15 @@ async function enqueueRecurringSucceededEmail(info: AliveSubscriptionInformation
   await enqueueEmail(emailReq);
 }
 
-async function enqueueRecurringFailedEmail(info: AliveSubscriptionInformation, subscription: Subscription, paidAmount: number, creditDeduction: number) {
+async function enqueueRecurringFailedEmail(activeOne: AliveSubscriptionInformation, subscription: Subscription, paidAmount: number, creditDeduction: number) {
   const emailReq: EmailRequest = {
-    to: info.email,
+    to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPayFailed,
     shouldBcc: true,
     vars: {
-      toWhom: getEmailRecipientName(info),
-      subscriptionId: info.subscriptionId,
-      subscriptionType: getSubscriptionName(info.subscriptionType),
+      toWhom: getEmailRecipientName(activeOne),
+      subscriptionId: activeOne.subscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.type),
       start: moment(subscription.start).format('D MMM YYYY'),
       end: moment(subscription.end).format('D MMM YYYY'),
       paidAmount,
@@ -148,31 +148,19 @@ async function getPreviousStripePaymentInfo(subscription: Subscription) {
   return { stripeCustomerId, stripePaymentMethodId };
 }
 
-function extendSubscriptionEndDate(subscription: Subscription) {
-  const { end, type } = subscription;
-  let newEnd = end;
-  switch (type) {
-    case SubscriptionType.UnlimitedMontly:
-      newEnd = moment(end).add(1, 'month').toDate();
-      break;
-    case SubscriptionType.UnlimitedYearly:
-      newEnd = moment(end).add(12, 'month').toDate();
-    default:
-      throw new Error(`Unkonwn subscription type ${type}`);
-  }
-
-  subscription.end = newEnd;
+function extendSubscriptionEndDate(subscription: Subscription, payment: Payment) {
+  subscription.end = payment.end;
   subscription.status = SubscriptionStatus.Alive;
 }
 
-async function renewRecurringSubscription(info: AliveSubscriptionInformation) {
-  const { subscriptionId, userId } = info;
+async function renewRecurringSubscription(activeSubscription: AliveSubscriptionInformation) {
+  const { subscriptionId, userId, type } = activeSubscription;
   const subscription = await getRepository(Subscription).findOne(subscriptionId)
 
   const tran = getConnection().createQueryRunner();
   const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
     userId,
-    subscription.type,
+    type,
     true
   );
   const { stripeCustomerId, stripePaymentMethodId } = await getPreviousStripePaymentInfo(subscription);
@@ -190,8 +178,8 @@ async function renewRecurringSubscription(info: AliveSubscriptionInformation) {
   const payment = new Payment();
   payment.subscription = subscription;
   payment.userId = userId;
-  payment.start = subscription.end;
-  payment.end = moment(subscription.end).add(subscription.type === SubscriptionType.UnlimitedYearly ? 12 : 1, 'month').toDate()
+  payment.start = moment(activeSubscription.end).add(1, 'day').toDate();
+  payment.end = moment(payment.end).add(type === SubscriptionType.UnlimitedYearly ? 12 : 1, 'month').toDate()
   payment.creditTransaction = creditTransaction;
   payment.amount = additionalPay;
   payment.method = additionalPay ? PaymentMethod.Card : PaymentMethod.Credit;
@@ -208,7 +196,7 @@ async function renewRecurringSubscription(info: AliveSubscriptionInformation) {
   payment.status = PaymentStatus.Paid;
   payment.paidAt = getUtcNow();
 
-  extendSubscriptionEndDate(subscription);
+  extendSubscriptionEndDate(subscription, payment);
 
   try {
     await tran.startTransaction();
@@ -220,10 +208,10 @@ async function renewRecurringSubscription(info: AliveSubscriptionInformation) {
     await tran.manager.save(subscription);
 
     await tran.commitTransaction();
-    await enqueueRecurringSucceededEmail(info, subscription, additionalPay, creditDeductAmount);
+    await enqueueRecurringSucceededEmail(activeSubscription, subscription, additionalPay, creditDeductAmount);
   } catch (err) {
     await tran.rollbackTransaction();
-    await enqueueRecurringFailedEmail(info, subscription, additionalPay, creditDeductAmount);
+    await enqueueRecurringFailedEmail(activeSubscription, subscription, additionalPay, creditDeductAmount);
   }
 }
 

@@ -5,8 +5,8 @@ export async function downloadReceipt(paymentId) {
   return request('GET', path, null, null, 'blob');
 }
 
-export async function cancelSubscription(id) {
-  return httpPost(`subscription/${id}/cancel`);
+export async function changeSubscriptionRecurring(id, recurring) {
+  return httpPost(`subscription/${id}/recurring`, {recurring});
 }
 
 export async function getMyCurrentSubscription() {

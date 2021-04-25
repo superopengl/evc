@@ -41,15 +41,6 @@ const MySubscriptionHistoryDrawer = (props) => {
 
   const columnDef = [
     {
-      title: 'Subscription type',
-      render: (value, item) => <Space>
-        <Text strong={item.status === 'alive'}>
-          {getSubscriptionName(item.type)}
-        </Text>
-        {item.status === 'alive' && <Tag color="success">Current</Tag>}
-      </Space>
-    },
-    {
       title: 'Subscription period',
       align: 'left',
       render: (value, item) => {
@@ -58,7 +49,8 @@ const MySubscriptionHistoryDrawer = (props) => {
           <ArrowRightOutlined />
           {/* <DoubleRightOutlined /> */}
           <TimeAgo value={item.end} showAgo={false} accurate={false} />
-          {item.recurring && <Tag>Auto renew</Tag>}
+          {item.recurring && <>(auto renew)</>}
+          {item.status === 'alive' && <Tag color="success">Current</Tag>}
         </Space>
       }
     },
@@ -111,9 +103,11 @@ const MySubscriptionHistoryDrawer = (props) => {
       visible={visible}
       onClose={onClose}
       style={style}
+      contentWrapperStyle={{maxWidth: 800}}
     >
       <Table
         // showHeader={false}
+        showHeader={false}
         loading={loading}
         style={{ width: '100%' }}
         dataSource={list}

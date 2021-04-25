@@ -1,13 +1,11 @@
-import { Card, Button, Modal, Space, Typography, Row, Col } from 'antd';
+import { Card, Button, Modal, Space, Typography, Row, Col, Alert } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { WarningOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { cancelSubscription, getMyCurrentSubscription } from 'services/subscriptionService';
-import { TimeAgo } from 'components/TimeAgo';
+import { changeSubscriptionRecurring, getMyCurrentSubscription } from 'services/subscriptionService';
 import MoneyAmount from 'components/MoneyAmount';
 import { getMyAccount, listMyCreditHistory } from 'services/accountService';
 import ReactDOM from 'react-dom';
@@ -15,8 +13,9 @@ import ReferralLinkInput from 'components/ReferralLinkInput';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
@@ -24,7 +23,7 @@ const MySubscriptionHistoryDrawer = loadable(() => import('./MySubscriptionHisto
 const CommissionWithdrawalForm = loadable(() => import('pages/CommissionWithdrawal/CommissionWithdrawalForm'));
 const MyCommissionWithdrawalHistoryDrawer = loadable(() => import('pages/CommissionWithdrawal/MyCommissionWithdrawalHistoryDrawer'));
 
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph, Text, Title, Link } = Typography;
 
 
 const ContainerStyled = styled.div`
@@ -104,30 +103,18 @@ const MyAccountPage = (props) => {
   const currentPlanKey = currentSubscription?.type || 'free';
   const isCurrentFree = currentPlanKey === 'free';
 
-  const handleCancelSubscription = async () => {
-    try {
-      setLoading(true);
-      await cancelSubscription(currentSubscription.id);
-      load(true);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleCancelCurrentPlan = () => {
+  const handleChangeRecurring = (recurring) => {
     Modal.confirm({
-      title: 'Cancel subscription',
-      icon: <WarningOutlined />,
-      content: 'Changing back to free plan will terminate your current subscription without refund. Continue?',
-      okText: 'Yes, continue',
+      title: recurring ? 'Turn on subscription auto-renew' : 'Turn off subscription auto-renew',
+      icon: <QuestionCircleOutlined />,
+      content: 'The change will take effect from your next payment. Continue?',
+      okText: recurring ? 'Yes, turn on auto-renew' : 'Yes, turn off auto-renew',
       maskClosable: true,
-      okButtonProps: {
-        danger: true
-      },
       onOk: async () => {
-        await handleCancelSubscription();
+        await changeSubscriptionRecurring(currentSubscription.id, recurring);
+        load();
       },
-      cancelText: 'No, keep the current plan',
+      // cancelText: 'No, keep the current plan',
     });
   }
 
@@ -136,23 +123,22 @@ const MyAccountPage = (props) => {
       return;
     }
     if (subscription.key === 'free') {
-      handleCancelCurrentPlan();
-    } else if (currentSubscription) {
-      Modal.confirm({
-        title: 'Change subscription',
-        icon: <WarningOutlined />,
-        content: 'Changing subscription will terminate your current subscription without refund. Continue?',
-        okText: 'Yes, continue',
-        maskClosable: true,
-        okButtonProps: {
-          danger: true
-        },
-        onOk: () => {
-          setPlanType(subscription.key);
-          setModalVisible(true);
-        },
-        cancelText: 'No, keep the current plan',
+      return;
+    }
+
+    if (currentSubscription?.recurring) {
+      Modal.info({
+        title: 'Auto-renew Payment is On',
+        content: <Paragraph>
+          Please turn auto-renew off before changing a plan. Your new plan will take affect from <Text underline strong>{moment(currentSubscription.end).add(1, 'day').format('D MMM YYYY')}</Text>.
+        </Paragraph>
       });
+      return;
+    } 
+
+    if (currentSubscription) {
+      setPlanType(subscription.key);
+      setModalVisible(true);
     } else {
       setPlanType(subscription.key);
       setModalVisible(true);
@@ -168,23 +154,21 @@ const MyAccountPage = (props) => {
     setModalVisible(false);
   }
 
-  const terminateCurrentSubscription = async () => {
-
-    Modal.confirm({
-      title: 'Terminate current subscription',
-      icon: <WarningOutlined />,
-      okText: 'Yes, terminate it',
-      maskClosable: true,
-      okButtonProps: {
-        danger: true
-      },
-      onOk: async () => {
-        await handleCancelSubscription();
-      },
-      cancelText: 'No, keep it',
-    });
-  }
-
+  const priceCardSpan = isCurrentFree ? {
+    xs: 24,
+    sm: 24,
+    md: 8,
+    lg: 8,
+    xl: 8,
+    xxl: 8
+  } : {
+    xs: 24,
+    sm: 24,
+    md: 12,
+    lg: 12,
+    xl: 12,
+    xxl: 12
+  };
 
   return (
     <ContainerStyled>
@@ -194,49 +178,41 @@ const MyAccountPage = (props) => {
             bordered={false}
             title="Subscription"
             extra={
-              <Space>
-                <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Billing</Button>
-                {!isCurrentFree && <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate Current Plan</Button>}
-              </Space>
+              <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Billing</Button>
             }
           >
-            <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
-            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-              <StyledRow gutter={[30, 30]} style={{ maxWidth: 900 }}>
-                {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
-                  <SubscriptionCard
-                    title={s.title}
-                    icon={s.icon}
-                    description={s.description}
-                    onClick={() => handleChangePlan(s)}
-                    price={s.price}
-                    active={s.key === currentPlanKey}
-                    unit={s.unit} />
-                </StyledCol>)}
-              </StyledRow>
-            </div>
-            <StyledRow style={{ marginTop: 30 }}>
-              {currentSubscription && <Col span={24}>
-                {/* <Title level={4}>{getSubscriptionName(currentSubscription.type)}</Title> */}
-                <Title level={5}>Subscription period</Title>
-                <Space>
-                  <TimeAgo value={currentSubscription.start} direction="horizontal" showAgo={false} accurate={false} />
-                  <ArrowRightOutlined />
+            <Space direction="vertical" style={{ width: '100%' }} size="large">
+              {currentSubscription && !currentSubscription?.recurring && <Alert type="info" showIcon description={<>
+                Your current subscription will expire on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
+                  You can extend the subscription now by continue purchasing a plan.
+                  The new plan will take effect right after the current plan's expiration from <Text underline strong>{moment(currentSubscription.end).add(1, 'day').format('D MMM YYYY')}</Text>.
+              </>} />}
+              {currentSubscription?.recurring && <Alert type="info" showIcon description={<>
+                The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
+                You can turn off the auto-renew payment <Link onClick={() => handleChangeRecurring(false)}>here</Link>. 
+              </>} />}
+              <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
+                <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
+                  {subscriptionDef.filter(x => x.key !== 'free' || isCurrentFree).map(s => <StyledCol key={s.key} {...priceCardSpan}>
+                    <SubscriptionCard
+                      title={s.title}
+                      icon={s.icon}
+                      description={s.description}
+                      onClick={() => handleChangePlan(s)}
+                      price={s.price}
+                      active={s.key === currentPlanKey}
+                      unit={s.unit} />
+                  </StyledCol>)}
+                </StyledRow>
+              </div>
 
-                  <TimeAgo value={currentSubscription.end} direction="horizontal" showAgo={false} accurate={false} />
-                </Space>
-                {currentSubscription.recurring && <>
-                  <Title level={5} style={{ marginTop: 20 }}>Next payment</Title>
-                  <TimeAgo value={currentSubscription.end} direction="horizontal" showAgo={false} accurate={false} />
-                </>}
-              </Col>}
-            </StyledRow>
+            </Space>
           </Card>
           <Card
             bordered={false}
-            title={<FormattedMessage id="text.referralLinkTitle"/>}
+            title={<FormattedMessage id="text.referralLinkTitle" />}
             extra={
-              <Space><Text><FormattedMessage id="text.haveReferred"/></Text><Title type="success">{account.referralCount}</Title></Space>
+              <Space><Text><FormattedMessage id="text.haveReferred" /></Text><Title type="success">{account.referralCount}</Title></Space>
             }
           >
             <Paragraph type="secondary">{<FormattedMessage id="text.shareReferralLink" />}</Paragraph>
@@ -280,7 +256,7 @@ const MyAccountPage = (props) => {
         onOk={handleCancelPayment}
         onCancel={handleCancelPayment}
       >
-        <PaymentStepperWidget 
+        <PaymentStepperWidget
           planType={planType}
           onComplete={handlePaymentOk}
           onLoading={loading => setPaymentLoading(loading)}
@@ -296,7 +272,7 @@ const MyAccountPage = (props) => {
         onClose={() => setSubscriptionHistoryVisible(false)}
       />
       <Modal
-        title={<FormattedMessage id="text.commissionWithdrawalApplication"/>}
+        title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
         visible={cashBackVisible}
         closable={true}
         maskClosable={false}

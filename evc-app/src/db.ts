@@ -20,6 +20,7 @@ import { AliveSubscriptionInformation } from './entity/views/AliveSubscriptionIn
 import { ReceiptInformation } from './entity/views/ReceiptInformation';
 import { RevertableCreditTransactionInformation } from './entity/views/RevertableCreditTransactionInformation';
 import { RevenueChartInformation } from './entity/views/RevenueChartInformation';
+import { UserCurrentSubscriptionInformation } from './entity/views/UserCurrentSubscriptionInformation';
 
 const views = [
   StockLatestPaidInformation,
@@ -32,7 +33,8 @@ const views = [
   AliveSubscriptionInformation,
   ReceiptInformation,
   RevertableCreditTransactionInformation,
-  RevenueChartInformation
+  RevenueChartInformation,
+  UserCurrentSubscriptionInformation
 ];
 const mviews = [
   StockDataInformation,

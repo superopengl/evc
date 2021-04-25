@@ -147,12 +147,15 @@ const PaymentStepperWidget = (props) => {
           <Text strong>Total payable amount:</Text>
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
         </Space>
-        <Space>
-          {shouldShowCard && [VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
-          {shouldShowPayPal && <CardIcon src={PayPalIcon} />}
-        </Space>
+        <Divider />
+        <div style={{display: 'flex', width: '100%', justifyContent:'center'}}>
+          <Space>
+            {shouldShowCard && [VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
+            {shouldShowPayPal && <CardIcon src={PayPalIcon} />}
+          </Space>
+        </div>
         {shouldShowFullCreditButton ? <>
-          <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon style={{marginBottom: 20}} />
+          <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon style={{ marginBottom: 20 }} />
           <FullCreditPayButton
             onProvision={() => handleProvisionSubscription('credit')}
             onCommit={handleSuccessfulPayment}

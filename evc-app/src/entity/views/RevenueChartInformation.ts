@@ -14,7 +14,7 @@ import { PaymentStatus } from '../../types/PaymentStatus';
   .where(`p.status = '${PaymentStatus.Paid}'`)
   .orderBy('p."paidAt"', 'DESC')
   .select([
-    's.type as "subscriptionType"',
+    'p.type as "subscriptionType"',
     'p.method as method',
     'p."paidAt" as date',
     'coalesce(p.amount, 0) - coalesce(c.amount, 0) as price',

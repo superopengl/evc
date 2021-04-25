@@ -18,23 +18,17 @@ export class Subscription {
   @Column('uuid')
   userId: string;
 
-  @Column()
-  type: SubscriptionType;
-
-  @Column('json', { nullable: true })
-  stripePaymentData: object;
-
-  @Column()
+  @Column('date')
   start: Date;
 
-  @Column()
+  @Column('date')
   end: Date;
 
   @Column({ default: true })
   recurring: boolean;
 
-  @Column({ type: 'int', default: 3 })
-  alertDays: number;
+  @Column({ type: 'int', array: true, default: `{1, 3, 7}` })
+  alertDays: number[];
 
   @Column({default: SubscriptionStatus.Provisioning})
   status: SubscriptionStatus;

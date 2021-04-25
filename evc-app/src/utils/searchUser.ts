@@ -31,9 +31,9 @@ export async function searchUser(queryInfo: StockUserParams) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
   }
   query = query.leftJoin(q => q.from(Subscription, 's').where('status = :status', { status: SubscriptionStatus.Alive }), 's', 's."userId" = u.id');
-  if (subscription?.length) {
-    query = query.andWhere('(s.type IN (:...subscription))', { subscription });
-  }
+  // if (subscription?.length) {
+  //   query = query.andWhere('(s.type IN (:...subscription))', { subscription });
+  // }
   query = query.leftJoin(q => q
     .from('user_tags_user_tag', 'tg')
     .groupBy('tg."userId"')
@@ -63,7 +63,6 @@ export async function searchUser(queryInfo: StockUserParams) {
       'tg.tags as tags',
       'u."lastLoggedInAt"',
       'u."createdAt" as "createdAt"',
-      's.type as "subscriptionType"'
     ]);
 
   const data = await query.execute();

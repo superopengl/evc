@@ -3,7 +3,7 @@ import { StockDailyPutCallRatio } from '../StockDailyPutCallRatio';
 
 
 @ViewEntity({
-  materialized: false,
+  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(StockDailyPutCallRatio, 'd')

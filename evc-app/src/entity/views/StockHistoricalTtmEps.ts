@@ -2,7 +2,7 @@ import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockEps } from '../StockEps';
 
 @ViewEntity({
-  materialized: false,
+  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q

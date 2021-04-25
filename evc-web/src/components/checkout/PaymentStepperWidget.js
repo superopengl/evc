@@ -123,7 +123,7 @@ const PaymentStepperWidget = (props) => {
     {
       component: <Space direction="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Auto renew (payments happen at the end of alive subscription automatically)?</Text>
+          <Text>Auto renew (payments happen on expiray automatically)?</Text>
           <Switch defaultChecked={recurring} onChange={handleRecurringChange} />
         </Space>
         {paymentDetail?.totalCreditAmount > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
@@ -208,7 +208,7 @@ const PaymentStepperWidget = (props) => {
 
   return (
     <Loading loading={loading} message={'In progress. Please do not close the window.'}>
-      <Space direction="vertical" size="large" style={{ width: '100%' }} >
+      <Space direction="vertical" size="large" style={{ width: '100%', paddingBottom: 20 }} >
         <Card>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>

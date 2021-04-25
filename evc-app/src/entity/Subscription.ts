@@ -27,9 +27,6 @@ export class Subscription {
   @Column({ default: true })
   recurring: boolean;
 
-  @Column({ type: 'int', array: true, default: `{1, 3, 7}` })
-  alertDays: number[];
-
   @Column({default: SubscriptionStatus.Provisioning})
   status: SubscriptionStatus;
 

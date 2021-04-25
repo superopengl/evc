@@ -26,7 +26,6 @@ import { UserProfile } from '../UserProfile';
       's.start as start',
       's.end as end',
       's.recurring as recurring',
-      's."alertDays" as "alertDays"',
     ])
 })
 export class AliveSubscriptionInformation {
@@ -54,7 +53,4 @@ export class AliveSubscriptionInformation {
 
   @ViewColumn()
   recurring: boolean;
-
-  @ViewColumn()
-  alertDays: number[];
 }

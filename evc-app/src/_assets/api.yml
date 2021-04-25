@@ -646,17 +646,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/pe:
-    get:
-      operationId: listStockPe
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
   /stock/s/{symbol}/fairvalue:
     get:
       operationId: getStockFairValue

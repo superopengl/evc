@@ -16,11 +16,11 @@ import { StockDeprecateResistance } from './entity/views/StockDeprecateResistanc
 import { redisCache } from './services/redisCache';
 import { CoreDataWatchlistEmailTask } from './entity/views/CoreDataWatchlistEmailTask';
 import { CoreDataLatestSnapshot } from './entity/views/CoreDataLatestSnapshot';
-import { AliveSubscriptionInformation } from './entity/views/AliveSubscriptionInformation';
+import { UserCurrentSubscriptionWithProfile } from './entity/views/UserCurrentSubscriptionWithProfile';
 import { ReceiptInformation } from './entity/views/ReceiptInformation';
-import { RevertableCreditTransactionInformation } from './entity/views/RevertableCreditTransactionInformation';
+import { RevertableCreditTransaction } from './entity/views/RevertableCreditTransaction';
 import { RevenueChartInformation } from './entity/views/RevenueChartInformation';
-import { UserCurrentSubscriptionInformation } from './entity/views/UserCurrentSubscriptionInformation';
+import { UserCurrentSubscription } from './entity/views/UserCurrentSubscription';
 
 const views = [
   StockLatestPaidInformation,
@@ -30,11 +30,11 @@ const views = [
   StockDeprecateResistance,
   CoreDataLatestSnapshot,
   CoreDataWatchlistEmailTask,
-  AliveSubscriptionInformation,
+  UserCurrentSubscriptionWithProfile,
   ReceiptInformation,
-  RevertableCreditTransactionInformation,
+  RevertableCreditTransaction,
   RevenueChartInformation,
-  UserCurrentSubscriptionInformation,
+  UserCurrentSubscription,
 ];
 const mviews = [
   StockPutCallRatio90,

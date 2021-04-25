@@ -24,7 +24,7 @@ import { UserProfile } from '../UserProfile';
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
       's.id as "subscriptionId"',
-      'p.type as "subscriptionType"',
+      's.type as "subscriptionType"',
       's.status as "subscriptionStatus"',
       'p."userId" as "userId"',
       'f.email as email',

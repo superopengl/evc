@@ -16,6 +16,7 @@ import { StockDailyPe } from './StockDailyPe';
             .getRepository(StockDailyPe)
             .createQueryBuilder('sdp')
             .where('sdp.date <= pe."date" - 90')
+            // .select('1')
         )
       )
       .groupBy('pe.symbol')

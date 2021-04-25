@@ -22,18 +22,11 @@ export async function commitSubscription(payment: Payment) {
 
     await m.save(payment);
 
-    await m.getRepository(Subscription).update({
-      userId,
-      status: SubscriptionStatus.Alive
-    }, {
-      end: getUtcNow(),
-      status: SubscriptionStatus.Terminated
-    });
-
     await m.save(subscription);
 
     await m.getRepository(User).update({
-      id: userId
+      id: userId,
+      role: Role.Free
     }, {
       role: Role.Member
     });

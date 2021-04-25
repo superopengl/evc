@@ -1,9 +1,7 @@
 
 import { getRepository, In } from 'typeorm';
-import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getUtcNow } from '../utils/getUtcNow';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { Payment } from '../entity/Payment';
@@ -13,11 +11,9 @@ import { provisionSubscriptionPurchase } from '../utils/provisionSubscriptionPur
 import { commitSubscription } from '../utils/commitSubscription';
 import * as _ from 'lodash';
 import { createStripeClientSecretForCardPayment, chargeStripeForCardPayment } from '../services/stripeService';
-import { Role } from '../types/Role';
 import { generateReceiptPdfStream } from '../services/receiptService';
-import { PaymentStatus } from '../types/PaymentStatus';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
-import { UserCurrentSubscriptionInformation } from '../entity/views/UserCurrentSubscriptionInformation';
+import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -26,7 +22,6 @@ async function getUserSubscriptionHistory(userId) {
       status: In([SubscriptionStatus.Alive, SubscriptionStatus.Expired, SubscriptionStatus.Terminated])
     },
     order: {
-      start: 'DESC',
       createdAt: 'DESC',
     },
     relations: [
@@ -55,20 +50,18 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const changeSubscriptionRecurring = handlerWrapper(async (req, res) => {
+export const turnOffSubscriptionRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
-  const { id } = req.params;
   const { user: { id: userId } } = req as any;
-  const { recurring } = req.body;
 
   await getRepository(Subscription).update(
     {
-      id,
       userId,
-      recurring: !recurring
+      status: SubscriptionStatus.Alive,
+      recurring: true,
     },
     {
-      recurring,
+      recurring: false,
     }
   );
 
@@ -97,8 +90,8 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
 
-  const subscription = await getRepository(UserCurrentSubscriptionInformation).findOne(
-    { 
+  const subscription = await getRepository(UserCurrentSubscription).findOne(
+    {
       userId
     }
   );

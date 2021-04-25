@@ -4,7 +4,7 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
 
 
 @ViewEntity({
-  materialized: true,
+  materialized: false,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(StockHistoricalComputedFairValue, 's')

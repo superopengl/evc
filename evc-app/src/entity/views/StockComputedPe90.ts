@@ -3,7 +3,7 @@ import { existsQuery } from '../../utils/existsQuery';
 import { StockDailyPe } from './StockDailyPe';
 
 @ViewEntity({
-  materialized: true,
+  materialized: false,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(StockDailyPe, 'pe')

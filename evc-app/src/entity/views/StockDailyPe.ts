@@ -4,7 +4,7 @@ import { StockDailyClose } from '../StockDailyClose';
 
 
 @ViewEntity({
-  materialized: true,
+  materialized: false,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(q => q.from(StockEps, 'eps')

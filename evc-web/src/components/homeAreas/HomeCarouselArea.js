@@ -4,7 +4,7 @@ import { Typography, Button, Space, Row, Col, List } from 'antd';
 import { withRouter } from 'react-router-dom';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
-import { StockSearchInput } from 'components/StockSearchInput';
+import { SearchStockInput } from 'components/SearchStockInput';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { Image } from 'antd';
@@ -163,7 +163,7 @@ const HomeCarouselAreaRaw = props => {
             </Paragraph>
 
             <div style={{ maxWidth: 400, width: '100%', margin: '10px 0 10px' }}>
-              <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true} />
+              <SearchStockInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>
               <Row gutter={[10, 10]}>
                 <Col flex="auto">

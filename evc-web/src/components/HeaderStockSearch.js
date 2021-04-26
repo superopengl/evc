@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { StockSearchInput } from 'components/StockSearchInput';
+import { SearchStockInput } from 'components/SearchStockInput';
 import { Space } from 'antd';
 
 const HeaderStockSearch = (props) => {
@@ -10,7 +10,7 @@ const HeaderStockSearch = (props) => {
   }
 
   return (
-      <StockSearchInput
+      <SearchStockInput
         style={{width: '100%', minWidth: 200, maxWidth: 400}}
         onChange={handleSelectedStock} />
   );

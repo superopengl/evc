@@ -349,7 +349,7 @@ export const createStock = handlerWrapper(async (req, res) => {
   }
   stock.logoUrl = await logoTask;
 
-  await getRepository(Stock).insert(stock);
+  await getRepository(Stock).save(stock);
 
   initilizedNewStockData(symbol).catch(err => { });
 

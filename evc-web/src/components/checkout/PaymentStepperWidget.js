@@ -100,7 +100,7 @@ const PaymentStepperWidget = (props) => {
       setLoading(false);
     }
     onComplete();
-    notify.success('Successfully added subscription', 'Thank you very much for purchasing subscription.');
+    notify.success('Successfully added subscription', 'Thank you very much for purchasing the subscription.');
   }
 
   // const handleCommitSubscription = async (data) => {

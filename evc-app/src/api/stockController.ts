@@ -73,7 +73,7 @@ export const getStockDataInfo = handlerWrapper(async (req, res) => {
 });
 
 export const getStockNextReportDate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member', 'free');
+  // assertRole(req, 'admin', 'agent', 'member', 'free');
   const symbol = req.params.symbol.toUpperCase();
 
   const entity = await getRepository(StockEarningsCalendar).findOne({

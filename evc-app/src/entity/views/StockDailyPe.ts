@@ -31,7 +31,7 @@ import { StockDailyClose } from '../StockDailyClose';
       'symbol',
       'date',
       'close',
-      '"ttmEps"',
+      'CASE WHEN "ttmEps" > 0 THEN "ttmEps" ELSE NULL END as "ttmEps"',
       'CASE WHEN "ttmEps" > 0 THEN close / "ttmEps" ELSE NULL END as pe',
     ])
 })

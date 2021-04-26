@@ -10,6 +10,7 @@ import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
 import {isNil} from 'lodash';
 import { Skeleton } from 'antd';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -63,10 +64,11 @@ const StockQuotePanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadData();
-    const subscription = subscribePriceEvent();
+    const load$ = from(loadData()).subscribe();
+    const event$ = subscribePriceEvent();
     return () => {
-      subscription.unsubscribe();
+      load$.unsubscribe();
+      event$.unsubscribe();
     }
   }, []);
 

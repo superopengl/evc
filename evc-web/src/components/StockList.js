@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { List } from 'antd';
 import StockInfoCard from './StockInfoCard';

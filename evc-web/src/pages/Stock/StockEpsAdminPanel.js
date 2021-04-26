@@ -9,6 +9,7 @@ import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { syncStockEps } from 'services/stockService';
 import { SyncOutlined } from '@ant-design/icons';
+import { from } from 'rxjs';
 const { Text } = Typography;
 
 const Container = styled.div`
@@ -38,7 +39,11 @@ const StockEpsAdminEditor = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity();
+    const load$ = from(loadEntity()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleSave = async (range) => {

@@ -5,7 +5,7 @@ import { listMyCommissionWithdrawal } from 'services/commissionService';
 import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
-
+import { from } from 'rxjs';
 
 const MyCommissionWithdrawalHistoryDrawer = (props) => {
   const { visible, onClose } = props;
@@ -27,8 +27,14 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
   }
 
   React.useEffect(() => {
+    let load$;
     if (visible) {
-      loadSubscrptions();
+      load$?.unsubscribe();
+      load$ = from(loadSubscrptions()).subscribe();
+    }
+
+    return () => {
+      load$?.unsubscribe();
     }
   }, [visible]);
 

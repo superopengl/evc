@@ -13,6 +13,7 @@ import {
 } from 'services/stockService';
 import ReactDOM from 'react-dom';
 import { CheckOutlined } from '@ant-design/icons';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -53,7 +54,11 @@ export const StockFairValueEditor = (props) => {
   }
 
   React.useEffect(() => {
-    load();
+    const load$ = from(load()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
 

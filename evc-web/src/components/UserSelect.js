@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { listAllUsers } from 'services/userService';
+import { from } from 'rxjs';
+
 const { Text } = Typography;
 
 const StyledSelect = styled(Select)`
@@ -32,7 +34,11 @@ const UserSelect = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity();
+    const load$ = from(loadEntity()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   return (

@@ -18,6 +18,7 @@ import StockEditTagModal from 'components/StockEditTagModal';
 import { updateStock } from 'services/stockService';
 import { StockNoticeButton } from 'components/StockNoticeButton';
 import { TimeAgo } from 'components/TimeAgo';
+import { from } from 'rxjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -60,7 +61,10 @@ const StockDetailPage = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity();
+    const load$ = from(loadEntity()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, [symbol]);
 
   const isMemberOrFree = ['member', 'free'].includes(role);

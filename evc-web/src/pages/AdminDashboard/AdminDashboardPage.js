@@ -6,6 +6,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
 import { CaretRightOutlined } from '@ant-design/icons';
+import { from } from 'rxjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -61,13 +62,16 @@ const AdminDashboardPage = () => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+    return () => {
+      load$.unsubscribe()
+    }
   }, []);
 
   return (
     <ContainerStyled>
       <Loading loading={loading}>
-         <Collapse
+        <Collapse
           // ghost
           bordered={false}
           defaultActiveKey={['plea']}

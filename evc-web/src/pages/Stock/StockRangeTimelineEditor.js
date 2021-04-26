@@ -8,7 +8,7 @@ import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import styled from 'styled-components';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
-
+import { from } from 'rxjs';
 
 const Container = styled.div`
   .current-published {
@@ -37,7 +37,11 @@ export const StockRangeTimelineEditor = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity();
+    const load$ = from(loadEntity()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleSaveSupport = async (range) => {

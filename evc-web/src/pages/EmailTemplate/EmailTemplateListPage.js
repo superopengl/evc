@@ -10,6 +10,7 @@ import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateServ
 import { LocaleSelector } from 'components/LocaleSelector';
 import 'react-quill/dist/quill.snow.css';
 import loadable from '@loadable/component'
+import { from } from 'rxjs';
 
 const ReactQuill = loadable(() => import('react-quill'));
 
@@ -69,7 +70,10 @@ const EmailTemplateListPage = () => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleSaveNew = async (values) => {

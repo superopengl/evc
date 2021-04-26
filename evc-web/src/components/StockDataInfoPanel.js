@@ -6,6 +6,7 @@ import { getStockDataInfo } from 'services/stockService';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
 import { isFinite } from 'lodash';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -37,7 +38,10 @@ const StockDataInfoPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadData();
+    const load$ = from(loadData()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const getLabel = (key) => {

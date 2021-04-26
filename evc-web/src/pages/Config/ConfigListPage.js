@@ -7,6 +7,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import { listConfig, saveConfig } from 'services/configService';
+import { from } from 'rxjs';
 
 const { Title } = Typography;
 
@@ -101,7 +102,10 @@ const ConfigListPage = () => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
 
@@ -117,20 +121,20 @@ const ConfigListPage = () => {
   }
 
   return (
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>System Configurations</Title>
-          </StyledTitleRow>
-          <Table columns={columnDef}
-            dataSource={list}
-            size="small"
-            rowKey="key"
-            loading={loading}
-            pagination={false}
-          />
-        </Space>
-      </ContainerStyled>
+    <ContainerStyled>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <StyledTitleRow>
+          <Title level={2} style={{ margin: 'auto' }}>System Configurations</Title>
+        </StyledTitleRow>
+        <Table columns={columnDef}
+          dataSource={list}
+          size="small"
+          rowKey="key"
+          loading={loading}
+          pagination={false}
+        />
+      </Space>
+    </ContainerStyled>
   );
 };
 

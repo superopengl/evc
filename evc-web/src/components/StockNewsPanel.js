@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
 import ReactDOM from 'react-dom';
 import Icon from '@ant-design/icons';
+import { from } from 'rxjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -62,7 +63,10 @@ const StockNewsPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadData();
+    const load$ = from(loadData()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleOpenNews = (url) => {

@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Tag, Badge, Select, DatePicker, Table, Input, Button, Space } from 'antd';
-import { Link, withRouter } from 'react-router-dom';
-import Icon, { FolderOpenOutlined } from '@ant-design/icons';
+import { Typography, Tag, Select, DatePicker, Table, Input, Button, Space } from 'antd';
+import { withRouter } from 'react-router-dom';
+import Icon from '@ant-design/icons';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { searchCommissionWithdrawal } from 'services/commissionService';
 import UserSelect from 'components/UserSelect';
 import MoneyAmount from 'components/MoneyAmount';
 import { TimeAgo } from 'components/TimeAgo';
 import AdminEditCommissionWithdrawalDrawer from './AdminEditCommissionWithdrawalDrawer';
-import {IoMdOpen} from 'react-icons/io';
+import { IoMdOpen } from 'react-icons/io';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -28,16 +29,6 @@ width: 100%;
 `;
 
 
-const StyledTag = styled(Tag)`
-margin-bottom: 8px;
-// font-size: 1rem;
-
-&:hover {
-  color: #55B0D4;
-  text-decoration: underline !important;
-}
-`;
-
 const StyledTable = styled(Table)`
 .ant-table-thead {
   .ant-table-cell {
@@ -46,17 +37,6 @@ const StyledTable = styled(Table)`
 }
 `;
 
-const CounterBadge = (props) => {
-  const count = props.count || 0;
-  const backgroundColor = count ? (props.color || '#d7183f') : '#AFAFAF';
-  return <Badge overflowCount={9999} count={count} showZero style={{ backgroundColor }} />
-}
-
-const LinkTag = props => {
-  return <Link to={props.to}>
-    <StyledTag>{props.children}</StyledTag>
-  </Link>
-}
 
 const DEFAULT_QUERY_INFO = {
   userId: null,
@@ -95,7 +75,10 @@ const AdminCommissionWithdrawalListPage = () => {
   }
 
   React.useEffect(() => {
-    loadList(queryInfo);
+    const load$ = from(loadList(queryInfo)).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleStatusChange = status => {
@@ -157,7 +140,7 @@ const AdminCommissionWithdrawalListPage = () => {
         </Select>
       </>,
       dataIndex: 'status',
-      render: (value, item) => {
+      render: (value) => {
         switch (value) {
           case 'submitted':
             return <Tag>Pending</Tag>
@@ -201,7 +184,7 @@ const AdminCommissionWithdrawalListPage = () => {
         </Space>
       </>,
       dataIndex: 'createdAt',
-      render: (value, item) => <TimeAgo value={value} />
+      render: (value) => <TimeAgo value={value} />
     },
     {
       title: 'Amount',
@@ -209,7 +192,7 @@ const AdminCommissionWithdrawalListPage = () => {
       fixed: 'right',
       render: (value, item) => <Space size="large" style={{ width: '100%', justifyContent: 'flex-end' }}>
         <MoneyAmount value={value} strong />
-        <Button shape="circle" icon={<Icon component={() => <IoMdOpen/>} />} onClick={() => handleEdit(item)} />
+        <Button shape="circle" icon={<Icon component={() => <IoMdOpen />} />} onClick={() => handleEdit(item)} />
       </Space>
     },
   ];

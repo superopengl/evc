@@ -7,6 +7,7 @@ import MoneyAmount from 'components/MoneyAmount';
 import { TimeAgo } from 'components/TimeAgo';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { sumBy } from 'lodash';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -36,7 +37,10 @@ const CreditHistoryListDrawer = (props) => {
   };
 
   React.useEffect(() => {
-    loadList(propVisible);
+    const load$ = from(loadList(propVisible)).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, [propVisible]);
 
   const total = sumBy(data, x => (+x.amount) || 0);

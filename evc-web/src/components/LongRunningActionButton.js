@@ -1,17 +1,14 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Typography, Row, Col, Upload, Alert, Button, Space, Modal } from 'antd';
-import { refreshMaterializedViews, getOperationStatus } from 'services/dataService';
-import { MemberOnlyCard } from 'components/MemberOnlyCard';
+import { Upload, Button, Modal } from 'antd';
+import { getOperationStatus } from 'services/dataService';
 import { interval } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import PropTypes from 'prop-types';
 import { notify } from 'util/notify';
 import { API_BASE_URL } from 'services/http';
 import { UploadOutlined } from '@ant-design/icons';
-
-const { Text, Paragraph } = Typography;
+import { from } from 'rxjs';
 
 
 export const LongRunningActionButton = props => {
@@ -45,8 +42,10 @@ export const LongRunningActionButton = props => {
   }
 
   React.useEffect(() => {
-    load();
+    const load$ = from(load()).subscribe();
+
     return () => {
+      load$.unsubscribe();
       ping$?.unsubscribe();
     }
   }, []);

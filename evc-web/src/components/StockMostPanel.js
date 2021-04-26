@@ -115,9 +115,9 @@ const StockMostPanel = (props) => {
   }
 
   React.useEffect(() => {
-    const subscription = pollData();
+    const poll$ = pollData();
     return () => {
-      subscription.unsubscribe();
+      poll$.unsubscribe();
     }
   }, []);
 

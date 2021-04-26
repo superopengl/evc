@@ -1,39 +1,36 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { Space, Button, Typography, Modal } from 'antd';
-import { changePassword } from 'services/userService';
-import { notify } from 'util/notify';
 import ReactDOM from 'react-dom';
-import { getMyAccount, listMyCreditHistory } from 'services/accountService';
+import { getMyAccount } from 'services/accountService';
 import ReferralLinkInput from 'components/ReferralLinkInput';
 import { FormattedMessage } from 'react-intl';
+import { from } from 'rxjs';
 
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph } = Typography;
 
 const EarnCommissionModal = props => {
 
   const {onOk} = props;
 
-  const [loading, setLoading] = React.useState(false);
   const [account, setAccount] = React.useState({});
 
   const load = async () => {
     try {
-      setLoading(true);
       const account = await getMyAccount();
 
       ReactDOM.unstable_batchedUpdates(() => {
         setAccount(account);
-        setLoading(false);
       })
     } catch (e) {
-      setLoading(false);
     }
   }
 
   React.useEffect(() => {
-    load(false);
+    const load$ = from(load(false)).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   return (

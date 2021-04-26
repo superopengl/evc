@@ -1,13 +1,13 @@
 import React from 'react';
-import { Typography, Space, Select, Button, Card } from 'antd';
+import { Space, Select, Button, Card } from 'antd';
 import { withRouter } from 'react-router-dom';
 import RevenueChart from 'components/charts/RevenueChart';
 import { Loading } from 'components/Loading';
 import { getRevenueChartData } from 'services/revenueService';
 import ReactDOM from 'react-dom';
 import { SyncOutlined } from '@ant-design/icons';
+import { from } from 'rxjs';
 
-const { Text, Paragraph } = Typography;
 
 const RevenuePage = () => {
 
@@ -29,7 +29,10 @@ const RevenuePage = () => {
   }
 
   React.useEffect(() => {
-    loadData();
+    const load$ = from(loadData()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, [period]);
 
   const handleRefresh = () => {
@@ -41,7 +44,7 @@ const RevenuePage = () => {
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
 
-          <Select defaultValue={period} onChange={setPeriod} style={{width: 100}}>
+          <Select defaultValue={period} onChange={setPeriod} style={{ width: 100 }}>
             <Select.Option value="day">Daily</Select.Option>
             {/* <Select.Option value="week">Weekly</Select.Option> */}
             <Select.Option value="month">Monthly</Select.Option>
@@ -51,7 +54,7 @@ const RevenuePage = () => {
         </Space>
         <Card>
 
-        <RevenueChart value={data} />
+          <RevenueChart value={data} />
         </Card>
       </Space>
     </Loading>

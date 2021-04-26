@@ -7,6 +7,7 @@ import { getWatchList } from 'services/stockService';
 import { Link, withRouter } from 'react-router-dom';
 import { StarOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import { from } from 'rxjs';
 
 const { Paragraph } = Typography;
 
@@ -46,7 +47,11 @@ const StockWatchListPage = (props) => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   return (

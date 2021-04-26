@@ -5,6 +5,7 @@ import { Line } from '@ant-design/charts';
 import { getStockPutCallRatioChart } from "services/stockService";
 import ReactDOM from 'react-dom';
 import { Loading } from "components/Loading";
+import { from } from 'rxjs';
 
 const StockPutCallRatioChart = props => {
   const [loading, setLoading] = React.useState(true);
@@ -40,7 +41,11 @@ const StockPutCallRatioChart = props => {
   }
 
   React.useEffect(() => {
-    load();
+    const load$ = from(load()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const config = {

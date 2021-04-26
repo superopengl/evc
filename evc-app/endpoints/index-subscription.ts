@@ -211,6 +211,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
     }
     await tran.manager.save(payment);
     await tran.manager.save(subscription);
+    await tran.manager.getRepository(User).update(subscription.userId, { role: Role.Member });
 
     await tran.commitTransaction();
     await enqueueRecurringSucceededEmail(targetSubscription, payment, additionalPay, creditDeductAmount);

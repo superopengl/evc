@@ -177,10 +177,10 @@ const MyAccountPage = (props) => {
           <Card
             bordered={false}
             title="Subscription"
-            style={{width: '100%'}}
-            // extra={
-            //   <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History & Billings</Button>
-            // }
+            style={{ width: '100%' }}
+          // extra={
+          //   <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History & Billings</Button>
+          // }
           >
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
@@ -192,6 +192,9 @@ const MyAccountPage = (props) => {
                 Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>.
               </>} />}
+              {!currentSubscription && <Alert type="warning" showIcon description={
+                <>Subscribe a plan to become our Pro Member so as to be accessible to all core data.</>
+              } />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
                   {subscriptionDef.filter(x => x.key !== 'free' || isCurrentFree).map(s => <StyledCol key={s.key} {...priceCardSpan}>
@@ -209,7 +212,7 @@ const MyAccountPage = (props) => {
                 </StyledRow>
               </div>
             </Space>
-            <MySubscriptionHistoryPanel data={subscriptionHistory}/>
+            {subscriptionHistory?.length > 0 && <MySubscriptionHistoryPanel data={subscriptionHistory} />}
           </Card>
           <Card
             bordered={false}

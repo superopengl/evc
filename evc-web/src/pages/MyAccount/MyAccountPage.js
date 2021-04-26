@@ -32,6 +32,10 @@ const ContainerStyled = styled.div`
   flex-direction: column;
   align-items: center;
 
+  .ant-spin-nested-loading {
+    width: 100%;
+  }
+
   // .ant-divider {
   //   margin: 20px 0 8px;
   // }
@@ -54,6 +58,8 @@ const StyledRow = styled(Row)`
 `;
 
 const StyledCol = styled(Col)`
+  display: flex;
+  justify-content: center;
   margin-bottom: 20px;
 `;
 

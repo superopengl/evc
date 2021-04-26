@@ -16,10 +16,10 @@ import loadable from '@loadable/component'
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
+import MySubscriptionHistoryPanel from './MySubscriptionHistoryPanel';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
-const MySubscriptionHistoryDrawer = loadable(() => import('./MySubscriptionHistoryDrawer'));
 const CommissionWithdrawalForm = loadable(() => import('pages/CommissionWithdrawal/CommissionWithdrawalForm'));
 const MyCommissionWithdrawalHistoryDrawer = loadable(() => import('pages/CommissionWithdrawal/MyCommissionWithdrawalHistoryDrawer'));
 
@@ -64,7 +64,6 @@ const MyAccountPage = (props) => {
   const [currentSubscription, setCurrentSubscription] = React.useState();
   const [planType, setPlanType] = React.useState();
   const [creditHistoryVisible, setCreditHistoryVisible] = React.useState(false);
-  const [subscriptionHistoryVisible, setSubscriptionHistoryVisible] = React.useState(false);
   const [commissionWithdrawalHistoryVisible, setCommissionWithdrawalHistoryVisible] = React.useState(false);
   const [cashBackVisible, setCashBackVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
@@ -131,7 +130,7 @@ const MyAccountPage = (props) => {
         </Paragraph>
       });
       return;
-    } 
+    }
 
     if (currentSubscription) {
       setPlanType(subscription.key);
@@ -142,9 +141,9 @@ const MyAccountPage = (props) => {
     }
   }
 
-  const handlePaymentOk = () => {
+  const handlePaymentOk = async () => {
     setModalVisible(false);
-    load();
+    await load();
   }
 
   const handleCancelPayment = () => {
@@ -170,23 +169,24 @@ const MyAccountPage = (props) => {
   return (
     <ContainerStyled>
       <Loading loading={loading} style={{ width: '100%' }}>
-        <Space direction="vertical" size="large" style={{ width: '100%', alignItems: 'stretch', justifyContent: 'center' }}>
+        <Space direction="vertical" size="large" style={{ width: '100%', justifyContent: 'center' }}>
           <Card
             bordered={false}
             title="Subscription"
-            extra={
-              <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History & Billings</Button>
-            }
+            style={{width: '100%'}}
+            // extra={
+            //   <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History & Billings</Button>
+            // }
           >
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Your subscription will expire on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
                   You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
-                  The new plan will take effect right after all your alive subscriptions end. See your <Link onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History</Link>.
+                  The new plan will take effect right after all your alive subscriptions end.
               </>} />}
               {currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
-                You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>. 
+                You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>.
               </>} />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
@@ -204,8 +204,8 @@ const MyAccountPage = (props) => {
                   </StyledCol>)}
                 </StyledRow>
               </div>
-
             </Space>
+            <MySubscriptionHistoryPanel />
           </Card>
           <Card
             bordered={false}
@@ -265,10 +265,6 @@ const MyAccountPage = (props) => {
         visible={creditHistoryVisible}
         onOk={() => setCreditHistoryVisible(false)}
         onFetch={handleFetchMyCreditHistoryList}
-      />
-      <MySubscriptionHistoryDrawer
-        visible={subscriptionHistoryVisible}
-        onClose={() => setSubscriptionHistoryVisible(false)}
       />
       <Modal
         title={<FormattedMessage id="text.commissionWithdrawalApplication" />}

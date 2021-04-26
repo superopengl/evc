@@ -23,6 +23,7 @@ import MaestroIcon from 'payment-icons/min/flat/maestro.svg';
 import AmexIcon from 'payment-icons/min/flat/amex.svg';
 import JcbIcon from 'payment-icons/min/flat/jcb.svg';
 import PayPalIcon from 'payment-icons/min/flat/paypal.svg';
+import { notify } from 'util/notify';
 
 const { Title, Text } = Typography;
 
@@ -99,6 +100,7 @@ const PaymentStepperWidget = (props) => {
       setLoading(false);
     }
     onComplete();
+    notify.success('Successfully added subscription', 'Thank you very much for purchasing subscription.');
   }
 
   // const handleCommitSubscription = async (data) => {

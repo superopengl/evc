@@ -1,7 +1,6 @@
-import { Tag, Space, Typography, Table, Drawer, Button } from 'antd';
+import { Tag, Space, Typography, Table, Button } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { getSubscriptionName } from 'util/getSubscriptionName';
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt, listMySubscriptionHistory } from 'services/subscriptionService';
@@ -12,12 +11,11 @@ import * as moment from 'moment';
 
 const { Text, Link } = Typography;
 
-const MySubscriptionHistoryDrawer = (props) => {
-  const { visible, onClose, style } = props;
+const MySubscriptionHistoryPanel = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
-  const loadSubscrptions = async () => {
+  const load = async () => {
     try {
       setLoading(true);
 
@@ -28,10 +26,8 @@ const MySubscriptionHistoryDrawer = (props) => {
   }
 
   React.useEffect(() => {
-    if (visible) {
-      loadSubscrptions();
-    }
-  }, [visible]);
+    load();
+  }, []);
 
   const handleReceipt = async (payment) => {
     const data = await downloadReceipt(payment.id);
@@ -43,24 +39,20 @@ const MySubscriptionHistoryDrawer = (props) => {
     {
       title: 'Subscription period',
       align: 'left',
+      width: 370,
       render: (value, item) => {
-        return <Space>
-          <TimeAgo value={item.start} showAgo={false} accurate={false} />
-          <ArrowRightOutlined />
-          {/* <DoubleRightOutlined /> */}
-          <TimeAgo value={item.end} showAgo={false} accurate={false} />
-          {item.recurring && <>(auto renew)</>}
-        </Space>
-      }
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      render: (status, item) => {
-        return <>
+        return <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Space>
+            <TimeAgo value={item.start} showAgo={false} accurate={false} />
+            <ArrowRightOutlined />
+            {/* <DoubleRightOutlined /> */}
+            <TimeAgo value={item.end} showAgo={false} accurate={false} />
+            {item.recurring && <>(auto renew)</>}
+          </Space>
+
           {moment().isAfter(moment(item.start).startOf('day')) && moment().isBefore(moment(item.end).endOf('day')) && <Tag color="success"><strong>Current</strong></Tag>}
-          {moment().isBefore(moment(item.start).startOf('day')) && <Tag color="blue">Furture</Tag>}
-        </>
+          {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>}
+        </Space>
       }
     },
     {
@@ -92,46 +84,37 @@ const MySubscriptionHistoryDrawer = (props) => {
               render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
             },
           ]}
-          bordered={false}
+          bordered={true}
           rowKey="id"
           showHeader={false}
           dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'desc')}
           pagination={false}
-          style={{ width: '100%' }}
+          scroll={false}
+          style={{ width: '100%', minWidth: 370 }}
         />
       }
     },
   ];
 
   return (
-    <Drawer
-      title="Subscription History & Billings"
-      width="80vw"
-      destroyOnClose={true}
-      maskClosable={true}
-      visible={visible}
-      onClose={onClose}
-      style={style}
-      contentWrapperStyle={{ maxWidth: 800 }}
-    >
-      <Table
-        // showHeader={false}
-        showHeader={true}
-        loading={loading}
-        style={{ width: '100%' }}
-        dataSource={list}
-        columns={columnDef}
-        size="small"
-        pagination={false}
-        rowKey="id"
-        bordered={false}
-      />
-    </Drawer>
+    <Table
+      // showHeader={false}
+      showHeader={true}
+      loading={loading}
+      style={{ width: '100%' }}
+      scroll={{ x: false, y: 300 }}
+      dataSource={list}
+      columns={columnDef}
+      size="small"
+      pagination={false}
+      rowKey="id"
+      bordered={false}
+    />
   );
 };
 
-MySubscriptionHistoryDrawer.propTypes = {};
+MySubscriptionHistoryPanel.propTypes = {};
 
-MySubscriptionHistoryDrawer.defaultProps = {};
+MySubscriptionHistoryPanel.defaultProps = {};
 
-export default withRouter(MySubscriptionHistoryDrawer);
+export default withRouter(MySubscriptionHistoryPanel);

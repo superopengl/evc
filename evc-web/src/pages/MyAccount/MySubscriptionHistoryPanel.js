@@ -8,26 +8,16 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 import MoneyAmount from 'components/MoneyAmount';
 import { orderBy } from 'lodash';
 import * as moment from 'moment';
+import PropTypes from 'prop-types';
 
-const { Text, Link } = Typography;
 
 const MySubscriptionHistoryPanel = (props) => {
-  const [loading, setLoading] = React.useState(true);
-  const [list, setList] = React.useState([]);
-
-  const load = async () => {
-    try {
-      setLoading(true);
-
-      setList(await listMySubscriptionHistory());
-    } finally {
-      setLoading(false);
-    }
-  }
+  const {data} = props;
+  const [list, setList] = React.useState(data || []);
 
   React.useEffect(() => {
-    load();
-  }, []);
+    setList(data);
+  }, [data]);
 
   const handleReceipt = async (payment) => {
     const data = await downloadReceipt(payment.id);
@@ -41,17 +31,15 @@ const MySubscriptionHistoryPanel = (props) => {
       align: 'left',
       width: 370,
       render: (value, item) => {
-        return <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Space>
-            <TimeAgo value={item.start} showAgo={false} accurate={false} />
-            <ArrowRightOutlined />
-            {/* <DoubleRightOutlined /> */}
-            <TimeAgo value={item.end} showAgo={false} accurate={false} />
-            {item.recurring && <>(auto renew)</>}
-          </Space>
-
-          {moment().isAfter(moment(item.start).startOf('day')) && moment().isBefore(moment(item.end).endOf('day')) && <Tag color="success"><strong>Current</strong></Tag>}
-          {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>}
+        return <Space>
+          <TimeAgo value={item.start} showAgo={false} accurate={false} />
+          <ArrowRightOutlined />
+          {/* <DoubleRightOutlined /> */}
+          <TimeAgo value={item.end} showAgo={false} accurate={false} />
+          {item.recurring && <Tag>auto renew</Tag>}
+          {moment().isAfter(moment(item.start).startOf('day')) && moment().isBefore(moment(item.end).endOf('day')) && <Tag color="#57BB60"><strong>current</strong></Tag>}
+          {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
+          {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
       }
     },
@@ -100,9 +88,8 @@ const MySubscriptionHistoryPanel = (props) => {
     <Table
       // showHeader={false}
       showHeader={true}
-      loading={loading}
       style={{ width: '100%' }}
-      scroll={{ x: false, y: 300 }}
+      scroll={{ x: 'max-content' }}
       dataSource={list}
       columns={columnDef}
       size="small"
@@ -113,8 +100,12 @@ const MySubscriptionHistoryPanel = (props) => {
   );
 };
 
-MySubscriptionHistoryPanel.propTypes = {};
+MySubscriptionHistoryPanel.propTypes = {
+  data: PropTypes.array.isRequired
+};
 
-MySubscriptionHistoryPanel.defaultProps = {};
+MySubscriptionHistoryPanel.defaultProps = {
+  data: []
+};
 
 export default withRouter(MySubscriptionHistoryPanel);

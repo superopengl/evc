@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { turnOffSubscriptionRecurring, getMyCurrentSubscription } from 'services/subscriptionService';
+import { turnOffSubscriptionRecurring, getMyCurrentSubscription, listMySubscriptionHistory } from 'services/subscriptionService';
 import MoneyAmount from 'components/MoneyAmount';
 import { getMyAccount, listMyCreditHistory } from 'services/accountService';
 import ReactDOM from 'react-dom';
@@ -68,6 +68,7 @@ const MyAccountPage = (props) => {
   const [cashBackVisible, setCashBackVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
   const [paymentLoading, setPaymentLoading] = React.useState(false);
+  const [subscriptionHistory, setSubscriptionHistory] = React.useState([]);
   const context = React.useContext(GlobalContext);
 
   const load = async (refreshAuthUser = false) => {
@@ -76,6 +77,7 @@ const MyAccountPage = (props) => {
       const account = await getMyAccount();
       const subscription = await getMyCurrentSubscription();
       const user = refreshAuthUser ? await getAuthUser() : null;
+      const subscriptionHistory = await listMySubscriptionHistory();
 
       ReactDOM.unstable_batchedUpdates(() => {
         setAccount(account);
@@ -83,6 +85,7 @@ const MyAccountPage = (props) => {
         if (refreshAuthUser) {
           context.setUser(user);
         }
+        setSubscriptionHistory(subscriptionHistory);
         setLoading(false);
       })
     } catch {
@@ -205,7 +208,7 @@ const MyAccountPage = (props) => {
                 </StyledRow>
               </div>
             </Space>
-            <MySubscriptionHistoryPanel />
+            <MySubscriptionHistoryPanel data={subscriptionHistory}/>
           </Card>
           <Card
             bordered={false}

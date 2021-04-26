@@ -9,7 +9,7 @@ import { filter } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
-import {from } from 'rxjs';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -25,14 +25,15 @@ export const SearchStockInput = (props) => {
   const loadEntities = async () => {
     const stocks = await listStock();
     const sorted = stocks.filter(s => !excluding.includes(s.symbol));
-      // .orderBy(['symbol'], ['asc'])
+    // .orderBy(['symbol'], ['asc'])
     setList(sorted);
   }
 
   const subscribeStockListUpdate = () => {
-    return context.event$.pipe(
-      filter(e => e.type === 'stock.created')
-    )
+    return context.event$
+      .pipe(
+        filter(e => e.type === 'stock.created')
+      )
       .subscribe(() => loadEntities());
   }
 

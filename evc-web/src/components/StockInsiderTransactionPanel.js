@@ -42,11 +42,11 @@ const Container = styled(Space)`
 
 const span = {
   xs: 1,
-  sm: 1,
-  md: 1,
+  sm: 2,
+  md: 2,
   lg: 1,
-  xl: 1,
-  xxl: 2
+  xl: 2,
+  xxl: 3
 };
 
 const StockInsiderTransactionPanel = (props) => {

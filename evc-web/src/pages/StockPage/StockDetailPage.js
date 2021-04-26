@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { deleteStock, getStock, unwatchStock, watchStock, bellStock, unbellStock, getStockNextReportDate } from 'services/stockService';
+import { deleteStock, getStock, unwatchStock, watchStock, bellStock, unbellStock } from 'services/stockService';
 import { StockName } from 'components/StockName';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
@@ -17,7 +17,6 @@ import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
 import StockEditTagModal from 'components/StockEditTagModal';
 import { updateStock } from 'services/stockService';
 import { StockNoticeButton } from 'components/StockNoticeButton';
-import { TimeAgo } from 'components/TimeAgo';
 import { from } from 'rxjs';
 
 const { Text, Paragraph } = Typography;
@@ -33,7 +32,6 @@ const StockDetailPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [stockTags, setStockTags] = React.useState([]);
   const [editTagVisible, setEditTagVisible] = React.useState(false);
-  const [reportDate, setReportDate] = React.useState();
 
   const loadEntity = async () => {
     if (!symbol) {
@@ -42,15 +40,13 @@ const StockDetailPage = (props) => {
     try {
       setLoading(true);
       // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
-      const [stock, reportDate, tags] = await Promise.all([
+      const [stock, tags] = await Promise.all([
         getStock(symbol),
-        getStockNextReportDate(symbol),
         listStockTags()
       ]);
 
       ReactDOM.unstable_batchedUpdates(() => {
         setStock(stock);
-        setReportDate(reportDate);
         setStockTags(tags);
         setWatched(stock.watched);
         setLoading(false);
@@ -154,7 +150,6 @@ const StockDetailPage = (props) => {
             isAdminOrAgent ? <Button key="delete" type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null
           ].filter(x => !!x)}
         >
-          {reportDate && <Paragraph>Next earnings report date (estimated): <TimeAgo value={reportDate} accurate={false} direction="horizontal" /></Paragraph>}
           {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
 
           {isAdminOrAgent && <StockAdminPanel stock={stock} onDataChange={loadEntity}/>}

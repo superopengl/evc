@@ -2,14 +2,14 @@ import React from 'react';
 import { Drawer, Button, Typography, Alert, Space } from 'antd';
 import { getStockForGuest } from 'services/stockService';
 import { StockName } from 'components/StockName';
-import ReactDOM from "react-dom";
-import { Link, withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import StockDisplayPanel from './StockDisplayPanel';
 import { Loading } from 'components/Loading';
 import { FormattedMessage } from 'react-intl';
 import { from } from 'rxjs';
-
+import {
+  InfoCircleOutlined,
+} from '@ant-design/icons';
 const { Text } = Typography;
 
 
@@ -55,7 +55,9 @@ export const StockGuestPreviewDrawer = (props) => {
       title={<Space direction="vertical" size="large" style={{width: '100%'}}>
         <Text>{stock ? <StockName value={stock} /> : symbol}</Text>
         <Alert
-          message={<><big>😉</big><Text style={{fontStyle: 'italic', marginLeft: 12}} type="success">More information is available to signed up users</Text></>}
+          showIcon
+          icon={<InfoCircleOutlined/>}
+          description={<Text style={{marginLeft: 12}} type="success">More information is available to signed up users</Text>}
           action={
             <Button type="primary" style={{width: 140}}>
               <FormattedMessage id="menu.signUpNow" />

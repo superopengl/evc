@@ -79,7 +79,6 @@ const StockDisplayPanel = (props) => {
               <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                 <MemberOnlyCard
                   title="EVC Core Info"
-                  message="The latest fair value is only accessible to paid user"
                   paidOnly={true}
                   bodyStyle={{ height: 274 }}
                   blockedComponent={

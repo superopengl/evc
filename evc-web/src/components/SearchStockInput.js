@@ -109,9 +109,9 @@ export const SearchStockInput = (props) => {
         suffixIcon={<SearchOutlined size="large" />}
         filterOption={(input, option) => {
           return true;
-          const match = input.toLowerCase();
-          const { symbol } = option.data;
-          return symbol.toLowerCase() === match;
+          // const match = input.toLowerCase();
+          // const { symbol } = option.data;
+          // return symbol.toLowerCase() === match;
         }}
         notFoundContent={isAdminOrAgent ?
           null :

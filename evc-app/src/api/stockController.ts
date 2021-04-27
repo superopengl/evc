@@ -495,20 +495,6 @@ export const getStockRoster = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const getStockEarningToday = handlerWrapper(async (req, res) => {
-  const { symbol } = req.params;
-  const last = await getRepository(StockEps).findOne({
-    where: {
-      symbol
-    },
-    order: {
-      year: 'DESC',
-      quarter: 'DESC'
-    }
-  });
-  res.json(last);
-});
-
 export const getStockNews = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   res.set('Cache-Control', `public, max-age=600`);

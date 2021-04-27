@@ -495,17 +495,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/earnings:
-    get:
-      operationId: getStockEarningToday
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
   /stock/s/{symbol}/news:
     get:
       operationId: getStockNews

@@ -155,10 +155,6 @@ export async function getStockRoster(symbol) {
   return httpGet(`/stock/s/${symbol}/roster`);
 }
 
-export async function getStockEarnings(symbol) {
-  return httpGet(`/stock/s/${symbol}/earnings`);
-}
-
 export async function getStockNews(symbol) {
   return httpGet(`/stock/s/${symbol}/news`);
 }

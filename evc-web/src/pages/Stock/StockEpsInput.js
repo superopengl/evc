@@ -12,14 +12,6 @@ export const StockEpsInput = (props) => {
   }
 
   return <Space>
-    {/* <DatePicker value={year ? moment(`${year}/7/1`) : null} onChange={handleChangeYear} picker="year" disabled={disabled}/> */}
-    {/* <InputNumber value={year} onChange={handleChangeYear} min={1970} max={new Date().getFullYear()} disabled={disabled}/>
-    <Select value={quarter} onChange={handleChangeQuarter} disabled={disabled} style={{minWidth: '4rem'}}>
-      <Select.Option value={1}>Q1</Select.Option>
-      <Select.Option value={2}>Q2</Select.Option>
-      <Select.Option value={3}>Q3</Select.Option>
-      <Select.Option value={4}>Q4</Select.Option>
-    </Select> */}
     <Form layout="inline" onFinish={handleSave}>
       <Form.Item label="" name="period" rules={[{ required: true, message: ' ' }]}>
         <DatePicker placeholder="Report date" picker="date" disabled={disabled} style={{width: 150}} />

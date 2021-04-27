@@ -10,6 +10,7 @@ const publisher = new RedisRealtimePricePubService();
 export const subscribeEvent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member', 'free');
   // const { user: { id: userId } } = req as any;
+  const symbolSet = new Set((req.query.symbols as string || '').split(',').map(s => s.trim().toUpperCase()));
   if (!isProd) {
     res.setHeader('Access-Control-Allow-Origin', process.env.EVC_WEB_DOMAIN_NAME);
   }
@@ -26,9 +27,16 @@ export const subscribeEvent = handlerWrapper(async (req, res) => {
   // });
   // res.flushHeaders();
 
-  const channel$ = subscriber.subscribe(data => {
-    res.write(`data: ${data}\n\n`);
-    (res as any).flush();
+  const channel$ = subscriber.subscribe(rawdata => {
+    const event = JSON.parse(rawdata);
+    if (!event) {
+      return;
+    }
+    const { type, data } = event;
+    if (type !== 'price' || !symbolSet.size || symbolSet.has(data?.symbol)) {
+      res.write(`data: ${rawdata}\n\n`);
+      (res as any).flush();
+    }
   });
 
   res.on('close', () => {

@@ -5,10 +5,10 @@ import { User } from '../entity/User';
 import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
-import { getUserCurrentSubscription } from '../utils/getUserCurrentSubscription';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
-import { getCurrentReferralAmountForReferrer } from '../services/referralService';
+import { getCurrentGlobalReferralCommission, getCurrentReferralAmountForReferrer, getCurrentSpecialReferralCommissionForUser } from '../services/referralService';
+import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
 
 export const createReferral = async (userId) => {
   const entity = new ReferralCode();
@@ -27,7 +27,7 @@ const getAccountForUser = async (userId) => {
     .where({ referredBy: userId, everPaid: true })
     .getCount();
 
-  const subscription = await getUserCurrentSubscription(userId);
+  const subscription = await getRepository(UserCurrentSubscription).findOne({ userId })
 
   const credit = await getRepository(UserCreditTransaction)
     .createQueryBuilder()
@@ -35,11 +35,14 @@ const getAccountForUser = async (userId) => {
     .select('SUM(amount) AS amount')
     .getRawOne();
 
-
-  const referralCommission = await getCurrentReferralAmountForReferrer(userId);
+  const globalReferralCommission = await getCurrentGlobalReferralCommission();
+  const specialReferralCommission = await getCurrentSpecialReferralCommissionForUser(userId);
+  const referralCommission = specialReferralCommission || globalReferralCommission;
 
   const result = {
     subscription,
+    globalReferralCommission,
+    specialReferralCommission,
     referralCommission,
     referralUrl,
     referralCount,

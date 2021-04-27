@@ -14,10 +14,11 @@ export class ReferralGlobalPolicy {
   @Column({ nullable: true })
   description?: string;
 
-  @Column()
+  @Column('date')
+  @Index()
   start: Date;
 
-  @Column({ nullable: true })
+  @Column('date', { nullable: true })
   end?: Date;
 
   @Column({ default: false })

@@ -1,6 +1,6 @@
 import { Button, Layout, Form, Space, Typography, Switch, Row, Col } from 'antd';
 import React from 'react';
-import { PlusOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { PlusOutlined, ArrowRightOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { subscriptionDef } from 'def/subscriptionDef';
@@ -10,7 +10,7 @@ import { InputNumber } from 'antd';
 import MoneyAmount from './MoneyAmount';
 import { notify } from 'util/notify';
 import ReferralLinkInput from './ReferralLinkInput';
-import { saveReferralUserPolicy } from 'services/referralPolicyService';
+import { saveReferralUserPolicy, deleteReferralUserPolicy } from 'services/referralPolicyService';
 import CreditHistoryListDrawer from 'components/CreditHistoryListDrawer';
 import { TimeAgo } from 'components/TimeAgo';
 import { from } from 'rxjs';
@@ -25,17 +25,13 @@ const Container = styled.div`
 }
 `;
 
-
-
-
-
 const ReferralCreditForm = (props) => {
 
   const { user } = props;
   const [loading, setLoading] = React.useState(true);
   const [creditHistoryVisible, setCreditHistoryVisible] = React.useState(false);
   const [account, setAccount] = React.useState();
-  const [creditAfter, setCreditAfter] = React.useState();
+  const [creditAfterAdjust, setCreditAfterAdjust] = React.useState();
   const formRef = React.useRef();
 
   const loadData = async () => {
@@ -43,7 +39,7 @@ const ReferralCreditForm = (props) => {
       setLoading(true);
       const account = await getAccount(user.id);
       setAccount(account);
-      setCreditAfter((account?.credit || 0));
+      setCreditAfterAdjust((account?.credit || 0));
     } finally {
       setLoading(false);
     }
@@ -61,9 +57,9 @@ const ReferralCreditForm = (props) => {
   const handleAdjustCredit = async (values) => {
     try {
       setLoading(true);
-      const { amount } = values;
-      await adjustCredit(user.id, amount);
-      notify.success(<>Successfully added <Text strong>${amount.toFixed(2)}</Text> to user <Text code>{user.email}</Text></>);
+      const { credit } = values;
+      await adjustCredit(user.id, credit);
+      notify.success(<>Successfully added <Text strong>${credit.toFixed(2)}</Text> to user <Text code>{user.email}</Text></>);
       formRef.current.resetFields();
       await loadData();
     } finally {
@@ -72,9 +68,9 @@ const ReferralCreditForm = (props) => {
   }
 
   const handleCreditValueChange = (changed, values) => {
-    const { amount } = values;
+    const { credit } = values;
 
-    setCreditAfter((account?.credit || 0) + +amount);
+    setCreditAfterAdjust((account?.credit || 0) + +credit);
   }
 
   const handleSaveReferralUserPolicy = async values => {
@@ -82,6 +78,18 @@ const ReferralCreditForm = (props) => {
       setLoading(true);
       await saveReferralUserPolicy(user.id, values);
       notify.success(<>Successfully set special referral policy to the user</>);
+      await loadData();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleDeleteSpecialCommission = async () => {
+    debugger;
+    try {
+      setLoading(true);
+      await deleteReferralUserPolicy(user.id);
+      notify.success(<>Successfully deleted special referral policy to the user. Now the global policy applies to the user.</>);
       await loadData();
     } finally {
       setLoading(false);
@@ -96,31 +104,38 @@ const ReferralCreditForm = (props) => {
     <Container>
       <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch' }}>
         <div>
-          <Title level={4}>{subscriptionDef.find(s => s.key === currentSubscription?.type)?.title}</Title>
-          {currentSubscription?.symbols?.length > 0 && <Text>{currentSubscription.symbols.join(', ')}</Text>}
+          <Title level={4}>{subscriptionDef.find(s => s.key === (currentSubscription?.type || 'free'))?.title}</Title>
         </div>
         {currentSubscription && <Space>
           <TimeAgo value={currentSubscription.start} />
-          <ArrowRightOutlined/>
+          <ArrowRightOutlined />
           <TimeAgo value={currentSubscription.end} />
         </Space>}
         <Divider></Divider>
-        <Title level={4}>User Referral Policy</Title>
-        <Paragraph type="secondary">Setting this policy will override the global referral policy.</Paragraph>
-        {account && <Form onFinish={handleSaveReferralUserPolicy} initialValues={account.referralPolicy}>
-          <Form.Item label="Override global policy" name="active"
-            rules={[{ required: true, message: ' ' }]}
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-          <Form.Item label="Amount per referral" name="amount"
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={4}>User Referral Commission</Title>
+          <Title type="success"><MoneyAmount type="success" value={account?.specialReferralCommission || account?.globalReferralCommission} /></Title>
+        </Space>
+        <Paragraph type="secondary">Setting this policy will override the global referral policy. Current global policy is <MoneyAmount value={account?.globalReferralCommission} /></Paragraph>
+        {account && <Form
+          onFinish={handleSaveReferralUserPolicy}
+          initialValues={{ amount: account.specialReferralCommission }}>
+          <Form.Item label="Commission per referral" name="amount"
             rules={[{ required: true, type: 'number', min: 0, message: ' ', whitespace: true }]}
           >
-            <InputNumber block disabled={loading} />
+            <InputNumber disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" loading={loading}>Set Referral Policy</Button>
+            <Button block type="primary" htmlType="submit" loading={loading}>Set Special Commission</Button>
+          </Form.Item>
+          <Form.Item>
+            <Button 
+              block
+              loading={loading}
+              onClick={() => handleDeleteSpecialCommission()}
+              >
+              Use Global Commission ($ {account?.globalReferralCommission.toFixed(2)})
+               </Button>
           </Form.Item>
         </Form>}
         <Divider></Divider>
@@ -135,7 +150,7 @@ const ReferralCreditForm = (props) => {
           <Title><MoneyAmount type="success" value={account?.credit} /></Title>
         </Space>
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          <div>After adjustment <MoneyAmount strong value={creditAfter} /></div>
+          <div>After adjustment <MoneyAmount strong value={creditAfterAdjust} /></div>
         </Space>
         <Paragraph type="secondary">
           Adjust the user's credit by adding up some amount. Either + or - number is avaiable.
@@ -145,12 +160,12 @@ const ReferralCreditForm = (props) => {
           onFinish={handleAdjustCredit}
           onValuesChange={handleCreditValueChange}
         >
-          <Form.Item label="Adjust amount" name="amount" rules={[{ required: true, type: 'number', message: ' ', whitespace: true }]}
+          <Form.Item label="Adjust amount" name="credit" rules={[{ required: true, type: 'number', message: ' ', whitespace: true }]}
           >
             <InputNumber disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" loading={loading} icon={<PlusOutlined/>}>Adjust Credit</Button>
+            <Button block type="primary" htmlType="submit" loading={loading} icon={<PlusOutlined />}>Adjust Credit</Button>
           </Form.Item>
           <Form.Item>
             <Button block onClick={() => setCreditHistoryVisible(true)}>Credit History</Button>

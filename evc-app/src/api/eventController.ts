@@ -8,9 +8,9 @@ const subscriber = new RedisRealtimePriceSubService();
 const publisher = new RedisRealtimePricePubService();
 
 export const subscribeEvent = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member', 'free');
+  // assertRole(req, 'admin', 'agent', 'member', 'free');
   // const { user: { id: userId } } = req as any;
-  const symbolSet = new Set((req.query.symbols as string || '').split(',').map(s => s.trim().toUpperCase()));
+  const symbolSet = new Set((req.query.symbols as string || '').split(',').map(s => s.trim().toUpperCase()).filter(x => !!x));
   if (!isProd) {
     res.setHeader('Access-Control-Allow-Origin', process.env.EVC_WEB_DOMAIN_NAME);
   }

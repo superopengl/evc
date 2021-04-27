@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { getStockQuote } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { filter, debounceTime } from 'rxjs/operators';
+import { filter, debounceTime, tap } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
 import { isNil } from 'lodash';
@@ -82,7 +82,7 @@ const StockQuotePanel = (props) => {
     }
     const symbol = changeValue >= 0 ? '+' : '';
     const type = changeValue >= 0 ? 'success' : 'danger';
-    return <Text type={type}><small>{symbol}{changeValue} ({symbol}{changePrecent?.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 3 })})</small></Text>
+    return <Text type={type}><small>{symbol}{changeValue.toFixed(3)} ({symbol}{changePrecent?.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 3 })})</small></Text>
   }
 
   const isIntra = quote.isUSMarketOpen;

@@ -8,7 +8,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { filter, debounceTime } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
-import {isNil} from 'lodash';
+import { isNil } from 'lodash';
 import { Skeleton } from 'antd';
 import { from } from 'rxjs';
 
@@ -53,13 +53,14 @@ const StockQuotePanel = (props) => {
   }, [priceEvent]);
 
   const subscribePriceEvent = () => {
-    const subscription = context.event$.pipe(
-      filter(e => e.type === 'price'),
-      filter(e => e.data?.symbol === symbol),
-      debounceTime(1000),
-    ).subscribe(e => {
-      setPriceEvent(e.data);
-    });
+    const subscription = context.event$
+      .pipe(
+        filter(e => e.type === 'price'),
+        filter(e => e.data?.symbol === symbol),
+        debounceTime(1000),
+      ).subscribe(e => {
+        setPriceEvent(e.data);
+      });
     return subscription;
   }
 
@@ -90,9 +91,9 @@ const StockQuotePanel = (props) => {
     <Card
       size="middle"
       title={null}
-      bodyStyle={{height: 178}}
-      // style={{height: 178}}
-      >
+      bodyStyle={{ height: 178 }}
+    // style={{height: 178}}
+    >
       {loading ?
         <Skeleton active />
         :

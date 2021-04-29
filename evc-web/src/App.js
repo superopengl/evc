@@ -28,6 +28,7 @@ const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
+const ProMemberPage = loadable(() => import('pages/ProMemberPage'));
 
 const localeDic = {
   'en-US': {
@@ -125,6 +126,7 @@ const App = () => {
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
+              <RoleRoute loading={loading} exact path="/pro-member" component={ProMemberPage} />
               {isGuest && <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />}
               {isLoggedIn && <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />}
               <Redirect to="/" />

@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Affix, Button, Layout, Modal } from 'antd';
+import { Affix, Button, Modal } from 'antd';
 import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
 import ContactForm from 'components/ContactForm';

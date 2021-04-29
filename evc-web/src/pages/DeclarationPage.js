@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Divider } from 'antd';
+import { Typography } from 'antd';
 import { Logo } from 'components/Logo';
 const ContainerStyled = styled.div`
 padding: 2rem 1rem;

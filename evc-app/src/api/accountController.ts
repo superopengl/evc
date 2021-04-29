@@ -6,8 +6,7 @@ import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
-import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
-import { getCurrentGlobalReferralCommission, getCurrentReferralAmountForReferrer, getCurrentSpecialReferralCommissionForUser } from '../services/referralService';
+import { getCurrentGlobalReferralCommission, getCurrentSpecialReferralCommissionForUser } from '../services/referralService';
 import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
 
 export const createReferral = async (userId) => {

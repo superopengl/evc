@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Modal } from 'antd';
+import { Typography, Modal } from 'antd';
 import StockList from '../../components/StockList';
 import { getWatchList } from 'services/stockService';
 import { Link, withRouter } from 'react-router-dom';

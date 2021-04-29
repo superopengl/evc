@@ -1,5 +1,5 @@
 import React from 'react';
-import { Space, Typography, Button } from 'antd';
+import { Typography, Button } from 'antd';
 import { LockFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';

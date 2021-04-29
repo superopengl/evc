@@ -1,12 +1,9 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Card } from 'antd';
+import { Card } from 'antd';
 import styled from 'styled-components';
 import { MemberOnlyPanel } from 'components/MemberOnlyPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
-
-
-const { Text, Title } = Typography;
 
 const StyledCard = styled(Card)`
 // margin-bottom: 30px;

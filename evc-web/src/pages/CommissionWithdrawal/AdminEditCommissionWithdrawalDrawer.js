@@ -1,7 +1,7 @@
-import { List, Drawer, Space, Input, Button, Modal } from 'antd';
+import { Drawer, Space, Input, Button, Modal } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { changeCommissionWithdrawalStatus, listMyCommissionWithdrawal } from 'services/commissionService';
+import { changeCommissionWithdrawalStatus } from 'services/commissionService';
 import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import PropTypes from 'prop-types';
 import { CloseOutlined, CheckOutlined, ExclamationCircleOutlined } from '@ant-design/icons';

@@ -3,7 +3,6 @@ import { EntityManager, getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
-import { getUtcNow } from '../utils/getUtcNow';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 
 export async function getCurrentGlobalReferralCommission() {

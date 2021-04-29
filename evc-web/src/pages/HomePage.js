@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown, Modal, Alert, Space, Typography, Button } from 'antd';
+import { Menu, Dropdown } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeFooter from 'components/HomeFooter';
 import React from 'react';
@@ -13,14 +13,8 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
 import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
-import { useIntl, FormattedMessage } from 'react-intl';
-import ProMemberPage from './ProMember/ProMemberPage';
-import {
-  InfoCircleOutlined,
-} from '@ant-design/icons';
-import { window } from 'rxjs/operators';
+import { FormattedMessage } from 'react-intl';
 
-const { Text } = Typography;
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
 const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStockRadarArea'));

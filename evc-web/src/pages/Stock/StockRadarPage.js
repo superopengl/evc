@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Divider, Space, Pagination, Button, Modal } from 'antd';
+import { Divider, Space, Pagination, Button } from 'antd';
 import StockList from '../../components/StockList';
 import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';

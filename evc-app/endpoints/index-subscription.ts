@@ -1,6 +1,4 @@
-import { Connection, getManager, getRepository, LessThan, getConnection, In, Not, IsNull } from 'typeorm';
-import errorToJson from 'error-to-json';
-import { connectDatabase } from '../src/db';
+import { getManager, getRepository, getConnection, In, Not, IsNull } from 'typeorm';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
 import { UserCreditTransaction } from '../src/entity/UserCreditTransaction';
@@ -18,7 +16,6 @@ import { UserAllAliveSubscriptionWithProfile } from '../src/entity/views/UserAll
 import { EmailRequest } from '../src/types/EmailRequest';
 import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
 import { PaymentMethod } from '../src/types/PaymentMethod';
-import { logError } from '../src/utils/logger';
 import { SysLog } from '../src/entity/SysLog';
 import { assert } from '../src/utils/assert';
 import { chargeStripeForCardPayment } from '../src/services/stripeService';

@@ -1,4 +1,4 @@
-import { Button, Typography, Input } from 'antd';
+import { Input } from 'antd';
 import React from 'react';
 import { CopyOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';

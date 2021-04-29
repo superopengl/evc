@@ -1,4 +1,4 @@
-import { Between, getManager, getRepository, In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { getManager, getRepository, In, MoreThanOrEqual } from 'typeorm';
 import { Stock } from '../entity/Stock';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -43,7 +43,6 @@ import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import * as moment from 'moment-timezone';
 import * as _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
-import { existsQuery } from '../utils/existsQuery';
 import { getCompanyName } from '../services/alphaVantageService';
 
 const redisPricePublisher = new RedisRealtimePricePubService();

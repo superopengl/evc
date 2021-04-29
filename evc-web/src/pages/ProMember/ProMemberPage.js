@@ -13,7 +13,7 @@ import { Line } from '@ant-design/charts';
 import putCallData from './putCallData';
 import { FormattedMessage } from 'react-intl';
 
-const { Text, Paragraph, Title } = Typography;
+const { Paragraph, Title } = Typography;
 
 const Container = styled.div`
 margin: 0;
@@ -138,7 +138,7 @@ const WalkthroughTour = withRouter((props) => {
   )
 });
 
-const PutCallDummyChart = props => {
+const PutCallDummyChart = () => {
   const data = putCallData;
 
   const config = {

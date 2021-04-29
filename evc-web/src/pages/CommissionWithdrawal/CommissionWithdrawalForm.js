@@ -1,15 +1,14 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button, Form, Input, Radio, Typography, Checkbox, Space } from 'antd';
+import { Button, Form, Input, Radio, Typography, Checkbox } from 'antd';
 import { notify } from 'util/notify';
 import { CountrySelector } from 'components/CountrySelector';
 import { FileUploader } from 'components/FileUploader';
-import { QuestionCircleFilled, SettingOutlined } from '@ant-design/icons';
+import { QuestionCircleFilled } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import { Image } from 'antd';
 import { InputNumber } from 'antd';
 import { createCommissionWithdrawal } from 'services/commissionService';
-import { Alert } from 'antd';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 

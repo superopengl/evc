@@ -1,9 +1,7 @@
 import { getRepository } from 'typeorm';
 import { assert } from './assert';
-import { Subscription } from '../entity/Subscription';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
-import { SubscriptionStatus } from '../types/SubscriptionStatus';
 
 export type StockUserParams = {
   text?: string;

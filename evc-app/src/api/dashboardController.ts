@@ -1,8 +1,6 @@
-
 import { getManager, getRepository } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from '../utils/assert';
-import { User } from '../entity/User';
 import { StockPlea } from '../entity/StockPlea';
 import { StockLatestFairValue } from '../entity/views/StockLatestFairValue';
 import { StockSupport } from '../entity/StockSupport';

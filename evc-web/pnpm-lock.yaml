@@ -7,6 +7,7 @@ dependencies:
   '@stripe/stripe-js': 1.13.2
   antd: 4.15.0_react-dom@17.0.2+react@17.0.2
   axios: 0.21.1
+  body-scroll-lock: 3.1.5
   file-saver: 2.0.5
   form-data: 3.0.1
   history: 5.0.0
@@ -38,6 +39,7 @@ dependencies:
   react-to-print: 2.12.3_react-dom@17.0.2+react@17.0.2
   react-tradingview-widget: 1.3.2_9bdd65c2b60ce8638444b80b396a481b
   reactjs-localstorage: 1.0.1
+  reactour: 1.18.3_84d21352b10017addcdab28b8d95ead5
   rxjs: 6.6.7
   styled-components: 5.2.3_84d21352b10017addcdab28b8d95ead5
   uuid: 8.3.2
@@ -1717,6 +1719,12 @@ packages:
       regenerator-runtime: 0.13.7
     resolution:
       integrity: sha512-4QPkjJq6Ns3V/RgpEahRk+AGfL0eO6RHHtTWoNNr5mO49G6B5+X6d6THgWEAvTrznU5xYpbAlVKRYcsCgh/Akw==
+  /@babel/runtime/7.13.17:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-NCdgJEelPTSh+FEFylhnP1ylq848l1z9t9N0j1Lfbcw0+KXGjsTvUmkxy+voLLXB5SOKMbLLx4jxYliGrYQseA==
   /@babel/template/7.12.13:
     dependencies:
       '@babel/code-frame': 7.12.13
@@ -2342,6 +2350,14 @@ packages:
       rollup: ^1.20.0||^2.0.0
     resolution:
       integrity: sha512-TrBhfJkFxA+ER+ew2U2/fHbebhLT/l/2pRk0hfj9KusXUuRXd2v0R58AfaZK9VXDQ4TogOSEmICVrQAA3zFnHQ==
+  /@rooks/use-mutation-observer/4.9.2_react@17.0.2:
+    dependencies:
+      react: 17.0.2
+    dev: false
+    peerDependencies:
+      react: '>=16.8.0'
+    resolution:
+      integrity: sha512-K8SLLPTBP6dYaVQjI/3U5OhVsSaHj83Ksj1mYNB2ULYXnKlMfwtll+KXFU8snusv4QKyWbyQOP4uIoI2eDUggA==
   /@sindresorhus/is/0.14.0:
     dev: true
     engines:
@@ -3879,6 +3895,10 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha512-dhEPs72UPbDnAQJ9ZKMNTP6ptJaionhP5cBb541nXPlW60Jepo9RV/a4fX4XWW9CuFNK22krhrj1+rgzifNCsw==
+  /body-scroll-lock/3.1.5:
+    dev: false
+    resolution:
+      integrity: sha512-Yi1Xaml0EvNA0OYWxXiYNqY24AfWkbA6w5vxE7GWxtKfzIbZM+Qw+aSmkgsbWzbHiy/RCSkUZBplVxTA+E4jJg==
   /bonjour/3.5.0:
     dependencies:
       array-flatten: 2.1.2
@@ -4360,6 +4380,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-qOhPa/Fj7s6TY8H8esGu5QNpMMQxz79h+urzrNYN6mn+9BnxlDGf5QZ+XeCDsxSjPqsSR56XOZOJmpeurnLMeg==
+  /classnames/2.2.6:
+    dev: false
+    resolution:
+      integrity: sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
   /classnames/2.3.1:
     dev: false
     resolution:
@@ -5404,6 +5428,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
+  /detect-node-es/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==
   /detect-node/2.0.5:
     dev: true
     resolution:
@@ -6545,6 +6573,18 @@ packages:
     dev: true
     resolution:
       integrity: sha512-3Z4XhFZ3992uIq0XOqb9AreonueSYphE6oYbpt5+3u06JWklbsPkNv3ZKkP9Bz/r+1MWCaMoSQ28P85+1Yc77w==
+  /focus-lock/0.8.1:
+    dependencies:
+      tslib: 1.14.1
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-/LFZOIo82WDsyyv7h7oc0MJF9ACOvDRdx9rWPZ2pgMfNWu/z8hQDBtOchuB/0BVLmuFOZjV02YwUVzNsWx/EzA==
+  /focus-outline-manager/1.0.2:
+    dev: false
+    resolution:
+      integrity: sha1-e/NliGU0H7awjQQqA3udKGixGbU=
   /follow-redirects/1.13.3:
     engines:
       node: '>=4.0'
@@ -8901,7 +8941,6 @@ packages:
     resolution:
       integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
   /lodash.debounce/4.0.8:
-    dev: true
     resolution:
       integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=
   /lodash.flatten/4.4.0:
@@ -8916,6 +8955,10 @@ packages:
     dev: true
     resolution:
       integrity: sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
+  /lodash.pick/4.4.0:
+    dev: false
+    resolution:
+      integrity: sha1-UvBWEP/53tQiYRRB7R/BI6AwAbM=
   /lodash.template/4.5.0:
     dependencies:
       lodash._reinterpolate: 3.0.0
@@ -11880,6 +11923,15 @@ packages:
       react-dom: '*'
     resolution:
       integrity: sha512-IEAEzWQbH91QuQBxk21XNdfdtK3OJq31sU6zhjnb1WubpSnqpfI4aqPheqsLSukqvWf/tIA2sO0WXz9Kg36YCA==
+  /react-clientside-effect/1.2.5_react@17.0.2:
+    dependencies:
+      '@babel/runtime': 7.13.17
+      react: 17.0.2
+    dev: false
+    peerDependencies:
+      react: ^15.3.0 || ^16.0.0 || ^17.0.0
+    resolution:
+      integrity: sha512-2bL8qFW1TGBHozGGbVeyvnggRpMjibeZM2536AKNENLECutp2yfs44IL8Hmpn8qjFQ2K7A9PnYf3vc7aQq/cPA==
   /react-content-loader/5.1.4_react@17.0.2:
     dependencies:
       react: 17.0.2
@@ -11960,6 +12012,20 @@ packages:
     dev: true
     resolution:
       integrity: sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
+  /react-focus-lock/2.5.0_react@17.0.2:
+    dependencies:
+      '@babel/runtime': 7.13.17
+      focus-lock: 0.8.1
+      prop-types: 15.7.2
+      react: 17.0.2
+      react-clientside-effect: 1.2.5_react@17.0.2
+      use-callback-ref: 1.2.5_react@17.0.2
+      use-sidecar: 1.0.5_react@17.0.2
+    dev: false
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+    resolution:
+      integrity: sha512-XLxj6uTXgz0US8TmqNU2jMfnXwZG0mH2r/afQqvPEaX6nyEll5LHVcEXk2XDUQ34RVeLPkO/xK5x6c/qiuSq/A==
   /react-google-login/5.2.2_react-dom@17.0.2+react@17.0.2:
     dependencies:
       '@types/react': 17.0.3
@@ -12354,6 +12420,28 @@ packages:
     dev: false
     resolution:
       integrity: sha512-eNSwfiVyVDhfjw9h83PBvgqQcFxmyK6KGPrPlutuaaTlALRZVQLZ0MAN72iU9UT+bKtscwtdogHQ2ikZ7rjT+w==
+  /reactour/1.18.3_84d21352b10017addcdab28b8d95ead5:
+    dependencies:
+      '@rooks/use-mutation-observer': 4.9.2_react@17.0.2
+      classnames: 2.2.6
+      focus-outline-manager: 1.0.2
+      lodash.debounce: 4.0.8
+      lodash.pick: 4.4.0
+      prop-types: 15.7.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-focus-lock: 2.5.0_react@17.0.2
+      scroll-smooth: 1.1.0
+      scrollparent: 2.0.1
+      styled-components: 5.2.3_84d21352b10017addcdab28b8d95ead5
+    dev: false
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.0-0
+      react-dom: ^16.3.0 || ^17.0.0-0
+      react-is: ^16.8 || ^17.0.0-0
+      styled-components: ^4.0.0 || ^5.0.0
+    resolution:
+      integrity: sha512-JeYP2cWeM6qQgy5mrTt/nUTsyvQRTy/vwG2TOnIpUWDztDM2MNbhAVAvIc88cz+IFdVmOIpsBnVdM3xDC2Ko/w==
   /read-pkg-up/2.0.0:
     dependencies:
       find-up: 2.1.0
@@ -13018,6 +13106,14 @@ packages:
     dev: false
     resolution:
       integrity: sha512-8LuxJSuFVc92+0AdNv4QOxRL4Abeo1DgLnGNkn1XlaujPH/3cCFz3QI60r2VNu4obJJROzgnIUw5TKQkZvZI1w==
+  /scroll-smooth/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha512-68OUOXKN/ykM/Dbp4Lhza3O9QQUuW/c01WTsZzDOUyVgb1I5QjT/awOHCCbuYTSV1QnExUQ9w+KcxmVxlXIiAg==
+  /scrollparent/2.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-cV1bnMV3YPsivczDvvtb/gaxoxc=
   /select-hose/2.0.0:
     dev: true
     resolution:
@@ -14465,6 +14561,20 @@ packages:
     dev: true
     resolution:
       integrity: sha1-ODjpfPxgUh63PFJajlW/3Z4uKPE=
+  /use-callback-ref/1.2.5_react@17.0.2:
+    dependencies:
+      react: 17.0.2
+    dev: false
+    engines:
+      node: '>=8.5.0'
+    peerDependencies:
+      '@types/react': ^16.8.0 || ^17.0.0
+      react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    resolution:
+      integrity: sha512-gN3vgMISAgacF7sqsLPByqoePooY3n2emTH59Ur5d/M8eg4WTWu1xp8i8DHjohftIyEx0S08RiYxbffr4j8Peg==
   /use-json-comparison/1.0.5_react@17.0.2:
     dependencies:
       react: 17.0.2
@@ -14481,6 +14591,18 @@ packages:
       react: 16.x
     resolution:
       integrity: sha512-uEP116w7LH2z4MatYM0UMKD0lI4awPtXh2WrbeUfG5mCS1UD9D7lZVz9QsRThTIButxNnx9LjPSBEBD8G3Z5BA==
+  /use-sidecar/1.0.5_react@17.0.2:
+    dependencies:
+      detect-node-es: 1.1.0
+      react: 17.0.2
+      tslib: 1.14.1
+    dev: false
+    engines:
+      node: '>=8.5.0'
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+    resolution:
+      integrity: sha512-k9jnrjYNwN6xYLj1iaGhonDghfvmeTmYjAiGvOr7clwKfPjMXJf4/HOr7oT5tJwYafgp2tG2l3eZEOfoELiMcA==
   /use/3.1.1:
     dev: true
     engines:
@@ -15236,6 +15358,7 @@ specifiers:
   antd: ^4.12.3
   axios: ^0.21.1
   babel-plugin-import: ^1.13.3
+  body-scroll-lock: ^3.1.5
   craco-less: ^1.17.1
   cross-env: ^7.0.3
   file-saver: ^2.0.5
@@ -15272,6 +15395,7 @@ specifiers:
   react-to-print: ^2.12.3
   react-tradingview-widget: ^1.3.2
   reactjs-localstorage: ^1.0.1
+  reactour: ^1.18.3
   rollup: ^2.40.0
   rollup-plugin-typescript2: ^0.30.0
   rxjs: ^6.6.3

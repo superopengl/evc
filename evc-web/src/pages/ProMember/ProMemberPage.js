@@ -1,25 +1,18 @@
-import { Space, Row, Alert, Tooltip } from 'antd';
+import { Alert, Button } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { Loading } from 'components/Loading';
-import StockNewsPanel from 'components/StockNewsPanel';
-import StockChart from 'components/charts/StockChart';
-import StockQuotePanel from 'components/StockQuotePanel';
-import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
-import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-import { TimeAgo } from 'components/TimeAgo';
 import { Typography } from 'antd';
-import StockRosterPanel from 'components/StockRosterPanel';
-import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
-import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
-import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import styled from 'styled-components';
-import StockEvcInfoPanel from '../components/StockEvcInfoPanel';
-import { from } from 'rxjs';
-import StockNextReportDatePanel from '../components/StockNextReportDatePanel';
+import Tour from "reactour";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { StockNoticeButton } from 'components/StockNoticeButton';
+import { withRouter } from 'react-router-dom';
+import SignUpForm from 'components/SignUpForm';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { Line } from '@ant-design/charts';
 
-const { Text } = Typography;
+import putCallData from './putCallData';
+
+const { Text, Paragraph, Title } = Typography;
 
 const Container = styled.div`
 margin: 0;
@@ -31,11 +24,153 @@ img {
 }
 `;
 
+const WalkthroughTour = withRouter((props) => {
+
+  const [visible, setVisible] = React.useState(props.visible);
+
+  React.useEffect(() => {
+    setVisible(props.visible);
+  }, [props.visible])
+
+  const tourConfig = [
+    {
+      selector: '#tour-fair-value',
+      content: <>
+        <Title level={4}>EVC fair values, capturing valuable buy points</Title>
+        <Paragraph>
+          EVC fair value, different from long-term target price, is trailing valuation. It closely tracks stock financial performances and reflects current rational prices. We do complicated financial analysis for you. Our aim is to make sure that the buy points are within the intervals of fair values; no more sightless chasing high or horrifying sale low.
+</Paragraph>
+        <Paragraph type="danger">
+          Note: NOT all stocks EVC can provide rational fair value. Some you will find N/A, i.e., fair value is not available.
+  </Paragraph>
+      </>
+    },
+    {
+      selector: '#tour-support',
+      content: <>
+        <Title level={4}>Precise support level and buy point, avoiding selling at bottom price</Title>
+        <Paragraph>
+          To what level, the stock market would stop declining? EVC gives precise support level-based on the comprehensive analysis of structural and technical supports, volume indicators, etc. The decline process usually stops at the support level, that is where investors can look for opportunities for rebound or bottom fishing. Panic selling at the bottom price during a correction can be avoided. If the stock price falls below the support level, it indicates that there is no tenable defense position, the stock price would continue dropping. Then, stop the loss as soon as possible to avoid greater losses.
+</Paragraph>
+        <Paragraph type="danger">
+          Note: NOT all stocks EVC can provide support level. Some you will find it show as blank, i.e., support level is not available.
+  </Paragraph>
+      </>
+    },
+    {
+      selector: '#tour-resistance',
+      content: <>
+        <Title level={4}>Accurate resistance level, finding out the sell points for attainable profit and the buy points for a shaped upward trend</Title>
+        <Paragraph>
+          Where would the stock price rise to its peak? Possible drawdown? After roundly analyzing structural pressure, technical pressure, etc., EVC gives an accurate pressure level that can protect your profit. When the predicted pressure level is broken through, a new upward trend has formed, it is the time to buy and help you grasp the buy point.
+</Paragraph>
+        <Paragraph type="danger">
+          Note: NOT all stocks EVC can provide resistance level. Some you will find it shows as blank, i.e., resistance level is not available.
+  </Paragraph>
+      </>
+    },
+    {
+      selector: '#tour-putcall',
+      content: <>
+        <Title level={4}>Daily option put/call ratio (PCR) tracks market sentiment and direction</Title>
+        <Paragraph>
+          The option put/call ratio is an important indicator of market sentiment. When the market is running smoothly, it is usually maintained at 0.7-1. If it is greater than 1, it means that the market’s bearish attitude is in control, or there are more people buying underlying stocks. Stock prices are concerned to go down. If it is less than 0.7, it means that bulls are strong, or there are more people speculating on the increasing stock prices, the market has no fear of the risk.
+</Paragraph>
+        <Paragraph type="danger">
+          Note: NOT all stocks EVC can provide PCR. Some you will find no such figure.
+  </Paragraph>
+      </>
+    },
+    {
+      selector: '#tour-insider',
+      content: <>
+        <Title level={4}>Timely Executives shareholding change information</Title>
+        <Paragraph>
+          The buying or selling of stocks by senior Executives, especially the substantial increase in the number of stock holdings, is usually a signal to the rise in stock prices. The prompt awareness of the change allows investors to react fast and make prudent decisions.
+</Paragraph>
+      </>
+    },
+    {
+      selector: '#tour-alert',
+      content: <>
+        <Title level={4}>Core data change alerts</Title>
+        <Paragraph>
+          Get real time email alerts every time the core data figures updated in your watchlist
+          The market is changing rapidly, and only by grasping first-hand information can you react quickly. Add the stocks you are interested to watchlist. All core data updates will be notified by email alerts, so buy/sell opportunities are just not going to be missed out.
+
+</Paragraph>
+      </>
+    },
+    {
+      selector: '#tour-signup',
+      content: <div style={{maxWidth: 300}}>
+        <SignUpForm onOk={() => props.history.push('/')} />
+        </div>
+    }
+  ];
+
+
+  return (
+    <Tour
+      isOpen={visible}
+      steps={tourConfig}
+      onRequestClose={() => props.onClose()}
+      onAfterOpen={disableBodyScroll}
+      onBeforeClose={enableBodyScroll}
+      accentColor="#57BB60"
+      className="tour-helper"
+      rounded={4}
+    // maskClassName="tour-mask"
+    />
+  )
+});
+
+const PutCallDummyChart = props => {
+  const data = putCallData;
+
+  debugger;
+
+  const config = {
+    data: data,
+    xField: 'date',
+    yField: 'value',
+    seriesField: 'type',
+    xAxis: { type: 'time' },
+    yAxis: {
+      label: {
+        formatter: function formatter(v) {
+          return v?.toLocaleString();
+        },
+      },
+    },
+    color: ['#531dab', '#ffc53d'],
+  };
+
+   return <Line {...config} />
+}
+
 const ProMemberPage = () => {
+  const [visible, setVisible] = React.useState(true);
+
   return (
     <Container>
+      <WalkthroughTour visible={visible} onClose={() => setVisible(false)} />
       <main className="ant-layout-content ant-pro-basicLayout-content ant-pro-basicLayout-has-header">
-        <Alert type="info" showIcon description={'Pro Members unlock the powerful features. How does it work?'} style={{ marginBottom: 30 }} />
+        {/* <Space style={{ marginBottom: 30, width: '100%', justifyContent: 'flex-end' }}>
+          <Link to="/"><Button type="link">Home</Button></Link>
+          <Button type="link" onClick={() => setVisible(true)}>Restart Tour</Button>
+          <Link to="/signup"><Button type="primary" onClick={() => setVisible(true)}>Sign Up</Button></Link>
+        </Space> */}
+        <Alert 
+        type="success" 
+        icon={<InfoCircleOutlined/>}
+        showIcon 
+        description={'Pro Members unlock the powerful features. How does it work?'} 
+        style={{ marginBottom: 30 }}
+        action={
+          <Button type="link" onClick={() => setVisible(true)}>Restart Tour</Button>
+        }
+        />
         <div className="sc-khQdMy cdJLiE">
           <div className="ant-page-header" style={{ backgroundColor: 'white', padding: '30px 30px 14px' }}>
             <div className="ant-page-header-heading">
@@ -51,15 +186,9 @@ const ProMemberPage = () => {
                   </div>
                 </span>
               </div>
-              <span className="ant-page-header-heading-extra">
-                <span role="img" style={{ fontSize: '20px', color: 'rgb(140, 140, 140)' }} tabIndex={-1} className="anticon">
-                  <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <g>
-                      <path fill="none" d="M0 0h24v24H0z" />
-                      <path d="M20 7.238l-7.928 7.1L4 7.216V19h7.07a6.95 6.95 0 0 0 .604 2H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v8.255a6.972 6.972 0 0 0-2-.965V7.238zM19.501 5H4.511l7.55 6.662L19.502 5zm-2.794 15.708a3 3 0 0 0 4.001-4.001l-4.001 4zm-1.415-1.415l4.001-4a3 3 0 0 0-4.001 4.001zM18 23a5 5 0 1 1 0-10 5 5 0 0 1 0 10z" />
-                    </g>
-                  </svg>
-                </span>
+              <span className="ant-page-header-heading-extra" id="tour-alert">
+                <StockNoticeButton value={true} />
+
                 <span role="img" aria-label="star" style={{ fontSize: '20px', color: 'rgb(250, 219, 20)' }} tabIndex={-1} className="anticon anticon-star">
                   <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true">
                     <path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" />
@@ -117,26 +246,19 @@ const ProMemberPage = () => {
                     <div className="ant-card-body" style={{ height: '274px', overflow: 'auto' }}>
                       <div className="ant-space ant-space-vertical" style={{ width: '100%' }}>
                         <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                          <Tooltip visible 
-                          placement="right"
-                          arrowPointAtCenter={false}
-                          title={<>
-                            EVC fair value, different from long-term target price, is trailing valuation. It closely tracks stock financial performances and reflects current rational prices. We do complicated financial analysis for you. Our aim is to make sure that the buy points are within the intervals of fair values; no more sightless chasing high or horrifying sale low. (* Note: NOT all stocks EVC can provide rational fair value. Some you will find N/A, i.e., fair value is not available.)
-                          </>}>
-                            <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between' }}>
-                              <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Fair Value</span></div>
-                              <div className="ant-space-item">
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">122.33 </span> ~ <span className="ant-typography">147.22 </span></div>
-                                  </div>
+                          <div className="ant-space ant-space-horizontal ant-space-align-center" id="tour-fair-value" style={{ width: '100%', justifyContent: 'space-between' }}>
+                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Fair Value</span></div>
+                            <div className="ant-space-item">
+                              <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                <div className="ant-space-item">
+                                  <div className="sc-llYToB bepCke"><span className="ant-typography">122.33 </span> ~ <span className="ant-typography">147.22 </span></div>
                                 </div>
                               </div>
                             </div>
-                          </Tooltip>
+                          </div>
                         </div>
                         <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div className="ant-space ant-space-horizontal ant-space-align-center" id="tour-support" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                             <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Support</span></div>
                             <div className="ant-space-item">
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -160,7 +282,7 @@ const ProMemberPage = () => {
                           </div>
                         </div>
                         <div className="ant-space-item">
-                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div className="ant-space ant-space-horizontal ant-space-align-center" id="tour-resistance" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                             <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Resistance</span></div>
                             <div className="ant-space-item">
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -199,7 +321,7 @@ const ProMemberPage = () => {
               </div>
             </div>
           </div>
-          <div className="ant-row" style={{ marginTop: '30px', rowGap: '0px' }}>
+          <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
             <div className="ant-col ant-col-24">
               <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
@@ -208,35 +330,12 @@ const ProMemberPage = () => {
                   </div>
                 </div>
                 <div className="ant-card-body" style={{ height: '450px', overflow: 'auto' }}>
-                  <div className="ant-spin-nested-loading">
-                    <div className="ant-spin-container">
-                      <div style={{ height: 'inherit' }} data-chart-source-type="G2Plot" size-sensor-id={1}>
-                        <div style={{ position: 'relative' }}>
-                          <canvas style={{ width: '1104px', height: '400px', display: 'inline-block', verticalAlign: 'middle', cursor: 'default' }} width={1104} height={400} />
-                          <div className="g2-tooltip" style={{ position: 'absolute', visibility: 'hidden', zIndex: 8, transition: 'left 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s, top 0.4s cubic-bezier(0.23, 1, 0.32, 1) 0s', backgroundColor: 'rgb(255, 255, 255)', boxShadow: 'rgb(174, 174, 174) 0px 0px 10px', borderRadius: '3px', color: 'rgb(89, 89, 89)', fontSize: '12px', fontFamily: '"-apple-system", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"', lineHeight: '12px', padding: '0px 12px', opacity: '0.95', pointerEvents: 'none', left: '225px', top: '0px' }}>
-                            <div className="g2-tooltip-title" style={{ marginBottom: '12px', marginTop: '12px' }}>2021-03-12</div>
-                            <ul className="g2-tooltip-list" style={{ margin: '0px', listStyleType: 'none', padding: '0px' }}>
-                              <li className="g2-tooltip-list-item" data-index style={{ listStyleType: 'none', padding: '0px', margin: '12px 0px' }}>
-                                <span className="g2-tooltip-marker" style={{ background: 'rgb(83, 29, 171) none repeat scroll 0% 0%', width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block', marginRight: '8px' }} />
-                                <span className="g2-tooltip-name">daily putCallRatio</span>:
-                                <span className="g2-tooltip-value" style={{ display: 'inline-block', float: 'right', marginLeft: '30px' }}>0.3509660789628098</span>
-                              </li>
-                              <li className="g2-tooltip-list-item" data-index style={{ listStyleType: 'none', padding: '0px', margin: '12px 0px' }}>
-                                <span className="g2-tooltip-marker" style={{ background: 'rgb(255, 197, 61) none repeat scroll 0% 0%', width: '8px', height: '8px', borderRadius: '50%', display: 'inline-block', marginRight: '8px' }} />
-                                <span className="g2-tooltip-name">90 days avg</span>:
-                                <span className="g2-tooltip-value" style={{ display: 'inline-block', float: 'right', marginLeft: '30px' }}>0.3436281372439346</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <PutCallDummyChart />
                 </div>
               </div>
             </div>
           </div>
-          <div className="ant-row" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
+          <div className="ant-row" id="tour-insider" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
             <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-8 ant-col-xxl-6">
               <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>

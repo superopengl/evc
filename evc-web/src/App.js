@@ -28,7 +28,7 @@ const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
-const ProMemberPage = loadable(() => import('pages/ProMemberPage'));
+const ProMemberPage = loadable(() => import('pages/ProMember/ProMemberPage'));
 
 const localeDic = {
   'en-US': {

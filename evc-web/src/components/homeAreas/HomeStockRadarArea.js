@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Button, Space } from 'antd';
+import { Typography, Button, Space, Alert } from 'antd';
 import styled from 'styled-components';
 import StockRadarPage from 'pages/Stock/StockRadarPage';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const Container = styled.div`
 justify-content: center;
@@ -38,15 +38,25 @@ export const HomeStockRadarArea = props => {
     <Container>
       <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
         <Title><FormattedMessage id="menu.stockRadar" /></Title>
-        <Text type="secondary">
-          This is Stock Radar preview.
-          Full feature is available after sign up
-          </Text>
+        <Alert 
+        type="success" 
+        description={<>
+          <Paragraph type="success">
+            Stock Radar, saving time and improving efficiency, selecting valuable investing targets.
+            Scanning assets based on your specified conditions helps you find what you need in stock.
+            Our stock radar screens both fundamental and technical aspects, e.g., whether included as components of stock indexes, in what industries and sectors, whether they are within valuations, etc. This helps save time, improve the searching efficiency, and find high-quality target companies making attractive money.
+        </Paragraph>
+        <Paragraph type="secondary">
+            This is Stock Radar preview. Full feature is available after sign up
+        </Paragraph>
         <Link to="/signup">
           <Button type="primary" style={{ minWidth: 140 }}>
             <FormattedMessage id="menu.signUpNow" />
           </Button>
         </Link>
+        </>} />
+
+
       </Space>
       <InnerContainer>
         <StockRadarPage onItemClick={onSymbolClick} />

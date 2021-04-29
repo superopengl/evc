@@ -14,7 +14,7 @@ import ProLayout from '@ant-design/pro-layout';
 import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
 import { useIntl, FormattedMessage } from 'react-intl';
-import ProMemberPage from './ProMemberPage';
+import ProMemberPage from './ProMember/ProMemberPage';
 import {
   InfoCircleOutlined,
 } from '@ant-design/icons';

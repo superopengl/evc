@@ -85,7 +85,6 @@ const ReferralCreditForm = (props) => {
   }
 
   const handleDeleteSpecialCommission = async () => {
-    debugger;
     try {
       setLoading(true);
       await deleteReferralUserPolicy(user.id);

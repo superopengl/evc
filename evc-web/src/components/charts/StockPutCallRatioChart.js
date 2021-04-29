@@ -48,8 +48,6 @@ const StockPutCallRatioChart = props => {
     }
   }, []);
 
-  debugger;
-
   const config = {
     data: data,
     xField: 'date',

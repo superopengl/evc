@@ -38,13 +38,15 @@ export const HomeStockRadarArea = props => {
     <Container>
       <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
         <Title><FormattedMessage id="menu.stockRadar" /></Title>
-          <Text type="secondary">
-            This is Stock Radar preview. 
-            Full feature is available after sign up
+        <Text type="secondary">
+          This is Stock Radar preview.
+          Full feature is available after sign up
           </Text>
-          <Link to="/signup"><Button type="primary" style={{minWidth: 140}}>
-            <FormattedMessage id="menu.signUpNow"/>
-            </Button></Link>
+        <Link to="/signup">
+          <Button type="primary" style={{ minWidth: 140 }}>
+            <FormattedMessage id="menu.signUpNow" />
+          </Button>
+        </Link>
       </Space>
       <InnerContainer>
         <StockRadarPage onItemClick={onSymbolClick} />

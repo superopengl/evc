@@ -47,7 +47,15 @@ export const subscriptionDef = [
     description: 
     <DescriptionContainer>
     <FeatureList>
-      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionCoreData" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription1" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription2" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription3" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription4" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription5" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription6" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription7" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription8" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription9" /></Space>
       <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneMonth" /></Space>
     </FeatureList>
     </DescriptionContainer>,
@@ -61,7 +69,15 @@ export const subscriptionDef = [
     description: 
     <DescriptionContainer>
     <FeatureList>
-      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionCoreData" /></Space>
+    <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription1" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription2" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription3" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription4" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription5" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription6" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription7" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription8" /></Space>
+      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription9" /></Space>
       <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneYear" /></Space>
       <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneYearSave" /></Space>
     </FeatureList>

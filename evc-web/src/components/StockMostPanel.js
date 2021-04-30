@@ -143,6 +143,9 @@ const StockMostPanel = (props) => {
           return index % 2 === 1 ? 'odd-row' : 'even-row';
         }}
         size="small"
+        locale={{
+          emptyText: 'Data updating'
+        }}
       />
     </>
   )

@@ -18,7 +18,7 @@ export type UnusalOptionsActivitySearchParams = {
 };
 
 
-export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' | 'index', q: any) {
+export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' | 'index', q: any, showFullData: boolean) {
   const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size } = q as UnusalOptionsActivitySearchParams;
 
   const entity = entityType === 'stock' ? UnusalOptionActivityStock :
@@ -68,6 +68,24 @@ export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' |
     .addOrderBy('symbol')
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize);
+
+  if(showFullData) {
+    query = query.select('*')
+  } else {
+    query = query.select([
+      'id',
+      'symbol',
+      'time',
+      'price',
+      'type',
+      'dte',
+      'last',
+      'volume',
+      '"openInt"',
+      'voloi',
+      'iv'
+    ])
+  }
   const data = await query.execute();
 
   return {

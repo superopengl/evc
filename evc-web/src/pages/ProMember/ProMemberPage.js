@@ -13,7 +13,7 @@ import { Line } from '@ant-design/charts';
 import putCallData from './putCallData';
 import { FormattedMessage } from 'react-intl';
 
-const { Paragraph, Title } = Typography;
+const { Paragraph, Text } = Typography;
 
 const Container = styled.div`
 margin: 0;
@@ -36,78 +36,84 @@ const WalkthroughTour = withRouter((props) => {
   const tourConfig = [
     {
       selector: '#tour-fair-value',
+      position: [20, 20],
       content: <>
-        <Title level={4}>
+        <Paragraph strong>
           <FormattedMessage id="tour.fairValueTitle" />
-        </Title>
-        <Paragraph>
+        </Paragraph>
+        <Paragraph style={{fontSize: 12}}>
           <FormattedMessage id="tour.fairValueDescription" />
         </Paragraph>
-        <Paragraph type="danger">
+        <Paragraph type="danger" style={{fontSize: 12}}>
           <FormattedMessage id="tour.fairValueNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-support',
+      position: [20, 20],
       content: <>
-        <Title level={4}>
+        <Paragraph strong>
           <FormattedMessage id="tour.supportTitle" />
-        </Title>
-        <Paragraph>
+        </Paragraph>
+        <Paragraph style={{fontSize: 12}}>
           <FormattedMessage id="tour.supportDescription" />
         </Paragraph>
-        <Paragraph type="danger">
+        <Paragraph type="danger" style={{fontSize: 12}}>
           <FormattedMessage id="tour.supportNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-resistance',
+      position: [20, 20],
       content: <>
-        <Title level={4}>
+        <Paragraph strong>
           <FormattedMessage id="tour.resistanceTitle" />
-        </Title>
-        <Paragraph>
+        </Paragraph>
+        <Paragraph style={{fontSize: 12}}>
           <FormattedMessage id="tour.resistanceDescription" />
         </Paragraph>
-        <Paragraph type="danger">
+        <Paragraph type="danger" style={{fontSize: 12}}>
           <FormattedMessage id="tour.resistanceNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-putcall',
+      // position: [20, 20],
       content: <>
-        <Title level={4}>
+        <Paragraph strong>
           <FormattedMessage id="tour.putCallTitle" />
-        </Title>
-        <Paragraph>
+        </Paragraph>
+        <Paragraph style={{fontSize: 12}}>
           <FormattedMessage id="tour.putCallDescription" />
         </Paragraph>
-        <Paragraph type="danger">
+        <Paragraph type="danger" style={{fontSize: 12}}>
           <FormattedMessage id="tour.putCallNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-insider',
+      // position: [20, 20],
       content: <>
-        <Title level={4}>
+        <Paragraph strong>
           <FormattedMessage id="tour.insiderTitle" />
-        </Title>
-        <Paragraph>
+        </Paragraph>
+        <Paragraph style={{fontSize: 12}}>
           <FormattedMessage id="tour.insiderDescription" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-alert',
+      position: 'bottom',
       content: <>
-        <Title level={4}>
+        <Paragraph strong>
           <FormattedMessage id="tour.alertTitle" />
-        </Title>
-        <Paragraph>
+        </Paragraph>
+        <Paragraph style={{fontSize: 12}}>
           <FormattedMessage id="tour.alertDescription" />
         </Paragraph>
       </>
@@ -128,10 +134,9 @@ const WalkthroughTour = withRouter((props) => {
       onRequestClose={() => props.onClose()}
       onAfterOpen={target => disableBodyScroll(target)}
       onBeforeClose={target => enableBodyScroll(target)}
-      // onAfterOpen={target => (document.body.style.overflowY = 'hidden')}
-      // onBeforeClose={target => (document.body.style.overflowY = 'auto')} 
       accentColor="#57BB60"
-
+      // inViewThreshold={1000}
+      // scrollOffset={500}
       className="tour-helper"
       rounded={4}
       startAt={0}
@@ -256,10 +261,10 @@ const ProMemberPage = () => {
                         <div className="ant-card-head-title">EVC Core Info</div>
                       </div>
                     </div>
-                    <div className="ant-card-body" style={{ height: '274px', overflow: 'auto' }}>
-                      <div className="ant-space ant-space-vertical" style={{ width: '100%' }}>
-                        <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                          <div className="ant-space ant-space-horizontal ant-space-align-center" id="tour-fair-value" style={{ width: '100%', justifyContent: 'space-between' }}>
+                    <div className="ant-card-body" style={{ height: '274px' }} >
+                      <div className="ant-space ant-space-vertical" style={{ width: '100%' }} >
+                        <div className="ant-space-item" style={{ marginBottom: '8px' }}  id="tour-fair-value">
+                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between' }}>
                             <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Fair Value</span></div>
                             <div className="ant-space-item">
                               <div className="ant-space ant-space-horizontal ant-space-align-center number">

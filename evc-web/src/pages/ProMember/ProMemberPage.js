@@ -126,9 +126,12 @@ const WalkthroughTour = withRouter((props) => {
       isOpen={visible}
       steps={tourConfig}
       onRequestClose={() => props.onClose()}
-      onAfterOpen={disableBodyScroll}
-      onBeforeClose={enableBodyScroll}
+      onAfterOpen={target => disableBodyScroll(target)}
+      onBeforeClose={target => enableBodyScroll(target)}
+      // onAfterOpen={target => (document.body.style.overflowY = 'hidden')}
+      // onBeforeClose={target => (document.body.style.overflowY = 'auto')} 
       accentColor="#57BB60"
+
       className="tour-helper"
       rounded={4}
       startAt={0}
@@ -165,7 +168,6 @@ const ProMemberPage = () => {
 
   return (
     <Container>
-      <WalkthroughTour visible={visible} onClose={() => setVisible(false)} />
       <main className="ant-layout-content ant-pro-basicLayout-content ant-pro-basicLayout-has-header">
         {/* <Space style={{ marginBottom: 30, width: '100%', justifyContent: 'flex-end' }}>
           <Link to="/"><Button type="link">Home</Button></Link>
@@ -1187,6 +1189,8 @@ const ProMemberPage = () => {
           </div>
         </div>
       </main>
+      <WalkthroughTour visible={visible} onClose={() => setVisible(false)} />
+    
     </Container>
   );
 }

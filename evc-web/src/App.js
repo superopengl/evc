@@ -19,6 +19,9 @@ import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
+import * as moment from 'moment-timezone';
+
+moment.tz.setDefault('America/New_York');
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 // const Error404 = loadable(() => import('pages/Error404'));

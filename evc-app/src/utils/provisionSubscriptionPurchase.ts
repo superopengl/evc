@@ -12,6 +12,7 @@ import { Payment } from '../entity/Payment';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { assert } from './assert';
 import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
+import { getRequestGeoInfo } from './getIpGeoLocation';
 
 export type ProvisionSubscriptionRequest = {
   userId: string;
@@ -33,7 +34,7 @@ async function getSubscriptionPeriod(q: QueryRunner, userId: string, newSubscrip
   return { start, end };
 }
 
-export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {
+export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest, expressReq: any): Promise<Payment> {
   const { userId, subscriptionType, paymentMethod, recurring, preferToUseCredit } = request;
   let payment: Payment = null;
 
@@ -81,6 +82,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.method = paymentMethod;
     payment.status = PaymentStatus.Pending;
     payment.auto = false;
+    payment.geo = await getRequestGeoInfo(expressReq);
     payment.creditTransaction = creditTransaction;
     payment.subscription = subscription;
 

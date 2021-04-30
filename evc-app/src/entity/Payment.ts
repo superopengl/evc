@@ -75,4 +75,7 @@ export class Payment {
 
   @Column('uuid', { nullable: true })
   creditTransactionId: string;
+
+  @Column('json', { nullable: true })
+  geo: object;
 }

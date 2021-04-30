@@ -20,6 +20,7 @@ import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
+import { getRequestGeoInfo } from '../utils/getIpGeoLocation';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -45,6 +46,10 @@ export const login = handlerWrapper(async (req, res) => {
   user.lastLoggedInAt = getUtcNow();
   user.resetPasswordToken = null;
   user.status = UserStatus.Enabled;
+  if (!user.profile.geo) {
+    user.profile.geo = await getRequestGeoInfo(req);
+    await getRepository(UserProfile).save(user.profile);
+  }
 
   await getRepository(User).save(user);
 
@@ -70,6 +75,7 @@ function createUserAndProfileEntity(payload): { user: User; profile: UserProfile
   const profileId = uuidv4();
   const userId = uuidv4();
   const salt = uuidv4();
+
 
   const profile = new UserProfile();
   profile.id = profileId;
@@ -296,6 +302,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     user.profile = profile;
     profile.givenName = givenName;
     profile.surname = surname;
+    profile.geo = await getRequestGeoInfo(req);
     await getManager().save([user, profile]);
 
     await createReferral(user.id);

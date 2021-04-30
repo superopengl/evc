@@ -110,7 +110,7 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
     paymentMethod: method,
     recurring,
     preferToUseCredit,
-  });
+  }, req);
   const result: any = {
     method,
     amount: payment.amount,

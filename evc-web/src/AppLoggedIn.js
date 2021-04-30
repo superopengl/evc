@@ -128,10 +128,10 @@ const AppLoggedIn = props => {
       roles: ['admin', 'agent', 'member', 'free']
     },
     {
-      path: '/unsual_options_activity',
-      name: <FormattedMessage id="menu.unsualOptionsActivity" />,
+      path: '/unusual_options_activity',
+      name: <FormattedMessage id="menu.unusualOptionsActivity" />,
       icon: <AlertOutlined />,
-      roles: ['admin', 'agent', 'member']
+      roles: ['admin', 'agent', 'member', 'free']
     },
     {
       path: '/user',
@@ -340,7 +340,7 @@ const AppLoggedIn = props => {
     <Switch>
       <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
       <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
-      <RoleRoute visible={!isFree} exact path="/unsual_options_activity" component={UnusualOptionsActivityPage} />
+      <RoleRoute visible={!isFree} exact path="/unusual_options_activity" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={true} path="/market" exact component={MarketPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockRadarPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />

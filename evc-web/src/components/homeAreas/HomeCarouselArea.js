@@ -158,7 +158,7 @@ const HomeCarouselAreaRaw = props => {
             {/* <Image src="/images/logo-transparent.png" width={120} style={{marginBottom: 20}} preview={false}/> */}
             <Image src="/images/logo-transparent.png" style={{ width: 140 }} preview={false} />
             <Title style={{ fontSize: 'clamp(22px, 3vw, 28px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight: 'bolder' }}>EASY VALUE CHECK</Title>
-            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(255,255,255,1)', textTransform: 'uppercase' }}>
+            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(0,0,0,0.8)' }} strong>
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
 
@@ -200,8 +200,8 @@ const HomeCarouselAreaRaw = props => {
               renderItem={item => (
                 <List.Item>
                   <Space size="large">
-                    <Text style={{ fontSize: 32, color: 'rgba(255,255,255,0.8)' }}>{item.icon}</Text>
-                    <Text style={{ fontSize: 16, color: 'rgba(255,255,255,1' }}>{item.description}</Text>
+                    <Text style={{ fontSize: 32, color: 'rgba(0,0,0,0.7)' }}>{item.icon}</Text>
+                    <Text style={{ fontSize: 16, color: 'rgba(0,0,0,0.7)' }}>{item.description}</Text>
                   </Space>
                 </List.Item>
               )}

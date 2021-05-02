@@ -11,6 +11,7 @@ import {
   RightOutlined,
 } from '@ant-design/icons';
 import { from } from 'rxjs';
+import { take } from 'lodash';
 
 const { Text } = Typography;
 
@@ -112,10 +113,11 @@ const StyledTable = styled(Table)`
 `;
 
 const EarningsCalendarPage = props => {
-  const { onSymbolClick } = props;
+  const { onSymbolClick, height } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [week, setWeek] = React.useState(0);
+  const [showMore, setShowMore] = React.useState(false);
   const [showLogo, setShowLogo] = React.useState(true);
 
   const load = async (week = 0) => {
@@ -153,12 +155,13 @@ const EarningsCalendarPage = props => {
 
   const renderDataList = (list) => {
     if (!list) return null;
+
     return <List
       grid={{
         column: 1,
         gutter: [0, 10]
       }}
-      dataSource={list}
+      dataSource={showMore ? list : take(list, 10)}
       renderItem={item => <Tooltip title={item.company} placement="top">
         <SymbolLogo>
           <Card size="small" onClick={() => handleItemClick(item.symbol)} >
@@ -176,8 +179,8 @@ const EarningsCalendarPage = props => {
     const date = moment().add(week, 'week').day(dayOfWeek);
     const isToday = date.isSame(moment(), 'day');
     return <>
-      <div><Text style={{fontWeight: isToday? 800: 400}}>{dayOfWeek}</Text></div>
-      <Text type="secondary" style={{fontWeight: isToday? 600: 400}}><small>{date.format('D MMM YYYY')}</small></Text>
+      <div><Text style={{ fontWeight: isToday ? 800 : 400 }}>{dayOfWeek}</Text></div>
+      <Text type="secondary" style={{ fontWeight: isToday ? 600 : 400 }}><small>{date.format('D MMM YYYY')}</small></Text>
     </>
   }
 
@@ -238,27 +241,31 @@ const EarningsCalendarPage = props => {
           <Button type="primary" shape="circle" icon={<RightOutlined />} disabled={week >= 52 || loading} onClick={() => handleWeekChange(1)}></Button>
         </Space>
         <Space>
-Logo
+          Logo
         <Switch defaultChecked={showLogo} onChange={handleToggleLogo} />
         </Space>
       </Space>
-      <StyledTable
-        size="small"
-        columns={columnDef}
-        dataSource={list}
-        loading={loading}
-        bordered={false}
-        pagination={false}
-        rowKey="key"
-        scroll={{ x: 500, y: 800 }}
-        style={{ marginBottom: '2rem' }}
-      />
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <StyledTable
+          size="small"
+          columns={columnDef}
+          dataSource={list}
+          loading={loading}
+          bordered={false}
+          pagination={false}
+          rowKey="key"
+          scroll={height ? { x: 500, y: height } : { x: 500, y: 'calc(100vh - 240px)' }}
+        // style={{ marginBottom: '2rem' }}
+        />
+        {!showMore && <Button type="link" onClick={() => setShowMore(true)} style={{ marginTop: '1rem' }}>more</Button>}
+      </div>
     </Space>
   );
 };
 
 EarningsCalendarPage.propTypes = {
   onSymbolClick: PropTypes.func,
+  height: PropTypes.number
 };
 
 EarningsCalendarPage.defaultProps = {

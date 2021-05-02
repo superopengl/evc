@@ -59,7 +59,7 @@ margin-right: auto;
 
 .ant-list-item {
   border: none;
-  padding: 2px 0;
+  padding: 8px 0;
 }
 `;
 
@@ -153,16 +153,16 @@ const HomeCarouselAreaRaw = props => {
   return (
     <Container>
       <InnerContainer>
-        <Row gutter={[30, 30]} style={{ marginTop: 90, marginBottom: 50, alignItems: 'center' }}>
+        <Row gutter={[30, 30]} style={{ marginTop: 70, marginBottom: 10, alignItems: 'center' }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* <Image src="/images/logo-transparent.png" width={120} style={{marginBottom: 20}} preview={false}/> */}
             <Image src="/images/logo-transparent.png" style={{ width: 140 }} preview={false} />
-            <Title style={{ fontSize: 'clamp(22px, 3vw, 28px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight: 'bolder' }}>EASY VALUE CHECK</Title>
+            <Title style={{ fontSize: 'clamp(22px, 3vw, 28px)', color: 'rgba(0,0,0,0.8)', marginTop: 24, marginBottom: 0, fontWeight: 'bolder' }}>EASY VALUE CHECK</Title>
             <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(0,0,0,0.8)' }} strong>
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
 
-            <div style={{ maxWidth: 400, width: '100%', margin: '10px 0 10px' }}>
+            <div style={{ maxWidth: 400, width: '100%', margin: '10px 0 30px' }}>
               <SearchStockInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>
               <Row gutter={[10, 10]}>
@@ -200,8 +200,8 @@ const HomeCarouselAreaRaw = props => {
               renderItem={item => (
                 <List.Item>
                   <Space size="large">
-                    <Text style={{ fontSize: 32, color: 'rgba(0,0,0,0.7)' }}>{item.icon}</Text>
-                    <Text style={{ fontSize: 16, color: 'rgba(0,0,0,0.7)' }}>{item.description}</Text>
+                    <Text style={{ fontSize: 30, color: 'rgba(255,255,255,0.9)' }}>{item.icon}</Text>
+                    <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>{item.description}</Text>
                   </Space>
                 </List.Item>
               )}

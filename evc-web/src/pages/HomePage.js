@@ -16,6 +16,7 @@ import { IoLanguage } from 'react-icons/io5';
 import { FormattedMessage } from 'react-intl';
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
+const HomeUnusualOptionActivityArea = loadable(() => import('components/homeAreas/HomeUnusualOptionActivityArea'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
 const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStockRadarArea'));
 
@@ -106,19 +107,26 @@ const HomePage = (props) => {
     },
     {
       key: '2',
+      path: '/#uoa',
+      name: <FormattedMessage id="menu.unusualOptionsActivity" />,
+    },
+    {
+      key: '3',
       path: '/#earnings-calendars',
       name: <FormattedMessage id="menu.earningsCalendar" />,
     },
     {
-      key: '3',
+      key: '4',
       path: '/#pricing',
       name: <FormattedMessage id="menu.pricing" />,
     },
     {
+      key: '5',
       path: '/signup',
       name: <FormattedMessage id="menu.signUp" />,
     },
     {
+      key: '6',
       path: '/login',
       name: <FormattedMessage id="menu.login" />,
     }
@@ -177,6 +185,9 @@ const HomePage = (props) => {
     </section>
     <section id="stock-radar">
       <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
+    </section>
+    <section id="uoa">
+      <HomeUnusualOptionActivityArea />
     </section>
     <section id="earnings-calendars">
       <HomeEarningsCalendarArea onSymbolClick={handleStockListSymbolClick} />

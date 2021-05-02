@@ -21,7 +21,7 @@ import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
 import { BsCalendar } from 'react-icons/bs';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
-import EarnCommissionModal from 'pages/EarnCommissionModal';
+import EarnCommissionModal from 'pages/EarnCommission/EarnCommissionModal';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { GoDatabase } from 'react-icons/go';

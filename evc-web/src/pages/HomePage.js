@@ -4,7 +4,7 @@ import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeFooter from 'components/HomeFooter';
 import React from 'react';
 import styled from 'styled-components';
-import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
+import HomePricingArea from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
 import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
 import { withRouter } from 'react-router-dom';

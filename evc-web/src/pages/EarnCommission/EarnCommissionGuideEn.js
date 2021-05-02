@@ -12,19 +12,19 @@ const EarnCommissionGuideEn = props => {
         Referral Program Rules
     </Title>
     </Divider>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
       Who is eligible to be a referrer?
     </Title>
     <Paragraph type="secondary">
       Any EVC account holder can become a referrer.
     </Paragraph>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
       Who is eligible to become a referee?
     </Title>
     <Paragraph type="secondary">
       Your friends or social media followers may be eligible to be referees. To receive commission rewards for referring someone who orders a paid plan on EVC, your referee must be a new EVC user and can’t have more than one account.
     </Paragraph>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
       How do referees/I earn discounts/rewards?
     </Title>
     <Paragraph type="secondary">
@@ -50,7 +50,7 @@ const EarnCommissionGuideEn = props => {
         * If the referee makes the first payment of 29USD/month and upgrades to 319USD/year later, you can only receive the first discount amount of 2.9USD as your commission. <strong><u>Recommend our Annual Pro Member to your friends to earn more commission rewards</u></strong>.
     </Text>
     </Paragraph>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
       How do I use commission rewards?
     </Title>
     <Paragraph type="secondary">

@@ -66,15 +66,15 @@ export const LongRunningActionButton = props => {
 
   const uploadProps = {
     action: `${API_BASE_URL}${uploadAction}?operation=${operationKey}`,
-    accept: '.csv',
+    accept: '.csv, text/csv, application/vnd.ms-excel, text/x-csv, application/x-csv, application/csv, text/x-comma-separated-values, text/comma-separated-values',
     withCredentials: true,
     showUploadList: false,
     multiple: false,
-    beforeUpload: file => {
-      if (file.type !== 'text/csv') {
-        notify.error('Invalid file format', `Uploaded file type '${file.type}' is invalid. Please upload a CSV file.`);
-      }
-    },
+    // beforeUpload: file => {
+    //   if (file.type !== 'text/csv') {
+    //     notify.error('Invalid file format', `Uploaded file type '${file.type}' is invalid. Please upload a CSV file.`);
+    //   }
+    // },
     onChange: (info) => {
       const { file } = info;
       const status = file.status;

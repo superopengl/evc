@@ -13,13 +13,14 @@ export async function getRequestGeoInfo(req) {
   const url = `http://api.ipstack.com/${ip}?access_key=${ipstackKey}&output=json&fields=country_code,region_code,latitude,longitude`; 
 
   const resp = await fetch(url);
+  const obj = await resp.json();
 
   return {
     ip,
-    country: resp?.country_code,
-    region: resp?.region_code,
-    latitude: resp?.latitude,
-    longitude: resp?.longitude,
+    country: obj?.country_code,
+    region: obj?.region_code,
+    latitude: obj?.latitude,
+    longitude: obj?.longitude,
   }
 }
 

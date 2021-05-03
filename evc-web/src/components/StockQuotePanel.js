@@ -57,7 +57,7 @@ const StockQuotePanel = (props) => {
       .pipe(
         filter(e => e.type === 'price'),
         filter(e => e.data?.symbol === symbol),
-        debounceTime(1000),
+        // debounceTime(1000),
       ).subscribe(e => {
         setPriceEvent(e.data);
       });

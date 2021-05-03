@@ -78,7 +78,6 @@ export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' |
       'time',
       'price',
       'type',
-      'dte',
       'last',
       'volume',
       '"openInt"',

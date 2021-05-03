@@ -13,6 +13,7 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
         .from(StockHistoricalTtmEps, 'subeps')
         .select([
           'symbol',
+          '"ttmEps"',
           'UNNEST(ARRAY["reportDate", "reportDate" + 30, "reportDate" + 60]) as "reportDate"'
         ]),
         'eps', 's.symbol = eps.symbol')
@@ -21,7 +22,7 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
       .select([
         's.symbol as symbol',
         'eps."reportDate" as "reportDate"',
-        'pe."ttmEps" as "ttmEps"',
+        'eps."ttmEps" as "ttmEps"',
         'pe.pe as pe',
         'pe."pe90Avg" as "pe90Avg"',
         'pe."pe90StdDev" as "pe90StdDev"',

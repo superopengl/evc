@@ -72,7 +72,7 @@ export const LongRunningActionButton = props => {
     multiple: false,
     beforeUpload: file => {
       if (file.type !== 'text/csv') {
-        notify.error('Invalid file format', 'Please upload a valid CSV file');
+        notify.error('Invalid file format', `Uploaded file type '${file.type}' is invalid. Please upload a CSV file.`);
       }
     },
     onChange: (info) => {

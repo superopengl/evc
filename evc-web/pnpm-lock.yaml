@@ -31,6 +31,7 @@ dependencies:
   react-markdown-editor-lite: 1.2.4_react@17.0.2
   react-paypal-button-v2: 2.6.3_react-dom@17.0.2+react@17.0.2
   react-quill: 1.3.5_react@17.0.2
+  react-responsive: 8.2.0_react@17.0.2
   react-router-dom: 5.2.0_react@17.0.2
   react-router-hash-link: 2.4.0_520bc78b4ba4065e7cfe4fe506865769
   react-select: 4.3.0_react-dom@17.0.2+react@17.0.2
@@ -4935,6 +4936,10 @@ packages:
       webpack: ^4.27.0 || ^5.0.0
     resolution:
       integrity: sha512-rdezjCjScIrsL8BSYszgT4s476IcNKt6yX69t0pHjJVnPUTDpn4WfIpDQTN3wCJvUvfsz/mFjuGOekf3PY3NUg==
+  /css-mediaquery/0.1.2:
+    dev: false
+    resolution:
+      integrity: sha1-aiw3NEkoYYYxxUvTPO3TAdoYvqA=
   /css-prefers-color-scheme/3.1.1:
     dependencies:
       postcss: 7.0.35
@@ -7317,6 +7322,10 @@ packages:
       node: '>=8.12.0'
     resolution:
       integrity: sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
+  /hyphenate-style-name/1.0.4:
+    dev: false
+    resolution:
+      integrity: sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
   /iconv-lite/0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -9088,6 +9097,12 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-aU1TzmBKcWNNYvH9pjq6u92BML+Hz3h5S/QpfTFwiQF852pLT+9qHsrhM9JYipkOXZxGn+sGH8oyJE9FD9WezQ==
+  /matchmediaquery/0.3.1:
+    dependencies:
+      css-mediaquery: 0.1.2
+    dev: false
+    resolution:
+      integrity: sha512-Hlk20WQHRIm9EE9luN1kjRjYXAQToHOIAHPJn9buxBwuhfTHoKUcX+lXBbxc85DVQfXYbEQ4HcwQdd128E3qHQ==
   /md5.js/1.3.5:
     dependencies:
       hash-base: 3.1.0
@@ -12208,6 +12223,20 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
+  /react-responsive/8.2.0_react@17.0.2:
+    dependencies:
+      hyphenate-style-name: 1.0.4
+      matchmediaquery: 0.3.1
+      prop-types: 15.7.2
+      react: 17.0.2
+      shallow-equal: 1.2.1
+    dev: false
+    engines:
+      node: '>= 0.10'
+    peerDependencies:
+      react: '>=16.8.0'
+    resolution:
+      integrity: sha512-iagCqVrw4QSjhxKp3I/YK6+ODkWY6G+YPElvdYKiUUbywwh9Ds0M7r26Fj2/7dWFFbOpcGnJE6uE7aMck8j5Qg==
   /react-router-dom/5.2.0_react@17.0.2:
     dependencies:
       '@babel/runtime': 7.13.10
@@ -13253,6 +13282,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-QMEp5B7cftE7APOjk5Y6xgrbWu+WkLVQwk8JNjZ8nKRciZaByEW6MubieAiToS7+dwvrjGhH8jRXz3MVd0AYqQ==
+  /shallow-equal/1.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==
   /shallowequal/1.1.0:
     dev: false
     resolution:
@@ -15386,6 +15419,7 @@ specifiers:
   react-markdown-editor-lite: ^1.2.4
   react-paypal-button-v2: ^2.6.3
   react-quill: ^1.3.5
+  react-responsive: ^8.2.0
   react-router-dom: ^5.2.0
   react-router-hash-link: ^2.4.0
   react-scripts: 4.0.2

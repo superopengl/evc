@@ -1,12 +1,12 @@
 
-import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
-import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
-import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
+import { UnusualOptionActivityEtfs } from '../entity/UnusualOptionActivityEtfs';
+import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock';
+import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex';
 import { assert } from './assert';
 import { getManager, getRepository } from 'typeorm';
 import * as moment from 'moment';
 
-export type UnusalOptionsActivitySearchParams = {
+export type UnusualOptionsActivitySearchParams = {
   symbol?: string;
   type?: 'Call' | 'Put';
   expDateFrom?: string;
@@ -18,12 +18,12 @@ export type UnusalOptionsActivitySearchParams = {
 };
 
 
-export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' | 'index', q: any, showFullData: boolean) {
-  const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size } = q as UnusalOptionsActivitySearchParams;
+export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' | 'index', q: any, showFullData: boolean) {
+  const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size } = q as UnusualOptionsActivitySearchParams;
 
-  const entity = entityType === 'stock' ? UnusalOptionActivityStock :
-    entityType === 'etfs' ? UnusalOptionActivityEtfs :
-      entityType === 'index' ? UnusalOptionActivityIndex :
+  const entity = entityType === 'stock' ? UnusualOptionActivityStock :
+    entityType === 'etfs' ? UnusualOptionActivityEtfs :
+      entityType === 'index' ? UnusualOptionActivityIndex :
         null;
   assert(entity, 400, `Unsupported type ${entityType}`);
   const pageNo = +page || 1;
@@ -73,7 +73,7 @@ export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' |
     query = query.select('*')
   } else {
     query = query.select([
-      'id',
+      'row_number() over (order by time desc, symbol) as id',
       'symbol',
       'time',
       'price',

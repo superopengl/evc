@@ -24,6 +24,7 @@ dependencies:
   html-pdf: 2.2.0
   html-to-text: 7.0.0
   http-assert: 1.4.1
+  json-2-csv: 3.10.3
   jsonwebtoken: 8.5.1
   lodash: 4.17.21
   moment: 2.29.1
@@ -1934,6 +1935,12 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-gKTdMjdIOEv6JICDYirt7Jgq3/M=
+  /deeks/2.3.0:
+    dev: false
+    engines:
+      node: '>= 10'
+    resolution:
+      integrity: sha512-mrNI+TSdnK5s2Gal4Fv3/RGcrYGtB4NC3tTXU1hu74tYsG9JS6SzNKLD8doq6UWsglouGwC86kXqB1pdO+9hyA==
   /deep-equal/1.0.1:
     dev: false
     resolution:
@@ -2052,6 +2059,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==
+  /doc-path/2.3.0:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-RMZA8AXl0I78jI9odw0kFzOfQvBcCFLI6/ZtOs9PwogcL4DHc+sCUZQ34fkealJyqErJryYODVBOtO2IzU/CSw==
   /doctrine/3.0.0:
     dependencies:
       esutils: 2.0.3
@@ -4068,6 +4081,15 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==
+  /json-2-csv/3.10.3:
+    dependencies:
+      deeks: 2.3.0
+      doc-path: 2.3.0
+    dev: false
+    engines:
+      node: '>= 10'
+    resolution:
+      integrity: sha512-GEvAkQ8dtvI9cD3VslY6TUtOYBzwlNF/4OzoVoiKXl+Ztd9VXL2SNQnYyXyqZCnKU3hwIfOoD9MdaWMMA2WOeg==
   /json-buffer/3.0.0:
     dev: true
     resolution:
@@ -7070,6 +7092,7 @@ specifiers:
   html-to-text: ^7.0.0
   http-assert: ^1.4.1
   jest: ^26.6.3
+  json-2-csv: ^3.10.3
   jsonwebtoken: ^8.5.1
   lodash: ^4.17.21
   moment: ^2.29.1

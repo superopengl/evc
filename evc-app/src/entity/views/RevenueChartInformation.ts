@@ -17,6 +17,7 @@ import { PaymentStatus } from '../../types/PaymentStatus';
     's.type as "subscriptionType"',
     'p.method as method',
     'p."paidAt" as date',
+    `case when p.geo ->> 'country' = 'NZ' then true else false end as "isNZ"`,
     'coalesce(p.amount, 0) - coalesce(c.amount, 0) as price',
     'coalesce(p.amount, 0) as payable',
     'coalesce(-c.amount, 0) as deduction',
@@ -35,6 +36,9 @@ export class RevenueChartInformation {
 
   @ViewColumn()
   date: Date;
+
+  @ViewColumn()
+  isNZ: boolean;
 
   @ViewColumn()
   price: number;

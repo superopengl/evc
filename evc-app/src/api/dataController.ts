@@ -26,8 +26,8 @@ const convertHeaderToPropName = header => {
 }
 
 const formatUoaUploadRow = row => {
-  row.expDate = moment(row.expDate, 'MM/DD/YY').toDate();
-  row.time = moment(row.time, 'MM/DD/YY').toDate();
+  row.expDate = parseUoaDate(row.expDate);
+  row.time = parseUoaDate(row.time);
   row.iv = row.iv.replace(/%/g, '');
   return row;
 }
@@ -35,6 +35,14 @@ const formatUoaUploadRow = row => {
 const formatPutCallRatioUploadRow = row => {
   row.date = moment(row.date, 'MM/DD/YY').toDate();
   return row;
+}
+
+function parseUoaDate(value) {
+  let m = moment(value, 'MM/DD/YY');
+  if(!m.isValid()) {
+    m = moment(value, 'YYYY/MM/DD')
+  }
+  return m.toDate();
 }
 
 function handleCsvUpload(

@@ -19,7 +19,7 @@ async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
     where: {
       userId,
-      status: In([SubscriptionStatus.Alive])
+      status: In([SubscriptionStatus.Expired, SubscriptionStatus.Alive])
     },
     order: {
       start: 'ASC',

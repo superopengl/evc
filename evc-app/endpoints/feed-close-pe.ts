@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { isUSMarketOpen } from '../src/services/iexService';
@@ -7,10 +7,95 @@ import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
 import * as delay from 'delay';
 import errorToJson from 'error-to-json';
-import {syncStockHistoricalClose} from '../src/services/stockCloseService';
+import { syncStockHistoricalClose } from '../src/services/stockCloseService';
+import { StockResistance } from '../src/entity/StockResistance';
+import { StockSupport } from '../src/entity/StockSupport';
+import { StockDeprecateResistance } from '../src/entity/views/StockDeprecateResistance';
+import { StockDeprecateSupport } from '../src/entity/views/StockDeprecateSupport';
+import { handleWatchlistNotification } from './handleWatchlistNotification';
 
 const JOB_NAME = 'feed-historical-close';
 const MAX_CALL_TIMES_PER_MINUTE = 50;
+
+
+async function scrubSupports() {
+
+  await getManager().transaction(async m => {
+    const list = await m.getRepository(StockDeprecateSupport).find();
+
+    console.log('Scrub support', JSON.stringify(list));
+
+    if (!list.length) {
+      return;
+    }
+
+    // Move deprecate supports to resistance
+    const ids = list.map(x => x.supportId);
+    const deleteResult = await m
+      .createQueryBuilder()
+      .delete()
+      .from(StockSupport)
+      .whereInIds(ids)
+      .execute();
+
+    console.log('Delete support', JSON.stringify(deleteResult));
+
+    const insertEntities = list.map(x => {
+      const entity = new StockResistance();
+      entity.symbol = x.symbol;
+      entity.lo = x.supportLo;
+      entity.hi = x.supportHi;
+      return entity;
+    })
+
+    const insertResult = await m.createQueryBuilder()
+      .insert()
+      .into(StockResistance)
+      .values(insertEntities)
+      .execute();
+
+    console.log('Moved from support to resistance', JSON.stringify(insertResult));
+  });
+
+}
+
+async function scrubResistances() {
+  await getManager().transaction(async m => {
+    const list = await m.getRepository(StockDeprecateResistance).find();
+
+    console.log('Scrub resistance', JSON.stringify(list));
+
+    if (!list.length) {
+      return;
+    }
+    // Delete resistance
+    const ids = list.map(x => x.resistanceId);
+    const deleteResult = await m
+      .createQueryBuilder()
+      .delete()
+      .from(StockResistance)
+      .whereInIds(ids)
+      .execute();
+
+    console.log('Delete resistance', JSON.stringify(deleteResult));
+
+    const insertEntities = list.map(x => {
+      const entity = new StockSupport();
+      entity.symbol = x.symbol;
+      entity.lo = x.resistanceLo;
+      entity.hi = x.resistanceHi;
+      return entity;
+    });
+
+    const insertResult = await m.createQueryBuilder()
+      .insert()
+      .into(StockSupport)
+      .values(insertEntities)
+      .execute();
+
+    console.log('Moved from resistance to support', JSON.stringify(insertResult));
+  });
+}
 
 start(JOB_NAME, async () => {
   const isMarketOpen = await isUSMarketOpen();
@@ -18,7 +103,7 @@ start(JOB_NAME, async () => {
     console.warn('Market is still open');
     return;
   }
-  
+
   const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
 
   const stocks = await getRepository(Stock)
@@ -28,7 +113,7 @@ start(JOB_NAME, async () => {
       },
       select: [
         'symbol'
-      ]
+      ],
     });
   const symbols = stocks.map(s => s.symbol);
 
@@ -47,7 +132,15 @@ start(JOB_NAME, async () => {
     }
   }
 
+  // Scrub supports and resistance
+  console.log(`Scrubing supports`)
+  await scrubSupports();
+  console.log(`Scrubing resistance`)
+  await scrubResistances();
+
   await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+
+  await handleWatchlistNotification();
 
   for (const err of failed) {
     console.error(err);

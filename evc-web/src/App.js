@@ -20,6 +20,7 @@ import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
 import * as moment from 'moment-timezone';
+import { Loading } from 'components/Loading';
 
 moment.tz.setDefault('America/New_York');
 
@@ -50,6 +51,7 @@ const localeDic = {
 const DEFAULT_LOCALE = getDefaultLocale();
 
 const App = () => {
+  const [ready, setReady] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
@@ -84,6 +86,7 @@ const App = () => {
     ReactDOM.unstable_batchedUpdates(() => {
       setUser(user);
       setLoading(false);
+      setReady(true);
     })
   }
 
@@ -118,6 +121,10 @@ const App = () => {
 
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
+  if (!ready) {
+    return <Loading loading={loading} />
+  }
+
   return (
     <GlobalContext.Provider value={contextValue}>
       <ConfigProvider locale={antdLocale}>
@@ -132,8 +139,7 @@ const App = () => {
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} exact path="/disclaimer" component={DisclaimerPage} />
               <RoleRoute loading={loading} exact path="/pro-member" component={ProMemberPage} />
-              {isGuest && <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />}
-              {isLoggedIn && <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />}
+              <RoleRoute loading={loading} path="/" component={isLoggedIn ? AppLoggedIn : HomePage} />
               <Redirect to="/" />
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>

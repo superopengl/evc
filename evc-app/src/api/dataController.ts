@@ -42,6 +42,9 @@ function parseUoaDate(value) {
   if (!m.isValid()) {
     m = moment(value, 'YYYY/MM/DD')
   }
+  if(!m.isValid()) {
+    throw new Error(`${value} is not a valid date.`)
+  }
   return m.toDate();
 }
 

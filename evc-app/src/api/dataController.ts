@@ -189,13 +189,13 @@ export const uploadPutCallRatioCsv = handleCsvUpload(
 
 async function cleanUpOldUoaData(m: EntityManager, table) {
   const now = getUtcNow();
-  const threeMonthAgo = moment(now).add(-3, 'month').toDate();
+  const oneYearAgo = moment(now).add(-1, 'year').startOf('day').toDate();
 
   await m
     .createQueryBuilder()
     .delete()
     .from(table)
-    .where('"expDate" < :date', { date: threeMonthAgo })
+    .where('"time" < :date', { date: oneYearAgo })
     .execute();
 }
 

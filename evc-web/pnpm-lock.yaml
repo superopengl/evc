@@ -42,6 +42,7 @@ dependencies:
   reactjs-localstorage: 1.0.1
   reactour: 1.18.3_84d21352b10017addcdab28b8d95ead5
   rxjs: 6.6.7
+  smoothscroll-polyfill: 0.4.4
   styled-components: 5.2.3_84d21352b10017addcdab28b8d95ead5
   uuid: 8.3.2
   validator: 13.6.0
@@ -13369,6 +13370,10 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-qMCMfhY040cVHT43K9BFygqYbUPFZKHOg7K73mtTWJRb8pyP3fzf4Ixd5SzdEJQ6MRUg/WBnOLxghZtKKurENQ==
+  /smoothscroll-polyfill/0.4.4:
+    dev: false
+    resolution:
+      integrity: sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg==
   /snapdragon-node/2.1.1:
     dependencies:
       define-property: 1.0.0
@@ -15433,6 +15438,7 @@ specifiers:
   rollup: ^2.40.0
   rollup-plugin-typescript2: ^0.30.0
   rxjs: ^6.6.3
+  smoothscroll-polyfill: ^0.4.4
   styled-components: ^5.2.1
   uuid: ^8.3.2
   validator: ^13.6.0

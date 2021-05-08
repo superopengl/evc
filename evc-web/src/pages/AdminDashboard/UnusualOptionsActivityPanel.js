@@ -5,11 +5,11 @@ import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip } from 'an
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
-import moment from 'moment';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { LockFilled } from '@ant-design/icons';
+import * as moment from 'moment-timezone';
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -160,7 +160,7 @@ const UnusualOptionsActivityPanel = (props) => {
       dataIndex: 'expDate',
       width: 100,
       align: shouldHide ? 'center' : 'right',
-      render: (value) => shouldHide ? <LockIcon /> : moment(value).format('D MMM YYYY'),
+      render: (value) => shouldHide ? <LockIcon /> : moment.tz(value, 'utc').format('D MMM YYYY'),
     },
     {
       title: 'Days To Expiration',
@@ -218,7 +218,7 @@ const UnusualOptionsActivityPanel = (props) => {
       dataIndex: 'time',
       width: 100,
       align: 'right',
-      render: (value) => moment(value).format('D MMM YYYY'),
+      render: (value) => moment.tz(value, 'utc').format('D MMM YYYY'),
     }
   ];
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 
 const FullCreditPayButton = (props) => {
-  const { onProvision, onCommit, onLoading } = props;
+  const { onProvision, onCommit, onLoading, style } = props;
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -22,11 +22,14 @@ const FullCreditPayButton = (props) => {
   }
 
   return (
-    <Button type="primary" block onClick={handleFullCreditPay}
+    <Button type="primary"
+      block
+      onClick={handleFullCreditPay}
       size="large"
       disabled={loading}
       loading={loading}
-    >Purchase with credits</Button>
+      style={style}
+    >Pay with credits</Button>
   );
 }
 

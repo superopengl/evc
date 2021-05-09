@@ -15,7 +15,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import moment from 'moment';
+import * as moment from 'moment-timezone';
 import MySubscriptionHistoryPanel from './MySubscriptionHistoryPanel';
 import { from } from 'rxjs';
 
@@ -184,7 +184,7 @@ const MyAccountPage = (props) => {
           >
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
-                Your subscription will expire on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
+                Your subscription will expire on <Text underline strong>{moment.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
                   You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
                   The new plan will take effect right after all your alive subscriptions end.
               </>} />}

@@ -29,8 +29,8 @@ export async function confirmSubscriptionPayment(paymentId, payload) {
   return httpPost(`subscription/payment/${paymentId}/confirm`, payload);
 }
 
-export async function calculatePaymentDetail(type, preferToUseCredit) {
-  return httpPost(`subscription/preview`, { type, preferToUseCredit });
+export async function calculatePaymentDetail(type) {
+  return httpPost(`subscription/preview`, { type });
 }
 
 export async function fetchStripeCheckoutSession() {

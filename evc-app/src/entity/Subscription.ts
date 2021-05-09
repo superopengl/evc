@@ -32,8 +32,8 @@ export class Subscription {
   @Column({default: SubscriptionStatus.Provisioning})
   status: SubscriptionStatus;
 
-  @Column({default: true})
-  preferToUseCredit: boolean;
+  @Column({default: false})
+  useCredit: boolean;
 
   @OneToMany(() => Payment, payment => payment.subscription, {onDelete: 'CASCADE'})
   payments: Payment[];

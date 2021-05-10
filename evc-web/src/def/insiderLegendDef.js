@@ -1,24 +1,27 @@
 
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
+
 export const INSIDER_LEGEND_INFOS = {
   'A': {
     color: '#333333',
-    message: 'Grant, award, or other acquisition of securities from the company (such as an option)'
+    message: <FormattedMessage id="text.insiderLegendA" />
   },
   'P': {
     color: '#3b5999',
-    message: 'Purchase of securities on an exchange or from another person'
+    message: <FormattedMessage id="text.insiderLegendP" />
   },
   'S': {
     color: '#108ee9',
-    message: 'Sale of securities on an exchange or to another person'
+    message: <FormattedMessage id="text.insiderLegendS" />
   },
   'M': {
     color: '#f05000',
-    message: 'Exercise or conversion of derivative security received from the company (such as an option)'
+    message: <FormattedMessage id="text.insiderLegendM" />
   },
   'G': {
     color: '#87d068',
-    message: 'Gift of securities by or to the insider'
+    message: <FormattedMessage id="text.insiderLegendG" />
   }
 };
 

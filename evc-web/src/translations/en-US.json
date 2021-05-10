@@ -130,5 +130,17 @@
   "text.commissionWithdrawalDescription": "Cash back to your PayPal account.",
   "text.commissionWithdrawalHistory": "All applications",
   "text.commissionWithdrawalNew": "New application",
+  "text.insiderLegendA": "Grant, award, or other acquisition of securities from the company (such as an option)",
+  "text.insiderLegendP": "Purchase of securities on an exchange or from another person",
+  "text.insiderLegendS": "Sale of securities on an exchange or to another person",
+  "text.insiderLegendM": "Exercise or conversion of derivative security received from the company (such as an option)",
+  "text.insiderLegendG": "Gift of securities by or to the insider",
+  "text.insiderTransactions": "Insider Transactions",
+  "text.roster": "Roster",
+  "text.optionPutCallRatio": "Option Put-Call Ratio",
+  "text.support": "Support",
+  "text.resistance": "Resistance",
+  "text.fairValue": "Fair Value",
+  "text.news": "News",
   "": ""
 }

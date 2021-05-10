@@ -130,5 +130,17 @@
   "text.commissionWithdrawalDescription": "佣金提现到PayPal账户。",
   "text.commissionWithdrawalHistory": "申请记录",
   "text.commissionWithdrawalNew": "提交新申请",
+  "text.insiderLegendA": "公司授予，奖励或以其他方式从公司获得证券",
+  "text.insiderLegendP": "从交易所或从他人购买证券",
+  "text.insiderLegendS": "通过交易所或他人出售证券",
+  "text.insiderLegendM": "行使或转换从公司获得的衍生证券（例如期权转换而来的证券）",
+  "text.insiderLegendG": "从其他内部高管获得礼物，或以礼物赠与给其它内部高管",
+  "text.insiderTransactions": "高管持股变更",
+  "text.roster": "高管持股",
+  "text.optionPutCallRatio": "每日期权看跌/看涨比",
+  "text.support": "支撑",
+  "text.resistance": "压力",
+  "text.fairValue": "估值",
+  "text.news": "新闻",
   "": ""
 }

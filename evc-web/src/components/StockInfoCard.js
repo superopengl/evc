@@ -198,7 +198,9 @@ const StockInfoCard = (props) => {
           <tbody>
             <tr>
               <td>
-                <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
+                <TooltipLabel message="How to use fair value">
+                  <FormattedMessage id="text.fairValue" />
+                </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                 {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} empty={<Text type="warning"><small>N/A Cannot calculate</small></Text>} />}
@@ -206,7 +208,9 @@ const StockInfoCard = (props) => {
             </tr>
             <tr>
               <td style={{ verticalAlign: 'top' }}>
-                <TooltipLabel message="How to use support">Support</TooltipLabel>
+                <TooltipLabel message="How to use support">
+                  <FormattedMessage id="text.support" />
+                </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                 {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
@@ -214,7 +218,9 @@ const StockInfoCard = (props) => {
             </tr>
             <tr>
               <td style={{ verticalAlign: 'top' }}>
-                <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
+                <TooltipLabel message="How to use resistance">
+                  <FormattedMessage id="text.resistance" />
+                </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                 {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}

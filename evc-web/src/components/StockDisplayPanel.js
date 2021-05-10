@@ -123,7 +123,7 @@ const StockDisplayPanel = (props) => {
         </Row>
         {showInlineStockChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true} bodyStyle={{ height: 450 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true} bodyStyle={{ height: 450 }}>
               <StockPutCallRatioChart symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
@@ -142,19 +142,19 @@ const StockDisplayPanel = (props) => {
         </Row>}
         <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
           <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
-            <MemberOnlyCard title={<>Roster</>} bodyStyle={{ height: 500 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.roster" />} bodyStyle={{ height: 500 }}>
               <StockRosterPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
           <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 16, xxl: 18 }}>
-            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true} bodyStyle={{ height: 500 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.insiderTransactions" />} paidOnly={true} bodyStyle={{ height: 500 }}>
               <StockInsiderTransactionPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
         </Row>
         <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<>News</>} bodyStyle={{ height: 700 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.news" />} bodyStyle={{ height: 700 }}>
               <StockNewsPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>

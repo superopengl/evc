@@ -192,10 +192,12 @@ const ProMemberPage = () => {
           type="success"
           icon={<InfoCircleOutlined />}
           showIcon
-          description={'Pro Members unlock the powerful features. How does it work? (data on this page is fake)'}
+          description={<FormattedMessage id="text.startTourAlert"/>}
           style={{ marginBottom: 30 }}
           action={
-            <Button type="link" onClick={() => setVisible(true)}>Restart Tour</Button>
+            <Button type="primary" onClick={() => setVisible(true)}>
+              <FormattedMessage id="text.startTour"/>
+            </Button>
           }
         />
         <div className="sc-khQdMy cdJLiE">
@@ -206,7 +208,7 @@ const ProMemberPage = () => {
                   <div className="ant-space ant-space-horizontal ant-space-align-center">
                     <div className="ant-space-item">
                       <div className="ant-space ant-space-horizontal ant-space-align-center">
-                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography"><strong>EVC</strong></span></div>
+                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography"><strong>EVCT</strong></span></div>
                         <div className="ant-space-item"><span className="ant-typography ant-typography-secondary" style={{ fontWeight: 300 }}>(Easy Value Check Inc)</span></div>
                       </div>
                     </div>

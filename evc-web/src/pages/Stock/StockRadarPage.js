@@ -14,6 +14,7 @@ import { listStockTags } from 'services/stockTagService';
 import PropTypes from 'prop-types';
 import { TagFilterButton } from 'components/TagFilterButton';
 import { from } from 'rxjs';
+import { FormattedMessage } from 'react-intl';
 
 const OverButton = styled(Button)`
 color: rgba(0, 0, 0, 0.85);
@@ -65,7 +66,10 @@ const StockRadarPage = (props) => {
 
   const { create } = queryString.parse(props.location.search);
 
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
+  const [queryInfo, setQueryInfo] = React.useState({
+    ...reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true),
+    size: props.size
+  })
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -146,8 +150,6 @@ const StockRadarPage = (props) => {
   }
 
 
-
-
   return (
     <>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -155,17 +157,17 @@ const StockRadarPage = (props) => {
           <Row gutter={[10, 10]}>
             <Col flex="auto">
               <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
-                {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
+                {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} <FormattedMessage id="text.overValued" />
             </OverButton>
             </Col>
             <Col flex="auto">
               <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
-                {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
+                {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} <FormattedMessage id="text.underValued" />
             </UnderButton>
             </Col>
             <Col flex="auto">
               <Button type="default" onClick={handleToggleInValued}>
-                {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
+                {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} <FormattedMessage id="text.inValued" />
             </Button>
             </Col>
             {tags && <Col flex="auto">
@@ -207,10 +209,12 @@ const StockRadarPage = (props) => {
 };
 
 StockRadarPage.propTypes = {
-  onItemClick: PropTypes.func
+  onItemClick: PropTypes.func,
+  size: PropTypes.number,
 };
 
 StockRadarPage.defaultProps = {
+  size: 60
 };
 
 export default withRouter(StockRadarPage);

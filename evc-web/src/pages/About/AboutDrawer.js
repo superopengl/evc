@@ -26,9 +26,7 @@ const AboutDrawer = (props) => {
         All data provided on Easy Value Check is provided to individuals for informational purposes only, and is not intended for trading or investing purposes. You must not redistribute information displayed on or provided by Easy Value Check.
       </Paragraph>
       <Divider />
-      Data is provided by IEX Cloud <a href="https://iexcloud.io" target="_blank" rel="noreferrer">https://iexcloud.io</a>
-      <Divider />
-      <Paragraph>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</Paragraph>
+      <Paragraph>©{new Date().getFullYear()} Easy Value Check. All right reserved.</Paragraph>
       <Paragraph>Version {gitVersion}</Paragraph>
       <Paragraph>
         <a href="/terms_and_conditions" target="_blank">

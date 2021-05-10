@@ -192,8 +192,8 @@ const MyAccountPage = (props) => {
                 Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>.
               </>} />}
-              {!currentSubscription && <Alert type="warning" showIcon description={
-                <>Subscribe a plan to become our Pro Member so as to be accessible to all core data.</>
+              {!currentSubscription && <Alert type="info" showIcon description={
+                <FormattedMessage id="text.freeToPaidSuggestion"/>
               } />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
@@ -226,7 +226,7 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title="Credit Balance"
+            title={<FormattedMessage id="text.creditBalance" />}
             extra={
               <Title><MoneyAmount type="success" value={account.credit} /></Title>
             }
@@ -234,20 +234,28 @@ const MyAccountPage = (props) => {
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">You can earn <MoneyAmount value={account.referralCommission} /> for each referral after the referred user has purchased a plan. The credit can be used for future payment.</Paragraph>
 
-              <Button key={0} onClick={() => setCreditHistoryVisible(true)}>Credit History</Button>
+              <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
+              <FormattedMessage id="text.creditHistory" />
+              </Button>
             </Space>
           </Card>
           <Card
             bordered={false}
-            title="Commission Withdrawal"
+            title={<FormattedMessage id="text.commissionWithdrawal"/>}
             extra={
               <Space>
-                <Button type="secondary" onClick={() => setCommissionWithdrawalHistoryVisible(true)}>All Applications</Button>
-                <Button type="primary" onClick={() => setCashBackVisible(true)} disabled={account.credit <= 0}>New Application</Button>
+                <Button type="secondary" onClick={() => setCommissionWithdrawalHistoryVisible(true)}>
+                  <FormattedMessage id="text.commissionWithdrawalHistory" />
+                </Button>
+                <Button type="primary" onClick={() => setCashBackVisible(true)} disabled={account.credit <= 0}>
+                  <FormattedMessage id="text.commissionWithdrawalNew" />
+                </Button>
               </Space>
             }
           >
-            <Paragraph type="secondary">Cash back to your PayPal account</Paragraph>
+            <Paragraph type="secondary">
+            <FormattedMessage id="text.commissionWithdrawalDescription"/>
+            </Paragraph>
           </Card>
         </Space>
       </Loading>

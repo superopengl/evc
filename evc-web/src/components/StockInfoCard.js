@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { LockFilled } from '@ant-design/icons';
 import { StockNoticeButton } from './StockNoticeButton';
 import { filter, debounceTime } from 'rxjs/operators';
+import { FormattedMessage } from 'react-intl';
 
 const { Text } = Typography;
 
@@ -226,7 +227,9 @@ const StockInfoCard = (props) => {
 
     {shouldHideData && <StyledGuestCover>
       <LockFilled />
-      <Text>Full feature is available after pay</Text>
+      <Text>
+        <FormattedMessage id="text.fullFeatureAfterPay" />
+      </Text>
       {/* {isGuest ?
         <Link to="/signup" onClick={e => e.stopPropagation()}>Click to sign up</Link> :
         <Link to="/account" onClick={e => e.stopPropagation()}>Click to upgrade</Link>} */}

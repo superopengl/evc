@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { timer } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 import ReactDOM from 'react-dom';
+import { FormattedMessage } from 'react-intl';
 
 const { Text, Title, Link: TextLink } = Typography;
 
@@ -144,7 +145,7 @@ const StockMostPanel = (props) => {
         }}
         size="small"
         locale={{
-          emptyText: 'Data updating'
+          emptyText: <FormattedMessage id="text.mostEmpty" />
         }}
       />
     </>

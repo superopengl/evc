@@ -5,7 +5,7 @@ import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Space } from 'antd';
-import Icon, { LeftOutlined } from '@ant-design/icons';
+import Icon, { ExclamationCircleOutlined, WarningFilled, WarningOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
@@ -25,6 +25,7 @@ import JcbIcon from 'payment-icons/min/flat/jcb.svg';
 import PayPalIcon from 'payment-icons/min/flat/paypal.svg';
 import { notify } from 'util/notify';
 import { from } from 'rxjs';
+import { FormattedMessage } from 'react-intl';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -106,7 +107,7 @@ const PaymentStepperWidget = (props) => {
 
   const stepDef = [
     {
-      component: <Space direction="vertical" style={{ width: '100%' }}>
+      component: <Space direction="vertical" style={{ width: '100%' }} size="large">
         {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Auto renew (payments happen on expiray automatically)?</Text>
           <Switch defaultChecked={recurring} onChange={handleRecurringChange} />
@@ -139,6 +140,12 @@ const PaymentStepperWidget = (props) => {
             {shouldShowPayPal && <CardIcon src={PayPalIcon} />}
           </Space>
         </div> */}
+        <Space style={{alignItems: 'flex-start'}} size="middle">
+          <Text type="warning" style={{ fontSize: 28 }}><ExclamationCircleOutlined /></Text>
+          <Paragraph type="warning">
+            <FormattedMessage id="text.noRefundAlert" />
+          </Paragraph>
+        </Space>
         <Row gutter={20}>
           <Col span={12}>
             <Button type="primary"
@@ -146,8 +153,7 @@ const PaymentStepperWidget = (props) => {
               size="large"
               style={{ height: 100 }}
               onClick={() => handleStepChange(1)}>
-              <div>Checkout</div>
-              <small>Auto renew applied</small>
+              <FormattedMessage id="text.payNow" />
             </Button>
           </Col>
           <Col span={12}>
@@ -157,8 +163,7 @@ const PaymentStepperWidget = (props) => {
               size="large"
               style={{ height: 100 }}
               onClick={() => handleStepChange(2)}>
-              <div>Pay with credits</div>
-              <small>One off trial</small>
+              <FormattedMessage id="text.payByCredit" />
             </Button>
           </Col>
         </Row>
@@ -250,7 +255,7 @@ const PaymentStepperWidget = (props) => {
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
             <div>
-              <Text strong type="success" style={{fontSize: 24}}>
+              <Text strong type="success" style={{ fontSize: 24 }}>
                 <big>$ {newPlanDef.price}</big>
               </Text> {newPlanDef.unit}
             </div>

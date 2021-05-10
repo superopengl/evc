@@ -41,7 +41,7 @@ const HomeFooter = () => (
           <p>
       All data provided on Easy Value Check is provided to individuals for informational purposes only, and is not intended for trading or investing purposes. You must not redistribute information displayed on or provided by Easy Value Check.
           </p>
-          <p style={{marginTop: 10}}>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</p>
+          <p style={{marginTop: 10}}>©{new Date().getFullYear()} Easy Value Check. All right reserved.</p>
           <p style={{ display: 'none' }}>Version {gitVersion}</p>
           <p><a href="/terms_and_conditions" target="_blank">
             <FormattedMessage id="menu.tc" />
@@ -50,15 +50,6 @@ const HomeFooter = () => (
             </a> | <a href="/disclaimer" target="_blank">
               <FormattedMessage id="menu.disclaimer" />
             </a> </p>
-        <p>
-          Data provided by IEX Cloud <a href="https://iexcloud.io" target="_blank" rel="noreferrer">https://iexcloud.io</a>
-          {/* <br />
-          <a href="https://www.techseeding.com.au/" target="_blank" rel="noopener noreferrer">
-            Technical solution by TECHSEEDING https://www.techseeding.com.au
-            <br />
-            <img src="https://www.techseeding.com.au/logo-bw.png" width="80px" height="auto" alt="Techseeding logo"></img>
-          </a> */}
-        </p>
         </Col>
       </Row>
     </section>

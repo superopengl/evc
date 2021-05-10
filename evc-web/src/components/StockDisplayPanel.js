@@ -23,6 +23,7 @@ import {
   BarChartOutlined,
   LineChartOutlined,
 } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 
 const { Text } = Typography;
 
@@ -93,7 +94,7 @@ const StockDisplayPanel = (props) => {
             <Row gutter={[30, 30]}>
               <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                 <StockQuotePanel symbol={stock.symbol} />
-                <MemberOnlyCard title={<>Next Report Date</>} bodyStyle={{ height: 65 }} style={{ marginTop: 30 }}>
+                <MemberOnlyCard title={<FormattedMessage id="text.nextReportDate" />} bodyStyle={{ height: 65 }} style={{ marginTop: 30 }}>
                   <StockNextReportDatePanel symbol={stock.symbol} />
                 </MemberOnlyCard>
               </Col>

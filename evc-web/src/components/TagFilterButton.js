@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge, Button, Modal } from 'antd';
 import { TagFilter } from 'components/TagFilter';
+import { FormattedMessage } from 'react-intl';
 
 export const TagFilterButton = (props) => {
 
@@ -32,10 +33,12 @@ export const TagFilterButton = (props) => {
   return (
     <>
       <Badge count={selectedTags.length} showZero={false} style={{ backgroundColor: "#57BB60" }}>
-        <Button onClick={() => setVisible(true)}>Tags Filter</Button>
+        <Button onClick={() => setVisible(true)}>
+          <FormattedMessage id="text.filter" />
+        </Button>
       </Badge>
       <Modal
-        title="Fitler stocks by tags"
+        title={<FormattedMessage id="text.filterByTags" />}
         confirmLoading={loading}
         visible={visible}
         closable

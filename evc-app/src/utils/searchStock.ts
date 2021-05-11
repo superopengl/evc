@@ -34,7 +34,7 @@ export async function searchStockForGuest(queryInfo: StockSearchParams) {
   const result = await query
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
-    .where(`symbol IN (:...symbols)`, {symbols    })
+    .where(`symbol IN (:...symbols)`, { symbols })
     .select([
       `s.symbol as symbol`,
       `s.company as company`,
@@ -43,7 +43,7 @@ export async function searchStockForGuest(queryInfo: StockSearchParams) {
       `s."isOver" as "isOver"`,
     ])
     .execute();
-  
+
   const data = _.sortBy(result, x => orderMap.get(x.symbol));
 
   return {

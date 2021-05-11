@@ -87,7 +87,7 @@ const StockEpsAdminEditor = (props) => {
       />
       <Space size="small" style={{ width: '100%', justifyContent: 'space-between' }}>
         <StockEpsInput onSave={handleSave} disabled={loading} />
-        <Tooltip title="Fetch last 8 EPS from IEX API">
+        <Tooltip title="Fetch last 8 EPS from AlphaVantage">
           <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading} icon={<SyncOutlined />}></Button>
         </Tooltip>
       </Space>

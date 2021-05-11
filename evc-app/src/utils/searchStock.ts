@@ -4,22 +4,37 @@ import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 import { Stock } from '../entity/Stock';
+import * as _ from 'lodash';
+
+const symbols = [
+  'AAPL',
+  'AMZN',
+  'TSLA',
+  'NIO',
+  'TSM',
+  'OXY',
+  'AMD',
+  'COST',
+  'DIS',
+  'WFC',
+  'BA',
+  'AAL'
+];
+const orderMap = new Map(symbols.map((s, i) => [s, i]));
 
 export async function searchStockForGuest(queryInfo: StockSearchParams) {
   const pageNo = 1;
   const pageSize = 12;
-  assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
   let query = getManager()
     .createQueryBuilder()
     .from(StockLatestPaidInformation, 's')
 
   const count = await query.getCount();
-
-  const data = await query
-    .orderBy('symbol', 'ASC')
+  const result = await query
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
+    .where(`symbol IN (:...symbols)`, {symbols    })
     .select([
       `s.symbol as symbol`,
       `s.company as company`,
@@ -28,6 +43,8 @@ export async function searchStockForGuest(queryInfo: StockSearchParams) {
       `s."isOver" as "isOver"`,
     ])
     .execute();
+  
+  const data = _.sortBy(result, x => orderMap.get(x.symbol));
 
   return {
     count,

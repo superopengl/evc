@@ -90,7 +90,6 @@ const StockDisplayPanel = (props) => {
                   title="EVC Core Info"
                   paidOnly={true}
                   bodyStyle={{ height: 274 }}
-                  message=""
                   blockedComponent={
                       <StockUnpaidEvcInfoPanel fairValues={stock.fairValues || []} />
                   }>

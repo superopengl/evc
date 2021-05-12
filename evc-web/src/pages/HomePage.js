@@ -114,11 +114,11 @@ const HomePage = (props) => {
       path: '/#uoa',
       name: <FormattedMessage id="menu.unusualOptionsActivity" />,
     },
-    // {
-    //   key: '3',
-    //   path: '/#earnings-calendars',
-    //   name: <FormattedMessage id="menu.earningsCalendar" />,
-    // },
+    {
+      key: '3',
+      path: '/earnings_calendar_preview',
+      name: <FormattedMessage id="menu.earningsCalendar" />,
+    },
     {
       key: '4',
       path: '/#pricing',
@@ -159,7 +159,7 @@ const HomePage = (props) => {
     location={{ pathname: '/non' }}
     fixedHeader={true}
     menuItemRender={(item, dom) => {
-      if(item.path === '/pro-member') {
+      if(['/pro-member', '/earnings_calendar_preview'].includes(item.path)) {
         return <a href={item.path} target="_blank" rel="noreferrer">
           {dom}
         </a>

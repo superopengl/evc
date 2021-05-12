@@ -36,10 +36,10 @@ const StockUnpaidEvcInfoPanel = (props) => {
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <FormattedMessage id="text.fairValue" />
         <OldFairValueContainer>
-          {fairValues?.map((fv, i) => i > 2 ? null : <Space key={i}>
+          {fairValues?.length ? fairValues.map((fv, i) => i > 2 ? null : <Space key={i}>
             <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
             {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <BlurPair />}
-          </Space>)}
+          </Space>) : <BlurPair />}
         </OldFairValueContainer>
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>

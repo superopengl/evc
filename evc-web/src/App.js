@@ -34,6 +34,7 @@ const DisclaimerPage = loadable(() => import('pages/DisclaimerPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const ProMemberPage = loadable(() => import('pages/ProMember/ProMemberPage'));
+const EarningsCalendarPreviewPage = loadable(() => import('pages/EarningsCalendarPreviewPage'));
 
 const localeDic = {
   'en-US': {
@@ -139,6 +140,7 @@ const App = () => {
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} exact path="/disclaimer" component={DisclaimerPage} />
               <RoleRoute loading={loading} exact path="/pro-member" component={ProMemberPage} />
+              <RoleRoute loading={loading} exact path="/earnings_calendar_preview" component={EarningsCalendarPreviewPage} />
               <RoleRoute loading={loading} path="/" component={isLoggedIn ? AppLoggedIn : HomePage} />
               <Redirect to="/" />
               {/* <RoleRoute loading={loading} component={Error404} /> */}

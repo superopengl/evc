@@ -39,9 +39,10 @@ const ReferralGlobalPolicyListPage = () => {
 
   const columnDef = [
     {
-      title: 'Amount per referral',
+      title: '% per referral',
       dataIndex: 'amount',
-      render: (value) => <MoneyAmount value={value} />
+      align: 'left',
+      render: (value) => <>{+value * 100} %</>
     },
     {
       title: 'Description',
@@ -174,7 +175,7 @@ const ReferralGlobalPolicyListPage = () => {
   };
 
   const handleSelectEvent = (event) => {
-    const {amount, start, end, description, active} = event;
+    const { amount, start, end, description, active } = event;
     setNewPolicy({
       amount,
       range: [moment(start), moment(end)],
@@ -192,48 +193,48 @@ const ReferralGlobalPolicyListPage = () => {
   }));
 
   return (
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }} size="large">
-          {/* <StyledTitleRow>
+    <ContainerStyled>
+      <Space direction="vertical" style={{ width: '100%' }} size="large">
+        {/* <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Global Referral Policy</Title>
           </StyledTitleRow> */}
 
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Policy</Button>
-          </Space>
-
-          <div>
-            <DnDCalendar
-              localizer={localizer}
-              events={calendarEvents}
-              defaultView="month"
-              views={['month']}
-              defaultDate={moment().toDate()}
-              startAccessor="start"
-              endAccessor="end"
-              onEventDrop={onEventDrop}
-              onEventResize={onEventResize}
-              onSelectEvent={handleSelectEvent}
-              resizable
-              style={{ height: "100vh", maxHeight: 700 }}
-            />
-          </div>
-          <Table columns={columnDef}
-            dataSource={list}
-            size="small"
-            // scroll={{x: 1000}}
-            rowKey="id"
-            loading={loading}
-            pagination={false}
-            onRow={row => {
-              return {
-                className: row.active ? 'active-referral' : ''
-              }
-            }}
-          // pagination={queryInfo}
-          // onChange={handleTableChange}
-          />
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Policy</Button>
         </Space>
+
+        <div>
+          <DnDCalendar
+            localizer={localizer}
+            events={calendarEvents}
+            defaultView="month"
+            views={['month']}
+            defaultDate={moment().toDate()}
+            startAccessor="start"
+            endAccessor="end"
+            onEventDrop={onEventDrop}
+            onEventResize={onEventResize}
+            onSelectEvent={handleSelectEvent}
+            resizable
+            style={{ height: "100vh", maxHeight: 700 }}
+          />
+        </div>
+        <Table columns={columnDef}
+          dataSource={list}
+          size="small"
+          // scroll={{x: 1000}}
+          rowKey="id"
+          loading={loading}
+          pagination={false}
+          onRow={row => {
+            return {
+              className: row.active ? 'active-referral' : ''
+            }
+          }}
+        // pagination={queryInfo}
+        // onChange={handleTableChange}
+        />
+      </Space>
 
       <Drawer
         title="New Global Referral Policy"
@@ -244,10 +245,16 @@ const ReferralGlobalPolicyListPage = () => {
         width={400}
         onClose={() => setNewPolicy()}
         footer={null}
-        >
+      >
         <Form layout="vertical" onFinish={handleSave} initialValues={newPolicy}>
-          <Form.Item label="Amount per referral" name="amount" rules={[{ required: true, type: 'number', min: 0, message: ' ' }]}>
-            <InputNumber />
+          <Form.Item label="Commission % per referral" name="amount" rules={[{ required: true, type: 'number', min: 0, max: 1, message: ' ' }]}>
+            <InputNumber
+              min={0}
+              max={100}
+              step={0.05}
+              formatter={value => `${value * 100} %`}
+              parser={value => +(value.replace(' %', '')) / 100}
+            />
           </Form.Item>
           <Form.Item label="Time Range" name="range" rules={[{ required: true, message: ' ' }]}>
             <DatePicker.RangePicker />
@@ -263,7 +270,7 @@ const ReferralGlobalPolicyListPage = () => {
           </Form.Item>
         </Form>
       </Drawer>
-        </ContainerStyled>
+    </ContainerStyled>
 
   );
 };

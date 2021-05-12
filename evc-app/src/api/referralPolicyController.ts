@@ -62,8 +62,10 @@ export const getReferralGlobalPolicy = handlerWrapper(async (req, res) => {
 
 export const saveReferralGlobalPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { user: {id} } = req as any;
+  const { user: { id } } = req as any;
   const policy = new ReferralGlobalPolicy();
+  const { amount } = req.body;
+  assert(0 <= amount && amount <= 100, 400, 'Amount is out of range');
   Object.assign(
     policy,
     { id: uuidv4() },

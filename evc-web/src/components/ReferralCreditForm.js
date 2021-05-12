@@ -113,27 +113,34 @@ const ReferralCreditForm = (props) => {
         <Divider></Divider>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Title level={4}>User Referral Commission</Title>
-          <Title type="success"><MoneyAmount type="success" value={account?.specialReferralCommission || account?.globalReferralCommission} /></Title>
+          <Title type="success">{(account?.specialReferralCommission || account?.globalReferralCommission) * 100}%</Title>
         </Space>
-        <Paragraph type="secondary">Setting this policy will override the global referral policy. Current global policy is <MoneyAmount value={account?.globalReferralCommission} /></Paragraph>
+        <Paragraph type="secondary">Setting this policy will override the global referral policy. Current global policy is <Text strong>{account?.globalReferralCommission * 100}%</Text>.</Paragraph>
         {account && <Form
           onFinish={handleSaveReferralUserPolicy}
           initialValues={{ amount: account.specialReferralCommission }}>
           <Form.Item label="Commission per referral" name="amount"
-            rules={[{ required: true, type: 'number', min: 0, message: ' ', whitespace: true }]}
+            rules={[{ required: true, type: 'number', min: 0, max: 1, message: ' ', whitespace: true }]}
           >
-            <InputNumber disabled={loading} />
+            <InputNumber 
+              disabled={loading}
+              min={0}
+              max={100}
+              step={0.05}
+              formatter={value => `${value * 100} %`}
+              parser={value => +(value.replace(' %', '')) / 100}
+            />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" loading={loading}>Set Special Commission</Button>
           </Form.Item>
           <Form.Item>
-            <Button 
+            <Button
               block
               loading={loading}
               onClick={() => handleDeleteSpecialCommission()}
-              >
-              Use Global Commission ($ {account?.globalReferralCommission.toFixed(2)})
+            >
+              Use Global Commission ({account?.globalReferralCommission * 100}%)
                </Button>
           </Form.Item>
         </Form>}

@@ -32,7 +32,7 @@ export async function commitSubscription(payment: Payment) {
     });
 
     if (payment.method !== PaymentMethod.Credit) {
-      await handleReferralCommissionWhenPaid(m, userId);
+      await handleReferralCommissionWhenPaid(m, userId, subscription.type);
     }
   });
 }

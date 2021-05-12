@@ -23,6 +23,14 @@ background-color: #f0f2f5;
 img {
   width: 200px;
 }
+
+.ant-card-head {
+  background-color: #57BB60;
+
+  .ant-card-head-title {
+    color: rgba(255,255,255,0.9);
+  }
+}
 `;
 
 const WalkthroughTour = withRouter((props) => {
@@ -231,7 +239,7 @@ const ProMemberPage = () => {
             <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-10 ant-col-xxl-8">
               <div className="ant-row" style={{ marginLeft: '-15px', marginRight: '-15px', rowGap: '30px' }}>
                 <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 ant-col-lg-12 ant-col-xl-24 ant-col-xxl-24">
-                  <div className="ant-card ant-card-bordered ant-card-middle">
+                  <div className="ant-card ant-card-bordered ant-card-small">
                     <div className="ant-card-body" style={{ height: '178px' }}>
                       <div className="ant-space ant-space-vertical">
                         <div className="ant-space-item">
@@ -243,7 +251,7 @@ const ProMemberPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div style={{ marginTop: '30px' }} className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
+                  <div style={{ marginTop: '30px' }} className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                     <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                       <div className="ant-card-head-wrapper">
                         <div className="ant-card-head-title">
@@ -268,7 +276,7 @@ const ProMemberPage = () => {
                   </div>
                 </div>
                 <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 ant-col-lg-12 ant-col-xl-24 ant-col-xxl-24">
-                  <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
+                  <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                     <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                       <div className="ant-card-head-wrapper">
                         <div className="ant-card-head-title">EVC Core Info</div>
@@ -350,7 +358,7 @@ const ProMemberPage = () => {
               </div>
             </div>
             {showInlineStockChart && <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-14 ant-col-xxl-16">
-              <div style={{ height: '672px', minWidth: '400px' }}>
+              <div style={{ height: '649px', minWidth: '400px' }}>
                 <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
                   <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
                     <div style={{ width: '100%', height: '100%', background: 'transparent', padding: '0 !important' }}><iframe id="tradingview_ad891" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_ad891&symbol=AAPL&interval=D&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=F1F3F6&studies=%5B%5D&hideideas=1&theme=Light&style=1&timezone=America%2FNew_York&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=easyvaluecheck.com&utm_medium=widget&utm_campaign=chart&utm_term=AAPL" style={{ width: '100%', height: '100%', margin: '0 !important', padding: '0 !important' }} allowTransparency="true" scrolling="no" allowFullScreen frameBorder={0} /></div>
@@ -362,14 +370,9 @@ const ProMemberPage = () => {
           <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
             <div className="ant-col ant-col-24">
               <Card
-                size="large"
+                size="small"
                 type="inner"
                 title={<FormattedMessage id="text.optionPutCallRatio" />}
-                headStyle={{
-                  color: 'rgb(0, 41, 61)',
-                  fontSize: 14,
-                  padding: '0 24px'
-                }}
               >
                 <PutCallDummyChart />
               </Card>
@@ -377,7 +380,7 @@ const ProMemberPage = () => {
           </div>
           <div className="ant-row" id="tour-insider" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
             <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-8 ant-col-xxl-6">
-              <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
+              <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
                     <div className="ant-card-head-title">
@@ -502,7 +505,7 @@ const ProMemberPage = () => {
               </div>
             </div>
             <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-16 ant-col-xxl-18">
-              <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
+              <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
                     <div className="ant-card-head-title">
@@ -926,7 +929,7 @@ const ProMemberPage = () => {
           </div>
           <div className="ant-row" style={{ marginTop: '30px', rowGap: '0px' }}>
             <div className="ant-col ant-col-24">
-              <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
+              <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
                     <div className="ant-card-head-title">

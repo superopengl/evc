@@ -26,11 +26,11 @@ export const MemberOnlyCard = (props) => {
 
   const bodyStyle = shouldBlock ? {
     ...propBodyStyle,
-    overflow:'auto',
+    overflow: 'auto',
     backgroundColor: 'rgba(0, 41, 61, 0.1)',
   } : {
     ...propBodyStyle,
-    overflow:'auto'
+    overflow: 'auto'
   };
   const headStyle = shouldBlock ?
     {
@@ -44,15 +44,16 @@ export const MemberOnlyCard = (props) => {
       color: '#00293d'
     };
   return (
-    <StyledCard size="middle"
+    <StyledCard
       type="inner"
       bordered={false}
       {...otherProps}
       bodyStyle={bodyStyle}
       headStyle={headStyle}
+      size="small"
     >
-      {shouldBlock ? <div style={{height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-      <MemberOnlyPanel message={message} />{blockedComponent}
+      {shouldBlock ? <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <MemberOnlyPanel message={message} />{blockedComponent}
       </div> : children}
     </StyledCard>
   );

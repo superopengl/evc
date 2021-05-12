@@ -82,9 +82,11 @@ const CreateStockModal = props => {
         >
           <Input placeholder="Stock symbol" allowClear={true} maxLength="10" disabled={sending} autoFocus={true} />
         </Form.Item>
-        {/* <Form.Item label="Company Name" name="company" rules={[{ required: true, max: 100, message: 'Please input company name' }]}>
-          <Input placeholder="Apple Inc." maxLength="100" disabled={sending} />
-        </Form.Item> */}
+        <Form.Item label="Company Name" name="company" rules={[{ required: false, max: 100 }]}
+          extra="If empty, it will use AlphaVantage API to find the company name."
+        >
+          <Input placeholder="Company name" maxLength="100" disabled={sending} />
+        </Form.Item>
         <Form.Item label="Tags" name="tags">
           <TagSelect tags={stockTags} onSave={saveStockTag} readonly={false} />
         </Form.Item>

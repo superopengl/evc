@@ -328,11 +328,12 @@ export const createStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
-  const { symbol: reqSymbol, tags } = req.body;
+  const { symbol: reqSymbol, company: reqCompany, tags } = req.body;
 
   assert(reqSymbol, 400, 'symbol is not specified');
-  const companyName = await getCompanyName(reqSymbol);
-  assert(companyName, 400, 'Cannot recoganize the symbol to get company name.');
+
+  const companyName = reqCompany?.trim() || await getCompanyName(reqSymbol);
+  assert(companyName, 400, 'Missing company name.');
 
   const symbol = reqSymbol.toUpperCase();
   const logoTask = getStockLogoUrl(symbol);

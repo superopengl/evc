@@ -145,5 +145,6 @@
   "text.commissionBalanceDescription1": "佣金可用来支付Pro会员订阅费或提现。",
   "text.commissionBalanceDescription2": "推荐朋友首次订阅月费会员，你可以获得 {amount} 佣金。",
   "text.commissionBalanceDescription3": "推荐朋友首次订阅年费会员，你可以获得 {amount} 佣金。",
+  "text.noEnoughCredit": "您没有足够的余额",
   "": ""
 }

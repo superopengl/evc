@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Switch, Divider, Steps, Card, Row, Col } from 'antd';
+import { Typography, Button, Switch, Divider, Modal, Card, Row, Col } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
@@ -26,6 +26,7 @@ import PayPalIcon from 'payment-icons/min/flat/paypal.svg';
 import { notify } from 'util/notify';
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -36,6 +37,7 @@ const PaymentStepperWidget = (props) => {
   const [paymentDetail, setPaymentDetail] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
   const context = React.useContext(GlobalContext);
+  const intl = useIntl();
 
 
   const fetchPaymentDetail = async () => {
@@ -102,44 +104,21 @@ const PaymentStepperWidget = (props) => {
   // }
 
   const handleStepChange = current => {
-    setCurrentStep(current);
+    if(paymentDetail?.price <= paymentDetail?.creditBalance) {
+      setCurrentStep(current);
+      return;
+    }
+
+    Modal.error({
+      title: '',
+      content: intl.formatMessage({id: 'text.noEnoughCredit'}),
+      centered: true,
+    })
   }
 
   const stepDef = [
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="large">
-        {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Auto renew (payments happen on expiray automatically)?</Text>
-          <Switch defaultChecked={recurring} onChange={handleRecurringChange} />
-        </Space>
-        {paymentDetail?.totalCreditAmount > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Prefer to use credit?</Text>
-          <Switch defaultChecked={false} onChange={handleUseCreditChange} />
-        </Space>}
-        {willUseCredit && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Total credit:</Text>
-          {paymentDetail ? <MoneyAmount value={paymentDetail.totalCreditAmount} /> : '-'}
-        </Space>}
-        <Divider />
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Total amount:</Text>
-          {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
-        </Space>
-        {willUseCredit && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Credit deduction:</Text>
-          {paymentDetail ? <MoneyAmount value={paymentDetail.creditDeductAmount * -1} /> : '-'}
-        </Space>}
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text strong>Total payable amount:</Text>
-          {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
-        </Space>
-        <Divider />
-        <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-          <Space>
-            {shouldShowCard && [VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
-            {shouldShowPayPal && <CardIcon src={PayPalIcon} />}
-          </Space>
-        </div> */}
         <Space style={{alignItems: 'flex-start'}} size="middle">
           <Text type="danger" style={{ fontSize: 28, color: '#55B0D4' }}><ExclamationCircleOutlined /></Text>
           <Paragraph type="secondary">
@@ -162,12 +141,13 @@ const PaymentStepperWidget = (props) => {
               ghost
               size="large"
               style={{ height: 100 }}
+              disabled={paymentDetail?.creditBalance < paymentDetail?.price}
               onClick={() => handleStepChange(2)}>
               <FormattedMessage id="text.payByCredit" />
+              {paymentDetail?.creditBalance < paymentDetail?.price && <><br/><Text type="warning"><small>(<FormattedMessage id="text.noEnoughCredit" />)</small></Text></>}
             </Button>
           </Col>
         </Row>
-
       </Space>
     },
     {
@@ -224,7 +204,7 @@ const PaymentStepperWidget = (props) => {
         />
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Current credit balance:</Text>
-          <MoneyAmount value={paymentDetail?.totalCreditAmount} />
+          <MoneyAmount value={paymentDetail?.creditBalance} />
         </Space>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Total amount:</Text>

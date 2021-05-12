@@ -24,22 +24,9 @@ import {
   LineChartOutlined,
 } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
 
 const { Text } = Typography;
-
-const OldFairValueContainer = styled.div`
-display: flex;
-flex-direction: column;
-// color: rgba(255, 255, 255, 0.75);
-width: 100%;
-align-items: center;
-
-.ant-typography {
-  // color: rgba(255, 255, 255, 0.75);
-}
-`;
-
-
 
 const StockDisplayPanel = (props) => {
   const { stock } = props;
@@ -103,13 +90,9 @@ const StockDisplayPanel = (props) => {
                   title="EVC Core Info"
                   paidOnly={true}
                   bodyStyle={{ height: 274 }}
+                  message=""
                   blockedComponent={
-                    <OldFairValueContainer >
-                      {stock.fairValues?.map((fv, i) => <Space key={i}>
-                        {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ fontWeight: 900, filter: 'blur(4px)' }}>XXXX ~ XXXX</Text>}
-                        <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
-                      </Space>)}
-                    </OldFairValueContainer>
+                      <StockUnpaidEvcInfoPanel fairValues={stock.fairValues || []} />
                   }>
                   <StockEvcInfoPanel symbol={stock.symbol} />
                 </MemberOnlyCard>

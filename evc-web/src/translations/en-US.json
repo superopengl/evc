@@ -145,5 +145,6 @@
   "text.commissionBalanceDescription1": "Credit can be used to pay for the subscription of Pro Member or withdraw into your PayPal. To refer a friend to subscribe:",
   "text.commissionBalanceDescription2": "You will get {amount} credit reward for his/her first paid monthly plan.",
   "text.commissionBalanceDescription3": "You will get {amount} credit reward for his/her first paid annual plan.",
+  "text.noEnoughCredit": "You don’t have enough credit",
   "": ""
 }

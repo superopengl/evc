@@ -7,10 +7,10 @@ export async function getNewSubscriptionPaymentInfo(
   subscriptionType: SubscriptionType,
 ) {
   const price = getSubscriptionPrice(subscriptionType);
-  const totalCreditAmount = await getUserCreditBalance(userId);
+  const creditBalance = await getUserCreditBalance(userId);
   const result = {
     price,
-    totalCreditAmount,
+    creditBalance,
   };
   return result;
 }

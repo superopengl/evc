@@ -145,7 +145,9 @@ const StockMostPanel = (props) => {
         }}
         size="small"
         locale={{
-          emptyText: <FormattedMessage id="text.mostEmpty" />
+          emptyText: <div style={{maxWidth: 220, textAlign: 'center', margin: '20px auto', fontStyle: 'italic'}}>
+            <FormattedMessage id="text.mostEmpty" />
+          </div>
         }}
       />
     </>

@@ -22,159 +22,226 @@ const { Title } = Typography;
 const TermAndConditionPage = () => <>
   <ContainerStyled>
     <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
-    <Title style={{ textAlign: 'center' }}>Easy Value Check Pty Ltd - Terms and Conditions</Title>
-    <html><head></head><body><Title level={2}>1. Scope</Title>
-      <p>These general terms apply to all professional relationships between Easy Value Check and its Client, notwithstanding any Client’s general terms even if more recent, unless explicitly accepted, totally or partially, in writing by Easy Value Check.</p>
-      <p>In case of contradiction between the Engagement Letter and the General Terms, the Engagement Letter shall prevail.</p>
-      <Title level={2}>2.Formation of the services contract</Title>
-      <p>The services Contract between Easy Value Check and the Client is deemed to have been entered into either when Easy Value Check receives the Engagement Letter, duly signed by the Client, or at the moment Easy Value Check starts to perform any Services upon request of the Client, if this takes place at an earlier moment. As long as Easy Value Check does not receive any Engagement Letter duly signed by the Client, all professional relationships between Easy Value Check and the Client will in any case be governed by the Services Contract, as from the moment that and insofar as such Services Contract has been delivered to the Client either by letter, telefax, email, verbal or by hand, against acknowledgement of the receipt.</p>
-      <Title level={2}>3.Information supplied by the client to Easy Value Check</Title>
-      <p>To enable Easy Value Check to perform the Services, the Client shall provide it in due time with assistance as well as with correct, complete and reliable data and documents, even if such information originates from third parties. This undertaking is applicable irrespective if the Client makes such data and documents available to Easy Value Check in so called “hard-copy” format or through the Easy Value Check platform.</p>
-      <p>Easy Value Check has no obligation to verify the completeness, accuracy and reliability of such data and documents.</p>
-      <p>Easy Value Check may claim additional fees and/or outlays resulting from any delay in performing the Services, as a consequence of the Client having failed to comply with the provisions of this.</p>
-      <p>The Client shall inform Easy Value Check of any information or developments which may come to its notice and which might have a bearing on the Services.</p>
-      <p>The Client will provide Easy Value Check with copies of all above mentioned data and documents or shall communicate such data and documents through our platform. The Client undertakes to keep the original data and documents and undertakes to keep them safe. If necessary of the performance of the Services, data and documents are provided in original by the Client to Easy Value Check, the Client must keep a copy thereof.</p>
-      <p>Easy Value Check may rely on any instructions or requests made or notices given or information supplied, whether orally or in writing, by any person whom it knows to be or reasonably believes to be authorized by the Client to communicate with it for such purposes.
-Easy Value Check may receive information from the Client or from other sources in the course of delivering the Services.</p>
-      <Title level={2}>4.Performance of the engagement</Title>
-      <p>Easy Value Check decides how and by whom the Services will be performed. The Services shall be delivered with reasonable skill and care based on the information supplied to us. Where individuals to be involved in delivering the Services are named in the Engagement Letter, Easy Value Check shall use reasonable endeavours to ensure that they are effectively involved. Easy Value Check may substitute those identified for others of equal or similar skills.</p>
-      <p>Our employees are and remain in all respects employees of Easy Value Check. We are responsible for the payment of the wages, social contributions, any contributions relating to any other social regulation and any other legal or other liabilities which we agreed upon with our staff or which the law obliges us to pay. If the Client gives instructions to our employees, such instructions must be expressly and specifically defined in the Services Contract and may not erode in any way Easy Value Check’ authority as an employer or, in case such instructions relate to welfare at work such instructions may not intervene in the existing agreements between Easy Value Check and its employees, which are and remain an exclusive matter of Easy Value Check.</p>
-      <p>The approach, method of working or scope of the mission and/or resulting activities can, from time to time, be modified or extended by mutual agreement. If such modification or extension results in additional work, Easy Value Check shall inform the Client. The case arising, additional fees and outlays can be charged to the Client.</p>
-      <p>Easy Value Check shall not be under any obligation to update any advice, or any product of the Services, oral or written, for events occurring after the advice, report or product concerned has been issued in final form except where we have expressly agreed to provide such an update during the term or our engagement as a result of changes to e.g. regulation, jurisprudence or doctrine.</p>
-      <p>The Client remains notably responsible for:</p>
-      <ul>
-        <li>the management, conduct and operation of its business and affairs;</li>
-        <li>making decisions which could possibly influence the performance of our services or the result thereof;</li>
-        <li>making decisions as to what extent Client wishes to rely on our advice, recommendations and other results of our Services, on their use and the implementation (if any) necessary with regard to</li>
-      </ul>
-      <p>the performance of our Services, including the evaluation of the adequacy of the results of the Services performed for the Client’s benefit and accepting responsibility for the actions, if any, to be taken arising from the results of the Services.</p>
-      <p>Client management will designate a Project sponsor who has the requisite skills and competencies for overseeing the services being provided.</p>
-      <p>Unless otherwise explicitly agreed upon in writing, the performance of the engagement does not authorize Easy Value Check to represent the Client. Such representation authority requires a specific power of attorney, in writing, to be given by the Client to Easy Value Check, and accepted by the latter.</p>
-      <Title level={2}>5.Access to and use of the AUAO Web platform</Title>
-      <p>In the event that the Client gains access to the AUAO Web platform for its Authorized Users, the following applies:</p>
-      <p>Client register as a user in our platform to authorise Easy Value Check to be the accountant and tax agent to deal with all the tasks set up in each portfolio which is under the user’s name. One user can authorise multiple portfolios and the user may be different from each portfolio’s person or director/public officer of an entity. All the correspondents between each user and us regarding all portfolios are confirmed by email which is registered at the same time as the user.</p>
-      <p>The Client and its Authorized Users are only granted “read only” access, except in the case of customized management reporting. Hence, the Client and its Authorized Users can only upload data on the AUAO Web platform via a unique inbox upload system or via web scanning and can only consult such data without being entitled to change, adapt, or delete the data.</p>
-      <p>In the event that Easy Value Check provides the Client with access to a customized management reporting tool the Client and its Authorized Users are solely responsible for the use of this tool and the data they enter in the customized management reporting tool. The Client acknowledges and accepts that Easy Value Check does not warrant, nor can be held accountable for the use (data entry included) of this tool by the Client and its Authorized Users.</p>
-      <p>The Client acknowledges and accepts that it is the responsibility of the Client and its Authorized Users to take suitable steps to prevent that unauthorized users gain access to the AUAO Web platform, whereby, amongst other measures, they are to assume responsibility for maintaining the confidentiality of their login and password vis-à-vis each other and third parties and for not releasing such information to any such outside parties.</p>
-      <p>The data are non-transferable and shall not be used outside the organization of the Client and its Authorized Users. It shall be incumbent on the Client to prohibit the use of the AUAO Web platform by any (legal) person other than the Client and/or its Authorized Users and for any purposes other than those specified within the context of the contracted Services. The Client is not entitled to assign or transfer rights and/or duties to third parties (including to any subsidiary company, parent company, stockholders, agents, representatives, or subcontractors) without prior written consent from Easy Value Check. The platform only allows one unique email per each Authorized user, and the user is responsible on behalf of all the portfolios which are under the Authorized user.</p>
-      <p>It shall further be incumbent on the Client to ensure that the data be accurate, complete, and reliable, also in the case of information supplied by the Authorized Users, by third parties, or scrutinized by the Client himself. It shall be incumbent on the Client to invariably save and keep an original copy of all of the data, to make a back-up thereof at regular intervals, and to save and safeguard them by one or several secured venues. Easy Value Check shall under no circumstance be held liable for any loss of, or damage to, data or for ensuring that damaged data be restored and provided to the Client.</p>
-      <p>The Client acknowledges and accepts that Easy Value Check does not guarantee that the AUAO Web platform is virus-proof and that Easy Value Check cannot be held responsible and/or liable for any and all loss(es) or damage(s) caused by any virus. The AUAO Web platform contains ‘links’ to other websites that are not property of Easy Value Check. We caution and strongly urge the Client and every Authorized User to use his/her own reliable, adequate and appropriate anti-virus protection system.</p>
-      <p>The Client undertakes, both on its own behalf and on behalf of its Authorized Users, to fully abide by the policy, the rules and regulations, and directives as established by Easy Value Check with reference to security, technology, and risk management, as well as with reference to the use of the AUAO Web platform. In the event that the Client finds himself not in agreement with the changed or new policy, the rules and regulations, and directives as stated, it shall be incumbent on him to inform Easy Value Check without delay of its disagreement, at which time Easy Value Check shall be entitled to rescind the Client’s user right and that of its Authorized Users.</p>
-      <p>Furthermore, the Client agrees to inform Easy Value Check without delay of any and all situations or actions which the Client suspects or knows might or could compromise the security of the AUAO Web platform, such as unauthorized access to the password and login (“Login Data”) of an Authorized User.</p>
-      <p>The Client accepts that Easy Value Check shall have full access to the AUAO Web platform and to all functionalities thereof. As such, the Client acknowledges that Easy Value Check shall be entitled to consult, use, modify, adapt, or delete the data.</p>
-      <p>Easy Value Check recognizes the importance of a permanent and effective control on the confidentiality of the information on the AUAO Web platform and, hence, has taken several measures to protect and secure such information against unauthorized access. The AUAO Web platform is configured in such a way that access to it requires a complex password to serve in the authentication of Authorized Users, that firewalls control the access to the system, and that data is exchanged in a secured (encrypted) fashion.</p>
-      <p>Although Easy Value Check has taken reasonable steps to safeguard the continuity of the AUAO Web platform, Easy Value Check provides no warranty and assumes no liability whatsoever regarding suspension, interruption or temporary unavailability of the AUAO Web platform.</p>
-      <p>The AUAO Web platform is accessible via a web browser. As is the case with all other internet applications, technical factors such as bandwidth, network configurations, and laptop browser settings may affect the speed and the accessibility of the AUAO Web platform.</p>
-      <p>In view of such considerations, Easy Value Check cannot guarantee the Client and the Authorized Users constant availability of access to the AUAO Web platform at all times.</p>
-      <p>Easy Value Check does not offer any guarantee(s) or warranty(s) related to the possible incompatibility with, disruption of, or damage to the computers of the Authorized Users caused as a result of the latter’s browser settings and, furthermore, rejects any and all guarantee(s) with reference to the reliability of the operation and functioning of the Authorized Users’ browser in combination with the AUAO Web platform. Certain risks are inherent in the transmission of data over the Internet and in the technical processes required for such transmissions.</p>
-      <p>Easy Value Check reserves the right to suspend, restrict, block, remove, or de-activate access to the AUAO Web platform for any reason whatsoever (such as, but not limited to, maintenance, software adaptations, etc.), as well as in any and all instances where Easy Value Check suspects, or has gained knowledge, that the Client or Authorized Users are not duly abiding by their undertakings and obligations, either failing wholly or performing unsatisfactorily or being late in their compliance, or in the event of unauthorized use of the Web platform by the Client or its Authorized Users.</p>
-      <p>The user right(s) granted to the Client and its Authorized Users shall remain valid for, and be restricted to, the duration of the Services only, unless explicitly agreed to otherwise.</p>
-      <p>On termination of the Services, or on termination of the business relationship, the Client’s user right and the right of its Authorized Users to the AUAO Web platform shall be rescinded with immediate effect and without prior notice. In such event, Easy Value Check shall be fully entitled to block, remove, or de-activate the Client’s and its Authorized Users’ access, as well as all related accounts.</p>
-      <p>In the event that the Client wholly or partially fails to abide by one of its undertakings and obligations with regard to the AUAO Web platform and, as a result thereof, legal action has been, or is about to be, instituted by a third party against Easy Value Check, it shall be incumbent on the Client to hold Easy Value Check harmless from all loss(es) and damage(s), expenditures and liabilities sustained by Easy Value Check, resulting and forth flowing from, or related to, such failure and such action.</p>
-      <Title level={2}>6.Remote access and use of e-mail</Title>
-      <p>Easy Value Check is authorized to make use of Your local network and Your internet in order to connect to the AUAO network (also called “Remote Access via Internet “) during the performance of the Services. Immediately after connecting to Your local network, we will establish a direct connection (known as a VPN connection), which will create a separate network from your network. Any associated risks will be restricted to a minimum because of the security measures that we take (including a firewall, a virus scanner and anti-spyware scanner).We do not accept any liability for any damages resulting from the use of Remote Access via the Internet.</p>
-      <p>Easy Value Check is allowed to communicate to You by electronic mail. Consequently, You accept the risks inherent to this method of communication (including the security risks of interception of or unauthorized access to such communications, the risks of corruption of such communications and the risks of viruses or) and You shall perform virus checks.</p>
-      <Title level={2}>7.Confidentiality</Title>
-      <p>Easy Value Check shall treat information obtained either prior to or in the course of delivering the Services as confidential according to the legal and professional confidentiality standards applicable to accountants and tax advisers. This clause shall not prohibit Easy Value Check's disclosure of information if it is so required or permitted pursuant to legal or professional regulations, e.g., in disciplinary, civil or criminal proceedings or in the context of anti-money laundering legislation.</p>
-      <p>The Client acknowledges and agrees that information related to the Services (including confidential information) may be disclosed to AUAO International and other AUAO Persons that assist us:</p>
-      <ul>
-        <li>in the execution of the Services;</li>
-        <li>to support the maintenance of quality and professional standards in the delivery of services (e.g. through the involvement of professional practice and policy departments, the participation in quality assurance measures or the establishment and maintenance of knowledge databases);</li>
-        <li>in the execution of client and engagement acceptance procedures
-        (including but not limited to potential conflicts of interest checks)
-For the execution of the Services Contract, we may make use of computer software in order to facilitate the efficient management of data. Consequently, data which is supplied by You may be transferred to computer servers which are operated outside Belgium with the implementation of adequate access controls and under the authority of member firms belonging to the AUAO network.</li>
-      </ul>
-      <Title level={2}>8.Product of the services</Title>
-      <p>Any product of the Services released to You in any form or medium shall be supplied by us on the basis that it is for Your benefit and information only and that it shall not be copied, referred to or disclosed, in whole or in part, unless this is required by Belgian legislation (in such case You will inform us prior to any disclosure). The Services shall be delivered on the basis that You shall not quote our name or reproduce our logo in any form or medium without our prior written consent.</p>
-      <Title level={2}>9.Intellectual property</Title>
-      <p>Easy Value Check shall retain ownership of the copyright and all other intellectual property rights in the product of the Services, and ownership of our working papers. The Client shall acquire ownership of any product of the Services in its tangible form on payment of our Charges for any such product. For the purposes of the performance of our services, we shall be entitled to use, develop or share with each other knowledge, experience and skills of general application gained through performing the Services.</p>
-      <p>Every and all copyright(s) and all other intellectual property right(s) and every and all similar rights on the AUAO Web platform shall be and will remain the exclusive property of Easy Value Check or its licenser(s). The Client is not authorized to grant or sell licenses with regard to AUAO Web platform or make any other profitable use of the AUAO Web platform. The Client is not authorized to decompile or disassemble AUAO Web platform nor to subject it to reverse engineering, to change it in any way or to break in or gain access to areas of the AUAO Web platform for which Easy Value Check did not grant access.</p>
-      <Title level={2}>10.Prohibition of hiring of Easy Value Check’ employees</Title>
-      <p>During the whole term of the Services Contract, and for a period of 12 months as from the termination thereof, regardless of the reason of the termination, the Client shall not engage any member of the staff or independent worker of Easy Value Check, directly or indirectly involved in the execution of the Services, or let him/her carry out activities beyond the framework of the agreement between Easy Value Check and the Client, unless prior agreement has been obtained in writing from Easy Value Check.</p>
-      <p>Any infringement of this prohibition shall result in the payment of a once-only compensation of 3 months employee’s salary plus superannuation.</p>
-      <p>The same compensation is due by the Client who, with the intention to by-pass this prohibition, obtains the same result in any other way.</p>
-      <Title level={2}>11.Our charges</Title>
-      <p>Easy Value Check shall render fee notes in respect of the Services comprising fees, outlays and taxes thereon (where appropriate) (hereafter "our Charges"). Our Charges and any special payment terms shall be set out in the Engagement Letter.</p>
-      <p>Unless otherwise explicitly agreed upon in writing, fees shall be based on the degree of responsibility of the persons involved in delivering the Services, their skill and time spent in performing the Services. Outlays will include both directly incurred costs, including expenses incurred with third parties, and an amount that may be determined as a percentage of the fees, to cover incidental expenses, which are not charged directly to the engagement.</p>
-      <p>Our Charges may differ from estimates or quotations that may have been supplied, for example where additional fees and outlays arise from any delay as a result of failure to supply information required to enable Easy Value Check to perform the Services.</p>
-      <p>Where Easy Value Check is required to provide information in respect of the Client pursuant to a regulatory request, requirement or through any form of legal proceedings, the Client agrees to reimburse Easy Value Check for the costs Easy Value Check and its personnel incur in relation to such requirement, request or proceeding, where Easy Value Check’ actions were not also the subject of such requirement, request or proceeding.</p>
-      <Title level={2}>12.Payment and payment terms</Title>
-      <p>The Client shall pay our Charges, without any right of deduction or set-off, within the term indicated on the fee notes, but by no means later than thirty days after receipt of the fee notes. The date of receipt of the fee notes is fixed on the first day, following the date mentioned on the fee notes.</p>
-      <p>Unless otherwise explicitly agreed upon in writing, any payments by the Client are to be made in Euros.</p>
-      <p>In case of default, Easy Value Check is entitled to charge interest on any outstanding credits at the interest rate of 4% per annual.</p>
-      <p>By virtue of the law referred to above, any overdue payment will also entitle Easy Value Check, without issuing any default notice, to claim lump-sum damages for recovery outlays, which will amount to 15% of the fee notes except if Easy Value Check can prove that higher damages have been incurred.</p>
-      <p>Non-payment of our Charges by the expiry date entails the immediate collectability of all outstanding invoices, even the non-due invoices, without us having to take into account previously authorized payment conditions.</p>
-      <p>If the Services Contract is terminated or suspended, Easy Value Check shall be entitled to payment for outlays incurred to that time and to payment of fees for work done, plus taxes thereon (where appropriate). The fees for work done shall in this event be calculated by reference to the parameters referred to in article 8 of these General Terms, applicable at the time of performance of our Services.</p>
-      <p>Where there is more than one addressee of the Engagement Letter, unless provision is made in the Engagement Letter for payment of our Charges by one of the addressees or by a third party, all of the addressees shall each be fully jointly and severally liable to pay our Charges, as well as any related interest and damages.</p>
-      <Title level={2}>13.Knowledge and conflicts</Title>
-      <p>The Engagement Team shall not be required, expected or deemed to have knowledge of any information known to Other AUAO Persons which is not known to the Engagement Team or be required to obtain such information from Other AUAO Persons.</p>
-      <p>The Engagement Team shall not be required to make use of or to disclose to You any information, whether known to them personally or known to Other AUAO Persons, which is confidential to another client.</p>
-      <p>AUAO Persons may provide services or be approached to provide services for one or more parties with interests conflicting with Your interests or that have interests that compete with Yours (“Party or Parties with a Conflict of Interest”). If You know or become aware that a AUAO Person is advising or proposing to advise a Party or Parties with a Conflict of Interest, You must inform us promptly.</p>
-      <p>AUAO persons are and remain free to provide services to a Party or Parties with a Conflict of Interest. If the interests of the Party or Parties with a Conflict of Interest, specifically and directly with regard to the Services, are in conflict with Your interests and You have informed us thereof, then:</p>
-      <ul>
-        <li>The Engagement Team shall not provide services to the Party or Parties with a Conflict of Interest; and</li>
-        <li>Other AUAO persons shall only provide services to the Party or Parties with a Conflict of Interest when adequate Barriers have been implemented. The effectiveness of these Barriers means that we have taken sufficient steps to avoid any real risks of damaging our confidential relationship of trust with You.</li>
-      </ul>
-      <Title level={2}>14. Limitation of liability</Title>
-      <p>The liability of Easy Value Check in connection with the Services Contract is limited in accordance with the provisions of article 14.1.</p>
-      <h3>14.1 The aggregate liability of all AUAO Persons towards Client,</h3>
-      <ul>
-        <li>arising in any way and on any basis, and irrespective of its legal basis;</li>
-        <li>for any damage arising from or in connection with the Services Contract;</li>
-        <li>regardless of the cause of loss or damage, including our negligence and serious fault;</li>
-      </ul>
-      <p>is limited to an amount of 1 (one) time the fees charged by Easy Value Check for the delivery of the Services . However, if the Services relate to monthly, quarterly or yearly periodical activities, our aggregate liability, as defined above, will be limited to an amount of 1 (one) times the fees charged by Easy Value Check for the periodical activities executed over the last year.</p>
-      <p>The limitation of liability as set out above is not applicable in the event that Easy Value Check has committed a fault with fraudulent intent.</p>
-      <p>AUAO Persons cannot be held liable for indirect damages, such as but not limited to, financial and commercial losses, loss of profits, increase of general costs, interruption of the planning, disturbances and glitches in (accounting)software, loss of the expected profit, capital, clients, etc.</p>
-      <p>This article 14 does not prejudice in any way the exclusion and limitation of our liability with respect to AUAO Web platform as described in article 5.</p>
-      <p>Where more than one addressee has been indicated for the delivery of the Services, the limitation on our liability agreed in article 14.1 applies to all of them jointly and shall be apportioned by them amongst them. No addressee shall dispute or challenge the validity, enforceability or operation of this clause on the ground that no such apportionment has been so agreed or on the ground that the agreed share of limitation amount apportioned to any addressee is unreasonably low.</p>
-      <Title level={2}>15. Suspension and termination</Title>
-      <p>If the Client is in breach of either executing or fulfilling correctly and/or in due time any of its obligations, Easy Value Check is entitled to suspend the performance of the Services until the Client will have fully complied with its obligations. Easy Value Check is also entitled to suspend the performance of the Services if, for any other engagement contracted with Easy Value Check, the Client either has not executed, or has executed its obligations partially, incorrectly or with delay. Easy Value Check will under all circumstances remain entitled to the payment of its Charges as set out in article 11 of these General Terms.</p>
-      <p>Either party can terminate the Services Contract by giving a reasonable notice term. Notices must be notified to the other Party (ies) by registered mail. In case of immediate termination by the Client without observance of the notice term, he shall pay a compensation to Easy Value Check equal to the half of the fees for aforesaid notice term.</p>
-      <p>However, the Client is entitled to terminate the Services Contract immediately without observance of any notice term and without payment of any compensation to Easy Value Check, if:</p>
-      <ul>
-        <li>Easy Value Check fails seriously in the performance of their liabilities;</li>
-        <li>in case of composition, bankruptcy, winding-up or liquidation of Easy Value Check.</li>
-      </ul>
-      <p>Easy Value Check is entitled to terminate the Services Contract immediately without notice term, without proof of default, without being liable for any compensation whatsoever, and without prior judicial intervention in any of the following cases:</p>
-      <ul>
-        <li>the Client commits a breach of contract, such as, but not limited to, the provision of incorrect or incomplete information to Easy Value Check, the absence of payment of the fees after sending of a formal notice, or the non-respect of the undertakings with regard to AUAO Web platform;</li>
-        <li>Easy Value Check is no longer allowed to provide the Client with services as a result of mandatory rules such as, but not limited to, legislation relating to the independence of the network of the auditor and to anti-money laundering;</li>
-        <li>in case of composition, bankruptcy, winding-up or liquidation of the Client.</li>
-      </ul>
-      <p>Easy Value Check will in all circumstances remain entitled to the payment of the Charges relating to work done and of the fee notes for the services performed, as set out in article 11 of these General Terms.</p>
-      <p>If the Client breaches any of the obligations under the Services Contract and there is any claim made or threatened against Easy Value Check by a third party; the Client shall compensate Easy Value Check and hold Easy Value Check harmless for any loss, damage, expense or liability incurred by Easy Value Check, which results from or arises from or is connected with any such breach and any such claim.</p>
-      <Title level={2}>16. Disputes</Title>
-      <p>Any complaint related to the Services performed or to our Charges must be communicated in writing to Easy Value Check, either within 30 days as from the sending date, by Easy Value Check, of the information and/or documents disputed by the Client, or within 30 days upon discovery of the mistake, provided that the Client demonstrates that such mistake could not have been discovered earlier. Any such dispute does not suspend the Client's payment obligations.</p>
-      <p>If a complaint is considered to be well-founded, Easy Value Check may decide:</p>
-      <ul>
-        <li>either, to correct, free of any charge, the Services performed; or</li>
-        <li>to perform again, totally or partially, the Services disputed; or</li>
-        <li>to cancel, totally or partially, the engagement with a proportional refund of the Charges paid by the Client; or</li>
-        <li>to adjust the amount of the fee notes issued.</li>
-      </ul>
-      <p>Unless explicitly otherwise agreed upon in writing, the period during which any complaint can be made by the Client against Easy Value Check expires six months as from the moment the client knew of the facts giving rise to said complaint, or should reasonably have known thereof.</p>
-      <Title level={2}>17. Processing of personal data</Title>
-      <p>This article applies to the treatment of personal data in connection with the Services and/or the Engagement Letter.</p>
-      <p>You warrant that the personal data which You transfer to AUAO (i.e. AUAO, other AUAO Persons and/or third parties supporting AUAO) in connection with the execution of the Services and the Engagement Letter, will be processed by You in accordance with the provisions and principles of the GDPR.</p>
-      <p>AUAO acts as controller in connection with the Services, whereby AUAO also has to comply with certain legal obligations and regulations. AUAO will process the received personal data as controller based on the Engagement Letter and/or based on one of the legal obligations.</p>
-      <p>AUAO will take appropriate technical and organizational measures in order to protect the personal data against unauthorized or unlawful processing and against accidental loss, destruction of or damage to the personal data.</p>
-      <p>AUAO can transfer personal data for the execution of the Services to other AUAO Persons and/or to third parties that support AUAO who will also take necessary and appropriate technical and organizational measures to protect personal data. Moreover, the received personal data can, amongst others, be communicated to and used by other AUAO Persons and/or third parties that support AUAO in view of compliance and regulatory requirements (amongst others anti-money laundering legislation), risk management and quality control of the Services delivered by AUAO, as well as for client and relation management.</p>
-      <p>In the event of loss of personal data, data breach or performance of a data protection impact assessment, You will respond to any reasonable request for assistance from AUAO.</p>
-      <p>Parties shall notify each other promptly: (i) upon receiving a request from a data subject, or if they receive any claim, complaint or allegation relating to the processing of personal data; (ii) upon becoming aware of any breach leading to the destruction, loss or unlawful disclosure of personal data in their possession.</p>
-      <p>You will notify AUAO promptly if You acquire knowledge of an infringement regarding the processing of the aforementioned personal data.</p>
-      <Title level={2}>18. Independence of the AUAO network</Title>
-      <p>We have the responsibility to keep the independence of our clients.</p>
-      <Title level={2}>19. Waiver and severability</Title>
-      <p>Any failure by Easy Value Check to enforce one of its rights or prerogatives under the Services Contract, or any failure by Easy Value Check to react to a default or breach by the Client of all or any parts of the provisions of the Services Contract shall not constitute a waiver by Easy Value Check of any of its rights there under.</p>
-      <p>Each clause or term of the Services Contract constitutes a separate and independent provision. If any of the provisions of the Services Contract is void or unenforceable, the remaining provisions shall continue in full force and effect.</p>
-      <Title level={2}>20. Circumstances beyond your or our control</Title>
-      <p>Easy Value Check is not bound to carry out its obligations mentioned under this Services Contract if its enforcement is hindered by an event of force majeure. Following circumstances shall be considered as force majeure, without being limitative: a state intervention, weather conditions, breakdowns and disruptions in telecommunication and internet connections, disruptions in (accountancy) software, delay or breach of Easy Value Check’s subcontractors in the performance of their obligations or strikes or similar circumstances which results in the Services not being provided or being provided with delay and/or being provided partially. Easy Value Check is under no obligation to prove that such circumstances were unforeseeable and unavoidable.</p>
-      <Title level={2}>21. Applicable law and jurisdictions</Title>
-      <p>The professional relationships between the Parties to which these General Terms apply will be governed exclusively by law. All disputes related thereto will be submitted exclusively to the courts within the judicial area in which Easy Value Check has its registered office.</p>
-    </body></html>
+    <Title style={{ textAlign: 'center' }}>Terms of Use</Title>
+    <p>
+      Welcome to Easyvaluecheck.com.
+      </p>
+    <p>
+      <i>
+        your affirmative act of using Easyvaluecheck.com ("EVC") or services (the “services”) signifies that you agree to the following terms and conditions of use ("Terms of use"), and you consent to the collection, use and disclosure of personal information as disclosed in the privacy policy. if you do not agree, do not use EVC.
+        </i>
+    </p>
+    <Title level={2}>CHANGES TO THE TERMS OF USE</Title>
+    <p>
+      We may change these Terms of Use at any time. You can review the most current version of these terms by clicking on the “Terms of Use” link located at the bottom of our web pages. You are responsible for checking these terms periodically for changes. If you continue to use EVC after we post changes to these Terms of Use, you are signifying your acceptance of the new terms.
+      </p>
+    <Title level={2}>CHANGES TO EVC</Title>
+    <p>
+      We may discontinue or change any service or feature on EVC at any time and without notice.
+      </p>
+    <Title level={2}>OWNERSHIP OF INFORMATION; LICENSE TO USE EVC; REDISTRIBUTION OF DATA</Title>
+    <p>
+      Unless otherwise noted, all right, title and interest in and to EVC, and all information made available through EVC or its Services, in all languages, formats and media throughout the world, including, but not limited to, all copyrights and trademarks therein, are the exclusive property of EVC, its affiliates or its Data Providers. Any Content on websites (a "Site" or "Sites") that are hosted by EVC and/or its affiliates, is owned by or licensed to EVC. You may not capture, record, publish, display, create derivative works of, republish the Content owned or hosted by EVC in whole or in part without consent from EVC or its clients. In no event shall any user publish, retransmit, redistribute or otherwise reproduce any EVC Content in any format to anyone, and no user shall use any EVC Content in or in connection with any business or commercial enterprise, including, without limitation, any securities, investment, accounting, banking, legal or media business or enterprise, without the express written consent of EVC. You may use EVC and the Content offered on EVC only for personal, non-commercial purposes. You may use Content offered for downloading, such as daily data files, for personal use only and subject to the rules that accompany that particular Content.
+      </p>
+    <p>
+      You may not use any data mining, robots, or similar data gathering and extraction tools on the Content, frame any portion of EVC or Content, or reproduce, reprint, copy, store, publicly display, broadcast, transmit, modify, translate, port, publish, sublicense, assign, transfer, sell, loan, or otherwise distribute the Content without our prior written consent. You may not circumvent any mechanisms included in the Content for preventing the unauthorized reproduction or distribution of the Content.
+      </p>
+    <p>
+      Except as otherwise expressly permitted by the preceding paragraph, you agree not to reproduce, retransmit, disseminate, sell, distribute, publish, broadcast or circulate any of the services or materials in any manner or for any purposes (whether personal or business) without the prior express written consent of EVC and/or the data providers. In addition, you shall not, without the prior express written consent of EVC and the relevant data providers, make copies of any of the software or documentation that may be provided, electronically or otherwise, including, but not limited to, translating, decompiling, disassembling or creating derivative works.
+      </p>
+    <Title level={2}>THIRD PARTY SITES and ADVERTISERS</Title>
+    <p>
+      EVC may include links to third party websites. Some of these sites may contain materials that are objectionable, unlawful, or inaccurate. You agree that EVC shall not be held liable for any trading activities or other activities that occur on any website you access through links on EVC. We provide these links as a convenience, and do not endorse the content or services offered by these other sites. Any dealings that you have with advertisers found on EVC are between you and the advertiser and you acknowledge and agree that we are not liable for any loss or claim you may have against an advertiser.
+      </p>
+    <p>EVC does not share your email address with any third-party advertisers.</p>
+    <Title level={2}>DISCLAIMER REGARDING CONTENT</Title>
+    <p>
+      EVC cannot and does not represent or guarantee that any of the information available through the Services or on EVC is accurate, reliable, current, complete or appropriate for your needs. Various information available through the Services or on EVC may be specially obtained by EVC from professional businesses or organizations, such as exchanges, news providers, market data providers and other content providers (e.g., the New York Stock Exchange, NASDAQ, Dow Jones, IEX Cloud, Alpha Vantage, and Trading View), who are believed to be sources of reliable information (collectively, the “Data Providers”). Nevertheless, due to various factors — including the inherent possibility of human and mechanical error — the accuracy, completeness, timeliness, results obtained from use, and correct sequencing of information available through the Services and Website are not and cannot be guaranteed by EVC. Neither EVC nor its affiliates make any express or implied warranties (including, without limitation, any warranty or merchantability or fitness for a particular purpose or use) regarding the Content on EVC. The EVC Content is provided to the users "as is." Neither EVC nor its affiliates will be liable to any user or anyone else for any interruption, inaccuracy, error or omission, regardless of cause, in the EVC Content or for any damages (whether direct or indirect, consequential, punitive or exemplary).
+      </p>
+    <p>
+      We make no warranty and assume no obligation or liability for scripts, indicators, ideas and other content of third parties. Your use of any third-party scripts, indicators, ideas and other content is at your sole risk.
+      </p>
+    <Title level={2}>DISCLAIMER REGARDING INVESTMENT DECISIONS AND TRADING</Title>
+    <p>
+      Decisions to buy, sell, hold or trade in securities, commodities and other investments involve risk and are best made based on the advice of qualified financial professionals. Any trading in securities or other investments involves a risk of substantial losses. The practice of “Day Trading” involves particularly high risks and can cause you to lose substantial sums of money. Before undertaking any trading program, you should consult a qualified financial professional. Please consider carefully whether such trading is suitable for you in light of your financial condition and ability to bear financial risks. Under no circumstances shall we be liable for any loss or damage you or anyone else incurs as a result of any trading or investment activity that you or anyone else engages in based on any information or material you receive through EVC or our Services.
+      </p>
+    <Title level={2}>DISCLAIMER REGARDING HYPOTHETICAL PERFORMANCE RESULTS</Title>
+    <p>
+      Hypothetical performance results have many inherent limitations, some of which are mentioned below. No representation is being made that any account will or is likely to achieve profits or losses similar to those shown. In fact, there are frequently sharp differences between hypothetical performance results and actual results subsequently achieved by any particular trading program.
+      </p>
+      <p>
+      One of the limitations of hypothetical performance results is that they are generally prepared with the benefit of hindsight. In addition, hypothetical trading does not involve financial risk and no hypothetical trading record can completely account for the impact of financial risk in actual trading. For example the ability to withstand losses or to adhere to a particular trading program in spite of the trading losses are material points, which can also adversely affect trading results. There are numerous other factors related to the market in general or to the implementation of any specific trading program which cannot be fully accounted for in the preparation of hypothetical performance results and all of which can adversely affect actual trading results.
+      </p>
+    <Title level={2}>REGISTERED USERS</Title>
+    <p>
+      To register to become users is the first step to use EVC’s services. During the registration process you may be prompted to click an “Sign up,” “Submit” or similar button; your clicking on such button will further confirm your agreement to be legally bound by these Terms and Conditions. If you register as a user of the features of EVC, you can only view limited data. Certain services, such as watchlist, screeners, resistance and support or email alert, are available only to paid subscribers of the EVC membership and require you to sign in with an email address and password to use them.
+      </p>
+    <p>
+      In consideration of your use of the EVC website, you represent that you are of legal age to form a binding contract and are not a person barred from receiving EVC Services under the laws of New Zealand or other applicable jurisdiction. You also agree to: (a) provide true, accurate, current and complete information about yourself as prompted by the EVC’s registration form (the “Registration Data”) and (b) maintain and promptly update the Registration Data to keep it true, accurate, current and complete. If you provide any information that is untrue, inaccurate, not current or incomplete, or EVC has reasonable grounds to suspect that such information is untrue, inaccurate, not current or incomplete, EVC has the right to suspend or terminate your account and refuse any and all current or future use of the EVC Services (or any portion thereof).
+      </p>
+    <Title level={2}>NON-PROFESSIONAL SUBSCRIBER STATUS</Title>
+    <p>
+      As a vendor of official real-time market data from exchanges (e.g. Nasdaq 100) for end users, we are required to identify the ‘Non-Professional’ status of any Subscriber. By ordering a subscription for market data on EVC you confirm the following:
+      </p>
+    <ol>
+      <li>
+        You use market data solely for personal use, not for your business or any other entity.
+        </li>
+      <li>
+        You are not registered or qualified with the Securities Exchange Commission (SEC) or the Commodities Futures Trading Commission (CFTC).
+        </li>
+      <li>
+        You are not registered or qualified with any securities agency, any securities exchange, association or regulatory body in any country.
+        </li>
+      <li>
+        You do not perform any functions that are similar to those that require an individual to register or qualify with the SEC, the CFTC, any other securities agency, any securities exchange, or association or regulatory body, or any commodities or futures contract market, or association or regulatory body.
+  </li>
+      <li>
+        You are not engaged as an investment advisor or asset manager and you are not engaged to provide investment advice to any individual or entity.
+    </li>
+      <li>
+        You are not subscribing to the service in your capacity as a principal, officer, partner, employee, or agent of any business or on behalf of any other individual.
+    </li>
+      <li>
+        You use your own capital, not provided by any other individual or entity in the conduct of your trading.
+    </li>
+      <li>
+        You do not conduct trading for the benefit of a corporation, partnership, or other entity.
+    </li>
+      <li>
+        You have not entered into any agreement to share the profit of your trading activities or receive compensation for your trading activities.</li>
+      <li>
+        You are not receiving office space, and equipment or other benefits in exchange for your trading or work as a financial consultant to any person, firm or business entity.
+    </li>
+    </ol>
+    <Title level={2}>ACCESS AND SECURITY</Title>
+    <p>You accept responsibility for the confidentiality and use of any email address that you may register for your access to and use of the Services. You are responsible for maintaining the confidentiality of the password and account and are fully responsible for all activities that occur under your password or account. You agree to (a) immediately notify EVC of any unauthorized use of your password or account or any other breach of security, and (b) ensure that you exit from your account at the end of each session. EVC cannot and will not be liable for any loss or damage arising from your failure to comply.</p>
+    <Title level={2}>PAYMENT AND CANCELLATION OF SERVICE</Title>
+    <p>By ordering any subscription on www.easyvaluecheck.com you confirm that you have read and accepted our Terms of Use and you authorize EVC to automatically charge your bank card or PayPal account according to the billing period manually selected by you. Unless otherwise stated, all subscriptions are automatically renewing.</p>
+    <p>There are no refunds for either monthly or annual plan, even if the subscription is canceled on the same day as the auto conversion payment has gone through. The membership service will last through the end of this billing period. </p>
+    <p>
+      The service is billed in advance on a monthly, or annual basis. EVC does not offer partial cancellations. There will be no refunds or credits for partial months of service, or refunds for months unused. If you cancel the service before the end of your current paid up period, your subscription will remain active until the next due date. After the due date, if no payment received, your subscription will be stopped.
+      </p>
+    <p>
+      All billing is recurring, which means you will continue to get billed until you cancel your subscription. You will get reminding emails several days in a row before the due date of your renewal. If you have been billed for automatic renewal of the Service, you can cancel the subscription to avoid billing for next period. You are solely responsible for properly canceling your EVC subscription. An email request asking for your subscription to be cancelled is not considered cancellation. You may cancel your subscription at any time by visiting the account section after you log in.
+
+      </p>
+    <p>
+      We do not offer refunds for upgrades to a more expensive plan or a longer billing cycle. Remaining days are added up to an equivalent value of days on the new subscription, i.e., the full term of plan before update will be fully exercised.
+      </p>
+    <p>
+      If you would like to use the credit you earned in our referral program to pay for a plan, you will need to properly cancel your current subscription at the first, then manually pay by “credit balance”. We do not accept the mixed mothed of bank account and credit balance to pay for any plan. The credit balance must be in the sufficient amount to pay for the full price of the subscription.
+      </p>
+    <Title level={2}>Emails</Title>
+    <p>By creating an account with EVC, you agree that EVC can use your email address to send you marketing materials, service-related notices, important information messages, special offers, etc.</p>
+    <Title level={2}>Feedback to EVC</Title>
+    <p>By submitting ideas, content, suggestions, documents, and/or proposals ("Contributions") to EVC through our contact or feedback webpage, you acknowledge and agree that: (a) your Contributions do not contain confidential or proprietary information; (b) EVC is not under any obligation of confidentiality, expressed or implied, with respect to the Contributions; (c) EVC shall be entitled to use or disclose (or choose not to use or disclose) such Contributions for any purpose, in any way, in any media worldwide; (d) EVC may have something similar to the Contributions already under consideration or in development; (e) your Contributions automatically become the property of EVC, without any obligation of EVC to you; and (f) you are not entitled to any compensation or reimbursement of any kind from EVC under any circumstances.</p>
+    <Title level={2}>INDEMNITY</Title>
+    <p>
+      You agree to indemnify and hold EVC and its subsidiaries, affiliates, officers, agents, employees, partners and licensors harmless from any claim or demand, including reasonable attorneys’ fees, made by any third party due to or arising out of Content you submit, post, transmit, modify or otherwise make available through the EVC Services, your use of the EVC Services, your connection to the EVC Services, your violation of the Terms of Use, or your violation of any rights of another.
+      </p>
+    <Title level={2}>TERMINATION</Title>
+    <p>
+      You may terminate your EVC account, any associated email address and access to the EVC Services by submitting such termination request to EVC by email.
+      </p>
+    <p>
+      You agree that EVC may, without prior notice, immediately terminate, limit your access to or suspend your EVC account, any associated email address, and access to the EVC Services. Cause for such termination, limitation of access or suspension shall include, but not be limited to, (a) breaches or violations of the Terms of Use or other incorporated agreements or guidelines, (b) requests by law enforcement or other government agencies, (c) discontinuance or material modification to the EVC Services (or any part thereof), (d) unexpected technical or security issues or problems, (e) extended periods of inactivity, (f) engagement by you in fraudulent or illegal activities, (g) and/or abusive correspondence with EVC. Further, you agree that all terminations, limitations of access and suspensions for cause shall be made in EVC’s sole discretion and that EVC shall not be liable to you or any third party for any termination of your account, any associated email address, or access to the EVC Services.
+      </p>
+    <Title level={2}>REFERRAL PROGRAM RULES</Title>
+    <ul>
+      <li>
+        <Title level={3}>Who is eligible to be a referrer?</Title>
+        <p>
+          Any EVC account holder can become a referrer.
+    </p>
+      </li>
+      <li>
+        <Title level={3}>Who is eligible to become a referee?</Title>
+        <p>
+          Your friends or social media followers may be eligible to be referees. To receive commission rewards for referring someone who orders a paid plan on EVC, your referee must be a new EVC user and can not have more than one account.
+</p>
+      </li>
+      <li>
+        <Title level={3}>How can I use my referral link?</Title>
+        <p>
+          EVC wants you to share your referral link and earn EVC commission rewards, but you agree that you will not:
+</p>
+        <ol type="a">
+          <li>
+            Try to get referees by spamming, bulk emailing, or sending large numbers of unsolicited emails. The only people you should be emailing are people you know personally;
+  </li>
+          <li>
+            Use scripts or programmed or automatic dialers to send invites or otherwise share your referral link;
+  </li>
+          <li>
+            Use scripts or programmed or automatic dialers to send invites or otherwise share your referral link;
+    </li>
+          <li>
+            Use, display, or manipulate EVC intellectual property (such as EVC logos, trademarks, and copyright-protected works) in any way, except as to identify yourself as a EVC user or a EVC referrer;
+    </li>
+          <li>
+            Create or register any (i) businesses, (ii) URLs, (iii) domain names, (iv) software application names or titles, or (v) social media handles or profiles that include the word "EVC" or any of EVC's other trademarks or any words that are confusingly similar to EVC trademarks.
+    </li>
+          <li>
+            Purchase keywords (including, but not limited to Google AdWords) that contain any of EVC trademarks;
+    </li>
+          <li>
+            Use EVC’s trademarks as your social media profile picture or wallpaper or use any of EVC’s copyright-protected works (such as graphic and screenshots from EVC’s website) without EVC’s express written permission;
+    </li>
+          <li>
+            Make misleading claims about EVC, use offensive/abusive content, create fake websites/webpages/social media profiles/apps, misrepresent your connection to EVC, or otherwise make any false or misleading statements to get a referee to use your link; or
+      </li>
+          <li>
+            Use your referral link in any manner that violates the law or the rights of anyone else.
+      </li>
+        </ol>
+      </li>
+      <li>
+        <Title level={3}>How do referee/I earn discount/reward?</Title>
+        <p>
+          Send the referral link to your friend. When he/she successfully registers as a new user with EVC and completes the purchase of Pro Member Services by clicking into the link that you referred.
+</p>
+        <p>
+          As a result, referees will get 10% off discount on their first payment. For example, you invite your friend, John, the referee. For his first purchase, he chooses Monthly Pro Member services. He gets discount of 2.9USD and pays 26.1USD for monthly subscription instead of 29USD. Or he chooses Annual Pro Member services for his first purchase, he gets discount of 31.9USD and pays 287.1USD for yearly subscription instead of 319USD. If he pays 29USD/month firstly and some time later upgrades to 319USD/year, he can only get discount of 2.9USD upon his first payment.
+</p>
+        <p>
+          As a referrer, you will receive commission rewards in the amount of referee’s first purchase discount.
+</p>
+        <p>
+          For example, your friend John, the referee pays 29USD monthly membership for his first subscription so you will get 2.9USD rewards. Or he pays 319USD yearly membership for his first subscription, you will receive 31.9USD. If referee makes the first payment of 29USD/month and upgrades to 319USD/year later, you can only receive the first discount amount of 2.9USD as your commission.
+</p>
+        <p>
+          The requirements for receiving, and the amounts of EVC credit rewards are subject to change at EVC’s sole discretion. Referral rewards in the form of EVC credit are not transferable. EVC may cancel a reward at any time at its sole discretion.
+</p>
+        <p>
+          There are no refunds for any full or partial subscribed plans, you and your referee need to make sure that the order is correct and both sides clearly understand our referral rules and terms and conditions before the payment is made.
+</p>
+      </li>
+      <li>
+        <Title level={3}>
+          How do I use commission rewards?
+</Title>
+        <p>
+          You can apply for withdrawal (the required minimum withdrawal amount is 100USD). Or you can spend the commission rewards by purchasing a new Pro Member subscription, extending an existing one or upgrading your current subscription to another tier.
+</p>
+        <p>
+          When you apply for commission withdrawal, you must fill out commission withdrawal application form and provide the real personal identity and PayPal account. We will make the transaction after the application is approved.
+</p>
+      </li>
+      <li>
+        <Title level={3}>
+          Termination and changes
+</Title>
+        <p>
+          EVC reserves the right to change, end, or pause, in whole or in part, any referral program, as well as any referrer’s or referee's ability to participate in any referral program or receive EVC credit rewards at any time for any reason, including suspected fraud (including by either the referrer and/or referee), abuse, or any violation of these Rules.
+</p>
+      </li>
+    </ul>
+    <p>
+      EVC may update these Rules at any time.
+</p>
   </ContainerStyled>
-</>;  
+</>;
 
 TermAndConditionPage.propTypes = {};
 

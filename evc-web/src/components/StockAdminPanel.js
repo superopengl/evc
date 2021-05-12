@@ -58,6 +58,10 @@ const ColInnerCard = props => {
     type="inner"
     bordered={false}
     size="small"
+    headStyle={{
+      backgroundColor: '#55B0D4',
+      color: 'white',
+    }}
     bodyStyle={{
       maxHeight: 400,
       overflow: 'auto',
@@ -161,7 +165,9 @@ const StockAdminPanel = (props) => {
         </ColInnerCard>
       </Col>
       <Col span={24}>
-        <MemberOnlyCard title="Fair Value">
+        <ColInnerCard 
+          type="inner"
+        title="Fair Value">
           <Space direction="vertical">
 
             <Alert
@@ -186,7 +192,7 @@ const StockAdminPanel = (props) => {
               }}
             />
           </Space>
-        </MemberOnlyCard>
+        </ColInnerCard>
       </Col>
     </Row>
 

@@ -23,6 +23,7 @@ import { getUtcNow } from '../src/utils/getUtcNow';
 import { RevertableCreditTransaction } from '../src/entity/views/RevertableCreditTransaction';
 import { notExistsQuery } from '../src/utils/existsQuery';
 import { UserCurrentSubscription } from '../src/entity/views/UserCurrentSubscription';
+import { getSubscriptionPrice } from '../src/utils/getSubscriptionPrice';
 
 const JOB_NAME = 'daily-subscription';
 
@@ -57,7 +58,7 @@ async function enqueueEmailTasks(template: EmailTemplateType, list: UserAllAlive
   }
 }
 
-async function enqueueRecurringSucceededEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, paidAmount: number, creditDeduction: number) {
+async function enqueueRecurringSucceededEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, price: number) {
   const emailReq: EmailRequest = {
     to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPaySucceeded,
@@ -68,14 +69,14 @@ async function enqueueRecurringSucceededEmail(activeOne: UserAllAliveSubscriptio
       subscriptionType: getSubscriptionName(activeOne.type),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
-      paidAmount,
-      creditDeduction
+      paidAmount: price,
+      creditDeduction: 0
     }
   };
   await enqueueEmail(emailReq);
 }
 
-async function enqueueRecurringFailedEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, paidAmount: number, creditDeduction: number) {
+async function enqueueRecurringFailedEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, price: number) {
   const emailReq: EmailRequest = {
     to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPayFailed,
@@ -86,8 +87,8 @@ async function enqueueRecurringFailedEmail(activeOne: UserAllAliveSubscriptionWi
       subscriptionType: getSubscriptionName(activeOne.type),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
-      paidAmount,
-      creditDeduction
+      paidAmount: price,
+      creditDeduction: 0
     }
   };
   await enqueueEmail(emailReq);
@@ -164,41 +165,29 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
   });
 
   const tran = getConnection().createQueryRunner();
-  const { creditDeductAmount, additionalPay } = await getNewSubscriptionPaymentInfo(
-    userId,
-    type,
-  );
-  const { stripeCustomerId, stripePaymentMethodId, geo } = await getPreviousPaymentInfo(subscription);
+  const price = getSubscriptionPrice(type);
 
-  let creditTransaction: UserCreditTransaction = null;
-  if (creditDeductAmount) {
-    creditTransaction = new UserCreditTransaction();
-    creditTransaction.userId = userId;
-    creditTransaction.amount = -1 * creditDeductAmount;
-    creditTransaction.type = 'recurring';
-  }
+  const { stripeCustomerId, stripePaymentMethodId, geo } = await getPreviousPaymentInfo(subscription);
 
   const startDate = moment(targetSubscription.end).add(1, 'day').toDate();
   const endDate = moment(startDate).add(1, type === SubscriptionType.UnlimitedYearly ? 'year' : 'month').add(-1, 'day').toDate();
   const payment = new Payment();
   payment.subscription = subscription;
-  payment.creditTransaction = creditTransaction;
+  payment.creditTransaction = null;
   payment.userId = userId;
   payment.start = startDate;
   payment.end = endDate
-  payment.amount = additionalPay;
-  payment.method = additionalPay ? PaymentMethod.Card : PaymentMethod.Credit;
+  payment.amount = price;
+  payment.method = PaymentMethod.Card;
   payment.status = PaymentStatus.Pending;
   payment.stripeCustomerId = stripeCustomerId;
   payment.stripePaymentMethodId = stripePaymentMethodId;
   payment.auto = true;
   payment.geo = geo;
 
-  if (additionalPay) {
-    const rawResponse = await chargeStripeForCardPayment(payment, false);
-    assert(rawResponse.status === 'succeeded', 500, `Failed to auto charge stripe for subscription ${subscription.id}`);
-    payment.rawResponse = rawResponse;
-  }
+  const rawResponse = await chargeStripeForCardPayment(payment, false);
+  assert(rawResponse.status === 'succeeded', 500, `Failed to auto charge stripe for subscription ${subscription.id}`);
+  payment.rawResponse = rawResponse;
   payment.status = PaymentStatus.Paid;
   payment.paidAt = getUtcNow();
 
@@ -208,18 +197,15 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
   try {
     await tran.startTransaction();
 
-    if (creditDeductAmount) {
-      await tran.manager.save(creditTransaction);
-    }
     await tran.manager.save(payment);
     await tran.manager.save(subscription);
     await tran.manager.getRepository(User).update(subscription.userId, { role: Role.Member });
 
     await tran.commitTransaction();
-    await enqueueRecurringSucceededEmail(targetSubscription, payment, additionalPay, creditDeductAmount);
+    await enqueueRecurringSucceededEmail(targetSubscription, payment, price);
   } catch (err) {
     await tran.rollbackTransaction();
-    await enqueueRecurringFailedEmail(targetSubscription, payment, additionalPay, creditDeductAmount);
+    await enqueueRecurringFailedEmail(targetSubscription, payment, price);
   }
 }
 

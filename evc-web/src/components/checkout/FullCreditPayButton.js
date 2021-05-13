@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 
 
 const FullCreditPayButton = (props) => {
@@ -29,7 +30,11 @@ const FullCreditPayButton = (props) => {
       disabled={loading}
       loading={loading}
       style={style}
-    >Pay with credits</Button>
+    >
+      <div style={{ fontWeight: 800, fontStyle: 'italic', color: 'black' }}>
+        <FormattedMessage id="text.payByCredit" />
+      </div>
+    </Button>
   );
 }
 

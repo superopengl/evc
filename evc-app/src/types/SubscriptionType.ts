@@ -1,7 +1,7 @@
 
 export enum SubscriptionType {
   Free = 'free',
-  UnlimitedMontly = 'unlimited_monthly',
-  UnlimitedYearly = 'unlimited_yearly'
+  UnlimitedMontly = 'pro_member_monthly',
+  UnlimitedYearly = 'pro_member_yearly'
 }
 

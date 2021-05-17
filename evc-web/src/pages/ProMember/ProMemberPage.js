@@ -2,7 +2,6 @@ import { Alert, Button, Card, Popover, Space, Modal, Tooltip } from 'antd';
 import React from 'react';
 import { Typography } from 'antd';
 import styled from 'styled-components';
-import Tour from "reactour";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { StockNoticeButton } from 'components/StockNoticeButton';
 import { withRouter } from 'react-router-dom';
@@ -13,6 +12,7 @@ import putCallData from './putCallData';
 import { FormattedMessage } from 'react-intl';
 import { useMediaQuery } from 'react-responsive'
 import { scrollToElement } from '../../util/scrollToElement';
+import Joyride from 'react-joyride';
 
 const { Paragraph, Text } = Typography;
 
@@ -44,20 +44,24 @@ img {
 
 const WalkthroughTour = withRouter((props) => {
 
-  const [visible, setVisible] = React.useState(props.visible);
+  const {visible : visibleProp, onClose} = props;
+
+  const [visible, setVisible] = React.useState(visibleProp);
+  const [current, setCurrent] = React.useState(0);
 
   const isNarrow = useMediaQuery({ query: '(max-width: 576px)' });
   const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
   const isLandscape = useMediaQuery({ query: '(orientation: landscape)' });
 
   React.useEffect(() => {
-    setVisible(props.visible);
-  }, [props.visible])
+    setVisible(visibleProp);
+  }, [visibleProp])
 
   const tourConfig = [
     {
-      selector: '#tour-fair-value',
+      target: '#tour-fair-value',
       position: isPortrait ? [20, 20] : isLandscape ? 'top' : 'bottom',
+      disableBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.fairValueTitle" />
@@ -71,8 +75,9 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      selector: '#tour-support',
+      target: '#tour-support',
       position: isPortrait ? [20, 20] : isLandscape ? 'top' : 'bottom',
+      disableBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.supportTitle" />
@@ -86,9 +91,10 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      selector: '#tour-resistance',
+      target: '#tour-resistance',
       // position: [20, 20],
       position: 'top',
+      disableBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.resistanceTitle" />
@@ -102,9 +108,11 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      selector: '#tour-putcall',
+      target: '#tour-putcall',
       position: 'top',
       // position: [20, 20],
+      placement: 'auto',
+      disableBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.putCallTitle" />
@@ -118,9 +126,10 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      selector: '#tour-insider',
-      position: 'top',
+      target: '#tour-insider',
+      placement: 'auto',
       // position: isPortrait ? 'top' : [20, 20],
+      disableBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.insiderTitle" />
@@ -131,8 +140,9 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      selector: '#tour-alert',
-      position: isLandscape ? 'left' : 'bottom',
+      target: '#tour-alert',
+      placement: 'left',
+      disableBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.alertTitle" />
@@ -143,31 +153,77 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      selector: '#tour-signup',
+      target: 'body',
+      placement: 'center',
+      disableBeacon: true,
       content: <div style={{ maxWidth: 300 }}>
         <SignUpForm onOk={() => props.history.push('/')} />
       </div>
     }
   ];
 
+  const handleTourStepChange = data => {
+    const {action, index} = data;
+    // debugger;
+    switch (action) {
+      case 'skip':
+      case 'stop':
+      case 'close': {
+        onClose();
+        break;
+      }
+      default: 
+        setCurrent(index);
+        break;
+    }
+  }
 
-  return (
-    <Tour
-      isOpen={visible}
-      steps={tourConfig}
-      onRequestClose={() => props.onClose()}
-      onAfterOpen={target => disableBodyScroll(target)}
-      onBeforeClose={target => enableBodyScroll(target)}
-      accentColor="#57BB60"
-      // inViewThreshold={1000}
-      scrollOffset={isPortrait ? -400 : isLandscape ? -300 : -50}
-      className="tour-helper"
-      rounded={4}
-      startAt={0}
-    // lastStepNextButton={<Button>Done! Let's start playing</Button>}
-    // maskClassName="tour-mask"
-    />
-  )
+  // debugger;
+
+  return <Joyride
+    steps={tourConfig}
+    run={visible}
+    continuous={true}
+    // scrollToFirstStep={true}
+    // showProgress={true}
+    // scrollToFirstStep={true}
+    // stepIndex={current}
+    showSkipButton={true}
+    callback={handleTourStepChange}
+    styles={{
+      options: {
+        // arrowColor: '#e3ffeb',
+        // backgroundColor: '#e3ffeb',
+        // overlayColor: 'rgba(79, 26, 0, 0.4)',
+        primaryColor: '#57BB60',
+        textAlign: 'left',
+        // textColor: '#004a14',
+        // width: 900,
+        zIndex: 1000,
+      },
+      tooltipContainer : {
+        textAlign: 'left'
+      }
+    }}
+  />
+
+  // return (
+  //   <Tour
+  //     isOpen={visible}
+  //     steps={tourConfig}
+  //     onRequestClose={() => props.onClose()}
+  //     onAfterOpen={target => disableBodyScroll(target)}
+  //     onBeforeClose={target => enableBodyScroll(target)}
+  //     accentColor="#57BB60"
+  //     // inViewThreshold={1000}
+  //     scrollOffset={isPortrait ? -400 : isLandscape ? -300 : -50}
+  //     className="tour-helper"
+  //     rounded={4}
+  //     startAt={0}
+  //   // lastStepNextButton={<Button>Done! Let's start playing</Button>}
+  //   // maskClassName="tour-mask"
+  //   />
+  // )
 });
 
 const PutCallDummyChart = () => {
@@ -193,7 +249,7 @@ const PutCallDummyChart = () => {
 }
 
 const ProMemberPage = (props) => {
-  const [visible, setVisible] = React.useState(true);
+  const [visible, setVisible] = React.useState(false);
   const [current, setCurrent] = React.useState(0);
 
   React.useEffect(() => {
@@ -301,36 +357,13 @@ const ProMemberPage = (props) => {
     }
   ];
 
-  const PopoverStep = props => {
-    const { step, children } = props;
-
-    return <Popover
-      visible={step === current}
-      arrowPointAtCenter={true}
-      overlayStyle={{ maxWidth: 600, width: 'calc(100vw - 20px)', marginLeft: 10, marginRight: 10 }}
-      placement={tourConfig[step].placement}
-      content={<Space direction="vertical">
-        <div onClick={() => setCurrent(current + 1)}>
-          {tourConfig[step].content}
-        </div>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Button type="link" onClick={() => setCurrent(current - 1)} disabled={current <= 0} icon={<LeftOutlined />}></Button>
-          <Button type="link" onClick={() => setCurrent(current + 1)} disabled={current >= tourConfig.length - 1} icon={<RightOutlined />}></Button>
-        </Space>
-      </Space>}
-    >
-      {step === current ? <div className="current-element">
-        {children}
-      </div> : children}
-    </Popover>
-  }
-
 
   const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
   const showingTour = 0 <= current && current < tourConfig.length - 1;
 
   return (
     <Container>
+      <WalkthroughTour visible={visible} onClose={() => setVisible(false)} />
       <Modal
         style={{ maxWidth: 'calc(100vw - 20px)', width: 400 }}
         visible={current === tourConfig.length - 1}
@@ -355,7 +388,7 @@ const ProMemberPage = (props) => {
           description={<FormattedMessage id="text.startTourAlert" />}
           style={{ marginBottom: 30 }}
           action={
-            <Button type="primary" onClick={() => setCurrent(0)}>
+            <Button type="primary" onClick={() => setVisible(true)}>
               <FormattedMessage id="text.startTour" />
             </Button>
           }
@@ -376,17 +409,15 @@ const ProMemberPage = (props) => {
                 </span>
               </div>
               <span className="ant-page-header-heading-extra">
-                <PopoverStep step={5}>
-                  <Space id="tour-alert">
-                    <StockNoticeButton value={true} />
+                <Space id="tour-alert">
+                  <StockNoticeButton value={true} />
 
-                    <span role="img" aria-label="star" style={{ fontSize: '20px', color: 'rgb(250, 219, 20)' }} tabIndex={-1} className="anticon anticon-star">
-                      <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                        <path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" />
-                      </svg>
-                    </span>
-                  </Space>
-                </PopoverStep>
+                  <span role="img" aria-label="star" style={{ fontSize: '20px', color: 'rgb(250, 219, 20)' }} tabIndex={-1} className="anticon anticon-star">
+                    <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                      <path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" />
+                    </svg>
+                  </span>
+                </Space>
               </span>
             </div>
             <div className="ant-page-header-content"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Dow Jones 30</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq Composite</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 1000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 3000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500 Information Technology</span></div>
@@ -443,78 +474,72 @@ const ProMemberPage = (props) => {
                     <div className="ant-card-body" style={{ height: '274px' }} >
                       <div className="ant-space ant-space-vertical" style={{ width: '100%' }} >
                         <div className="ant-space-item" style={{ marginBottom: '8px' }} id="tour-fair-value">
-                          <PopoverStep step={0}>
-                            <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between' }}>
-                              <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
-                                <FormattedMessage id="text.fairValue" />
+                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between' }}>
+                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
+                              <FormattedMessage id="text.fairValue" />
 
-                              </span></div>
-                              <div className="ant-space-item">
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">122.33 </span> ~ <span className="ant-typography">147.22 </span></div>
-                                  </div>
+                            </span></div>
+                            <div className="ant-space-item">
+                              <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                <div className="ant-space-item">
+                                  <div className="sc-llYToB bepCke"><span className="ant-typography">122.33 </span> ~ <span className="ant-typography">147.22 </span></div>
                                 </div>
                               </div>
                             </div>
-                          </PopoverStep>
+                          </div>
                         </div>
                         <div className="ant-space-item" style={{ marginBottom: '8px' }} id="tour-support">
-                          <PopoverStep step={1}>
-                            <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                              <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
-                                <FormattedMessage id="text.support" />
-                              </span></div>
-                              <div className="ant-space-item">
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                  <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                    <div className="ant-space-item">
-                                      <div className="sc-llYToB bepCke"><span className="ant-typography">114.60 </span> ~ <span className="ant-typography">116.00 </span></div>
-                                    </div>
+                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
+                              <FormattedMessage id="text.support" />
+                            </span></div>
+                            <div className="ant-space-item">
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                  <div className="ant-space-item">
+                                    <div className="sc-llYToB bepCke"><span className="ant-typography">114.60 </span> ~ <span className="ant-typography">116.00 </span></div>
                                   </div>
-                                  <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                    <div className="ant-space-item">
-                                      <div className="sc-llYToB bepCke"><span className="ant-typography">108.00 </span> ~ <span className="ant-typography">111.00 </span></div>
-                                    </div>
+                                </div>
+                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                  <div className="ant-space-item">
+                                    <div className="sc-llYToB bepCke"><span className="ant-typography">108.00 </span> ~ <span className="ant-typography">111.00 </span></div>
                                   </div>
-                                  <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                    <div className="ant-space-item">
-                                      <div className="sc-llYToB bepCke"><span className="ant-typography">88.00 </span> ~ <span className="ant-typography">98.00 </span></div>
-                                    </div>
+                                </div>
+                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                  <div className="ant-space-item">
+                                    <div className="sc-llYToB bepCke"><span className="ant-typography">88.00 </span> ~ <span className="ant-typography">98.00 </span></div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </PopoverStep>
+                          </div>
                         </div>
                         <div className="ant-space-item" id="tour-resistance">
-                          <PopoverStep step={2}>
 
-                            <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                              <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
-                                <FormattedMessage id="text.resistance" />
-                              </span></div>
-                              <div className="ant-space-item">
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                  <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                    <div className="ant-space-item">
-                                      <div className="sc-llYToB bepCke"><span className="ant-typography">122.00 </span> ~ <span className="ant-typography">128.00 </span></div>
-                                    </div>
+                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
+                              <FormattedMessage id="text.resistance" />
+                            </span></div>
+                            <div className="ant-space-item">
+                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                  <div className="ant-space-item">
+                                    <div className="sc-llYToB bepCke"><span className="ant-typography">122.00 </span> ~ <span className="ant-typography">128.00 </span></div>
                                   </div>
-                                  <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                    <div className="ant-space-item">
-                                      <div className="sc-llYToB bepCke"><span className="ant-typography">122.00 </span> ~ <span className="ant-typography">129.00 </span></div>
-                                    </div>
+                                </div>
+                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                  <div className="ant-space-item">
+                                    <div className="sc-llYToB bepCke"><span className="ant-typography">122.00 </span> ~ <span className="ant-typography">129.00 </span></div>
                                   </div>
-                                  <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                    <div className="ant-space-item">
-                                      <div className="sc-llYToB bepCke"><span className="ant-typography">133.00 </span> ~ <span className="ant-typography">137.50 </span></div>
-                                    </div>
+                                </div>
+                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
+                                  <div className="ant-space-item">
+                                    <div className="sc-llYToB bepCke"><span className="ant-typography">133.00 </span> ~ <span className="ant-typography">137.50 </span></div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </PopoverStep>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -535,133 +560,129 @@ const ProMemberPage = (props) => {
             </div>}
           </div>
           <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
-            <PopoverStep step={3}>
-              <div className="ant-col ant-col-24">
-                <Card
-                  size="small"
-                  type="inner"
-                  title={<FormattedMessage id="text.optionPutCallRatio" />}
-                >
-                  <PutCallDummyChart />
-                </Card>
-              </div>
-            </PopoverStep>
+            <div className="ant-col ant-col-24">
+              <Card
+                size="small"
+                type="inner"
+                title={<FormattedMessage id="text.optionPutCallRatio" />}
+              >
+                <PutCallDummyChart />
+              </Card>
+            </div>
           </div>
-          <PopoverStep step={4}>
-            <div className="ant-row" id="tour-insider" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
-              <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-8 ant-col-xxl-6">
-                <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
-                  <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
-                    <div className="ant-card-head-wrapper">
-                      <div className="ant-card-head-title">
-                        <FormattedMessage id="text.roster" />
-                      </div>
+          <div className="ant-row" id="tour-insider" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
+            <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-8 ant-col-xxl-6">
+              <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
+                <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
+                  <div className="ant-card-head-wrapper">
+                    <div className="ant-card-head-title">
+                      <FormattedMessage id="text.roster" />
                     </div>
                   </div>
-                  <div className="ant-card-body" style={{ height: '500px', overflow: 'auto' }}>
-                    <div className="ant-spin-nested-loading">
-                      <div className="ant-spin-container">
-                        <div className="ant-list ant-list-sm ant-list-split ant-list-grid sc-caiKgP ipNIuR">
-                          <div className="ant-spin-nested-loading">
-                            <div className="ant-spin-container">
-                              <div className="ant-row" style={{ marginLeft: '-5px', marginRight: '-5px', rowGap: '0px' }}>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">COOK TIMOTHY D</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">333,987</span></div>
-                                      </div>
+                </div>
+                <div className="ant-card-body" style={{ height: '500px', overflow: 'auto' }}>
+                  <div className="ant-spin-nested-loading">
+                    <div className="ant-spin-container">
+                      <div className="ant-list ant-list-sm ant-list-split ant-list-grid sc-caiKgP ipNIuR">
+                        <div className="ant-spin-nested-loading">
+                          <div className="ant-spin-container">
+                            <div className="ant-row" style={{ marginLeft: '-5px', marginRight: '-5px', rowGap: '0px' }}>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">COOK TIMOTHY D</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">333,987</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">Adams Katherine L.</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">Adams Katherine L.</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">Maestri Luca</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">Maestri Luca</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">WILLIAMS JEFFREY E</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">WILLIAMS JEFFREY E</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">O'BRIEN DEIRDRE</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">49,836</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">O'BRIEN DEIRDRE</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">49,836</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">KONDO CHRIS</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">15,586</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">KONDO CHRIS</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">15,586</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">BELL JAMES A</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">BELL JAMES A</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">GORE ALBERT JR</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">GORE ALBERT JR</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">JUNG ANDREA</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">JUNG ANDREA</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
                                     </div>
                                   </div>
                                 </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">LEVINSON ARTHUR D</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
+                              </div>
+                              <div style={{ width: '100%', maxWidth: '100%' }}>
+                                <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
+                                  <div className="ant-list-item">
+                                    <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
+                                      <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">LEVINSON ARTHUR D</span></div>
+                                      <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
                                     </div>
                                   </div>
                                 </div>
@@ -674,413 +695,413 @@ const ProMemberPage = (props) => {
                   </div>
                 </div>
               </div>
-              <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-16 ant-col-xxl-18">
-                <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
-                  <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
-                    <div className="ant-card-head-wrapper">
-                      <div className="ant-card-head-title">
-                        <FormattedMessage id="text.insiderTransactions" />
-                      </div>
+            </div>
+            <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-16 ant-col-xxl-18">
+              <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
+                <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
+                  <div className="ant-card-head-wrapper">
+                    <div className="ant-card-head-title">
+                      <FormattedMessage id="text.insiderTransactions" />
                     </div>
                   </div>
-                  <div className="ant-card-body" style={{ height: '500px', overflow: 'auto' }}>
-                    <div className="ant-spin-nested-loading">
-                      <div className="ant-spin-container">
-                        <div className="ant-space ant-space-vertical sc-iAKVOt klLDEA" style={{ width: '100%' }}>
-                          <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                            <div className="ant-space ant-space-vertical" style={{ marginBottom: '24px' }}>
-                              <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                                <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span>
-                                  <FormattedMessage id="text.insiderLegendA" />
-                                </div>
+                </div>
+                <div className="ant-card-body" style={{ height: '500px', overflow: 'auto' }}>
+                  <div className="ant-spin-nested-loading">
+                    <div className="ant-spin-container">
+                      <div className="ant-space ant-space-vertical sc-iAKVOt klLDEA" style={{ width: '100%' }}>
+                        <div className="ant-space-item" style={{ marginBottom: '8px' }}>
+                          <div className="ant-space ant-space-vertical" style={{ marginBottom: '24px' }}>
+                            <div className="ant-space-item" style={{ marginBottom: '8px' }}>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span>
+                                <FormattedMessage id="text.insiderLegendA" />
                               </div>
-                              <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                                <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(59, 89, 153)' }}>P</span>
-                                  <FormattedMessage id="text.insiderLegendP" />
-                                </div>
+                            </div>
+                            <div className="ant-space-item" style={{ marginBottom: '8px' }}>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(59, 89, 153)' }}>P</span>
+                                <FormattedMessage id="text.insiderLegendP" />
                               </div>
-                              <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                                <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(16, 142, 233)' }}>S</span>
-                                  <FormattedMessage id="text.insiderLegendS" />
-                                </div>
+                            </div>
+                            <div className="ant-space-item" style={{ marginBottom: '8px' }}>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(16, 142, 233)' }}>S</span>
+                                <FormattedMessage id="text.insiderLegendS" />
                               </div>
-                              <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                                <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(240, 80, 0)' }}>M</span>
-                                  <FormattedMessage id="text.insiderLegendM" />
-                                </div>
+                            </div>
+                            <div className="ant-space-item" style={{ marginBottom: '8px' }}>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(240, 80, 0)' }}>M</span>
+                                <FormattedMessage id="text.insiderLegendM" />
                               </div>
-                              <div className="ant-space-item">
-                                <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(135, 208, 104)' }}>G</span>
-                                  <FormattedMessage id="text.insiderLegendG" />
-                                </div>
+                            </div>
+                            <div className="ant-space-item">
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(135, 208, 104)' }}>G</span>
+                                <FormattedMessage id="text.insiderLegendG" />
                               </div>
                             </div>
                           </div>
-                          <div className="ant-space-item">
-                            <div className="ant-list ant-list-sm ant-list-split ant-list-grid sc-iUKrWq kSLLaF">
-                              <div className="ant-spin-nested-loading">
-                                <div className="ant-spin-container">
-                                  <div className="ant-row" style={{ rowGap: '0px' }}>
-                                    <div style={{ width: '100%', maxWidth: '100%' }}>
-                                      <div style={{ flex: '1 1 auto' }} className="ant-col">
-                                        <div className="ant-list-item">
-                                          <div className="ant-descriptions ant-descriptions-small">
-                                            <div className="ant-descriptions-header">
-                                              <div className="ant-descriptions-title">
-                                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                                  <div className="ant-space-item" style={{ marginRight: '8px' }}>LEVINSON ARTHUR D</div>
-                                                  <div className="ant-space-item"> </div>
-                                                </div>
+                        </div>
+                        <div className="ant-space-item">
+                          <div className="ant-list ant-list-sm ant-list-split ant-list-grid sc-iUKrWq kSLLaF">
+                            <div className="ant-spin-nested-loading">
+                              <div className="ant-spin-container">
+                                <div className="ant-row" style={{ rowGap: '0px' }}>
+                                  <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    <div style={{ flex: '1 1 auto' }} className="ant-col">
+                                      <div className="ant-list-item">
+                                        <div className="ant-descriptions ant-descriptions-small">
+                                          <div className="ant-descriptions-header">
+                                            <div className="ant-descriptions-title">
+                                              <div className="ant-space ant-space-horizontal ant-space-align-center">
+                                                <div className="ant-space-item" style={{ marginRight: '8px' }}>LEVINSON ARTHUR D</div>
+                                                <div className="ant-space-item"> </div>
                                               </div>
-                                              <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
                                             </div>
-                                            <div className="ant-descriptions-view">
-                                              <table>
-                                                <tbody>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={2}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                            <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
+                                          </div>
+                                          <div className="ant-descriptions-view">
+                                            <table>
+                                              <tbody>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={2}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <div style={{ width: '100%', maxWidth: '100%' }}>
-                                      <div style={{ flex: '1 1 auto' }} className="ant-col">
-                                        <div className="ant-list-item">
-                                          <div className="ant-descriptions ant-descriptions-small">
-                                            <div className="ant-descriptions-header">
-                                              <div className="ant-descriptions-title">
-                                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                                  <div className="ant-space-item" style={{ marginRight: '8px' }}>JUNG ANDREA</div>
-                                                  <div className="ant-space-item"> </div>
-                                                </div>
+                                  </div>
+                                  <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    <div style={{ flex: '1 1 auto' }} className="ant-col">
+                                      <div className="ant-list-item">
+                                        <div className="ant-descriptions ant-descriptions-small">
+                                          <div className="ant-descriptions-header">
+                                            <div className="ant-descriptions-title">
+                                              <div className="ant-space ant-space-horizontal ant-space-align-center">
+                                                <div className="ant-space-item" style={{ marginRight: '8px' }}>JUNG ANDREA</div>
+                                                <div className="ant-space-item"> </div>
                                               </div>
-                                              <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
                                             </div>
-                                            <div className="ant-descriptions-view">
-                                              <table>
-                                                <tbody>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={2}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                            <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
+                                          </div>
+                                          <div className="ant-descriptions-view">
+                                            <table>
+                                              <tbody>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={2}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <div style={{ width: '100%', maxWidth: '100%' }}>
-                                      <div style={{ flex: '1 1 auto' }} className="ant-col">
-                                        <div className="ant-list-item">
-                                          <div className="ant-descriptions ant-descriptions-small">
-                                            <div className="ant-descriptions-header">
-                                              <div className="ant-descriptions-title">
-                                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                                  <div className="ant-space-item" style={{ marginRight: '8px' }}>GORE ALBERT JR</div>
-                                                  <div className="ant-space-item"> </div>
-                                                </div>
+                                  </div>
+                                  <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    <div style={{ flex: '1 1 auto' }} className="ant-col">
+                                      <div className="ant-list-item">
+                                        <div className="ant-descriptions ant-descriptions-small">
+                                          <div className="ant-descriptions-header">
+                                            <div className="ant-descriptions-title">
+                                              <div className="ant-space ant-space-horizontal ant-space-align-center">
+                                                <div className="ant-space-item" style={{ marginRight: '8px' }}>GORE ALBERT JR</div>
+                                                <div className="ant-space-item"> </div>
                                               </div>
-                                              <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
                                             </div>
-                                            <div className="ant-descriptions-view">
-                                              <table>
-                                                <tbody>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={2}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                            <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
+                                          </div>
+                                          <div className="ant-descriptions-view">
+                                            <table>
+                                              <tbody>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={2}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <div style={{ width: '100%', maxWidth: '100%' }}>
-                                      <div style={{ flex: '1 1 auto' }} className="ant-col">
-                                        <div className="ant-list-item">
-                                          <div className="ant-descriptions ant-descriptions-small">
-                                            <div className="ant-descriptions-header">
-                                              <div className="ant-descriptions-title">
-                                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                                  <div className="ant-space-item" style={{ marginRight: '8px' }}>SUGAR RONALD D</div>
-                                                  <div className="ant-space-item"> </div>
-                                                </div>
+                                  </div>
+                                  <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    <div style={{ flex: '1 1 auto' }} className="ant-col">
+                                      <div className="ant-list-item">
+                                        <div className="ant-descriptions ant-descriptions-small">
+                                          <div className="ant-descriptions-header">
+                                            <div className="ant-descriptions-title">
+                                              <div className="ant-space ant-space-horizontal ant-space-align-center">
+                                                <div className="ant-space-item" style={{ marginRight: '8px' }}>SUGAR RONALD D</div>
+                                                <div className="ant-space-item"> </div>
                                               </div>
-                                              <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
                                             </div>
-                                            <div className="ant-descriptions-view">
-                                              <table>
-                                                <tbody>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={2}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                            <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
+                                          </div>
+                                          <div className="ant-descriptions-view">
+                                            <table>
+                                              <tbody>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={2}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <div style={{ width: '100%', maxWidth: '100%' }}>
-                                      <div style={{ flex: '1 1 auto' }} className="ant-col">
-                                        <div className="ant-list-item">
-                                          <div className="ant-descriptions ant-descriptions-small">
-                                            <div className="ant-descriptions-header">
-                                              <div className="ant-descriptions-title">
-                                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                                  <div className="ant-space-item" style={{ marginRight: '8px' }}>WAGNER SUSAN</div>
-                                                  <div className="ant-space-item"> </div>
-                                                </div>
+                                  </div>
+                                  <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    <div style={{ flex: '1 1 auto' }} className="ant-col">
+                                      <div className="ant-list-item">
+                                        <div className="ant-descriptions ant-descriptions-small">
+                                          <div className="ant-descriptions-header">
+                                            <div className="ant-descriptions-title">
+                                              <div className="ant-space ant-space-horizontal ant-space-align-center">
+                                                <div className="ant-space-item" style={{ marginRight: '8px' }}>WAGNER SUSAN</div>
+                                                <div className="ant-space-item"> </div>
                                               </div>
-                                              <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
                                             </div>
-                                            <div className="ant-descriptions-view">
-                                              <table>
-                                                <tbody>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={2}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                            <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
+                                          </div>
+                                          <div className="ant-descriptions-view">
+                                            <table>
+                                              <tbody>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={2}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <div style={{ width: '100%', maxWidth: '100%' }}>
-                                      <div style={{ flex: '1 1 auto' }} className="ant-col">
-                                        <div className="ant-list-item">
-                                          <div className="ant-descriptions ant-descriptions-small">
-                                            <div className="ant-descriptions-header">
-                                              <div className="ant-descriptions-title">
-                                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                                  <div className="ant-space-item" style={{ marginRight: '8px' }}>BELL JAMES A</div>
-                                                  <div className="ant-space-item"> </div>
-                                                </div>
+                                  </div>
+                                  <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    <div style={{ flex: '1 1 auto' }} className="ant-col">
+                                      <div className="ant-list-item">
+                                        <div className="ant-descriptions ant-descriptions-small">
+                                          <div className="ant-descriptions-header">
+                                            <div className="ant-descriptions-title">
+                                              <div className="ant-space ant-space-horizontal ant-space-align-center">
+                                                <div className="ant-space-item" style={{ marginRight: '8px' }}>BELL JAMES A</div>
+                                                <div className="ant-space-item"> </div>
                                               </div>
-                                              <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
                                             </div>
-                                            <div className="ant-descriptions-view">
-                                              <table>
-                                                <tbody>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={2}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                            <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span></div>
+                                          </div>
+                                          <div className="ant-descriptions-view">
+                                            <table>
+                                              <tbody>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">25 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">23 Feb 2021</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">1,986</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={2}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
-                                    <div style={{ width: '100%', maxWidth: '100%' }}>
-                                      <div style={{ flex: '1 1 auto' }} className="ant-col">
-                                        <div className="ant-list-item">
-                                          <div className="ant-descriptions ant-descriptions-small">
-                                            <div className="ant-descriptions-header">
-                                              <div className="ant-descriptions-title">
-                                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                                  <div className="ant-space-item" style={{ marginRight: '8px' }}>JUNG ANDREA</div>
-                                                  <div className="ant-space-item"> </div>
-                                                </div>
+                                  </div>
+                                  <div style={{ width: '100%', maxWidth: '100%' }}>
+                                    <div style={{ flex: '1 1 auto' }} className="ant-col">
+                                      <div className="ant-list-item">
+                                        <div className="ant-descriptions ant-descriptions-small">
+                                          <div className="ant-descriptions-header">
+                                            <div className="ant-descriptions-title">
+                                              <div className="ant-space ant-space-horizontal ant-space-align-center">
+                                                <div className="ant-space-item" style={{ marginRight: '8px' }}>JUNG ANDREA</div>
+                                                <div className="ant-space-item"> </div>
                                               </div>
-                                              <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(240, 80, 0)' }}>M</span></div>
                                             </div>
-                                            <div className="ant-descriptions-view">
-                                              <table>
-                                                <tbody>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span><span className="ant-descriptions-item-content">48.9457</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">30 Apr 2020</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">0</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">28 Apr 2020</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
-                                                    </td>
-                                                    <td className="ant-descriptions-item" colSpan={1}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">9,590</span></div>
-                                                    </td>
-                                                  </tr>
-                                                  <tr className="ant-descriptions-row">
-                                                    <td className="ant-descriptions-item" colSpan={2}>
-                                                      <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
-                                                    </td>
-                                                  </tr>
-                                                </tbody>
-                                              </table>
-                                            </div>
+                                            <div className="ant-descriptions-extra"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(240, 80, 0)' }}>M</span></div>
+                                          </div>
+                                          <div className="ant-descriptions-view">
+                                            <table>
+                                              <tbody>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Exercise price</span><span className="ant-descriptions-item-content">48.9457</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Filing date</span><span className="ant-descriptions-item-content">30 Apr 2020</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Post shares</span><span className="ant-descriptions-item-content">0</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction date</span><span className="ant-descriptions-item-content">28 Apr 2020</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction price</span></div>
+                                                  </td>
+                                                  <td className="ant-descriptions-item" colSpan={1}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction shares</span><span className="ant-descriptions-item-content">9,590</span></div>
+                                                  </td>
+                                                </tr>
+                                                <tr className="ant-descriptions-row">
+                                                  <td className="ant-descriptions-item" colSpan={2}>
+                                                    <div className="ant-descriptions-item-container"><span className="ant-descriptions-item-label">Transaction value</span></div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </div>
                                         </div>
                                       </div>
@@ -1097,7 +1118,7 @@ const ProMemberPage = (props) => {
                 </div>
               </div>
             </div>
-          </PopoverStep>
+          </div>
           <div className="ant-row" style={{ marginTop: '30px', rowGap: '0px' }}>
             <div className="ant-col ant-col-24">
               <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">

@@ -37,13 +37,13 @@ const WalkthroughTour = withRouter((props) => {
 
   const [visible, setVisible] = React.useState(props.visible);
 
+  const isNarrow = useMediaQuery({ query: '(max-width: 576px)' });
+  const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
+  const isLandscape = useMediaQuery({ query: '(orientation: landscape)' });
+  
   React.useEffect(() => {
     setVisible(props.visible);
   }, [props.visible])
-
-  const isNarrow = useMediaQuery({ query: '(max-width: 576px)' });
-  const isPortrait = isNarrow && useMediaQuery({ query: '(orientation: portrait)' });
-  const isLandscape = isNarrow && useMediaQuery({ query: '(orientation: landscape)' });
 
   const tourConfig = [
     {

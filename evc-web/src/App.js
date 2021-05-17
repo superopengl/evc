@@ -57,13 +57,11 @@ const App = () => {
   const [user, setUser] = React.useState(null);
   const [event$] = React.useState(new Subject());
 
-  const startEventSource = user => {
-    if (user) {
-      const eventSource = getEventSource();
-      eventSource.onmessage = (message) => {
-        const event = JSON.parse(message.data);
-        event$.next(event);
-      }
+  const startEventSource = () => {
+    const eventSource = getEventSource();
+    eventSource.onmessage = (message) => {
+      const event = JSON.parse(message.data);
+      event$.next(event);
     }
   }
 
@@ -91,6 +89,7 @@ const App = () => {
   }
 
   React.useEffect(() => {
+    startEventSource();
     const load$ = from(initalize()).subscribe();
     return () => {
       load$.unsubscribe();
@@ -99,8 +98,6 @@ const App = () => {
 
   React.useEffect(() => {
     if (user !== contextValue.user) {
-      startEventSource(user);
-
       setContextValue({
         ...contextValue,
         user,

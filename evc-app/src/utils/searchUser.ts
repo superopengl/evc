@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm';
 import { assert } from './assert';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
+import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
 
 export type StockUserParams = {
   text?: string;
@@ -14,7 +15,7 @@ export type StockUserParams = {
 };
 
 export async function searchUser(queryInfo: StockUserParams) {
-  const { text, page, size, orderField, orderDirection, tags } = queryInfo;
+  const { text, page, size, orderField, orderDirection, tags, subscription } = queryInfo;
 
   const pageNo = page || 1;
   const pageSize = size || 50;
@@ -28,10 +29,10 @@ export async function searchUser(queryInfo: StockUserParams) {
   if (text) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
   }
-  // query = query.leftJoin(q => q.from(Subscription, 's').where('status = :status', { status: SubscriptionStatus.Alive }), 's', 's."userId" = u.id');
-  // if (subscription?.length) {
-  //   query = query.andWhere('(s.type IN (:...subscription))', { subscription });
-  // }
+  query = query.leftJoin(q => q.from(UserCurrentSubscription, 's'), 's', 's."userId" = u.id');
+  if (subscription?.length) {
+    query = query.andWhere(`(COALESCE(s."currentType", 'free') IN (:...subscription))`, { subscription });
+  }
   query = query.leftJoin(q => q
     .from('user_tags_user_tag', 'tg')
     .groupBy('tg."userId"')
@@ -47,7 +48,6 @@ export async function searchUser(queryInfo: StockUserParams) {
 
   const count = await query.getCount();
 
-
   query = query.orderBy(orderField, orderDirection)
     .addOrderBy('p.email', 'ASC')
     .offset((pageNo - 1) * pageSize)
@@ -57,6 +57,7 @@ export async function searchUser(queryInfo: StockUserParams) {
       'u.id as id',
       'u."loginType"',
       'u.role as role',
+      `COALESCE(s."currentType", 'free') as subscription`,
       'tg.tags as tags',
       'u."lastLoggedInAt"',
       'u."createdAt" as "createdAt"',

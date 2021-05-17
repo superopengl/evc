@@ -22,9 +22,11 @@ import { useMediaQuery } from 'react-responsive'
 import {
   BarChartOutlined,
   LineChartOutlined,
+  LockFilled,
 } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Text } = Typography;
 
@@ -34,6 +36,7 @@ const StockDisplayPanel = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [stockChartVisible, setStockChartVisible] = React.useState(false);
   const [putCallChartVisible, setPutCallChartVisible] = React.useState(false);
+  const context = React.useContext(GlobalContext);
 
   const loadEntity = async () => {
     try {
@@ -70,6 +73,8 @@ const StockDisplayPanel = (props) => {
   }
 
   const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
+
+  const shouldHidePutCall = ['guest', 'free'].includes(context.role);
 
   return (
     <>
@@ -117,7 +122,7 @@ const StockDisplayPanel = (props) => {
               </Button>
           </Col>
           <Col span={12}>
-            <Button block icon={<LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()}>
+            <Button block icon={shouldHidePutCall ? <LockFilled/> : <LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()} disabled={shouldHidePutCall}>
                {' '}<FormattedMessage id="text.optionPutCallRatio" />
             </Button>
           </Col>
@@ -153,10 +158,11 @@ const StockDisplayPanel = (props) => {
           footer={null}
           width="100vw"
           centered
+          bodyStyle={{padding: 0}}
         >
           <StockChart symbol={stock.symbol} period="1d" interval="5m" />
         </Modal>
-        <Modal
+        {!shouldHidePutCall && <Modal
           visible={putCallChartVisible}
           title={stock.symbol}
           onOk={() => setPutCallChartVisible(false)}
@@ -169,7 +175,7 @@ const StockDisplayPanel = (props) => {
           centered
         >
           <StockPutCallRatioChart symbol={stock.symbol} />
-        </Modal>
+        </Modal>}
       </>}
 
     </>

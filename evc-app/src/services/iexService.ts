@@ -51,7 +51,7 @@ export async function getInsiderTransactions(symbol: string) {
 }
 
 export async function getNews(symbol: string) {
-  const list = await requestIexApi(`/stock/${symbol}/news/last/10`);
+  const list = await requestIexApi(`/stock/${symbol}/news/last/50`);
   return (list ?? [])
     .filter(x => x.lang === 'en')
     .map(x => ({

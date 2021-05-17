@@ -5,7 +5,6 @@ import HomePage from 'pages/HomePage';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
-import { ContactWidget } from 'components/ContactWidget';
 import { getEventSource } from 'services/eventSourceService';
 import { Subject } from 'rxjs';
 import ReactDOM from 'react-dom';
@@ -146,7 +145,6 @@ const App = () => {
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>
           </BrowserRouter>
-          {isGuest && <ContactWidget />}
         </IntlProvider>
       </ConfigProvider>
     </GlobalContext.Provider>

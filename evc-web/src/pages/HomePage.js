@@ -15,6 +15,7 @@ import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
 import { FormattedMessage } from 'react-intl';
 import smoothscroll from 'smoothscroll-polyfill';
+import { ContactWidget } from 'components/ContactWidget';
 
 smoothscroll.polyfill();
 
@@ -98,6 +99,9 @@ const HomePage = (props) => {
     context.setLocale(locale);
   }
 
+  const isGuest = context.role === 'guest';
+
+
   const ROUTES = [
     {
       key: '0',
@@ -159,7 +163,7 @@ const HomePage = (props) => {
     location={{ pathname: '/non' }}
     fixedHeader={true}
     menuItemRender={(item, dom) => {
-      if(['/pro-member', '/earnings_calendar_preview'].includes(item.path)) {
+      if (['/pro-member', '/earnings_calendar_preview'].includes(item.path)) {
         return <a href={item.path} target="_blank" rel="noreferrer">
           {dom}
         </a>
@@ -206,6 +210,8 @@ const HomePage = (props) => {
     {/* <section>
       <HomeServiceArea bgColor="#135200" />
     </section> */}
+
+    {isGuest && <ContactWidget />}
 
     <HomeFooter />
 

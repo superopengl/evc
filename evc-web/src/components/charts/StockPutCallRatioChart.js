@@ -17,11 +17,11 @@ const StockPutCallRatioChart = props => {
       const {date, putCallRatio, putCallRatioAvg90} = d;
       chartData.push({
         date,
-        value: parseFloat(putCallRatio),
+        value: parseFloat(putCallRatio).toFixed(2),
         type: 'daily putCallRatio'
       }, {
         date,
-        value: parseFloat(putCallRatioAvg90),
+        value: parseFloat(putCallRatioAvg90).toFixed(2),
         type: '90 days avg'
       });
     }

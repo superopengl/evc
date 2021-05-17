@@ -117,12 +117,12 @@ const StockDisplayPanel = (props) => {
         </Row>}
         {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
           <Col span={12}>
-            <Button block icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
+            <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
                {' '}<FormattedMessage id="text.stockChart" />
               </Button>
           </Col>
           <Col span={12}>
-            <Button block icon={shouldHidePutCall ? <LockFilled/> : <LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()} disabled={shouldHidePutCall}>
+            <Button block type="primary" icon={shouldHidePutCall ? <LockFilled/> : <LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()} disabled={shouldHidePutCall}>
                {' '}<FormattedMessage id="text.optionPutCallRatio" />
             </Button>
           </Col>

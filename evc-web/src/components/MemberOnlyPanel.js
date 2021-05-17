@@ -38,12 +38,12 @@ return <StyledSpace>
   <Text><LockFilled /> {props.message}</Text>
   {isGuest && <Link to="/signup">
     <Button type="link">
-      Click to Sign Up
+      <FormattedMessage id="text.clickToSignUp" />
       </Button>
   </Link>}
   {!isGuest && <Link to="/settings/subscription">
     <Button type="link">
-      Click to upgrade
+      <FormattedMessage id="text.clickToUpgrade" />
       </Button>
   </Link>}
 </StyledSpace>}

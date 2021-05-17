@@ -92,7 +92,7 @@ const StockDisplayPanel = (props) => {
               </Col>
               <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                 <MemberOnlyCard
-                  title="EVC Core Info"
+                  title={<FormattedMessage id="text.evcCoreInfo" />}
                   paidOnly={true}
                   bodyStyle={{ height: 274 }}
                   blockedComponent={

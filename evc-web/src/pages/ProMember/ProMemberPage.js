@@ -279,7 +279,9 @@ const ProMemberPage = () => {
                   <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                     <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                       <div className="ant-card-head-wrapper">
-                        <div className="ant-card-head-title">EVC Core Info</div>
+                        <div className="ant-card-head-title">
+                          <FormattedMessage id="text.evcCoreInfo" />
+                        </div>
                       </div>
                     </div>
                     <div className="ant-card-body" style={{ height: '274px' }} >

@@ -1,17 +1,15 @@
-import { Alert, Button, Card, Popover, Space, Modal, Tooltip } from 'antd';
+import { Alert, Button, Card, Space, Modal } from 'antd';
 import React from 'react';
 import { Typography } from 'antd';
 import styled from 'styled-components';
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import { StockNoticeButton } from 'components/StockNoticeButton';
 import { withRouter } from 'react-router-dom';
 import SignUpForm from 'components/SignUpForm';
-import { InfoCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/charts';
 import putCallData from './putCallData';
 import { FormattedMessage } from 'react-intl';
 import { useMediaQuery } from 'react-responsive'
-import { scrollToElement } from '../../util/scrollToElement';
 import Joyride from 'react-joyride';
 
 const { Paragraph, Text } = Typography;
@@ -44,14 +42,10 @@ img {
 
 const WalkthroughTour = withRouter((props) => {
 
-  const {visible : visibleProp, onClose} = props;
+  const {visible : visibleProp, onClose, onComplete} = props;
 
   const [visible, setVisible] = React.useState(visibleProp);
-  const [current, setCurrent] = React.useState(0);
 
-  const isNarrow = useMediaQuery({ query: '(max-width: 576px)' });
-  const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
-  const isLandscape = useMediaQuery({ query: '(orientation: landscape)' });
 
   React.useEffect(() => {
     setVisible(visibleProp);
@@ -60,7 +54,6 @@ const WalkthroughTour = withRouter((props) => {
   const tourConfig = [
     {
       target: '#tour-fair-value',
-      position: isPortrait ? [20, 20] : isLandscape ? 'top' : 'bottom',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
@@ -76,8 +69,8 @@ const WalkthroughTour = withRouter((props) => {
     },
     {
       target: '#tour-support',
-      position: isPortrait ? [20, 20] : isLandscape ? 'top' : 'bottom',
       disableBeacon: true,
+      placement: 'top',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.supportTitle" />
@@ -92,8 +85,6 @@ const WalkthroughTour = withRouter((props) => {
     },
     {
       target: '#tour-resistance',
-      // position: [20, 20],
-      position: 'top',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
@@ -109,8 +100,6 @@ const WalkthroughTour = withRouter((props) => {
     },
     {
       target: '#tour-putcall',
-      position: 'top',
-      // position: [20, 20],
       placement: 'auto',
       disableBeacon: true,
       content: <>
@@ -128,7 +117,6 @@ const WalkthroughTour = withRouter((props) => {
     {
       target: '#tour-insider',
       placement: 'auto',
-      // position: isPortrait ? 'top' : [20, 20],
       disableBeacon: true,
       content: <>
         <Paragraph strong>
@@ -141,7 +129,7 @@ const WalkthroughTour = withRouter((props) => {
     },
     {
       target: '#tour-alert',
-      placement: 'left',
+      placement: 'auto',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
@@ -152,20 +140,16 @@ const WalkthroughTour = withRouter((props) => {
         </Paragraph>
       </>
     },
-    {
-      target: 'body',
-      placement: 'center',
-      disableBeacon: true,
-      content: <div style={{ maxWidth: 300 }}>
-        <SignUpForm onOk={() => props.history.push('/')} />
-      </div>
-    }
   ];
 
   const handleTourStepChange = data => {
     const {action, index} = data;
-    // debugger;
     switch (action) {
+      case 'reset': {
+        onComplete();
+        onClose();
+        break;
+      }
       case 'skip':
       case 'stop':
       case 'close': {
@@ -173,12 +157,9 @@ const WalkthroughTour = withRouter((props) => {
         break;
       }
       default: 
-        setCurrent(index);
         break;
     }
   }
-
-  // debugger;
 
   return <Joyride
     steps={tourConfig}
@@ -203,27 +184,12 @@ const WalkthroughTour = withRouter((props) => {
       },
       tooltipContainer : {
         textAlign: 'left'
+      },
+      tooltip: {
+        fontSize: 14
       }
     }}
   />
-
-  // return (
-  //   <Tour
-  //     isOpen={visible}
-  //     steps={tourConfig}
-  //     onRequestClose={() => props.onClose()}
-  //     onAfterOpen={target => disableBodyScroll(target)}
-  //     onBeforeClose={target => enableBodyScroll(target)}
-  //     accentColor="#57BB60"
-  //     // inViewThreshold={1000}
-  //     scrollOffset={isPortrait ? -400 : isLandscape ? -300 : -50}
-  //     className="tour-helper"
-  //     rounded={4}
-  //     startAt={0}
-  //   // lastStepNextButton={<Button>Done! Let's start playing</Button>}
-  //   // maskClassName="tour-mask"
-  //   />
-  // )
 });
 
 const PutCallDummyChart = () => {
@@ -250,127 +216,21 @@ const PutCallDummyChart = () => {
 
 const ProMemberPage = (props) => {
   const [visible, setVisible] = React.useState(false);
-  const [current, setCurrent] = React.useState(0);
-
-  React.useEffect(() => {
-    const stepConfig = tourConfig[current];
-    const selector = stepConfig?.selector;
-    if (selector) {
-      scrollToElement(selector, {
-        block: stepConfig.scroll,
-        inline: 'center'
-      });
-    }
-  }, [current]);
-
-  const tourConfig = [
-    {
-      selector: '#tour-fair-value',
-      scroll: 'center',
-      content: <>
-        <Paragraph strong>
-          <FormattedMessage id="tour.fairValueTitle" />
-        </Paragraph>
-        <Paragraph style={{ fontSize: 14 }}>
-          <FormattedMessage id="tour.fairValueDescription" />
-        </Paragraph>
-        <Paragraph type="danger" style={{ fontSize: 14 }}>
-          <FormattedMessage id="tour.fairValueNote" />
-        </Paragraph>
-      </>
-    },
-    {
-      selector: '#tour-support',
-      scroll: 'center',
-      content: <>
-        <Paragraph strong>
-          <FormattedMessage id="tour.supportTitle" />
-        </Paragraph>
-        <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.supportDescription" />
-        </Paragraph>
-        <Paragraph type="danger" style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.supportNote" />
-        </Paragraph>
-      </>
-    },
-    {
-      selector: '#tour-resistance',
-      scroll: 'center',
-      content: <>
-        <Paragraph strong>
-          <FormattedMessage id="tour.resistanceTitle" />
-        </Paragraph>
-        <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.resistanceDescription" />
-        </Paragraph>
-        <Paragraph type="danger" style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.resistanceNote" />
-        </Paragraph>
-      </>
-    },
-    {
-      selector: '#tour-putcall',
-      scroll: 'center',
-      content: <>
-        <Paragraph strong>
-          <FormattedMessage id="tour.putCallTitle" />
-        </Paragraph>
-        <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.putCallDescription" />
-        </Paragraph>
-        <Paragraph type="danger" style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.putCallNote" />
-        </Paragraph>
-      </>
-    },
-    {
-      selector: '#tour-insider',
-      scroll: 'start',
-      content: <>
-        <Paragraph strong>
-          <FormattedMessage id="tour.insiderTitle" />
-        </Paragraph>
-        <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.insiderDescription" />
-        </Paragraph>
-      </>
-    },
-    {
-      selector: '#tour-alert',
-      placement: 'bottomRight',
-      scroll: 'center',
-      content: <>
-        <Paragraph strong>
-          <FormattedMessage id="tour.alertTitle" />
-        </Paragraph>
-        <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.alertDescription" />
-        </Paragraph>
-      </>
-    },
-    {
-      selector: '#tour-signup',
-      content: <div style={{ maxWidth: 300 }}>
-        <SignUpForm onOk={() => props.history.push('/')} />
-      </div>
-    }
-  ];
-
+  const [signUpVisible, setSignUpVisible] = React.useState(false);
 
   const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
-  const showingTour = 0 <= current && current < tourConfig.length - 1;
 
   return (
     <Container>
-      <WalkthroughTour visible={visible} onClose={() => setVisible(false)} />
+      <WalkthroughTour visible={visible} onClose={() => setVisible(false)} onComplete={() => setSignUpVisible(true)} />
       <Modal
-        style={{ maxWidth: 'calc(100vw - 20px)', width: 400 }}
-        visible={current === tourConfig.length - 1}
+        style={{ maxWidth: 'calc(100vw - 20px)', width: 300 }}
+        width={340}
+        visible={signUpVisible}
         maskClosable={true}
         destroyOnClose={true}
-        onOk={() => setCurrent(current + 1)}
-        onCancel={() => setCurrent(current + 1)}
+        onOk={() => setSignUpVisible(false)}
+        onCancel={() => setSignUpVisible(false)}
         footer={null}
       >
         <SignUpForm onOk={() => props.history.push('/')} />

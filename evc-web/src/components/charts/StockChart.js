@@ -12,6 +12,7 @@ const StockChart = props => {
     allow_symbol_change={false}
     save_image={false}
     autosize
+    hide_legend={true}
     />
     </div>
 }

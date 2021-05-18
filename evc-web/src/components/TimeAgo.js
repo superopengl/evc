@@ -21,11 +21,14 @@ font-size: 0.8rem;
 `
 
 export const TimeAgo = props => {
-  const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime, type } = props;
+  const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime, type, toLocalTime } = props;
   if (!value) {
     return defaultContent || null;
   }
-  const m = moment(value);
+  let m = moment.utc(value);
+  if(toLocalTime) {
+    m = m.local();
+  }
   return <StyledSpace size="small" direction="horizontal">
     <Space direction={direction} size="small">
       {prefix}
@@ -46,7 +49,8 @@ TimeAgo.propTypes = {
   accurate: PropTypes.bool.isRequired,
   showAgo: PropTypes.bool,
   showTime: PropTypes.bool,
-  type: PropTypes.oneOf([null, 'secondary'])
+  type: PropTypes.oneOf([null, 'secondary']),
+  toLocalTime: PropTypes.bool
 };
 
 TimeAgo.defaultProps = {
@@ -56,5 +60,6 @@ TimeAgo.defaultProps = {
   accurate: true,
   showAgo: true,
   showTime: true,
-  type: 'secondary'
+  type: 'secondary',
+  toLocalTime: true
 };

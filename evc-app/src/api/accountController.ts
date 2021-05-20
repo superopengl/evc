@@ -6,7 +6,12 @@ import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
-import { getCurrentGlobalReferralCommission, getCurrentSpecialReferralCommissionForUser } from '../services/referralService';
+import {
+  getCurrentGlobalReferralCommission,
+  getCurrentSpecialReferralCommissionForUser,
+  getCurrentGlobalReferreeDiscount,
+  getCurrentUserSpecialReferreeDiscount
+} from '../services/referralService';
 import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
 
 export const createReferral = async (userId) => {
@@ -37,11 +42,15 @@ const getAccountForUser = async (userId) => {
   const globalReferralCommission = await getCurrentGlobalReferralCommission();
   const specialReferralCommission = await getCurrentSpecialReferralCommissionForUser(userId);
   const referralCommission = specialReferralCommission || globalReferralCommission;
+  const globalReferreeDiscount = await getCurrentGlobalReferreeDiscount();
+  const specialReferreeDiscount = await getCurrentUserSpecialReferreeDiscount(userId);
 
   const result = {
     subscription,
     globalReferralCommission,
     specialReferralCommission,
+    globalReferreeDiscount,
+    specialReferreeDiscount,
     referralCommission,
     referralUrl,
     referralCount,

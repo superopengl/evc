@@ -25,7 +25,7 @@
   "menu.tags": "标签管理",
   "menu.config": "系统配置",
   "menu.emailTemplate": "邮件模板",
-  "menu.globalReferralPolicy": "推荐佣金策略",
+  "menu.globalCommissionPolicy": "推荐佣金策略",
   "menu.continueWithGoogle": "Google账号登录",
   "menu.tc": "使用条款",
   "menu.pp": "隐私政策",

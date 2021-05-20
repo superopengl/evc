@@ -251,9 +251,9 @@ paths:
       responses:
         200:
           description: OK
-  /user/:id/referral_policy:
+  /user/:id/commission_policy:
     get:
-      operationId: getReferralUserPolicy
+      operationId: getCommissionUserPolicy
       parameters:
         - name: id
           in: path
@@ -264,7 +264,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: saveReferralUserPolicy
+      operationId: saveCommissionUserPolicy
       parameters:
         - name: id
           in: path
@@ -275,7 +275,7 @@ paths:
         200:
           description: OK
     delete:
-      operationId: deleteReferralUserPolicy
+      operationId: deleteCommissionUserPolicy
       parameters:
         - name: id
           in: path
@@ -285,6 +285,40 @@ paths:
       responses:
         200:
           description: OK          
+  /user/:id/discount_policy:
+    get:
+      operationId: getDiscountUserPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveDiscountUserPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteDiscountUserPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                    
   /user/:id/set_password:
     post:
       operationId: setUserPassword
@@ -896,20 +930,20 @@ paths:
       responses:
         200:
           description: OK
-  /referral_policy/global:
+  /commission_policy/global:
     get:
-      operationId: listReferralGlobalPolicy
+      operationId: listCommissionGlobalPolicy
       responses:
         200:
           description: OK
     post:
-      operationId: saveReferralGlobalPolicy
+      operationId: saveCommissionGlobalPolicy
       responses:
         200:
           description: OK
-  /referral_policy/global/:id:
+  /commission_policy/global/:id:
     get:
-      operationId: getReferralGlobalPolicy
+      operationId: getCommissionGlobalPolicy
       parameters:
         - name: id
           in: path
@@ -918,9 +952,9 @@ paths:
       responses:
         200:
           description: OK
-  /referral_policy/:id/enable:
+  /commission_policy/:id/enable:
     post:
-      operationId: enableReferralGlobalPolicy
+      operationId: enableCommissionGlobalPolicy
       parameters:
         - name: id
           in: path
@@ -929,6 +963,39 @@ paths:
       responses:
         200:
           description: OK
+  /discount_policy/global:
+    get:
+      operationId: listDiscountGlobalPolicy
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveDiscountGlobalPolicy
+      responses:
+        200:
+          description: OK
+  /discount_policy/global/:id:
+    get:
+      operationId: getDiscountGlobalPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /discount_policy/:id/enable:
+    post:
+      operationId: enableDiscountGlobalPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /commission_withdrawal:
     get:
       operationId: listMyCommissionWithdrawal

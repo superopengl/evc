@@ -29,7 +29,7 @@ const EarnCommissionGuideZh = props => {
     受邀者使用你的邀请链接，首次注册，首次购买，可享受10%折扣
     </Title>
     <Paragraph type="secondary">
-    例如：受邀者首次支付，购买29 USD/月会员服务，折扣为2.9 USD，实际支付26.1 USD/月。受邀者首次支付，购买319 USD/年会员服务，折扣为31.9 USD，实际支付287.1/年
+    例如：受邀者首次支付，购买29 USD/月会员服务，折扣为2.9 USD，实际支付26.1 USD/月。受邀者首次支付，购买319 USD/年会员服务，折扣为31.9 USD，实际支付287.1 USD/年
     <br />
       <Text type="danger">
         * 如果受邀者先支付29 USD/月，又升级为319 USD/年，只能获得首次支付折扣2.9 USD。<strong><u>建议首次支付选择年费会员，享受更多折扣</u></strong>。
@@ -43,6 +43,10 @@ const EarnCommissionGuideZh = props => {
     <br />
       <Text type="danger">
         * 如果对方先支付29 USD/月，又升级为319 USD/年，你只能获得首次支付的2.9 USD佣金。<strong><u>建议向你的朋友推荐首次支付年会员服务，赚取更多佣金</u></strong>。
+    </Text>
+    <br />
+      <Text type="danger">
+      折扣和佣金比例，未来可能发生改变，具体信息以本页面为准!
     </Text>
     </Paragraph>
     <Title level={5} style={{marginTop: '3rem'}}>

@@ -193,7 +193,7 @@ const MyAccountPage = (props) => {
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>.
               </>} />}
               {!currentSubscription && <Alert type="info" showIcon description={
-                <FormattedMessage id="text.freeToPaidSuggestion"/>
+                <FormattedMessage id="text.freeToPaidSuggestion" />
               } />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
@@ -233,32 +233,40 @@ const MyAccountPage = (props) => {
           >
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">
-              <FormattedMessage id="text.commissionBalanceDescription1" /><br/>
-              <FormattedMessage id="text.commissionBalanceDescription2" values={{amount: <MoneyAmount value={account.referralCommission * 29} />}}/><br/>
-                <FormattedMessage id="text.commissionBalanceDescription3" values={{amount: <MoneyAmount value={account.referralCommission * 319} />}}/>
-                </Paragraph>
+                <FormattedMessage id="text.commissionBalanceDescription1" /><br />
+                <FormattedMessage id="text.commissionBalanceDescription2" values={{ amount: <MoneyAmount value={account.referralCommission * 29} /> }} /><br />
+                <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommission * 319} /> }} />
+              </Paragraph>
 
               <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
-              <FormattedMessage id="text.creditHistory" />
+                <FormattedMessage id="text.creditHistory" />
               </Button>
             </Space>
           </Card>
           <Card
             bordered={false}
-            title={<FormattedMessage id="text.commissionWithdrawal"/>}
-            extra={
-              <Space>
-                <Button type="secondary" onClick={() => setCommissionWithdrawalHistoryVisible(true)}>
-                  <FormattedMessage id="text.commissionWithdrawalHistory" />
-                </Button>
-                <Button type="primary" onClick={() => setCashBackVisible(true)} disabled={account.credit <= 0}>
-                  <FormattedMessage id="text.commissionWithdrawalNew" />
-                </Button>
-              </Space>
-            }
+            title={<Row gutter={[10, 10]} justify="space-between">
+              <Col>
+                <FormattedMessage id="text.commissionWithdrawal" />
+              </Col>
+              <Col>
+                <Row gutter={[10, 10]}>
+                  <Col>
+                    <Button type="secondary" onClick={() => setCommissionWithdrawalHistoryVisible(true)}>
+                      <FormattedMessage id="text.commissionWithdrawalHistory" />
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button type="primary" onClick={() => setCashBackVisible(true)} disabled={account.credit <= 0}>
+                      <FormattedMessage id="text.commissionWithdrawalNew" />
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>}
           >
             <Paragraph type="secondary">
-            <FormattedMessage id="text.commissionWithdrawalDescription"/>
+              <FormattedMessage id="text.commissionWithdrawalDescription" />
             </Paragraph>
           </Card>
         </Space>

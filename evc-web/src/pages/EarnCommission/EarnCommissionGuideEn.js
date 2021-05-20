@@ -41,13 +41,17 @@ const EarnCommissionGuideEn = props => {
     </Text>
     </Paragraph>
     <Paragraph type="secondary">
-      As a referrer, <strong>you will receive commission rewards in the amount of the referee's first purchase discount</strong>.
+      As a referrer, <strong>you will receive commission rewards in the amount of referee’s first purchase discount, i.e. 10% of their first paid subscription fee.</strong>
     </Paragraph>
     <Paragraph type="secondary">
       For example, your friend John, the referee, pays 29USD monthly membership for his first subscription so you will get 2.9USD rewards. Or he pays 319USD yearly membership for his first subscription, you will receive 31.9USD.
     <br />
       <Text type="danger">
         * If the referee makes the first payment of 29USD/month and upgrades to 319USD/year later, you can only receive the first discount amount of 2.9USD as your commission. <strong><u>Recommend our Annual Pro Member to your friends to earn more commission rewards</u></strong>.
+    </Text>
+    <br />
+      <Text type="danger">
+      Discount and commission reward percentage or amount in the referral program may change at any time. The rules are subject to change.
     </Text>
     </Paragraph>
     <Title level={5} style={{marginTop: '3rem'}}>

@@ -105,7 +105,7 @@ const ReferralCreditForm = (props) => {
       notify.success(<>Successfully deleted special referral policy from the user. Now the global policy applies to the user.</>);
       await loadData();
     } finally {
-      commissionFormRef.current.resetFields();
+      commissionFormRef.current.setFieldsValue({percentage: null});
       setLoading(false);
     }
   }
@@ -117,7 +117,7 @@ const ReferralCreditForm = (props) => {
       notify.success(<>Successfully deleted special discount policy from the user. Now the global policy applies to the user.</>);
       await loadData();
     } finally {
-      discountFormRef.current.resetFields();
+      discountFormRef.current.setFieldsValue({percentage: null});
       setLoading(false);
     }
   }
@@ -142,13 +142,13 @@ const ReferralCreditForm = (props) => {
         {/* User referral commission */}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Title level={4}>User Referral Commission</Title>
-          <Title type="success">{(account?.specialReferralCommission || account?.globalReferralCommission) * 100}%</Title>
+          <Title type="success">{account?.referralCommissionPerc * 100}%</Title>
         </Space>
-        <Paragraph type="secondary">Setting this policy will override the global referral policy. The current global policy is <Text strong>{account?.globalReferralCommission * 100}%</Text>.</Paragraph>
+        <Paragraph type="secondary">Setting this policy will override the global referral policy. The current global policy is <Text strong>{account?.globalReferralCommissionPerc * 100}%</Text>.</Paragraph>
         {account && <Form
           ref={commissionFormRef}
           onFinish={handleSaveCommissionUserPolicy}
-          initialValues={{ percentage: account.specialReferralCommission }}>
+          initialValues={{ percentage: account.specialReferralCommissionPerc || null }}>
           <Form.Item label="Commission per referral" name="percentage"
             rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, message: 'Must be 0.01 ~ 0.99', whitespace: true }]}
           >
@@ -170,7 +170,7 @@ const ReferralCreditForm = (props) => {
               loading={loading}
               onClick={() => handleDeleteSpecialCommission()}
             >
-              Use Global Commission ({account?.globalReferralCommission * 100}%)
+              Use Global Commission ({account?.globalReferralCommissionPerc * 100}%)
                </Button>
           </Form.Item>
         </Form>}
@@ -179,13 +179,13 @@ const ReferralCreditForm = (props) => {
         {/* Referree discount */}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Title level={4}>Referree 1st Buy Discount</Title>
-          <Title type="success">{(account?.specialReferreeDiscount || account?.globalReferreeDiscount) * 100}%</Title>
+          <Title type="success">{account?.referreeDiscountPerc * 100}%</Title>
         </Space>
-        <Paragraph type="secondary">Setting this policy will override the global referree discount policy. The current global policy is <Text strong>{account?.globalReferreeDiscount * 100}%</Text>.</Paragraph>
+        <Paragraph type="secondary">Setting this policy will override the global referree discount policy. The current global policy is <Text strong>{account?.globalReferreeDiscountPerc * 100}%</Text>.</Paragraph>
         {account && <Form
           ref={discountFormRef}
           onFinish={handleSaveDiscountUserPolicy}
-          initialValues={{ percentage: account.specialReferreeDiscount }}>
+          initialValues={{ percentage: account.specialReferreeDiscountPerc || null }}>
           <Form.Item label={<>Discount for the 1st buy</>} name="percentage"
             rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, message: 'Must be 0.01 ~ 0.99', whitespace: true }]}
           >
@@ -207,7 +207,7 @@ const ReferralCreditForm = (props) => {
               loading={loading}
               onClick={() => handleDeleteSpecialDiscount()}
             >
-              Use Global Discount ({account?.globalReferreeDiscount * 100}%)
+              Use Global Discount ({account?.globalReferreeDiscountPerc * 100}%)
                </Button>
           </Form.Item>
         </Form>}

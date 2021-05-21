@@ -30,6 +30,7 @@
   "menu.tc": "使用条款",
   "menu.pp": "隐私政策",
   "menu.disclaimer": "免责声明",
+  "menu.globalDiscountPolicy": "被推荐者折扣策略",
   "placeholder.searchSymbol": "搜索股票代码",
   "placeholder.emailAddress": "电子邮箱地址",
   "placeholder.password": "密 码",
@@ -152,5 +153,6 @@
   "text.noEnoughCredit": "您没有足够的余额",
   "text.currentReferralCommissionPercentage": "您当前的推荐佣金比例为{percentage}。",
   "text.currentReferreeDiscountPercentage": "被您推荐的用户首次购买时享受的折扣优惠为{percentage}。",
+  "text.initialBuyDiscountMessage": "You can get {percentage}% off discount now!",
   "": ""
 }

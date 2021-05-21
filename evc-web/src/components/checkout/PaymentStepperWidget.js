@@ -48,7 +48,7 @@ const CardButton = styled(Button)`
 
 const PaymentStepperWidget = (props) => {
 
-  const { planType, onComplete, onLoading } = props;
+  const { planType, onComplete, onLoading, discount } = props;
   const [loading, setLoading] = React.useState(false);
   const [paymentDetail, setPaymentDetail] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
@@ -238,10 +238,11 @@ const PaymentStepperWidget = (props) => {
         <Card>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
-            <div>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}>
               <Text strong type="success" style={{ fontSize: 24 }}>
-                <big>$ {newPlanDef.price}</big>
-              </Text> {newPlanDef.unit}
+                <big>$ {(newPlanDef.price * (1 - discount)).toFixed(2)}</big>
+              </Text> 
+              <small><Text type="secondary">{newPlanDef.unit}</Text></small>
             </div>
           </Space>
           <div style={{ display: 'flex' }}>
@@ -265,9 +266,11 @@ PaymentStepperWidget.propTypes = {
   planType: PropTypes.string.isRequired,
   onComplete: PropTypes.func.isRequired,
   onLoading: PropTypes.func.isRequired,
+  discount: PropTypes.number
 };
 
 PaymentStepperWidget.defaultProps = {
+  discount: 0
 };
 
 export default withRouter(PaymentStepperWidget);

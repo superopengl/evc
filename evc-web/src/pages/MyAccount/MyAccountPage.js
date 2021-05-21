@@ -293,6 +293,7 @@ const MyAccountPage = (props) => {
       >
         <PaymentStepperWidget
           planType={planType}
+          discount={account.my1stBuyDiscountPerc}
           onComplete={handlePaymentOk}
           onLoading={loading => setPaymentLoading(loading)}
         />

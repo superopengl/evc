@@ -150,5 +150,7 @@
   "text.commissionBalanceDescription2": "推荐朋友首次订阅月费会员，你可以获得 {amount} 佣金。",
   "text.commissionBalanceDescription3": "推荐朋友首次订阅年费会员，你可以获得 {amount} 佣金。",
   "text.noEnoughCredit": "您没有足够的余额",
+  "text.currentReferralCommissionPercentage": "您当前的推荐佣金比例为{percentage}。",
+  "text.currentReferreeDiscountPercentage": "被您推荐的用户首次购买时享受的折扣优惠为{percentage}。",
   "": ""
 }

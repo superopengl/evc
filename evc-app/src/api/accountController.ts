@@ -41,9 +41,11 @@ const getAccountForUser = async (userId) => {
 
   const globalReferralCommission = await getCurrentGlobalReferralCommission();
   const specialReferralCommission = await getCurrentSpecialReferralCommissionForUser(userId);
-  const referralCommission = specialReferralCommission || globalReferralCommission;
   const globalReferreeDiscount = await getCurrentGlobalReferreeDiscount();
   const specialReferreeDiscount = await getCurrentUserSpecialReferreeDiscount(userId);
+  
+  const referralCommission = specialReferralCommission || globalReferralCommission;
+  const referralDiscount = specialReferreeDiscount || globalReferreeDiscount;
 
   const result = {
     subscription,
@@ -52,6 +54,7 @@ const getAccountForUser = async (userId) => {
     globalReferreeDiscount,
     specialReferreeDiscount,
     referralCommission,
+    referralDiscount,
     referralUrl,
     referralCount,
     credit: +credit?.amount || 0

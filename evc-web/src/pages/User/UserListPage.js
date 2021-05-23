@@ -100,14 +100,19 @@ const UserListPage = () => {
     //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
     // },
     {
+      title: 'Signed Up',
+      dataIndex: 'createdAt',
+      render: (text) => <TimeAgo value={text} />,
+    },
+    {
+      title: 'Last Logged In',
+      dataIndex: 'lastLoggedInAt',
+      render: (text) => <TimeAgo value={text} />,
+    },
+    {
       title: 'Tags',
       dataIndex: 'tags',
       render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
-    },
-    {
-      title: 'Last Logged In At',
-      dataIndex: 'lastLoggedInAt',
-      render: (text) => <TimeAgo value={text} />,
     },
     {
       // title: 'Action',

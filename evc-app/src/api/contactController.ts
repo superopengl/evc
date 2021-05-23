@@ -9,7 +9,7 @@ import { EmailTemplateType } from '../types/EmailTemplateType';
 
 
 export const saveContact = handlerWrapper(async (req, res) => {
-  const {email, givenName, surname} = (req as any).user || {};
+  const {email, givenName, surname} = (req as any).user?.profile || {};
   const { name, contact, message } = req.body;
 
   const userName = `${givenName || ''} ${surname || ''}`.trim();

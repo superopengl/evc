@@ -80,8 +80,13 @@ const UserListPage = () => {
       render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />,
     },
     {
-      title: 'Country',
+      title: 'Profile Country',
       dataIndex: 'country',
+      render: (value) => value ? countries.getLabel(value) : null
+    },
+    {
+      title: 'IP Country',
+      dataIndex: 'ipCountry',
       render: (value) => value ? countries.getLabel(value) : null
     },
     {

@@ -343,6 +343,7 @@ const UserListPage = () => {
         </Space>
         {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
         <Table columns={columnDef}
+          bordered
           dataSource={list}
           size="small"
           scroll={{

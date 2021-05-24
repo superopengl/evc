@@ -21,6 +21,7 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>, option
     if (oneTimeRun) {
       console.log('Task', jobName, 'done');
       await logDataEvent({ eventId, eventType: jobName, status: 'done', by: 'task' })
+      process.exit(0);
     }
   } catch (e) {
     const jsonError = errorToJson(e);
@@ -28,12 +29,12 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>, option
     await logDataEvent({ eventId, eventType: jobName, status: 'error', by: 'task', data: jsonError });
     error = e;
   } finally {
-    if (error || oneTimeRun) {
+    if (error) {
       try {
         await connection?.close();
       } catch {
       }
-      process.exit();
+      process.exit(1);
     }
   }
 };

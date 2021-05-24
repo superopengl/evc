@@ -40,7 +40,7 @@ export async function searchUser(queryInfo: StockUserParams) {
       'tg."userId" as "userId"',
       'array_agg(tg."userTagId") as tags'
     ]),
-  'tg', 'tg."userId" = u.id');
+    'tg', 'tg."userId" = u.id');
 
   if (tags?.length) {
     query = query.andWhere('(tg.tags && array[:...tags]::uuid[]) IS TRUE', { tags });
@@ -53,7 +53,11 @@ export async function searchUser(queryInfo: StockUserParams) {
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
     .select([
-      'p.*',
+      'p.email as email',
+      'p."givenName" as "givenName"',
+      'p.surname as surname',
+      'p.country as country',
+      `p.geo ->> 'country' as "ipCountry"`,
       'u.id as id',
       'u."loginType"',
       'u.role as role',

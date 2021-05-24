@@ -3,12 +3,13 @@ import { withRouter } from 'react-router-dom';
 import ProfileForm from './ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Modal } from 'antd';
+import PropTypes from 'prop-types';
 
 const ProfileModal = props => {
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
 
-  const { visible, onOk } = props;
+  const { visible, onOk, closable } = props;
 
   const handlePostSave = (updatedUser) => {
     setUser(updatedUser);
@@ -19,8 +20,8 @@ const ProfileModal = props => {
   return (
     <Modal
       title="Update Profile"
-      closable={true}
-      maskClosable={true}
+      closable={closable}
+      maskClosable={closable}
       destroyOnClose={true}
       footer={null}
       visible={visible}
@@ -31,8 +32,12 @@ const ProfileModal = props => {
   );
 };
 
-ProfileModal.propTypes = {};
+ProfileModal.propTypes = {
+  closable: PropTypes.bool
+};
 
-ProfileModal.defaultProps = {};
+ProfileModal.defaultProps = {
+  closable: true
+};
 
 export default withRouter(ProfileModal);

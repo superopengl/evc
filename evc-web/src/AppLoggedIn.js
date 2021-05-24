@@ -89,13 +89,28 @@ const AppLoggedIn = props => {
   const [pathname, setPathname] = React.useState(getSanitizedPathName(props.location.pathname));
 
   const { user, role, setUser } = context;
+
+  const isProfileComplete = () => {
+    if (!user) return false;
+    const { surname, givenName, country } = user.profile;
+    return surname && givenName && country;
+  }
+
+  React.useEffect(() => {
+    if (!isProfileComplete()) {
+      setProfileVisible(true);
+    }
+  }, [user]);
+
   if (!user) {
     return null;
   }
+
   const isAdmin = role === 'admin';
   const isFree = role === 'free';
   const isMember = role === 'member';
   const isAgent = role === 'agent';
+
 
   const ROUTES = [
     {
@@ -382,6 +397,7 @@ const AppLoggedIn = props => {
     />
     <ProfileModal
       visible={profileVisible}
+      closable={isProfileComplete()}
       onOk={() => setProfileVisible(false)}
       onCancel={() => setProfileVisible(false)}
     />

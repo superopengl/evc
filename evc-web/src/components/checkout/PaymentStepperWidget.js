@@ -1,11 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Switch, Divider, Modal, Card, Row, Col } from 'antd';
+import { Typography, Button, Divider, Card } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Space } from 'antd';
-import Icon, { ExclamationCircleOutlined, WarningFilled, WarningOutlined } from '@ant-design/icons';
+import Icon, { CreditCardFilled, ExclamationCircleOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
@@ -14,20 +14,19 @@ import FullCreditPayButton from './FullCreditPayButton';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { FaCashRegister } from 'react-icons/fa';
-import { BsCardChecklist } from 'react-icons/bs';
 import { CardIcon } from 'components/CardIcon';
 import VisaIcon from 'payment-icons/min/flat/visa.svg';
 import MasterIcon from 'payment-icons/min/flat/mastercard.svg';
 import MaestroIcon from 'payment-icons/min/flat/maestro.svg';
 import AmexIcon from 'payment-icons/min/flat/amex.svg';
 import JcbIcon from 'payment-icons/min/flat/jcb.svg';
-import PayPalIcon from 'payment-icons/min/flat/paypal.svg';
 import { notify } from 'util/notify';
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 import styled from 'styled-components';
+import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
+import { GiReceiveMoney } from 'react-icons/gi';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -137,11 +136,16 @@ const PaymentStepperWidget = (props) => {
           size="large"
           onClick={() => handleStepChange(1)}>
           <div style={{ fontWeight: 700, fontStyle: 'italic' }}>
-            <FormattedMessage id="text.payByCard" />
+          <CreditCardFilled style={{marginRight: 6}}/> <FormattedMessage id="text.payByCard" />
           </div>
         </CardButton>
         <PayPalCheckoutButton
           onProvision={() => handleProvisionSubscription('paypal')}
+          onCommit={handleSuccessfulPayment}
+          onLoading={setLoading}
+        />
+        <StripeAlipayPaymentWidget
+          onProvision={() => handleProvisionSubscription('alipay')}
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
         />
@@ -153,6 +157,7 @@ const PaymentStepperWidget = (props) => {
           onClick={() => handleStepChange(2)}>
           <div style={{ fontWeight: 700, fontStyle: 'italic' }}>
             <Text type={paymentDetail?.creditBalance < paymentDetail?.price ? 'secondary' : null}>
+              {/* <Icon component={() => <GiReceiveMoney />} style={{marginRight: 6 }}/> */}
               <FormattedMessage id={paymentDetail?.creditBalance < paymentDetail?.price ? 'text.noEnoughCredit' : 'text.payByCredit'} />
             </Text>
           </div>

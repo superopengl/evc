@@ -93,7 +93,8 @@ const AppLoggedIn = props => {
   const isProfileComplete = () => {
     if (!user) return false;
     const { surname, givenName, country } = user.profile;
-    return surname && givenName && country;
+    const isComplete = surname && givenName && country;
+    return !!isComplete;
   }
 
   React.useEffect(() => {

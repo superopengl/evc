@@ -15,10 +15,11 @@ import { DiscountUserPolicy } from '../DiscountUserPolicy';
     .leftJoin(q => q
       .from(User, 'usr')
       .where(`"everPaid" IS TRUE`)
+      .andWhere(`"referredBy" IS NOT NULL`)
       .groupBy('"referredBy"')
       .select([
         '"referredBy"',
-        'COUNT(null) as "referralCount"'
+        'COUNT(1) as "referralCount"'
       ]),
       'ru', 'u.id = ru."referredBy"')
     .leftJoin(q => q

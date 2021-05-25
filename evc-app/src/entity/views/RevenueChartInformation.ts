@@ -20,6 +20,7 @@ import { PaymentStatus } from '../../types/PaymentStatus';
     `case when p.geo ->> 'country' = 'NZ' then true else false end as "isNZ"`,
     'coalesce(p.amount, 0) - coalesce(c.amount, 0) as price',
     'coalesce(p.amount, 0) as payable',
+    'p."amountCny" as "payableCny"',
     'coalesce(-c.amount, 0) as deduction',
     `to_char("paidAt", 'YYYY') as year`,
     `to_char("paidAt", 'YYYY/MM') as month`,
@@ -47,6 +48,9 @@ export class RevenueChartInformation {
   payable: number;
 
   @ViewColumn()
+  payableCny: number;
+
+  @ViewColumn()
   deduction: number;
 
   @ViewColumn()
@@ -61,3 +65,5 @@ export class RevenueChartInformation {
   @ViewColumn()
   day: string;
 }
+
+

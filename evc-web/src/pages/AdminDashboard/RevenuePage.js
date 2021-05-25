@@ -64,19 +64,34 @@ const RevenuePage = () => {
           </Space>
         </Space>
         <Card
-          title="All regions"
+          title="All regions (USD)"
         >
-          <RevenueChart value={data.combined} />
+          <RevenueChart value={data.combinedUsd} />
         </Card>
         <Card
-          title="New Zealand"
+          title="New Zealand (USD)"
         >
-          <RevenueChart value={data.NZ} />
+          <RevenueChart value={data.NzUsd} />
         </Card>
         <Card
-          title="None New Zealand"
+          title="None New Zealand (USD)"
         >
-          <RevenueChart value={data.nonNZ} />
+          <RevenueChart value={data.nonNzUsd} />
+        </Card>
+        <Card
+          title="All regions (CNY)"
+        >
+          <RevenueChart value={data.combinedCny} />
+        </Card>
+        <Card
+          title="New Zealand (CNY)"
+        >
+          <RevenueChart value={data.NzCny} />
+        </Card>
+        <Card
+          title="None New Zealand (CNY)"
+        >
+          <RevenueChart value={data.nonNzCny} />
         </Card>
       </Space>
     </Loading>

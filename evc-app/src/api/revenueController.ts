@@ -5,6 +5,8 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { RevenueChartInformation } from '../entity/views/RevenueChartInformation';
 import { json2csvAsync } from 'json-2-csv';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
+import { RevenueUsdChartInformation } from '../entity/views/RevenueUsdChartInformation';
+import { RevenueCnyChartInformation } from '../entity/views/RevenueCnyChartInformation';
 
 export const getRevenueChart = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -12,7 +14,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
 
   assert(['year', 'month', 'week', 'day'].includes(period), 400, `Unsupported period ${period}`);
 
-  const conbimedQuery = getRepository(RevenueChartInformation)
+  const conbimedUsdQuery = getRepository(RevenueUsdChartInformation)
     .createQueryBuilder()
     .groupBy(period)
     .orderBy(period, 'ASC')
@@ -23,7 +25,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
       `${period} as time`
     ]);
 
-  const queryNZOnly = getRepository(RevenueChartInformation)
+  const queryNzUsdOnly = getRepository(RevenueUsdChartInformation)
     .createQueryBuilder()
     .where(`"isNZ" is true`)
     .groupBy(period)
@@ -35,7 +37,42 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
       `${period} as time`
     ]);
 
-  const queryNonNZ = getRepository(RevenueChartInformation)
+  const queryNonNzUsd = getRepository(RevenueUsdChartInformation)
+    .createQueryBuilder()
+    .where(`"isNZ" is false`)
+    .groupBy(period)
+    .orderBy(period, 'ASC')
+    .select([
+      'sum(price) as revenue',
+      'sum(payable) as profit',
+      'sum(deduction) as credit',
+      `${period} as time`
+    ]);
+
+  const conbimedCnyQuery = getRepository(RevenueCnyChartInformation)
+    .createQueryBuilder()
+    .groupBy(period)
+    .orderBy(period, 'ASC')
+    .select([
+      'sum(price) as revenue',
+      'sum(payable) as profit',
+      'sum(deduction) as credit',
+      `${period} as time`
+    ]);
+
+  const queryNzCnyOnly = getRepository(RevenueCnyChartInformation)
+    .createQueryBuilder()
+    .where(`"isNZ" is true`)
+    .groupBy(period)
+    .orderBy(period, 'ASC')
+    .select([
+      'sum(price) as revenue',
+      'sum(payable) as profit',
+      'sum(deduction) as credit',
+      `${period} as time`
+    ]);
+
+  const queryNonNzCny = getRepository(RevenueCnyChartInformation)
     .createQueryBuilder()
     .where(`"isNZ" is false`)
     .groupBy(period)
@@ -48,9 +85,12 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
     ]);
 
   const result = {
-    combined: await conbimedQuery.execute(),
-    NZ: await queryNZOnly.execute(),
-    nonNZ: await queryNonNZ.execute(),
+    combinedUsd: await conbimedUsdQuery.execute(),
+    NzUsd: await queryNzUsdOnly.execute(),
+    nonNzUsd: await queryNonNzUsd.execute(),
+    combinedCny: await conbimedCnyQuery.execute(),
+    NzCny: await queryNzCnyOnly.execute(),
+    nonNzCny: await queryNonNzCny.execute(),
   }
 
   res.json(result);

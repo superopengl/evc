@@ -461,11 +461,25 @@ export const getEarningsCalendar = handlerWrapper(async (req, res) => {
   res.json(result);
 });
 
+function includesTransactionCode(transactionCode: string) {
+  switch (transactionCode) {
+    case 'A':
+    case 'P':
+    case 'S':
+    case 'M':
+    case 'G':
+      return true;
+    default:
+      return false;
+  }
+}
+
 export const getStockInsiderTransaction = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
   const { symbol } = req.params;
   const result = await getInsiderTransactions(symbol)
   const list = _.chain(result)
+    .filter(x => includesTransactionCode(x.transactionCode))
     .map(x => _.pick(x, [
       'fullName',
       'reportedTitle',

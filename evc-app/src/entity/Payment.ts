@@ -30,6 +30,9 @@ export class Payment {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
 
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  amountCny: number;
+
   @Column({ nullable: true })
   method: PaymentMethod;
 

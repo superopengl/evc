@@ -7,9 +7,7 @@ import styled from 'styled-components';
 import { AlipayCircleOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
 
-
-
-const AlipayButton = styled(Button)`
+export const AlipayButton = styled(Button)`
   border-color: #108fe9;
   background-color: #108fe9;
   color: white;
@@ -81,7 +79,7 @@ const StripeAlipayPaymentForm = (props) => {
       icon={<AlipayCircleOutlined />}
       block
       disabled={loading || !isInfoComplete}
-      style={{ fontWeight: 800, fontStyle: 'italic' }}
+      style={{ fontWeight: 700, fontStyle: 'italic' }}
       onClick={handleSubmit}
     >
       Alipay

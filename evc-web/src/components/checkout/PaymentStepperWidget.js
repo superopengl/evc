@@ -25,8 +25,9 @@ import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 import styled from 'styled-components';
-import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
+import StripeAlipayPaymentWidget, { AlipayButton } from './StripeAlipayPaymentWidget';
 import { GiReceiveMoney } from 'react-icons/gi';
+import { AlipayCircleOutlined } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -136,7 +137,7 @@ const PaymentStepperWidget = (props) => {
           size="large"
           onClick={() => handleStepChange(1)}>
           <div style={{ fontWeight: 700, fontStyle: 'italic' }}>
-          <CreditCardFilled style={{marginRight: 6}}/> <FormattedMessage id="text.payByCard" />
+            <CreditCardFilled style={{ marginRight: 6 }} /> <FormattedMessage id="text.payByCard" />
           </div>
         </CardButton>
         <PayPalCheckoutButton
@@ -144,11 +145,16 @@ const PaymentStepperWidget = (props) => {
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
         />
-        <StripeAlipayPaymentWidget
-          onProvision={() => handleProvisionSubscription('alipay')}
-          onCommit={handleSuccessfulPayment}
-          onLoading={setLoading}
-        />
+        <AlipayButton
+          size="large"
+          icon={<AlipayCircleOutlined />}
+          block
+          disabled={loading}
+          style={{ fontWeight: 700, fontStyle: 'italic' }}
+          onClick={() => handleStepChange(3)}
+        >
+          Alipay
+        </AlipayButton>
         <Button type="primary"
           block
           size="large"
@@ -176,14 +182,6 @@ const PaymentStepperWidget = (props) => {
           <MoneyAmount strong value={paymentDetail?.price} />
         </Space>
         <Divider></Divider>
-        {/* {shouldShowFullCreditButton && <>
-          <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon />
-          <FullCreditPayButton
-            onProvision={() => handleProvisionSubscription('credit')}
-            onCommit={handleSuccessfulPayment}
-            onLoading={setLoading}
-          />
-        </>} */}
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
           <Space>
             {[VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
@@ -194,14 +192,6 @@ const PaymentStepperWidget = (props) => {
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
         />
-        {/* {shouldShowAliPay && <StripeAlipayPaymentWidget
-          onProvision={() => handleProvisionSubscription('alipay')}
-          onCommit={handleSuccessfulPayment}
-          onLoading={setLoading}
-        />} */}
-        {/* <Divider><Text type="secondary"><small>or</small></Text></Divider> */}
-        {/* <Divider />
-        <Button size="large" block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button> */}
       </Space>
     },
     {
@@ -234,7 +224,27 @@ const PaymentStepperWidget = (props) => {
           onLoading={setLoading}
         />
       </Space>
-    }
+    },
+    {
+      // Alipay
+      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Alert
+          type="info"
+          showIcon
+          description="You have to accept our CNY price when using Alipay."
+        />
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text strong>Total payable amount (CNY):</Text>
+          <MoneyAmount strong value={paymentDetail?.priceCny} symbol="¥"/>
+        </Space>
+        <Divider></Divider>
+        <StripeAlipayPaymentWidget
+          onProvision={() => handleProvisionSubscription('alipay')}
+          onCommit={handleSuccessfulPayment}
+          onLoading={setLoading}
+        />
+      </Space>
+    },
   ];
 
   return (
@@ -243,10 +253,10 @@ const PaymentStepperWidget = (props) => {
         <Card>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
-            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
               <Text strong type="success" style={{ fontSize: 24 }}>
                 <big>$ {(newPlanDef.price * (1 - discount)).toFixed(2)}</big>
-              </Text> 
+              </Text>
               <small><Text type="secondary">{newPlanDef.unit}</Text></small>
             </div>
           </Space>

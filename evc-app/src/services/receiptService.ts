@@ -41,6 +41,20 @@ function getSubscriptionDescription(receipt: ReceiptInformation) {
 
 function getVars(receipt: ReceiptInformation) {
   const subscriptionPrice = (+receipt.payable || 0) + (+receipt.deduction || 0);
+  if (receipt.method === PaymentMethod.AliPay) {
+    return {
+      receiptNumber: receipt.receiptNumber,
+      date: moment(receipt.paidAt).format('D MMM YYYY'),
+      subscriptionDescription: getSubscriptionDescription(receipt),
+      subscriptionPrice: subscriptionPrice.toFixed(2),
+      creditDeduction: (+receipt.deduction || 0).toFixed(2),
+      payableAmount: (+receipt.payableCny || 0).toFixed(2),
+      paymentMethod: getPaymentMethodName(receipt.method),
+      symbol: '¥',
+      currency: 'CNY',
+      total: (+(receipt.payableCny)).toFixed(2)
+    }
+  }
   return {
     receiptNumber: receipt.receiptNumber,
     date: moment(receipt.paidAt).format('D MMM YYYY'),
@@ -48,7 +62,10 @@ function getVars(receipt: ReceiptInformation) {
     subscriptionPrice: subscriptionPrice.toFixed(2),
     creditDeduction: (+receipt.deduction || 0).toFixed(2),
     payableAmount: (+receipt.payable || 0).toFixed(2),
-    paymentMethod: getPaymentMethodName(receipt.method)
+    paymentMethod: getPaymentMethodName(receipt.method),
+    symbol: '$',
+    currency: 'USD',
+    total: subscriptionPrice.toFixed(2)
   };
 }
 

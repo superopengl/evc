@@ -43,7 +43,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
 
     const { start, end } = await getSubscriptionPeriod(tran, userId, subscriptionType);
 
-    const { creditBalance, price } = await getNewSubscriptionPaymentInfo(userId, subscriptionType);
+    const { creditBalance, price, priceCny } = await getNewSubscriptionPaymentInfo(userId, subscriptionType);
 
     const subscription = new Subscription();
     subscription.id = uuidv4();
@@ -74,6 +74,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.end = end;
     payment.paidAt = null;
     payment.amount = paymentMethod === PaymentMethod.Credit ? 0 : price;
+    payment.amountCny = paymentMethod === PaymentMethod.AliPay ? priceCny : null;
     payment.method = paymentMethod;
     payment.status = PaymentStatus.Pending;
     payment.auto = false;

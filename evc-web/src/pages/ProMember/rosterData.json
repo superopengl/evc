@@ -1,0 +1,122 @@
+[
+  {
+    "fullName": "Maestri Luca",
+    "reportedTitle": "Senior Vice President, CFO",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-05-05",
+    "postShares": 110501,
+    "transactionCode": "S",
+    "transactionDate": "2021-05-03",
+    "transactionPrice": 133.93,
+    "transactionShares": -3700,
+    "transactionValue": 495541
+  },
+  {
+    "fullName": "Adams Katherine L.",
+    "reportedTitle": "SVP, GC and Secretary",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-05-05",
+    "postShares": 328174,
+    "transactionCode": "S",
+    "transactionDate": "2021-05-03",
+    "transactionPrice": 133.93,
+    "transactionShares": -400,
+    "transactionValue": 53572
+  },
+  {
+    "fullName": "O'BRIEN DEIRDRE",
+    "reportedTitle": "Senior Vice President",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-04-19",
+    "postShares": 136118,
+    "transactionCode": "S",
+    "transactionDate": "2021-04-16",
+    "transactionPrice": 134.01,
+    "transactionShares": -18216,
+    "transactionValue": 2441130
+  },
+  {
+    "fullName": "O'BRIEN DEIRDRE",
+    "reportedTitle": "Senior Vice President",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-04-19",
+    "postShares": 22292,
+    "transactionCode": "M",
+    "transactionDate": "2021-04-15",
+    "transactionPrice": null,
+    "transactionShares": 22296,
+    "transactionValue": null
+  },
+  {
+    "fullName": "KONDO CHRIS",
+    "reportedTitle": "Principal Accounting Officer",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-04-19",
+    "postShares": 37138,
+    "transactionCode": "F",
+    "transactionDate": "2021-04-15",
+    "transactionPrice": 134.5,
+    "transactionShares": -7499,
+    "transactionValue": 1008620
+  },
+  {
+    "fullName": "WILLIAMS JEFFREY E",
+    "reportedTitle": "COO",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-04-05",
+    "postShares": 489490,
+    "transactionCode": "S",
+    "transactionDate": "2021-04-05",
+    "transactionPrice": 125.74,
+    "transactionShares": -133867,
+    "transactionValue": 16832400
+  },
+  {
+    "fullName": "WILLIAMS JEFFREY E",
+    "reportedTitle": "COO",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-04-05",
+    "postShares": 746838,
+    "transactionCode": "M",
+    "transactionDate": "2021-04-01",
+    "transactionPrice": null,
+    "transactionShares": 257348,
+    "transactionValue": null
+  },
+  {
+    "fullName": "Maestri Luca",
+    "reportedTitle": "Senior Vice President, CFO",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-04-05",
+    "postShares": 367849,
+    "transactionCode": "M",
+    "transactionDate": "2021-04-01",
+    "transactionPrice": null,
+    "transactionShares": 257348,
+    "transactionValue": null
+  },
+  {
+    "fullName": "Adams Katherine L.",
+    "reportedTitle": "SVP, GC and Secretary",
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-04-05",
+    "postShares": 118128,
+    "transactionCode": "M",
+    "transactionDate": "2021-04-01",
+    "transactionPrice": null,
+    "transactionShares": 59068,
+    "transactionValue": null
+  },
+  {
+    "fullName": "BELL JAMES A",
+    "reportedTitle": null,
+    "conversionOrExercisePrice": null,
+    "filingDate": "2021-02-25",
+    "postShares": 1986,
+    "transactionCode": "A",
+    "transactionDate": "2021-02-23",
+    "transactionPrice": null,
+    "transactionShares": 1986,
+    "transactionValue": null
+  }
+]

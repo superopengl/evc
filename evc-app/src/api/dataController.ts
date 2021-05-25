@@ -110,7 +110,7 @@ export const flushCache = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-function parseLoHi(strData) {
+function parseLoHi(strData: string, rowNumber: number) {
   assert(strData?.trim(), 400, `Empty lo-hi pair value`)
   const [loStr, hiStr] = strData.split('-');
   const lo = +(loStr?.trim());
@@ -118,7 +118,7 @@ function parseLoHi(strData) {
   if (_.isNaN(hi)) {
     hi = lo;
   }
-  assert(_.isFinite(lo) && _.isFinite(hi), 400, `Invalid lo-hi pair value ${strData}`);
+  assert(_.isFinite(lo) && _.isFinite(hi), 400, `Invalid lo-hi pair value '${strData}' from line ${rowNumber}`);
   return { lo, hi };
 }
 
@@ -126,14 +126,15 @@ function formatSupportResistanceRowsToEntites(rows) {
   const supports: StockSupport[] = [];
   const resistances: StockResistance[] = [];
   let currentSymbol;
+  let rowNumber = 2; // Because we skipped the header line, the data line starts from 2.
   for (const row of rows) {
     const { symbol, support, resistance } = row;
     currentSymbol = symbol?.trim() || currentSymbol;
     const supportData = support?.trim();
     const resistanceData = resistance?.trim();
-    assert(currentSymbol, 400, 'Cannot find symbol');
+    assert(currentSymbol, 400, `Cannot find symbol from line ${rowNumber}`);
     if (supportData) {
-      const { lo, hi } = parseLoHi(supportData);
+      const { lo, hi } = parseLoHi(supportData, rowNumber);
       const entity = new StockSupport();
       entity.symbol = currentSymbol;
       entity.lo = lo;
@@ -141,13 +142,15 @@ function formatSupportResistanceRowsToEntites(rows) {
       supports.push(entity);
     }
     if (resistanceData) {
-      const { lo, hi } = parseLoHi(resistanceData);
+      const { lo, hi } = parseLoHi(resistanceData, rowNumber);
       const entity = new StockResistance();
       entity.symbol = currentSymbol;
       entity.lo = lo;
       entity.hi = hi;
       resistances.push(entity);
     }
+
+    rowNumber++;
   }
 
   return { supports, resistances };

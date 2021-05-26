@@ -9,7 +9,7 @@ import { Space } from 'antd';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { from } from 'rxjs';
-import RickTextInput from 'components/RickTextInput';
+import RichTextInput from 'components/RichTextInput';
 import RawHtmlDisplay from 'components/RawHtmlDisplay';
 
 
@@ -124,7 +124,7 @@ const EmailTemplateListPage = () => {
             <Input allowClear disabled={loading} />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: false, whitespace: true, message: ' ' }]}>
-            <RickTextInput disabled={loading} />
+            <RichTextInput disabled={loading} />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>

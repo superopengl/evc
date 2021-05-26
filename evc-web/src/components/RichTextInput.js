@@ -8,7 +8,7 @@ const SunEditor = loadable(() => import('suneditor-react'));
 
 const DEFAULT_SAMPLE = ``;
 
-const RickTextInput = (props) => {
+const RichTextInput = (props) => {
 
   const {ref, value, disabled, onChange} = props;
 
@@ -41,16 +41,16 @@ const RickTextInput = (props) => {
   );
 };
 
-RickTextInput.propTypes = {
+RichTextInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
 };
 
-RickTextInput.defaultProps = {
+RichTextInput.defaultProps = {
   value: DEFAULT_SAMPLE,
   onChange: () => { },
   disabled: false,
 };
 
-export default withRouter(RickTextInput);
+export default withRouter(RichTextInput);

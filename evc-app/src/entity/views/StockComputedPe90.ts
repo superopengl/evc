@@ -21,11 +21,13 @@ import { StockDailyPe } from './StockDailyPe';
       )
       .groupBy('pe.symbol')
       .addGroupBy('pe.date')
+      .addGroupBy('pe.close')
       .addGroupBy('pe."ttmEps"')
       .addGroupBy('pe.pe')
       .select([
         'pe.symbol as symbol',
         'pe.date as date',
+        'pe.close as close',
         'pe."ttmEps" as "ttmEps"',
         'pe.pe as pe',
         'avg(back.pe) as avg',
@@ -35,6 +37,7 @@ import { StockDailyPe } from './StockDailyPe';
     .select([
       'x.symbol',
       'x.date',
+      'x.close',
       'x."ttmEps"',
       'x.pe',
       'x.avg as "pe90Avg"',
@@ -51,6 +54,9 @@ export class StockComputedPe90 {
 
   @ViewColumn()
   date: string;
+
+  @ViewColumn()
+  close: number;
 
   @ViewColumn()
   ttmEps: number;

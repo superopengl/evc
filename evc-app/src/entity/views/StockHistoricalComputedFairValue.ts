@@ -29,8 +29,8 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
         'pe.date as "peDate"',
         'pe."peLo" as "peLo"',
         'pe."peHi" as "peHi"',
-        'pe."fairValueLo" as "fairValueLo"',
-        'pe."fairValueHi" as "fairValueHi"',
+        'CASE WHEN 0 < pe."fairValueLo" AND pe."fairValueHi" <= pe.close * 3 THEN pe."fairValueLo" ELSE NULL END as "fairValueLo"',
+        'CASE WHEN 0 < pe."fairValueLo" AND pe."fairValueHi" <= pe.close * 3 THEN pe."fairValueHi" ELSE NULL END as "fairValueHi"',
       ]), 'sub')
     .distinctOn([
       'symbol',

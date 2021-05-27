@@ -25,9 +25,8 @@ import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 import styled from 'styled-components';
-import StripeAlipayPaymentWidget, { AlipayButton } from './StripeAlipayPaymentWidget';
-import { GiReceiveMoney } from 'react-icons/gi';
-import { AlipayCircleOutlined } from '@ant-design/icons';
+import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
+import { AlipayButton } from 'components/AlipayButton';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -146,11 +145,7 @@ const PaymentStepperWidget = (props) => {
           onLoading={setLoading}
         />
         <AlipayButton
-          size="large"
-          icon={<AlipayCircleOutlined />}
-          block
           disabled={loading}
-          style={{ fontWeight: 700, fontStyle: 'italic' }}
           onClick={() => handleStepChange(3)}
         >
           Alipay

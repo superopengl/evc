@@ -144,12 +144,12 @@ const PaymentStepperWidget = (props) => {
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
         />
-        <AlipayButton
+        {/* <AlipayButton
           disabled={loading}
           onClick={() => handleStepChange(3)}
         >
           Alipay
-        </AlipayButton>
+        </AlipayButton> */}
         <Button type="primary"
           block
           size="large"

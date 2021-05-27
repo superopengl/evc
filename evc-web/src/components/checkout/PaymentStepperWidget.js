@@ -246,10 +246,10 @@ const PaymentStepperWidget = (props) => {
     <Loading loading={loading} message={'In progress. Please do not close the window.'}>
       <Space direction="vertical" size="large" style={{ width: '100%', paddingBottom: 20 }} >
         <Card>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Title level={3}>{newPlanDef.title}</Title>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <Text strong type="success" style={{ fontSize: 24 }}>
+              <Text strong type="success" style={{ fontSize: 24, whiteSpace: 'nowrap' }}>
                 <big>$ {(newPlanDef.price * (1 - discount)).toFixed(2)}</big>
               </Text>
               <small><Text type="secondary">{newPlanDef.unit}</Text></small>

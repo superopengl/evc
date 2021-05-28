@@ -107,11 +107,11 @@ async function expireSubscriptions() {
     if (list.length) {
       // Set subscriptions to be expired
       const subscriptionIds = list.map(x => x.subscriptionId);
-      await tran.manager.getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
+      await tran.manager.update(Subscription, subscriptionIds, { status: SubscriptionStatus.Expired });
 
       // Set user's role to Free
       const userIds = list.map(x => x.userId);
-      await tran.manager.getRepository(User).update(userIds, { role: Role.Free })
+      await tran.manager.update(User, userIds, { role: Role.Free })
     }
 
     tran.commitTransaction();
@@ -199,7 +199,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
 
     await tran.manager.save(payment);
     await tran.manager.save(subscription);
-    await tran.manager.getRepository(User).update(subscription.userId, { role: Role.Member });
+    await tran.manager.update(User, subscription.userId, { role: Role.Member });
 
     await tran.commitTransaction();
     await enqueueRecurringSucceededEmail(targetSubscription, payment, price);
@@ -252,24 +252,27 @@ async function timeoutProvisioningSubscriptions() {
 }
 
 async function revokeUnpaidUsersRole() {
-  const users = await getRepository(User)
-    .createQueryBuilder('u')
-    .where(`role = '${Role.Member}'`)
-    .andWhere(`"deletedAt" IS NULL`)
-    .andWhere(
-      notExistsQuery(
-        getRepository(UserCurrentSubscription)
-          .createQueryBuilder('s')
-          .where(`u.id = s."userId"`)
+  await getManager().transaction(async m => {
+    const users = await m
+      .createQueryBuilder()
+      .from(User, 'u')
+      .where(`role = '${Role.Member}'`)
+      .andWhere(`"deletedAt" IS NULL`)
+      .andWhere(
+        notExistsQuery(
+          getRepository(UserCurrentSubscription)
+            .createQueryBuilder('s')
+            .where(`u.id = s."userId"`)
+        )
       )
-    )
-    .select('id')
-    .execute();
+      .select('id')
+      .execute();
 
-  if (users.length) {
-    const userIds = users.map(u => u.id);
-    await getRepository(User).update(userIds, { role: Role.Free });
-  }
+    if (users.length) {
+      const userIds = users.map(u => u.id);
+      await m.update(User, userIds, { role: Role.Free });
+    }
+  })
 }
 
 start(JOB_NAME, async () => {

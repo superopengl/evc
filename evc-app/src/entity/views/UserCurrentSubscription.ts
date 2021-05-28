@@ -4,6 +4,8 @@ import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { Subscription } from '../Subscription';
 import { Payment } from '../Payment';
+import { User } from '../User';
+import { UserProfile } from '../UserProfile';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
@@ -44,6 +46,8 @@ import { Payment } from '../Payment';
         'id'
       ])
       , 'r', 'r."userId" = x."userId"')
+    .innerJoin(User, 'u', 'x."userId" = u.id')
+    .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .select([
       'x."userId" as "userId"',
       'x.start as start',
@@ -52,6 +56,9 @@ import { Payment } from '../Payment';
       'r.recurring as "lastRecurring"',
       'f.id as "currentSubscriptionId"',
       'r.id as "lastSubscriptionId"',
+      'p."givenName" as "givenName"',
+      'p.surname as surname',
+      'p.email as email',
     ])
 })
 export class UserCurrentSubscription {
@@ -76,4 +83,13 @@ export class UserCurrentSubscription {
 
   @ViewColumn()
   lastSubscriptionId: string;
+
+  @ViewColumn()
+  givenName: string;
+
+  @ViewColumn()
+  surname: string;
+
+  @ViewColumn()
+  email: string;
 }

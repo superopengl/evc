@@ -21,7 +21,11 @@ import { from } from 'rxjs';
 import * as moment from 'moment-timezone';
 import { Loading } from 'components/Loading';
 
-moment.tz.setDefault('America/New_York');
+// moment.tz.setDefault('America/New_York');
+
+
+console.log('Now', moment(1622148159000).format('YYYYMMDD HHmmss Z'));
+console.log('Now tz', moment.tz().format('YYYYMMDD HHmmss Z'));
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 // const Error404 = loadable(() => import('pages/Error404'));
@@ -30,6 +34,7 @@ const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const DisclaimerPage = loadable(() => import('pages/DisclaimerPage'));
+const ChineseUserPaymentGuidePage = loadable(() => import('pages/ChineseUserPaymentGuidePage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const ProMemberPage = loadable(() => import('pages/ProMember/ProMemberPage'));
@@ -137,6 +142,7 @@ const App = () => {
               <RoleRoute loading={loading} exact path="/disclaimer" component={DisclaimerPage} />
               <RoleRoute loading={loading} exact path="/pro-member" component={ProMemberPage} />
               <RoleRoute loading={loading} exact path="/earnings_calendar_preview" component={EarningsCalendarPreviewPage} />
+              <RoleRoute loading={loading} exact path="/chinese_user_payment_guide" component={ChineseUserPaymentGuidePage} />
               <RoleRoute loading={loading} path="/" component={isLoggedIn ? AppLoggedIn : HomePage} />
               <Redirect to="/" />
               {/* <RoleRoute loading={loading} component={Error404} /> */}

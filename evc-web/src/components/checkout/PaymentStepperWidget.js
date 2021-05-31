@@ -5,7 +5,7 @@ import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Space } from 'antd';
-import Icon, { CreditCardFilled, ExclamationCircleOutlined } from '@ant-design/icons';
+import Icon, { CreditCardFilled, ExclamationCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
@@ -28,7 +28,7 @@ import styled from 'styled-components';
 import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
 import { AlipayButton } from 'components/AlipayButton';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text, Paragraph, Link: TextLink } = Typography;
 
 const CardButton = styled(Button)`
     border-color: #55B0D4;
@@ -127,9 +127,12 @@ const PaymentStepperWidget = (props) => {
       component: <Space direction="vertical" style={{ width: '100%' }} size="large">
         <Space style={{ alignItems: 'flex-start' }} size="middle">
           <Text type="danger" style={{ fontSize: 28, color: '#55B0D4' }}><ExclamationCircleOutlined /></Text>
+          <div>
           <Paragraph type="secondary">
             <FormattedMessage id="text.noRefundAlert" />
           </Paragraph>
+          <TextLink href="/chinese_user_payment_guide" target="_blank">中国用户支付指南 <QuestionCircleFilled /></TextLink>
+          </div>
         </Space>
         <CardButton type="primary"
           block

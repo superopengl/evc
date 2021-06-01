@@ -1,4 +1,3 @@
-import errorToJson from 'error-to-json';
 import * as EventSource from 'eventsource';
 import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService';
 import { StockLastPriceInfo } from '../src/types/StockLastPriceInfo';

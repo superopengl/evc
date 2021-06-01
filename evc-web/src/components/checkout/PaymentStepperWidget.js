@@ -5,7 +5,7 @@ import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { Alert, Space } from 'antd';
-import Icon, { CreditCardFilled, ExclamationCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
+import { CreditCardFilled, ExclamationCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
@@ -26,7 +26,6 @@ import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 import styled from 'styled-components';
 import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
-import { AlipayButton } from 'components/AlipayButton';
 
 const { Title, Text, Paragraph, Link: TextLink } = Typography;
 

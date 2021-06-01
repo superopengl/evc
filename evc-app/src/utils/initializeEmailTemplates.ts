@@ -58,6 +58,11 @@ export async function initializeEmailTemplates() {
   WatchlistCoreDataChangedEmailDef.locale = Locale.Engish;
   WatchlistCoreDataChangedEmailDef.vars = ['website', 'toWhom', 'symbol'];
 
+  const WatchlistInsiderTransactionChangedEmailDef = new EmailTemplate();
+  WatchlistInsiderTransactionChangedEmailDef.key = EmailTemplateType.WatchlistInsiderTransactionChangedEmail;
+  WatchlistInsiderTransactionChangedEmailDef.locale = Locale.Engish;
+  WatchlistInsiderTransactionChangedEmailDef.vars = ['website', 'toWhom', 'symbol'];
+
   const SubscriptionExpiredDef = new EmailTemplate();
   SubscriptionExpiredDef.key = EmailTemplateType.SubscriptionExpired;
   SubscriptionExpiredDef.locale = Locale.Engish;
@@ -90,6 +95,7 @@ export async function initializeEmailTemplates() {
     commissionWithdrawalCompletedEmailDef,
     commissionWithdrawalRejectedEmailDef,
     WatchlistCoreDataChangedEmailDef,
+    WatchlistInsiderTransactionChangedEmailDef,
     SubscriptionExpiredDef,
     SubscriptionExpiringDef,
     SubscriptionRecurringAutoPaySucceededDef,

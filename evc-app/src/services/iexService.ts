@@ -81,7 +81,7 @@ export async function isUSMarketOpen(): Promise<boolean> {
   return !!isUSMarketOpen;
 }
 
-export async function singleBatchRequest(symbols: string[], types: string[], params: {}) {
+export async function singleBatchRequest(symbols: string[], types: string[], params?: {}) {
   const len = symbols.length;
   assert(0 < len && len <= 100, 400, `Wrong size of iex batch request ${len}`);
   return await requestIexApi('/stock/market/batch', {

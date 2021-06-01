@@ -9,12 +9,12 @@ import { CoreDataPreviousSnapshot } from '../CoreDataPreviousSnapshot';
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(StockWatchList, 'swt')
-    .where(`belled IS TRUE`)
     .innerJoin(User, 'u', 'u.id = swt."userId" AND u."deletedAt" IS NUll')
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .innerJoin(CoreDataLatestSnapshot, 'lts', 'lts.symbol = swt.symbol')
     .leftJoin(CoreDataPreviousSnapshot, 'pre', 'lts.symbol = pre.symbol')
-    .where(`(pre.hash IS NULL OR lts.hash != pre.hash)`)
+    .where(`swt.belled IS TRUE`)
+    .andWhere(`(pre.hash IS NULL OR lts.hash != pre.hash)`)
     .select([
       'u.id as "userId"',
       'p.email as email',

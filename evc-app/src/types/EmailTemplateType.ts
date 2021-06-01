@@ -11,6 +11,7 @@ export enum EmailTemplateType {
   CommissionWithdrawalCompleted = 'commission_withdrawal_completed',
   CommissionWithdrawalRejected = 'commission_withdrawal_rejected',
   WatchlistCoreDataChangedEmail = 'watchlist_core_data_changed_email',
+  WatchlistInsiderTransactionChangedEmail = 'watchlist_insider_transaction_changed_email',
   SubscriptionStarted = 'subscription_started',
   SubscriptionRecurringAutoPaySucceeded = 'subscription_recurring_autopay_succeeded',
   SubscriptionRecurringAutoPayFailed = 'subscription_recurring_autopay_failed',

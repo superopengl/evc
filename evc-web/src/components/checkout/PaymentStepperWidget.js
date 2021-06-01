@@ -130,7 +130,7 @@ const PaymentStepperWidget = (props) => {
           <Paragraph type="secondary">
             <FormattedMessage id="text.noRefundAlert" />
           </Paragraph>
-          <TextLink href="/chinese_user_payment_guide" target="_blank">中国用户支付指南 <QuestionCircleFilled /></TextLink>
+          <TextLink href="/chinese_user_payment_guide" target="_blank" underline>中国用户支付指南 <QuestionCircleFilled /></TextLink>
           </div>
         </Space>
         <CardButton type="primary"

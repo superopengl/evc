@@ -75,7 +75,7 @@ const MySubscriptionHistoryPanel = (props) => {
           bordered={true}
           rowKey="id"
           showHeader={false}
-          dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'desc')}
+          dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
           pagination={false}
           scroll={false}
           // style={{ width: '100%', minWidth: 370 }}

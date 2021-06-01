@@ -110,6 +110,9 @@ async function expireSubscriptions() {
       // Set user's role to Free
       const userIds = list.map(x => x.userId);
       await tran.manager.update(User, userIds, { role: Role.Free })
+
+      console.log(`Expired subscriptions ${subscriptionIds.join(', ')}`);
+      console.log(`Set Free role to users ${userIds.join(', ')}`);
     }
 
     tran.commitTransaction();
@@ -201,6 +204,8 @@ async function renewRecurringSubscription(targetSubscription: UserAliveSubscript
     await tran.manager.update(User, subscription.userId, { role: Role.Member });
 
     await tran.commitTransaction();
+
+    console.log(`Renewed subscription ${lastSubscriptionId} for user ${userId} at $${price} from ${startDate} to ${endDate}`);
     await enqueueRecurringSucceededEmail(targetSubscription, payment, price);
   } catch (err) {
     await tran.rollbackTransaction();
@@ -248,6 +253,8 @@ async function timeoutProvisioningSubscriptions() {
     await m.save(creditTransactions);
     m.update(Subscription, { id: In(subscriptionIds) }, { status: SubscriptionStatus.Timeout });
   });
+
+  console.log(`Timed out provisioning subscriptions ${subscriptionIds.join(', ')}`);
 }
 
 async function revokeUnpaidUsersRole() {
@@ -270,6 +277,8 @@ async function revokeUnpaidUsersRole() {
     if (users.length) {
       const userIds = users.map(u => u.id);
       await m.update(User, userIds, { role: Role.Free });
+
+      console.log(`Revoked membership from users ${userIds.join(', ')}`);
     }
   })
 }

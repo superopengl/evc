@@ -19,7 +19,7 @@ import { updateStock } from 'services/stockService';
 import { StockNoticeButton } from 'components/StockNoticeButton';
 import { from } from 'rxjs';
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 const StockDetailPage = (props) => {
   const { symbol } = props;

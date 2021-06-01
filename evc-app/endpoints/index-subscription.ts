@@ -7,12 +7,10 @@ import { Payment } from '../src/entity/Payment';
 import { User } from '../src/entity/User';
 import { PaymentStatus } from '../src/types/PaymentStatus';
 import * as moment from 'moment';
-import { getNewSubscriptionPaymentInfo } from '../src/utils/getNewSubscriptionPaymentInfo';
 import { Role } from '../src/types/Role';
 import { start } from './jobStarter';
 import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
-import { UserAllAliveSubscriptionWithProfile } from '../src/entity/views/UserAllAliveSubscriptionWithProfile';
 import { EmailRequest } from '../src/types/EmailRequest';
 import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
 import { PaymentMethod } from '../src/types/PaymentMethod';
@@ -21,9 +19,9 @@ import { assert } from '../src/utils/assert';
 import { chargeStripeForCardPayment } from '../src/services/stripeService';
 import { getUtcNow } from '../src/utils/getUtcNow';
 import { RevertableCreditTransaction } from '../src/entity/views/RevertableCreditTransaction';
-import { notExistsQuery } from '../src/utils/existsQuery';
-import { UserCurrentSubscription } from '../src/entity/views/UserCurrentSubscription';
 import { getSubscriptionPrice } from '../src/utils/getSubscriptionPrice';
+import { UserAliveSubscriptionSummary } from '../src/entity/views/UserAliveSubscriptionSummary';
+import { notExistsQuery } from '../src/utils/existsQuery';
 
 const JOB_NAME = 'daily-subscription';
 
@@ -40,7 +38,7 @@ function getSubscriptionName(type: SubscriptionType) {
   }
 };
 
-async function enqueueEmailTasks(template: EmailTemplateType, list: UserAllAliveSubscriptionWithProfile[]) {
+async function enqueueEmailTasks(template: EmailTemplateType, list: UserAliveSubscriptionSummary[]) {
   for (const subscriptionInfo of list) {
     const emailReq: EmailRequest = {
       to: subscriptionInfo.email,
@@ -48,8 +46,8 @@ async function enqueueEmailTasks(template: EmailTemplateType, list: UserAllAlive
       shouldBcc: true,
       vars: {
         toWhom: getEmailRecipientName(subscriptionInfo),
-        subscriptionId: subscriptionInfo.subscriptionId,
-        subscriptionType: getSubscriptionName(subscriptionInfo.type),
+        subscriptionId: subscriptionInfo.lastSubscriptionId,
+        subscriptionType: getSubscriptionName(subscriptionInfo.lastType),
         start: moment(subscriptionInfo.start).format('D MMM YYYY'),
         end: moment(subscriptionInfo.end).format('D MMM YYYY'),
       }
@@ -58,15 +56,15 @@ async function enqueueEmailTasks(template: EmailTemplateType, list: UserAllAlive
   }
 }
 
-async function enqueueRecurringSucceededEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, price: number) {
+async function enqueueRecurringSucceededEmail(activeOne: UserAliveSubscriptionSummary, payment: Payment, price: number) {
   const emailReq: EmailRequest = {
     to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPaySucceeded,
     shouldBcc: true,
     vars: {
       toWhom: getEmailRecipientName(activeOne),
-      subscriptionId: activeOne.subscriptionId,
-      subscriptionType: getSubscriptionName(activeOne.type),
+      subscriptionId: activeOne.lastSubscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.lastType),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
       paidAmount: price,
@@ -76,15 +74,15 @@ async function enqueueRecurringSucceededEmail(activeOne: UserAllAliveSubscriptio
   await enqueueEmail(emailReq);
 }
 
-async function enqueueRecurringFailedEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, price: number) {
+async function enqueueRecurringFailedEmail(activeOne: UserAliveSubscriptionSummary, payment: Payment, price: number) {
   const emailReq: EmailRequest = {
     to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPayFailed,
     shouldBcc: true,
     vars: {
       toWhom: getEmailRecipientName(activeOne),
-      subscriptionId: activeOne.subscriptionId,
-      subscriptionType: getSubscriptionName(activeOne.type),
+      subscriptionId: activeOne.lastSubscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.lastType),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
       paidAmount: price,
@@ -99,14 +97,14 @@ async function expireSubscriptions() {
 
   try {
     await tran.startTransaction();
-    const list = await getRepository(UserAllAliveSubscriptionWithProfile)
+    const list = await getRepository(UserAliveSubscriptionSummary)
       .createQueryBuilder()
       .where('"end" < CURRENT_DATE')
       .getMany();
 
     if (list.length) {
       // Set subscriptions to be expired
-      const subscriptionIds = list.map(x => x.subscriptionId);
+      const subscriptionIds = list.map(x => x.lastSubscriptionId);
       await tran.manager.update(Subscription, subscriptionIds, { status: SubscriptionStatus.Expired });
 
       // Set user's role to Free
@@ -124,9 +122,10 @@ async function expireSubscriptions() {
 
 
 async function sendAlertForNonRecurringExpiringSubscriptions() {
-  const list = await getRepository(UserAllAliveSubscriptionWithProfile)
+  const list = await getRepository(UserAliveSubscriptionSummary)
     .createQueryBuilder()
-    .where('recurring = FALSE')
+    .where('"lastRecurring" = FALSE')
+    .andWhere('"currentSubscriptionId" = "lastSubscriptionId"')
     .andWhere(`"end" - CURRENT_DATE = ANY(ARRAY[1, 3, 7])`)
     .getMany();
 
@@ -157,10 +156,10 @@ async function getPreviousPaymentInfo(subscription: Subscription) {
   return { stripeCustomerId, stripePaymentMethodId, geo };
 }
 
-async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscriptionWithProfile) {
-  const { subscriptionId, userId, type } = targetSubscription;
+async function renewRecurringSubscription(targetSubscription: UserAliveSubscriptionSummary) {
+  const { lastSubscriptionId, userId, lastType: type, lastEnd } = targetSubscription;
   const subscription = await getRepository(Subscription).findOne({
-    id: subscriptionId,
+    id: lastSubscriptionId,
     recurring: true,
   });
 
@@ -169,7 +168,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
 
   const { stripeCustomerId, stripePaymentMethodId, geo } = await getPreviousPaymentInfo(subscription);
 
-  const startDate = moment(targetSubscription.end).add(1, 'day').toDate();
+  const startDate = moment(lastEnd).add(1, 'day').toDate();
   const endDate = moment(startDate).add(1, type === SubscriptionType.UnlimitedYearly ? 'year' : 'month').add(-1, 'day').toDate();
   const payment = new Payment();
   payment.subscription = subscription;
@@ -210,9 +209,9 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
 }
 
 async function handleRecurringPayments() {
-  const list = await getRepository(UserAllAliveSubscriptionWithProfile)
+  const list = await getRepository(UserAliveSubscriptionSummary)
     .createQueryBuilder()
-    .where('recurring = TRUE')
+    .where('"lastRecurring" = TRUE')
     .andWhere('"end" <= CURRENT_DATE')
     .getMany();
 
@@ -260,7 +259,7 @@ async function revokeUnpaidUsersRole() {
       .andWhere(`"deletedAt" IS NULL`)
       .andWhere(
         notExistsQuery(
-          getRepository(UserCurrentSubscription)
+          getRepository(UserAliveSubscriptionSummary)
             .createQueryBuilder('s')
             .where(`u.id = s."userId"`)
         )

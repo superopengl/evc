@@ -81,8 +81,8 @@ export const searchUserList = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const page = +req.body.page;
   const size = +req.body.size;
-  const orderField = req.body.orderBy || 'email';
-  const orderDirection = req.body.orderDirection || 'ASC';
+  const orderField = req.body.orderField || 'createdAt';
+  const orderDirection = req.body.orderDirection || 'DESC';
   const text = req.body.text?.trim();
   const subscription = (req.body.subscription || []);
   const tags = (req.body.tags || []);

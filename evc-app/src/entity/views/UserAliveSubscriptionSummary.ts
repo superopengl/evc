@@ -1,9 +1,7 @@
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
-import { PaymentStatus } from '../../types/PaymentStatus';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { Subscription } from '../Subscription';
-import { Payment } from '../Payment';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
 
@@ -12,7 +10,6 @@ import { UserProfile } from '../UserProfile';
     .from(q => q
       .from(Subscription, 's')
       .where(`status = '${SubscriptionStatus.Alive}'`)
-      .andWhere('CURRENT_DATE <= "end"')
       .groupBy('"userId"')
       .select([
         '"userId"',
@@ -20,7 +17,7 @@ import { UserProfile } from '../UserProfile';
         'MAX("end") as "end"'
       ])
       , 'x')
-    .innerJoin(q => q
+    .leftJoin(q => q
       .from(Subscription, 's')
       .where(`status = '${SubscriptionStatus.Alive}'`)
       .andWhere('CURRENT_DATE <= "end"')
@@ -29,20 +26,22 @@ import { UserProfile } from '../UserProfile';
       .addOrderBy('start', 'ASC')
       .select([
         '"userId"',
+        '"end"',
         'type',
         'id'
       ])
       , 'f', 'f."userId" = x."userId"')
-    .innerJoin(q => q
+    .leftJoin(q => q
       .from(Subscription, 's')
       .where(`status = '${SubscriptionStatus.Alive}'`)
-      .andWhere('CURRENT_DATE <= "end"')
       .distinctOn(['"userId"'])
       .orderBy('"userId"')
       .addOrderBy('"end"', 'DESC')
       .select([
         '"userId"',
         'recurring',
+        '"end"',
+        'type',
         'id'
       ])
       , 'r', 'r."userId" = x."userId"')
@@ -50,40 +49,28 @@ import { UserProfile } from '../UserProfile';
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .select([
       'x."userId" as "userId"',
-      'x.start as start',
-      'x."end" as "end"',
-      'f.type as "currentType"',
-      'r.recurring as "lastRecurring"',
-      'f.id as "currentSubscriptionId"',
-      'r.id as "lastSubscriptionId"',
+      'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
-      'p.email as email',
+      'x.start as start',
+      'x."end" as "end"',
+      'f.id as "currentSubscriptionId"',
+      'f.type as "currentType"',
+      'f."end" as "currentEnd"',
+      'r.id as "lastSubscriptionId"',
+      'r.type as "lastType"',
+      'r."end" as "lastEnd"',
+      'r.recurring as "lastRecurring"',
     ])
 })
-export class UserCurrentSubscription {
+export class UserAliveSubscriptionSummary {
   @ViewColumn()
   @PrimaryColumn()
   userId: string;
 
   @ViewColumn()
-  currentType: SubscriptionType;
-
-  @ViewColumn()
-  start: Date;
-
-  @ViewColumn()
-  end: Date;
-
-  @ViewColumn()
-  lastRecurring: boolean;
-
-  @ViewColumn()
-  currentSubscriptionId: string;
-
-  @ViewColumn()
-  lastSubscriptionId: string;
-
+  email: string;
+  
   @ViewColumn()
   givenName: string;
 
@@ -91,5 +78,29 @@ export class UserCurrentSubscription {
   surname: string;
 
   @ViewColumn()
-  email: string;
+  start: string;
+
+  @ViewColumn()
+  end: string;
+
+  @ViewColumn()
+  currentSubscriptionId: string;
+
+  @ViewColumn()
+  currentType: SubscriptionType;
+
+  @ViewColumn()
+  currentEnd: string;
+
+  @ViewColumn()
+  lastSubscriptionId: string;
+
+  @ViewColumn()
+  lastType: SubscriptionType;
+
+  @ViewColumn()
+  lastEnd: string;
+
+  @ViewColumn()
+  lastRecurring: boolean;
 }

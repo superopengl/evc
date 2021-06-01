@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import { useStripe, Elements } from '@stripe/react-stripe-js';

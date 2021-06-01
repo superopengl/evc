@@ -13,7 +13,7 @@ import * as _ from 'lodash';
 import { createStripeClientSecretForCardPayment, chargeStripeForCardPayment, chargeStripeForAlipay } from '../services/stripeService';
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
-import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
+import { getUserCurrentSubscriptionInfo } from '../utils/getUserCurrentSubscriptionInfo';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -90,11 +90,7 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
 
-  const subscription = await getRepository(UserCurrentSubscription).findOne(
-    {
-      userId
-    }
-  );
+  const subscription = await getUserCurrentSubscriptionInfo(userId);
 
   res.json(subscription);
 });

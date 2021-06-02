@@ -1,4 +1,5 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { Stock } from '../Stock';
 import { StockSpecialFairValue } from '../StockSpecialFairValue';
 import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
 
@@ -7,26 +8,27 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
   materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(q => q.from(StockHistoricalComputedFairValue, 's')
+    .from(Stock, 's')
+    .leftJoin(q => q.from(StockHistoricalComputedFairValue, 'sc')
       .distinctOn(['symbol'])
       .orderBy('symbol')
       .addOrderBy('"reportDate"', 'DESC'),
-    's')
+    'sc', 's.symbol = sc.symbol')
     .leftJoin(q => q
       .from(StockSpecialFairValue, 'sp')
       .distinctOn(['symbol'])
       .orderBy('symbol')
       .addOrderBy('"reportDate"', 'DESC'),
-    'sp', 'sp.symbol = s.symbol AND s."reportDate" <= sp."reportDate"')
+    'sp', 'sp.symbol = s.symbol AND (sc."reportDate" IS NULL OR sc."reportDate" <= sp."reportDate")')
     .select([
       's.symbol as symbol',
-      's."reportDate" as "reportDate"',
+      'COALESCE(sp."reportDate", sc."reportDate") as "reportDate"',
       'sp."createdAt" as "specialCreatedAt"',
-      's."ttmEps" as "ttmEps"',
-      's."fairValueLo" as "computedFairValueLo"',
-      's."fairValueHi" as "computedFairValueHi"',
-      'COALESCE(sp."fairValueLo", s."fairValueLo") as "fairValueLo"',
-      'COALESCE(sp."fairValueHi", s."fairValueHi") as "fairValueHi"',
+      'sc."ttmEps" as "ttmEps"',
+      'sc."fairValueLo" as "computedFairValueLo"',
+      'sc."fairValueHi" as "computedFairValueHi"',
+      'COALESCE(sp."fairValueLo", sc."fairValueLo") as "fairValueLo"',
+      'COALESCE(sp."fairValueHi", sc."fairValueHi") as "fairValueHi"',
     ])
 })
 export class StockLatestFairValue {

@@ -22,7 +22,7 @@ start(JOB_NAME, async () => {
     console.log('Other job is still running, skip this run');
     return;
   }
-  await redisCache.setex(JOB_IN_PROGRESS, 3600, true);
+  await redisCache.setex(JOB_IN_PROGRESS, 60 * 95, true); // Lock for 95 minutes
 
   try {
     const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;

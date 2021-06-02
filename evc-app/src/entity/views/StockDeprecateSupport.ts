@@ -1,6 +1,5 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockSupport } from '../StockSupport';
-import { StockLatestFairValue } from './StockLatestFairValue';
 import { Stock } from '../Stock';
 import { StockDailyClose } from '../StockDailyClose';
 

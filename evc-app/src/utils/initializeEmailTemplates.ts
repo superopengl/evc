@@ -53,15 +53,20 @@ export async function initializeEmailTemplates() {
   commissionWithdrawalRejectedEmailDef.locale = Locale.Engish;
   commissionWithdrawalRejectedEmailDef.vars = ['website', 'toWhom', 'referenceId', 'comment'];
 
-  const WatchlistCoreDataChangedEmailDef = new EmailTemplate();
-  WatchlistCoreDataChangedEmailDef.key = EmailTemplateType.WatchlistCoreDataChangedEmail;
-  WatchlistCoreDataChangedEmailDef.locale = Locale.Engish;
-  WatchlistCoreDataChangedEmailDef.vars = ['website', 'toWhom', 'symbol'];
-
   const WatchlistInsiderTransactionChangedEmailDef = new EmailTemplate();
   WatchlistInsiderTransactionChangedEmailDef.key = EmailTemplateType.WatchlistInsiderTransactionChangedEmail;
   WatchlistInsiderTransactionChangedEmailDef.locale = Locale.Engish;
   WatchlistInsiderTransactionChangedEmailDef.vars = ['website', 'toWhom', 'symbol'];
+
+  const WatchlistFairValueChangedEmaillDef = new EmailTemplate();
+  WatchlistFairValueChangedEmaillDef.key = EmailTemplateType.WatchlistFairValueChangedEmail;
+  WatchlistFairValueChangedEmaillDef.locale = Locale.Engish;
+  WatchlistFairValueChangedEmaillDef.vars = ['website', 'toWhom', 'symbol'];
+
+  const WatchlistSupportResistanceChangedEmailDef = new EmailTemplate();
+  WatchlistSupportResistanceChangedEmailDef.key = EmailTemplateType.WatchlistSupportResistanceChangedEmail;
+  WatchlistSupportResistanceChangedEmailDef.locale = Locale.Engish;
+  WatchlistSupportResistanceChangedEmailDef.vars = ['website', 'toWhom', 'symbol'];
 
   const SubscriptionExpiredDef = new EmailTemplate();
   SubscriptionExpiredDef.key = EmailTemplateType.SubscriptionExpired;
@@ -94,8 +99,9 @@ export async function initializeEmailTemplates() {
     commissionWithdrawalSubmittedEmailDef,
     commissionWithdrawalCompletedEmailDef,
     commissionWithdrawalRejectedEmailDef,
-    WatchlistCoreDataChangedEmailDef,
     WatchlistInsiderTransactionChangedEmailDef,
+    WatchlistFairValueChangedEmaillDef,
+    WatchlistSupportResistanceChangedEmailDef,
     SubscriptionExpiredDef,
     SubscriptionExpiringDef,
     SubscriptionRecurringAutoPaySucceededDef,

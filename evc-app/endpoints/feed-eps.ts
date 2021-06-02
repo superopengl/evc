@@ -6,9 +6,10 @@ import * as delay from 'delay';
 import errorToJson from 'error-to-json';
 import * as moment from 'moment';
 import { redisCache } from '../src/services/redisCache';
-import { handleCoreDataWatchlistNotification } from './handleCoreDataWatchlistNotification';
+import { handleWatchlistSupportResistanceChangedNotification } from './handleWatchlistSupportResistanceChangedNotification';
 import { refreshMaterializedView } from '../src/db';
 import { executeWithDataEvents } from '../src/services/dataLogService';
+import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
 
 const JOB_NAME = 'feed-eps';
 
@@ -63,7 +64,8 @@ start(JOB_NAME, async () => {
 
     await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
 
-    await handleCoreDataWatchlistNotification();
+    await handleWatchlistSupportResistanceChangedNotification();
+    await handleWatchlistFairValueChangedNotification();
   } finally {
     await redisCache.del(JOB_IN_PROGRESS);
   }

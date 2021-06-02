@@ -1,5 +1,5 @@
 import { getRepository, getManager } from 'typeorm';
-import { CoreDataPreviousSnapshot } from '../src/entity/CoreDataPreviousSnapshot';
+import { SupportResistancePreviousSnapshot } from '../src/entity/SupportResistancePreviousSnapshot';
 import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
 import { InsiderTransactionWatchlistEmailTask } from '../src/entity/views/InsiderTransactionWatchlistEmailTask';
@@ -33,13 +33,13 @@ async function promoteLatestSnapshotToPreviousSnapshot() {
   const { tableName: toTableName, schema: toSchema } = getRepository(StockInsiderTransactionPreviousSnapshot).metadata;
 
   await getManager().transaction(async m => {
-    await m.delete(CoreDataPreviousSnapshot, {});
+    await m.delete(SupportResistancePreviousSnapshot, {});
     const sql = `INSERT INTO "${toSchema}"."${toTableName}" SELECT * FROM "${fromSchema}"."${fromTableName}"`;
     await m.query(sql);
   });
 }
 
-export async function handleInsiderTransactionWatchlistNotification() {
+export async function handleWatchlistInsiderTransactionNotification() {
   console.log(`Sending watchlist insider transaction change emails`);
   await sendInsiderTransactionChangedEmails();
   await promoteLatestSnapshotToPreviousSnapshot();

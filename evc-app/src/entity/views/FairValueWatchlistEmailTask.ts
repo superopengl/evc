@@ -2,8 +2,9 @@ import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockWatchList } from '../StockWatchList';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
-import { CoreDataLatestSnapshot } from './CoreDataLatestSnapshot';
-import { CoreDataPreviousSnapshot } from '../CoreDataPreviousSnapshot';
+import { FairValueLatestSnapshot } from './FairValueLatestSnapshot';
+import { FairValuePreviousSnapshot } from '../FairValuePreviousSnapshot';
+
 
 @ViewEntity({
   expression: (connection: Connection) => connection
@@ -11,8 +12,8 @@ import { CoreDataPreviousSnapshot } from '../CoreDataPreviousSnapshot';
     .from(StockWatchList, 'swt')
     .innerJoin(User, 'u', 'u.id = swt."userId" AND u."deletedAt" IS NUll')
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
-    .innerJoin(CoreDataLatestSnapshot, 'lts', 'lts.symbol = swt.symbol')
-    .leftJoin(CoreDataPreviousSnapshot, 'pre', 'lts.symbol = pre.symbol')
+    .innerJoin(FairValueLatestSnapshot, 'lts', 'lts.symbol = swt.symbol')
+    .leftJoin(FairValuePreviousSnapshot, 'pre', 'lts.symbol = pre.symbol')
     .where(`swt.belled IS TRUE`)
     .andWhere(`(pre.hash IS NULL OR lts.hash != pre.hash)`)
     .select([
@@ -21,15 +22,9 @@ import { CoreDataPreviousSnapshot } from '../CoreDataPreviousSnapshot';
       'p."givenName" as "givenName"',
       'p.surname as surname',
       'swt.symbol as symbol',
-      'lts."fairValueLo" as "fairValueLo"',
-      'lts."fairValueHi" as "fairValueHi"',
-      'lts.supports as supports',
-      'lts.resistances as resistances',
-      'lts.hash as hash',
-      'lts.date as date',
     ])
 })
-export class CoreDataWatchlistEmailTask {
+export class FairValueWatchlistEmailTask {
   @ViewColumn()
   userId: string;
 
@@ -44,24 +39,4 @@ export class CoreDataWatchlistEmailTask {
 
   @ViewColumn()
   symbol: string;
-
-  @ViewColumn()
-  fairValueLo: number;
-
-  @ViewColumn()
-  fairValueHi: number;
-
-  @ViewColumn()
-  supports: { lo: number, hi: number }[];
-
-  @ViewColumn()
-  resistances: { lo: number, hi: number }[];
-
-  @ViewColumn()
-  hash: string;
-
-  @ViewColumn()
-  date: string;
 }
-
-

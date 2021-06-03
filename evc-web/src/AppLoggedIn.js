@@ -268,9 +268,9 @@ const AppLoggedIn = props => {
     <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
       <FormattedMessage id="menu.profile" />
     </Menu.Item>
-    <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
+    {user.loginType === 'local' && <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
       <FormattedMessage id="menu.changePassword" />
-    </Menu.Item>
+    </Menu.Item>}
     <Menu.Divider />
     <Menu.Item key="logout" danger onClick={handleLogout}>
       <FormattedMessage id="menu.logout" />

@@ -30,7 +30,6 @@ export class User {
   @Column()
   emailHash!: string;
 
-
   @Column({ default: 'local' })
   loginType: string;
 

@@ -513,7 +513,6 @@ async function updateStockLastPrice(info: StockLastPriceInfo) {
   lastPrice.price = price;
   lastPrice.change = change;
   lastPrice.changePercent = changePercent;
-  lastPrice.updatedAt = new Date(time);
   await getManager()
     .createQueryBuilder()
     .insert()

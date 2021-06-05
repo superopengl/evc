@@ -10,9 +10,9 @@ type StockIexEpsInfo = {
 };
 
 export const syncStockEps = async (symbol: string, howManyQuarters = 8) => {
-  const earnings = await getEarnings(symbol, howManyQuarters);
+  const { earnings, rawResponse } = await getEarnings(symbol, howManyQuarters);
   if (!earnings?.length) {
-    console.log('Nothing returned form API for ', symbol);
+    console.log('Nothing returned form API for ', symbol, JSON.stringify(rawResponse));
     return;
   }
   const infoList = _.chain(earnings)

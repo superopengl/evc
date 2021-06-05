@@ -6,16 +6,16 @@ import * as parse from 'csv-parse/lib/sync';
 // const alphaApi = alphavantage({key: process.env.ALPHAVANTAGE_API_KEY});
 
 export async function getEarnings(symbol: string, howManyQuarters = 4) {
-  const resp = await requestAlphaVantageApi({
+  const rawResponse = await requestAlphaVantageApi({
     function: 'EARNINGS',
     symbol,
   });
-  const quarterlyEarnings = resp?.quarterlyEarnings || [];
-  const result = _.chain(quarterlyEarnings)
+  const quarterlyEarnings = rawResponse?.quarterlyEarnings || [];
+  const earnings = _.chain(quarterlyEarnings)
     .filter(x => _.isFinite(+(x.reportedEPS)))
     .take(howManyQuarters)
     .value();
-  return result;
+  return { earnings, rawResponse };
 }
 
 export async function getHistoricalClose(symbol: string, days = 1) {
@@ -39,7 +39,7 @@ export async function getHistoricalClose(symbol: string, days = 1) {
   return result;
 }
 
-export async function getEarningsCalendarForAll(): Promise<{symbol: string, reportDate: string}[]> {
+export async function getEarningsCalendarForAll(): Promise<{ symbol: string, reportDate: string }[]> {
   const data = await requestAlphaVantageApi({
     function: 'EARNINGS_CALENDAR',
     horizon: '12month',

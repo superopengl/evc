@@ -11,6 +11,8 @@ import putCallData from './putCallData';
 import rosterListData from './rosterData';
 import { FormattedMessage } from 'react-intl';
 import { useMediaQuery } from 'react-responsive'
+import { TimeAgo } from 'components/TimeAgo';
+
 import Joyride from 'react-joyride';
 import {
   BarChartOutlined,
@@ -425,15 +427,23 @@ const ProMemberPage = (props) => {
               <Row gutter={[30, 30]}>
                 <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                   <div className="ant-card ant-card-bordered ant-card-small">
-                    <div className="ant-card-body" style={{ height: '178px' }}>
-                      <div className="ant-space ant-space-vertical">
-                        <div className="ant-space-item">
+                    <div className="ant-card-body" style={{ minHeight: '178px' }}>
+                      <Space size="small" direction="vertical">
+                        <div>
+                          <Text style={{ fontSize: 30 }} strong>133.67 <span className="ant-typography ant-typography-success"><small>+0.720 (+0.536%)</small></span></Text>
+                          <div><Text type="secondary"><small>Price At: 5:59 am EST</small></Text></div>
+                        </div>
+
+                        <div>
+                          <Text style={{ fontSize: 20 }} strong>25.98 <span className="ant-typography ant-typography-success"><small>+0.010 (+0.039%)</small></span></Text>
                           <div>
-                            <span className="ant-typography" style={{ fontSize: '30px' }}><strong>133.67 <span className="ant-typography ant-typography-success"><small>+0.720 (+0.536%)</small></span></strong></span>
-                            <div><span className="ant-typography ant-typography-secondary"><small>Price At: 5:59 am EST</small></span></div>
+                            <Space size="small" style={{ width: '100%', alignItems: 'flex-start' }}>
+                              <Text type="secondary"><small>extended hours</small></Text>
+                              <TimeAgo direction={superNarrow ? 'vertical' : 'horizontal'} value={moment().add(-1, 'day').toDate()} />
+                            </Space>
                           </div>
                         </div>
-                      </div>
+                      </Space>
                     </div>
                   </div>
                   <div style={{ marginTop: '30px' }} className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
@@ -708,43 +718,43 @@ const ProMemberPage = (props) => {
             </Col>
             <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 16, xxl: 18 }}>
               <Card
-                  size="small"
-                  type="inner"
-                  title={<FormattedMessage id="text.insiderTransactions" />}
-                  bodyStyle={{ height: 500, overflow: 'auto' }}>
-      <RosterContainer direction="vertical" size="small" style={{ width: '100%' }}>
-
-                            <Space direction="vertical" size="small" style={{ marginBottom: 24 }}>
-          {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
-            <Tag color={v.color}>{k}</Tag>
-            {v.message}
-          </div>)}
-        </Space>
-              <RosterList
-                grid={{ column: 1 }}
-                itemLayout="horizontal"
                 size="small"
-                dataSource={rosterListData}
-                renderItem={item => (
-                  <List.Item>
-                    <Descriptions
-                      title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
-                      size="small"
-                      column={insiderSpan}
-                      extra={getBadgeComponent(item.transactionCode)}
-                    >
-                      <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
-                      <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
-                      <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
-                      <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
-                      <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
-                      <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
-                      <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
-                    </Descriptions>
-                  </List.Item>
-                )}
-              />
-              </RosterContainer>
+                type="inner"
+                title={<FormattedMessage id="text.insiderTransactions" />}
+                bodyStyle={{ height: 500, overflow: 'auto' }}>
+                <RosterContainer direction="vertical" size="small" style={{ width: '100%' }}>
+
+                  <Space direction="vertical" size="small" style={{ marginBottom: 24 }}>
+                    {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
+                      <Tag color={v.color}>{k}</Tag>
+                      {v.message}
+                    </div>)}
+                  </Space>
+                  <RosterList
+                    grid={{ column: 1 }}
+                    itemLayout="horizontal"
+                    size="small"
+                    dataSource={rosterListData}
+                    renderItem={item => (
+                      <List.Item>
+                        <Descriptions
+                          title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
+                          size="small"
+                          column={insiderSpan}
+                          extra={getBadgeComponent(item.transactionCode)}
+                        >
+                          <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
+                          <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
+                          <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
+                        </Descriptions>
+                      </List.Item>
+                    )}
+                  />
+                </RosterContainer>
               </Card>
             </Col>
           </Row>

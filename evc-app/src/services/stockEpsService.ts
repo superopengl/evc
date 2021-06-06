@@ -3,6 +3,7 @@ import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';
 import * as _ from 'lodash';
 import * as delay from 'delay';
+import { backOff } from "exponential-backoff";
 
 type StockIexEpsInfo = {
   symbol: string;
@@ -11,34 +12,26 @@ type StockIexEpsInfo = {
 };
 
 async function getEarningsWithThreeAttempts(symbol: string, howManyQuarters: number) {
-  let earnings;
-  let rawResponse;
+  let attempt = 0;
+  const earningsResult = await backOff(async () => {
+    attempt++;
+    const { earnings, rawResponse } = await getEarnings(symbol, howManyQuarters);
+    if (!earnings?.length) {
+      console.log(`Attempt ${attempt}: Nothing returned form API for `, symbol, JSON.stringify(rawResponse));
+      if (rawResponse?.Information) {
+        throw new Error('AlphaVantage API returns nothing');
+      }
+    }
+    return earnings;
+  }, {
+    delayFirstAttempt: false,
+    startingDelay: 500,
+    timeMultiple: 3,
+    numOfAttempts: 10,
+    maxDelay: 5 * 1000 // 5 seconds
+  });
 
-  const attempt1 = await getEarnings(symbol, howManyQuarters);
-  earnings = attempt1.earnings;
-  rawResponse = attempt1.rawResponse;
-
-  if (!earnings?.length) {
-    console.log('Attempt 1: Nothing returned form API for ', symbol, JSON.stringify(rawResponse), '. Next attempt after 300 ms.');
-    await delay(300);
-    const attempt2 = await getEarnings(symbol, howManyQuarters);
-    earnings = attempt2.earnings;
-    rawResponse = attempt2.rawResponse;
-  }
-
-  if (!earnings?.length) {
-    console.log('Attempt 2: Nothing returned form API for ', symbol, JSON.stringify(rawResponse), '. Next attempt after 1000 ms.');
-    await delay(1000);
-    const attempt3 = await getEarnings(symbol, howManyQuarters);
-    earnings = attempt3.earnings;
-    rawResponse = attempt3.rawResponse;
-  }
-
-  if (!earnings?.length) {
-    console.log('Attempt 3: Nothing returned form API for ', symbol, JSON.stringify(rawResponse));
-  }
-
-  return earnings;
+  return earningsResult;
 }
 
 

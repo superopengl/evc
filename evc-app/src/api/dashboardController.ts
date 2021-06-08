@@ -23,6 +23,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
           .where('s.symbol = p.symbol')
       )
     )
+    .andWhere('"deletedAt" IS NULl')
     .select([
       'symbol',
       'count'

@@ -10,7 +10,6 @@ export class StockPlea {
   createdAt: Date;
 
   @DeleteDateColumn()
-  @Index()
   deletedAt: Date;
 
   @Column({ default: 1 })

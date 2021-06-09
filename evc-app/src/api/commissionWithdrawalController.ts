@@ -1,7 +1,8 @@
 
 import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { v4 as uuidv4 } from 'uuid';
 import { CommissionWithdrawal } from '../entity/CommissionWithdrawal';
 import * as moment from 'moment';

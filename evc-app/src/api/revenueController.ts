@@ -1,6 +1,7 @@
 
 import { getManager, getRepository } from 'typeorm';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { RevenueChartInformation } from '../entity/views/RevenueChartInformation';
 import { json2csvAsync } from 'json-2-csv';

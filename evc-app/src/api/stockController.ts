@@ -1,6 +1,7 @@
 import { getManager, getRepository, In, MoreThanOrEqual } from 'typeorm';
 import { Stock } from '../entity/Stock';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockHotSearch } from '../entity/StockHotSearch';
 import { StockWatchList } from '../entity/StockWatchList';

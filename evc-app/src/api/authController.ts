@@ -44,15 +44,18 @@ export const login = handlerWrapper(async (req, res) => {
   const hash = computeUserSecret(password, user.salt);
   assert(hash === user.secret, 400, 'User or password is not valid');
 
-  user.lastLoggedInAt = getUtcNow();
+  const entitiesToSave: any[] = [user];
+  const now = getUtcNow();
+  user.lastNudgedAt = now;
+  user.lastLoggedInAt = now;
   user.resetPasswordToken = null;
   user.status = UserStatus.Enabled;
   if (!user.profile.geo) {
     user.profile.geo = await getRequestGeoInfo(req);
-    await getRepository(UserProfile).save(user.profile);
+    entitiesToSave.push(user.profile);
   }
 
-  await getRepository(User).save(user);
+  getManager().save(entitiesToSave).catch(() => {});
 
   attachJwtCookie(user, res);
 

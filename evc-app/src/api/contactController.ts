@@ -20,7 +20,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
   await enqueueEmail({
     template: EmailTemplateType.Contact,
     to: await getConfigValue('email.contact.recipient'),
-    from: email,
+    from: await getConfigValue('email.sender.noreply'),
     vars: {
       name: recipentName,
       contact: recipentContact,

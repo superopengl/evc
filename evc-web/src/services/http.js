@@ -2,6 +2,9 @@ import * as axios from 'axios';
 import { get } from 'lodash';
 import { notify } from 'util/notify';
 import * as FormData from 'form-data';
+import { Modal } from 'antd';
+
+let isSessionTimeoutModalOn = false;
 
 axios.defaults.withCredentials = true;
 
@@ -36,6 +39,26 @@ function getHeaders(responseType) {
   return headers;
 }
 
+function reloadPage() {
+  window.location = '/';
+}
+
+function handleSessionTimeout() {
+  if(!isSessionTimeoutModalOn) {
+    isSessionTimeoutModalOn = true;
+    Modal.warning({
+      title: 'Session timeout',
+      content: 'Your session is timeout.',
+      maskClosable: false,
+      closable: false,
+      okText: 'Reload page',
+      onOk: () => {
+        reloadPage();
+      }
+    });
+  }
+}
+
 export async function request(method, path, queryParams, body, responseType = 'json') {
   try {
     const response = await axios({
@@ -52,9 +75,8 @@ export async function request(method, path, queryParams, body, responseType = 'j
   } catch (e) {
     const code = get(e, 'response.status', null);
     if (code === 401) {
-      notify.error('Session timeout.');
-      window.location = '/';
-      return;
+      handleSessionTimeout();
+      return false;
     }
     const errorMessage = responseType === 'blob' ? e.message : get(e, 'response.data.message') || get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);
@@ -77,9 +99,8 @@ export async function uploadFile(fileBlob) {
   } catch (e) {
     const code = get(e, 'response.status', null);
     if (code === 401) {
-      notify.error('Session timeout.');
-      window.location = '/';
-      return;
+      handleSessionTimeout();
+      return false;
     }
     const errorMessage = get(e, 'response.data.message') || get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);

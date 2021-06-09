@@ -172,7 +172,7 @@ const MyAccountPage = (props) => {
 
   return (
     <ContainerStyled>
-      <Loading loading={loading} style={{ width: '100%' }}>
+      {!account ? <Loading loading={loading} style={{ width: '100%' }} /> :
         <Space direction="vertical" size="large" style={{ width: '100%', justifyContent: 'center' }}>
           <Card
             bordered={false}
@@ -194,7 +194,7 @@ const MyAccountPage = (props) => {
               </>} />}
               {!currentSubscription && <Alert type="info" showIcon description={<>
                 <FormattedMessage id="text.freeToPaidSuggestion" />
-                {account.my1stBuyDiscountPerc > 0 && <strong> <FormattedMessage id="text.initialBuyDiscountMessage" values={{percentage: account.my1stBuyDiscountPerc * 100}} /></strong>}
+                {account.my1stBuyDiscountPerc > 0 && <strong> <FormattedMessage id="text.initialBuyDiscountMessage" values={{ percentage: account.my1stBuyDiscountPerc * 100 }} /></strong>}
               </>} />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
@@ -278,47 +278,47 @@ const MyAccountPage = (props) => {
               <FormattedMessage id="text.commissionWithdrawalDescription" />
             </Paragraph>
           </Card>
-        </Space>
-      </Loading>
-      <Modal
-        visible={modalVisible}
-        closable={!paymentLoading}
-        maskClosable={false}
-        title="Subscribe plan"
-        destroyOnClose
-        footer={null}
-        width={520}
-        onOk={handleCancelPayment}
-        onCancel={handleCancelPayment}
-      >
-        <PaymentStepperWidget
-          planType={planType}
-          discount={account.my1stBuyDiscountPerc}
-          onComplete={handlePaymentOk}
-          onLoading={loading => setPaymentLoading(loading)}
-        />
-      </Modal>
-      <CreditHistoryListModal
-        visible={creditHistoryVisible}
-        onOk={() => setCreditHistoryVisible(false)}
-        onFetch={handleFetchMyCreditHistoryList}
-      />
-      <Modal
-        title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
-        visible={cashBackVisible}
-        closable={true}
-        maskClosable={false}
-        destroyOnClose={true}
-        footer={null}
-        onOk={() => setCashBackVisible(false)}
-        onCancel={() => setCashBackVisible(false)}
-      >
-        <CommissionWithdrawalForm onOk={() => setCashBackVisible(false)} />
-      </Modal>
-      <MyCommissionWithdrawalHistoryDrawer
-        visible={commissionWithdrawalHistoryVisible}
-        onClose={() => setCommissionWithdrawalHistoryVisible(false)}
-      />
+          <Modal
+            visible={modalVisible}
+            closable={!paymentLoading}
+            maskClosable={false}
+            title="Subscribe plan"
+            destroyOnClose
+            footer={null}
+            width={520}
+            onOk={handleCancelPayment}
+            onCancel={handleCancelPayment}
+          >
+            <PaymentStepperWidget
+              planType={planType}
+              discount={account.my1stBuyDiscountPerc}
+              onComplete={handlePaymentOk}
+              onLoading={loading => setPaymentLoading(loading)}
+            />
+          </Modal>
+          <CreditHistoryListModal
+            visible={creditHistoryVisible}
+            onOk={() => setCreditHistoryVisible(false)}
+            onFetch={handleFetchMyCreditHistoryList}
+          />
+          <Modal
+            title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
+            visible={cashBackVisible}
+            closable={true}
+            maskClosable={false}
+            destroyOnClose={true}
+            footer={null}
+            onOk={() => setCashBackVisible(false)}
+            onCancel={() => setCashBackVisible(false)}
+          >
+            <CommissionWithdrawalForm onOk={() => setCashBackVisible(false)} />
+          </Modal>
+          <MyCommissionWithdrawalHistoryDrawer
+            visible={commissionWithdrawalHistoryVisible}
+            onClose={() => setCommissionWithdrawalHistoryVisible(false)}
+          />
+        </Space>}
+
     </ContainerStyled>
   );
 };

@@ -17,6 +17,7 @@ import { FormattedMessage } from 'react-intl';
 import smoothscroll from 'smoothscroll-polyfill';
 import { ContactWidget } from 'components/ContactWidget';
 import { scrollToElement } from '../util/scrollToElement';
+import { trackGuestUserVisit } from '../util/trackGuestUserVisit';
 
 smoothscroll.polyfill();
 
@@ -97,6 +98,12 @@ const HomePage = (props) => {
   }
 
   const isGuest = context.role === 'guest';
+
+  React.useEffect(() => {
+    if(isGuest) {
+      trackGuestUserVisit();
+    }
+  }, []);
 
 
   const ROUTES = [

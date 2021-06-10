@@ -9,29 +9,6 @@ import 'colors';
 import { GuestUserStats } from '../entity/GuestUserStats';
 import { getTableName } from '../utils/getTableName';
 
-function trackGuestUser(req) {
-  const deviceId = req.header('x-evc-device-id');
-
-  console.log('guest traking', deviceId, req.url);
-
-  if (!deviceId) {
-    return;
-  }
-
-  getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(GuestUserStats)
-    .values({
-      deviceId
-    })
-    .onConflict(`("deviceId") DO UPDATE SET count = ${getTableName(GuestUserStats)}.count + 1, "lastNudgedAt" = NOW()`)
-    .execute()
-    .catch((err) => {
-      console.log('guest traking err', err);
-    });
-}
-
 export const authMiddleware = async (req, res, next) => {
   // console.log('Authing'.green, req.method, req.url);
 
@@ -61,7 +38,6 @@ export const authMiddleware = async (req, res, next) => {
       // Guest user (hasn't logged in)
       // req.user = null;
       // clearJwtCookie(res);
-      trackGuestUser(req);
     }
   } catch {
     clearJwtCookie(res);

@@ -39,8 +39,7 @@ async function promoteSupportResistanceLatestSnapshotToPreviousSnapshot() {
 }
 
 export async function handleWatchlistSupportResistanceChangedNotification() {
-  // Send watchlist emails if core data change detected.
-  console.log(`Sending watchlist core change emails`);
+  console.log(`Sending watchlist support/resistance changed notification emails`);
   await sendSupportResistanceChangedEmails();
   await promoteSupportResistanceLatestSnapshotToPreviousSnapshot();
 }

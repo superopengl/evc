@@ -8,7 +8,7 @@ import { getUtcNow } from '../utils/getUtcNow';
 import 'colors';
 
 export const authMiddleware = async (req, res, next) => {
-  console.log('Authing'.green, req.method, req.url);
+  // console.log('Authing'.green, req.method, req.url);
 
   try {
     let user = verifyJwtFromCookie(req);
@@ -25,7 +25,7 @@ export const authMiddleware = async (req, res, next) => {
           res.sendStatus(401);
           return;
         }
-        console.log('Renewed cookie for'.green, user.profile.email);
+        // console.log('Renewed cookie for'.green, user.profile.email);
 
         user = existingUser;
       }
@@ -41,7 +41,7 @@ export const authMiddleware = async (req, res, next) => {
     clearJwtCookie(res);
   }
 
-  console.log('Auth done'.green, req.method, req.url, req.user);
+  // console.log('Auth done'.green, req.method, req.url, req.user);
 
   next();
 };

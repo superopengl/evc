@@ -34,7 +34,7 @@ export async function syncManyStockClose(info: StockCloseInfo[]) {
 
 export async function syncStockHistoricalClose(symbol: string, days = 100) {
   const data = await getHistoricalClose(symbol, days);
-  if (!data.length) {
+  if (!data?.length) {
     return;
   }
   const closeEntities = [];

@@ -25,9 +25,12 @@ export async function getHistoricalClose(symbol: string, days = 1) {
     datatype: 'json',
     outputsize: days <= 100 ? 'compact' : 'full'
   });
-  const list = resp['Time Series (Daily)'];
+  const data = resp['Time Series (Daily)'];
+  if(!data) {
+    return [];
+  }
 
-  const result = _.chain(Object.entries(list))
+  const result = _.chain(Object.entries(data))
     .map(([date, value]) => ({
       date,
       close: value['4. close']

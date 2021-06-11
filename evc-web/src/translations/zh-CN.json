@@ -154,5 +154,6 @@
   "text.currentReferralCommissionPercentage": "您当前的推荐佣金比例为{percentage}。",
   "text.currentReferreeDiscountPercentage": "被您推荐的用户首次购买时享受的折扣优惠为{percentage}。",
   "text.initialBuyDiscountMessage": "You can get {percentage}% off discount now!",
+  "text.reportDate": "更新日期",
   "": ""
 }

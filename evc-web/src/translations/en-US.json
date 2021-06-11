@@ -154,5 +154,6 @@
   "text.currentReferralCommissionPercentage": "You current referral commission is {percentage}.",
   "text.currentReferreeDiscountPercentage": "The referrees by you will get a {percentage} discount for the first purchase.",
   "text.initialBuyDiscountMessage": "You can get {percentage}% off discount now!",
+  "text.reportDate": "Report Date",
   "": ""
 }

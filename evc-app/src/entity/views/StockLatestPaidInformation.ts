@@ -26,6 +26,7 @@ import { StockResistance } from '../StockResistance';
     )
     .addSelect('sfv."fairValueLo"')
     .addSelect('sfv."fairValueHi"')
+    .addSelect('sfv."reportDate" as "fairValueDate"')
     .leftJoin(q => q.from(StockLastPrice, 'slp'),
       'slp', 'slp.symbol = s.symbol'
     )
@@ -85,6 +86,9 @@ export class StockLatestPaidInformation {
 
   @ViewColumn()
   fairValueHi: number;
+
+  @ViewColumn()
+  fairValueDate: string;
 
   @ViewColumn()
   lastPrice: number;

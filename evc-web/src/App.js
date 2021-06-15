@@ -60,6 +60,7 @@ const App = () => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
+  const [customTags, setCustomTags] = React.useState(null);
   const [event$] = React.useState(new Subject());
 
   const startEventSource = () => {
@@ -73,8 +74,10 @@ const App = () => {
   const globalContextValue = {
     event$,
     user: null,
-    role: 'guest',
     setUser,
+    role: 'guest',
+    customTags,
+    setCustomTags,
     setLoading,
     setLocale: locale => {
       reactLocalStorage.set('locale', locale);
@@ -112,6 +115,13 @@ const App = () => {
       contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
     }
   }, [user]);
+
+  React.useEffect(() => {
+    setContextValue({
+      ...contextValue,
+      customTags
+    })
+  }, [customTags]);
 
 
   const role = contextValue.role;

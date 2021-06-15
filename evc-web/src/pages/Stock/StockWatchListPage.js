@@ -3,11 +3,12 @@ import ReactDOM from "react-dom";
 import styled from 'styled-components';
 import { Typography, Modal } from 'antd';
 import StockList from '../../components/StockList';
-import { getWatchList } from 'services/stockService';
+import { getWatchList, listCustomTags } from 'services/watchListService';
 import { Link, withRouter } from 'react-router-dom';
 import { StarOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { from } from 'rxjs';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Paragraph } = Typography;
 
@@ -21,6 +22,7 @@ const StockWatchListPage = (props) => {
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const context = React.useContext(GlobalContext);
 
   const loadList = async () => {
     try {
@@ -36,6 +38,9 @@ const StockWatchListPage = (props) => {
         });
         return;
       }
+      const customTags = await listCustomTags();
+      context.setCustomTags(customTags);
+
       ReactDOM.unstable_batchedUpdates(() => {
         const { data } = resp;
         setList(data ?? []);
@@ -57,7 +62,13 @@ const StockWatchListPage = (props) => {
   return (
       <ContainerStyled>
         <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock"><FormattedMessage id="menu.stockRadar"/></Link> to find all the stocks our platform supports</Paragraph>
-        <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} showBell={true}/>
+        <StockList 
+        data={list} 
+        loading={loading} 
+        onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} 
+        showBell={true}
+        showTags={true}
+        />
       </ContainerStyled>
   );
 };

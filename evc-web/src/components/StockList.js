@@ -13,7 +13,7 @@ const StyledList = styled(List)`
 
 const StockList = (props) => {
 
-  const { data, loading, onItemClick, showBell } = props;
+  const { data, loading, onItemClick, showBell, showTags } = props;
 
   return (
     <StyledList
@@ -31,11 +31,12 @@ const StockList = (props) => {
       dataSource={data}
       renderItem={stock => (
         <List.Item>
-          <StockInfoCard 
-          value={stock}
-          hoverable
-          onClick={() => onItemClick(stock)}
-          showBell={showBell}
+          <StockInfoCard
+            value={stock}
+            hoverable
+            onClick={() => onItemClick(stock)}
+            showBell={showBell}
+            showTags={showTags}
           />
         </List.Item>
       )}
@@ -48,11 +49,13 @@ StockList.propTypes = {
   data: PropTypes.array.isRequired,
   onItemClick: PropTypes.func,
   showBell: PropTypes.bool,
+  showTags: PropTypes.bool,
 };
 
 StockList.defaultProps = {
   showBell: false,
-  onItemClick: () => {}
+  showTags: false,
+  onItemClick: () => { }
 };
 
 export default withRouter(StockList);

@@ -160,7 +160,7 @@ paths:
       #   - authAdminOrAgent: []
       responses:
         200:
-          description: OK          
+          description: OK
   /user:
     get:
       operationId: listAllUsers
@@ -176,7 +176,7 @@ paths:
       #   - authAdminOrAgent: []
       responses:
         200:
-          description: OK          
+          description: OK
   /user/search:
     post:
       operationId: searchUserList
@@ -300,7 +300,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /user/:id/discount_policy:
     get:
       operationId: getDiscountUserPolicy
@@ -334,7 +334,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK                    
+          description: OK
   /user/:id/set_password:
     post:
       operationId: setUserPassword
@@ -380,7 +380,7 @@ paths:
       operationId: downloadAllPaymentCsv
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/search:
     post:
       operationId: searchStockList
@@ -505,7 +505,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/s/{symbol}/insider:
     get:
       operationId: getStockInsiderTransaction
@@ -619,6 +619,17 @@ paths:
   /stock/s/{symbol}/unbell:
     post:
       operationId: unbellStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/custom_tags:
+    post:
+      operationId: saveStockCustomTags
       parameters:
         - name: symbol
           in: path
@@ -867,7 +878,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /subscription/recurring/off:
     post:
       operationId: turnOffSubscriptionRecurring
@@ -891,7 +902,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /event:
     get:
       operationId: subscribeEvent
@@ -1032,7 +1043,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /commission_withdrawal:
     get:
       operationId: listMyCommissionWithdrawal
@@ -1214,7 +1225,7 @@ paths:
       operationId: listAdminUoaStocks
       responses:
         200:
-          description: OK          
+          description: OK
   /admin/data/uoa/etfs:
     get:
       operationId: listUoaEtfs
@@ -1231,7 +1242,7 @@ paths:
       operationId: listAdminUoaEtfs
       responses:
         200:
-          description: OK          
+          description: OK
   /admin/data/uoa/index:
     get:
       operationId: listUoaindex
@@ -1248,12 +1259,34 @@ paths:
       operationId: listAdminUoaindex
       responses:
         200:
-          description: OK          
+          description: OK
   /admin/operation/:operation/status:
     get:
       operationId: getOperationStatus
       parameters:
         - name: operation
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /custom_tags:
+    get:
+      operationId: listStockCustomTag
+      responses:
+        200:
+          description: OK    
+    post:
+      operationId: createStockCustomTag
+      responses:
+        200:
+          description: OK
+  /custom_tags/:id:
+    delete:
+      operationId: deleteStockCustomTag
+      parameters:
+        - name: id
           in: path
           type: string
           required: true

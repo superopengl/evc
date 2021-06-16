@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany } from 'typeorm';
+import { ManyToMany, JoinTable } from 'typeorm-plus';
 import { StockWatchList } from './StockWatchList';
 
 
@@ -17,6 +18,7 @@ export class StockUserCustomTag {
   @Column()
   name: string;
 
-  @OneToMany(() => StockWatchList, w => w.tags)
+  @ManyToMany(() => StockWatchList, wl => wl.tags, { cascade: true })
+  @JoinTable()
   stockInWatchList: StockWatchList[];
 }

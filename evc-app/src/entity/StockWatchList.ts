@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, CreateDateColumn, ManyToOne } from 'typeorm';
+import { ManyToMany, JoinTable } from 'typeorm-plus';
 import { StockUserCustomTag } from "./StockUserCustomTag";
 
 
@@ -17,9 +18,10 @@ export class StockWatchList {
   @Column('uuid')
   userId: string;
 
-  @Column({default: true})
+  @Column({ default: true })
   belled: boolean;
 
-  @ManyToOne(() => StockUserCustomTag)
+  @ManyToMany(() => StockUserCustomTag, tag => tag.stockInWatchList)
+  @JoinTable()
   tags: StockUserCustomTag[];
 }

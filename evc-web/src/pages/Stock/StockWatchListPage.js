@@ -38,25 +38,20 @@ const StockWatchListPage = (props) => {
         });
         return;
       }
-      const customTags = await listCustomTags();
-      context.setCustomTags(customTags);
+      await context.reloadCustomTags();
 
       ReactDOM.unstable_batchedUpdates(() => {
         const { data } = resp;
         setList(data ?? []);
         setLoading(false);
       });
-    } catch {
+    } catch(e) {
       setLoading(false);
     }
   }
 
   React.useEffect(() => {
-    const load$ = from(loadList()).subscribe();
-
-    return () => {
-      load$.unsubscribe();
-    }
+    loadList();
   }, []);
 
   return (

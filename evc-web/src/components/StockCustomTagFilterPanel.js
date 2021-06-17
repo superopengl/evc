@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CloseOutlined, MinusOutlined, TagFilled, TagOutlined } from '@ant-design/icons';
-import { Button, Tag, Row, Col } from 'antd';
+import { CheckOutlined, CloseOutlined, MinusOutlined, TagFilled, TagOutlined } from '@ant-design/icons';
+import { Button, Tag, Row, Col, Modal, Input } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import styled from 'styled-components';
-import { deleteCustomTag } from 'services/watchListService';
-import { Modal } from 'antd';
+import { createCustomTag, deleteCustomTag } from 'services/watchListService';
+import { notify } from 'util/notify';
 
 const StyledTag = styled(Tag)`
 &:hover {
@@ -18,11 +18,18 @@ font-size: 12px;
 color: rgba(0,0,0,0.35);
 `;
 
+const StyledNewTagInput = styled(Input.Search)`
+input {
+  font-size: 12px;
+}
+`;
+
 export const StockCustomTagFilterPanel = (props) => {
 
   const { onChange, onDeleteTag, onAddTag, value } = props;
 
   const context = React.useContext(GlobalContext);
+  const [tagName, setTagName] = React.useState('');
   const { customTags } = context;
 
   const isSelected = (tagId) => {
@@ -52,8 +59,17 @@ export const StockCustomTagFilterPanel = (props) => {
       okButtonProps: {
         danger: true
       }
-      
-    })
+    });
+  }
+
+  const handleCreateTag = async (value, e) => {
+    e.stopPropagation();
+    if (value) {
+      await createCustomTag(value);
+      onAddTag();
+      setTagName('');
+      notify.success(<>Successfully saved tag <strong>{value}</strong>.</>);
+    }
   }
 
   return (<Row gutter={[5, 5]}>
@@ -64,10 +80,23 @@ export const StockCustomTagFilterPanel = (props) => {
           onClick={() => toggleTag(t.id)}
         >
           {t.name} <StyledCloseButton onClick={e => handleDeleteTag(e, t)}>
-            <CloseOutlined style={{marginLeft: 4}}/>
+            <CloseOutlined style={{ marginLeft: 4 }} />
           </StyledCloseButton>
         </StyledTag>
       </Col>)}
+    <Col>
+      <div style={{ display: 'flex' }}>
+        <StyledNewTagInput placeholder="Create tag"
+          size="small"
+          maxLength={16}
+          allowClear
+          value={tagName}
+          onChange={e => setTagName(e.target.value)}
+          enterButton={<Button type="primary" icon={<CheckOutlined />}></Button>}
+          onSearch={handleCreateTag}
+        />
+      </div>
+    </Col>
   </Row>
   );
 };

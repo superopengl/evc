@@ -61,22 +61,21 @@ const StockWatchListPage = (props) => {
   }, [selectedTagIds]);
 
   const handleDeleteTag = (id) => {
-    reactLocalStorage.setObject(LOCAL_STORAGE_QUERY_KEY, selectedTagIds.filter(x => x !== id));
-    loadList();
+    setSelectedTagIds(selectedTagIds.filter(x => x !== id));
   }
 
-  const handleAddTag = () => {
-    loadList();
+  const handleAddTag = async () => {
+    await context.reloadCustomTags();
   }
 
   return (
     <ContainerStyled>
-      <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock"><FormattedMessage id="menu.stockRadar" /></Link> to find all the stocks our platform supports</Paragraph>
-      <StockCustomTagFilterPanel 
-      onChange={setSelectedTagIds} 
-      onDeleteTag={handleDeleteTag}
-      onAddTag={handleAddTag}
-      value={selectedTagIds} 
+      <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock"><FormattedMessage id="menu.stockRadar" /></Link> to find all the stocks our platform supports.</Paragraph>
+      <StockCustomTagFilterPanel
+        onChange={setSelectedTagIds}
+        onDeleteTag={handleDeleteTag}
+        onAddTag={handleAddTag}
+        value={selectedTagIds}
       />
       <Divider />
       <StockList

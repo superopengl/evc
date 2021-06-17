@@ -5,7 +5,7 @@ import Tag from './Tag';
 import { v4 as uuidv4 } from 'uuid';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { CheckOutlined, TagsOutlined } from '@ant-design/icons';
-import { createCustomTags } from 'services/watchListService';
+import { createCustomTag } from 'services/watchListService';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -18,7 +18,7 @@ width: 100%;
 
 const StockCustomTagSelect = (props) => {
 
-  const { value, readonly, onChange } = props;
+  const { value, readonly, onChange, onBlur } = props;
   const context = React.useContext(GlobalContext);
   const [selected, setSelected] = React.useState(value);
 
@@ -29,7 +29,7 @@ const StockCustomTagSelect = (props) => {
     const lastOption = optionList.length ? optionList[optionList.length - 1] : null;
     if (lastOption && !lastOption.value) {
       const name = valueList[valueList.length - 1];
-      await createCustomTags(name);
+      await createCustomTag(name);
       await context.reloadCustomTags();
     } else {
       setSelected(valueList);
@@ -53,6 +53,7 @@ const StockCustomTagSelect = (props) => {
       allowClear={false}
       style={{ width: '100%', marginRight: 8, flex: '1' }}
       onChange={handleChange}
+      onBlur={onBlur}
       value={selected}
       notFoundContent={<>Not found</>}
       // value={selectedOptions}
@@ -83,12 +84,14 @@ StockCustomTagSelect.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   onChange: PropTypes.func,
+  onBlur: PropTypes.func,
 };
 
 StockCustomTagSelect.defaultProps = {
   value: [],
   readonly: true,
   onChange: () => { },
+  onBlur: () => { },
 };
 
 export default StockCustomTagSelect;

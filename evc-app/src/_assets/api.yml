@@ -405,7 +405,7 @@ paths:
         200:
           description: OK
   /stock/watchlist:
-    get:
+    post:
       operationId: getWatchList
       responses:
         200:

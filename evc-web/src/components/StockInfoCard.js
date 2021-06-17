@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Tooltip, Row, Col, Button } from 'antd';
+import { Card, Typography, Space, Tooltip, Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
@@ -11,10 +11,9 @@ import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 import { LockFilled } from '@ant-design/icons';
 import { StockNoticeButton } from './StockNoticeButton';
-import { filter, debounceTime } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { FormattedMessage } from 'react-intl';
 import StockCustomTagSelect from './StockCustomTagSelect';
-import { TagOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -142,6 +141,12 @@ const StockInfoCard = (props) => {
   const isMember = role === 'member';
   const isGuest = role === 'guest';
   const shouldHideData = ['guest', 'free'].includes(role);
+
+  React.useEffect(() => {
+    setWatched(stock?.watched);
+    setBelled(stock?.belled);
+    setCustomTags(stock?.tags?.filter(x => !!x));
+  }, [stock]);
 
   React.useEffect(() => {
     const price$ = context.event$

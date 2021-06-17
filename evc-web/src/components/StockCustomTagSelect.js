@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tag as AntdTag, Select, Dropdown, Button, Space } from 'antd';
+import { Select } from 'antd';
 import Tag from './Tag';
-import { v4 as uuidv4 } from 'uuid';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { CheckOutlined, TagsOutlined } from '@ant-design/icons';
 import { createCustomTag } from 'services/watchListService';
 import styled from 'styled-components';
 
@@ -25,6 +23,10 @@ const StockCustomTagSelect = (props) => {
   // const initSelectedOptions = allOptions.filter(x => selectedTagIds?.some(tagId => tagId === x.value));
   // const [selectedOptions, setSelectedOptions] = React.useState(initSelectedOptions);
 
+  React.useEffect(() => {
+    setSelected(value);
+  }, [value]);
+
   const handleChange = async (valueList, optionList) => {
     const lastOption = optionList.length ? optionList[optionList.length - 1] : null;
     if (lastOption && !lastOption.value) {
@@ -37,28 +39,27 @@ const StockCustomTagSelect = (props) => {
     }
   }
 
-  if (readonly) {
-    return <>
-      {(context.customTags || [])
-        .filter(t => (selected || []).includes(t.id))
-        .map((t, i) => <Tag color="#55B0D4" key={i}>{t.name}</Tag>)}
-    </>
-  }
-
   return <Container>
-    <Select
-      placeholder="Select tags"
-      onClick={e => e.stopPropagation()}
-      mode="multiple"
-      allowClear={false}
-      style={{ width: '100%', marginRight: 8, flex: '1' }}
-      onChange={handleChange}
-      onBlur={onBlur}
-      value={selected}
-      notFoundContent={<>Not found</>}
-      // value={selectedOptions}
-      options={(context.customTags || []).map((t, i) => ({ label: t.name, value: t.id }))}
-    />
+    {readonly ?
+      <>
+        {(context.customTags || [])
+          .filter(t => (selected || []).includes(t.id))
+          .map((t, i) => <Tag color="#55B0D4" key={i}>{t.name}</Tag>)}
+      </>
+      :
+      <Select
+        placeholder="Select tags"
+        onClick={e => e.stopPropagation()}
+        mode="multiple"
+        allowClear={false}
+        style={{ width: '100%', marginRight: 8, flex: '1' }}
+        onChange={handleChange}
+        onBlur={onBlur}
+        value={selected}
+        notFoundContent={<>Not found</>}
+        // value={selectedOptions}
+        options={(context.customTags || []).map((t, i) => ({ label: t.name, value: t.id }))}
+      />}
   </Container>
 
 

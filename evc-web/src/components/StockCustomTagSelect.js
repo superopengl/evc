@@ -40,7 +40,7 @@ const StockCustomTagSelect = (props) => {
   if (readonly) {
     return <>
       {(context.customTags || [])
-        .filter(t => (value || []).includes(t.id))
+        .filter(t => (selected || []).includes(t.id))
         .map((t, i) => <Tag color="#55B0D4" key={i}>{t.name}</Tag>)}
     </>
   }
@@ -54,6 +54,7 @@ const StockCustomTagSelect = (props) => {
       style={{ width: '100%', marginRight: 8, flex: '1' }}
       onChange={handleChange}
       value={selected}
+      notFoundContent={<>Not found</>}
       // value={selectedOptions}
       options={(context.customTags || []).map((t, i) => ({ label: t.name, value: t.id }))}
     />

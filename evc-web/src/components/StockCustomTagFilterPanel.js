@@ -5,6 +5,7 @@ import { Button, Tag, Row, Col } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import styled from 'styled-components';
 import { deleteCustomTag } from 'services/watchListService';
+import { Modal } from 'antd';
 
 const StyledTag = styled(Tag)`
 &:hover {
@@ -19,7 +20,7 @@ color: rgba(0,0,0,0.35);
 
 export const StockCustomTagFilterPanel = (props) => {
 
-  const { onChange, onTagListChange, value } = props;
+  const { onChange, onDeleteTag, onAddTag, value } = props;
 
   const context = React.useContext(GlobalContext);
   const { customTags } = context;
@@ -37,10 +38,22 @@ export const StockCustomTagFilterPanel = (props) => {
     }
   };
 
-  const handleDeleteTag = async (e, id) => {
+  const handleDeleteTag = async (e, tag) => {
     e.stopPropagation();
-    await deleteCustomTag(id);
-    onTagListChange();
+    Modal.confirm({
+      title: <>Delete tag <Tag>{tag.name}</Tag>?</>,
+      content: `Deleting will remove this tag from all the stocks, which are being tagged right now.`,
+      maskClosable: true,
+      onOk: async () => {
+        await deleteCustomTag(tag.id);
+        onDeleteTag(tag.id);
+      },
+      okText: 'Delete it',
+      okButtonProps: {
+        danger: true
+      }
+      
+    })
   }
 
   return (<Row gutter={[5, 5]}>
@@ -50,8 +63,8 @@ export const StockCustomTagFilterPanel = (props) => {
           color={isSelected(t.id) ? "#55B0D4" : null}
           onClick={() => toggleTag(t.id)}
         >
-          {t.name} <StyledCloseButton onClick={e => handleDeleteTag(e, t.id)}>
-            <CloseOutlined />
+          {t.name} <StyledCloseButton onClick={e => handleDeleteTag(e, t)}>
+            <CloseOutlined style={{marginLeft: 4}}/>
           </StyledCloseButton>
         </StyledTag>
       </Col>)}
@@ -61,7 +74,8 @@ export const StockCustomTagFilterPanel = (props) => {
 
 StockCustomTagFilterPanel.propTypes = {
   onChange: PropTypes.func.isRequired,
-  onTagListChange: PropTypes.func.isRequired,
+  onDeleteTag: PropTypes.func.isRequired,
+  onAddTag: PropTypes.func.isRequired,
   value: PropTypes.arrayOf(PropTypes.string),
 };
 

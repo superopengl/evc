@@ -188,6 +188,14 @@ const StockInfoCard = (props) => {
     setEditingTag(editing);
   }
 
+  const handleCardClick = () => {
+    if(editingTag) {
+      setEditingTag(false);
+    } else  {
+      props.onClick();
+    }
+  }
+
   const { isOver, isUnder } = stock;
   const className = isOver ? 'over-valued' : isUnder ? 'under-valued' : null;
 
@@ -204,7 +212,7 @@ const StockInfoCard = (props) => {
       {showBell && <StockNoticeButton value={belled} onChange={handleToggleBell} />}
       {showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
     </Space>}
-    onClick={props.onClick}
+    onClick={handleCardClick}
     hoverable={hoverable}
     actions={actions}
   >

@@ -6,6 +6,8 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import styled from 'styled-components';
 import { createCustomTag, deleteCustomTag } from 'services/watchListService';
 import { notify } from 'util/notify';
+import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 const { Paragraph } = Typography;
 const StyledTag = styled(Tag)`
@@ -36,6 +38,7 @@ export const StockCustomTagFilterPanel = (props) => {
 
   const context = React.useContext(GlobalContext);
   const [tagName, setTagName] = React.useState('');
+  const intl = useIntl();
   const { customTags } = context;
 
   const isSelected = (tagId) => {
@@ -54,14 +57,14 @@ export const StockCustomTagFilterPanel = (props) => {
   const handleDeleteTag = async (e, tag) => {
     e.stopPropagation();
     Modal.confirm({
-      title: <>Delete tag <Tag>{tag.name}</Tag>?</>,
-      content: `Deleting will remove this tag from all the stocks, which are being tagged right now.`,
+      title: intl.formatMessage({id: 'text.deleteCustomTagTitle'}, {tag: <Tag>{tag.name}</Tag>}),
+      content: intl.formatMessage({id: 'text.deleteCustomTagMessage'}),
       maskClosable: true,
       onOk: async () => {
         await deleteCustomTag(tag.id);
         onDeleteTag(tag.id);
       },
-      okText: 'Delete it',
+      okText: intl.formatMessage({id: 'text.delete'}),
       okButtonProps: {
         danger: true
       }
@@ -74,7 +77,7 @@ export const StockCustomTagFilterPanel = (props) => {
       await createCustomTag(value);
       onAddTag();
       setTagName('');
-      notify.success(<>Successfully saved tag <strong>{value}</strong>.</>);
+      notify.success(intl.formatMessage({id: 'text.savedCustomTag'}, {tag: <strong>{value}</strong>}));
     }
   }
 
@@ -82,7 +85,7 @@ export const StockCustomTagFilterPanel = (props) => {
 
   return (<>
     {!customTags?.length && <Paragraph type="secondary">
-      You can filter ang group stocks by custom tags. Click the <TagFilled style={{ color: '#fadb14' }} /> icon on the stock cards to specify tags for stocks.
+      <FormattedMessage id="text.emptyCustomTagMessage" values={{icon: <TagFilled style={{ color: '#fadb14' }} />}} />
     </Paragraph>}
     <Row gutter={[8, 8]}>
       {(customTags || [])
@@ -98,7 +101,7 @@ export const StockCustomTagFilterPanel = (props) => {
         </Col>)}
       <Col>
         <div style={{ display: 'flex' }}>
-          <StyledNewTagInput placeholder="Create tag"
+          <StyledNewTagInput placeholder={intl.formatMessage({id: 'text.createTag'})}
             // size="small"
             maxLength={16}
             allowClear

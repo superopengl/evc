@@ -155,5 +155,14 @@
   "text.currentReferreeDiscountPercentage": "The referrees by you will get a {percentage} discount for the first purchase.",
   "text.initialBuyDiscountMessage": "You can get {percentage}% off discount now!",
   "text.reportDate": "Report Date",
+  "text.watchListMessage": "This page lists all the stocks you have chosen to watch. You can always go to {link} to find all the stocks our platform supports.",
+  "text.emptyCustomTagMessage": "You can filter ang group stocks by custom tags. Click the {icon} icon on the stock cards to specify tags for stocks.",
+  "text.savedCustomTag": "Successfully saved tag {tag}!",
+  "text.createTag": "Create tag",
+  "text.selectTags": "Select tags",
+  "text.notFound": "Not found. Please create tag first.",
+  "text.delete": "Delete",
+  "text.deleteCustomTagTitle": "Delete tag {tag}?",
+  "text.deleteCustomTagMessage": "Deleting will remove this tag from all the stocks, which are being tagged right now.",
   "": ""
 }

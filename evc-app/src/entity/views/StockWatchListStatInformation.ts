@@ -14,8 +14,9 @@ import { StockLatestPaidInformation } from './StockLatestPaidInformation';
       'w')
     .innerJoin(StockLatestPaidInformation, 'i', 'w.symbol = i.symbol')
     .select([
-      'w.count',
-      'i.symbol',
+      'w.count as count',
+      'i.symbol as symbol',
+      'i.company as company',
       'i."lastPrice"',
       'i."lastChange"',
       'i."lastChangePercent"',

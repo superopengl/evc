@@ -7,11 +7,25 @@ import { StockHistoricalComputedFairValue } from '../entity/views/StockHistorica
 import * as _ from 'lodash';
 import moment = require('moment');
 import { refreshMaterializedView } from '../db';
+import { StockDailyPe } from '../entity/views/StockDailyPe';
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
 
+  const latestPe = await getRepository(StockDailyPe).findOne({
+    where: {
+      symbol
+    },
+    order: {
+      date: 'DESC'
+    }
+  });
+  const latestPeItem = {
+    reportDate: latestPe.date,
+    ttmEps: latestPe.ttmEps,
+    pe: latestPe.pe,
+  }
   const computedList = await getRepository(StockHistoricalComputedFairValue).find({
     where: {
       symbol
@@ -22,7 +36,7 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
       symbol
     },
   });
-  const list = _.orderBy([...computedList, ...specialList], [(item) => moment(item.reportDate).toDate()], ['desc']);
+  const list = _.orderBy([latestPeItem, ...computedList, ...specialList], [(item) => moment(item.reportDate).toDate()], ['desc']);
 
   res.json(list);
 });
@@ -41,7 +55,7 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
 
   await repo.insert(entity);
 
-  refreshMaterializedView().catch(() => {});
+  refreshMaterializedView().catch(() => { });
 
   res.json();
 });

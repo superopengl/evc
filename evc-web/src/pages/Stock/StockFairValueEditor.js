@@ -2,7 +2,7 @@
 import React from 'react';
 import { Typography, DatePicker, Table, Form, Button, Space } from 'antd';
 import PropTypes from 'prop-types';
-import {isNil} from 'lodash';
+import { isNil } from 'lodash';
 import styled from 'styled-components';
 import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
@@ -103,28 +103,36 @@ export const StockFairValueEditor = (props) => {
       },
     },
     {
-      title: 'PE90 Avg',
-      dataIndex: 'pe90Avg',
+      title: 'PE',
+      dataIndex: 'pe',
       render: (value, item) => {
         return item.id ? null : displayNumber(value)
+      },
+    },
+    {
+      title: 'PE90 Avg',
+      dataIndex: 'pe90Avg',
+      render: (value, item, index) => {
+        return item.id || index === 0 ? null : displayNumber(value)
       },
     },
     {
       title: 'PE90 StdDev',
       dataIndex: 'pe90StdDev',
-      render: (value, item) => {
-        return item.id ? null : displayNumber(value)
+      render: (value, item, index) => {
+        return item.id || index === 0 ? null : displayNumber(value)
       },
     },
     {
       title: 'PE90 Avg±SD',
-      render: (value, item) => {
-        return item.id ? null : <>{displayNumber(item.peLo)} ~ {displayNumber(item.peHi)}</>
+      render: (value, item, index) => {
+        return item.id || index === 0 ? null : <>{displayNumber(item.peLo)} ~ {displayNumber(item.peHi)}</>
       },
     },
     {
       title: 'Fair Value',
-      render: (value, item) => {
+      render: (value, item, index) => {
+        if (index === 0) return null;
         const { id, fairValueLo, fairValueHi } = item;
         return fairValueLo ? <Space>
           {displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}
@@ -163,7 +171,7 @@ export const StockFairValueEditor = (props) => {
       loading={loading}
       pagination={false}
       style={{ width: '100%' }}
-      scroll={{y: 300}}
+      scroll={{ y: 300 }}
     />
   </Container>
 }

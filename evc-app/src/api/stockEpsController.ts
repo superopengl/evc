@@ -7,6 +7,7 @@ import * as stockEpsService from '../services/stockEpsService';
 import * as moment from 'moment';
 import { refreshMaterializedView } from '../db';
 import { executeWithDataEvents } from '../services/dataLogService';
+import { StockDailyClose } from '../entity/StockDailyClose';
 
 export const listStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -66,19 +67,27 @@ export const syncStockEps = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const factorStockEps = handlerWrapper(async (req, res) => {
+export const factorStockValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { symbol } = req.params;
-  const { factor } = req.body;
+  const symbol = req.params.symbol.toUpperCase();
+  const { date, factor } = req.body;
   assert(factor > 0 && factor !== 1, 400, `Invalid factor value ${factor}`);
 
-  const { schema, tableName } = getRepository(StockEps).metadata;
-  await getManager()
-    .query(
-      `UPDATE "${schema}"."${tableName}" SET value = value * $2 WHERE symbol = $1`,
-      [symbol.toUpperCase(), factor]
+  const dbDateString = moment(date).format('YYYY-MM-DD');
+
+  await getManager().transaction(async m => {
+    const { schema: epsSchema, tableName: epsTableName } = getRepository(StockEps).metadata;
+    await m.query(
+      `UPDATE "${epsSchema}"."${epsTableName}" SET value = value * $1 WHERE symbol = $2 AND "reportDate" < $3`,
+      [factor, symbol, dbDateString]
     );
 
+    const { schema: closeSchema, tableName: closeTableName } = getRepository(StockDailyClose).metadata;
+    await m.query(
+      `UPDATE "${closeSchema}"."${closeTableName}" SET close = close * $1 WHERE symbol = $2 AND date < $3`,
+      [factor, symbol, dbDateString]
+    );
+  })
   res.json();
 });
 

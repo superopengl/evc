@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Tooltip, Alert, Modal, Form, Input } from 'antd';
+import { List, Typography, Space, Button, Tooltip, Alert } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
 import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
-import { syncStockEps, factorStockEps } from 'services/stockService';
-import { EditOutlined, SyncOutlined } from '@ant-design/icons';
+import { syncStockEps } from 'services/stockService';
+import { SyncOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
 const { Text } = Typography;
 
@@ -22,7 +22,6 @@ const Container = styled.div`
 const StockEpsAdminEditor = (props) => {
   const { onLoadList, onSaveNew, onDelete, onChange, onSelected } = props;
   const [loading, setLoading] = React.useState(true);
-  const [bulkEditVisible, setBulkEditVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
 
   const updateList = list => {
@@ -77,22 +76,6 @@ const StockEpsAdminEditor = (props) => {
     }
   }
 
-  const handleBulkUpdateEps = () => {
-    setBulkEditVisible(true);
-  }
-
-  const handleSubmitBulkEdit = async (values) => {
-    const { factor } = values;
-    try {
-      setLoading(true);
-      await factorStockEps(props.symbol, factor);
-      loadEntity();
-    } finally {
-      setBulkEditVisible(false);
-      setLoading(false);
-    }
-  }
-
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
       <Alert description={<>
@@ -104,14 +87,9 @@ const StockEpsAdminEditor = (props) => {
       />
       <Space size="small" style={{ width: '100%', justifyContent: 'space-between' }}>
         <StockEpsInput onSave={handleSave} disabled={loading} />
-        <Space>
-          <Tooltip title="Bulk update" placement="topRight">
-            <Button disabled={loading} onClick={() => handleBulkUpdateEps()} loading={loading} icon={<EditOutlined />}></Button>
-          </Tooltip>
-          <Tooltip title="Fetch last 8 EPS from AlphaVantage" placement="topRight">
-            <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading} icon={<SyncOutlined />}></Button>
-          </Tooltip>
-        </Space>
+        <Tooltip title="Fetch last 8 EPS from AlphaVantage" placement="topRight">
+          <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading} icon={<SyncOutlined />}></Button>
+        </Tooltip>
       </Space>
       <List
         dataSource={list}
@@ -135,44 +113,6 @@ const StockEpsAdminEditor = (props) => {
         )}
       />
     </Space>
-    <Modal
-      visible={bulkEditVisible}
-      title="Bulk edit EPS values"
-      closable={true}
-      maskClosable
-      destroyOnClose
-      width={300}
-      footer={null}
-      onOk={() => setBulkEditVisible(false)}
-      onCancel={() => setBulkEditVisible(false)}
-    >
-      <Form onFinish={handleSubmitBulkEdit}>
-        <Form.Item
-          label={<>Factor <Text type="secondary">(value &times; factor = newValue)</Text></>}
-          name="factor"
-          rules={[{
-            required: true,
-            validator: (rule, value) => {
-              const num = +value;
-              if (num === 1) {
-                return Promise.reject('Cannot be 1');
-              }
-              if (num < 0) {
-                return Promise.reject('Must be a positive number');
-              }
-              if (num > 0) {
-                return Promise.resolve(num);
-              }
-              return Promise.reject('Not a valid number');
-            },
-          }]}>
-          <Input style={{ textAlign: 'center' }} placeholder="Greater than 0, but not 1" />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" block htmlType="submit">Submit</Button>
-        </Form.Item>
-      </Form>
-    </Modal>
   </Container>
 }
 

@@ -95,8 +95,8 @@ export async function syncStockEps(symbol) {
   return httpPost(`stock/s/${symbol}/eps/sync`);
 }
 
-export async function factorStockEps(symbol, factor) {
-  return httpPost(`stock/s/${symbol}/eps/factor`, { factor });
+export async function factorStockValue(symbol, date, factor) {
+  return httpPost(`stock/s/${symbol}/factor`, { date, factor });
 }
 
 export async function deleteStockEps(symbol, reportDate) {

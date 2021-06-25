@@ -376,7 +376,6 @@ const AppLoggedIn = props => {
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
 
       <RoleRoute visible={true} exact path="/earnings_calendar" component={() => <EarningsCalendarPage onSymbolClick={symbol => props.history.push(`/stock/${symbol}`)} />} />
-      {/* <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} /> */}
       <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />

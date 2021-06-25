@@ -12,7 +12,6 @@ import { StockDailyClose } from '../entity/StockDailyClose';
 export const listStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
-  const limit = +req.query.limit || 6;
 
   const list = await getRepository(StockEps).find({
     where: {
@@ -21,7 +20,6 @@ export const listStockEps = handlerWrapper(async (req, res) => {
     order: {
       reportDate: 'DESC',
     },
-    take: limit
   });
 
   res.json(list);

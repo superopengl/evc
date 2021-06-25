@@ -35,45 +35,32 @@ async function getEarningsWithThreeAttempts(symbol: string, howManyQuarters: num
 }
 
 
-export const syncStockEps = async (symbol: string, howManyQuarters = 8) => {
+export const syncStockEps = async (symbol: string) => {
+  const howManyQuarters = 16;
   const earnings = await getEarningsWithThreeAttempts(symbol, howManyQuarters);
   if (!earnings?.length) {
     return;
   }
 
-  const infoList = _.chain(earnings)
-    .map(e => {
-      const data: StockIexEpsInfo = {
-        symbol,
-        reportDate: e.reportedDate,
-        value: e.reportedEPS,
-      };
+  const entities: StockEps[] = earnings
+    .map(e => ({
+      symbol,
+      reportDate: e.reportedDate,
+      value: e.reportedEPS,
+    }));
 
-      return data;
-    })
-    .uniqBy(e => `${e.symbol}.${e.reportDate}`)
-    .value();
-
-  await syncManyStockEps(infoList);
+  await syncManyStockEps(symbol, entities);
 };
 
-export async function syncManyStockEps(epsInfo: StockIexEpsInfo[]) {
-  const entites = epsInfo.map(item => {
-    const { symbol, reportDate, value: value } = item;
-
-    const entity = new StockEps();
-    entity.symbol = symbol;
-    entity.reportDate = reportDate;
-    entity.value = value;
-    return entity;
-  }).filter(x => !!x);
-
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockEps)
-    .values(entites)
-    .orIgnore()
-    // .onConflict('(symbol, "reportDate") DO UPDATE SET value = excluded.value')
-    .execute();
+async function syncManyStockEps(symbol: string, entites: StockEps[]) {
+  await getManager().transaction(async m => {
+    await m.delete(StockEps, { symbol });
+    await m
+      .createQueryBuilder()
+      .insert()
+      .into(StockEps)
+      .values(entites)
+      .orIgnore()
+      .execute();
+  })
 };

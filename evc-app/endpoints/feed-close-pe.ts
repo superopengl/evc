@@ -14,6 +14,7 @@ import { StockDeprecateResistance } from '../src/entity/views/StockDeprecateResi
 import { StockDeprecateSupport } from '../src/entity/views/StockDeprecateSupport';
 import { handleWatchlistSupportResistanceChangedNotification } from './handleWatchlistSupportResistanceChangedNotification';
 import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
+import { StockDailyClose } from '../src/entity/StockDailyClose';
 
 const JOB_NAME = 'feed-historical-close';
 const MAX_CALL_TIMES_PER_MINUTE = 50;
@@ -108,14 +109,16 @@ start(JOB_NAME, async () => {
   const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
 
   const stocks = await getRepository(Stock)
-    .find({
-      order: {
-        symbol: 'ASC'
-      },
-      select: [
-        'symbol'
-      ],
-    });
+    .createQueryBuilder('s')
+    .innerJoin(q => q.from(StockDailyClose, 'c')
+      .distinctOn(['symbol'])
+      .orderBy('symbol', 'DESC')
+      .addOrderBy('date', 'DESC'),
+      'c', `s.symbol = c.symbol`)
+    .where(`c.date < CURRENT_DATE`)
+    .select('s.symbol as symbol')
+    .orderBy('s.symbol', 'ASC')
+    .execute();
   const symbols = stocks.map(s => s.symbol);
 
   let count = 0;

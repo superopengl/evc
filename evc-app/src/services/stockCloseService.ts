@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { StockDailyClose } from '../entity/StockDailyClose';
 import { getHistoricalClose } from './alphaVantageService';
 
@@ -9,35 +9,13 @@ export type StockCloseInfo = {
   date: string;
 }
 
-export async function syncManyStockClose(info: StockCloseInfo[]) {
-  const entites = info.map(item => {
-    const { symbol, close, date } = item;
-    if(!close) {
-      return null;
-    }
-
-    const entity = new StockDailyClose();
-    entity.symbol = symbol;
-    entity.close = close;
-    entity.date = date;
-    return entity;
-  }).filter(x => !!x);
-
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockDailyClose)
-    .values(entites)
-    .orIgnore()
-    .execute();
-}
-
 export async function syncStockHistoricalClose(symbol: string, days = 100) {
   const data = await getHistoricalClose(symbol, days);
   if (!data?.length) {
+    console.log(`Skipped syncing close for ${symbol} as no return from the API`);
     return;
   }
-  const closeEntities = [];
+  const closeEntities: StockDailyClose[] = [];
   for (const p of data) {
     const stockClose = new StockDailyClose();
     stockClose.symbol = symbol;
@@ -53,4 +31,7 @@ export async function syncStockHistoricalClose(symbol: string, days = 100) {
     .orIgnore()
     .values(closeEntities)
     .execute();
+
+  const priceOfToday = closeEntities[0];
+  console.log(`Synced close for ${symbol} with ${priceOfToday.date}/${priceOfToday.close} and more.`);
 }

@@ -11,7 +11,7 @@ import { StockDailyClose } from '../StockDailyClose';
     .innerJoin(q => q
       .from(StockDailyClose, 'c')
       .distinctOn(['symbol'])
-      .orderBy('symbol')
+      .orderBy('symbol', 'DESC')
       .addOrderBy('date', 'DESC'),
       'c', 'c.symbol = sp.symbol AND c.close < sp.lo')
     .select([

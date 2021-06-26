@@ -1,9 +1,11 @@
-import { getManager } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';
 import * as _ from 'lodash';
 import * as delay from 'delay';
 import { backOff } from "exponential-backoff";
+import { existsQuery } from '../utils/existsQuery';
+import { StockScrappedEps } from '../entity/StockScrappedEps';
 
 type StockIexEpsInfo = {
   symbol: string;
@@ -62,5 +64,16 @@ async function syncManyStockEps(symbol: string, entites: StockEps[]) {
       .values(entites)
       .orIgnore()
       .execute();
+
+    // Delete those scrapped ones
+    const epsTable = getRepository(StockEps).metadata;
+    const scrappedTable = getRepository(StockScrappedEps).metadata;
+    await m.query(`
+DELETE FROM "${epsTable.schema}"."${epsTable.tableName}" AS e
+WHERE EXISTS(
+  SELECT 1 FROM "${scrappedTable.schema}"."${scrappedTable.tableName}" AS x
+  WHERE e.symbol = x.symbol AND e."reportDate" = x."reportDate"
+)
+    `);
   })
 };

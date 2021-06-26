@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { refreshMaterializedView } from '../db';
 import { executeWithDataEvents } from '../services/dataLogService';
 import { StockDailyClose } from '../entity/StockDailyClose';
+import { StockScrappedEps } from '../entity/StockScrappedEps';
 
 export const listStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -39,7 +40,7 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
 
   await getRepository(StockEps).insert(entity);
 
-  await executeWithDataEvents('refresh materialized views', 'ui save eps', refreshMaterializedView);
+  executeWithDataEvents('refresh materialized views', 'ui save eps', refreshMaterializedView);
 
   res.json();
 });
@@ -47,12 +48,32 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
 export const deleteStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol, reportDate } = req.params;
-  await getRepository(StockEps).delete({
-    symbol,
-    reportDate
+
+  let happened = false;
+  await getManager().transaction(async m => {
+    const entity = await m.findOne(StockEps, { symbol, reportDate });
+    if (entity) {
+      happened = true;
+
+      await m.delete(StockEps, { symbol, reportDate });
+
+      // Move it to the scrapped EPS table
+      const scrapped = new StockScrappedEps();
+      scrapped.symbol = entity.symbol;
+      scrapped.reportDate = entity.reportDate;
+      scrapped.value = entity.value;
+      await m.createQueryBuilder()
+        .insert()
+        .into(StockScrappedEps)
+        .values(scrapped)
+        .orIgnore()
+        .execute();
+    }
   });
 
-  await executeWithDataEvents('refresh materialized views', 'ui delete eps', refreshMaterializedView);
+  if (happened) {
+    executeWithDataEvents('refresh materialized views', 'ui delete eps', refreshMaterializedView);
+  }
 
   res.json();
 });

@@ -56,7 +56,10 @@ export const syncStockEps = async (symbol: string) => {
 
 async function syncManyStockEps(symbol: string, entites: StockEps[]) {
   await getManager().transaction(async m => {
-    await m.delete(StockEps, { symbol });
+    await m.delete(StockEps, {
+      symbol,
+      source: 'alpha-vantage'
+    });
     await m
       .createQueryBuilder()
       .insert()

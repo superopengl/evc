@@ -18,5 +18,8 @@ export class StockEps {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   value: number;
+
+  @Column({ default: 'alpha-vantage' })
+  source: 'alpha-vantage' | 'evc'
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Collapse, Tag, Badge, List, Table } from 'antd';
+import { Typography, Collapse, Tag, Badge, List, Table, Space } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
@@ -30,14 +30,6 @@ margin-bottom: 8px;
 &:hover {
   color: #55B0D4;
   text-decoration: underline !important;
-}
-`;
-
-const StyledStockPleaList = styled(List)`
-.ant-list-item {
-  border: 0;
-  padding-left: 0;
-  padding-right: 0;
 }
 `;
 
@@ -110,7 +102,7 @@ const AdminDashboardPage = () => {
                 {
                   title: 'Symbol',
                   dataIndex: 'symbol',
-                  render: value => <LinkTag to={`/stock/${value}`} style={{margin: 0}}>{value}</LinkTag>
+                  render: value => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
                 },
                 {
                   title: 'Close price',
@@ -121,7 +113,7 @@ const AdminDashboardPage = () => {
                 {
                   title: 'Price date',
                   dataIndex: 'date',
-                  render: value => <TimeAgo value={value} showAgo={false} accurate={false}/>
+                  render: value => <TimeAgo value={value} showAgo={false} accurate={false} />
                 },
                 {
                   title: 'Data input time',
@@ -129,17 +121,46 @@ const AdminDashboardPage = () => {
                   render: value => <TimeAgo value={value} showAgo={false} accurate={true} extra={<Text type="secondary">EST</Text>} />
                 },
               ]}
-              renderItem={item => <List.Item
-                actions={[
-                  <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`}
-                    message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
-                    icon={<DeleteOutlined />}
-                    onOk={() => handleDeleteStockPlea(item.symbol)}
-                  />
-                ]}
-              >
-                <strong>{item.symbol}</strong> has {item.count} requests. <Link to={`/stock?create=${item.symbol}`}>Click to create</Link>
-              </List.Item>}
+            />
+          </Collapse.Panel>
+          <Collapse.Panel
+            key="unusualEps"
+            header={<>Unusual EPS</>}
+            extra={<CounterBadge count={data.unusualEps?.length} />}
+          >
+            <Paragraph type="secondary">
+            Successive identical EPS values within 80 days.
+            </Paragraph>
+            <Table
+              loading={loading}
+              size="small"
+              bordered={false}
+              dataSource={data.unusualEps}
+              rowKey="symbol"
+              pagination={false}
+              columns={[
+                {
+                  title: 'Symbol',
+                  dataIndex: 'symbol',
+                  render: value => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
+                },
+                {
+                  title: 'EPS value',
+                  // align: 'right',
+                  dataIndex: 'value',
+                  render: value => +value
+                },
+                {
+                  title: 'Report date',
+                  dataIndex: 'reportDateFormer',
+                  render: (value, item) => <Space size="small">
+                    <TimeAgo value={item.reportDateFormer} showAgo={false} accurate={false} />
+                    /
+                    <TimeAgo value={item.reportDateLatter} showAgo={false} accurate={false} />
+                    <Text>({item.span} days)</Text>
+                  </Space>
+                },
+              ]}
             />
           </Collapse.Panel>
           <Collapse.Panel
@@ -147,22 +168,39 @@ const AdminDashboardPage = () => {
             header={<>Unsupported Stock Requests </>}
             extra={<CounterBadge count={data.pleas?.length} color="#55B0D4" />}
           >
-            <StyledStockPleaList
+            <Table
               loading={loading}
               size="small"
               bordered={false}
               dataSource={data.pleas}
-              renderItem={item => <List.Item
-                actions={[
-                  <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`}
-                    message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
-                    icon={<DeleteOutlined />}
-                    onOk={() => handleDeleteStockPlea(item.symbol)}
-                  />
-                ]}
-              >
-                <strong>{item.symbol}</strong> has {item.count} requests. <Link to={`/stock?create=${item.symbol}`}>Click to create</Link>
-              </List.Item>}
+              rowKey="symbol"
+              pagination={false}
+              columns={[
+                {
+                  title: 'Symbol',
+                  dataIndex: 'symbol',
+                  render: (value) => <Space>
+                    <Tag>{value}</Tag>
+                    <Link to={`/stock?create=${value}`}>Click to create</Link>
+                    </Space>
+                },
+                {
+                  title: 'Request count',
+                  // align: 'right',
+                  dataIndex: 'count',
+                  render: value => +value
+                },
+                {
+                  align: "right",
+                  render: (value, item) => <Space size="small">
+                    <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`}
+                      message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
+                      icon={<DeleteOutlined />}
+                      onOk={() => handleDeleteStockPlea(item.symbol)}
+                    />
+                  </Space>
+                },
+              ]}
             />
           </Collapse.Panel>
           <Collapse.Panel

@@ -10,6 +10,7 @@ import { from } from 'rxjs';
 import { deleteStockPlea } from 'services/stockService';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
+import * as moment from 'moment';
 
 const { Text, Paragraph } = Typography;
 
@@ -43,6 +44,18 @@ const LinkTag = props => {
   return <Link to={props.to}>
     <StyledTag style={props.style}>{props.children}</StyledTag>
   </Link>
+}
+
+const stringNumberComparer = (a, b) => {
+  const x = +a;
+  const y = +b;
+  return x === y ? 0 : x < y ? -1 : 1;
+}
+
+const stringDateComparer = (a, b) => {
+  const x = moment(a).toDate();
+  const y = moment(b).toDate();
+  return x === y ? 0 : x < y ? -1 : 1;
 }
 
 const AdminDashboardPage = () => {
@@ -102,22 +115,26 @@ const AdminDashboardPage = () => {
                 {
                   title: 'Symbol',
                   dataIndex: 'symbol',
+                  sorter: (a, b) => a.symbol.localeCompare(b.symbol),
                   render: value => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
                 },
                 {
                   title: 'Close price',
                   // align: 'right',
                   dataIndex: 'close',
+                  sorter: (a, b) => stringNumberComparer(a.close, b.close),
                   render: value => +value
                 },
                 {
                   title: 'Price date',
                   dataIndex: 'date',
+                  sorter: (a, b) => stringDateComparer(a.date, b.date),
                   render: value => <TimeAgo value={value} showAgo={false} accurate={false} />
                 },
                 {
                   title: 'Data input time',
                   dataIndex: 'createdAt',
+                  sorter: (a, b) => stringDateComparer(a.createdAt, b.createdAt),
                   render: value => <TimeAgo value={value} showAgo={false} accurate={true} extra={<Text type="secondary">EST</Text>} />
                 },
               ]}
@@ -142,17 +159,20 @@ const AdminDashboardPage = () => {
                 {
                   title: 'Symbol',
                   dataIndex: 'symbol',
-                  render: value => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
+                  sorter: (a, b) => a.symbol.localeCompare(b.symbol),
+                  render: (value) => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
                 },
                 {
                   title: 'EPS value',
                   // align: 'right',
                   dataIndex: 'value',
+                  sorter: (a, b) => stringNumberComparer(a.value, b.value),
                   render: value => +value
                 },
                 {
                   title: 'Report date',
                   dataIndex: 'reportDateFormer',
+                  sorter: (a, b) => stringDateComparer(a.reportDateFormer, b.reportDateFormer),
                   render: (value, item) => <Space size="small">
                     <TimeAgo value={item.reportDateFormer} showAgo={false} accurate={false} />
                     /
@@ -160,6 +180,16 @@ const AdminDashboardPage = () => {
                     <Text>({item.span} days)</Text>
                   </Space>
                 },
+                {
+                  title: 'Recent?',
+                  dataIndex: 'recent',
+                  sorter: (a, b) => {
+                    const x = a.recent;
+                    const y = b.recent;
+                    return x === y ? 0 : x ? -1 : 1;
+                  },
+                  render: (value, item) => <>{!item.recent && <Tag color="warning">recent</Tag>}</>
+                }
               ]}
             />
           </Collapse.Panel>

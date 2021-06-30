@@ -194,7 +194,7 @@ const AdminDashboardPage = () => {
                     const y = b.recent;
                     return x === y ? 0 : x ? -1 : 1;
                   },
-                  render: (value, item) => <>{!item.recent && <Tag color="warning">recent</Tag>}</>
+                  render: (value, item) => <>{item.recent && <Tag color="warning">recent</Tag>}</>
                 }
               ]}
             />

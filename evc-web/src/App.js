@@ -20,7 +20,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
 import * as moment from 'moment-timezone';
 import { Loading } from 'components/Loading';
-import { getWatchList, listCustomTags } from 'services/watchListService';
+import { listCustomTags } from 'services/watchListService';
 
 // moment.tz.setDefault('America/New_York');
 

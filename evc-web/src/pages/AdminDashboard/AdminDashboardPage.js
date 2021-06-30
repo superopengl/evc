@@ -153,7 +153,7 @@ const AdminDashboardPage = () => {
               size="small"
               bordered={false}
               dataSource={data.unusualEps}
-              rowKey="symbol"
+              rowKey={item => `${item.symbol}.${item.reportDateFormer}`}
               pagination={false}
               columns={[
                 {

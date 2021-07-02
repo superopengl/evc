@@ -30,6 +30,10 @@ const Container = styled.div`
   display: none !important;
 }
 
+.latest-pe90-row {
+  background-color: #57BB6033;
+  font-weight: 600;
+}
 `;
 
 export const StockFairValueEditor = (props) => {
@@ -87,13 +91,17 @@ export const StockFairValueEditor = (props) => {
     });
   }
 
+  const handleRowClassName = (item, index) => {
+    return item.isLatest ? 'latest-pe90-row' : null;
+  }
+
   const columns = [
     {
       title: 'Report Date',
       dataIndex: 'reportDate',
-      render: (value) => <Text type="secondary"><small>
+      render: (value, item) => <Text type="secondary">
         {moment(value, 'YYYY-MM-DD').format('D MMM YYYY')}
-      </small></Text>
+      </Text>
     },
     {
       title: 'TtmEPS',
@@ -113,26 +121,25 @@ export const StockFairValueEditor = (props) => {
       title: 'PE90 Avg',
       dataIndex: 'pe90Avg',
       render: (value, item, index) => {
-        return item.id || index === 0 ? null : displayNumber(value)
+        return item.id ? null : displayNumber(value)
       },
     },
     {
       title: 'PE90 StdDev',
       dataIndex: 'pe90StdDev',
       render: (value, item, index) => {
-        return item.id || index === 0 ? null : displayNumber(value)
+        return item.id ? null : displayNumber(value)
       },
     },
     {
       title: 'PE90 Avg±SD',
       render: (value, item, index) => {
-        return item.id || index === 0 ? null : <>{displayNumber(item.peLo)} ~ {displayNumber(item.peHi)}</>
+        return item.id ? null : <>{displayNumber(item.peLo)} ~ {displayNumber(item.peHi)}</>
       },
     },
     {
       title: 'Fair Value',
       render: (value, item, index) => {
-        if (index === 0) return null;
         const { id, fairValueLo, fairValueHi } = item;
         return fairValueLo ? <Space>
           {displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}
@@ -167,11 +174,11 @@ export const StockFairValueEditor = (props) => {
       dataSource={list}
       size="small"
       rowKey={item => item.id ?? item.reportDate}
-      rowClassName={() => 'editable-row'}
       loading={loading}
       pagination={false}
       style={{ width: '100%' }}
       scroll={{ y: 300 }}
+      rowClassName={handleRowClassName}
     />
   </Container>
 }

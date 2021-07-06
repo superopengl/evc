@@ -27,6 +27,7 @@ import { StockResistance } from '../StockResistance';
     .addSelect('sfv."fairValueLo"')
     .addSelect('sfv."fairValueHi"')
     .addSelect('sfv."reportDate" as "fairValueDate"')
+    .addSelect('CASE WHEN sfv."ttmEps" <= 0 THEN TRUE ELSE FALSE END as "isLoss"')
     .leftJoin(q => q.from(StockLastPrice, 'slp'),
       'slp', 'slp.symbol = s.symbol'
     )
@@ -104,6 +105,9 @@ export class StockLatestPaidInformation {
 
   @ViewColumn()
   isOver: boolean;
+
+  @ViewColumn()
+  isLoss: boolean;
 
   @ViewColumn()
   supports: { lo: number; hi: number }[];

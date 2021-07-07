@@ -100,11 +100,11 @@ async function scrubResistances() {
 }
 
 start(JOB_NAME, async () => {
-  const isMarketOpen = await isUSMarketOpen();
-  if (isMarketOpen) {
-    console.warn('Market is still open');
-    return;
-  }
+  // const isMarketOpen = await isUSMarketOpen();
+  // if (isMarketOpen) {
+  //   console.warn('Market is still open');
+  //   return;
+  // }
 
   const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
 

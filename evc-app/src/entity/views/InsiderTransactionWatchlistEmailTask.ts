@@ -4,19 +4,20 @@ import { User } from '../User';
 import { UserProfile } from '../UserProfile';
 import { StockInsiderTransaction } from '../StockInsiderTransaction';
 import { StockInsiderTransactionPreviousSnapshot } from '../StockInsiderTransactionPreviousSnapshot';
-
-
+import { Role } from '../../types/Role';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(StockWatchList, 'swt')
-    .innerJoin(User, 'u', 'u.id = swt."userId" AND u."deletedAt" IS NUll')
+    .innerJoin(User, 'u', 'u.id = swt."userId"')
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .innerJoin(StockInsiderTransaction, 'lts', 'lts.symbol = swt.symbol')
     .leftJoin(StockInsiderTransactionPreviousSnapshot, 'pre', 'lts.symbol = pre.symbol')
-    .where(`swt.belled IS TRUE`)
-    .andWhere(`(pre.value IS NULL OR md5(lts.value::text) != md5(pre.value::text))`)
+    .where(`u."deletedAt" IS NUll`)
+    .andWhere(`u.role = '${Role.Member}'`)
+    .andWhere(`swt.belled IS TRUE`)
+    .andWhere(`lts."firstHash" != pre."firstHash"`)
     .select([
       'u.id as "userId"',
       'p.email as email',

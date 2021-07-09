@@ -5,7 +5,8 @@ import { singleBatchRequest } from '../src/services/iexService';
 import * as _ from 'lodash';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
 import { handleWatchlistInsiderTransactionNotification } from './handleWatchlistInsiderTransactionNotification';
-
+import * as objHash from 'object-hash';
+import { promoteLatestSnapshotToPreviousSnapshot } from './promoteLatestSnapshotToPreviousSnapshot';
 
 async function syncManyStockInsiderTransactions(list: StockInsiderTransaction[]) {
   const entites = list.filter(x => x?.value);
@@ -38,22 +39,26 @@ async function udpateDatabase(iexBatchResponse) {
   for (const [symbol, value] of Object.entries(iexBatchResponse)) {
     // advanced-stats
     const insiderTransactionData = value['insider-transactions'];
+    const list = insiderTransactionData
+    .filter(x => includesTransactionCode(x.transactionCode))
+    .map(x => _.pick(x, [
+      'fullName',
+      'reportedTitle',
+      'conversionOrExercisePrice',
+      'filingDate',
+      'postShares',
+      'transactionCode',
+      'transactionDate',
+      'transactionPrice',
+      'transactionShares',
+      'transactionValue',
+    ]));
+    const first = list[0];
     const entity = new StockInsiderTransaction();
     entity.symbol = symbol;
-    entity.value = insiderTransactionData
-      .filter(x => includesTransactionCode(x.transactionCode))
-      .map(x => _.pick(x, [
-        'fullName',
-        'reportedTitle',
-        'conversionOrExercisePrice',
-        'filingDate',
-        'postShares',
-        'transactionCode',
-        'transactionDate',
-        'transactionPrice',
-        'transactionShares',
-        'transactionValue',
-      ]))
+    entity.value = list;
+    entity.first = first;
+    entity.firstHash = objHash(first || {});
     entities.push(entity);
   }
 
@@ -76,6 +81,10 @@ start(JOB_NAME, async () => {
     .select('symbol')
     .getRawMany();
   const symbols = stocks.map(s => s.symbol);
+
+  if(symbols.length) {
+    await promoteLatestSnapshotToPreviousSnapshot();
+  }
 
   const batchSize = 100;
   let round = 0;

@@ -111,7 +111,8 @@ export const listAllUsers = handlerWrapper(async (req, res) => {
 
   const list = await getRepository(UserProfile)
     .createQueryBuilder('p')
-    .innerJoin(User, 'u', `u."profileId" = p.id AND u."deletedAt" IS NULL`)
+    .innerJoin(User, 'u', `u."profileId" = p.id`)
+    .andWhere(`u."deletedAt" IS NUll`)
     .select([
       'u.id as id',
       '"givenName"',

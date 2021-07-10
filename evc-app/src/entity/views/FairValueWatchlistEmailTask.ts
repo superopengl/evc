@@ -4,17 +4,20 @@ import { User } from '../User';
 import { UserProfile } from '../UserProfile';
 import { FairValueLatestSnapshot } from './FairValueLatestSnapshot';
 import { FairValuePreviousSnapshot } from '../FairValuePreviousSnapshot';
+import { Role } from '../../types/Role';
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(StockWatchList, 'swt')
-    .innerJoin(User, 'u', 'u.id = swt."userId" AND u."deletedAt" IS NUll')
+    .innerJoin(User, 'u', 'u.id = swt."userId"')
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .innerJoin(FairValueLatestSnapshot, 'lts', 'lts.symbol = swt.symbol')
     .leftJoin(FairValuePreviousSnapshot, 'pre', 'lts.symbol = pre.symbol')
-    .where(`swt.belled IS TRUE`)
+    .where(`u.role = '${Role.Member}'`)
+    .andWhere(`u."deletedAt" IS NUll`)
+    .andWhere(`swt.belled IS TRUE`)
     .andWhere(`(pre.hash IS NULL OR lts.hash != pre.hash)`)
     .select([
       'u.id as "userId"',

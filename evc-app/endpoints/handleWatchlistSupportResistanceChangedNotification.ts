@@ -33,7 +33,7 @@ async function promoteSupportResistanceLatestSnapshotToPreviousSnapshot() {
 
   await getManager().transaction(async m => {
     await m.delete(SupportResistancePreviousSnapshot, {});
-    const sql = `INSERT INTO "${toSchema}"."${toTableName}" SELECT * FROM "${fromSchema}"."${fromTableName}"`;
+    const sql = `INSERT INTO "${toSchema}"."${toTableName}" (symbol, supports, resistances, hash, "date") SELECT symbol, supports, resistances, hash, "date" FROM "${fromSchema}"."${fromTableName}"`;
     await m.query(sql);
   });
 }

@@ -59,7 +59,7 @@
     "clean": "rm -rf build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "dev": "yarn && yarn build && yarn start",
+    "dev": "pnpm i && pnpm build && pnpm start",
     "watched": "nodemon -w src --ext js --exec npm run build",
     "watch": "npm-watch",
     "g": "npx generate-react-cli component --",

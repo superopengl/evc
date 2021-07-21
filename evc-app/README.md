@@ -22,4 +22,10 @@ from
   (select setting::int max_conn from pg_settings where name=$$max_connections$$) t3
 ```
 
+## Check current running queries
+```sql
+SELECT * FROM pg_stat_activity
+where datname = 'evcprod'
+```
+
 Make sure not to configure too high number in env var `TYPEORM_DRIVER_EXTRA={"max": 100, "connectionTimeoutMillis": 3000}`.

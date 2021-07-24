@@ -9,7 +9,13 @@ import MoneyAmount from 'components/MoneyAmount';
 import { orderBy } from 'lodash';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
+const StyledPaymentTable = styled(Table)`
+.ant-table {
+  margin-left: -8px !important;
+}
+`;
 
 const MySubscriptionHistoryPanel = (props) => {
   const {data} = props;
@@ -35,7 +41,7 @@ const MySubscriptionHistoryPanel = (props) => {
           <ArrowRightOutlined />
           {/* <DoubleRightOutlined /> */}
           <TimeAgo value={item.end} showAgo={false} accurate={false} />
-          {item.recurring && <Tag>auto renew</Tag>}
+          {item.status === 'alive' && item.recurring && <Tag>auto renew</Tag>}
           {moment().isAfter(moment(item.start).startOf('day')) && moment().isBefore(moment(item.end).endOf('day')) && <Tag color="#57BB60"><strong>current</strong></Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
@@ -48,27 +54,27 @@ const MySubscriptionHistoryPanel = (props) => {
       align: 'center',
       width: 370,
       render: (payments, item) => {
-        return <Table
+        return <StyledPaymentTable
           columns={[
             {
               title: 'link',
               dataIndex: 'amount',
-              align: 'right',
+              align: 'center',
               width: '33%',
               render: (amount, item) => <MoneyAmount value={item.amountCny ?? amount} symbol={item.amountCny ? '¥' : '$'}/>
             },
             {
               title: 'link',
               dataIndex: 'createdAt',
-              align: 'right',
+              align: 'center',
               width: '33%',
               render: (createdAt, item) => <TimeAgo value={createdAt} showAgo={false} accurate={false} />
             },
             {
               title: 'link',
               dataIndex: 'id',
-              width: '33%',
-              align: 'right',
+              width: '34%',
+              align: 'center',
               render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
             },
           ]}
@@ -78,7 +84,6 @@ const MySubscriptionHistoryPanel = (props) => {
           dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
           pagination={false}
           scroll={false}
-          // style={{ width: '100%', minWidth: 370 }}
         />
       }
     },

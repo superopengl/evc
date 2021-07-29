@@ -16,7 +16,11 @@ async function syncManyStockInsiderTransactions(list: StockInsiderTransaction[])
     .insert()
     .into(StockInsiderTransaction)
     .values(entites)
-    .onConflict('(symbol) DO UPDATE SET value = excluded.value')
+    .onConflict(`(symbol) DO UPDATE SET 
+    value = excluded.value, 
+    first = excluded.first, 
+    "firstHash" = excluded."firstHash", 
+    "createdAt" = NOW()`)
     .execute();
 }
 

@@ -44,7 +44,7 @@ function reloadPage() {
 }
 
 function handleSessionTimeout() {
-  if(!isSessionTimeoutModalOn) {
+  if (!isSessionTimeoutModalOn) {
     isSessionTimeoutModalOn = true;
     Modal.warning({
       title: 'Session timeout',
@@ -77,6 +77,9 @@ export async function request(method, path, queryParams, body, responseType = 'j
     if (code === 401) {
       handleSessionTimeout();
       return false;
+    } else if (code === 403) {
+      window.location.reload(false);
+      return;
     }
     const errorMessage = responseType === 'blob' ? e.message : get(e, 'response.data.message') || get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);

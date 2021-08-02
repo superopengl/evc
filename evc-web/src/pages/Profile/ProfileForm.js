@@ -6,6 +6,7 @@ import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
+import { getAuthUser } from 'services/authService';
 
 const { Link } = Typography;
 
@@ -26,21 +27,20 @@ const ProfileForm = (props) => {
     try {
       setLoading(true);
 
-      const result = await saveProfile(user.id, values);
+      await saveProfile(user.id, values);
 
-      if (result) {
-        if (refreshAfterLocaleChange) {
-          const hasLocaleChanged = profile.locale !== values.locale;
+      if (refreshAfterLocaleChange) {
+        const hasLocaleChanged = profile.locale !== values.locale;
 
-          notify.success(
-            'Successfully saved profile!',
-            hasLocaleChanged ? <>You have changed locale. Please <Link onClick={handleRefreshPage}>Refresh</Link> the page to catch up the locale change</> : null
-          );
+        notify.success(
+          'Successfully saved profile!',
+          hasLocaleChanged ? <>You have changed locale. Please <Link onClick={handleRefreshPage}>Refresh</Link> the page to catch up the locale change</> : null
+        );
 
-          Object.assign(profile, values);
-        }
-        onOk(user);
+        Object.assign(profile, values);
       }
+      const updatedUser = await getAuthUser();
+      onOk(updatedUser);
     } finally {
       setLoading(false);
     }

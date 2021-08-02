@@ -18,6 +18,7 @@ export enum EmailTemplateType {
   SubscriptionRecurringAutoPayFailed = 'subscription_recurring_autopay_failed',
   SubscriptionExpired = 'subscription_expired',
   SubscriptionExpiring = 'subscription_expiring',
+  SubscriptionTerminated = 'subscription_terminated',
 }
 
 

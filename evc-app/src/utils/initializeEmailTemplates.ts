@@ -88,6 +88,12 @@ export async function initializeEmailTemplates() {
   SubscriptionRecurringAutoPayFailedDef.locale = Locale.Engish;
   SubscriptionRecurringAutoPayFailedDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end', 'paidAmount', 'creditDeduction'];
 
+  const SubscriptionTerminatedDef = new EmailTemplate();
+  SubscriptionTerminatedDef.key = EmailTemplateType.SubscriptionTerminated;
+  SubscriptionTerminatedDef.locale = Locale.Engish;
+  SubscriptionTerminatedDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end'];
+
+
   const entities = [
     signatureDef,
     signUpEmailDef,
@@ -106,6 +112,7 @@ export async function initializeEmailTemplates() {
     SubscriptionExpiringDef,
     SubscriptionRecurringAutoPaySucceededDef,
     SubscriptionRecurringAutoPayFailedDef,
+    SubscriptionTerminatedDef,
   ];
 
   await getManager()
@@ -113,6 +120,6 @@ export async function initializeEmailTemplates() {
     .insert()
     .into(EmailTemplate)
     .values(entities)
-    .onConflict(`(key, locale) DO NOTHING`)
+    .orIgnore()
     .execute();
 }

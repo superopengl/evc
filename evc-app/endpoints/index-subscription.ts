@@ -22,21 +22,10 @@ import { RevertableCreditTransaction } from '../src/entity/views/RevertableCredi
 import { getSubscriptionPrice } from '../src/utils/getSubscriptionPrice';
 import { UserAliveSubscriptionSummary } from '../src/entity/views/UserAliveSubscriptionSummary';
 import { notExistsQuery } from '../src/utils/existsQuery';
+import { getSubscriptionName } from '../src/utils/getSubscriptionName';
 
 const JOB_NAME = 'daily-subscription';
 
-function getSubscriptionName(type: SubscriptionType) {
-  switch (type) {
-    case SubscriptionType.Free:
-      return 'Free'
-    case SubscriptionType.UnlimitedMontly:
-      return 'Pro Member Monthly'
-    case SubscriptionType.UnlimitedYearly:
-      return 'Pro Member Annually'
-    default:
-      assert(false, 500, `Unsupported subscription type ${type}`);
-  }
-};
 
 async function enqueueEmailTasks(template: EmailTemplateType, list: UserAliveSubscriptionSummary[]) {
   for (const subscriptionInfo of list) {

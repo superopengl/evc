@@ -469,7 +469,10 @@ const UserListPage = () => {
       >
         {currentUser && <Space size="large" direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
           <Text code>{currentUser.email}</Text>
-          <ReferralCreditForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
+          <ReferralCreditForm user={currentUser} onOk={() => {
+            setProfileModalVisible(false);
+            loadList();
+          }} />
 
         </Space>}
       </Drawer>

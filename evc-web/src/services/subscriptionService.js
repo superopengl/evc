@@ -1,4 +1,4 @@
-import { httpGet, httpPost, request } from './http';
+import { httpGet, httpPost, httpDelete, request } from './http';
 
 export async function downloadReceipt(paymentId) {
   const path = `subscription/${paymentId}/receipt`;
@@ -35,4 +35,8 @@ export async function calculatePaymentDetail(type) {
 
 export async function fetchStripeCheckoutSession() {
   return httpGet(`/checkout/stripe/session`);
+}
+
+export async function terminateSubscription(userId) {
+  return httpDelete(`/user/${userId}/subscription`);
 }

@@ -1,4 +1,3 @@
-
 import { getRepository, In } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
@@ -15,12 +14,13 @@ import { createStripeClientSecretForCardPayment, chargeStripeForCardPayment, cha
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { getUserCurrentSubscriptionInfo } from '../utils/getUserCurrentSubscriptionInfo';
+import { terminateSubscriptionForUser } from '../utils/terminateSubscriptionForUser';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
     where: {
       userId,
-      status: In([SubscriptionStatus.Expired, SubscriptionStatus.Alive])
+      status: In([SubscriptionStatus.Expired, SubscriptionStatus.Alive, SubscriptionStatus.Terminated])
     },
     order: {
       start: 'ASC',
@@ -49,6 +49,15 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
   const list = await getUserSubscriptionHistory(id);
 
   res.json(list);
+});
+
+export const terminateUserCurrentSubscription = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { id } = req.params;
+
+  await terminateSubscriptionForUser(id);
+
+  res.json();
 });
 
 export const turnOffSubscriptionRecurring = handlerWrapper(async (req, res) => {

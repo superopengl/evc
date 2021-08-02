@@ -4,4 +4,5 @@ export enum SubscriptionStatus {
   Alive = 'alive',
   Expired = 'expired',
   Timeout = 'timeout',
+  Terminated = 'terminated',
 }

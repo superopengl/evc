@@ -231,6 +231,17 @@ paths:
       responses:
         200:
           description: OK
+    delete:
+      operationId: terminateUserCurrentSubscription
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /user/:id/credit:
     post:
       operationId: adjustCredit

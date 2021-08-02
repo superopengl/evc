@@ -92,7 +92,7 @@ const MyAccountPage = (props) => {
   }
 
   React.useEffect(() => {
-    const load$ = from(load(false)).subscribe();
+    const load$ = from(load(true)).subscribe();
     return () => {
       load$.unsubscribe();
     }
@@ -147,7 +147,7 @@ const MyAccountPage = (props) => {
 
   const handlePaymentOk = async () => {
     setModalVisible(false);
-    await load();
+    await load(true);
   }
 
   const handleCancelPayment = () => {

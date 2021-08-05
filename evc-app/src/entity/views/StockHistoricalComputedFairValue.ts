@@ -29,8 +29,9 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
         'pe.date as "peDate"',
         'pe."peLo" as "peLo"',
         'pe."peHi" as "peHi"',
-        'CASE WHEN 0 < pe."fairValueLo" AND pe."fairValueHi" <= pe.close * 3 THEN pe."fairValueLo" ELSE NULL END as "fairValueLo"',
-        'CASE WHEN 0 < pe."fairValueLo" AND pe."fairValueHi" <= pe.close * 3 THEN pe."fairValueHi" ELSE NULL END as "fairValueHi"',
+        'CASE WHEN pe."fairValueLo" <=0 THEN NULL WHEN pe."fairValueLo" >= pe.close * 1.2 THEN pe.close * 0.95 ELSE pe."fairValueLo" END as "fairValueLo"',
+        'CASE WHEN pe."fairValueLo" <=0 THEN NULL WHEN pe."fairValueLo" >= pe.close * 1.2 THEN pe.close * 1.2 ELSE pe."fairValueHi" END as "fairValueHi"',
+        'CASE WHEN pe."fairValueLo" >= pe.close * 1.2 THEN TRUE ELSE FALSE END as "isAdjustedFairValue"',
       ]), 'sub')
     .distinctOn([
       'symbol',
@@ -73,5 +74,8 @@ export class StockHistoricalComputedFairValue {
 
   @ViewColumn()
   fairValueHi: number;
+
+  @ViewColumn()
+  isAdjustedFairValue: boolean;
 }
 

@@ -14,6 +14,7 @@ import { Loading } from 'components/Loading';
 import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSourceService';
+import { FairValueSpecialLabel } from 'components/FairValueSpecialLabel';
 
 import { StockRangeTimelineEditor } from '../pages/Stock/StockRangeTimelineEditor';
 import StockEpsAdminEditor from '../pages/Stock/StockEpsAdminPanel';
@@ -63,7 +64,7 @@ const ColInnerCard = props => {
       color: 'white',
     }}
     bodyStyle={{
-      maxHeight: 400,
+      maxHeight: 500,
       overflow: 'auto',
 
     }}
@@ -165,19 +166,26 @@ const StockAdminPanel = (props) => {
         </ColInnerCard>
       </Col>
       <Col span={24}>
-        <ColInnerCard 
+        <ColInnerCard
           type="inner"
-        title="Fair Value">
+          title="Fair Value">
           <Space direction="vertical">
 
             <Alert
               type="info"
               showIcon
               description={<>
-                If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br />
-          Minus or zero <strong>TtmEps</strong> values are not valid to compute out PE90 nor fair values. In this case, <strong>PE90</strong> will always be <Text type="danger">n/a</Text> and special fair values need to be input manually.<br />
-          If the <strong>TtmEps</strong> has positive value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.
-          </>}
+                <Paragraph>
+                  If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br />
+                  Minus or zero <strong>TtmEps</strong> values are not valid to compute out PE90 nor fair values. In this case, <strong>PE90</strong> will always be <Text type="danger">n/a</Text> and special fair values need to be input manually.<br />
+                  If the <strong>TtmEps</strong> has positive value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.
+                </Paragraph>
+                <Paragraph style={{ marginBottom: 0 }}>
+                  <FairValueSpecialLabel show={true} color="#d7183f" /> 95% ~ 120% of close price due to improperly computed fair value
+                  <br />
+                  <FairValueSpecialLabel show={true} color="#55B0D4" /> Manually input special fair value
+                </Paragraph>
+              </>}
             />
             <StockFairValueEditor
               symbol={stock.symbol}

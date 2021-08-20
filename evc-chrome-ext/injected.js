@@ -22,24 +22,104 @@ function createMenuItem(sourceNode, label, onClick) {
   return menuItem;
 }
 
+let supportLoDatapoint = '';
+let supportHiDatapoint = '';
+let resistanceLoDatapoint = '';
+let resistanceHiDatapoint = '';
+
+function renderLoHiPair(lo, hi) {
+  return `${Math.min(lo, hi)}~${Math.max(lo, hi)}`;
+}
+
 function updateContextMenu(number) {
   const menuBodyNode = document.querySelector('#overlap-manager-root tbody');
   if (menuBodyNode) {
+    const menuItems = [];
+    const symbol = document.getElementById('header-toolbar-symbol-search')?.innerText;
     const sourceNode = menuBodyNode.querySelector('tr');
-    const supportItem = createMenuItem(sourceNode, `Save as support (${number})`, () => restoreData(number, 'support'));
-    const resistanceItem = createMenuItem(sourceNode, `Save as resistance (${number})`, () => restoreData(number, 'resistance'));
 
-    if (data.length) {
-      const saveItem = createMenuItem(sourceNode, `Download csv (${data.length} rows)`, () => download());
-      menuBodyNode.prepend(saveItem);
+    const supportHiItem = createMenuItem(sourceNode, `Support High (${number})`,
+      () => {
+        supportHiDatapoint = number;
+        closeContextMenu();
+      });
+    menuItems.push(supportHiItem);
+
+    const supportLoItem = createMenuItem(sourceNode, `Support Low (${number})`,
+      () => {
+        supportLoDatapoint = number;
+        closeContextMenu();
+      });
+    menuItems.push(supportLoItem);
+
+    if (supportLoDatapoint || supportHiDatapoint) {
+      const supportSaveItem = createMenuItem(sourceNode, `Save as Support (${renderLoHiPair(supportLoDatapoint || supportHiDatapoint, number)})`,
+        () => {
+          supportLoDatapoint = supportLoDatapoint || number;
+          supportHiDatapoint = supportHiDatapoint || number;
+          trySaveSupport(symbol);
+        });
+      menuItems.push(supportSaveItem);
     }
 
-    menuBodyNode.prepend(supportItem, resistanceItem);
+    const resistanceHiItem = createMenuItem(sourceNode, `Resistance High (${number})`, () => {
+      resistanceHiDatapoint = number;
+      closeContextMenu();
+    });
+    menuItems.push(resistanceHiItem);
+
+    const resistanceLoItem = createMenuItem(sourceNode, `Resistance Low (${number})`, () => {
+      resistanceLoDatapoint = number;
+      closeContextMenu();
+    });
+    menuItems.push(resistanceLoItem);
+
+
+    if (resistanceLoDatapoint || resistanceHiDatapoint) {
+      const resistanceLoItem = createMenuItem(sourceNode, `Save as Resistance (${renderLoHiPair(number, resistanceLoDatapoint || resistanceHiDatapoint)})`, 
+      () => {
+        resistanceLoDatapoint = resistanceLoDatapoint || number;
+        resistanceHiDatapoint = resistanceHiDatapoint || number;
+        trySaveResistance(symbol);
+      });
+      menuItems.push(resistanceLoItem);
+    }
+
+    if (data.length) {
+      const saveItem = createMenuItem(sourceNode, `Download csv (${data.length} rows)`, () => handleDownloadCsv());
+      menuItems.push(saveItem);
+    }
+
+    menuBodyNode.prepend(...menuItems);
   }
 }
 
+function trySaveSupport(symbol) {
+  if (supportLoDatapoint && supportHiDatapoint) {
+    data.push({
+      symbol,
+      support: `${supportLoDatapoint}-${supportHiDatapoint}`
+    });
+    supportLoDatapoint = '';
+    supportHiDatapoint = '';
+  }
+  closeContextMenu();
+}
+
+function trySaveResistance(symbol) {
+  if (resistanceLoDatapoint && resistanceHiDatapoint) {
+    data.push({
+      symbol,
+      support: `${resistanceLoDatapoint}-${resistanceHiDatapoint}`
+    });
+    resistanceLoDatapoint = '';
+    resistanceHiDatapoint = '';
+  }
+  closeContextMenu();
+}
+
 function restoreData(number, type) {
-  const symbol = document.getElementById('header-toolbar-symbol-search')?.innerText;
+
   if (symbol && (number || number === 0)) {
     // 
     const item = (type === 'support') ? { symbol, support: number } : { symbol, resistance: number };
@@ -53,7 +133,7 @@ function closeContextMenu() {
   document.getElementById('overlap-manager-root').innerHTML = '';
 }
 
-function download() {
+function handleDownloadCsv() {
   closeContextMenu();
   const dataRows = data.map(x => `${x.symbol},${x.support ?? ''},${x.resistance ?? ''}`).join('\n');
   const csvData = `Symbol,Support,Resistance\n` + dataRows;

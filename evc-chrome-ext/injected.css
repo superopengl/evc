@@ -1,9 +1,9 @@
 .evc-menu-item {
   background-color: #57BB60;
-  color: #000000 !important;
+  color: #000000dd !important;
 }
 
 .evc-menu-item:hover {
-  background-color: #57BB60 !important;
-  color: #000000bb !important;
+  background-color: #57BB60dd !important;
+  color: #000000 !important;
 }

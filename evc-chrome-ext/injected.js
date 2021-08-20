@@ -13,9 +13,9 @@ function handleCapture() {
   }
 }
 
-function createMenuItem(sourceNode, label, onClick) {
+function createMenuItem(sourceNode, label, className, onClick) {
   const menuItem = sourceNode.cloneNode(true);
-  menuItem.classList.add('evc-menu-item');
+  menuItem.classList.add(className);
   menuItem.querySelector('td:nth-of-type(1) span').innerHTML = '<small><strong>EVC</strong></small>';
   menuItem.querySelector('td:nth-of-type(2) span').innerText = label;
   menuItem.addEventListener('click', () => onClick());
@@ -38,14 +38,14 @@ function updateContextMenu(number) {
     const symbol = document.getElementById('header-toolbar-symbol-search')?.innerText;
     const sourceNode = menuBodyNode.querySelector('tr');
 
-    const supportHiItem = createMenuItem(sourceNode, `Support High (${number})`,
+    const supportHiItem = createMenuItem(sourceNode, `Support High (${number})`, 'evc-menu-item-support',
       () => {
         supportHiDatapoint = number;
         closeContextMenu();
       });
     menuItems.push(supportHiItem);
 
-    const supportLoItem = createMenuItem(sourceNode, `Support Low (${number})`,
+    const supportLoItem = createMenuItem(sourceNode, `Support Low (${number})`, 'evc-menu-item-support',
       () => {
         supportLoDatapoint = number;
         closeContextMenu();
@@ -53,7 +53,7 @@ function updateContextMenu(number) {
     menuItems.push(supportLoItem);
 
     if (supportLoDatapoint || supportHiDatapoint) {
-      const supportSaveItem = createMenuItem(sourceNode, `Save as Support (${renderLoHiPair(supportLoDatapoint || supportHiDatapoint, number)})`,
+      const supportSaveItem = createMenuItem(sourceNode, `Save as Support (${renderLoHiPair(supportLoDatapoint || supportHiDatapoint, number)})`, 'evc-menu-item-support',
         () => {
           supportLoDatapoint = supportLoDatapoint || number;
           supportHiDatapoint = supportHiDatapoint || number;
@@ -62,13 +62,15 @@ function updateContextMenu(number) {
       menuItems.push(supportSaveItem);
     }
 
-    const resistanceHiItem = createMenuItem(sourceNode, `Resistance High (${number})`, () => {
+    const resistanceHiItem = createMenuItem(sourceNode, `Resistance High (${number})`,  'evc-menu-item-resistance', 
+    () => {
       resistanceHiDatapoint = number;
       closeContextMenu();
     });
     menuItems.push(resistanceHiItem);
 
-    const resistanceLoItem = createMenuItem(sourceNode, `Resistance Low (${number})`, () => {
+    const resistanceLoItem = createMenuItem(sourceNode, `Resistance Low (${number})`, 'evc-menu-item-resistance', 
+    () => {
       resistanceLoDatapoint = number;
       closeContextMenu();
     });
@@ -76,7 +78,7 @@ function updateContextMenu(number) {
 
 
     if (resistanceLoDatapoint || resistanceHiDatapoint) {
-      const resistanceLoItem = createMenuItem(sourceNode, `Save as Resistance (${renderLoHiPair(number, resistanceLoDatapoint || resistanceHiDatapoint)})`, 
+      const resistanceLoItem = createMenuItem(sourceNode, `Save as Resistance (${renderLoHiPair(number, resistanceLoDatapoint || resistanceHiDatapoint)})`, 'evc-menu-item-resistance', 
       () => {
         resistanceLoDatapoint = resistanceLoDatapoint || number;
         resistanceHiDatapoint = resistanceHiDatapoint || number;
@@ -86,7 +88,7 @@ function updateContextMenu(number) {
     }
 
     if (data.length) {
-      const saveItem = createMenuItem(sourceNode, `Download csv (${data.length} rows)`, () => handleDownloadCsv());
+      const saveItem = createMenuItem(sourceNode, `Download csv (${data.length} rows)`, 'evc-menu-item', () => handleDownloadCsv());
       menuItems.push(saveItem);
     }
 

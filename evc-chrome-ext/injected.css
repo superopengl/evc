@@ -7,3 +7,23 @@
   background-color: #57BB60dd !important;
   color: #000000 !important;
 }
+
+.evc-menu-item-support {
+  background-color: #fff566;
+  color: #000000dd !important;
+}
+
+.evc-menu-item-support:hover {
+  background-color: #fff566dd !important;
+  color: #000000 !important;
+}
+
+.evc-menu-item-resistance {
+  background-color: #36cfc9;
+  color: #000000dd !important;
+}
+
+.evc-menu-item-resistance:hover {
+  background-color: #36cfc9dd !important;
+  color: #000000 !important;
+}

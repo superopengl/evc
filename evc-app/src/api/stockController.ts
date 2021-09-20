@@ -46,6 +46,7 @@ import * as _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
 import { getCompanyName } from '../services/alphaVantageService';
 import { StockInsiderTransaction } from '../entity/StockInsiderTransaction';
+import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -465,13 +466,8 @@ async function updateStockLastPrice(info: StockLastPriceInfo) {
   lastPrice.price = price;
   lastPrice.change = change;
   lastPrice.changePercent = changePercent;
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockLastPrice)
-    .values(lastPrice)
-    .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent", "updatedAt" = excluded."updatedAt"')
-    .execute();
+
+  await syncStockLastPrice(getManager(), lastPrice);
 }
 
 const getAndFeedStockQuote = async (symbol) => {

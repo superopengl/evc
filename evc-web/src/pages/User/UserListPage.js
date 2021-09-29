@@ -30,7 +30,7 @@ import { from } from 'rxjs';
 import countryList from 'react-select-country-list'
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import GuestSignUpPanel from './GuestSignUpPanel';
-
+import useLocalStorageState from 'use-local-storage-state'
 const { Text, Paragraph } = Typography;
 const countries = countryList();
 
@@ -63,7 +63,7 @@ const UserListPage = () => {
   const [tags, setTags] = React.useState([]);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
+  const [queryInfo, setQueryInfo] = useLocalStorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
 
   const handleTagChange = async (user, tags) => {
     await setUserTags(user.id, tags);
@@ -174,11 +174,10 @@ const UserListPage = () => {
   }, []);
 
   const handleSearchTextChange = text => {
-    const newQueryInfo = {
+    setQueryInfo(queryInfo => ({
       ...queryInfo,
       text
-    }
-    searchByQueryInfo(newQueryInfo);
+    }));
     // await loadTaskWithQuery(newQueryInfo);
   }
 
@@ -190,7 +189,7 @@ const UserListPage = () => {
       text
     }
 
-    await loadList(newQueryInfo);
+    await searchByQueryInfo(newQueryInfo);
   }
 
   const searchByQueryInfo = async (queryInfo) => {
@@ -204,7 +203,6 @@ const UserListPage = () => {
         setQueryInfo({ ...queryInfo, page });
         setLoading(false);
       });
-      reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
     } catch {
       setLoading(false);
     }
@@ -334,7 +332,7 @@ const UserListPage = () => {
         <Space style={{ marginTop: 16 }}>
           {subscriptionDef.map((x, i) => <CheckboxButton key={i}
             onChange={checked => handleSubscriptionChange(x.key, checked)}
-            value={queryInfo.subscription.includes(x.key)}
+            value={queryInfo?.subscription?.includes(x.key)}
           >
             {x.title}
           </CheckboxButton>)}

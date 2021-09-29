@@ -8,7 +8,7 @@ import {
   ClearOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space, Pagination } from 'antd';
+import { Space } from 'antd';
 import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
 import { inviteUser, impersonate } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
@@ -18,7 +18,6 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { BiDollar } from 'react-icons/bi';
 import ReferralCreditForm from 'components/ReferralCreditForm';
-import { keyBy } from 'lodash';
 import { subscriptionDef } from 'def/subscriptionDef';
 import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
@@ -33,10 +32,6 @@ import GuestSignUpPanel from './GuestSignUpPanel';
 import useLocalStorageState from 'use-local-storage-state'
 const { Text, Paragraph } = Typography;
 const countries = countryList();
-
-const ContainerStyled = styled.div`
-`;
-
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -309,7 +304,7 @@ const UserListPage = () => {
   }
 
   return (
-    <ContainerStyled>
+    <>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Input.Search
@@ -469,7 +464,7 @@ const UserListPage = () => {
 
         </Space>}
       </Drawer>
-    </ContainerStyled>
+    </>
 
   );
 };

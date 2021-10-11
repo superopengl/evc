@@ -15,6 +15,13 @@ export async function getRequestGeoInfo(req) {
   const resp = await fetch(url, { timeout: 5000 });
   const obj = await resp.json();
 
+  const country = req.headers['CloudFront-Viewer-Country'];
+  const region = req.headers['CloudFront-Viewer-Country-Region'];
+  const latitude = req.headers['CloudFront-Viewer-Latitude'];
+  const longitude = req.headers['CloudFront-Viewer-Longitude'];
+
+  console.log(`Cloudfront country: ${country} region: ${region} latitude: ${latitude} longitude: ${longitude}`);
+
   return {
     ip,
     country: obj?.country_code,

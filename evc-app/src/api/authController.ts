@@ -51,7 +51,7 @@ export const login = handlerWrapper(async (req, res) => {
   user.resetPasswordToken = null;
   user.status = UserStatus.Enabled;
   if (!user.profile.geo) {
-    user.profile.geo = await getRequestGeoInfo(req);
+    user.profile.geo = getRequestGeoInfo(req);
     entitiesToSave.push(user.profile);
   }
 
@@ -310,7 +310,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     user.profile = profile;
     profile.givenName = givenName;
     profile.surname = surname;
-    profile.geo = await getRequestGeoInfo(req);
+    profile.geo = getRequestGeoInfo(req);
     await getManager().save([user, profile]);
 
     await createReferral(user.id);

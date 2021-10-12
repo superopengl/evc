@@ -20,7 +20,7 @@ export async function getRequestGeoInfo(req) {
   const latitude = req.headers['CloudFront-Viewer-Latitude'];
   const longitude = req.headers['CloudFront-Viewer-Longitude'];
 
-  console.log(`Cloudfront country: ${country} region: ${region} latitude: ${latitude} longitude: ${longitude}`);
+  console.log(`Cloudfront country: ${country} region: ${region} latitude: ${latitude} longitude: ${longitude}. ${JSON.stringify(req.headers)}`);
 
   return {
     ip,

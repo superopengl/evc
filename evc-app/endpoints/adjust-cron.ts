@@ -44,7 +44,7 @@ const defs = [
         name: 'daily-subscription',
         description: 'Daily subscription check',
         startTimeNY: '23:00',
-        daysOfWeek: 'MON-FRI',
+        daysOfWeek: '*',
     },
     {
         name: 'daily-insider',

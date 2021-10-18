@@ -4,7 +4,7 @@ import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Ra
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined, BarChartOutlined,
-  UserOutlined, WarningFilled,
+  UserOutlined, ExclamationCircleFilled,
   ClearOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
@@ -91,7 +91,9 @@ const UserListPage = () => {
       title: 'Role',
       dataIndex: 'role',
       render: (role, item) => role === 'member' && item.subscription === 'free' ?
-        <>{capitalize(role)} <Tooltip title="Role will be revoked upon the next run of daily subscription clean up."><WarningFilled /></Tooltip></> :
+        <Tooltip title="Role will be revoked upon the next run of daily subscription clean up.">
+          {capitalize(role)} <ExclamationCircleFilled style={{color: '#fa8c16'}} />
+        </Tooltip> :
         capitalize(role)
     },
     {

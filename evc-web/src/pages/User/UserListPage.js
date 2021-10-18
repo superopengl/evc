@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  SearchOutlined,BarChartOutlined,
+  SearchOutlined, BarChartOutlined,
   UserOutlined,
   ClearOutlined
 } from '@ant-design/icons';
@@ -30,6 +30,7 @@ import countryList from 'react-select-country-list'
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import GuestSignUpPanel from './GuestSignUpPanel';
 import useLocalStorageState from 'use-local-storage-state'
+import { capitalize } from 'lodash';
 const { Text, Paragraph } = Typography;
 const countries = countryList();
 
@@ -89,7 +90,9 @@ const UserListPage = () => {
     {
       title: 'Role',
       dataIndex: 'role',
-      render: (text) => text
+      render: (role, item) => role === 'member' && item.subscription === 'free' ?
+        <>{capitalize(role)} <Text type="secondary"><small>(pending revoke)</small></Text></> :
+        capitalize(role)
     },
     {
       title: 'Subscription',

@@ -6,7 +6,6 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { redisCache } from '../services/redisCache';
 import { Translation } from '../entity/Translation';
 import { Locale } from '../types/Locale';
-import { EmailSignature } from '../entity/EmailSignature';
 import { EmailTemplate } from '../entity/EmailTemplate';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 

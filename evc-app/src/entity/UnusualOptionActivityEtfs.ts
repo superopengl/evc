@@ -7,6 +7,10 @@ export class UnusualOptionActivityEtfs {
   @PrimaryColumn()
   symbol: string;
 
+  @PrimaryColumn('date')
+  @Index()
+  tradeDate: string;
+
   @PrimaryColumn('decimal', { transformer: new ColumnNumericTransformer() })
   price: number;
 
@@ -47,8 +51,4 @@ export class UnusualOptionActivityEtfs {
 
   @PrimaryColumn('decimal', { transformer: new ColumnNumericTransformer() })
   iv: number;
-
-  @PrimaryColumn('date')
-  @Index()
-  time: string;
 }

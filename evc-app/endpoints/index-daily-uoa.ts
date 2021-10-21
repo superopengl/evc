@@ -33,9 +33,9 @@ function getTradeDateTime(rawValue) {
     date = convertToDate(rawValue);
   } else {
     // MM/DD/YY time format
-    const m = moment(rawValue, 'MM/DD/YY blah');
+    const m = moment(rawValue, 'HH:mm [ET]');
     date = m.toDate();
-    time = m.format('');
+    time = m.format('HH:mm:ss');
   }
 
   return {

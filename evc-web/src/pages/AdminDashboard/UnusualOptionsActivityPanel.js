@@ -253,12 +253,12 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value, item) => {
         const dateString = moment.tz(`${item.tradeDate}`, 'utc').format('DD MMM YYYY');
 
-        if(item.tradeTime) {
-          return <>{dateString} {moment(item.tradeTime, 'HH:mm:ss').format('HH:mm')} <sub>ET</sub></>;
+        if (item.tradeTime) {
+          return <>{dateString} {moment(item.tradeTime, 'HH:mm:ss').format('HH:mm')} ET</>;
         } else {
           return dateString;
         }
-        
+
       }
     },
   ];
@@ -318,8 +318,8 @@ const UnusualOptionsActivityPanel = (props) => {
         <Descriptions.Item label="">
         </Descriptions.Item>
         <Descriptions.Item label="Last day only">
-        <Tooltip title={queryInfo.lastDayOnly ? "Switch off to view all historical data" : "Switch on to only view the last day's data"}>
-          <Switch checked={queryInfo.lastDayOnly} onChange={handleLastDayOnlyChange} />
+          <Tooltip title={queryInfo.lastDayOnly ? "Switch off to view all historical data" : "Switch on to only view the last day's data"}>
+            <Switch checked={queryInfo.lastDayOnly} onChange={handleLastDayOnlyChange} />
           </Tooltip>
         </Descriptions.Item>
         <Descriptions.Item label="Trade Date">

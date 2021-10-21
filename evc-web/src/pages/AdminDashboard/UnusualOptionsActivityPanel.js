@@ -214,8 +214,15 @@ const UnusualOptionsActivityPanel = (props) => {
       title: 'Trade Date',
       dataIndex: 'tradeDate',
       width: 100,
-      align: 'right',
+      align: 'center',
       render: (value) => moment.tz(value, 'utc').format('D MMM YYYY'),
+    },
+    {
+      title: 'Trade Time',
+      dataIndex: 'tradeTime',
+      width: 80,
+      align: 'center',
+      render: (value) => value ? moment.tz(value, 'utc').format('HH:mm:ss') : null,
     }
   ];
 

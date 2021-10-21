@@ -206,7 +206,7 @@ async function cleanUpOldUoaData(m: EntityManager, table) {
     .createQueryBuilder()
     .delete()
     .from(table)
-    .where('"time" < :date', { date: oneYearAgo })
+    .where('"tradeDate" < :date', { date: oneYearAgo })
     .execute();
 }
 

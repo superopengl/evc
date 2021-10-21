@@ -1232,53 +1232,56 @@ paths:
         200:
           description: OK
   /admin/data/uoa/stock:
-    get:
-      operationId: listUoaStocks
-      responses:
-        200:
-          description: OK
     post:
       operationId: uploadUoaStockCsv
       responses:
         200:
           description: OK
-  /admin/data/uoa/stock/admin:
-    get:
+  /admin/data/uoa/stock/search:
+    post:
+      operationId: listUoaStocks
+      responses:
+        200:
+          description: OK          
+  /admin/data/uoa/stock/admin/search:
+    post:
       operationId: listAdminUoaStocks
       responses:
         200:
           description: OK
   /admin/data/uoa/etfs:
-    get:
-      operationId: listUoaEtfs
-      responses:
-        200:
-          description: OK
     post:
       operationId: uploadUoaEtfsCsv
       responses:
         200:
           description: OK
-  /admin/data/uoa/etfs/admin:
-    get:
+  /admin/data/uoa/etfs/search:
+    post:
+      operationId: listUoaEtfs
+      responses:
+        200:
+          description: OK          
+  /admin/data/uoa/etfs/admin/search:
+    post:
       operationId: listAdminUoaEtfs
       responses:
         200:
           description: OK
   /admin/data/uoa/index:
-    get:
-      operationId: listUoaindex
-      responses:
-        200:
-          description: OK
     post:
       operationId: uploadUoaIndexCsv
       responses:
         200:
           description: OK
-  /admin/data/uoa/index/admin:
-    get:
-      operationId: listAdminUoaindex
+  /admin/data/uoa/index/search:
+    post:
+      operationId: listUoaindex
+      responses:
+        200:
+          description: OK          
+  /admin/data/uoa/index/admin/search:
+    post:
+      operationId: listAdminUoaIndex
       responses:
         200:
           description: OK

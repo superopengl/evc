@@ -81,11 +81,22 @@ const UnusualOptionsActivityPanel = (props) => {
     }
   }
 
+  const getQueryConditions = (queryInfo) => {
+    return {
+      ...queryInfo,
+      order: queryInfo.order?.map(x => ({
+        field: `"${x.field}"`,
+        order: x.order === 'descend' ? 'DESC' : 'ASC'
+      }))
+    }
+  }
+
   const searchByQueryInfo = async (queryInfo, dryRun = false) => {
     try {
       if (!dryRun) {
         setLoading(true);
-        const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryInfo) : await listUnusualOptionsActivity(props.type, queryInfo);
+        const queryCondition = getQueryConditions(queryInfo);
+        const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryCondition) : await listUnusualOptionsActivity(props.type, queryCondition);
         updateWithResponse(resp, queryInfo);
       } else {
         setQueryInfo(queryInfo);
@@ -123,6 +134,16 @@ const UnusualOptionsActivityPanel = (props) => {
     });
   }
 
+  const getSortOrder = (key) => {
+    const order = queryInfo.order ?? [];
+    for (const item of order) {
+      if (item.field === key) {
+        return item.order;
+      }
+    }
+    return false;
+  }
+
   const shouldHide = context.role === 'free' || context.role === 'guest';
 
   const columnDef = [
@@ -131,6 +152,8 @@ const UnusualOptionsActivityPanel = (props) => {
       dataIndex: 'symbol',
       fixed: 'left',
       width: 80,
+      sorter: { multiple: 1 },
+      sortOrder: getSortOrder('symbol'),
       render: (value) => value,
     },
     {
@@ -155,7 +178,9 @@ const UnusualOptionsActivityPanel = (props) => {
     {
       title: 'Expiration Date',
       dataIndex: 'expDate',
-      width: 100,
+      width: 110,
+      sorter: { multiple: 1 },
+      sortOrder: getSortOrder('expDate'),
       align: shouldHide ? 'center' : 'right',
       render: (value) => shouldHide ? <LockIcon /> : moment.tz(value, 'utc').format('D MMM YYYY'),
     },
@@ -187,12 +212,16 @@ const UnusualOptionsActivityPanel = (props) => {
     {
       title: 'Volume',
       dataIndex: 'volume',
+      sorter: { multiple: 1 },
+      sortOrder: getSortOrder('volume'),
       align: 'right',
       render: (value) => value,
     },
     {
       title: 'Open Interest',
       dataIndex: 'openInt',
+      sorter: { multiple: 1 },
+      sortOrder: getSortOrder('openInt'),
       align: 'right',
       width: 80,
       render: (value) => value,
@@ -200,6 +229,8 @@ const UnusualOptionsActivityPanel = (props) => {
     {
       title: 'Volume / Open Interest',
       dataIndex: 'voloi',
+      sorter: { multiple: 1 },
+      sortOrder: getSortOrder('voloi'),
       align: 'right',
       width: 80,
       render: (value) => value,
@@ -213,6 +244,8 @@ const UnusualOptionsActivityPanel = (props) => {
     {
       title: 'Trade Date',
       dataIndex: 'tradeDate',
+      sorter: { multiple: 1 },
+      sortOrder: getSortOrder('tradeDate'),
       width: 100,
       align: 'center',
       render: (value) => moment.tz(value, 'utc').format('D MMM YYYY'),
@@ -230,6 +263,13 @@ const UnusualOptionsActivityPanel = (props) => {
     searchByQueryInfo({ ...queryInfo, symbol, page: 1 });
   }
 
+  const handleTableChange = (pagination, filters, sorter) => {
+    searchByQueryInfo({
+      ...queryInfo,
+      order: (Array.isArray(sorter) ? sorter : [sorter]).map(x => ({ field: x.field, order: x.order })),
+    });
+  }
+
   return (
     <ContainerStyled>
       <Descriptions bordered={false} column={{
@@ -241,15 +281,15 @@ const UnusualOptionsActivityPanel = (props) => {
         xs: 1
       }} size="small" style={{ marginBottom: 8 }}>
         <Descriptions.Item label="Symbol">
-          <Select allowClear style={{ width: 100 }} placeholder="Symbol" 
-          // onSearch={handleSymbolChange}
-          onChange={handleSymbolChange}
-          showSearch
-          filterOption={(input, option) => {
-            const match = input.toLowerCase();
-            const symbol = option.key;
-            return symbol.toLowerCase().includes(match);
-          }}
+          <Select allowClear style={{ width: 100 }} placeholder="Symbol"
+            // onSearch={handleSymbolChange}
+            onChange={handleSymbolChange}
+            showSearch
+            filterOption={(input, option) => {
+              const match = input.toLowerCase();
+              const symbol = option.key;
+              return symbol.toLowerCase().includes(match);
+            }}
           >
             {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
           </Select>
@@ -271,10 +311,11 @@ const UnusualOptionsActivityPanel = (props) => {
         bordered
         size="small"
         columns={columnDef}
-        dataSource={list}
+        dataSource={list.map((x, index) => ({ ...x, index }))}
         loading={loading}
-        rowKey="id"
+        rowKey="index"
         pagination={false}
+        onChange={handleTableChange}
         style={{
           marginBottom: '1rem',
           // height: 'calc(100vh - 320px)' 

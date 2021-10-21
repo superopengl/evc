@@ -3,13 +3,16 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
+@Index(['tradeDate', 'tradeTime'])
 export class UnusualOptionActivityEtfs {
   @PrimaryColumn()
   symbol: string;
 
   @PrimaryColumn('date')
-  @Index()
   tradeDate: string;
+
+  @Column('time', { nullable: true})
+  tradeTime: string;
 
   @PrimaryColumn('decimal', { transformer: new ColumnNumericTransformer() })
   price: number;

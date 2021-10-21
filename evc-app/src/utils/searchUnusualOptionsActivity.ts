@@ -57,14 +57,14 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
     query = query.andWhere(`"expDate" <= :b::date`, { b: expDateTo });
   }
   if (timeFrom) {
-    query = query.andWhere(`time >= :c::date`, { c: timeFrom });
+    query = query.andWhere(`"tradeDate" >= :c::date`, { c: timeFrom });
   }
   if (timeTo) {
-    query = query.andWhere(`time <= :d::date`, { d: timeTo });
+    query = query.andWhere(`"tradeDate" <= :d::date`, { d: timeTo });
   }
   const count = await query.getCount();
 
-  query = query.orderBy('time', 'DESC')
+  query = query.orderBy('"tradeDate"', 'DESC')
     .addOrderBy('symbol')
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize);
@@ -73,9 +73,9 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
     query = query.select('*')
   } else {
     query = query.select([
-      'row_number() over (order by time desc, symbol) as id',
+      'row_number() over (order by "tradeDate" desc, symbol) as id',
       'symbol',
-      'time',
+      '"tradeDate"',
       'price',
       'type',
       'last',

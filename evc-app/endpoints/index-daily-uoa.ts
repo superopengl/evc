@@ -94,4 +94,4 @@ start(JOB_NAME, async () => {
     const rawData = await getAllUnusualOptionActivity(type);
     await upsertDatabase(table, rawData);
   }
-});
+}, { daemon: false });

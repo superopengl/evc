@@ -9,16 +9,25 @@ import moment = require('moment');
 
 async function upsertDatabase(tableEntity, rawData) {
   if (!rawData?.length) {
+    console.log('Skip, no date to update')
     return;
   }
   const entities = rawData.map(x => convertToEntity(x));
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(tableEntity)
-    .values(entities)
-    .orIgnore()
-    .execute();
+  if (entities.some(x => !x.tradeTime)) {
+    console.log('Skip, response data contains record having no trade time');
+    return;
+  }
+  const tradeDate = entities[0].tradeDate;
+
+  await getManager().transaction(async m => {
+    await m.delete(tableEntity, { tradeDate });
+    await m.createQueryBuilder()
+      .insert()
+      .into(tableEntity)
+      .values(entities)
+      .orIgnore()
+      .execute();
+  });
 }
 
 function convertToDate(dateMMDDYY) {
@@ -32,7 +41,7 @@ function getTradeDateTime(rawValue) {
     // MM/DD/YY format
     date = convertToDate(rawValue);
   } else {
-    // MM/DD/YY time format
+    // HH:mm [ET] time format
     const m = moment(rawValue, 'HH:mm [ET]');
     date = m.toDate();
     time = m.format('HH:mm:ss');

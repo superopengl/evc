@@ -13,10 +13,6 @@ async function upsertDatabase(tableEntity, rawData) {
     return;
   }
   const entities = rawData.map(x => convertToEntity(x));
-  if (entities.some(x => !x.tradeTime)) {
-    console.log('Skip, response data contains record having no trade time');
-    return;
-  }
   const tradeDate = entities[0].tradeDate;
 
   await getManager().transaction(async m => {
@@ -58,11 +54,10 @@ function stringToInt(str) {
 }
 
 function convertToEntity(data) {
-  const { date, time } = getTradeDateTime(data.tradeTime);
+  const { date } = getTradeDateTime(data.tradeTime);
   return {
     symbol: data.baseSymbol,
     tradeDate: date,
-    tradeTime: time,
     price: stringToInt(data.baseLastPrice),
     type: data.symbolType,
     strike: stringToInt(data.strikePrice),

@@ -250,15 +250,9 @@ const UnusualOptionsActivityPanel = (props) => {
       sortOrder: getSortOrder('tradeDate'),
       width: 155,
       align: 'left',
-      render: (value, item) => {
-        const dateString = moment.tz(`${item.tradeDate}`, 'utc').format('DD MMM YYYY');
-
-        if (item.tradeTime) {
-          return <>{dateString} {moment(item.tradeTime, 'HH:mm:ss').format('HH:mm')} ET</>;
-        } else {
-          return dateString;
-        }
-
+      render: (value) => {
+        const dateString = moment.tz(`${value}`, 'utc').format('DD MMM YYYY');
+        return dateString;
       }
     },
   ];

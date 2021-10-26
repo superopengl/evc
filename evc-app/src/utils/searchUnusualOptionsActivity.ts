@@ -59,7 +59,7 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
     query = query.andWhere(`"expDate" <= :b::date`, { b: expDateTo });
   }
 
-  if(lastDayOnly) {
+  if (lastDayOnly) {
     const { tableName, schema } = getRepository(entity).metadata;
     query = query.andWhere(`"tradeDate" = (select max("tradeDate") from "${schema}"."${tableName}")`);
   } else {
@@ -79,11 +79,8 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
   ]
 
   for (const orderCond of orderConditions) {
-    const {field, order} = orderCond;
+    const { field, order } = orderCond;
     query = query.addOrderBy(`"${field}"`, order);
-    if(field === 'tradeDate') {
-      query = query.addOrderBy('"tradeTime"', order, order === 'DESC' ? 'NULLS FIRST' : 'NULLS LAST');
-    }
   }
 
   query = query.offset((pageNo - 1) * pageSize)

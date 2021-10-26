@@ -29,8 +29,7 @@ const convertHeaderToPropName = header => {
 const formatUoaUploadRow = row => {
   try {
     row.expDate = parseUoaDate(row.expDate);
-    row.tradeDate = parseUoaDate(row.tradeDate);
-    row.tradeTime = parseUoaTime(row.tradeTime);
+    row.tradeDate = parseUoaDate(row.time);
     row.iv = row.iv.replace(/%/g, '');
     return row;
   } catch (e) {

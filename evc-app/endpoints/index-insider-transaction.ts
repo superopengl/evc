@@ -44,19 +44,19 @@ async function udpateDatabase(iexBatchResponse) {
     // advanced-stats
     const insiderTransactionData = value['insider-transactions'];
     const list = insiderTransactionData
-    .filter(x => includesTransactionCode(x.transactionCode))
-    .map(x => _.pick(x, [
-      'fullName',
-      'reportedTitle',
-      'conversionOrExercisePrice',
-      'filingDate',
-      'postShares',
-      'transactionCode',
-      'transactionDate',
-      'transactionPrice',
-      'transactionShares',
-      'transactionValue',
-    ]));
+      .filter(x => includesTransactionCode(x.transactionCode))
+      .map(x => _.pick(x, [
+        'fullName',
+        'reportedTitle',
+        'conversionOrExercisePrice',
+        'filingDate',
+        'postShares',
+        'transactionCode',
+        'transactionDate',
+        'transactionPrice',
+        'transactionShares',
+        'transactionValue',
+      ]));
     const first = list[0];
     const entity = new StockInsiderTransaction();
     entity.symbol = symbol;
@@ -86,7 +86,7 @@ start(JOB_NAME, async () => {
     .getRawMany();
   const symbols = stocks.map(s => s.symbol);
 
-  if(symbols.length) {
+  if (symbols.length) {
     await promoteLatestSnapshotToPreviousSnapshot();
   }
 
@@ -98,7 +98,7 @@ start(JOB_NAME, async () => {
     await syncIexForSymbols(batchSymbols);
   }
 
-  await handleWatchlistInsiderTransactionNotification();
+  // await handleWatchlistInsiderTransactionNotification();
 
   // await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView(StockPutCallRatio90));
 });

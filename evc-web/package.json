@@ -66,7 +66,7 @@
     "g": "npx generate-react-cli component --",
     "p": "npx generate-react-cli component -- --type=page",
     "upload": " aws s3 sync build s3://evc-web/",
-    "analyze": "pnpm build; source-map-explorer 'build/static/js/*.js'"
+    "analyze": "pnpm build; pnpx source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
     "extends": "react-app"

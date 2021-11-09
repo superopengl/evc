@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 const redisUrl = process.env.REDIS_URL;
 
-export class RedisPubService {
+class RedisPubService {
   private publisher = null;
 
   constructor(private channelName) {

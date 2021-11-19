@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { getStockDataInfo } from 'services/stockService';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
-import { isFinite } from 'lodash';
+import isFinite from 'lodash/isFinite';
 import { from } from 'rxjs';
 
 const { Text } = Typography;

@@ -6,7 +6,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt } from 'services/subscriptionService';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import MoneyAmount from 'components/MoneyAmount';
-import { orderBy } from 'lodash';
+import orderBy from 'lodash/orderBy';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -18,7 +18,7 @@ const StyledPaymentTable = styled(Table)`
 `;
 
 const MySubscriptionHistoryPanel = (props) => {
-  const {data} = props;
+  const { data } = props;
   const [list, setList] = React.useState(data || []);
 
   React.useEffect(() => {
@@ -61,7 +61,7 @@ const MySubscriptionHistoryPanel = (props) => {
               dataIndex: 'amount',
               align: 'center',
               width: '33%',
-              render: (amount, item) => <MoneyAmount value={item.amountCny ?? amount} symbol={item.amountCny ? '¥' : '$'}/>
+              render: (amount, item) => <MoneyAmount value={item.amountCny ?? amount} symbol={item.amountCny ? '¥' : '$'} />
             },
             {
               title: 'link',

@@ -39,7 +39,7 @@ export class RedisSubService {
   }
 }
 
-export const REDIS_CHANNEL_NAME = 'stock_realtime_price';
+const REDIS_CHANNEL_NAME = 'stock_realtime_price';
 
 export class RedisRealtimePricePubService extends RedisPubService {
   constructor() {

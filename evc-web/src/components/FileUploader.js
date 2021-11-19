@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Upload, Typography } from 'antd';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import styled from 'styled-components';
 import { searchFile } from 'services/fileService';
 import { saveAs } from 'file-saver';
@@ -127,12 +127,12 @@ export const FileUploader = (props) => {
         disabled={disabled || fileList.length >= maxSize}
       // showUploadList={true}
       >
-        {disabled ? <Text type="secondary"><FormattedMessage id="text.fileUploadIsDisabled"/></Text>
+        {disabled ? <Text type="secondary"><FormattedMessage id="text.fileUploadIsDisabled" /></Text>
           : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', padding: '0 20px' }}>
             <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-          <Paragraph><FormattedMessage id="text.clickORDragToUpload"/></Paragraph>
-          <Paragraph type="warning"><FormattedMessage id="text.paypalScreenshotUploadWarning"/></Paragraph>
-        </div>}
+            <Paragraph><FormattedMessage id="text.clickORDragToUpload" /></Paragraph>
+            <Paragraph type="warning"><FormattedMessage id="text.paypalScreenshotUploadWarning" /></Paragraph>
+          </div>}
       </Dragger>
       {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
     </Container>

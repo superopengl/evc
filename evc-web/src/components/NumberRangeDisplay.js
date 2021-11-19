@@ -2,7 +2,7 @@
 import React from 'react';
 import { Typography, Space } from 'antd';
 import PropTypes from 'prop-types';
-import {isNumber} from 'lodash';
+import isNumber from 'lodash/isNumber';
 import { TimeAgo } from './TimeAgo';
 import styled from 'styled-components';
 
@@ -30,7 +30,7 @@ export const NumberRangeDisplay = (props) => {
   }
 
   const getComponent = (number, trend) => {
-    const textProps = {...getTextPropsByTrend(trend)}
+    const textProps = { ...getTextPropsByTrend(trend) }
     return <Text {...textProps}>{number.toFixed(2)} {trend === 1 ? '↑' : trend === -1 ? '↓' : null}</Text>
   }
 
@@ -40,7 +40,7 @@ export const NumberRangeDisplay = (props) => {
   const isCompactMode = displayLo === displayHi && loTrend === hiTrend;
 
   return <Space size="small" direction="horizontal" className={className}>
-    {time && <TimeAgo value={time} accurate={accurateTime} showAgo={false} direction="vertical"/>}
+    {time && <TimeAgo value={time} accurate={accurateTime} showAgo={false} direction="vertical" />}
     <NumberPanel>
       {displayLo === null && displayHi === null ? <Text>None</Text> :
         isCompactMode ? getComponent(displayLo, loTrend) :

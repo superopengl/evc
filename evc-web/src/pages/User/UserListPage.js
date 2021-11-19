@@ -30,7 +30,7 @@ import countryList from 'react-select-country-list'
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import GuestSignUpPanel from './GuestSignUpPanel';
 import useLocalStorageState from 'use-local-storage-state'
-import { capitalize } from 'lodash';
+import capitalize from 'lodash/capitalize';
 const { Text, Paragraph } = Typography;
 const countries = countryList();
 
@@ -92,7 +92,7 @@ const UserListPage = () => {
       dataIndex: 'role',
       render: (role, item) => role === 'member' && item.subscription === 'free' ?
         <Tooltip title="Role will be revoked upon the next run of daily subscription clean up.">
-          {capitalize(role)} <ExclamationCircleFilled style={{color: '#fa8c16'}} />
+          {capitalize(role)} <ExclamationCircleFilled style={{ color: '#fa8c16' }} />
         </Tooltip> :
         capitalize(role)
     },

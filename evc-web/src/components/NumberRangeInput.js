@@ -2,7 +2,7 @@
 import React from 'react';
 import { InputNumber, Space, Button } from 'antd';
 import PropTypes from 'prop-types';
-import { isNumber } from 'lodash';
+import isNumber from 'lodash/isNumber';
 import { CheckOutlined } from '@ant-design/icons';
 
 export const NumberRangeInput = (props) => {

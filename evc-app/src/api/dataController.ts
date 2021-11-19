@@ -99,21 +99,13 @@ function handleCsvUpload(
 
 export const refreshMaterializedViews = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { operation } = req.query;
-  assert(operation, 400, 'operation query param is required');
-  const key = `operation.status.${operation}`;
-  await redisCache.set(key, 'in-progress');
-  refreshMaterializedView().finally(() => {
-    redisCache.del(key);
-  });
+  refreshMaterializedView();
   res.json();
 });
 
 export const flushCache = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { operation } = req.query;
-  assert(operation, 400, 'operation query param is required');
-  const key = `operation.status.${operation}`;
+  const key = `operation.status.flush_cache`;
   await redisCache.set(key, 'in-progress');
   redisCache.flush().finally(() => {
     redisCache.del(key);

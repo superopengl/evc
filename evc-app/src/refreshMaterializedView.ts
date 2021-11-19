@@ -9,7 +9,7 @@ import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
 import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 
-const REFRESHING_MV_CACHE_KEY = 'database.mv.refreshing'
+const REFRESHING_MV_CACHE_KEY = 'operation.status.refresh-mv'
 
 const MV_REFRESH_ORDER = [
   StockHistoricalTtmEps,
@@ -27,6 +27,8 @@ export async function refreshMaterializedView(mviewEnitity?: any) {
     return;
   }
   try {
+    await redisCache.set(REFRESHING_MV_CACHE_KEY, 'in-progress');
+
     const matviews = await getManager().query(`
 select schemaname as schema, matviewname as "tableName"
 from pg_catalog.pg_matviews 

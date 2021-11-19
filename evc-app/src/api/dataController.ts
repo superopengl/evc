@@ -4,7 +4,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as path from 'path';
-import { refreshMaterializedView } from '../db';
+import { refreshMaterializedView } from "../refreshMaterializedView";
 import { redisCache } from '../services/redisCache';
 import * as parse from 'csv-parse/lib/sync';
 import { StockSupport } from '../entity/StockSupport';

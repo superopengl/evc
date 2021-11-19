@@ -7,7 +7,7 @@ import errorToJson from 'error-to-json';
 import * as moment from 'moment';
 import { redisCache } from '../src/services/redisCache';
 import { handleWatchlistSupportResistanceChangedNotification } from './handleWatchlistSupportResistanceChangedNotification';
-import { refreshMaterializedView } from '../src/db';
+import { refreshMaterializedView } from "../src/refreshMaterializedView";
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
 

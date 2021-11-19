@@ -4,7 +4,7 @@ import { Stock } from '../src/entity/Stock';
 import { isUSMarketOpen, singleBatchRequest } from '../src/services/iexService';
 import { StockAdvancedStatsInfo, syncManyStockPutCallRatio } from '../src/services/stockPutCallRatioService';
 import * as moment from 'moment';
-import { refreshMaterializedView } from '../src/db';
+import { refreshMaterializedView } from "../src/refreshMaterializedView";
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
 import { StockPutCallRatio90 } from '../src/entity/views/StockPutCallRatio90';
@@ -42,7 +42,7 @@ start(JOB_NAME, async () => {
     console.warn('Market is still open');
     return;
   }
-  
+
   const stocks = await getRepository(Stock)
     .createQueryBuilder()
     .select('symbol')
@@ -52,7 +52,7 @@ start(JOB_NAME, async () => {
   const batchSize = 100;
   let round = 0;
   const chunks = _.chunk(symbols, batchSize);
-  for(const batchSymbols of chunks) {
+  for (const batchSymbols of chunks) {
     console.log(JOB_NAME, `${++round}/${chunks.length}`);
     await syncIexForSymbols(batchSymbols);
   }

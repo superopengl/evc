@@ -1,8 +1,7 @@
 import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { isUSMarketOpen } from '../src/services/iexService';
-import { refreshMaterializedView } from '../src/db';
+import { refreshMaterializedView } from "../src/refreshMaterializedView";
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
 import * as delay from 'delay';

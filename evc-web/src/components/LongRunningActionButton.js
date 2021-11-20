@@ -39,9 +39,9 @@ export const LongRunningActionButton = props => {
     if (loading) {
       pingSubRef.current?.unsubscribe();
       pingSubRef.current = interval(5 * 1000)
-        // .pipe(
-        //   startWith(0),
-        // )
+        .pipe(
+          startWith(0),
+        )
         .subscribe(async () => {
           const result = await getOperationStatus(operationKey);
           if (!result) {
@@ -60,8 +60,8 @@ export const LongRunningActionButton = props => {
       maskClosable: true,
       content: confirmMessage,
       onOk: async () => {
-        setLoading(true);
         await onOk();
+        setLoading(true);
       }
     });
   }

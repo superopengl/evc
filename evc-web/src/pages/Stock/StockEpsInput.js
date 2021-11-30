@@ -11,17 +11,15 @@ export const StockEpsInput = (props) => {
     onSave(values);
   }
 
-  return <Space>
+  return <Space size="small">
     <Form layout="inline" onFinish={handleSave}>
       <Form.Item label="" name="period" rules={[{ required: true, message: ' ' }]}>
-        <DatePicker placeholder="Report date" picker="date" disabled={disabled} style={{width: 150}} />
+        <DatePicker placeholder="Report date" picker="date" disabled={disabled} style={{ width: 150 }} />
       </Form.Item>
-      <Form.Item label="" name="value" rules={[{ required: true, message : ' ' }]}>
+      <Form.Item label="" name="value" rules={[{ required: true, message: ' ' }]}>
         <InputNumber disabled={disabled} />
       </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit" icon={<CheckOutlined />} disabled={disabled} />
-      </Form.Item>
+      <Button type="primary" htmlType="submit" icon={<CheckOutlined />} disabled={disabled} />
     </Form>
   </Space>
 }

@@ -54,6 +54,12 @@ const StyledLayout = styled(ProLayout)`
   min-width: 0;
 }
 
+.ant-pro-top-nav-header-logo {
+  h1 {
+    display: none;
+  }
+}
+
 .ant-pro-top-nav-header-main {
   margin: auto;
   // max-width: 1200px;
@@ -100,7 +106,7 @@ const HomePage = (props) => {
   const isGuest = context.role === 'guest';
 
   React.useEffect(() => {
-    if(isGuest) {
+    if (isGuest) {
       trackGuestUserVisit();
     }
   }, []);
@@ -156,7 +162,7 @@ const HomePage = (props) => {
 
   return <StyledLayout
     logo="/favicon-32x32.png"
-    title={null}
+    title="Easy Value Check"
     // logo="/images/logo-transparent.png"
     collapsed={collapsed}
     onCollapse={setCollapsed}
@@ -192,7 +198,6 @@ const HomePage = (props) => {
       </div> : dropdown
     }}
   >
-
     <section>
       <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>
@@ -227,7 +232,7 @@ const HomePage = (props) => {
     />
     <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
       We use cookies to improve your experiences on our website.
-        </CookieConsent>
+    </CookieConsent>
   </StyledLayout>
 }
 

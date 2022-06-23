@@ -107,24 +107,28 @@ function handleEventMessage(eventMessage: string) {
   }
 }
 
-function createSseForSymbols(symbols: string[]) {
+function createSseForSymbols(symbols: string[], generation = 0) {
   assert(symbols && symbols.length > 0 && symbols.length <= SYMBOL_BATCH_SIZE, 400, 'Wrong size of symbols. Must be between 1 and 100');
   const symbolsPlainString = symbols.join(',');
   const symbolEncodedString = symbols.map(s => encodeURIComponent(s)).join(',');
   let es: EventSource = null;
   try {
-    const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
+    const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last2?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
     es = new EventSource(url);
 
     es.onopen = () => {
-      console.log(`Task ${JOB_NAME} opened [${symbolsPlainString}]`);
+      console.log(`Task ${JOB_NAME} (generation ${generation}) opened [${symbolsPlainString}]`);
     };
-    es.onerror = (err) => {
-      console.log(`Task ${JOB_NAME} error [${symbolsPlainString}]`.red, err);
+    es.onerror = async (err) => {
+      console.log(`Task ${JOB_NAME} (generation ${generation}) error [${symbolsPlainString}]`.red, err);
+      es.close();
+      console.log(`Task ${JOB_NAME} (generation ${generation}) closed [${symbolsPlainString}]. Reopening`.red);
+      await sleep(30 * 1000);
+      createSseForSymbols(symbols, generation + 1);
     };
     es.onmessage = (e) => handleEventMessage(e.data);
   } catch (err) {
-    console.log(`Task ${JOB_NAME} error [${symbolsPlainString}]. Closing`.red, err);
+    console.log(`Task ${JOB_NAME} (generation ${generation}) closed [${symbolsPlainString}]`.red, err);
     es?.close();
     throw err;
   }

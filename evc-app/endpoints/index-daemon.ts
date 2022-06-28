@@ -113,7 +113,7 @@ function createSseForSymbols(symbols: string[], generation = 0) {
   const symbolEncodedString = symbols.map(s => encodeURIComponent(s)).join(',');
   let es: EventSource = null;
   try {
-    const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last2?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
+    const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
     es = new EventSource(url);
 
     es.onopen = () => {

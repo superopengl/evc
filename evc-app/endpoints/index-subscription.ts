@@ -1,4 +1,5 @@
-import { getManager, getRepository, getConnection, In, Not, IsNull } from 'typeorm';
+import { SubscriptionEndingNotificationEmailInformation } from './../src/entity/views/SubscriptionEndingNotificationEmailInformation';
+import { getManager, getRepository, getConnection, In, Not, IsNull, LessThan, LessThanOrEqual } from 'typeorm';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
 import { UserCreditTransaction } from '../src/entity/UserCreditTransaction';
@@ -9,7 +10,7 @@ import { PaymentStatus } from '../src/types/PaymentStatus';
 import * as moment from 'moment';
 import { Role } from '../src/types/Role';
 import { start } from './jobStarter';
-import { enqueueEmail } from '../src/services/emailService';
+import { enqueueEmail, enqueueEmailInBulk } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
 import { EmailRequest } from '../src/types/EmailRequest';
 import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
@@ -82,11 +83,8 @@ async function enqueueRecurringFailedEmail(activeOne: UserAliveSubscriptionSumma
 }
 
 async function expireSubscriptions() {
-  const tran = getConnection().createQueryRunner();
-
-  try {
-    await tran.startTransaction();
-    const list = await getRepository(UserAliveSubscriptionSummary)
+  await getManager().transaction(async m => {
+    const list = await m.getRepository(UserAliveSubscriptionSummary)
       .createQueryBuilder()
       .where('"end" < CURRENT_DATE')
       .getMany();
@@ -94,34 +92,67 @@ async function expireSubscriptions() {
     if (list.length) {
       // Set subscriptions to be expired
       const subscriptionIds = list.map(x => x.lastSubscriptionId);
-      await tran.manager.update(Subscription, subscriptionIds, { status: SubscriptionStatus.Expired });
+      await m.update(Subscription, subscriptionIds, { status: SubscriptionStatus.Expired });
 
       // Set user's role to Free
       const userIds = list.map(x => x.userId);
-      await tran.manager.update(User, userIds, { role: Role.Free })
+      await m.update(User, userIds, { role: Role.Free })
 
       console.log(`Expired subscriptions ${subscriptionIds.join(', ')}`);
       console.log(`Set Free role to users ${userIds.join(', ')}`);
+
+      // Compose email requests
+      const emailRequests = list.map(x => {
+        const emailRequest: EmailRequest = {
+          to: x.email,
+          template: EmailTemplateType.SubscriptionExpired,
+          shouldBcc: true,
+          vars: {
+            toWhom: getEmailRecipientName(x),
+            subscriptionId: x.lastSubscriptionId,
+            subscriptionType: getSubscriptionName(x.lastType),
+            start: moment(x.start).format('D MMM YYYY'),
+            end: moment(x.end).format('D MMM YYYY'),
+          }
+        };
+        return emailRequest;
+      });
+
+      // Enqueue email notifications
+      await enqueueEmailInBulk(m, emailRequests);
     }
-
-    tran.commitTransaction();
-
-    enqueueEmailTasks(EmailTemplateType.SubscriptionExpired, list);
-  } catch {
-    tran.rollbackTransaction();
-  }
+  });
 }
 
 
-async function sendAlertForNonRecurringExpiringSubscriptions() {
-  const list = await getRepository(UserAliveSubscriptionSummary)
-    .createQueryBuilder()
-    .where('"lastRecurring" = FALSE')
-    .andWhere('"currentSubscriptionId" = "lastSubscriptionId"')
-    .andWhere(`"end" - CURRENT_DATE = ANY(ARRAY[7])`) // notice before 7 days
-    .getMany();
+async function sendEndingNotificationEmails() {
+  await getManager().transaction(async m => {
 
-  enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);
+    const list = await m.find(SubscriptionEndingNotificationEmailInformation, {
+      sentAt: IsNull(),
+      daysBeforeEnd: LessThanOrEqual(7) // notice before 7 days
+    });
+
+    // Compose email requests
+    const emailRequests = list.map(x => {
+      const emailRequest: EmailRequest = {
+        to: x.email,
+        template: x.recurring ? EmailTemplateType.SubscriptionAutoRenewing : EmailTemplateType.SubscriptionExpiring,
+        shouldBcc: true,
+        vars: {
+          toWhom: getEmailRecipientName(x),
+          subscriptionId: x.subscriptionId,
+          subscriptionType: getSubscriptionName(x.type),
+          start: moment(x.start).format('D MMM YYYY'),
+          end: moment(x.end).format('D MMM YYYY'),
+        }
+      };
+      return emailRequest;
+    });
+
+    // Enqueue email notifications
+    await enqueueEmailInBulk(m, emailRequests);
+  });
 }
 
 async function getPreviousPaymentInfo(subscription: Subscription) {
@@ -277,9 +308,9 @@ start(JOB_NAME, async () => {
   await handleRecurringPayments();
   console.log('Finished recurring payments');
 
-  console.log('Starting alerting expiring subscriptions');
-  await sendAlertForNonRecurringExpiringSubscriptions();
-  console.log('Finished alerting expiring subscriptions');
+  console.log('Starting sending notification emails for renewing/expiring subscriptions');
+  await sendEndingNotificationEmails();
+  console.log('Finished sending notification emails for renewing/expiring subscriptions');
 
   console.log('Starting expiring subscriptions');
   await expireSubscriptions();

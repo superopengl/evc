@@ -124,13 +124,14 @@ export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailR
     assert(template, 400, 'Email template is not specified');
 
     const emailTask = new EmailSentOutTask();
-    emailTask.id = uuidv4();
     emailTask.from = req.from || defaultFrom
     emailTask.to = req.to;
     emailTask.template = req.template;
     emailTask.vars = req.vars;
     emailTask.attachments = req.attachments;
     emailTask.shouldBcc = req.shouldBcc;
+
+    entities.push(emailTask);
   }
 
   if (entities.length) {

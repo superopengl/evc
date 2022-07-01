@@ -1,5 +1,5 @@
 import { SubscriptionEndingNotificationEmailInformation } from './../src/entity/views/SubscriptionEndingNotificationEmailInformation';
-import { getManager, getRepository, getConnection, In, Not, IsNull, LessThan, LessThanOrEqual } from 'typeorm';
+import { getManager, getRepository, getConnection, In, Not, IsNull, Between } from 'typeorm';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
 import { UserCreditTransaction } from '../src/entity/UserCreditTransaction';
@@ -26,25 +26,6 @@ import { notExistsQuery } from '../src/utils/existsQuery';
 import { getSubscriptionName } from '../src/utils/getSubscriptionName';
 
 const JOB_NAME = 'daily-subscription';
-
-
-async function enqueueEmailTasks(template: EmailTemplateType, list: UserAliveSubscriptionSummary[]) {
-  for (const subscriptionInfo of list) {
-    const emailReq: EmailRequest = {
-      to: subscriptionInfo.email,
-      template: template,
-      shouldBcc: true,
-      vars: {
-        toWhom: getEmailRecipientName(subscriptionInfo),
-        subscriptionId: subscriptionInfo.lastSubscriptionId,
-        subscriptionType: getSubscriptionName(subscriptionInfo.lastType),
-        start: moment(subscriptionInfo.start).format('D MMM YYYY'),
-        end: moment(subscriptionInfo.end).format('D MMM YYYY'),
-      }
-    };
-    await enqueueEmail(emailReq);
-  }
-}
 
 async function enqueueRecurringSucceededEmail(activeOne: UserAliveSubscriptionSummary, payment: Payment, price: number) {
   const emailReq: EmailRequest = {
@@ -130,7 +111,7 @@ async function sendEndingNotificationEmails() {
 
     const list = await m.find(SubscriptionEndingNotificationEmailInformation, {
       sentAt: IsNull(),
-      daysBeforeEnd: LessThanOrEqual(7) // notice before 7 days
+      daysBeforeEnd: Between(1, 7)
     });
 
     // Compose email requests

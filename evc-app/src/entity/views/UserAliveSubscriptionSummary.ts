@@ -70,7 +70,7 @@ export class UserAliveSubscriptionSummary {
 
   @ViewColumn()
   email: string;
-  
+
   @ViewColumn()
   givenName: string;
 

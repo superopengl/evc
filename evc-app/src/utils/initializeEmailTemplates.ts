@@ -78,6 +78,11 @@ export async function initializeEmailTemplates() {
   SubscriptionExpiringDef.locale = Locale.Engish;
   SubscriptionExpiringDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end'];
 
+  const SubscriptionAutoRenewingDef = new EmailTemplate();
+  SubscriptionAutoRenewingDef.key = EmailTemplateType.SubscriptionAutoRenewing;
+  SubscriptionAutoRenewingDef.locale = Locale.Engish;
+  SubscriptionAutoRenewingDef.vars = ['website', 'toWhom', 'subscriptionId', 'subscriptionType', 'start', 'end'];
+
   const SubscriptionRecurringAutoPaySucceededDef = new EmailTemplate();
   SubscriptionRecurringAutoPaySucceededDef.key = EmailTemplateType.SubscriptionRecurringAutoPaySucceeded;
   SubscriptionRecurringAutoPaySucceededDef.locale = Locale.Engish;
@@ -110,6 +115,7 @@ export async function initializeEmailTemplates() {
     WatchlistSupportResistanceChangedEmailDef,
     SubscriptionExpiredDef,
     SubscriptionExpiringDef,
+    SubscriptionAutoRenewingDef,
     SubscriptionRecurringAutoPaySucceededDef,
     SubscriptionRecurringAutoPayFailedDef,
     SubscriptionTerminatedDef,

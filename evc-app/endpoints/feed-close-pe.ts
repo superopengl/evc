@@ -14,6 +14,7 @@ import { StockDeprecateSupport } from '../src/entity/views/StockDeprecateSupport
 import { handleWatchlistSupportResistanceChangedNotification } from './handleWatchlistSupportResistanceChangedNotification';
 import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
 import { StockDailyClose } from '../src/entity/StockDailyClose';
+import { redisCache } from '../src/services/redisCache';
 
 const JOB_NAME = 'feed-historical-close';
 const MAX_CALL_TIMES_PER_MINUTE = 50;
@@ -105,49 +106,62 @@ start(JOB_NAME, async () => {
   //   return;
   // }
 
-  const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
-
-  const stocks = await getRepository(Stock)
-    .createQueryBuilder('s')
-    .innerJoin(q => q.from(StockDailyClose, 'c')
-      .distinctOn(['symbol'])
-      .orderBy('symbol', 'DESC')
-      .addOrderBy('date', 'DESC'),
-      'c', `s.symbol = c.symbol`)
-    .where(`c.date < CURRENT_DATE`)
-    .select('s.symbol as symbol')
-    .orderBy('s.symbol', 'ASC')
-    .execute();
-  const symbols = stocks.map(s => s.symbol);
-
-  let count = 0;
-  const failed = [];
-  for await (const symbol of symbols) {
-    try {
-      await syncStockHistoricalClose(symbol, 10);
-      console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
-      await delay(sleepTime);
-    } catch (e) {
-      const errorJson = errorToJson(e);
-      const msg = `${JOB_NAME} ${symbol} ${++count}/${symbols.length} failed`
-      console.error(msg.red, errorJson);
-      failed.push(msg + JSON.stringify(errorJson));
-    }
+  const JOB_IN_PROGRESS = `JOBKEY_${JOB_NAME}`;
+  const running = await redisCache.get(JOB_IN_PROGRESS);
+  if (running) {
+    console.log('Other process is still running, skip this run');
+    return;
   }
+  await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
 
-  // Scrub supports and resistance
-  console.log(`Scrubing supports`)
-  await scrubSupports();
-  console.log(`Scrubing resistance`)
-  await scrubResistances();
+  try {
+    const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
 
-  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+    const stocks = await getRepository(Stock)
+      .createQueryBuilder('s')
+      .innerJoin(q => q.from(StockDailyClose, 'c')
+        .distinctOn(['symbol'])
+        .orderBy('symbol', 'DESC')
+        .addOrderBy('date', 'DESC'),
+        'c', `s.symbol = c.symbol`)
+      .where(`c.date < CURRENT_DATE`)
+      .select('s.symbol as symbol')
+      .orderBy('s.symbol', 'ASC')
+      .execute();
+    const symbols = stocks.map(s => s.symbol);
 
-  await handleWatchlistSupportResistanceChangedNotification();
-  await handleWatchlistFairValueChangedNotification();
+    let count = 0;
+    const failed = [];
+    for await (const symbol of symbols) {
+      await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
+      try {
+        await syncStockHistoricalClose(symbol, 10);
+        console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
+        await delay(sleepTime);
+      } catch (e) {
+        const errorJson = errorToJson(e);
+        const msg = `${JOB_NAME} ${symbol} ${++count}/${symbols.length} failed`
+        console.error(msg.red, errorJson);
+        failed.push(msg + JSON.stringify(errorJson));
+      }
+    }
 
-  for (const err of failed) {
-    console.error(err);
+    // Scrub supports and resistance
+    console.log(`Scrubing supports`)
+    await scrubSupports();
+    console.log(`Scrubing resistance`)
+    await scrubResistances();
+
+    await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+
+    await handleWatchlistSupportResistanceChangedNotification();
+    await handleWatchlistFairValueChangedNotification();
+
+    for (const err of failed) {
+      console.error(err);
+    }
+  } finally {
+    await redisCache.del(JOB_IN_PROGRESS);
   }
 });
 

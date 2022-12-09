@@ -24,10 +24,11 @@ const MV_REFRESH_ORDER = [
 export async function refreshMaterializedView(mviewEnitity?: any) {
   const refreshing = await redisCache.get(REFRESHING_MV_CACHE_KEY);
   if (refreshing) {
+    console.log('Other process is refreshing materialized view, skip this request');
     return;
   }
   try {
-    await redisCache.set(REFRESHING_MV_CACHE_KEY, 'in-progress');
+    await redisCache.set(REFRESHING_MV_CACHE_KEY, new Date().toUTCString());
 
     const matviews = await getManager().query(`
 select schemaname as schema, matviewname as "tableName"
@@ -42,10 +43,10 @@ where schemaname = 'evc'
 
     const list = mviewEnitity ? [getManager().getRepository(mviewEnitity).metadata] : matviews;
     const sortedMviews = _.sortBy(list, x => mvRefreshOrder.get(x.tableName));
-    await redisCache.setex(REFRESHING_MV_CACHE_KEY, 10 * 60, true);
 
     await getManager().transaction(async (m) => {
       for (const item of sortedMviews) {
+        await redisCache.set(REFRESHING_MV_CACHE_KEY, new Date().toUTCString());
         const { schema, tableName } = item;
         await m.query(`REFRESH MATERIALIZED VIEW CONCURRENTLY "${schema}"."${tableName}" `);
       }

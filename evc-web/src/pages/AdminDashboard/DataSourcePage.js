@@ -221,6 +221,7 @@ GOOG,09/18/21,0.85`}
           size="small"
           columns={columns}
           dataSource={cachedItems}
+          pagination={false}
         />}
       </Card>
     </Space>

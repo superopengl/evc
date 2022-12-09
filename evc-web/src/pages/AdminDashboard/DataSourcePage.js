@@ -58,6 +58,7 @@ const DataSourcePage = () => {
       title: 'Time',
       dataIndex: 'value',
       key: 'value',
+      render: value => value,
     },
     {
       title: 'Age',

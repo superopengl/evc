@@ -19,8 +19,8 @@ export async function logDataEvent(dataEvent: DataEvent) {
   }
 }
 
-export async function executeWithDataEvents(eventType: string, by: string, fn: () => Promise<void>) {
-  const eventId = uuidv4();
+export async function executeWithDataEvents(eventType: string, by: string, fn: () => Promise<void>, options?: any) {
+  const eventId = options?.eventId ?? uuidv4();
   try {
     await logDataEvent({ eventId, eventType, by, status: 'started' });
     await fn();

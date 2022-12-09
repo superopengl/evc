@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, Index } from 'typeorm';
 
 @Entity()
 export class SysLog {
@@ -6,15 +6,19 @@ export class SysLog {
   id?: number;
 
   @CreateDateColumn()
+  @Index()
   createdAt?: Date;
 
   @Column({ default: 'system' })
+  @Index()
   createdBy?: string;
 
   @Column({ default: 'error' })
+  @Index()
   level?: string;
 
   @Column({ nullable: true })
+  @Index()
   message?: string;
 
   @Column({ type: 'json', nullable: true })

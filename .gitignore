@@ -1,0 +1,14 @@
+web/node_modules
+web/build
+node_modules
+ubc-web/build
+build
+ubc-app/src/**/*.js
+ubc-app/index.js
+**/.terraform
+terraform.tfstate
+docs/images-to-upload
+*.js.map
+devops/.env.prod
+ubc-app/www
+file_storage

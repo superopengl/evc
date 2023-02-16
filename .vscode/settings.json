@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "ubc-app/index.js": true,
+    "ubc-app/src/**/*.js": true
+  },
+  "search.exclude": {
+    "**/build": true
+  }
+}

@@ -37,6 +37,7 @@ dependencies:
   react-router-dom: 5.2.0_react@16.13.1
   react-router-hash-link: 2.0.0_f32e785fa5e199175d00c0f3e09c74b3
   react-scripts: 3.4.1
+  react-select-country-list: 2.2.1
   react-step-wizard: 5.3.5_react@16.13.1
   react-time-ago: 6.0.1_react-dom@16.13.1+react@16.13.1
   react-to-print: 2.9.0_react-dom@16.13.1+react@16.13.1
@@ -11245,6 +11246,10 @@ packages:
         optional: true
     resolution:
       integrity: sha512-JpTdi/0Sfd31mZA6Ukx+lq5j1JoKItX7qqEK4OiACjVQletM1P38g49d9/D0yTxp9FrSF+xpJFStkGgKEIRjlQ==
+  /react-select-country-list/2.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-sH5/nV7J5QreB75iGSFFPjuSeHr0B1oDtSximzlZj/LXoVw47SsOv2WvzPhwYcHMwgXiLI+gvdXY9Cp0MGasjA==
   /react-spinkit/3.0.0:
     dependencies:
       classnames: 2.2.6
@@ -13949,6 +13954,7 @@ specifiers:
   react-router-dom: ^5.2.0
   react-router-hash-link: ^2.0.0
   react-scripts: 3.4.1
+  react-select-country-list: ^2.2.1
   react-step-wizard: ^5.3.5
   react-time-ago: ^6.0.1
   react-to-print: ^2.9.0

@@ -104,7 +104,7 @@ const StockList = (props) => {
           <List.Item onClick={() => handleItemClick(item)}>
             <List.Item.Meta
               // avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-              title={<Title level={5}>{item.company} ({item.symbol})</Title>}
+              title={<Text strong style={{fontSize: '1.1rem'}}>{item.company} ({item.symbol})</Text>}
               description={<>
                 <Row>
                   <Col span={6}>

@@ -10,7 +10,8 @@ import { SearchOutlined } from '@ant-design/icons';
 import SignOnForm from 'components/SignOnForm';
 import { LogoTextDark } from 'components/LogoTextDark';
 import { SearchStockInput } from 'components/SearchStockInput';
-import { getStockHistory } from 'services/stockService';
+import { getStockHistory, incrementStock } from 'services/stockService';
+import HotStockList from 'components/HotStockList';
 
 const { Title } = Typography;
 
@@ -78,11 +79,12 @@ const HomeCarouselAreaRaw = props => {
     windowWidth < 992 ? 36 :
       44;
 
-  const handleSignIn = () => {
+  const handleSignOn = () => {
     props.history.push('/signon')
   }
 
   const handleSearchChange = async symbol => {
+    incrementStock(symbol);
     const data = await getStockHistory(symbol);
   }
 
@@ -96,7 +98,7 @@ const HomeCarouselAreaRaw = props => {
         You’ve got the skills and the experience. We’ve got diverse projects and meaningful work. Let’s take your career to the next level.
               </Title> */}
       <Space align="center" style={{ marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' }} >
-        <Button type="link">Sign On with Email</Button>
+        <Button type="link" onClick={() => handleSignOn()}>Sign On with Email</Button>
         <GoogleSsoButton
           render={
             renderProps => (
@@ -117,6 +119,7 @@ const HomeCarouselAreaRaw = props => {
           onChange={handleSearchChange}
         style={{ maxWidth: 500, width: '100%', borderRadius: 24, paddingLeft: 20 }}/>
       </div>
+      <HotStockList size={10}/>
     </ContainerStyled>
   );
 }

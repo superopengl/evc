@@ -105,8 +105,8 @@ const StockForm = (props) => {
     });
   }
 
-  if(symbol && !stock) {
-    return <Loading/>
+  if (symbol && !stock) {
+    return <Loading />
   }
 
   return (
@@ -148,17 +148,16 @@ const StockForm = (props) => {
       <Form.Item label="Pressure Price High" name="pressurePriceHi" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
         <InputNumber min={0} placeholder="PE high" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item wrapperCol={{span: 24}} style={{ marginTop: '1rem' }}>
-        <Space size="middle" direction="vertical" style={{width: '100%'}}>
-
-        <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
-        <Button block type="link" onClick={handleCancel}>Cancel</Button>
-        <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
+      <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
+        <Space size="middle" direction="vertical" style={{ width: '100%' }}>
+          <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
+          <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
+          <Button block type="link" onClick={handleCancel}>Cancel</Button>
         </Space>
       </Form.Item>
-      <Form.Item wrapperCol={{span: 24}} style={{ marginTop: '1rem' }}>
+      <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
       </Form.Item>
-      <Form.Item wrapperCol={{span: 24}} style={{ marginTop: '1rem' }}>
+      <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
       </Form.Item>
     </Form>
   );

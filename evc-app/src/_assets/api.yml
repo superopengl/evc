@@ -690,6 +690,12 @@ paths:
       responses:
         200:
           description: OK
+  /stock/hot:
+    get:
+      operationId: listHotStock
+      responses:
+        200:
+          description: OK
   /stock/{symbol}:
     get:
       operationId: getStock
@@ -724,7 +730,19 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
+  /stock/{symbol}/inc:
+    get:
+      operationId: incrementStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
   /stock:
     post:
       operationId: saveStock

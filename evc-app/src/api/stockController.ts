@@ -9,15 +9,41 @@ import { getUtcNow } from '../utils/getUtcNow';
 import { guessDisplayNameFromFields } from '../utils/guessDisplayNameFromFields';
 import { StockHistory } from '../entity/StockHistory';
 import * as moment from 'moment';
+import { StockSearch } from '../entity/StockSearch';
+import { logError } from '../utils/logger';
+import * as geoip from 'geoip-lite';
+import * as uaParser from 'ua-parser-js';
+import { getCache, setCache } from '../utils/cache';
 
 async function publishStock(stock) {
 
 }
 
+export const incrementStock = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const { user: { id: userId } } = req as any;
+
+  const stock = await getRepository(Stock).findOne(symbol);
+  assert(stock, 404);
+
+  const entity = new StockSearch();
+  entity.symbol = symbol;
+  entity.by = userId;
+  entity.ipAddress = req.ip;
+  entity.country = geoip.lookup(req.ip);
+  entity.userAgent = uaParser(req.headers['user-agent']);
+
+  try {
+    await getRepository(StockSearch).insert(entity);
+  } catch (err) {
+    logError(err, req, null);
+  }
+});
+
 export const getStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { user: { id: userId } } = req as any;
-  const symbol = req.params;
+  const { symbol } = req.params;
 
   const repo = getRepository(Stock);
   const stock = await repo.findOne(symbol);
@@ -29,7 +55,7 @@ export const getStock = handlerWrapper(async (req, res) => {
 export const getStockHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { user: { id: userId, role } } = req as any;
-  const {symbol} = req.params;
+  const { symbol } = req.params;
 
   const list = await getRepository(StockHistory).find({
     where: {
@@ -45,7 +71,31 @@ export const getStockHistory = handlerWrapper(async (req, res) => {
 });
 
 export const listStock = handlerWrapper(async (req, res) => {
-  const list = await getRepository(Stock).find({select: ['symbol', 'company']});
+  const list = await getRepository(Stock).find({ select: ['symbol', 'company'] });
+
+  res.json(list);
+});
+
+export const listHotStock = handlerWrapper(async (req, res) => {
+  const { size } = req.query;
+  const limit = +size || 10;
+
+  const cacheKey = 'hotStockList';
+  let list = getCache(cacheKey);
+  if (!list) {
+    list = await getManager()
+      .createQueryBuilder()
+      .from(Stock, 's')
+      .innerJoin(q => q.from(StockSearch, 'h')
+        .select('h.symbol, COUNT(1) AS count')
+        .groupBy('h.symbol')
+        .orderBy('count', 'DESC'), 'h', `s.symbol = h.symbol`
+      )
+      .select('*')
+      .limit(limit)
+      .execute();
+    setCache(cacheKey, list, 30);
+  }
 
   res.json(list);
 });
@@ -74,9 +124,9 @@ export const searchStock = handlerWrapper(async (req, res) => {
     query = query.andWhere('s."createdAt" <= :date', { data: moment(to).toDate() });
   }
   query = query.orderBy('symbol')
-  .addOrderBy('"createdAt"', 'DESC')
-  .offset(pagenation.skip)
-  .limit(pagenation.limit);
+    .addOrderBy('"createdAt"', 'DESC')
+    .offset(pagenation.skip)
+    .limit(pagenation.limit);
 
   const list = await query.execute();
   res.json(list);

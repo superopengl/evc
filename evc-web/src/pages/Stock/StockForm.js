@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Select, Form, Input, Checkbox, Layout, Divider } from 'antd';
+import { Typography, Button, Space, Form, Input, Modal, Layout, InputNumber } from 'antd';
 import { Logo } from 'components/Logo';
 import { signOn } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -13,7 +13,9 @@ import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
-const { Title } = Typography;
+import { deleteStock, getStock, saveStock } from 'services/stockService';
+import { Loading } from 'components/Loading';
+const { Title, Text } = Typography;
 
 
 const PageContainer = styled.div`
@@ -43,76 +45,127 @@ const LayoutStyled = styled(Layout)`
 `;
 
 const StockForm = (props) => {
-  const { stock, onOk } = props;
-  const [sending, setSending] = React.useState(false);
+  const { symbol, onOk } = props;
+  const [loading, setLoading] = React.useState(true);
+  const [stock, setStock] = React.useState();
+
+  const loadEntity = async () => {
+    if (symbol) {
+      const entity = await getStock(symbol);
+      setStock(entity);
+    }
+    setLoading(false);
+  }
+
+  React.useEffect(() => {
+    loadEntity();
+  }, []);
 
   const handleSave = async (values) => {
-    if (sending) {
+    if (loading) {
       return;
     }
 
     try {
-      setSending(true);
+      setLoading(true);
 
-      await saveProfile(user.id, values);
+      await saveStock(values);
 
-      notify.success('Successfully saved stock!')
+      notify.success('Successfully saved stock!');
+
+      onOk();
     } finally {
-      setSending(false);
+      setLoading(false);
     }
   }
 
   const handleValuesChange = (changedValues, allValues) => {
-    
+
   }
 
-  const isBuiltinAdmin = user.email === 'admin@easyvaluecheck.com';
+  const handleCancel = () => {
+    props.history.goBack();
+  }
+
+  const handleDelete = () => {
+    Modal.confirm({
+      title: "Delete Stock",
+      content: <>Do you want delete <Text strong>{stock.company} (stock.symbol)</Text>?</>,
+      async onOk() {
+        await deleteStock(stock.symbol);
+        onOk();
+      },
+      maskClosable: true,
+      okText: 'Yes, Delete!',
+      okButtonProps: {
+        type: 'danger'
+      },
+      onCancel() {
+      },
+    });
+  }
+
+  if(symbol && !stock) {
+    return <Loading/>
+  }
 
   return (
-    <Form layout="vertical" 
-    onFinish={handleSave} 
-    onValuesChange={handleValuesChange}
-    style={{ textAlign: 'left' }} 
-    initialValues={stock}>
-      <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
-        <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={isBuiltinAdmin} />
+    <Form
+      labelCol={{ span: 10 }}
+      wrapperCol={{ span: 14 }}
+      layout="horizontal"
+      onFinish={handleSave}
+      onValuesChange={handleValuesChange}
+      style={{ textAlign: 'left' }}
+      initialValues={stock}>
+      <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+        <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
       </Form.Item>
-      <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
+      <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
         <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
       </Form.Item>
-      <Form.Item label="Market" name="market" rules={[{ required: false, whitespace: true, max: 100, message: ' ' }]}>
+      <Form.Item label="Market" name="market" rules={[{ required: false, whitespace: true, message: ' ' }]}>
         <Input placeholder="market" allowClear={true} maxLength="100" />
       </Form.Item>
-      <Form.Item label="PE Low" name="peLo" rules={[{ required: true, type: 'number', whitespace: true, max: 20, message: ' ' }]}>
-        <Input placeholder="PE low" allowClear={true} maxLength="20" pattern="[0-9.]*" />
+      <Form.Item label="PE Low" name="peLo" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+        <InputNumber min={0} placeholder="PE low" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item label="PE High" name="peHi" rules={[{ required: true, type: 'number', whitespace: true, max: 20, message: ' ' }]}>
-        <Input placeholder="PE high" allowClear={true} maxLength="20" pattern="[0-9.]*" />
+      <Form.Item label="PE High" name="peHi" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+        <InputNumber min={0} placeholder="PE high" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item label="Value" name="value" rules={[{ required: true, type: 'number', whitespace: true, max: 20, message: ' ' }]}>
-        <Input placeholder="Value" allowClear={true} maxLength="20" pattern="[0-9.]*" />
+      <Form.Item label="Value" name="value" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+        <InputNumber min={0} placeholder="Value" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item label="Support Price Low" name="supportPriceLo" rules={[{ required: true, type: 'number', whitespace: true, max: 20, message: ' ' }]}>
-        <Input placeholder="PE low" allowClear={true} maxLength="20" pattern="[0-9.]*" />
+      <Form.Item label="Support Price Low" name="supportPriceLo" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+        <InputNumber min={0} placeholder="PE low" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item label="Support Price High" name="supportPriceHi" rules={[{ required: true, type: 'number', whitespace: true, max: 20, message: ' ' }]}>
-        <Input placeholder="PE high" allowClear={true} maxLength="20" pattern="[0-9.]*" />
+      <Form.Item label="Support Price High" name="supportPriceHi" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+        <InputNumber min={0} placeholder="PE high" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item label="Pressure Price Low" name="pressurePriceLo" rules={[{ required: true, type: 'number', whitespace: true, max: 20, message: ' ' }]}>
-        <Input placeholder="PE low" allowClear={true} maxLength="20" pattern="[0-9.]*" />
+      <Form.Item label="Pressure Price Low" name="pressurePriceLo" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+        <InputNumber min={0} placeholder="PE low" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item label="Pressure Price High" name="pressurePriceHi" rules={[{ required: true, type: 'number', whitespace: true, max: 20, message: ' ' }]}>
-        <Input placeholder="PE high" allowClear={true} maxLength="20" pattern="[0-9.]*" />
+      <Form.Item label="Pressure Price High" name="pressurePriceHi" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+        <InputNumber min={0} placeholder="PE high" allowClear={true} pattern="[0-9.]*" />
       </Form.Item>
-      <Form.Item style={{ marginTop: '1rem' }}>
-        <Button block type="primary" htmlType="submit" disabled={sending}>Save</Button>
+      <Form.Item wrapperCol={{span: 24}} style={{ marginTop: '1rem' }}>
+        <Space size="middle" direction="vertical" style={{width: '100%'}}>
+
+        <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
+        <Button block type="link" onClick={handleCancel}>Cancel</Button>
+        <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
+        </Space>
+      </Form.Item>
+      <Form.Item wrapperCol={{span: 24}} style={{ marginTop: '1rem' }}>
+      </Form.Item>
+      <Form.Item wrapperCol={{span: 24}} style={{ marginTop: '1rem' }}>
       </Form.Item>
     </Form>
   );
 }
 
 StockForm.propTypes = {
-  stock: PropTypes.object;
+  symbol: PropTypes.string
 };
 
 StockForm.defaultProps = {

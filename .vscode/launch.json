@@ -13,7 +13,7 @@
         "<node_internals>/**"
       ],
       "args": [
-        "${workspaceFolder}/aua-app/src/index.ts"
+        "${workspaceFolder}/evc-app/src/index.ts"
       ],
       "env": {
         "TS_NODE_IGNORE": "false",
@@ -25,10 +25,10 @@
         "-r",
         "ts-node/register"
       ],
-      "cwd": "${workspaceRoot}/aua-app",
+      "cwd": "${workspaceRoot}/evc-app",
       "protocol": "inspector",
       "outFiles": [
-        "${workspaceFolder}/aua-app/**/*.js"
+        "${workspaceFolder}/evc-app/**/*.js"
       ]
     }
   ]

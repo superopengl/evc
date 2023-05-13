@@ -2,7 +2,7 @@ Arguments:
   /usr/local/bin/node /usr/local/Cellar/yarn/1.22.4/libexec/bin/yarn.js
 
 PATH: 
-  /var/folders/05/0slzxkzx34j2dxfn_qntmbx40000gp/T/yarn--1605093574919-0.04035254915995856:/Users/jshao/github/ecv/ecv-web/node_modules/.bin:/Users/jshao/.config/yarn/link/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/Cellar/python/3.6.5/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/Applications/google-cloud-sdk/bin:/usr/local/opt/mongodb-community@3.6/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/Cellar/python/3.6.5/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/PostgreSQL/11/bin:/Library/Apple/usr/bin:/Applications/google-cloud-sdk/bin:/usr/local/opt/mongodb-community@3.6/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/Cellar/python/3.6.5/bin:/opt/local/bin:/opt/local/sbin:/Library/Frameworks/Python.framework/Versions/3.6/bin
+  /Applications/google-cloud-sdk/bin:/usr/local/opt/mongodb-community@3.6/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/Cellar/python/3.6.5/bin:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/PostgreSQL/11/bin:/Library/Apple/usr/bin:/Applications/google-cloud-sdk/bin:/usr/local/opt/mongodb-community@3.6/bin:/Users/jshao/.nvm/versions/node/v13.0.1/bin:/usr/local/Cellar/python/3.6.5/bin:/opt/local/bin:/opt/local/sbin:/Library/Frameworks/Python.framework/Versions/3.6/bin
 
 Yarn version: 
   1.22.4
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: EEXIST: file already exists, mkdir '/Users/jshao/github/ecv/ecv-web/node_modules/cross-env/node_modules'
+  Error: ENOENT: no such file or directory, copyfile '/Users/jshao/Library/Caches/Yarn/v6/npm-shebang-regex-3.0.0-ae16f1644d873ecad843b0307b143362d4c42172-integrity/node_modules/shebang-regex/index.js' -> '/Users/jshao/github/evc/evc-web/node_modules/@craco/craco/node_modules/shebang-regex/index.js'
 
 npm manifest: 
   {
@@ -60,6 +60,7 @@ npm manifest:
       "react-router-dom": "^5.2.0",
       "react-router-hash-link": "^2.0.0",
       "react-scripts": "3.4.1",
+      "react-select-country-list": "^2.2.1",
       "react-step-wizard": "^5.3.5",
       "react-time-ago": "^6.0.1",
       "react-to-print": "^2.9.0",
@@ -84,7 +85,7 @@ npm manifest:
       "watch": "npm-watch",
       "g": "npx generate-react-cli component --",
       "p": "npx generate-react-cli component -- --type=page",
-      "upload": " aws s3 sync build s3://ecv-web/"
+      "upload": " aws s3 sync build s3://evc-web/"
     },
     "eslintConfig": {
       "extends": "react-app"

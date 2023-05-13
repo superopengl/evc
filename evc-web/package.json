@@ -9,7 +9,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "abbreviate": "^0.0.3",
     "abnacn-validator": "^0.0.5",
-    "antd": "^4.6.2",
+    "antd": "^4.8.2",
     "axios": "^0.19.2",
     "bizcharts": "^4.0.14",
     "craco-less": "^1.16.0",

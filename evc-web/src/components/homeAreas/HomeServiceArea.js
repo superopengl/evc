@@ -31,9 +31,9 @@ class HomeServiceArea extends React.Component {
         xs: 24,
         sm: 24,
         md: 24,
-        lg: 8,
-        xl: 8,
-        xxl: 8
+        lg: 12,
+        xl: 12,
+        xxl: 12
       },
       style: {
         // backgroundColor: '#002855',
@@ -58,38 +58,6 @@ class HomeServiceArea extends React.Component {
               <br />Fringe Benefit Tax
               <br />ATO Audit Reviews
               Global Compliance Services</p>
-          </section>
-        </InfoCard>
-
-        <InfoCard >
-          <Title>Accounting</Title>
-          <section>
-            <p>
-              Business is more than just the numbers. Having a solid understanding of your business, financial position, and the market enables you to make business decisions that ultimately improve efficiency and drive profitability. Our accounting team doubles as your financial business advisors; giving you advice that makes sense and helping you manage risk, and identify and take advantage of profit opportunities. Often you can gain more from your accounts than you realise. Understanding your financial position can help you identify new investors and partners, set a future succession plan, execute an acquisition strategy or secure that all important bank loan. You can identify areas of strength and weakness, and use the reliable financial data to manage investments and reduce over spending.
-            </p>
-            <p>
-              We are your partners in business; we work in collaboration with you to fully understand your business, keep you informed at all times, and develop a customised strategy to achieve your business goals.
-            </p>
-            <p>Our accounting services include:
-              <br />Daily bookkeeping and inducting your way to record your book
-              <br />Preparation of financial statements for statutory and management purposes
-              <br />Technical advice on applying financial reporting standards (IFRS)
-              <br />Training and support for your accounting staff and management
-            </p>
-            <p>
-              Compliance services we offer:
-            <br />Corporate, trust & individual financial statements
-            <br />Preparation of income tax returns
-            <br />GST and business activity statement
-            <br />Corporate secretarial services
-            <br />Administration, audit & taxation compliance for SMSF’s
-            <br />Fringe benefits tax
-            <br />Payroll tax
-            <br />ATO reporting
-            <br />Tax Planning
-            <br />View our tax page for more information on our tax services.
-            </p>
-
           </section>
         </InfoCard>
 
@@ -120,15 +88,6 @@ class HomeServiceArea extends React.Component {
             </p>
             <p>
               Updating tax registration in ATO for GST, PAYGI, PAYG withholding, etc.
-            </p>
-          </section>
-        </InfoCard>
-
-        <InfoCard >
-          <Title>188/132投资移民审计</Title>
-          <section>
-            <p>
-              我们承办中国企业主申请澳洲投资移民188/132类签证，针对中国企业进行财务审计，出具符合2400/4400标准的财务报表。具体业务细节欢迎咨询。
             </p>
           </section>
         </InfoCard>

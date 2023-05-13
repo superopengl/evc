@@ -8,6 +8,9 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { SearchOutlined } from '@ant-design/icons';
 import SignOnForm from 'components/SignOnForm';
+import { LogoTextDark } from 'components/LogoTextDark';
+import { SearchStockInput } from 'components/SearchStockInput';
+import { getStockHistory } from 'services/stockService';
 
 const { Title } = Typography;
 
@@ -15,10 +18,9 @@ const { Title } = Typography;
 const ContainerStyled = styled.div`
 // border-bottom: 1px solid #f0f0f0;
 margin: 0 auto 0;
-padding: 2rem auto;
+padding: 4rem 4px;
 width: 100%;
 height: 100%;
-
 `;
 
 const SignInButton = styled(Button)`
@@ -80,35 +82,41 @@ const HomeCarouselAreaRaw = props => {
     props.history.push('/signon')
   }
 
-  const handleSearch = async value => {
-
+  const handleSearchChange = async symbol => {
+    const data = await getStockHistory(symbol);
   }
 
 
   return (
     <ContainerStyled gutter={0} style={{ position: 'relative' }}>
-          <Title style={{ fontSize: catchPhraseSize, marginLeft: 'auto', marginRight:'auto', textAlign:'center' }}>Easy Value Check</Title>
-          {/* <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
-            We are providing professional accounting and tax services to our clients including individuals, Sole traders, Partnerships, Companies, Trusts etc.
-            You’ve got the skills and the experience. We’ve got diverse projects and meaningful work. Let’s take your career to the next level.
+      <Title style={{ fontSize: catchPhraseSize, marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>Easy Value Check</Title>
+      {/* <LogoTextDark /> */}
+      {/* <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
+        We are providing professional accounting and tax services to our clients including individuals, Sole traders, Partnerships, Companies, Trusts etc.
+        You’ve got the skills and the experience. We’ve got diverse projects and meaningful work. Let’s take your career to the next level.
               </Title> */}
-
-          <Row style={{ margin: '2rem auto 0' }}>
-            <Col span={16}>
-              <Input.Search
-                size="large"
-                enterButton={false}
-                // prefix={<SearchOutlined />}
-                placeholder="Search for symbols or companies"
-                allowClear
-                onSearch={handleSearch}
-                style={{ width: '100%', borderRadius: 24, paddingLeft: 20 }}
-              />
-            </Col>
-            <Col span={8}>
-              <SignOnForm />
-            </Col>
-          </Row>
+      <Space align="center" style={{ marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' }} >
+        <Button type="link">Sign On with Email</Button>
+        <GoogleSsoButton
+          render={
+            renderProps => (
+              <Button
+                ghost
+                type="link"
+                block
+                icon={<GoogleLogoSvg size={16} />}
+                // icon={<GoogleOutlined />}
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+              >Continue with Google</Button>
+            )}
+        />
+      </Space>
+      <div style={{ margin: '1rem auto', width: '100%', display: 'flex', justifyContent: 'center' }} >
+        <SearchStockInput
+          onChange={handleSearchChange}
+        style={{ maxWidth: 500, width: '100%', borderRadius: 24, paddingLeft: 20 }}/>
+      </div>
     </ContainerStyled>
   );
 }

@@ -38,42 +38,6 @@ const SignOnPage = (props) => {
   const [sending, setSending] = React.useState(false);
 
 
-  const handleSignIn = async (values) => {
-    if (sending) {
-      return;
-    }
-
-    try {
-      const { history } = props;
-      setSending(true);
-
-      // Sanitize pictures to imageIds
-      const user = await signOn(values);
-
-      // Guest
-      Modal.confirm({
-        title: '🎉 Successfully signed up!',
-        icon: null,
-        content: <>
-          <p>
-            Congratulations and thank you very much for signing up Easy Value Check. The invitation email has been sent out to <Text strong>{values.email}</Text>. Please verify your email within 24 hours.
-          </p>
-        </>,
-        onOk() {
-          history.push('/');
-        },
-        okText: 'Go To log in',
-        onCancel() {
-          history.push('/');
-        },
-        cancelText: 'Go to home page'
-      });
-    } catch (e) {
-      console.error(e);
-      setSending(false);
-    }
-  }
-
   return (
     <GlobalContext.Consumer>{
       () => {

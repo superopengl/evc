@@ -30,7 +30,7 @@ export const incrementStock = handlerWrapper(async (req, res) => {
   entity.symbol = symbol;
   entity.by = user?.id;
   entity.ipAddress = req.ip;
-  entity.country = geoip.lookup(req.ip);
+  entity.location = geoip.lookup(req.ip);
   entity.userAgent = uaParser(req.headers['user-agent']);
 
   try {

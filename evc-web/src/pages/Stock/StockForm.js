@@ -151,6 +151,7 @@ const StockForm = (props) => {
       <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
         <Space size="middle" direction="vertical" style={{ width: '100%' }}>
           <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
+          <Button block type="primary" htmlType="submit" disabled={loading}>Publish</Button>
           <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
           <Button block type="link" onClick={handleCancel}>Cancel</Button>
         </Space>

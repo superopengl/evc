@@ -21,7 +21,7 @@ export class StockSearch {
   ipAddress: string;
 
   @Column('json', {nullable: true})
-  country: object;
+  location: object;
 
   @Column('json', {nullable: true})
   userAgent: object;

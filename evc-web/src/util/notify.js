@@ -32,4 +32,3 @@ export const notify = {
     return request('warn', title, content, 5);
   }
 }
-

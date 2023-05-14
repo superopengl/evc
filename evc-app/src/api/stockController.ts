@@ -92,7 +92,7 @@ export const listHotStock = handlerWrapper(async (req, res) => {
       .select('*')
       .limit(limit)
       .execute();
-    setCache(cacheKey, list, 30);
+    setCache(cacheKey, list, 1);
   }
 
   res.json(list);
@@ -143,7 +143,7 @@ export const saveStock = handlerWrapper(async (req, res) => {
   const repo = getRepository(Stock);
   await repo.save(stock);
 
-  if (stock.shouldPublish) {
+  if (stock.isPublished) {
     await publishStock(stock);
   }
 

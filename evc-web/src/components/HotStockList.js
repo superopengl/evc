@@ -84,7 +84,7 @@ const HotStockList = (props) => {
   ];
   return (
     <Space direction="vertical" align="center">
-      <Title level={3}>Most Watched</Title>
+      <Title level={3}>Most Searched</Title>
       <Table
         columns={columnDef}
         dataSource={list}

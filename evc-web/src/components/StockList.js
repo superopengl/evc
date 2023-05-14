@@ -5,7 +5,6 @@ import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography
 import { TimeAgo } from 'components/TimeAgo';
 import { countUnreadMessage } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
-import InfiniteScroll from 'react-infinite-scroller';
 import { withRouter } from 'react-router-dom';
 import { Loading } from './Loading';
 import Highlighter from "react-highlight-words";
@@ -36,50 +35,17 @@ cursor: pointer;
 
 const StockList = (props) => {
 
-  const { onFetchNextPage, size, max } = props;
+  const { data, search, loading: propLoading } = props;
 
-  const [list, setList] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const [hasMore, setHasMore] = React.useState(true);
-  const [page, setPage] = React.useState(0);
-  const [text, setText] = React.useState('');
-  const context = React.useContext(GlobalContext);
+  const [list, setList] = React.useState(data);
+  const [loading, setLoading] = React.useState(propLoading);
+  const [text, setText] = React.useState(search);
 
-  const { role } = context;
-  const isClient = role === 'client';
-
-  const initloadList = async () => {
-    setLoading(true);
-    await handleFetchNextPageData(size);
-    const count = await countUnreadMessage();
-    context.setNotifyCount(count);
-    setLoading(false);
-  }
 
   React.useEffect(() => {
-    initloadList();
-  }, []);
-
-  const handleFetchNextPageData = async () => {
-    // const data = await listNotification(page, pageSize);
-    const data = await onFetchNextPage(page, size);
-    const newList = [...list, ...data];
-
-    setList(max ? newList.slice(0, max) : newList);
-    setPage(page + 1);
-
-    const shouldStopLoading = data.length < size || (max && newList.length >= max);
-    setHasMore(!shouldStopLoading);
-  }
-
-  const handleItemClick = (item) => {
-    const { symbol } = item;
-    props.history.push(`/stock/${symbol}`);
-  }
-
-  const handleDelete = () => {
-
-  }
+    setList(data);
+    setText(search);
+  }, [data, search]);
 
   const columnDef = [
     {
@@ -136,14 +102,6 @@ const StockList = (props) => {
   ];
 
   return (
-    <InfiniteScroll
-      initialLoad={true}
-      pageStart={0}
-      loadMore={() => handleFetchNextPageData()}
-      hasMore={!loading && hasMore}
-      useWindow={true}
-      loader={<Space key="loader" style={{ width: '100%', justifyContent: 'center' }}><Loading /></Space>}
-    >
       <Table
         columns={columnDef}
         dataSource={list}
@@ -156,24 +114,22 @@ const StockList = (props) => {
         // rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
         onRow={(item) => ({
           onDoubleClick: () => {
-            handleItemClick(item);
+            props.history.push(`stock/${item.symbol}`);
           }
         })}
       />
-    </InfiniteScroll>
   );
 };
 
 StockList.propTypes = {
-  size: PropTypes.number.isRequired,
-  onItemRead: PropTypes.func.isRequired,
-  onFetchNextPage: PropTypes.func.isRequired,
-  max: PropTypes.number,
+  data: PropTypes.array.isRequired,
+  search: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 StockList.defaultProps = {
-  size: 20,
-  onItemRead: () => { },
+  search: '',
+  loading: false
 };
 
 export default withRouter(StockList);

@@ -121,7 +121,7 @@ paths:
       responses:
         200:
           description: OK
-  /auth/reset_password/{token}:
+  /auth/r/{token}:
     get:
       operationId: retrievePassword
       # security:
@@ -137,7 +137,7 @@ paths:
           description: OK
   /auth/signon:
     post:
-      operationId: signin
+      operationId: signon
       # security:
       #   - authAnyRole: []
       responses:

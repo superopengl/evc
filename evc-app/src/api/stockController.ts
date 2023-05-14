@@ -21,14 +21,14 @@ async function publishStock(stock) {
 
 export const incrementStock = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
-  const { user: { id: userId } } = req as any;
+  const { user } = req as any;
 
   const stock = await getRepository(Stock).findOne(symbol);
   assert(stock, 404);
 
   const entity = new StockSearch();
   entity.symbol = symbol;
-  entity.by = userId;
+  entity.by = user?.id;
   entity.ipAddress = req.ip;
   entity.country = geoip.lookup(req.ip);
   entity.userAgent = uaParser(req.headers['user-agent']);
@@ -53,8 +53,6 @@ export const getStock = handlerWrapper(async (req, res) => {
 });
 
 export const getStockHistory = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const { user: { id: userId, role } } = req as any;
   const { symbol } = req.params;
 
   const list = await getRepository(StockHistory).find({

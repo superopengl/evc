@@ -11,6 +11,8 @@ import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
+import { SubscriptionArea } from 'components/SubscriptionArea';
+import GuestHomeHeader from 'components/GuestHomeHeader';
 
 const { Content } = Layout;
 
@@ -20,7 +22,7 @@ const LayoutStyled = styled(Layout)`
 `;
 
 const ContentStyled = styled(Content)`
-  margin: 64px auto 0 auto;
+  margin: 0 auto 0 auto;
   width: 100%;
 `;
 
@@ -58,21 +60,22 @@ class HomePage extends React.Component {
 
     return (
       <LayoutStyled>
-        <HomeHeader></HomeHeader>
+        {/* <GuestHomeHeader/> */}
         {/* <BarStyled></BarStyled> */}
         <ContentStyled>
           <HashAnchorPlaceholder id="home" />
           <section>
             <HomeCarouselArea></HomeCarouselArea>
           </section>
+          <SubscriptionArea />
           {/* <section><HomeSearchArea /></section> */}
           <HashAnchorPlaceholder id="services" />
           <section><HomeServiceArea bgColor="#135200"/></section>
           {/* <HashAnchorPlaceholder id="team" /> */}
           {/* <section><HomeTeamArea /></section> */}
           {/* <section><HomeContactArea bgColor="#135200"></HomeContactArea></section> */}
+        <HomeFooter />
         </ContentStyled>
-        <HomeFooter style={{position: 'fixed', bottom: 0}}></HomeFooter>
       </LayoutStyled>
     );
   }

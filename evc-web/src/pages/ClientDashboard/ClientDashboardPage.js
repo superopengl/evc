@@ -1,4 +1,4 @@
-import { Button, Layout, Modal, Space, Typography, Tabs } from 'antd';
+import { Button, Layout, Modal, Space, Typography, Tabs, Row, Col } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -16,6 +16,9 @@ import { Tooltip } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { isProfileComplete } from 'util/isProfileComplete';
+import { SearchStockInput } from 'components/SearchStockInput';
+import { getStockHistory } from 'services/stockService';
+import { SubscriptionArea } from 'components/SubscriptionArea';
 
 const { Paragraph } = Typography;
 
@@ -24,7 +27,7 @@ const ContainerStyled = styled.div`
   margin: 6rem auto 2rem auto;
   padding: 0 1rem;
   width: 100%;
-  max-width: 600px;
+  max-width: 1000px;
 
   .ant-divider {
     margin: 8px 0 24px;
@@ -106,10 +109,20 @@ const ClientDashboardPage = (props) => {
     }
   }
 
+  const handleSearchChange = async symbol => {
+    const data = await getStockHistory(symbol);
+  }
+
+
+
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
+        <SearchStockInput
+          onChange={handleSearchChange}
+          style={{ width: '100%', maxWidth: 400 }} />
+          <SubscriptionArea />
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Link to="/tasks">All tasks</Link>
           <Button type="primary" onClick={createNewTask} icon={<PlusOutlined />}>New Task</Button>

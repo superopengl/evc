@@ -48,7 +48,7 @@ const SignOnForm = (props) => {
 
   return (
     <ContainerStyled>
-      <Title level={2}>Sign On</Title>
+      <Title level={2}>Sign Up</Title>
 
       <Link to="/login"><Button size="small" block type="link">Already a user? Click to log in</Button></Link>
       <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'client' }}>
@@ -62,7 +62,7 @@ const SignOnForm = (props) => {
           <Checkbox disabled={sending}>I have read and agree to the <a target="_blank" href="/terms_and_conditions">terms & conditions</a> and <a target="_blank" href="/privacy_policy">privacy policy</a>.</Checkbox>
         </Form.Item>
         <Form.Item style={{ marginTop: '1rem' }}>
-          <Button block type="primary" htmlType="submit" disabled={sending}>Sign On</Button>
+          <Button block type="primary" htmlType="submit" disabled={sending}>Sign Up</Button>
         </Form.Item>
         {/* <Form.Item>
                   <Button block type="link" onClick={() => goBack()}>Cancel</Button>

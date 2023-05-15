@@ -28,7 +28,7 @@ dependencies:
   react-file-icon: 1.0.0_react-dom@16.13.1+react@16.13.1
   react-google-login: 5.1.21_react-dom@16.13.1+react@16.13.1
   react-highlight-words: 0.16.0_react@16.13.1
-  react-icons: 3.10.0_react@16.13.1
+  react-icons: 3.11.0_react@16.13.1
   react-image-lightbox: 5.1.1_react-dom@16.13.1+react@16.13.1
   react-infinite-scroller: 1.2.4_react@16.13.1
   react-markdown-editor-lite: 1.2.2_react@16.13.1
@@ -11014,7 +11014,7 @@ packages:
       react-dom: ^0.14.0 || ^15.0.0 || ^16.0.0
     resolution:
       integrity: sha512-0n4lcGqzJFcIQLoQytLdJCE0DKSA9dkwEZRYoGrIDJZFvIT6Hbajx5mv9geqhqFiNjUgtxg8kPyDfjlhymbGFg==
-  /react-icons/3.10.0_react@16.13.1:
+  /react-icons/3.11.0_react@16.13.1:
     dependencies:
       camelcase: 5.3.1
       react: 16.13.1
@@ -11022,7 +11022,7 @@ packages:
     peerDependencies:
       react: '*'
     resolution:
-      integrity: sha512-WsQ5n1JToG9VixWilSo1bHv842Cj5aZqTGiS3Ud47myF6aK7S/IUY2+dHcBdmkQcCFRuHsJ9OMUI0kTDfjyZXQ==
+      integrity: sha512-JRgiI/vdF6uyBgyZhVyYJUZAop95Sy4XDe/jmT3R/bKliFWpO/uZBwvSjWEdxwzec7SYbEPNPck0Kff2tUGM2Q==
   /react-image-lightbox/5.1.1_react-dom@16.13.1+react@16.13.1:
     dependencies:
       prop-types: 15.7.2
@@ -13982,7 +13982,7 @@ specifiers:
   react-file-icon: ^1.0.0
   react-google-login: ^5.1.21
   react-highlight-words: ^0.16.0
-  react-icons: ^3.10.0
+  react-icons: ^3.11.0
   react-image-lightbox: ^5.1.1
   react-infinite-scroller: ^1.2.4
   react-markdown-editor-lite: ^1.2.2

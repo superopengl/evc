@@ -83,8 +83,6 @@ const HotStockList = (props) => {
     },
   ];
   return (
-    <Space direction="vertical" align="center">
-      <Title level={3}>Most Searched</Title>
       <Table
         columns={columnDef}
         dataSource={list}
@@ -92,6 +90,7 @@ const HotStockList = (props) => {
         size="small"
         loading={loading}
         pagination={false}
+        style={{width: '100%'}}
         // onChange={handleTableChange}
         // rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
         onRow={(item) => ({
@@ -100,8 +99,6 @@ const HotStockList = (props) => {
           }
         })}
       />
-    </Space>
-
   );
 };
 

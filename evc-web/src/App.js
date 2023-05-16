@@ -37,6 +37,7 @@ import ProfilePage from 'pages/Profile/ProfilePage';
 import StockListPage from 'pages/Stock/StockListPage';
 import StockPage from 'pages/Stock/StockPage';
 import { ContactWidget } from 'components/ContactWidget';
+import SubscriptionListPage from 'pages/Subscription/SubscriptionListPage';
 
 
 class App extends React.Component {
@@ -88,7 +89,7 @@ class App extends React.Component {
       <GlobalContext.Provider value={this.state}>
         <BrowserRouter basename="/">
           <Switch>
-            <RoleRoute loading={loading} path="/" exact component={HomePage} />
+            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? ClientDashboardPage : isAdmin ? StockListPage : Error404 } />
             <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
@@ -96,7 +97,7 @@ class App extends React.Component {
             <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
             <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/stats" component={AdminStatsPage} />
             {/* <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/board" component={AdminBoardPage} /> */}
-            <RoleRoute visible={isClient} loading={loading} exact path="/landing" component={ClientDashboardPage} />
+            {/* <RoleRoute visible={isClient} loading={loading} exact path="/landing" component={ClientDashboardPage} /> */}
             <RoleRoute visible={isClient} loading={loading} exact path="/portfolios" component={PortfolioListPage} />
             <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/:id" component={PortfolioFormPage} />
             <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/new/:type" component={PortfolioFormPage} />
@@ -110,9 +111,10 @@ class App extends React.Component {
             <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/stock/new" exact component={StockPage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/stock/:id" exact component={StockPage} />
-            <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} />
+            {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
             <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
+            <RoleRoute visible={isClient} loading={loading} path="/subscription" exact component={SubscriptionListPage} />
             <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
             <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
             <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} />

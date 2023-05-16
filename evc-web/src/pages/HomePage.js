@@ -12,7 +12,6 @@ import React from 'react';
 import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
 import { SubscriptionArea } from 'components/SubscriptionArea';
-import GuestHomeHeader from 'components/GuestHomeHeader';
 
 const { Content } = Layout;
 
@@ -60,7 +59,6 @@ class HomePage extends React.Component {
 
     return (
       <LayoutStyled>
-        {/* <GuestHomeHeader/> */}
         {/* <BarStyled></BarStyled> */}
         <ContentStyled>
           <HashAnchorPlaceholder id="home" />

@@ -3,7 +3,6 @@ import { getRepository, getConnection } from 'typeorm';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
-import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
 import { computeUserSecret } from '../utils/computeUserSecret';
@@ -15,6 +14,7 @@ import * as jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
+import { sanitizeUser } from '../utils/sanitizeUser';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -33,10 +33,6 @@ async function getLoginUser(email) {
       })
     .getOne();
   return user;
-}
-
-function sanitizeUser(user: User) {
-  return _.pick(user, ['id', 'email', 'givenName', 'surname', 'role', 'lastLoggedInAt', 'status', 'loginType']);
 }
 
 export const login = handlerWrapper(async (req, res) => {

@@ -1,21 +1,30 @@
 
-import { getRepository } from 'typeorm';
+import { getRepository, Not } from 'typeorm';
 import { User } from '../entity/User';
 import { getUtcNow } from '../utils/getUtcNow';
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
+import * as moment from 'moment';
+import { UserStatus } from '../types/UserStatus';
 
 export const authMiddleware = async (req, res, next) => {
   try {
-    const user = verifyJwtFromCookie(req);
+    let user = verifyJwtFromCookie(req);
+
     if (user) {
       // Logged in users
-      const { id } = user;
+      const { id, expires } = user;
       const repo = getRepository(User);
-      const existing = await repo.findOne(id);
-      if (!existing) {
-        clearJwtCookie(res);
-        res.sendStatus(401);
-        return;
+      if (moment(expires).isBefore()) {
+        // JWT token expired. Needs to refresh
+        const existingUser = await repo.findOne({ id, status: Not(UserStatus.Disabled) });
+        if (!existingUser) {
+          // User not existing anymore
+          clearJwtCookie(res);
+          res.sendStatus(401);
+          return;
+        }
+
+        user = existingUser;
       }
       repo.update(id, { lastNudgedAt: getUtcNow() }).catch(() => { });
       req.user = Object.freeze(user);
@@ -23,9 +32,10 @@ export const authMiddleware = async (req, res, next) => {
     } else {
       // Guest user (hasn't logged in)
     }
-    next();
-  } catch (err) {
-    next(err);
+  } catch {
+    clearJwtCookie(res);
   }
+
+  next();
 };
 

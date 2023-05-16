@@ -18,7 +18,7 @@ const ContainerStyled = styled.div`
 
 
 
-const SignOnForm = (props) => {
+const SignUpForm = (props) => {
 
   const {onOk } = props;
 
@@ -89,8 +89,8 @@ const SignOnForm = (props) => {
   );
 }
 
-SignOnForm.propTypes = {};
+SignUpForm.propTypes = {};
 
-SignOnForm.defaultProps = {};
+SignUpForm.defaultProps = {};
 
-export default withRouter(SignOnForm);
+export default withRouter(SignUpForm);

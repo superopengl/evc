@@ -48,19 +48,17 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   if (role !== 'admin') {
     assert(id === loginUserId, 403);
   }
-  const { email, givenName, surname, phone } = req.body;
+  const { email } = req.body;
   const repo = getRepository(User);
   const user = await repo.findOne(id);
   assert(user, 404);
 
-  user.givenName = givenName || user.givenName;
-  user.surname = surname || user.surname;
-  user.phone = phone || user.phone;
+  Object.assign(user, req.body);
 
   const newEmail = email?.trim().toLowerCase();
   const hasEmailChange = newEmail && user.email.toLowerCase() !== newEmail;
   if (hasEmailChange) {
-    assert(user.email !== 'admin@easyvaluecheck.com', 400, 'Cannot change the email for the builtin admin');
+    assert(user.email !== 'system@easyvaluecheck.com', 400, 'Cannot change the email for the builtin admin');
     user.email = newEmail;
     await handleInviteUser(user);
   } else {
@@ -104,7 +102,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   const { id } = req.params;
 
   const repo = getRepository(User);
-  const user = await repo.findOne({ id, email: Not('admin@easyvaluecheck.com') });
+  const user = await repo.findOne({ id, email: Not('system@easyvaluecheck.com') });
 
   if (user) {
     await getRepository(Portfolio).update({ userId: id }, { deleted: true });

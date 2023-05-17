@@ -113,7 +113,8 @@ const MarketChangeSimulatorPage = (props) => {
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>Stock List</Title>
+            <Title level={2} style={{ margin: 'auto' }}>Market Price Simulator</Title>
+            <Paragraph>Simulating realtime market price change.</Paragraph>
           </StyledTitleRow>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }} >
             <Input.Search
@@ -128,16 +129,6 @@ const MarketChangeSimulatorPage = (props) => {
             />
             <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}>Add Stock</Button>
           </Space>
-          <InfiniteScroll
-            initialLoad={true}
-            pageStart={0}
-            loadMore={() => handleFetchNextPageData()}
-            hasMore={!loading && hasMore}
-            useWindow={true}
-            loader={<Space key="loader" style={{ width: '100%', justifyContent: 'center' }}><Loading /></Space>}
-          >
-            <StockList data={list} />
-          </InfiniteScroll>
         </Space>
       </ContainerStyled>
     </LayoutStyled>

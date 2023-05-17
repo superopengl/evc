@@ -16,6 +16,7 @@ import { CountrySelector } from 'components/CountrySelector';
 import { deleteStock, getStock, saveStock } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
+import { publishEvent } from 'services/eventSevice';
 const { Title, Text, Paragraph } = Typography;
 
 
@@ -108,11 +109,18 @@ const StockForm = (props) => {
     });
   }
 
-  const handlePublishMarketPrice = (values) => {
+  const handlePublishMarketPrice = async (values) => {
     const { price } = values;
     try{
       setPublishingPrice(true);
 
+      const event = {
+        type: 'market-price',
+        symbol,
+        price,
+        by: 'simulator'
+      };
+      await publishEvent(event);
       notify.success(`Publishing market price at $${price}`);
 
     }finally{
@@ -167,7 +175,7 @@ const StockForm = (props) => {
         <Space size="middle" direction="vertical" style={{ width: '100%' }}>
           <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
           {stock && <Button block type="primary" htmlType="submit" disabled={loading}>Publish</Button>}
-          {stock && <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Market Simulator</Button>}
+          {stock && <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>}
           {stock && <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>}
           <Button block type="link" onClick={handleCancel}>Cancel</Button>
         </Space>

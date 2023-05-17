@@ -11,6 +11,7 @@ import * as api from './api';
 import { authMiddleware } from './middlewares/authMiddleware';
 import * as cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
+import { sseMiddleware } from 'express-sse-middleware';
 
 
 function errorHandler(err, req, res, next) {
@@ -66,6 +67,7 @@ export function createAppInstance() {
   //     return req.cookies['jwt'] || null;
   //   }
   // }));
+  app.use(sseMiddleware);
   app.use(bodyParser.json({ limit: '8mb' }));
   app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
   // app.use(expressSession({

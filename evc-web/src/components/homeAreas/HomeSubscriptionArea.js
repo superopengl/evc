@@ -11,7 +11,7 @@ import { subscriptionDef } from 'def/subscriptionDef';
 
 
 const StyledRow = styled(Row)`
-  margin-top: 20px;
+  margin-top: 10px;
 `;
 
 const StyledCol = styled(Col)`

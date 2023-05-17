@@ -14,6 +14,7 @@ import { logError } from '../utils/logger';
 import * as geoip from 'geoip-lite';
 import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
+import { StockWatchList } from '../entity/StockWatchList';
 
 async function publishStock(stock) {
 
@@ -66,6 +67,37 @@ export const getStockHistory = handlerWrapper(async (req, res) => {
   assert(list.length, 404);
 
   res.json(list);
+});
+
+export const getWatchList = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const { user: { id: userId } } = req as any;
+  const list = await getRepository(Stock)
+    .createQueryBuilder('s')
+    .innerJoin(
+      q => q.from(StockWatchList, 'w').where(`w."userId" = :userId`, { userId }),
+      'w',
+      `s.symbol = w.symbol`
+    )
+    .getMany();
+
+  res.json(list);
+});
+
+export const watchStock = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { symbol } = req.params;
+  const { user: { id: userId } } = req as any;
+  await getRepository(StockWatchList).insert({ userId, symbol });
+  res.json();
+});
+
+export const unwatchStock = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { symbol } = req.params;
+  const { user: { id: userId } } = req as any;
+  await getRepository(StockWatchList).delete({ userId, symbol });
+  res.json();
 });
 
 export const listStock = handlerWrapper(async (req, res) => {

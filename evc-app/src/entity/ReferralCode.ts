@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
 
 
 @Entity()
@@ -10,6 +10,7 @@ export class ReferralCode {
   createdAt?: Date;
 
   @Column('uuid')
+  @Index()
   userId: string;
 
   @Column({ default: 0 })

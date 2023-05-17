@@ -9,8 +9,8 @@ function getS3Service() {
 
 
 function getDefaultConfig(id, name) {
-  const bucketName = process.env.AUA_S3_BUCKET;
-  const prefix = process.env.AUA_FILE_PREFIX;
+  const bucketName = process.env.EVC_S3_BUCKET;
+  const prefix = process.env.EVC_FILE_PREFIX;
   const key = `${prefix}/${id}/${name}`;
   assert(prefix && id, 404, `image path cannot be composed '${bucketName}/${key}'`);
   return {

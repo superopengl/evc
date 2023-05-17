@@ -28,6 +28,7 @@ dependencies:
   nodemailer: 6.4.14
   pg: 8.3.3_pg@8.3.3
   pug: 3.0.0
+  redis: 3.0.2
   rxjs: 6.6.3
   serialize-error: 7.0.1
   swagger-routes-express: 3.2.1
@@ -1306,6 +1307,12 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-txgOrJu3OdtOfTiEOT2e76dJVfG/1dz2NZ4F0Pyt4UGZJryssMRp5vdM5wQoLwSOBNdrJv3F9PAhp/heqd7vrA==
+  /denque/1.4.1:
+    dev: false
+    engines:
+      node: '>=0.10'
+    resolution:
+      integrity: sha512-OfzPuSZKGcgr96rf1oODnfjqBFmr1DVoc/TrItj3Ohe0Ah1C5WX5Baquw/9U9KovnQ88EqmJbD66rKYUQYN1tQ==
   /depd/1.1.2:
     dev: false
     engines:
@@ -4022,6 +4029,35 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-wbIAe0LVfrE4kHmzyDM2OdXhzKo=
+  /redis-commands/1.6.0:
+    dev: false
+    resolution:
+      integrity: sha512-2jnZ0IkjZxvguITjFTrGiLyzQZcTvaw8DAaCXxZq/dsHXz7KfMQ3OUJy7Tz9vnRtZRVz6VRCPDvruvU8Ts44wQ==
+  /redis-errors/1.2.0:
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-62LSrbFeTq9GEMBK/hUpOEJQq60=
+  /redis-parser/3.0.0:
+    dependencies:
+      redis-errors: 1.2.0
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ=
+  /redis/3.0.2:
+    dependencies:
+      denque: 1.4.1
+      redis-commands: 1.6.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+    dev: false
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-PNhLCrjU6vKVuMOyFu7oSP296mwBkcE6lrAjruBYG5LgdSqtRBoVQIylrMyVZD/lkF24RSNNatzvYag6HRBHjQ==
   /reflect-metadata/0.1.13:
     dev: false
     resolution:
@@ -5300,6 +5336,7 @@ specifiers:
   nodemon: ^2.0.4
   pg: ^8.3.3
   pug: ^3.0.0
+  redis: ^3.0.2
   rxjs: ^6.6.3
   serialize-error: ^7.0.1
   swagger-routes-express: ^3.1.2

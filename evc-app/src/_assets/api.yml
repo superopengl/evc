@@ -696,7 +696,13 @@ paths:
       responses:
         200:
           description: OK
-  /stock/{symbol}:
+  /stock/watchlist:
+    get:
+      operationId: getWatchList
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}:
     get:
       operationId: getStock
       parameters:
@@ -719,7 +725,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/{symbol}/history:
+  /stock/s/{symbol}/history:
     get:
       operationId: getStockHistory
       parameters:
@@ -731,7 +737,31 @@ paths:
       responses:
         200:
           description: OK
-  /stock/{symbol}/inc:
+  /stock/s/{symbol}/watch:
+    post:
+      operationId: watchStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/unwatch:
+    post:
+      operationId: unwatchStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/inc:
     get:
       operationId: incrementStock
       parameters:

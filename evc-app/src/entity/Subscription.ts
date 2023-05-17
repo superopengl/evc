@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Unique } from 'typeorm';
+import { SubscriptionType } from '../types/SubscriptionType';
 
 
 
@@ -9,14 +10,14 @@ export class Subscription {
   id?: string;
 
   @Column({ default: () => `timezone('UTC', now())` })
+  @Index()
   createdAt?: Date;
 
   @Column('uuid')
-  @Index()
   userId: string;
 
   @Column()
-  subscriptionType: string;
+  subscriptionType: SubscriptionType;
 
   @Column()
   start: Date;

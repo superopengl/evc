@@ -57,9 +57,7 @@ const LogInPage = props => {
       const count = await countUnreadMessage();
       setNotifyCount(count);
 
-      const isClient = user.role === 'client';
-
-      props.history.push(isClient ? '/landing' : '/stock');
+      props.history.push('/');
     } catch {
       setLoading(false);
     }

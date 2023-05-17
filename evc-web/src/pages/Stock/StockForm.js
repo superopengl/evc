@@ -15,7 +15,8 @@ import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 import { deleteStock, getStock, saveStock } from 'services/stockService';
 import { Loading } from 'components/Loading';
-const { Title, Text } = Typography;
+import { StockName } from 'components/StockName';
+const { Title, Text, Paragraph } = Typography;
 
 
 const PageContainer = styled.div`
@@ -47,6 +48,8 @@ const LayoutStyled = styled(Layout)`
 const StockForm = (props) => {
   const { symbol, onOk } = props;
   const [loading, setLoading] = React.useState(true);
+  const [simulatorVisible, setSimulatorVisible] = React.useState(false);
+  const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [stock, setStock] = React.useState();
 
   const loadEntity = async () => {
@@ -105,11 +108,23 @@ const StockForm = (props) => {
     });
   }
 
+  const handlePublishMarketPrice = (values) => {
+    const { price } = values;
+    try{
+      setPublishingPrice(true);
+
+      notify.success(`Publishing market price at $${price}`);
+
+    }finally{
+      setPublishingPrice(false);
+    }
+  }
+
   if (symbol && !stock) {
     return <Loading />
   }
 
-  return (
+  return (<>
     <Form
       labelCol={{ span: 10 }}
       wrapperCol={{ span: 14 }}
@@ -151,8 +166,9 @@ const StockForm = (props) => {
       <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
         <Space size="middle" direction="vertical" style={{ width: '100%' }}>
           <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
-          <Button block type="primary" htmlType="submit" disabled={loading}>Publish</Button>
-          <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
+          {stock && <Button block type="primary" htmlType="submit" disabled={loading}>Publish</Button>}
+          {stock && <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Market Simulator</Button>}
+          {stock && <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>}
           <Button block type="link" onClick={handleCancel}>Cancel</Button>
         </Space>
       </Form.Item>
@@ -161,7 +177,30 @@ const StockForm = (props) => {
       <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
       </Form.Item>
     </Form>
-  );
+    <Modal
+      visible={simulatorVisible}
+      destroyOnClose={true}
+      closable={true}
+      maskClosable={false}
+      title={<StockName value={stock} />}
+      onCancel={() => setSimulatorVisible(false)}
+      onOk={() => setSimulatorVisible(false)}
+      footer={null}
+    >
+      <Paragraph type="secondary">Publishing price in here will broadcast to all online clients.</Paragraph>
+      <Form
+        onFinish={handlePublishMarketPrice}
+      >
+        <Form.Item label="Market Price" name="price" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
+          <InputNumber min={0} />
+        </Form.Item>
+        <Form.Item>
+          <Button block type="primary" htmlType="submit" loading={publishingPrice}>Publish</Button>
+        </Form.Item>
+      </Form>
+      <Button block type="link" onClick={() => setSimulatorVisible(false)}>Cancel</Button>
+    </Modal>
+  </>);
 }
 
 StockForm.propTypes = {

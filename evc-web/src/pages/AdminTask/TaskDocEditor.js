@@ -183,7 +183,7 @@ export const TaskDocEditor = (props) => {
         <Button type="primary" ghost disabled={loading} icon={<FileAddOutlined />} onClick={() => showGenDocModalAny()}>Add from Doc Template</Button>
         <Upload
           multiple={true}
-          action={`${process.env.REACT_APP_AUA_API_ENDPOINT}/file`}
+          action={`${process.env.REACT_APP_EVC_API_ENDPOINT}/file`}
           withCredentials={true}
           accept="*/*"
           // fileList={docList}

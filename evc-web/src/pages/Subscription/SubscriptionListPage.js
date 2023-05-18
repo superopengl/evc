@@ -20,6 +20,7 @@ import { SearchStockInput } from 'components/SearchStockInput';
 import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
+import { PaymentCheckout } from 'components/PaymentCheckout';
 
 const { Paragraph } = Typography;
 
@@ -29,6 +30,9 @@ const ContainerStyled = styled.div`
   padding: 0 1rem;
   width: 100%;
   max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   .ant-divider {
     margin: 8px 0 24px;
@@ -37,7 +41,7 @@ const ContainerStyled = styled.div`
 
 const span = {
   xs: 24,
-  sm: 24,
+  sm: 12,
   md: 12,
   lg: 12,
   xl: 6,
@@ -84,6 +88,9 @@ const SubscriptionListPage = (props) => {
               period={s.period} />
           </StyledCol>)}
         </StyledRow>
+        <div style={{ maxWidth: 400, width: '100%' }}>
+          <PaymentCheckout price={0.01} />
+        </div>
       </ContainerStyled>
 
     </LayoutStyled >

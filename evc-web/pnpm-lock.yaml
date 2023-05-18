@@ -22,6 +22,7 @@ dependencies:
   object-hash: 2.0.3
   query-string: 6.13.1
   react: 16.13.1
+  react-async-script-loader: 0.3.0_react@16.13.1
   react-beautiful-dnd: 13.0.0_react-dom@16.13.1+react@16.13.1
   react-chat-elements: 10.10.2_eb0d650be231ffd0ace4a30b38162117
   react-dom: 16.13.1_react@16.13.1
@@ -33,6 +34,7 @@ dependencies:
   react-infinite-scroller: 1.2.4_react@16.13.1
   react-markdown-editor-lite: 1.2.2_react@16.13.1
   react-multi-carousel: 2.5.5
+  react-paypal-button-v2: 2.6.2_react-dom@16.13.1+react@16.13.1
   react-responsive: 8.1.0_react@16.13.1
   react-router-dom: 5.2.0_react@16.13.1
   react-router-hash-link: 2.0.0_f32e785fa5e199175d00c0f3e09c74b3
@@ -6215,6 +6217,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-0nRXAQJabHdabFRXk+1QL8DGSaE=
+  /hoist-non-react-statics/1.2.0:
+    dev: false
+    resolution:
+      integrity: sha1-qkSM8JhtVcxAdzsXF0t90GbLfPs=
   /hoist-non-react-statics/3.3.2:
     dependencies:
       react-is: 16.13.1
@@ -10874,6 +10880,15 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-OfBnObtnGgLGfweORmdZbyEz+3dgVePQBb3zipiaDsMHV1NpWm0rDFYIVXFV/AK+x4VIIfWHhrdMIeoTLyRr2g==
+  /react-async-script-loader/0.3.0_react@16.13.1:
+    dependencies:
+      hoist-non-react-statics: 1.2.0
+      react: 16.13.1
+    dev: false
+    peerDependencies:
+      react: ^15.5.4
+    resolution:
+      integrity: sha1-x0KzyiXgi6Yat+tkNx+BQCdpK4Y=
   /react-beautiful-dnd/13.0.0_react-dom@16.13.1+react@16.13.1:
     dependencies:
       '@babel/runtime': 7.11.2
@@ -11092,6 +11107,18 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-rpfhfPiXCK2PX1nrNhdxSMrEGB/Gw/SvKoPM0G2wAkSoqynnes19K0VYI+Up7DqR1rFIpE4hP2erpT1tNx2tfg==
+  /react-paypal-button-v2/2.6.2_react-dom@16.13.1+react@16.13.1:
+    dependencies:
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      rimraf: 3.0.2
+    dev: false
+    peerDependencies:
+      react: ^0.14.6 || 15.x.x || 16.x.x
+      react-dom: ^0.14.6 || 15.x.x || 16.x.x
+    resolution:
+      integrity: sha512-+IgmfbKRdlfopX8YHfPcCrbuQnaA4mCRPQV3VbFXVHDOEiEHvROJ8arQc/JTa1ppRc95u/SweKeVRK1c65JWqA==
   /react-pdf-js/2.0.5_react-dom@16.13.1+react@16.13.1:
     dependencies:
       pdfjs-dist: 1.10.100
@@ -11778,6 +11805,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==
+  /rimraf/3.0.2:
+    dependencies:
+      glob: 7.1.6
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
   /ripemd160/2.0.2:
     dependencies:
       hash-base: 3.1.0
@@ -13976,6 +14010,7 @@ specifiers:
   prop-types: ^15.7.2
   query-string: ^6.13.1
   react: ^16.13.1
+  react-async-script-loader: ^0.3.0
   react-beautiful-dnd: ^13.0.0
   react-chat-elements: ^10.10.2
   react-dom: ^16.13.1
@@ -13987,6 +14022,7 @@ specifiers:
   react-infinite-scroller: ^1.2.4
   react-markdown-editor-lite: ^1.2.2
   react-multi-carousel: ^2.5.5
+  react-paypal-button-v2: ^2.6.2
   react-responsive: ^8.1.0
   react-router-dom: ^5.2.0
   react-router-hash-link: ^2.0.0

@@ -9,11 +9,12 @@ import * as WebSocket from 'ws';
 
 function validateEnvVars() {
   const requiredEnvVars = [
-    'EVC_DOMAIN_NAME',
-    'EVC_S3_BUCKET',
     'AWS_DEFAULT_REGION',
-    'EVC_FILE_PREFIX',
     'GIT_HASH',
+    'EVC_WEB_DOMAIN_NAME',
+    'EVC_API_DOMAIN_NAME',
+    'EVC_S3_BUCKET',
+    'EVC_FILE_PREFIX',
     'EVC_GOOGLE_SSO_CLIENT_SECRET',
   ];
 

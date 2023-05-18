@@ -32,7 +32,7 @@ export async function sendEmail(req: EmailRequest, throws = false) {
   assert(template, 400, 'Email template is not specified');
 
   const locals = {
-    website: process.env.EVC_DOMAIN_NAME,
+    website: process.env.EVC_API_DOMAIN_NAME,
     ...vars
   };
 

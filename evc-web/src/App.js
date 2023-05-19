@@ -37,9 +37,10 @@ import ProfilePage from 'pages/Profile/ProfilePage';
 import StockListPage from 'pages/Stock/StockListPage';
 import StockPage from 'pages/Stock/StockPage';
 import { ContactWidget } from 'components/ContactWidget';
-import SubscriptionListPage from 'pages/Subscription/SubscriptionListPage';
+import SubscriptionPage from 'pages/Subscription/SubscriptionPage';
 import { getEventSource } from 'services/eventSevice';
 import {Subject} from 'rxjs';
+import DebugPage from 'pages/Debug/DebugPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -110,6 +111,7 @@ class App extends React.Component {
             <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/new/:type" component={PortfolioFormPage} />
             <RoleRoute loading={loading} path="/reset_password" exact component={ResetPasswordPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template" component={TaskTemplatePage} />
+            <RoleRoute visible={isAdmin} loading={loading} exact path="/debug" component={DebugPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template/:id" component={TaskTemplatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/doc_template" component={DocTemplatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/user" component={UserListPage} />
@@ -121,7 +123,7 @@ class App extends React.Component {
             {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
             <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
-            <RoleRoute visible={isClient} loading={loading} path="/subscription" exact component={SubscriptionListPage} />
+            <RoleRoute visible={isClient} loading={loading} path="/subscription" exact component={SubscriptionPage} />
             <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
             <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
             <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} />

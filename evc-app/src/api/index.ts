@@ -13,3 +13,4 @@ export * from './blogController';
 export * from './stockController';
 export * from './subscriptionController';
 export * from './eventController';
+export * from './debugController';

@@ -813,3 +813,9 @@ paths:
       responses:
         200:
           description: OK
+  /debug:
+    get:
+      operationId: getDebugInfo
+      responses:
+        200:
+          description: OK          

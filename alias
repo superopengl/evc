@@ -6,6 +6,7 @@ NC='\033[0m'
 echo -e "${ORANGE}Techseeding EasyValueCheck${NC}"
 
 alias ahome='cd /Users/jshao/github/evc'
+alias awslocal='f(){ aws --endpoint-url=http://localhost:4566 "$@";  unset -f f; }; f'
 
 export AWS_PROFILE=evc
 

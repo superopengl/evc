@@ -84,6 +84,7 @@ resource "aws_acm_certificate" "evc_certificate" {
   provider    = "aws.useast1"
   domain_name = "easyvaluecheck.com"
   subject_alternative_names = [
+    "www.easyvaluecheck.com",
     "easyvaluecheck.net",
     "techseeding.com.au"
   ]

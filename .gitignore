@@ -12,3 +12,5 @@ docs/images-to-upload
 devops/.env.prod
 ubc-app/www
 file_storage
+terraform.tfstate.*
+.terraform.tfstate.*

@@ -73,6 +73,7 @@ const SubscriptionListPage = (props) => {
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
   const [loading, setLoading] = React.useState(true);
+  const [payPalPlanId, setPayPalPlanId] = React.useState();
 
   return (
     <LayoutStyled>
@@ -84,13 +85,14 @@ const SubscriptionListPage = (props) => {
               title={s.title}
               icon={s.icon}
               description={s.description}
+              onClick={() => setPayPalPlanId(s.payPalPlanId)}
               price={s.price}
               period={s.period} />
           </StyledCol>)}
         </StyledRow>
-        <div style={{ maxWidth: 400, width: '100%' }}>
-          <PaymentCheckout price={0.01} />
-        </div>
+        {payPalPlanId && <div style={{ maxWidth: 400, width: '100%' }}>
+          <PaymentCheckout payPalPlanId={payPalPlanId} />
+        </div>}
       </ContainerStyled>
 
     </LayoutStyled >

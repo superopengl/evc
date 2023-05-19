@@ -9,14 +9,14 @@ import PropTypes from 'prop-types';
 // next create the class and Bind React and ReactDom to window
 //as we will be needing them later
 
-const PAYPAL_CLIENT_ID = 'sb' || process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
+const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
+
 
 export const PaymentCheckout = (props) => {
 
   const CURRENCY = 'USD';
-  const { price, onSuccess, onApprove } = props;
+  const { payPalPlanId, onSuccess, onApprove } = props;
 
-  const [amount, setAmount] = React.useState(price);
 
   const handleTransactionSuccess = async (details, data) => {
     debugger;
@@ -32,41 +32,40 @@ export const PaymentCheckout = (props) => {
     // });
   }
 
-  const handleCreateOrder = (data, actions) => {
-    return actions.order.create({
-      purchase_units: [{
-        amount: {
-          currency_code: CURRENCY,
-          value: amount
-        }
-      }],
-      // application_context: {
-      //   shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
-      // }
-    });
-  }
+  // const handleCreateOrder = (data, actions) => {
+  //   return actions.order.create({
+  //     purchase_units: [{
+  //       amount: {
+  //         currency_code: CURRENCY,
+  //         value: amount
+  //       }
+  //     }],
+  //     // application_context: {
+  //     //   shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
+  //     // }
+  //   });
+  // }
 
   const handleApprove = (data, actions) => {
     // Capture the funds from the transaction
-    return actions.order.capture().then(function (details) {
+    return actions.subscription.get().then((details) => {
+      debugger;
       onApprove(details);
-      // Show a success message to your buyer
-      // alert("Transaction completed by " + details.payer.name.given_name);
-
-      // // OPTIONAL: Call your server to save the transaction
-      // return fetch("/paypal-transaction-complete", {
-      //   method: "post",
-      //   body: JSON.stringify({
-      //     orderID: data.orderID
-      //   })
-      // });
     });
   }
+
+  const handleCreateSubscription = (data, actions) => {
+    return actions.subscription.create({
+      plan_id: payPalPlanId
+    });
+  }
+
   return (
     <PayPalButton
-      amount={amount}
-      createOrder={handleCreateOrder}
-      onSuccess={handleTransactionSuccess}
+      // amount={amount}
+      // createOrder={handleCreateOrder}
+      // onSuccess={handleTransactionSuccess}
+      createSubscription={handleCreateSubscription}
       onApprove={handleApprove}
       style={{
         layout: 'vertical',
@@ -76,8 +75,10 @@ export const PaymentCheckout = (props) => {
         height: 40
       }}
       options={{
+        vault: true,
         clientId: PAYPAL_CLIENT_ID,
-        currency: CURRENCY
+        // currency: CURRENCY,
+        intent: 'subscription'
       }}
     // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
     />
@@ -86,7 +87,7 @@ export const PaymentCheckout = (props) => {
 }
 
 PaymentCheckout.propTypes = {
-  price: PropTypes.number.isRequired,
+  payPalPlanId: PropTypes.string.isRequired,
   onSuccess: PropTypes.func,
   onApprove: PropTypes.func
 };

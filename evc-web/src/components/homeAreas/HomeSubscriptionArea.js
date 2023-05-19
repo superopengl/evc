@@ -33,7 +33,7 @@ margin-bottom: 0rem;
 width: 100%;
 text-align: center;
 padding: 2rem 0;
-background: #f5f5f5;
+background: #f0f0f0;
 `;
 
 const InnerContainer = styled.div`

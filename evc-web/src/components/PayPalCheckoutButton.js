@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
 
 
-export const PaymentCheckout = (props) => {
+export const PayPalCheckoutButton = (props) => {
 
   const CURRENCY = 'USD';
   const { payPalPlanId, onSuccess, onApprove } = props;
@@ -77,6 +77,7 @@ export const PaymentCheckout = (props) => {
       options={{
         vault: true,
         clientId: PAYPAL_CLIENT_ID,
+        disableFunding: 'card',
         // currency: CURRENCY,
         intent: 'subscription'
       }}
@@ -86,10 +87,10 @@ export const PaymentCheckout = (props) => {
   )
 }
 
-PaymentCheckout.propTypes = {
+PayPalCheckoutButton.propTypes = {
   payPalPlanId: PropTypes.string.isRequired,
   onSuccess: PropTypes.func,
   onApprove: PropTypes.func
 };
 
-PaymentCheckout.defaultProps = {};
+PayPalCheckoutButton.defaultProps = {};

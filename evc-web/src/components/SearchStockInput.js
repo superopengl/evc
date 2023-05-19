@@ -9,7 +9,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 export const SearchStockInput = (props) => {
-  const { onChange, onFetchData, excluding, traceSearch, mode } = props;
+  const { onChange, onFetchData, excluding, traceSearch, mode, value } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');

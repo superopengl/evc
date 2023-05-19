@@ -6,7 +6,7 @@ const modifyVars = {
   '@height-base': '40px',
   '@height-lg': '48px',
   '@height-sm': '32px',
-  '@border-radius-base': '4px',
+  '@border-radius-base': '8px',
   '@heading-1-size': 'ceil(@font-size-base * 2.0)',
   '@heading-2-size': 'ceil(@font-size-base * 1.8)',
   '@heading-3-size': 'ceil(@font-size-base * 1.6)',

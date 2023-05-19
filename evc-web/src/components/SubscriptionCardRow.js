@@ -39,7 +39,7 @@ export const SubscriptionCardRow = props => {
           icon={s.icon}
           list={s.description}
           price={s.price} 
-          period={s.period} />
+          unit={s.unit} />
       </StyledCol>)}
     </StyledRow>
   )

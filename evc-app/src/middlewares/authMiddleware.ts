@@ -1,10 +1,18 @@
 
-import { getRepository, Not } from 'typeorm';
+import { getRepository, LessThan, MoreThan, Not } from 'typeorm';
 import { User } from '../entity/User';
 import { getUtcNow } from '../utils/getUtcNow';
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import * as moment from 'moment';
 import { UserStatus } from '../types/UserStatus';
+import { Subscription } from '../entity/Subscription';
+import { getCurrentSubscription } from '../api';
+
+async function attachSubscriptionCredential(user) {
+  const subscription = await getCurrentSubscription(user.id);
+
+  user.subscribedSymbols = subscription ? subscription.symbols : null;
+}
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -23,8 +31,8 @@ export const authMiddleware = async (req, res, next) => {
           res.sendStatus(401);
           return;
         }
-
         user = existingUser;
+        await attachSubscriptionCredential(user);
       }
       repo.update(id, { lastNudgedAt: getUtcNow() }).catch(() => { });
       req.user = Object.freeze(user);

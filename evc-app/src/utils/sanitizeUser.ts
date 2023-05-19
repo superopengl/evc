@@ -13,6 +13,7 @@ export function sanitizeUser(user: User) {
     'country',
     'locale',
     'status',
-    'loginType'
+    'loginType',
+    'subscribedSymbols'
   ]);
 }

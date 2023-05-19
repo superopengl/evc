@@ -146,6 +146,7 @@ const HomeCarouselAreaRaw = props => {
               <SearchStockInput
                 onFetchData={handleFetchSearchedSymbol}
                 onChange={handleSearchChange}
+                traceSearch={true}
                 style={{ maxWidth: 500, width: '100%' }} />
               <Text>most searched</Text>
               <HotStockList size={10} />

@@ -4,13 +4,13 @@ import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { listTask } from 'services/taskService';
 import { listPortfolio } from 'services/portfolioService';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, WarningOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import MyTaskList from 'pages/MyTask/MyTaskList';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { groupBy } from 'lodash';
-import { Empty } from 'antd';
+import { Empty, List } from 'antd';
 import { Loading } from 'components/Loading';
 import { Tooltip } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -21,8 +21,13 @@ import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
 import { PaymentCheckout } from 'components/PaymentCheckout';
+import { getMySubscription } from 'services/subscriptionService';
+import { getSubscriptionName } from 'util/getSubscriptionName';
+import { Alert } from 'antd';
+import PaymentModal from 'components/PaymentModal';
+import { StockName } from 'components/StockName';
 
-const { Paragraph } = Typography;
+const { Paragraph, Title } = Typography;
 
 
 const ContainerStyled = styled.div`
@@ -70,29 +75,89 @@ const StyledCol = styled(Col)`
 
 const SubscriptionPage = (props) => {
 
-  const context = React.useContext(GlobalContext);
-  const { user, setUser } = context;
   const [loading, setLoading] = React.useState(true);
-  const [payPalPlanId, setPayPalPlanId] = React.useState();
+  const [newPlan, setNewPlan] = React.useState();
+  const [currentSubscription, setCurrentSubscription] = React.useState([]);
+
+  const loadSubscrptions = async () => {
+    try {
+      setLoading(true);
+      const sub = await getMySubscription();
+      setCurrentSubscription(sub);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  React.useEffect(() => {
+    loadSubscrptions();
+  }, []);
+
+  const isFree = !!currentSubscription;
+  const currentPlan = currentSubscription?.type || 'free';
+
+  const handleChangePlan = (subscription) => {
+    if(subscription.key === currentPlan) {
+      return;
+    }
+    if(currentSubscription) {
+      Modal.confirm({
+        title: 'Change subscription',
+        icon: <WarningOutlined/>,
+        description: 'Changing subscription will terminate your current subscription without refund. Continue?',
+        okText: 'Yes, continue',
+        okButtonProps: {
+          danger: true
+        },
+        cancelText: 'No, keep the current plan',
+
+      });
+    }
+    setNewPlan(subscription.key);
+  }
+
+  const handlePaymentOk = () => {
+    setNewPlan(null);
+  }
+
+  const handleCancelPayment = () => {
+    setNewPlan(null);
+  }
+
 
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <StyledRow gutter={20}>
-          {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
-            <SubscriptionCard
-              title={s.title}
-              icon={s.icon}
-              description={s.description}
-              onClick={() => setPayPalPlanId(s.payPalPlanId)}
-              price={s.price}
-              period={s.period} />
-          </StyledCol>)}
-        </StyledRow>
-        {payPalPlanId && <div style={{ maxWidth: 400, width: '100%' }}>
-          <PaymentCheckout payPalPlanId={payPalPlanId} />
-        </div>}
+        <Space direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
+          {currentSubscription && <>
+            <Title>{currentSubscription.title}</Title>
+            {currentSubscription.stocks?.map((s, i) => <div key={i}>
+              <StockName value={s} />
+            </div>)}
+          </>}
+
+          <StyledRow gutter={20}>
+            {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
+              <SubscriptionCard
+                title={s.title}
+                icon={s.icon}
+                description={s.description}
+                onClick={() => handleChangePlan(s)}
+                price={s.price}
+                active={s.key === currentPlan}
+                unit={s.unit} />
+            </StyledCol>)}
+          </StyledRow>
+          {newPlan && <PaymentModal
+            visible={!!newPlan}
+            oldPlan={currentPlan}
+            newPlan={newPlan}
+            excluding={currentSubscription?.symbols}
+            onOk={handlePaymentOk}
+            onCancel={handleCancelPayment}
+          />}
+        </Space>
       </ContainerStyled>
 
     </LayoutStyled >

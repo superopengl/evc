@@ -54,7 +54,7 @@ export const SubscriptionCard = props => {
       {active && <Text strong type="warning" style={{position:'absolute', right: 8, bottom: 4}}>Current plan</Text>}
       <Card.Meta
         title={<div style={{display: 'flex', flexDirection: 'column'}}>
-          {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#389e0d' }}><sup><small>$</small></sup> {price}</Text> */}
+          {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#15be53' }}><sup><small>$</small></sup> {price}</Text> */}
           <MoneyAmount  style={{ fontSize: '2.2rem', margin: '0 4px'}} type="success" value={price} />
           <Text>{unit}</Text>
         </div>}

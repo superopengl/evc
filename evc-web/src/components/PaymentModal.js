@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Form, Input, Checkbox, Layout, Divider } from 'antd';
+import { Typography, Button, Form, Input, Checkbox, Switch, Divider } from 'antd';
 import { signUp } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
@@ -14,6 +14,7 @@ import { DoubleRightOutlined, RightOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SearchStockInput } from './SearchStockInput';
 import * as _ from 'lodash';
+import MoneyAmount from './MoneyAmount';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -28,10 +29,11 @@ const ContainerStyled = styled.div`
 
 const PaymentModal = (props) => {
 
-  const { visible, oldPlan, newPlan, excluding, onOk, onCancel } = props;
+  const { visible, oldPlan, newPlan, excluding, onOk, onCancel, balance } = props;
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
   const [selectedSymbols, setSelectedSymbols] = React.useState();
+  const [willUseBalance, setWillUseBalance] = React.useState(true);
   const wizardRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -82,7 +84,40 @@ const PaymentModal = (props) => {
     setSelectedSymbols(symbols);
   }
 
+  const handleUseBalanceChange = checked => {
+    setWillUseBalance(checked);
+  }
+
+  const calculateTotalAmount = () => {
+    const price = newPlanDef.price;
+    const quantity = isAddSingle ? selectedSymbols?.length : 1;
+    const termAmount = price * quantity;
+    if (willUseBalance) {
+      const payments = [];
+      let remainingBalance = balance;
+      while (remainingBalance) {
+        let shouldPay = 0;
+        if (remainingBalance >= termAmount) {
+          shouldPay = 0;
+          remainingBalance -= termAmount;
+        } else {
+          // remainingBalance < unitPrice
+          shouldPay = termAmount - remainingBalance;
+          remainingBalance = 0;
+        }
+        payments.push(shouldPay);
+      }
+      payments.push(termAmount);
+      return payments;
+    } else {
+      return [termAmount];
+    }
+  }
+
+
   const canShowPayButtons = !isAddSingle || selectedSymbols?.length > 0;
+
+  const paymentPlans = calculateTotalAmount();
 
   return (
     <Modal
@@ -100,7 +135,6 @@ const PaymentModal = (props) => {
         <div><Text strong type="success">$ {newPlanDef.price}</Text> {newPlanDef.unit}</div>
       </Space>
       <Paragraph>{newPlanDef.description}</Paragraph>
-      <Divider />
       {isBackToFree ? <>
         <Paragraph>You are going back to free plan. Your current paid plan will cease after it expires.</Paragraph>
         <Button block onClick={() => onOk()}>OK</Button>
@@ -118,9 +152,22 @@ const PaymentModal = (props) => {
               </Form.Item>
             </Form>
           </div>}
-          {canShowPayButtons && <>
+          {canShowPayButtons && <Divider/>}
+          {canShowPayButtons && <Space size="large" direction="vertical" style={{ width: '100%' }} >
+            
+            {balance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+              <Text>Use balance <MoneyAmount strong value={balance} /> to deduct?</Text>
+              <Switch defaultChecked onChange={handleUseBalanceChange} />
+            </Space>}
+            {paymentPlans.map((price, i) => <Space key={i} style={{ width: '100%', justifyContent: 'space-between' }}>
+              <Text strong>Term {i + 1}{i === 0 ? ' (this time)' : i === paymentPlans.length - 1 ? ' and following' : ''}</Text>
+              <MoneyAmount type="success" strong value={price} />
+            </Space>
+            )}
+
             <PayPalCheckoutButton payPalPlanId={payPalPlanId} />
-          </>}
+          </Space>}
+
         </Space>}
     </Modal>);
 }
@@ -132,11 +179,13 @@ PaymentModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
+  balance: PropTypes.number
 };
 
 PaymentModal.defaultProps = {
   visible: false,
-  excluding: []
+  excluding: [],
+  balance: 0
 };
 
 export default withRouter(PaymentModal);

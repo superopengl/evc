@@ -141,9 +141,7 @@ const MyAccountPage = (props) => {
               <StockName value={s} />
             </div>)}
           </>}
-          <Alert type="warning"
-            showIcon
-           message="Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding."/>
+          <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
           <StyledRow gutter={20}>
             {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
               <SubscriptionCard
@@ -163,18 +161,20 @@ const MyAccountPage = (props) => {
             excluding={currentSubscription?.symbols}
             onOk={handlePaymentOk}
             onCancel={handleCancelPayment}
+            balance={account.balance}
           />}
           <Divider></Divider>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title>Balance</Title>
             <Title><MoneyAmount type="success" value={account.balance} /></Title>
           </Space>
+          <Paragraph type="secondary">The money can be used deduct future payment.</Paragraph>
           <Divider></Divider>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title>Referral Link</Title>
             <Space><Text type="success">have referred</Text><Title type="success">{account.referralCount}</Title></Space>
           </Space>
-          <Paragraph type="secondary">Share this link to invite friends to earn kickback to deduct future payment.</Paragraph>
+          <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
           <ReferralLinkInput value={account?.referralUrl}/>
         </Space>
       </ContainerStyled>

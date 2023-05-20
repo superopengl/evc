@@ -27,6 +27,7 @@ import PaymentModal from 'components/PaymentModal';
 import { StockName } from 'components/StockName';
 import { getMyAccount } from 'services/accountService';
 import MoneyAmount from 'components/MoneyAmount';
+import ReferralLinkInput from 'components/ReferralLinkInput';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
@@ -174,7 +175,7 @@ const MyAccountPage = (props) => {
             <Space><Text type="success">have referred</Text><Title type="success">{account.referralCount}</Title></Space>
           </Space>
           <Paragraph type="secondary">Share this link to invite friends to earn kickback to deduct future payment.</Paragraph>
-          <Input value={account?.referralUrl} addonAfter={<CopyOutlined />} readonly={true}></Input>
+          <ReferralLinkInput value={account?.referralUrl}/>
         </Space>
       </ContainerStyled>
 

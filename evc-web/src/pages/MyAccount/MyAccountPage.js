@@ -26,6 +26,7 @@ import { Alert } from 'antd';
 import PaymentModal from 'components/PaymentModal';
 import { StockName } from 'components/StockName';
 import { getMyAccount } from 'services/accountService';
+import MoneyAmount from 'components/MoneyAmount';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
@@ -139,6 +140,9 @@ const MyAccountPage = (props) => {
               <StockName value={s} />
             </div>)}
           </>}
+          <Alert type="warning"
+            showIcon
+           message="Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding."/>
           <StyledRow gutter={20}>
             {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
               <SubscriptionCard
@@ -160,10 +164,16 @@ const MyAccountPage = (props) => {
             onCancel={handleCancelPayment}
           />}
           <Divider></Divider>
-          <Title>Balance</Title>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Title>Balance</Title>
+            <Title><MoneyAmount type="success" value={account.balance} /></Title>
+          </Space>
           <Divider></Divider>
-          <Title>Referral Link</Title>
-          <Paragraph type="secondary">Share this link to invite friends to earn kickback to deduct future payment. You have referred <Text type="success" strong>{account.referralCount}</Text> users.</Paragraph>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Title>Referral Link</Title>
+            <Space><Text type="success">have referred</Text><Title type="success">{account.referralCount}</Title></Space>
+          </Space>
+          <Paragraph type="secondary">Share this link to invite friends to earn kickback to deduct future payment.</Paragraph>
           <Input value={account?.referralUrl} addonAfter={<CopyOutlined />} readonly={true}></Input>
         </Space>
       </ContainerStyled>

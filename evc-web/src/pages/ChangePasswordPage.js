@@ -96,6 +96,8 @@ class ChangePasswordPage extends React.Component {
                   </Form.Item>
                   <Form.Item style={{ marginTop: '2rem' }}>
                     <Button block type="primary" htmlType="submit" disabled={sending}>Change Password</Button>
+                  </Form.Item>
+                  <Form.Item>
                     <Button block type="link" onClick={() => this.goBack()}>Cancel</Button>
                   </Form.Item>
                 </Form>

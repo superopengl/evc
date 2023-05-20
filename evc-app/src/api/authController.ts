@@ -264,7 +264,7 @@ async function decodeEmailFromGoogleToken(token) {
 }
 
 export const ssoGoogle = handlerWrapper(async (req, res) => {
-  const { token } = req.body;
+  const { token, referralCode } = req.body;
 
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
@@ -287,6 +287,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   user.loginType = 'google';
   user.lastLoggedInAt = getUtcNow();
   user.lastNudgedAt = getUtcNow();
+  user.referralCode = referralCode;
 
   await getRepository(User).save(user);
   await createReferral(user.id);

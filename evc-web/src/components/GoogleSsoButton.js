@@ -7,11 +7,12 @@ import { ssoGoogle } from 'services/authService';
 import { countUnreadMessage } from 'services/messageService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
+import PropTypes from 'prop-types';
 
 const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
   const { setUser, setNotifyCount } = context;
-  const {render} = props;
+  const {render, referralCode} = props;
 
   const handleGoogleSso = async (response) => {
     console.log('Google sso', response);
@@ -19,7 +20,7 @@ const GoogleSsoButton = props => {
     if(error || !tokenId) {
       return;
     }
-    const user = await ssoGoogle(tokenId);
+    const user = await ssoGoogle(tokenId, referralCode);
     if (user) {
       setUser(user);
 
@@ -46,5 +47,10 @@ const GoogleSsoButton = props => {
   // cookiePolicy={'single_host_origin'}
   />
 }
+
+GoogleSsoButton.propTypes = {
+  referralCode: PropTypes.string,
+};
+
 
 export default withRouter(GoogleSsoButton);

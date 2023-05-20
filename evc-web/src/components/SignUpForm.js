@@ -84,6 +84,7 @@ const SignUpForm = (props) => {
               disabled={renderProps.disabled}
             >Continue with Google</Button>
           )}
+        referralCode={referralCode}
       />
 
     </ContainerStyled>

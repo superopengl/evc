@@ -17,10 +17,11 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { isProfileComplete } from 'util/isProfileComplete';
 import { SearchStockInput } from 'components/SearchStockInput';
-import { getStock, getStockHistory, getWatchList, watchStock } from 'services/stockService';
+import { getStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
 import { List } from 'antd';
 import StockCard from 'components/StockCard';
 import { reactLocalStorage } from 'reactjs-localstorage';
+import { StockName } from 'components/StockName';
 
 const { Paragraph, Text } = Typography;
 
@@ -122,6 +123,25 @@ const ClientHomePage = (props) => {
     setWatchList([...watchList, stock]);
   }
 
+  const handleUnwatch = async (stock) => {
+    Modal.confirm({
+      title: <>Remove <StockName value={stock}/> from watchlist</>,
+      async onOk() {
+        await unwatchStock(stock.symbol);
+        setWatchList(watchList.filter(x => x.symbol !== stock.symbol));
+      },
+      maskClosable: true,
+      okText: 'Yes, unwatch it',
+      okButtonProps: {
+        danger: true
+      },
+      onCancel() {
+      },
+    });
+
+
+  }
+
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
@@ -142,7 +162,10 @@ const ClientHomePage = (props) => {
           dataSource={watchList}
           renderItem={item => (
             <List.Item>
-              <StockCard value={item} showRemove={true} showWatch={true} />
+              <StockCard
+                value={item}
+                onUnwatch={() => handleUnwatch(item)}
+                showUnwatch={true} />
             </List.Item>
           )}
         />

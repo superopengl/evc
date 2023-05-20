@@ -8,7 +8,7 @@ import MoneyAmount from './MoneyAmount';
 
 const { Title, Text } = Typography;
 
-const StyledCard = styled(Card)`
+  const StyledCard = styled(Card)`
 text-align: center;
 height: 400px;
 & .ant-card-head {
@@ -25,34 +25,42 @@ transform: scale(1.05);
 
 }
 
-&:hover {
-background-color: rgba(250, 140, 22, 0.1);
+
+&.interactive:hover {
+// background-color: #ffe7ba;
+border: 2px solid #fa8c16;
 transform: scale(1.05);
 }
 `;
 
 export const SubscriptionCard = props => {
-  const { onClick, title, description, icon, price, unit, active } = props;
+  const { onClick, title, description, icon, price, unit, active, interactive } = props;
 
-
+  const classNameArray = [];
+  if(active){
+    classNameArray.push('subscription-active');
+  }
+  if(interactive) {
+    classNameArray.push('interactive');
+  }
 
   return <IconContext.Provider value={{ size: '3rem' }}>
     <StyledCard
-      className={active ? 'subscription-active' : ''}
+      className={classNameArray.join(' ')}
       title={<Space direction="vertical" size="small">
         {icon}
         {title.toUpperCase()}
       </Space>}
-      hoverable={!active}
+      hoverable={interactive && !active}
       onClick={onClick}
     // bodyStyle={{backgroundColor: bgColor}}
     // headerStyle={{backgroundColor: bgColor}}
     >
-      {active && <Text strong type="warning" style={{position:'absolute', right: 8, bottom: 4}}>Current plan</Text>}
+      {active && <Text strong type="warning" style={{ position: 'absolute', right: 8, bottom: 4 }}>Current plan</Text>}
       <Card.Meta
-        title={<div style={{display: 'flex', flexDirection: 'column'}}>
+        title={<div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#15be53' }}><sup><small>$</small></sup> {price}</Text> */}
-          <MoneyAmount  style={{ fontSize: '2.2rem', margin: '0 4px'}} type="success" value={price} />
+          <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }} type="success" value={price} />
           <Text>{unit}</Text>
         </div>}
         description={description}
@@ -66,9 +74,11 @@ SubscriptionCard.propTypes = {
   description: PropTypes.any,
   price: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired,
-  active: PropTypes.bool
+  active: PropTypes.bool,
+  interactive: PropTypes.bool,
 };
 
 SubscriptionCard.defaultProps = {
-  active: false
+  active: false,
+  interactive: true,
 };

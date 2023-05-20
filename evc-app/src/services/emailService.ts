@@ -8,7 +8,7 @@ import * as path from 'path';
 import { logError } from '../utils/logger';
 
 let emailerInstance = null;
-const sender = 'EasyValueCheck <techseeding2020@gmail.com>';
+const sender = 'EasyValueCheck <noreply@easyvaluecheck.com>';
 
 function getEmailer() {
   if (!emailerInstance) {
@@ -66,49 +66,3 @@ export class EmailRequest {
   attachments?: { filename: string, path: string }[];
   shouldBcc?: boolean = false;
 }
-
-// function sanitizeVars(vars) {
-//   const sanitized = {};
-//   Object.entries(vars).forEach(([k, v]) => sanitized[k] = _.isString(v) ? sanitizeHtml(v) : v);
-//   return sanitized;
-// }
-
-// export async function sendEmail2(req: EmailRequest) {
-//   assert(req.to, 400, 'Email recipient is not specified');
-//   const template = templates[req.template];
-//   assert(template, 404, `Email template '${req.template}' is not found`);
-
-//   const body = template.body(sanitizeVars(req.vars));
-//   awsConfig();
-
-//   const ses = new aws.SES({ apiVersion: '2010-12-01' });
-
-//   const params = {
-//     Destination: {
-//       CcAddresses: [],
-//       ToAddresses: [req.to],
-//       BccAddresses: req.shouldBcc ? ['techseeding2020@gmail.com'] : []
-//     },
-//     Message: {
-//       Body: {
-//         Html: {
-//           Charset: 'UTF-8',
-//           Data: body
-//         },
-//         // Text: {
-//         //   Charset: 'UTF-8',
-//         //   Data: body
-//         // }
-//       },
-//       Subject: {
-//         Charset: 'UTF-8',
-//         Data: template.subject
-//       }
-//     },
-//     Source: 'Easy Value Check <techseeding2020@gmail.com>',
-//     ReplyToAddresses: ['Easy Value Check <techseeding2020@gmail.com>'],
-//   };
-
-//   const sesRequest = ses.sendEmail(params).promise();
-//   await sesRequest;
-// }

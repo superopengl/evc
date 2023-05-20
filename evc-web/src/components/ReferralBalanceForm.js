@@ -92,6 +92,7 @@ const ReferralBalanceForm = (props) => {
       setLoading(true);
       const account = await getAccount(user.id);
       setAccount(account);
+      setBalanceAfter((account?.balance || 0));
     } finally {
       setLoading(false);
     }

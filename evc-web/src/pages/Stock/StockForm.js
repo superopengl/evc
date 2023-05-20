@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { Typography, Button, Space, Form, Input, Modal, Layout, InputNumber } from 'antd';
 import { Logo } from 'components/Logo';
-import { signOn } from 'services/authService';
+import { signUp } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';

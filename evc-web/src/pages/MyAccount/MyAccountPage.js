@@ -1,10 +1,10 @@
-import { Button, Layout, Modal, Space, Typography, Tabs, Row, Col } from 'antd';
+import { Button, Layout, Modal, Space, Typography, Input, Row, Col } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { listTask } from 'services/taskService';
 import { listPortfolio } from 'services/portfolioService';
-import { PlusOutlined, WarningOutlined } from '@ant-design/icons';
+import { CopyOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import MyTaskList from 'pages/MyTask/MyTaskList';
@@ -21,13 +21,13 @@ import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
 import { PayPalCheckoutButton } from 'components/PayPalCheckoutButton';
-import { getMySubscription } from 'services/subscriptionService';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { Alert } from 'antd';
 import PaymentModal from 'components/PaymentModal';
 import { StockName } from 'components/StockName';
+import { getMyAccount } from 'services/accountService';
 
-const { Paragraph, Title } = Typography;
+const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
 
 const ContainerStyled = styled.div`
@@ -39,9 +39,9 @@ const ContainerStyled = styled.div`
   flex-direction: column;
   align-items: center;
 
-  .ant-divider {
-    margin: 8px 0 24px;
-  }
+  // .ant-divider {
+  //   margin: 20px 0 8px;
+  // }
 `;
 
 const span = {
@@ -73,17 +73,18 @@ const StyledCol = styled(Col)`
   margin-bottom: 20px;
 `;
 
-const SubscriptionPage = (props) => {
+const MyAccountPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [newPlan, setNewPlan] = React.useState();
-  const [currentSubscription, setCurrentSubscription] = React.useState([]);
+  const [account, setAccount] = React.useState({});
 
   const loadSubscrptions = async () => {
     try {
       setLoading(true);
-      const sub = await getMySubscription();
-      setCurrentSubscription(sub);
+
+      const account = await getMyAccount();
+      setAccount(account);
     } finally {
       setLoading(false);
     }
@@ -93,17 +94,18 @@ const SubscriptionPage = (props) => {
     loadSubscrptions();
   }, []);
 
+  const currentSubscription = account.subscription;
   const isFree = !!currentSubscription;
   const currentPlan = currentSubscription?.type || 'free';
 
   const handleChangePlan = (subscription) => {
-    if(subscription.key === currentPlan) {
+    if (subscription.key === currentPlan) {
       return;
     }
-    if(currentSubscription) {
+    if (currentSubscription) {
       Modal.confirm({
         title: 'Change subscription',
-        icon: <WarningOutlined/>,
+        icon: <WarningOutlined />,
         description: 'Changing subscription will terminate your current subscription without refund. Continue?',
         okText: 'Yes, continue',
         okButtonProps: {
@@ -129,14 +131,14 @@ const SubscriptionPage = (props) => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
+        <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
+          <Title>Subscription</Title>
           {currentSubscription && <>
             <Title>{currentSubscription.title}</Title>
             {currentSubscription.stocks?.map((s, i) => <div key={i}>
               <StockName value={s} />
             </div>)}
           </>}
-
           <StyledRow gutter={20}>
             {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
               <SubscriptionCard
@@ -157,6 +159,12 @@ const SubscriptionPage = (props) => {
             onOk={handlePaymentOk}
             onCancel={handleCancelPayment}
           />}
+          <Divider></Divider>
+          <Title>Balance</Title>
+          <Divider></Divider>
+          <Title>Referral Link</Title>
+          <Paragraph type="secondary">Share this link to invite friends to earn kickback to deduct future payment. You have referred <Text type="success" strong>{account.referralCount}</Text> users.</Paragraph>
+          <Input value={account?.referralUrl} addonAfter={<CopyOutlined />} readonly={true}></Input>
         </Space>
       </ContainerStyled>
 
@@ -164,8 +172,8 @@ const SubscriptionPage = (props) => {
   );
 };
 
-SubscriptionPage.propTypes = {};
+MyAccountPage.propTypes = {};
 
-SubscriptionPage.defaultProps = {};
+MyAccountPage.defaultProps = {};
 
-export default withRouter(SubscriptionPage);
+export default withRouter(MyAccountPage);

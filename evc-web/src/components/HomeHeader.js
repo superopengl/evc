@@ -132,7 +132,7 @@ const HomeHeaderRaw = props => {
             </Menu.SubMenu>}
             {!isGuest && <Menu.SubMenu key="me" title={<Avatar size={40} icon={<UserOutlined style={{ fontSize: 20 }} />} style={{ backgroundColor: isAdmin ? '#FF4D4F' : isAgent ? '#000000' : '#389e0d' }} />}>
               <Menu.Item key="profile"><Link to="/profile">Profile</Link></Menu.Item>
-              {isClient && <Menu.Item key="subscription"><Link to="/subscription">Subscription</Link></Menu.Item>}
+              {isClient && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}
               {canChangePassword && <Menu.Item key="changePassword"><Link to="/change_password">Change Password</Link></Menu.Item>}
               <Menu.Item key="logout" onClick={handleLogout}>Log Out</Menu.Item>
             </Menu.SubMenu>}
@@ -175,7 +175,7 @@ const HomeHeaderRaw = props => {
             {(isAdmin || isAgent) && <Menu.Item key="stats"><DashboardOutlined /> <Link to="/stats">Statistics</Link></Menu.Item>}
             {/* {isAdmin && <Menu.Item key="impersonate"><SkinOutlined /> <Link to="/impersonate">Impersonate</Link></Menu.Item>} */}
             {!isGuest && <Menu.Item key="profile"><UserOutlined /> <Link to="/profile">Profile</Link></Menu.Item>}
-            {isClient && <Menu.Item key="subscription"><Link to="/subscription">Subscription</Link></Menu.Item>}
+            {isClient && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}
             {canChangePassword && <Menu.Item key="changePassword"><SecurityScanOutlined /> <Link to="/change_password">Change Password</Link></Menu.Item>}
             {isGuest && <Menu.Item key="home"><HomeOutlined /> <HashLink to="/#home" onClick={onClose}>Home</HashLink></Menu.Item>}
             {isGuest && <Menu.Item key="services"><HeartOutlined /> <HashLink to="/#services" onClick={onClose}>Services</HashLink></Menu.Item>}

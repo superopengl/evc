@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { Typography, Button, Form, Input, Checkbox, Layout, Divider } from 'antd';
-import { signOn } from 'services/authService';
+import { signUp } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
@@ -63,7 +63,7 @@ const PaymentModal = (props) => {
     try {
       setLoading(true);
 
-      await signOn(values);
+      await signUp(values);
 
       onOk();
       // Guest

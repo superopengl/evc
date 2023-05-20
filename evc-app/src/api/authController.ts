@@ -15,6 +15,7 @@ import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
 import { sanitizeUser } from '../utils/sanitizeUser';
+import { createReferral } from './accountController';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -85,13 +86,17 @@ function createUserEntity(email, password, role): User {
 
 
 async function createNewLocalUser(payload): Promise<User> {
-  const { email, password, role } = payload;
+  const { email, password, role, ...other } = payload;
   const user = createUserEntity(email, password, role);
+
+  Object.assign(user, other);
 
   user.resetPasswordToken = uuidv4();
   user.status = UserStatus.ResetPassword;
   const repo = getRepository(User);
   await repo.save(user);
+
+  await createReferral(user.id);
 
   return user;
 }
@@ -284,6 +289,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   user.lastNudgedAt = getUtcNow();
 
   await getRepository(User).save(user);
+  await createReferral(user.id);
 
   attachJwtCookie(user, res);
 

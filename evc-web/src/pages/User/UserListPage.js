@@ -4,7 +4,7 @@ import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag } f
 import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  IdcardOutlined,
+  IdcardOutlined, DollarOutlined,
   UserOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
@@ -17,6 +17,8 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import PortfolioList from 'pages/Portfolio/PortfolioList';
 import ProfileForm from 'pages/Profile/ProfileForm';
+import { BiDollar } from 'react-icons/bi';
+import ReferralBalanceForm from 'components/ReferralBalanceForm';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -45,6 +47,7 @@ const UserListPage = () => {
   const [] = React.useState(false);
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [portfolioModalVisible, setPortfolioModalVisible] = React.useState(false);
+  const [referralBalanceModal, setReferralBalanceModal] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
@@ -76,7 +79,7 @@ const UserListPage = () => {
     {
       title: 'Login Type',
       dataIndex: 'loginType',
-      render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#389e0d">Google</Tag>
+      render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
     },
     {
       title: 'Last Logged In At',
@@ -95,6 +98,11 @@ const UserListPage = () => {
       render: (text, user) => {
         return (
           <Space size="small" style={{ width: '100%' }}>
+            <Tooltip placement="bottom" title="Referral & balance">
+              <Button shape="circle" icon={<BiDollar style={{position: 'relative', top: 2}} />} 
+              disabled={user.role !== 'client'}
+              onClick={e => openReferralBalanceModal(e, user)} />
+            </Tooltip>
             <Tooltip placement="bottom" title="Update profile">
               <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
             </Tooltip>
@@ -166,6 +174,13 @@ const UserListPage = () => {
         window.location = '/';
       }
     })
+  }
+
+  
+  const openReferralBalanceModal = async (e, user) => {
+    e.stopPropagation();
+    setCurrentUser(user);
+    setReferralBalanceModal(true);
   }
 
   const handlePortfolioForUser = async (e, user) => {
@@ -304,6 +319,17 @@ const UserListPage = () => {
         <Alert style={{ marginBottom: '0.5rem' }} type="warning" message="Changing email will change the login account. After changing, system will send you an new invitation to the new email address to reset your password." />
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
+      </Modal>
+      <Modal
+        visible={referralBalanceModal}
+        destroyOnClose={true}
+        maskClosable={false}
+        title="Referral & Balance"
+        onOk={() => setReferralBalanceModal(false)}
+        onCancel={() => setReferralBalanceModal(false)}
+        footer={null}
+      >
+        {currentUser && <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
       </Modal>
     </LayoutStyled >
 

@@ -6,10 +6,10 @@ import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/j
 import * as moment from 'moment';
 import { UserStatus } from '../types/UserStatus';
 import { Subscription } from '../entity/Subscription';
-import { getCurrentSubscription } from '../api';
+import { getUserSubscription } from '../utils/getUserSubscription';
 
 async function attachSubscriptionCredential(user) {
-  const subscription = await getCurrentSubscription(user.id);
+  const subscription = await getUserSubscription(user.id);
 
   user.subscribedSymbols = subscription ? subscription.symbols : null;
 }

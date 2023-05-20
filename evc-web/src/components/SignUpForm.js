@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { Typography, Button, Form, Input, Checkbox, Layout, Divider } from 'antd';
-import { signOn } from 'services/authService';
+import { signUp } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
+import * as queryString from 'query-string';
 const { Title, Text } = Typography;
 
 
@@ -21,7 +22,7 @@ const SignUpForm = (props) => {
   const {onOk } = props;
 
   const [sending, setSending] = React.useState(false);
-
+  const { code: referralCode } = queryString.parse(props.location.search);
 
   const handleSignIn = async (values) => {
     if (sending) {
@@ -31,7 +32,9 @@ const SignUpForm = (props) => {
     try {
       setSending(true);
 
-      await signOn(values);
+      Object.assign(values, {referralCode});
+
+      await signUp(values);
 
       onOk();
       // Guest

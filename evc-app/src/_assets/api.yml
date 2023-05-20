@@ -208,6 +208,30 @@ paths:
       responses:
         200:
           description: OK
+  /user/:id/account:
+    get:
+      operationId: getAccount
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /user/:id/balance:
+    post:
+      operationId: adjustBalance
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /user/:id/set_password:
     post:
       operationId: setUserPassword
@@ -780,11 +804,6 @@ paths:
         200:
           description: OK
   /subscription:
-    get:
-      operationId: getMySubscription
-      responses:
-        200:
-          description: OK
     post:
       operationId: provisionSubscription
       responses:
@@ -832,6 +851,12 @@ paths:
   /debug:
     get:
       operationId: getDebugInfo
+      responses:
+        200:
+          description: OK
+  /account:
+    get:
+      operationId: getMyAccount
       responses:
         200:
           description: OK

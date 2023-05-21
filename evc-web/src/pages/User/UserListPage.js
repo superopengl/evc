@@ -114,11 +114,6 @@ const UserListPage = () => {
                 <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
               </Button>
             </Tooltip>
-            <Tooltip placement="bottom" title="Portfolio">
-              <Button shape="circle" onClick={e => handlePortfolioForUser(e, user)} disabled={user.role !== 'client'}>
-                <IdcardOutlined style={{ position: 'relative', top: 1 }} size={20} />
-              </Button>
-            </Tooltip>
             <Tooltip placement="bottom" title="Delete user">
               <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'system@easyvaluecheck.com'} />
             </Tooltip>
@@ -316,7 +311,7 @@ const UserListPage = () => {
         onCancel={() => setProfileModalVisible(false)}
         footer={null}
       >
-        <Alert style={{ marginBottom: '0.5rem' }} type="warning" message="Changing email will change the login account. After changing, system will send you an new invitation to the new email address to reset your password." />
+        <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." />
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
       </Modal>
@@ -329,7 +324,11 @@ const UserListPage = () => {
         onCancel={() => setReferralBalanceModal(false)}
         footer={null}
       >
-        {currentUser && <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
+        {currentUser && <Space size="large" direction="vertical" style={{width: '100%', alignItems: 'center'}}>
+        <Text code>{currentUser.email}</Text>
+        <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
+        
+        </Space>}
       </Modal>
     </LayoutStyled >
 

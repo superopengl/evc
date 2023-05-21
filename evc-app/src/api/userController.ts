@@ -13,6 +13,8 @@ import { TaskStatus } from '../types/TaskStatus';
 import { Task } from '../entity/Task';
 import { handleInviteUser } from './authController';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
+import { Subscription } from '../entity/Subscription';
+import { SubscriptionType } from '../types/SubscriptionType';
 
 export const getProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -68,13 +70,42 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const listAllUsers = handlerWrapper(async (req, res) => {
+export const searchUsers = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
+  const page = +req.body.page;
+  const size = +req.body.size;
+  const orderBy = req.body.orderBy || 'email';
+  const orderDirection = req.body.orderDirection || 'ASC';
+  const text = req.body.text?.trim();
+  const plans = (req.body.plans || []);
 
-  const list = await getRepository(User).find({
-    where: { status: Not(UserStatus.Disabled) },
-    order: { role: 'ASC', email: 'ASC' }
-  });
+  assert(page >= 0 && size > 0, 400, 'Invalid page and size parameter');
+
+  let query = getRepository(User)
+    .createQueryBuilder('u')
+    .where(`u.status != :status`, { status: UserStatus.Disabled });
+
+  if (text) {
+    query = query.andWhere(`u.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text`, { text })
+  }
+  query = query.leftJoin(q => q.from(Subscription, 's'), 's', `s."userId" = u.id`);
+  if (plans.length) {
+    const sanitisedPlans = plans.map(p => p === SubscriptionType.Free ? null : p);
+    query = query.where(`s.type IN (:...plans)`, { plans: sanitisedPlans });
+  }
+  query = query.orderBy(orderBy, orderDirection)
+    .addOrderBy('u.email', 'ASC')
+    .offset(page * size)
+    .limit(size)
+    .select([
+      'u.*',
+      's.*',
+      'u.id as id',
+      'u."createdAt" as "createdAt"',
+      ''
+    ]);
+
+  const list = await query.execute();
 
   res.json(list);
 });

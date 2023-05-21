@@ -31,6 +31,7 @@
     "react-async-script-loader": "^0.3.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-chat-elements": "^10.10.2",
+    "react-color": "^2.19.3",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
     "react-file-icon": "^1.0.0",
@@ -54,6 +55,7 @@
     "rxjs": "^6.6.3",
     "styled-components": "^5.1.0",
     "tfn": "^1.0.0",
+    "tinycolor2": "^1.4.2",
     "uniqolor": "^1.0.1",
     "validator": "^13.1.1"
   },

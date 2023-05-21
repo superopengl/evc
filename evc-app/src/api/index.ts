@@ -15,3 +15,4 @@ export * from './subscriptionController';
 export * from './eventController';
 export * from './debugController';
 export * from './accountController';
+export * from './stockTagController';

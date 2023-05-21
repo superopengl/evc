@@ -157,9 +157,9 @@ paths:
       responses:
         200:
           description: OK
-  /user:
-    get:
-      operationId: listAllUsers
+  /user/search:
+    post:
+      operationId: searchUsers
       # security:
       #   - authAdminOrAgent: []
       responses:
@@ -231,7 +231,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /user/:id/set_password:
     post:
       operationId: setUserPassword
@@ -857,6 +857,28 @@ paths:
   /account:
     get:
       operationId: getMyAccount
+      responses:
+        200:
+          description: OK
+  /stocktag:
+    get:
+      operationId: listStockTags
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveStockTag
+      responses:
+        200:
+          description: OK
+  /stocktag/{id}:
+    delete:
+      operationId: deleteStockTag
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
       responses:
         200:
           description: OK

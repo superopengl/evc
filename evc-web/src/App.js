@@ -41,6 +41,7 @@ import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import { getEventSource } from 'services/eventSevice';
 import {Subject} from 'rxjs';
 import DebugPage from 'pages/Debug/DebugPage';
+import StockTagPage from 'pages/StockTag/StockTagPage';
 
 class App extends React.Component {
   constructor(props) {
@@ -115,6 +116,7 @@ class App extends React.Component {
             <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template/:id" component={TaskTemplatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/doc_template" component={DocTemplatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/user" component={UserListPage} />
+            <RoleRoute visible={isAdmin} loading={loading} exact path="/stocktag" component={StockTagPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/recurring" component={RecurringListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/impersonate" component={ImpersonatePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />

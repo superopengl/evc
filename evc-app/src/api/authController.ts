@@ -16,6 +16,7 @@ import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
 import { sanitizeUser } from '../utils/sanitizeUser';
 import { createReferral } from './accountController';
+import { createInitialFreeSubscription } from './subscriptionController';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -97,6 +98,8 @@ async function createNewLocalUser(payload): Promise<User> {
   await repo.save(user);
 
   await createReferral(user.id);
+
+  await createInitialFreeSubscription(user.id);
 
   return user;
 }
@@ -276,8 +279,9 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
       { email })
     .getOne();
 
+  const isNewUser = !user;
 
-  if (!user) {
+  if (isNewUser) {
     user = createUserEntity(email, uuidv4(), 'client');
     user.status = UserStatus.Enabled;
   }
@@ -290,7 +294,11 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   user.referralCode = referralCode;
 
   await getRepository(User).save(user);
-  await createReferral(user.id);
+
+  if (isNewUser) {
+    await createReferral(user.id);
+    await createInitialFreeSubscription(user.id);
+  }
 
   attachJwtCookie(user, res);
 

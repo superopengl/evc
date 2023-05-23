@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag } from 'antd';
+import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Select } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  IdcardOutlined, DollarOutlined,
+  IdcardOutlined, SearchOutlined,
   UserOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
@@ -21,6 +21,9 @@ import { BiDollar } from 'react-icons/bi';
 import ReferralBalanceForm from 'components/ReferralBalanceForm';
 import * as _ from 'lodash';
 import { subscriptionDef } from 'def/subscriptionDef';
+import Highlighter from "react-highlight-words";
+import HighlightingText from 'components/HighlightingText';
+
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -43,11 +46,24 @@ const LayoutStyled = styled(Layout)`
 
 const subscriptionDefMap = _.keyBy(subscriptionDef, 'key');
 
+const SUBSCRIPTION_OPTIONS = subscriptionDef.map(x => ({
+  label: x.title,
+  value: x.key
+}))
+
+const DEFAULT_QUERY_INFO = {
+  text: '',
+  page: 1,
+  size: 50,
+  subscription: subscriptionDef.map(x => x.key),
+  orderField: 'createdAt',
+  orderDirection: 'DESC'
+};
+
+const LOCAL_STORAGE_KEY = 'user_query';
 
 const UserListPage = () => {
 
-  const [] = React.useState(false);
-  const [] = React.useState(false);
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [portfolioModalVisible, setPortfolioModalVisible] = React.useState(false);
   const [referralBalanceModal, setReferralBalanceModal] = React.useState(false);
@@ -57,27 +73,28 @@ const UserListPage = () => {
   const [list, setList] = React.useState([]);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
+  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
   const columnDef = [
     {
       title: 'Email',
       dataIndex: 'email',
-      render: (text) => text,
+      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
     {
       title: 'Given Name',
       dataIndex: 'givenName',
-      render: (text) => text,
+      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
     {
       title: 'Surname',
       dataIndex: 'surname',
-      render: (text) => text,
+      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
     {
       title: 'Subscription',
       dataIndex: 'subscriptionType',
-      render: (value) => subscriptionDefMap[value].title
+      render: (value) => subscriptionDefMap[value]?.title
     },
     {
       title: 'Role',
@@ -100,16 +117,16 @@ const UserListPage = () => {
       render: (text) => <TimeAgo value={text} />,
     },
     {
-      title: 'Action',
+      // title: 'Action',
       // fixed: 'right',
       // width: 200,
       render: (text, user) => {
         return (
           <Space size="small" style={{ width: '100%' }}>
             <Tooltip placement="bottom" title="Referral & balance">
-              <Button shape="circle" icon={<BiDollar style={{position: 'relative', top: 2}} />} 
-              disabled={user.role !== 'client'}
-              onClick={e => openReferralBalanceModal(e, user)} />
+              <Button shape="circle" icon={<BiDollar style={{ position: 'relative', top: 2 }} />}
+                disabled={user.role !== 'client'}
+                onClick={e => openReferralBalanceModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Update profile">
               <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
@@ -131,16 +148,54 @@ const UserListPage = () => {
     },
   ];
 
-  const loadList = async () => {
-    setLoading(true);
-    const list = await listAllUsers();
-    setList(list);
-    setLoading(false);
+  const loadList = async (qi = queryInfo) => {
+    try {
+      setLoading(true);
+      const list = await listAllUsers(qi);
+      setList(list);
+      updateQueryInfo(qi);
+    } finally {
+      setLoading(false);
+    }
   }
 
   React.useEffect(() => {
     loadList();
   }, []);
+
+  const handleSubscriptionFilter = async (subscription) => {
+    debugger;
+    const newQueryInfo = {
+      ...queryInfo,
+      subscription
+    }
+    await loadList(newQueryInfo);
+  }
+
+  const updateQueryInfo = (queryInfo) => {
+    reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
+    setQueryInfo(queryInfo);
+  }
+
+  const handleSearchTextChange = text => {
+    const newQueryInfo = {
+      ...queryInfo,
+      text
+    }
+    updateQueryInfo(newQueryInfo);
+    // await loadTaskWithQuery(newQueryInfo);
+  }
+
+  const handleSearch = async (value) => {
+    const text = value?.trim();
+
+    const newQueryInfo = {
+      ...queryInfo,
+      text
+    }
+
+    await loadList(newQueryInfo);
+  }
 
   const handleDelete = async (e, item) => {
     e.stopPropagation();
@@ -179,17 +234,11 @@ const UserListPage = () => {
     })
   }
 
-  
+
   const openReferralBalanceModal = async (e, user) => {
     e.stopPropagation();
     setCurrentUser(user);
     setReferralBalanceModal(true);
-  }
-
-  const handlePortfolioForUser = async (e, user) => {
-    e.stopPropagation();
-    setCurrentUser(user);
-    setPortfolioModalVisible(true);
   }
 
   const openSetPasswordModal = async (e, user) => {
@@ -233,6 +282,29 @@ const UserListPage = () => {
             <Title level={2} style={{ margin: 'auto' }}>User Management</Title>
           </StyledTitleRow>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+            <Input.Search
+              placeholder="input search text"
+              enterButton={<><SearchOutlined /> Search</>}
+              onSearch={value => handleSearch(value)}
+              onPressEnter={e => handleSearch(e.target.value)}
+              onChange={e => handleSearchTextChange(e.target.value)}
+              loading={loading}
+              value={queryInfo?.text}
+              allowClear
+            />
+
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '600px' }}
+              placeholder="Status filter"
+              value={queryInfo?.subscription || []}
+              onChange={handleSubscriptionFilter}
+            >
+              {SUBSCRIPTION_OPTIONS.map((x, i) => <Select.Option key={i} value={x.value}>
+                {x.label}
+              </Select.Option>)}
+            </Select>
             <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Invite User</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
           </Space>
@@ -243,7 +315,7 @@ const UserListPage = () => {
             // scroll={{x: 1000}}
             rowKey="id"
             loading={loading}
-            pagination={false}
+            pagination={queryInfo}
           // pagination={queryInfo}
           // onChange={handleTableChange}
           // onRow={(record, index) => ({
@@ -332,10 +404,10 @@ const UserListPage = () => {
         onCancel={() => setReferralBalanceModal(false)}
         footer={null}
       >
-        {currentUser && <Space size="large" direction="vertical" style={{width: '100%', alignItems: 'center'}}>
-        <Text code>{currentUser.email}</Text>
-        <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
-        
+        {currentUser && <Space size="large" direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
+          <Text code>{currentUser.email}</Text>
+          <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
+
         </Space>}
       </Modal>
     </LayoutStyled >

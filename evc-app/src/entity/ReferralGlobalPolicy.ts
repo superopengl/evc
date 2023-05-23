@@ -25,4 +25,7 @@ export class ReferralGlobalPolicy {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   amount: number;
+
+  @Column('uuid')
+  by: string;
 }

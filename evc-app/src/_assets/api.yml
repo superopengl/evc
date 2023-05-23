@@ -232,6 +232,29 @@ paths:
       responses:
         200:
           description: OK
+  /user/:id/referral_policy:
+    get:
+      operationId: getReferralUserPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveReferralUserPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
   /user/:id/set_password:
     post:
       operationId: setUserPassword
@@ -874,6 +897,39 @@ paths:
   /stocktag/{id}:
     delete:
       operationId: deleteStockTag
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /referral_policy/global:
+    get:
+      operationId: listReferralGlobalPolicy
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveReferralGlobalPolicy
+      responses:
+        200:
+          description: OK
+  /referral_policy/global/{id}:
+    get:
+      operationId: getReferralGlobalPolicy
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /referral_policy/{id}/enable:
+    post:
+      operationId: enableReferralGlobalPolicy
       parameters:
         - name: id
           in: path

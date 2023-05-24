@@ -42,7 +42,8 @@ export const StockEpsInput = (props) => {
       quarter,
       value
     });
-    handleChange(null, null, null);
+    setQuarter(null);
+    setValue(null);
   }
 
   const isValidValue = () => {
@@ -52,7 +53,7 @@ export const StockEpsInput = (props) => {
   return <Space>
     {/* <DatePicker value={year ? moment(`${year}/7/1`) : null} onChange={handleChangeYear} picker="year" disabled={disabled}/> */}
     <InputNumber value={year} onChange={handleChangeYear} min={1970} max={new Date().getFullYear()} disabled={disabled}/>
-    <Select value={quarter} onChange={handleChangeQuarter} disabled={disabled}>
+    <Select value={quarter} onChange={handleChangeQuarter} disabled={disabled} style={{minWidth: '4rem'}}>
       <Select.Option value={1}>Q1</Select.Option>
       <Select.Option value={2}>Q2</Select.Option>
       <Select.Option value={3}>Q3</Select.Option>

@@ -52,12 +52,21 @@ export async function saveStockSupport(symbol, lo, hi) {
   return httpPost(`stock/s/${symbol}/support`, { lo, hi });
 }
 
+export async function deleteStockSupport(id) {
+  return httpDelete(`stock/support/${id}`);
+}
+
+
 export async function listStockResistance(symbol) {
   return httpGet(`stock/s/${symbol}/resistance`);
 }
 
 export async function saveStockResistance(symbol, lo, hi) {
   return httpPost(`stock/s/${symbol}/resistance`, { lo, hi });
+}
+
+export async function deleteStockResistance(id) {
+  return httpDelete(`stock/resistance/${id}`);
 }
 
 export async function listStockEps(symbol) {
@@ -68,10 +77,30 @@ export async function saveStockEps(symbol, values) {
   return httpPost(`stock/s/${symbol}/eps`, values);
 }
 
+export async function deleteStockEps(id) {
+  return httpDelete(`stock/eps/${id}`);
+}
+
 export async function listStockPe(symbol) {
   return httpGet(`stock/s/${symbol}/pe`);
 }
 
 export async function saveStockPe(symbol, lo, hi) {
   return httpPost(`stock/s/${symbol}/pe`, { lo, hi });
+}
+
+export async function deleteStockPe(id) {
+  return httpDelete(`stock/pe/${id}`);
+}
+
+export async function listStockValue(symbol) {
+  return httpGet(`stock/s/${symbol}/value`);
+}
+
+export async function saveStockValue(symbol, payload) {
+  return httpPost(`stock/s/${symbol}/value`, payload);
+}
+
+export async function deleteStockValue(id) {
+  return httpDelete(`stock/value/${id}`);
 }

@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { List, Typography, Space, Button } from 'antd';
+import { List, Typography, Space, Button, Modal } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
+import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { TimeAgo } from './TimeAgo';
 import MoneyAmount from './MoneyAmount';
@@ -24,15 +24,20 @@ const Container = styled.div`
 
 
 export const StockRangeTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, clickable, showTime, publishedId } = props;
+  const { onLoadList, onSaveNew, onChange, onDelete, clickable, showTime, publishedId } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [currentItem, setCurrentItem] = React.useState();
 
+  const updateList = (list) => {
+    setList(list);
+    onChange(list);
+  }
+
   const loadEntity = async () => {
     try {
       setLoading(true);
-      setList(await onLoadList());
+      updateList(await onLoadList());
     } finally {
       setLoading(false);
     }
@@ -46,7 +51,7 @@ export const StockRangeTimelineEditor = (props) => {
     try {
       setLoading(true);
       await onSaveNew(range);
-      setList(await onLoadList());
+      updateList(await onLoadList());
     } finally {
       setLoading(false);
     }
@@ -55,6 +60,27 @@ export const StockRangeTimelineEditor = (props) => {
   const toggleCurrentItem = item => {
     if(!clickable) return;
     setCurrentItem(currentItem === item ? null : item);
+  }
+
+  const handleDeleteItem = async (item) => {
+    Modal.confirm({
+      title: <>Delete <NumberRangeDisplay value={item} showTime={false} /></>,
+      maskClosable: true,
+      closable: true,
+      okButtonProps: {
+        danger: true
+      },
+      okText: 'Yes, delete',
+      onOk: async () => {
+        try {
+          setLoading(true);
+          await onDelete(item.id);
+          updateList(await onLoadList());
+        } finally {
+          setLoading(false);
+        }
+      }
+    })
   }
 
   return <Container>
@@ -71,6 +97,7 @@ export const StockRangeTimelineEditor = (props) => {
             onClick={() => toggleCurrentItem(item)}
             style={{position: 'relative'}}
             className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
+            extra={<Button type="link" danger icon={<DeleteOutlined/>} onClick={() => handleDeleteItem(item)} />}
           >
             {clickable && <div style={{position:'absolute', right: 10, top: 10}}>
               {item.id === publishedId ? <FlagFilled />
@@ -89,7 +116,9 @@ export const StockRangeTimelineEditor = (props) => {
 StockRangeTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   onItemClick: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
   publishedId: PropTypes.string,
   showTime: PropTypes.bool,
   mode: PropTypes.string,
@@ -100,4 +129,6 @@ StockRangeTimelineEditor.defaultProps = {
   showTime: true,
   mode: null,
   clickable: true,
+  onChange: () => {},
+  onDelete: () => {}
 };

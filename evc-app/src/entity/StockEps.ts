@@ -6,8 +6,8 @@ import { Stock } from './Stock';
 @Entity()
 @Index('idx_stockEps_symbol_year_quarter', ['symbol', 'year', 'quarter'], {unique: true})
 export class StockEps {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
 
   @Column({ default: () => `timezone('UTC', now())` })
   createdAt?: Date;

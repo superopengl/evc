@@ -7,9 +7,14 @@ import * as _ from 'lodash';
 import { CheckOutlined } from '@ant-design/icons';
 
 export const NumberRangeInput = (props) => {
-  const { onChange, onSave, value, disabled} = props;
+  const { onChange, onSave, value, disabled, readOnly, allowInputNone} = props;
   const [lo, setLo] = React.useState(value[0]);
   const [hi, setHi] = React.useState(value[1]);
+
+  React.useEffect(() => {
+    setLo(value[0]);
+    setHi(value[1]);
+  }, [value])
 
   const handleChangeLo = newLo => {
     handleChange(newLo, hi);
@@ -36,12 +41,12 @@ export const NumberRangeInput = (props) => {
     if (isLoNumber && isHiNumber) {
       return lo <= hi;
     }
-    return isLoNumber || isHiNumber;
+    return allowInputNone || isLoNumber || isHiNumber;
   }
 
   return <Space>
-    <InputNumber value={lo} onChange={handleChangeLo} disabled={disabled}/>
-    <InputNumber value={hi} onChange={handleChangeHi} disabled={disabled}/>
+    <InputNumber value={lo} onChange={handleChangeLo} disabled={disabled || readOnly} readOnly={readOnly}/>
+    <InputNumber value={hi} onChange={handleChangeHi} disabled={disabled || readOnly} readOnly={readOnly}/>
     <Button type="primary" icon={<CheckOutlined />} onClick={handleSave} disabled={disabled || !isValidValue()} />
   </Space>
 }
@@ -52,6 +57,8 @@ NumberRangeInput.propTypes = {
   value: PropTypes.array.isRequired,
   showSave: PropTypes.bool,
   disabled: PropTypes.bool,
+  readOnly: PropTypes.bool,
+  allowInputNone: PropTypes.bool,
 };
 
 NumberRangeInput.defaultProps = {
@@ -59,5 +66,7 @@ NumberRangeInput.defaultProps = {
   onChange: () => { },
   onSave: () => { },
   showSave: true,
-  disabled: false
+  disabled: false,
+  readOnly: false,
+  allowInputNone: false
 };

@@ -17,3 +17,8 @@ export * from './debugController';
 export * from './accountController';
 export * from './stockTagController';
 export * from './referralPolicyController';
+export * from './stockValueController';
+export * from './stockPeController';
+export * from './stockEpsController';
+export * from './stockResistanceController';
+export * from './stockSupportController';

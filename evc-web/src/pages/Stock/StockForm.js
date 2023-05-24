@@ -13,11 +13,14 @@ import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
-import { deleteStock, getStock, listStockSupport, saveStock, saveStockSupport,
-  listStockResistance, saveStockResistance,
-  listStockPe, saveStockPe,
-  listStockEps, saveStockEps,
- } from 'services/stockService';
+import {
+  deleteStock, getStock, saveStock, 
+  listStockSupport,  saveStockSupport, deleteStockSupport,
+  listStockResistance, saveStockResistance, deleteStockResistance,
+  listStockPe, saveStockPe, deleteStockPe,
+  listStockEps, saveStockEps, deleteStockEps,
+  listStockValue, saveStockValue, deleteStockValue,
+} from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSevice';
@@ -26,6 +29,7 @@ import { Divider } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import { StockRangeTimelineEditor } from 'components/StockRangeTimelineEditor';
 import { StockEpsTimelineEditor } from 'components/StockEpsTimelineEditor';
+import { StockValueTimelineEditor } from 'components/StockValueTimelineEditor';
 const { Title, Text, Paragraph } = Typography;
 
 
@@ -70,6 +74,8 @@ const StockForm = (props) => {
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [stock, setStock] = React.useState();
+  const [sourceEps, setSourceEps] = React.useState();
+  const [sourcePe, setSourcePe] = React.useState();
 
   const loadEntity = async () => {
     setLoading(true);
@@ -168,31 +174,6 @@ const StockForm = (props) => {
           <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
         </Form.Item>
       </Space>
-      <Divider />
-      <Form.Item label="Market" name="market" rules={[{ required: false, whitespace: true, message: ' ' }]}>
-        <Input placeholder="market" allowClear={true} maxLength="100" />
-      </Form.Item>
-      <Form.Item label="PE Low" name="peLo" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
-        <InputNumber min={0} placeholder="PE low" allowClear={true} pattern="[0-9.]*" />
-      </Form.Item>
-      <Form.Item label="PE High" name="peHi" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
-        <InputNumber min={0} placeholder="PE high" allowClear={true} pattern="[0-9.]*" />
-      </Form.Item>
-      <Form.Item label="Value" name="value" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
-        <InputNumber min={0} placeholder="Value" allowClear={true} pattern="[0-9.]*" />
-      </Form.Item>
-      <Form.Item label="Support Price Low" name="supportPriceLo" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
-        <InputNumber min={0} placeholder="PE low" allowClear={true} pattern="[0-9.]*" />
-      </Form.Item>
-      <Form.Item label="Support Price High" name="supportPriceHi" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
-        <InputNumber min={0} placeholder="PE high" allowClear={true} pattern="[0-9.]*" />
-      </Form.Item>
-      <Form.Item label="Pressure Price Low" name="pressurePriceLo" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
-        <InputNumber min={0} placeholder="PE low" allowClear={true} pattern="[0-9.]*" />
-      </Form.Item>
-      <Form.Item label="Pressure Price High" name="pressurePriceHi" rules={[{ required: true, type: 'number', whitespace: true, min: 0, message: ' ' }]}>
-        <InputNumber min={0} placeholder="PE high" allowClear={true} pattern="[0-9.]*" />
-      </Form.Item>
       <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
         <Space size="middle" direction="vertical" style={{ width: '100%' }}>
           <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
@@ -211,19 +192,52 @@ const StockForm = (props) => {
     <Row gutter={20}>
       <Col {...span}>
         <Title level={3}>Support</Title>
-        <StockRangeTimelineEditor onLoadList={() => listStockSupport(symbol)} onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)} />
+        <StockRangeTimelineEditor
+          onLoadList={() => listStockSupport(symbol)}
+          onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)}
+          onDelete={id => deleteStockSupport(id)}
+        />
       </Col>
       <Col {...span}>
         <Title level={3}>Resistance</Title>
-        <StockRangeTimelineEditor onLoadList={() => listStockResistance(symbol)} onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)} />
+        <StockRangeTimelineEditor
+          onLoadList={() => listStockResistance(symbol)}
+          onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)}
+          onDelete={id => deleteStockResistance(id)}
+        />
       </Col>
+    </Row>
+    <Divider />
+    <Row gutter={20}>
       <Col {...span}>
         <Title level={3}>EPS</Title>
-        <StockEpsTimelineEditor onLoadList={() => listStockEps(symbol)} onSaveNew={values => saveStockEps(symbol, values)} />
+        <StockEpsTimelineEditor
+          onLoadList={() => listStockEps(symbol)}
+          onSaveNew={values => saveStockEps(symbol, values)}
+          onDelete={id => deleteStockEps(id)}
+          onChange={list => setSourceEps(list.slice(0, 4).map(x => x.value))}
+        />
       </Col>
       <Col {...span}>
         <Title level={3}>PE</Title>
-        <StockRangeTimelineEditor onLoadList={() => listStockPe(symbol)} onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)} clickable={false}/>
+        <StockRangeTimelineEditor
+          onLoadList={() => listStockPe(symbol)}
+          onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)}
+          clickable={false}
+          onChange={list => setSourcePe(list[0])}
+          onDelete={id => deleteStockPe(id)}
+        />
+      </Col>
+      <Col {...span}>
+        <Title level={3}>Fair Value</Title>
+        <StockValueTimelineEditor
+          onLoadList={() => listStockValue(symbol)}
+          onSaveNew={payload => saveStockValue(symbol, payload)}
+          onDelete={id => deleteStockValue(id)}
+          clickable={true}
+          sourceEps={sourceEps}
+          sourcePe={sourcePe}
+        />
       </Col>
     </Row>
     <Modal

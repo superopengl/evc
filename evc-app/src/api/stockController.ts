@@ -18,6 +18,7 @@ import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockSupport } from '../entity/StockSupport';
 import { StockResistance } from '../entity/StockResistance';
+import { StockEps } from '../entity/StockEps';
 
 async function publishStock(stock) {
 
@@ -259,6 +260,42 @@ export const saveStockResistance = handlerWrapper(async (req, res) => {
   });
 
   await getRepository(StockResistance).insert(entity);
+
+  res.json(entity);
+});
+
+export const getStockEps = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { symbol } = req.params;
+
+  const list = await getRepository(StockEps).find({
+    where: {
+      symbol
+    },
+    order: {
+      year: 'DESC',
+      quarter: 'DESC'
+    },
+  });
+
+  res.json(list);
+});
+
+export const saveStockEps = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { symbol } = req.params;
+  const { user: { id: userId } } = req as any;
+  const { year, quarter, value } = req.body;
+  const entity = new StockEps();
+  Object.assign(entity, {
+    symbol,
+    author: userId,
+    year,
+    quarter,
+    value
+  });
+
+  await getRepository(StockEps).insert(entity);
 
   res.json(entity);
 });

@@ -3,7 +3,7 @@ import React from 'react';
 import { List, Typography, Space, Button } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
+import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined,FlagFilled, FlagOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { TimeAgo } from './TimeAgo';
 import MoneyAmount from './MoneyAmount';
@@ -11,20 +11,22 @@ import { NumberRangeInput } from 'components/NumberRangeInput';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
+import { StockEpsInput } from './StockEpsInput';
+
+const {Text} = Typography;
 
 const Container = styled.div`
   .current-published {
     background-color: rgba(21,190,83, 0.1);
   }
-
   .current-selected {
     background-color: rgba(250, 140, 22, 0.1);
   }
 `;
 
 
-export const StockRangeTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, clickable, showTime, publishedId } = props;
+export const StockEpsTimelineEditor = (props) => {
+  const { onLoadList, onSaveNew, mode, showTime, publishedId } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [currentItem, setCurrentItem] = React.useState();
@@ -42,7 +44,7 @@ export const StockRangeTimelineEditor = (props) => {
     loadEntity();
   }, []);
 
-  const handleSaveSupport = async (range) => {
+  const handleSave = async (range) => {
     try {
       setLoading(true);
       await onSaveNew(range);
@@ -53,13 +55,12 @@ export const StockRangeTimelineEditor = (props) => {
   }
 
   const toggleCurrentItem = item => {
-    if(!clickable) return;
     setCurrentItem(currentItem === item ? null : item);
   }
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <NumberRangeInput onSave={handleSaveSupport} disabled={loading} />
+      <StockEpsInput onSave={handleSave} disabled={loading} />
       <List
         dataSource={list}
         loading={loading}
@@ -68,16 +69,19 @@ export const StockRangeTimelineEditor = (props) => {
         size="small"
         renderItem={item => (
           <List.Item
-            onClick={() => toggleCurrentItem(item)}
-            style={{position: 'relative'}}
-            className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
+            // onClick={() => toggleCurrentItem(item)}
+            // style={{position: 'relative'}}
+            // className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
           >
-            {clickable && <div style={{position:'absolute', right: 10, top: 10}}>
+            {/* <div style={{position:'absolute', right: 10, top: 10}}>
               {item.id === publishedId ? <FlagFilled />
               : item === currentItem ? <FlagOutlined /> : null}
-            </div>}
+            </div> */}
             <List.Item.Meta
-              description={<NumberRangeDisplay value={item} showTime={showTime} />}
+              description={<Space>
+                <Text type="secondary">{item.year} Q{item.quarter}</Text>
+                <MoneyAmount value={item.value} showSymbol={false}/>
+              </Space>}
             />
           </List.Item>
         )}
@@ -86,18 +90,16 @@ export const StockRangeTimelineEditor = (props) => {
   </Container>
 }
 
-StockRangeTimelineEditor.propTypes = {
+StockEpsTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
   onItemClick: PropTypes.func,
   publishedId: PropTypes.string,
   showTime: PropTypes.bool,
   mode: PropTypes.string,
-  clickable: PropTypes.bool
 };
 
-StockRangeTimelineEditor.defaultProps = {
+StockEpsTimelineEditor.defaultProps = {
   showTime: true,
-  mode: null,
-  clickable: true,
+  mode: null
 };

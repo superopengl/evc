@@ -7,23 +7,25 @@ const { Text } = Typography;
 
 const MoneyAmount = (props) => {
 
-  const { value, ...other } = props;
+  const { value, showSymbol, ...other } = props;
 
   const [] = React.useState(value);
 
   return (
     <Text {...other}>
-      $ {(+value || 0).toFixed(2)}
+      {showSymbol ? `$ `: ''}{(+value || 0).toFixed(2)}
     </Text>
   );
 };
 
 MoneyAmount.propTypes = {
   value: PropTypes.number.isRequired,
+  showSymbol: PropTypes.bool
 };
 
 MoneyAmount.defaultProps = {
-  value: 0
+  value: 0,
+  showSymbol: true
 };
 
 export default MoneyAmount;

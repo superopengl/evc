@@ -23,7 +23,7 @@ const Container = styled.div`
 `;
 
 
-export const StockRangeTimelineEditor = (props) => {
+export const StockValueTimelineEditor = (props) => {
   const { onLoadList, onSaveNew, clickable, showTime, publishedId } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -86,7 +86,7 @@ export const StockRangeTimelineEditor = (props) => {
   </Container>
 }
 
-StockRangeTimelineEditor.propTypes = {
+StockValueTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
   onItemClick: PropTypes.func,
@@ -96,7 +96,7 @@ StockRangeTimelineEditor.propTypes = {
   clickable: PropTypes.bool
 };
 
-StockRangeTimelineEditor.defaultProps = {
+StockValueTimelineEditor.defaultProps = {
   showTime: true,
   mode: null,
   clickable: true,

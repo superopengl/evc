@@ -37,7 +37,7 @@ export const saveStockResistance = handlerWrapper(async (req, res) => {
 
   await getRepository(StockResistance).insert(entity);
 
-  res.json(entity);
+  res.json();
 });
 
 export const deleteStockResistance = handlerWrapper(async (req, res) => {

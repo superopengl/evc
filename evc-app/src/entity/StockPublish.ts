@@ -24,12 +24,12 @@ export class StockPublish {
   @Column('uuid')
   author: string;
 
-  @ManyToOne(() => StockSupport)
+  @ManyToOne(() => StockSupport, {nullable: false})
   support: StockSupport;
 
-  @ManyToOne(() => StockResistance)
+  @ManyToOne(() => StockResistance, {nullable: false})
   resistance: StockResistance;
 
-  @ManyToOne(() => StockValue)
+  @ManyToOne(() => StockValue, {nullable: false})
   value: StockValue;
 }

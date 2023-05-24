@@ -5,13 +5,13 @@ import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, CheckOutlined,FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-import { TimeAgo } from './TimeAgo';
-import MoneyAmount from './MoneyAmount';
+import MoneyAmount from 'components/MoneyAmount';
 import { NumberRangeInput } from 'components/NumberRangeInput';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
+import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 
 const {Text} = Typography;
 
@@ -61,24 +61,13 @@ export const StockEpsTimelineEditor = (props) => {
   }
 
   const handleDeleteItem = async (item) => {
-    Modal.confirm({
-      title: 'Delete EPS',
-      maskClosable: true,
-      closable: true,
-      okButtonProps: {
-        danger: true
-      },
-      okText: 'Yes, delete',
-      onOk: async () => {
-        try {
-          setLoading(true);
-          await onDelete(item.id);
-          updateList(await onLoadList());
-        } finally {
-          setLoading(false);
-        }
-      }
-    })
+    try {
+      setLoading(true);
+      await onDelete(item.id);
+      updateList(await onLoadList());
+    } finally {
+      setLoading(false);
+    }
   }
 
 
@@ -96,7 +85,7 @@ export const StockEpsTimelineEditor = (props) => {
             // onClick={() => toggleCurrentItem(item)}
             // style={{position: 'relative'}}
             // className={index <= 3 ? 'current-selected' : ''}
-            extra={<Button type="link" danger icon={<DeleteOutlined/>} onClick={() => handleDeleteItem(item)} />}
+            extra={<ConfirmDeleteButton onDelete={() => handleDeleteItem(item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
               {item.id === publishedId ? <FlagFilled />

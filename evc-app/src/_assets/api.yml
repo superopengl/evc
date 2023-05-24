@@ -921,6 +921,27 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/publish:
+    get:
+      operationId: listStockPublish
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveStockPublish
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
   /stock/support/{id}:
     delete:
       operationId: deleteStockSupport

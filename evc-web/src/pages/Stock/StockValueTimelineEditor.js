@@ -5,14 +5,13 @@ import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-import { TimeAgo } from './TimeAgo';
-import MoneyAmount from './MoneyAmount';
 import { NumberRangeInput } from 'components/NumberRangeInput';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
 import { Switch } from 'antd';
 import { Tag } from 'antd';
+import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 
 const { Text } = Typography;
 
@@ -88,39 +87,30 @@ export const StockValueTimelineEditor = (props) => {
   }
 
   const handleDeleteItem = async (item) => {
-    Modal.confirm({
-      title: <>Delete <NumberRangeDisplay value={item} showTime={false} /></>,
-      maskClosable: true,
-      closable: true,
-      okButtonProps: {
-        danger: true
-      },
-      okText: 'Yes, delete',
-      onOk: async () => {
-        try {
-          setLoading(true);
-          await onDelete(item.id);
-          updateList(await onLoadList());
-        } finally {
-          setLoading(false);
-        }
-      }
-    })
+    try {
+      setLoading(true);
+      await onDelete(item.id);
+      updateList(await onLoadList());
+    } finally {
+      setLoading(false);
+    }
   }
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <Space style={{ width: '100%' }}>
-        <Text>Special Fair Value</Text>
-        <Switch value={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} />
+      <Space direction="vertical" size="middle">
+        <Space>
+          <Text>Special Fair Value</Text>
+          <Switch checked={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} />
+        </Space>
+        <NumberRangeInput
+          onSave={handleSave}
+          value={[derivedValue?.lo, derivedValue?.hi]}
+          disabled={loading}
+          readOnly={!isSpecialFairValue}
+          allowInputNone={true}
+        />
       </Space>
-      <NumberRangeInput 
-        onSave={handleSave} 
-        value={[derivedValue?.lo, derivedValue?.hi]}
-        disabled={loading} 
-        readOnly={!isSpecialFairValue} 
-        allowInputNone={true}
-      />
       <List
         dataSource={list}
         loading={loading}
@@ -132,7 +122,7 @@ export const StockValueTimelineEditor = (props) => {
             onClick={() => toggleCurrentItem(item)}
             style={{ position: 'relative' }}
             className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
-            extra={<Button type="link" danger icon={<DeleteOutlined/>} onClick={() => handleDeleteItem(item)} />}
+            extra={<ConfirmDeleteButton onDelete={() => handleDeleteItem(item)} />}
           >
             {clickable && <div style={{ position: 'absolute', right: 10, top: 10 }}>
               {item.id === publishedId ? <FlagFilled />
@@ -159,7 +149,7 @@ StockValueTimelineEditor.propTypes = {
   showTime: PropTypes.bool,
   clickable: PropTypes.bool,
   sourceEps: PropTypes.array.isRequired,
-  sourcePe: PropTypes.array.isRequired,
+  sourcePe: PropTypes.object.isRequired,
 };
 
 StockValueTimelineEditor.defaultProps = {
@@ -169,5 +159,5 @@ StockValueTimelineEditor.defaultProps = {
   sourceEps: [0, 0, 0, 0],
   sourcePe: { lo: 0, hi: 0 },
   onChange: () => { },
-  onDelete: () => {}
+  onDelete: () => { }
 };

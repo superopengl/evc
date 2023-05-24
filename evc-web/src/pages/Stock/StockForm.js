@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Space, Form, Input, Modal, Layout, InputNumber, Row, Col } from 'antd';
+import { Typography, Button, Space, Form, Input, Modal, Layout, InputNumber, Row, Col, Card } from 'antd';
 import { Logo } from 'components/Logo';
 import { signUp } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -14,12 +14,13 @@ import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 import {
-  deleteStock, getStock, saveStock, 
-  listStockSupport,  saveStockSupport, deleteStockSupport,
+  deleteStock, getStock, saveStock,
+  listStockSupport, saveStockSupport, deleteStockSupport,
   listStockResistance, saveStockResistance, deleteStockResistance,
   listStockPe, saveStockPe, deleteStockPe,
   listStockEps, saveStockEps, deleteStockEps,
   listStockValue, saveStockValue, deleteStockValue,
+  listStockPublish, saveStockPublish,
 } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
@@ -27,26 +28,37 @@ import { publishEvent } from 'services/eventSevice';
 import { Divider } from 'antd';
 
 import { SaveOutlined } from '@ant-design/icons';
-import { StockRangeTimelineEditor } from 'components/StockRangeTimelineEditor';
-import { StockEpsTimelineEditor } from 'components/StockEpsTimelineEditor';
-import { StockValueTimelineEditor } from 'components/StockValueTimelineEditor';
+import { StockRangeTimelineEditor } from './StockRangeTimelineEditor';
+import { StockEpsTimelineEditor } from './StockEpsTimelineEditor';
+import { StockValueTimelineEditor } from './StockValueTimelineEditor';
+import { StockPublishTimelineEditor } from './StockPublishTimelineEditor';
+import { PageHeader } from 'antd';
+import { Select } from 'antd';
+import { listStockTags } from 'services/stockTagService';
+import StockTag from 'components/StockTag';
 const { Title, Text, Paragraph } = Typography;
 
 
-const PageContainer = styled.div`
+const Container = styled.div`
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
   // background-color: #f3f3f3;
+
+  .ant-page-header {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
-const ContainerStyled = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
-  max-width: 400px;
+const ColStyled = styled(Col)`
+  margin-bottom: 20px;
   // background-color: #f3f3f3;
+`;
+
+const ColInnerCard = styled(Card)`
+height: 100%;
 `;
 
 const LogoContainer = styled.div`
@@ -63,24 +75,30 @@ const span = {
   xs: 24,
   sm: 24,
   md: 12,
-  lg: 8,
-  xl: 6,
-  xxl: 6
+  lg: 12,
+  xl: 8,
+  xxl: 8
 };
 
 const StockForm = (props) => {
   const { symbol, onOk } = props;
+  const formRef = React.createRef();
   const [loading, setLoading] = React.useState(true);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [stock, setStock] = React.useState();
   const [sourceEps, setSourceEps] = React.useState();
   const [sourcePe, setSourcePe] = React.useState();
+  const [supportList, setSupportList] = React.useState();
+  const [resistanceList, setResistanceList] = React.useState();
+  const [valueList, setValueList] = React.useState();
+  const [tagList, setTagList] = React.useState([]);
 
   const loadEntity = async () => {
     setLoading(true);
     if (symbol) {
       setStock(await getStock(symbol));
+      setTagList(await listStockTags());
     }
     setLoading(false);
   }
@@ -118,7 +136,7 @@ const StockForm = (props) => {
   const handleDelete = () => {
     Modal.confirm({
       title: "Delete Stock",
-      content: <>Do you want delete <Text strong>{stock.company} (stock.symbol)</Text>?</>,
+      content: <>Do you want delete <Text strong>{stock.symbol} ({stock.company})</Text>?</>,
       async onOk() {
         await deleteStock(stock.symbol);
         onOk();
@@ -152,16 +170,40 @@ const StockForm = (props) => {
     }
   }
 
+  const handlePublish = async () => {
+    try {
+      setLoading(true);
+      const payload = {
+        supportId: supportList[0].id,
+        resistanceId: resistanceList[0].id,
+        valueId: valueList[0].id
+      };
+      await saveStockPublish(symbol, payload);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   if (symbol && !stock) {
     return <Loading />
   }
 
 
-  return (<>
+  return (<Container>
+    <PageHeader
+      onBack={handleCancel}
+      title={<>{stock.symbol} ({stock.company})</>}
+      extra={[
+        <Button type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button>,
+        <Button disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>,
+        <Button ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
+      ]}
+    />
     <Form
       labelCol={{ span: 10 }}
       wrapperCol={{ span: 14 }}
       layout="inline"
+      ref={formRef}
       onFinish={handleSave}
       onValuesChange={handleValuesChange}
       style={{ textAlign: 'left' }}
@@ -173,73 +215,85 @@ const StockForm = (props) => {
         <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
           <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
         </Form.Item>
+        <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
+          <Select
+            mode="multiple"
+            allowClear
+            style={{minWidth: 120}}
+          >
+            {tagList.map(t => <Select.Option value={t.id}>
+              <StockTag color={t.color}>{t.name}</StockTag>
+              </Select.Option>)}
+          </Select>
+        </Form.Item>
       </Space>
-      <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
-        <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-          <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
-          {stock && <Button block type="primary" htmlType="submit" disabled={loading}>Publish</Button>}
-          {stock && <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>}
-          {stock && <Button block ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>}
-          <Button block type="link" onClick={handleCancel}>Cancel</Button>
-        </Space>
-      </Form.Item>
-      <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
-      </Form.Item>
-      <Form.Item wrapperCol={{ span: 24 }} style={{ marginTop: '1rem' }}>
-      </Form.Item>
     </Form>
     <Divider />
     <Row gutter={20}>
-      <Col {...span}>
-        <Title level={3}>Support</Title>
-        <StockRangeTimelineEditor
-          onLoadList={() => listStockSupport(symbol)}
-          onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)}
-          onDelete={id => deleteStockSupport(id)}
-        />
-      </Col>
-      <Col {...span}>
-        <Title level={3}>Resistance</Title>
-        <StockRangeTimelineEditor
-          onLoadList={() => listStockResistance(symbol)}
-          onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)}
-          onDelete={id => deleteStockResistance(id)}
-        />
-      </Col>
+      <ColStyled {...span}>
+        <ColInnerCard title="EPS">
+          <StockEpsTimelineEditor
+            onLoadList={() => listStockEps(symbol)}
+            onSaveNew={values => saveStockEps(symbol, values)}
+            onDelete={id => deleteStockEps(id)}
+            onChange={list => setSourceEps(list.slice(0, 4).map(x => x.value))}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="PE">
+          <StockRangeTimelineEditor
+            onLoadList={() => listStockPe(symbol)}
+            onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)}
+            clickable={false}
+            onChange={list => setSourcePe(list[0])}
+            onDelete={id => deleteStockPe(id)}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Fair Value">
+          <StockValueTimelineEditor
+            onLoadList={() => listStockValue(symbol)}
+            onSaveNew={payload => saveStockValue(symbol, payload)}
+            onDelete={id => deleteStockValue(id)}
+            onChange={list => setValueList(list)}
+            clickable={true}
+            sourceEps={sourceEps}
+            sourcePe={sourcePe}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Support">
+          <StockRangeTimelineEditor
+            onLoadList={() => listStockSupport(symbol)}
+            onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)}
+            onDelete={id => deleteStockSupport(id)}
+            onChange={list => setSupportList(list)}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Resistance">
+          <StockRangeTimelineEditor
+            onLoadList={() => listStockResistance(symbol)}
+            onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)}
+            onDelete={id => deleteStockResistance(id)}
+            onChange={list => setResistanceList(list)}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Publish History">
+          <StockPublishTimelineEditor
+            onLoadList={() => listStockPublish(symbol)}
+            onPublishNew={() => handlePublish()}
+          />
+        </ColInnerCard>
+      </ColStyled>
     </Row>
-    <Divider />
-    <Row gutter={20}>
-      <Col {...span}>
-        <Title level={3}>EPS</Title>
-        <StockEpsTimelineEditor
-          onLoadList={() => listStockEps(symbol)}
-          onSaveNew={values => saveStockEps(symbol, values)}
-          onDelete={id => deleteStockEps(id)}
-          onChange={list => setSourceEps(list.slice(0, 4).map(x => x.value))}
-        />
-      </Col>
-      <Col {...span}>
-        <Title level={3}>PE</Title>
-        <StockRangeTimelineEditor
-          onLoadList={() => listStockPe(symbol)}
-          onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)}
-          clickable={false}
-          onChange={list => setSourcePe(list[0])}
-          onDelete={id => deleteStockPe(id)}
-        />
-      </Col>
-      <Col {...span}>
-        <Title level={3}>Fair Value</Title>
-        <StockValueTimelineEditor
-          onLoadList={() => listStockValue(symbol)}
-          onSaveNew={payload => saveStockValue(symbol, payload)}
-          onDelete={id => deleteStockValue(id)}
-          clickable={true}
-          sourceEps={sourceEps}
-          sourcePe={sourcePe}
-        />
-      </Col>
-    </Row>
+
     <Modal
       visible={simulatorVisible}
       destroyOnClose={true}
@@ -263,7 +317,7 @@ const StockForm = (props) => {
       </Form>
       <Button block type="link" onClick={() => setSimulatorVisible(false)}>Cancel</Button>
     </Modal>
-  </>);
+  </Container>);
 }
 
 StockForm.propTypes = {

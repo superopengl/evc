@@ -39,7 +39,7 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
 
   await getRepository(StockEps).insert(entity);
 
-  res.json(entity);
+  res.json();
 });
 
 export const deleteStockEps = handlerWrapper(async (req, res) => {
@@ -48,3 +48,4 @@ export const deleteStockEps = handlerWrapper(async (req, res) => {
   await getRepository(StockEps).delete(id);
   res.json();
 });
+

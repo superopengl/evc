@@ -15,6 +15,7 @@ import * as geoip from 'geoip-lite';
 import * as uaParser from 'ua-parser-js';
 import { getCache, setCache } from '../utils/cache';
 import { StockWatchList } from '../entity/StockWatchList';
+import { StockSupport } from '../entity/StockSupport';
 
 async function publishStock(stock) {
 
@@ -190,4 +191,39 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   const repo = getRepository(Stock);
   await repo.delete(symbol);
   res.json();
+});
+
+export const getStockSupport = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { symbol } = req.params;
+  const { user: { id: userId } } = req as any;
+
+  const list = await getRepository(StockSupport).find({
+    where: {
+      symbol
+    },
+    order: {
+      createdAt: 'DESC'
+    },
+  });
+
+  res.json(list);
+});
+
+export const saveStockSupport = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { symbol } = req.params;
+  const { user: { id: userId } } = req as any;
+  const { lo, hi } = req.body;
+  const entity = new StockSupport();
+  Object.assign(entity, {
+    symbol,
+    author: userId,
+    lo,
+    hi
+  });
+
+  await getRepository(StockSupport).insert(entity);
+
+  res.json(entity);
 });

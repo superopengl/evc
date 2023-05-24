@@ -215,7 +215,7 @@ const ReferralGlobalPolicyListPage = (props) => {
         footer={null}
       >
         <Form layout="vertical" onFinish={handleSave} initialValues={newPolicy}>
-          <Form.Item label="Amount per Referral" name="amount" rules={[{ required: true, type: 'number', min: 0, max: 9.99, message: ' ' }]}>
+          <Form.Item label="Amount per Referral" name="amount" rules={[{ required: true, type: 'number', min: 0,message: ' ' }]}>
             <InputNumber />
           </Form.Item>
           <Form.Item label="Time Range" name="range" rules={[{ required: true, message: ' ' }]}>

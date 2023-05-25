@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Layout, Button, Table, Modal, Tooltip, Form, Input } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
-  DeleteOutlined, EditOutlined, PlusOutlined, QuestionOutlined
+  DeleteOutlined, DeleteRowOutlined, EditFilled, EditOutlined, EditTwoTone, PlusOutlined, QuestionOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
@@ -109,10 +109,10 @@ const StockTagPage = () => {
         return (
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Tooltip placement="bottom" title="Edit tag">
-              <Button shape="link" onClick={() => handleEdit(item)} >edit</Button>
+              <Button shape="link" onClick={() => handleEdit(item)} icon={<EditOutlined />}></Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Delete tag">
-              <Button shape="link" danger onClick={() => handleDelete(item)} >delete</Button>
+              <Button shape="link" danger onClick={() => handleDelete(item)} icon={<DeleteOutlined/>} ></Button>
             </Tooltip>
           </Space>
         )

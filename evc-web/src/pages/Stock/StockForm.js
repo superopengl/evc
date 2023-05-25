@@ -27,7 +27,7 @@ import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSevice';
 import { Divider } from 'antd';
 
-import { SaveOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EllipsisOutlined, SaveOutlined, SyncOutlined } from '@ant-design/icons';
 import { StockRangeTimelineEditor } from './StockRangeTimelineEditor';
 import { StockEpsTimelineEditor } from './StockEpsTimelineEditor';
 import { StockValueTimelineEditor } from './StockValueTimelineEditor';
@@ -37,6 +37,7 @@ import { Select } from 'antd';
 import { listStockTags } from 'services/stockTagService';
 import StockTag from 'components/StockTag';
 import StockTagSelect from 'components/StockTagSelect';
+import { Drawer } from 'antd';
 const { Title, Text, Paragraph } = Typography;
 
 
@@ -86,6 +87,7 @@ const StockForm = (props) => {
   const formRef = React.createRef();
   const [loading, setLoading] = React.useState(true);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
+  const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [stock, setStock] = React.useState();
   const [sourceEps, setSourceEps] = React.useState();
@@ -115,10 +117,11 @@ const StockForm = (props) => {
       setLoading(true);
 
       await saveStock(values);
+      setDrawerVisible(false);
+      await loadEntity();
 
       notify.success('Successfully saved stock!');
 
-      onOk();
     } finally {
       setLoading(false);
     }
@@ -191,35 +194,13 @@ const StockForm = (props) => {
   return (<Container>
     <PageHeader
       onBack={handleCancel}
-      title={<>{stock.symbol} ({stock.company})</>}
+      title={<StockName value={stock} />}
       extra={[
-        <Button key="1" type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button>,
-        <Button key="2" disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>,
-        <Button key="3" ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
+        <Button key="1" disabled={loading} onClick={() => loadEntity()} icon={<SyncOutlined />} />,
+        <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined/>}></Button>,
+        <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
       ]}
     />
-    <Form
-      labelCol={{ span: 10 }}
-      wrapperCol={{ span: 14 }}
-      layout="inline"
-      ref={formRef}
-      onFinish={handleSave}
-      onValuesChange={handleValuesChange}
-      style={{ textAlign: 'left' }}
-      initialValues={stock}>
-      <Space>
-        <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-          <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
-        </Form.Item>
-        <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-          <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
-        </Form.Item>
-        <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
-          <StockTagSelect />
-        </Form.Item>
-      </Space>
-    </Form>
-    <Divider />
     <Row gutter={20}>
       <ColStyled {...span}>
         <ColInnerCard title="EPS">
@@ -308,7 +289,43 @@ const StockForm = (props) => {
       </Form>
       <Button block type="link" onClick={() => setSimulatorVisible(false)}>Cancel</Button>
     </Modal>
-  </Container>);
+
+
+    <Drawer
+      visible={drawerVisible}
+      destroyOnClose={true}
+      closable={true}
+      maskClosable={false}
+      title={<StockName value={stock} />}
+      width={300}
+      onClose={() => setDrawerVisible(false)}
+      footer={
+        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+          <Button block type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button>
+          <Button block onClick={() => setDrawerVisible(false)}>Cancel</Button>
+          <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>
+        </Space>
+      }
+    >
+      <Form
+        layout="vertical"
+        ref={formRef}
+        onFinish={handleSave}
+        onValuesChange={handleValuesChange}
+        // style={{ textAlign: 'left' }}
+        initialValues={stock}>
+        <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+          <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
+        </Form.Item>
+        <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+          <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
+        </Form.Item>
+        <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
+          <StockTagSelect />
+        </Form.Item>
+      </Form>
+    </Drawer>
+  </Container >);
 }
 
 StockForm.propTypes = {

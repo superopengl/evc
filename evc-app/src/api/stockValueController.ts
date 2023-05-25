@@ -7,6 +7,7 @@ import { StockValue } from '../entity/StockValue';
 export const getStockValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
+  const limit = +req.query.limit || 6;
 
   const list = await getRepository(StockValue).find({
     where: {
@@ -15,6 +16,10 @@ export const getStockValue = handlerWrapper(async (req, res) => {
     order: {
       createdAt: 'DESC'
     },
+    relations: [
+      'publish'
+    ],
+    take: limit
   });
 
   res.json(list);

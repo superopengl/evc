@@ -1,6 +1,7 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
+import { StockPublish } from './StockPublish';
 
 
 @Entity()
@@ -18,6 +19,10 @@ export class StockSupport {
 
   @Column('uuid')
   symbol: string;
+
+  @OneToOne(() => StockPublish, {nullable: true})
+  @JoinColumn()
+  publish: StockPublish;
 
   @Column('uuid')
   author: string;

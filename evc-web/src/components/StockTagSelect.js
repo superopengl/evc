@@ -29,25 +29,29 @@ const SelectStyled = styled(Select)`
 }
 `;
 
+const getFontColor = (backgroundColor) => {
+  return tinycolor(backgroundColor).isLight() ? '#000000' : '#ffffff';
+}
+
 const Input = props => {
   if (props.isHidden) {
     return <components.Input {...props} />;
   }
   return (
-    <div style={{padding: 6}}>
-    <div style={{ border: `1px dotted #999999`, padding: 0, margin: 0 }}>
+    <div style={{ padding: 6 }}>
+      <div style={{ border: `1px dotted #999999`, padding: 0, margin: 0 }}>
         <components.Input {...props} />
-    </div>
+      </div>
 
     </div>
   );
 };
 
 const Option = props => {
-  const {data, innerProps} = props;
+  const { data, innerProps } = props;
   return <div {...innerProps} style={{ padding: 6 }}>
     {data.color ? <StockTag color={data.color}>{data.label}</StockTag> : data.label}
-    </div>;
+  </div>;
 }
 
 const MultiValueLabel = props => {
@@ -97,28 +101,31 @@ const colourStyles = {
   multiValue: (styles, { data }) => {
     return {
       ...styles,
-      width: '100%',
-      margin: '6px 0',
-      backgroundColor: 'none',
+      // width: '100%',
+      margin: '4px',
+      // backgroundColor: data.color,
       // backgroundColor: data.color,
     };
   },
-  // multiValueLabel: (styles, { data }) => ({
-  //   ...styles,
-  //   width: '100%',
-  //   color: data.color,
-  // }),
-  // multiValueRemove: (styles, { data }) => {
-  //   const color = chroma(data.color);
-  //   return {
-  //     ...styles,
-  //     color: data.color,
-  //     ':hover': {
-  //       backgroundColor: color.alpha(0.1).css(),
-  //       color: 'white',
-  //     },
-  //   }
-  // },
+  multiValueLabel: (styles, { data }) => ({
+    ...styles,
+    // width: '100%',
+    color: getFontColor(data.color),
+    backgroundColor: data.color,
+    borderRadius: '4px 0 0 4px',
+  }),
+  multiValueRemove: (styles, { data }) => {
+    const color = chroma(data.color);
+    return {
+      ...styles,
+      backgroundColor: data.color,
+      borderRadius: '0 4px 4px 0',
+      ':hover': {
+        backgroundColor: data.color, //color.alpha(0.5).css(),
+        // color: 'white',
+      },
+    }
+  },
 };
 
 function convertTagToOption(tag) {
@@ -174,9 +181,9 @@ const StockTagSelect = (props) => {
   const handleChange = async (newValue, actionMeta) => {
     switch (actionMeta.action) {
       case 'select-option':
-        case 'remove-value':
-          updateSelectedOptions(newValue);
-          break;
+      case 'remove-value':
+        updateSelectedOptions(newValue || []);
+        break;
       case 'create-option':
       default:
     }
@@ -208,7 +215,7 @@ const StockTagSelect = (props) => {
   return <CreatableSelect
     isMulti
     closeMenuOnSelect={false}
-    components={{ MultiValueLabel, Option, Input }}
+    components={{ Option }}
     isClearable={false}
     isSearchable={true}
     isLoading={loading}

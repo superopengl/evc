@@ -36,6 +36,7 @@ import { PageHeader } from 'antd';
 import { Select } from 'antd';
 import { listStockTags } from 'services/stockTagService';
 import StockTag from 'components/StockTag';
+import StockTagSelect from 'components/StockTagSelect';
 const { Title, Text, Paragraph } = Typography;
 
 
@@ -92,13 +93,11 @@ const StockForm = (props) => {
   const [supportList, setSupportList] = React.useState();
   const [resistanceList, setResistanceList] = React.useState();
   const [valueList, setValueList] = React.useState();
-  const [tagList, setTagList] = React.useState([]);
 
   const loadEntity = async () => {
     setLoading(true);
     if (symbol) {
       setStock(await getStock(symbol));
-      setTagList(await listStockTags());
     }
     setLoading(false);
   }
@@ -194,9 +193,9 @@ const StockForm = (props) => {
       onBack={handleCancel}
       title={<>{stock.symbol} ({stock.company})</>}
       extra={[
-        <Button type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button>,
-        <Button disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>,
-        <Button ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
+        <Button key="1" type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button>,
+        <Button key="2" disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>,
+        <Button key="3" ghost type="danger" disabled={loading} onClick={handleDelete}>Delete</Button>
       ]}
     />
     <Form
@@ -216,15 +215,7 @@ const StockForm = (props) => {
           <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
         </Form.Item>
         <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
-          <Select
-            mode="multiple"
-            allowClear
-            style={{minWidth: 120}}
-          >
-            {tagList.map(t => <Select.Option value={t.id}>
-              <StockTag color={t.color}>{t.name}</StockTag>
-              </Select.Option>)}
-          </Select>
+          <StockTagSelect />
         </Form.Item>
       </Space>
     </Form>

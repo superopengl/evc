@@ -8,18 +8,23 @@ const { Text } = Typography;
 
 const StockTag = (props) => {
 
-  const { children, color: backgroundColor } = props;
+  const { children, color: backgroundColor, ...other } = props;
 
   const color = tinycolor(backgroundColor).isLight() ? '#000000' : '#ffffff';
   return (
-    <Tag style={{
-      padding: '6px 16px', 
+    <Tag 
+      style={{
+      // padding: '6px 16px', 
       borderRadius: 30, 
       backgroundColor, 
       color, 
-      fontWeight: 'bold',
-      border: 'none'
-      }}>
+      // fontWeight: 'bold',
+      width: '100%',
+      textAlign: 'center',
+      // border: 'none'
+      }}
+      {...other}
+      >
       {children}
       </Tag>
   );

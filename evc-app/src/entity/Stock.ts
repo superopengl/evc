@@ -14,7 +14,7 @@ export class Stock {
 
   @ManyToMany(type => StockTag, { onDelete: 'CASCADE' })
   @JoinTable()
-  tags: string[];
+  tags: StockTag[];
 
   @Column()
   by: string;

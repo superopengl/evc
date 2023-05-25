@@ -116,6 +116,7 @@ const StockForm = (props) => {
     try {
       setLoading(true);
 
+      debugger;
       await saveStock(values);
       setDrawerVisible(false);
       await loadEntity();
@@ -313,7 +314,7 @@ const StockForm = (props) => {
         onFinish={handleSave}
         onValuesChange={handleValuesChange}
         // style={{ textAlign: 'left' }}
-        initialValues={stock}>
+        initialValues={{...stock, tags: stock?.tags?.map(t => t.id)}}>
         <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
           <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
         </Form.Item>

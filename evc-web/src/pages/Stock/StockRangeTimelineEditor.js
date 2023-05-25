@@ -81,6 +81,7 @@ export const StockRangeTimelineEditor = (props) => {
         itemLayout="horizontal"
         rowKey="id"
         size="small"
+        locale={{emptyText: ' '}}
         loadMore={list.length >= 6 && <div style={{ width: '100%', textAlign: 'center' }}>
           <Button block size="large" type="link" icon={<EllipsisOutlined />} />
         </div>}

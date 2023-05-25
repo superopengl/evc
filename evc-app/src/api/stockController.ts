@@ -22,7 +22,7 @@ async function publishStock(stock) {
 }
 
 export const incrementStock = handlerWrapper(async (req, res) => {
-  const { symbol } = req.params;
+  const symbol = req.params.symbol.toUpperCase();
   const { user } = req as any;
 
   const stock = await getRepository(Stock).findOne(symbol);
@@ -47,7 +47,7 @@ export const incrementStock = handlerWrapper(async (req, res) => {
 export const getStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { user: { id: userId } } = req as any;
-  const { symbol } = req.params;
+  const symbol = req.params.symbol.toUpperCase();
 
   const repo = getRepository(Stock);
   const stock = await repo.findOne(symbol, {relations: ['tags']});
@@ -57,7 +57,7 @@ export const getStock = handlerWrapper(async (req, res) => {
 });
 
 export const getStockHistory = handlerWrapper(async (req, res) => {
-  const { symbol } = req.params;
+  const symbol = req.params.symbol.toUpperCase();
 
   const list = await getRepository(StockHistory).find({
     where: {
@@ -89,7 +89,7 @@ export const getWatchList = handlerWrapper(async (req, res) => {
 
 export const watchStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
-  const { symbol } = req.params;
+  const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
   await getRepository(StockWatchList).insert({ userId, symbol });
   res.json();
@@ -97,7 +97,7 @@ export const watchStock = handlerWrapper(async (req, res) => {
 
 export const unwatchStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
-  const { symbol } = req.params;
+  const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
   await getRepository(StockWatchList).delete({ userId, symbol });
   res.json();
@@ -184,7 +184,7 @@ export const saveStock = handlerWrapper(async (req, res) => {
 
 export const deleteStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
-  const { symbol } = req.params;
+  const symbol = req.params.symbol.toUpperCase();
   const repo = getRepository(Stock);
   await repo.delete(symbol);
   res.json();

@@ -93,7 +93,8 @@ export const StockPublishTimelineEditor = (props) => {
       <Button type="primary" onClick={handlePublishNew} disabled={loading}>Publish New</Button>
       <Table
        columns={columnDef} 
-      size="small" 
+        locale={{emptyText: ' '}}
+        size="small" 
       pagination={false}
       dataSource={list} 
       rowKey="id" 

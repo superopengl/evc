@@ -1,11 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout } from 'antd';
+import { Typography, Layout, Form, Button, Input } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { withRouter } from 'react-router-dom';
 import * as queryString from 'query-string';
 import StockForm from './StockForm';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { Loading } from 'components/Loading';
+import { Modal } from 'antd';
+import StockTagSelect from 'components/StockTagSelect';
+import { saveStock } from 'services/stockService';
 
 const { Title, Paragraph, Link } = Typography;
 
@@ -32,7 +36,7 @@ const LayoutStyled = styled(Layout)`
 
 
 const StockPage = props => {
-  const id = props.match.params.id;
+  const symbol = props.match.params.symbol;
 
   const handlePostSave = () => {
     props.history.goBack();
@@ -45,8 +49,9 @@ const StockPage = props => {
         {/* <StyledTitleRow>
           <Title level={2} style={{ margin: 'auto' }}>Stock</Title>
         </StyledTitleRow> */}
-        <StockForm symbol={id === 'new' ? null : id} onOk={() => handlePostSave()}/>
+        <StockForm symbol={symbol} onOk={() => handlePostSave()} />
       </ContainerStyled>
+
     </LayoutStyled >
   );
 };

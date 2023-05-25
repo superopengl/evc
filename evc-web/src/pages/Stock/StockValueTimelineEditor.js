@@ -117,6 +117,7 @@ export const StockValueTimelineEditor = (props) => {
         itemLayout="horizontal"
         rowKey="id"
         size="small"
+        locale={{emptyText: ' '}}
         renderItem={item => (
           <List.Item
             onClick={() => toggleCurrentItem(item)}

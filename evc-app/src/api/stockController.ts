@@ -172,10 +172,18 @@ export const searchStock = handlerWrapper(async (req, res) => {
     .leftJoin(StockSupport, 'ss', 'pu."supportId" = ss.id')
     .leftJoin(StockResistance, 'sr', 'pu."resistanceId" = sr.id')
     .leftJoin(StockValue, 'sv', 'pu."valueId" = sv.id')
+    .leftJoin(q => q.from('stock_tags_stock_tag', 'tg')
+      .groupBy('tg."stockSymbol"')
+      .select([
+        'tg."stockSymbol" as symbol',
+        'array_agg(tg."stockTagId") as tags'
+      ]),
+      'tag', 'tag.symbol = s.symbol')
     .orderBy('s.symbol')
     .addOrderBy('pu."createdAt"', 'DESC')
     .select([
       's.*',
+      'tag.tags',
       'pu."createdAt" as "publishedAt"',
       'ss.lo as "supportLo"',
       'ss.hi as "supportHi"',
@@ -188,16 +196,6 @@ export const searchStock = handlerWrapper(async (req, res) => {
     .limit(pagenation.limit);
 
   const list = await query.execute();
-
-  // list = await getRepository(Stock).find({
-  //   relations: [
-  //     'tags',
-  //   ],
-  //   join: {
-  //     alias: 'pub',
-  //     leftJoin
-  //   }
-  // });
 
   res.json(list);
 });

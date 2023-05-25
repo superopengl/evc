@@ -34,7 +34,7 @@ export const authMiddleware = async (req, res, next) => {
         user = existingUser;
         await attachSubscriptionCredential(user);
       }
-      repo.update(id, { lastNudgedAt: getUtcNow() }).catch(() => { });
+      repo.update({id}, { lastNudgedAt: getUtcNow() }).catch(() => { });
       req.user = Object.freeze(user);
       attachJwtCookie(user, res);
     } else {

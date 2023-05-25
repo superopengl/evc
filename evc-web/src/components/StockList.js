@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Input, Layout, Modal, Select, Space, Table, Tooltip, Typography } from 'antd';
+import { Button, Input, Layout, Modal, Select, Space, Table, Card, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { countUnreadMessage } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -10,6 +10,8 @@ import { Loading } from './Loading';
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
+import { List } from 'antd';
+import { StockName } from './StockName';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -102,6 +104,36 @@ const StockList = (props) => {
     // },
   ];
 
+  return (
+    <List
+    grid={{
+      gutter: 10,
+      xs: 1,
+      sm: 2,
+      md: 3,
+      lg: 4,
+      xl: 6,
+      xxl: 6,
+    }}
+    size="small"
+    dataSource={list}
+    renderItem={stock => (
+      <List.Item>
+        <Card 
+        size="small" 
+        type="inner"
+        // bordered={false}
+        hoverable={true}
+        onClick={() => props.history.push(`/stock/${stock.symbol}`)}
+        title={<StockName value={stock}/>}
+        >
+          Card content
+          </Card>
+      </List.Item>
+    )}
+    />
+
+  )
   return (
       <Table
         columns={columnDef}

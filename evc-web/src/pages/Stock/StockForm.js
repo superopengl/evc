@@ -115,9 +115,8 @@ const StockForm = (props) => {
 
     try {
       setLoading(true);
-
-      debugger;
-      await saveStock(values);
+      const stock = {...values, tags: values.tags.map(t => t.id)};
+      await saveStock(stock);
       setDrawerVisible(false);
       await loadEntity();
 
@@ -129,7 +128,7 @@ const StockForm = (props) => {
   }
 
   const handleValuesChange = (changedValues, allValues) => {
-
+    console.log(changedValues);
   }
 
   const handleCancel = () => {
@@ -296,7 +295,7 @@ const StockForm = (props) => {
       visible={drawerVisible}
       destroyOnClose={true}
       closable={true}
-      maskClosable={false}
+      maskClosable={true}
       title={<StockName value={stock} />}
       width={300}
       onClose={() => setDrawerVisible(false)}
@@ -312,9 +311,9 @@ const StockForm = (props) => {
         layout="vertical"
         ref={formRef}
         onFinish={handleSave}
-        onValuesChange={handleValuesChange}
+        // onValuesChange={handleValuesChange}
         // style={{ textAlign: 'left' }}
-        initialValues={{...stock, tags: stock?.tags?.map(t => t.id)}}>
+        initialValues={stock}>
         <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
           <Input placeholder="Stock symbol" allowClear={true} maxLength="100" autoFocus={true} />
         </Form.Item>

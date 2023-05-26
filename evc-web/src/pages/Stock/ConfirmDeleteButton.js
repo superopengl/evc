@@ -44,7 +44,7 @@ ConfirmDeleteButton.propTypes = {
   onOk: PropTypes.func.isRequired,
   okButtonProps: PropTypes.object,
   okText: PropTypes.string,
-  message: PropTypes.object
+  message: PropTypes.any
 };
 
 ConfirmDeleteButton.defaultProps = {

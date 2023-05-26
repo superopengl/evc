@@ -12,20 +12,15 @@ export const listStockPublish = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const limit = +req.query.limit || 6;
 
-  const list = await getRepository(StockPublish).find({
-    where: {
-      symbol
-    },
-    order: {
-      createdAt: 'DESC',
-    },
-    relations: [
-      'support',
-      'resistance',
-      'value'
-    ],
-    take: limit
-  });
+  const list = await getRepository(StockPublish)
+    .createQueryBuilder('sp')
+    .where({ symbol })
+    .leftJoinAndMapMany('sp.support', StockSupport, 'ss', 'ss.id = sp."supportId"')
+    .leftJoinAndMapMany('sp.resistance', StockResistance, 'sr', 'sr.id = sp."resistanceId"')
+    .leftJoinAndMapMany('sp.value', StockValue, 'sv', 'sv.id = sp."valueId"')
+    .orderBy('sp."createdAt"', 'DESC')
+    .limit(limit)
+    .getMany();
 
   res.json(list);
 });
@@ -47,29 +42,18 @@ export const saveStockPublish = handlerWrapper(async (req, res) => {
   //   );
 
   await getManager().transaction(async tranc => {
-    const [support, resistance, value] = await Promise.all([
-      tranc.getRepository(StockSupport).findOne(supportId),
-      tranc.getRepository(StockResistance).findOne(resistanceId),
-      tranc.getRepository(StockValue).findOne(valueId),
-    ]);
-
     const publish = new StockPublish();
     publish.id = uuidv4();
     publish.symbol = symbol;
     publish.author = userId;
-    publish.support = support;
-    publish.resistance = resistance;
-    publish.value = value;
+    publish.supportId = supportId;
+    publish.resistanceId = resistanceId;
+    publish.valueId = valueId;
 
-    await tranc.save(publish);
-
-    support.publish = publish;
-    resistance.publish = publish;
-    value.publish = publish;
-
-    await tranc.save(support);
-    await tranc.save(resistance);
-    await tranc.save(value);
+    await tranc.getRepository(StockPublish).insert(publish);
+    await tranc.getRepository(StockSupport).update(supportId, { publishId: publish.id });
+    await tranc.getRepository(StockResistance).update(resistanceId, { publishId: publish.id });
+    await tranc.getRepository(StockValue).update(valueId, { publishId: publish.id });
   });
 
   res.json();

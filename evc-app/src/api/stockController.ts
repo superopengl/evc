@@ -209,7 +209,9 @@ export const saveStock = handlerWrapper(async (req, res) => {
   Object.assign(stock, other);
   stock.symbol = stock.symbol.toUpperCase();
   stock.by = userId;
-  stock.tags = await getRepository(StockTag).find({ id: In(tags) });
+  if (tags?.length) {
+    stock.tags = await getRepository(StockTag).find({ id: In(tags) });
+  }
 
   const repo = getRepository(Stock);
   await repo.save(stock);

@@ -1,7 +1,9 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
 import { StockPublish } from './StockPublish';
+import { StockEps } from './StockEps';
+import { StockPe } from './StockPe';
 
 
 @Entity()
@@ -13,16 +15,8 @@ export class StockValue {
   @Column({ default: () => `timezone('UTC', now())` })
   createdAt?: Date;
 
-  @ManyToOne(() => Stock)
-  @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
-  stock: Stock;
-
-  @Column('uuid')
+  @Column()
   symbol: string;
-
-  @OneToOne(() => StockPublish, {nullable: true})
-  @JoinColumn()
-  publish: StockPublish;
 
   @Column('uuid')
   author: string;
@@ -36,9 +30,12 @@ export class StockValue {
   @Column({ default: false })
   special: boolean;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true, array: true })
-  sourceEps: number[];
+  @Column('uuid', {nullable: true})
+  publishId: string;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true, array: true })
-  sourcePe: number[];
+  @Column('uuid', {array: true})
+  epsIds: string[];
+
+  @Column('uuid')
+  peId: string;
 }

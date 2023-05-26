@@ -17,28 +17,40 @@ export const ConfirmDeleteButton = (props) => {
 
   const handleDelete = async () => {
     setLoading(true);
-    await props.onDelete();
+    await props.onOk();
     setVisible(false);
     setLoading(false);
   }
 
   return <Popover
-    title={<>Delete this?</>}
+    title={<>{props.message || 'Confirm'}</>}
     trigger="click"
     visible={visible}
     onVisibleChange={handleVisibleChange}
     content={<>
       <Button onClick={() => setVisible(false)} disabled={loading}>Cancel</Button>
-      <Button style={{marginLeft: 10}} danger type="primary" onClick={handleDelete} disabled={loading}>Yes, delete</Button>
+      <Button style={{ marginLeft: 10 }}
+        type="primary"
+        {...props.okButtonProps}
+        onClick={handleDelete}
+        disabled={loading}>{props.okText || 'OK'}</Button>
     </>}
   >
-    <Button type="link" danger icon={<CloseOutlined style={{fontSize: '0.8rem'}} />} disabled={loading} />
+    <Button type="link" danger icon={<CloseOutlined style={{ fontSize: '0.8rem' }} />} disabled={loading} />
   </Popover>
 }
 
 ConfirmDeleteButton.propTypes = {
-  onDelete: PropTypes.func.isRequired,
+  onOk: PropTypes.func.isRequired,
+  okButtonProps: PropTypes.object,
+  okText: PropTypes.string,
+  message: PropTypes.object
 };
 
 ConfirmDeleteButton.defaultProps = {
+  okButtonProps: {
+    danger: true
+  },
+  okText: 'Yes, delete',
+  message: 'Delete it?'
 };

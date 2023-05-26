@@ -7,14 +7,19 @@ import * as _ from 'lodash';
 import { CheckOutlined } from '@ant-design/icons';
 
 export const NumberRangeInput = (props) => {
-  const { onChange, onSave, value, disabled, readOnly, allowInputNone} = props;
+  const { onChange, onSave, value, disabled: propsDisabled, readOnly, allowInputNone} = props;
   const [lo, setLo] = React.useState(value[0]);
   const [hi, setHi] = React.useState(value[1]);
+  const [disabled, setDisabled] = React.useState(propsDisabled);
 
   React.useEffect(() => {
     setLo(value[0]);
     setHi(value[1]);
   }, [value])
+
+  React.useEffect(() => {
+    setDisabled(propsDisabled);
+  }, [propsDisabled])
 
   const handleChangeLo = newLo => {
     handleChange(newLo, hi);
@@ -45,6 +50,7 @@ export const NumberRangeInput = (props) => {
   }
 
   return <Space>
+    {`${disabled} ${propsDisabled}`}
     <InputNumber value={lo} onChange={handleChangeLo} disabled={disabled || readOnly} readOnly={readOnly}/>
     <InputNumber value={hi} onChange={handleChangeHi} disabled={disabled || readOnly} readOnly={readOnly}/>
     <Button type="primary" icon={<CheckOutlined />} onClick={handleSave} disabled={disabled || !isValidValue()} />

@@ -90,7 +90,7 @@ export const StockRangeTimelineEditor = (props) => {
             onClick={() => toggleCurrentItem(item)}
             style={{ position: 'relative' }}
             className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
-            extra={<ConfirmDeleteButton onDelete={() => handleDeleteItem(item)} />}
+            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             {clickable && <div style={{ position: 'absolute', right: 10, top: 10 }}>
               {item.id === publishedId ? <FlagFilled />

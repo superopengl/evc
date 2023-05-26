@@ -132,7 +132,7 @@ const StockForm = (props) => {
 
     try {
       setLoading(true);
-      const stock = { ...values, tags: values.tags.map(t => t.id) };
+      const stock = { ...values, tags: values.tags?.map(t => t.id) };
       await saveStock(stock);
       setDrawerVisible(false);
       await loadEntity();
@@ -242,7 +242,7 @@ const StockForm = (props) => {
             onLoadList={() => listStockEps(symbol)}
             onSaveNew={values => saveStockEps(symbol, values)}
             onDelete={id => deleteStockEps(id)}
-            onChange={list => setSourceEps(list.slice(0, 4).map(x => x.value))}
+            onChange={list => setSourceEps(list.slice(0, 4))}
           />
         </ColInnerCard>
       </ColStyled>
@@ -258,7 +258,7 @@ const StockForm = (props) => {
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
-        <ColInnerCard title="Fair Value">
+        {(sourceEps && sourcePe) &&  <ColInnerCard title="Fair Value">
           <StockValueTimelineEditor
             onLoadList={() => listStockValue(symbol)}
             onSaveNew={payload => saveStockValue(symbol, payload)}
@@ -268,7 +268,7 @@ const StockForm = (props) => {
             sourceEps={sourceEps}
             sourcePe={sourcePe}
           />
-        </ColInnerCard>
+        </ColInnerCard>}
       </ColStyled>
       <ColStyled {...span}>
         <ColInnerCard title="Support">

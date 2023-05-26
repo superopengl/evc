@@ -1,6 +1,7 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, OneToMany } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
+import { StockValue } from './StockValue';
 
 
 @Entity()
@@ -16,7 +17,7 @@ export class StockPe {
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
   stock: Stock;
 
-  @Column('uuid')
+  @Column()
   symbol: string;
 
   @Column('uuid')

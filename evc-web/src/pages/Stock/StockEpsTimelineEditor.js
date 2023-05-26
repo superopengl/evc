@@ -86,7 +86,7 @@ export const StockEpsTimelineEditor = (props) => {
             // onClick={() => toggleCurrentItem(item)}
             // style={{position: 'relative'}}
             // className={index <= 3 ? 'current-selected' : ''}
-            extra={<ConfirmDeleteButton onDelete={() => handleDeleteItem(item)} />}
+            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
               {item.id === publishedId ? <FlagFilled />

@@ -13,17 +13,11 @@ export class StockResistance {
   @Column({ default: () => `timezone('UTC', now())` })
   createdAt?: Date;
 
-  // @Column('uuid')
-  @ManyToOne(() => Stock)
-  @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
-  stock: Stock;
-
-  @Column('uuid')
+  @Column()
   symbol: string;
 
-  @OneToOne(() => StockPublish, {nullable: true})
-  @JoinColumn()
-  publish: StockPublish;
+  @Column('uuid', {nullable: true})
+  publishId: string;
 
   @Column('uuid')
   author: string;

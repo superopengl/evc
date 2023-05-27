@@ -33,7 +33,7 @@ const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
 
 const ContainerStyled = styled.div`
-  margin: 5rem auto 2rem auto;
+  margin: 6rem auto 2rem auto;
   padding: 0 1rem 4rem;
   width: 100%;
   max-width: 1000px;

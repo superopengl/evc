@@ -9,7 +9,7 @@ import PortfolioList from './PortfolioList';
 const { Title, Paragraph, Link } = Typography;
 
 const ContainerStyled = styled.div`
-margin: 5rem auto 2rem auto;
+margin: 6rem auto 2rem auto;
 padding: 0 1rem;
 width: 100%;
 max-width: 600px;

@@ -19,7 +19,7 @@ const LayoutStyled = styled(Layout)`
 `;
 
 const ContainerStyled = styled.div`
-  margin: 5rem 1rem 2rem 1rem;
+  margin: 6rem 1rem 2rem 1rem;
 `;
 
 const StyledRow = styled(Row)`

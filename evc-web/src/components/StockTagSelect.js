@@ -98,6 +98,12 @@ const colourStyles = {
   //     backgroundColor: 'red',
   //   }
   // },
+  container: (styles) => {
+    return {
+      ...styles,
+      minWidth: '180px'
+    }
+  },
   multiValue: (styles, { data }) => {
     return {
       ...styles,
@@ -221,7 +227,6 @@ const StockTagSelect = (props) => {
     isLoading={loading}
     onChange={handleChange}
     onCreateOption={handleCreateNew}
-
     value={selectedOptions}
     styles={colourStyles}
     options={options}

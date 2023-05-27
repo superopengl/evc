@@ -17,7 +17,7 @@ import { Divider } from 'antd';
 const { Title, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
-margin: 5rem auto 2rem auto;
+margin: 6rem auto 2rem auto;
 padding: 0 1rem;
 width: 100%;
 // max-width: 600px;
@@ -129,35 +129,37 @@ const StockListPage = (props) => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <Space size="small" direction="vertical" style={{ width: '100%' }}>
-          {/* <StyledTitleRow>
+        <Loading loading={loading}>
+          <Space size="small" direction="vertical" style={{ width: '100%' }}>
+            {/* <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Stock List</Title>
           </StyledTitleRow> */}
-          <Space style={{ width: '100%', justifyContent: 'space-between' }} >
-            <Input.Search
-              placeholder="input search text"
-              enterButton={<SearchOutlined />}
-              onSearch={value => handleSearch(value)}
-              onPressEnter={e => handleSearch(e.target.value)}
-              onChange={e => handleSearchChange(e.target.value)}
-              loading={false}
-              value={queryInfo?.text}
-              allowClear
-            />
-            <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
+            <Space style={{ width: '100%', justifyContent: 'space-between' }} >
+              <Input.Search
+                placeholder="input search text"
+                enterButton={<SearchOutlined />}
+                onSearch={value => handleSearch(value)}
+                onPressEnter={e => handleSearch(e.target.value)}
+                onChange={e => handleSearchChange(e.target.value)}
+                loading={false}
+                value={queryInfo?.text}
+                allowClear
+              />
+              <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
+            </Space>
+            <Divider />
+            <InfiniteScroll
+              initialLoad={true}
+              pageStart={0}
+              loadMore={() => handleFetchNextPageData()}
+              hasMore={!loading && hasMore}
+              useWindow={true}
+              loader={<Space key="loader" style={{ width: '100%', justifyContent: 'center' }}><Loading /></Space>}
+            >
+              <StockList data={list} />
+            </InfiniteScroll>
           </Space>
-          <Divider/>
-          <InfiniteScroll
-            initialLoad={true}
-            pageStart={0}
-            loadMore={() => handleFetchNextPageData()}
-            hasMore={!loading && hasMore}
-            useWindow={true}
-            loader={<Space key="loader" style={{ width: '100%', justifyContent: 'center' }}><Loading /></Space>}
-          >
-            <StockList data={list} />
-          </InfiniteScroll>
-        </Space>
+        </Loading>
       </ContainerStyled>
       <Modal
         visible={visible}

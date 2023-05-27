@@ -24,7 +24,7 @@ import { DatePicker } from 'antd';
 const { Title, Link: TextLink } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
+  margin: 5rem 1rem 2rem 1rem;
 
   .active-referral {
     background-color: rgba(21,190,83, 0.1);

@@ -29,7 +29,7 @@ import CheckboxButton from 'components/CheckboxButton';
 const { Title, Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
+  margin: 5rem 1rem 2rem 1rem;
 `;
 
 const StyledTitleRow = styled.div`

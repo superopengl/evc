@@ -10,7 +10,7 @@ import PortfolioForm from '../../components/PortfolioForm';
 const { Title } = Typography;
 
 const ContainerStyled = styled.div`
-margin: 6rem auto 2rem auto;
+margin: 5rem auto 2rem auto;
 padding: 0 1rem;
 width: 100%;
 max-width: 600px;

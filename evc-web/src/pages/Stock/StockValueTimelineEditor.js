@@ -19,15 +19,11 @@ const Container = styled.div`
   .current-published {
     background-color: rgba(21,190,83, 0.1);
   }
-
-  .current-selected {
-    background-color: rgba(250, 140, 22, 0.2);
-  }
 `;
 
 
 export const StockValueTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, shouldHighlightItem, showTime, sourceEps, sourcePe } = props;
+  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, showTime, sourceEps, sourcePe } = props;
   const [disabled, setDisabled] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -125,7 +121,7 @@ export const StockValueTimelineEditor = (props) => {
           <List.Item
             onClick={() => onSelected(item)}
             style={{ position: 'relative' }}
-            className={shouldHighlightItem(item) ? 'current-selected' : ''}
+            className={getClassNameOnSelect(item)}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             <List.Item.Meta
@@ -145,7 +141,7 @@ StockValueTimelineEditor.propTypes = {
   onChange: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
   onSelected: PropTypes.func,
-  shouldHighlightItem: PropTypes.func,
+  getClassNameOnSelect: PropTypes.func,
   showTime: PropTypes.bool,
   sourceEps: PropTypes.array.isRequired,
   sourcePe: PropTypes.array.isRequired,
@@ -156,5 +152,5 @@ StockValueTimelineEditor.defaultProps = {
   onChange: () => { },
   onDelete: () => { },
   onSelected: () => { },
-  shouldHighlightItem: () => false,
+  getClassNameOnSelect: () => false,
 };

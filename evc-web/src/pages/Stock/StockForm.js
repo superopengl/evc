@@ -236,8 +236,8 @@ const StockForm = (props) => {
     return <Loading />
   }
 
-  const shouldHighlightEpsItem = item => {
-    return selected.epsIds.includes(item.id);
+  const getClassNameOnSelectForEpsItem = item => {
+    return `${selected.epsIds.includes(item.id) ? 'current-selected-datepoint' : ''} ${selected.source === 'eps' ? 'source' : ''}`;
   }
 
   const updateSelectedByEps = (item) => {
@@ -248,8 +248,8 @@ const StockForm = (props) => {
     });
   }
 
-  const shouldHighlightPeItem = item => {
-    return item.id === selected.peId;
+  const getClassNameOnSelectForPeItem = item => {
+    return `${item.id === selected.peId ? 'current-selected-datepoint' : ''} ${selected.source === 'pe' ? 'source' : ''}`;
   }
 
   const updateSelectedByPe = (item) => {
@@ -260,18 +260,22 @@ const StockForm = (props) => {
     });
   }
 
-  const shouldHighlightValueItem = item => {
-    switch (selected.source) {
-      case 'value':
-      case 'publish':
-        return item.id === selected.valueId;
-      case 'pe':
-        return item.peId === selected.peId;
-      case 'eps':
-        return item.epsIds.some(x => selected.epsIds.includes(x));
-      default:
-        return false;
+  const getClassNameOnSelectForValueItem = item => {
+    const shouldHighlight = () => {
+      switch (selected.source) {
+        case 'value':
+        case 'publish':
+          return item.id === selected.valueId;
+        case 'pe':
+          return item.peId === selected.peId;
+        case 'eps':
+          return item.epsIds.some(x => selected.epsIds.includes(x));
+        default:
+          return false;
+      }
     }
+
+    return `${shouldHighlight() ? 'current-selected-datepoint' : ''} ${selected.source === 'value' ? 'source' : ''}`;
   }
 
   const updateSelectedByValue = (item) => {
@@ -284,8 +288,8 @@ const StockForm = (props) => {
     });
   }
 
-  const shouldHighlightSupportItem = support => {
-    return support.id === selected.supportId;
+  const getClassNameOnSelectForSupportItem = support => {
+    return `${support.id === selected.supportId ? 'current-selected-datepoint' : ''} ${selected.source === 'support' ? 'source' : ''}`;
   }
 
   const updateSelectedBySupport = (item) => {
@@ -296,8 +300,8 @@ const StockForm = (props) => {
     });
   }
 
-  const shouldHighlightResistanceItem = resistance => {
-    return resistance.id === selected.resistanceId;
+  const getClassNameOnSelectForResistanceItem = resistance => {
+    return `${resistance.id === selected.resistanceId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance' ? 'source' : ''}`;
   }
 
   const updateSelectedByResistance = (item) => {
@@ -323,22 +327,26 @@ const StockForm = (props) => {
   }
 
 
-  const shouldHighlightPublishItem = publish => {
-    switch (selected.source) {
-      case 'publish':
-        return publish.id === selected.publishId;
-      case 'support':
-        return publish.supportId === selected.supportId;
-      case 'resistance':
-        return publish.resistanceId === selected.resistanceId;
-      case 'value':
-      case 'eps':
-      case 'pe':
-        return publish.valueId === selected.valueId;
-      default:
-    }
+  const getClassNameOnSelectForPublishItem = item => {
+    const shouldHighlight = () => {
+      switch (selected.source) {
+        case 'publish':
+          return item.id === selected.publishId;
+        case 'support':
+          return item.supportId === selected.supportId;
+        case 'resistance':
+          return item.resistanceId === selected.resistanceId;
+        case 'value':
+        case 'eps':
+        case 'pe':
+          return item.valueId === selected.valueId;
+        default:
+      }
 
-    return false;
+      return false;
+    };
+
+    return `${shouldHighlight() ? 'current-selected-datepoint' : ''} ${selected.source === 'publish' ? 'source' : ''}`;
   }
 
   return (<Container>
@@ -360,7 +368,7 @@ const StockForm = (props) => {
             onDelete={id => deleteStockEps(id)}
             onChange={list => setEpsList(list)}
             onSelected={updateSelectedByEps}
-            shouldHighlightItem={shouldHighlightEpsItem}
+            getClassNameOnSelect={getClassNameOnSelectForEpsItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -372,7 +380,7 @@ const StockForm = (props) => {
             onChange={list => setPeList(list)}
             onDelete={id => deleteStockPe(id)}
             onSelected={updateSelectedByPe}
-            shouldHighlightItem={shouldHighlightPeItem}
+            getClassNameOnSelect={getClassNameOnSelectForPeItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -386,7 +394,7 @@ const StockForm = (props) => {
             sourceEps={epsList}
             sourcePe={peList}
             onSelected={updateSelectedByValue}
-            shouldHighlightItem={shouldHighlightValueItem}
+            getClassNameOnSelect={getClassNameOnSelectForValueItem}
           /> : <Alert type="warning" message="Please setup EPS and PE before setting Fair Value" showIcon />}
         </ColInnerCard>
       </ColStyled>
@@ -398,7 +406,7 @@ const StockForm = (props) => {
             onDelete={id => deleteStockSupport(id)}
             onChange={list => setSupportList(list)}
             onSelected={updateSelectedBySupport}
-            shouldHighlightItem={shouldHighlightSupportItem}
+            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -410,7 +418,7 @@ const StockForm = (props) => {
             onDelete={id => deleteStockResistance(id)}
             onChange={list => setResistanceList(list)}
             onSelected={updateSelectedByResistance}
-            shouldHighlightItem={shouldHighlightResistanceItem}
+            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -421,7 +429,7 @@ const StockForm = (props) => {
             onPublishNew={() => handlePublish()}
             onChange={list => setPublishList(list)}
             onSelected={updateSelectedByPublish}
-            shouldHighlightItem={shouldHighlightPublishItem}
+            getClassNameOnSelect={getClassNameOnSelectForPublishItem}
             disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
           />
         </ColInnerCard>

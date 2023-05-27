@@ -19,14 +19,11 @@ const Container = styled.div`
   .current-published {
     background-color: rgba(21,190,83, 0.1);
   }
-  .current-selected {
-    background-color: rgba(250, 140, 22, 0.2);
-  }
 `;
 
 
 export const StockEpsTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onDelete, onChange, onSelected, shouldHighlightItem } = props;
+  const { onLoadList, onSaveNew, onDelete, onChange, onSelected, getClassNameOnSelect } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [currentItem, setCurrentItem] = React.useState();
@@ -87,7 +84,7 @@ export const StockEpsTimelineEditor = (props) => {
             // onClick={() => toggleCurrentItem(item)}
             // style={{position: 'relative'}}
             // className={index <= 3 ? 'current-selected' : ''}
-            className={shouldHighlightItem(item) ? 'current-selected' : ''}
+            className={getClassNameOnSelect(item)}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
@@ -113,7 +110,7 @@ StockEpsTimelineEditor.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onSelected: PropTypes.func,
-  shouldHighlightItem: PropTypes.func,
+  getClassNameOnSelect: PropTypes.func,
   showTime: PropTypes.bool,
 };
 
@@ -121,5 +118,5 @@ StockEpsTimelineEditor.defaultProps = {
   showTime: true,
   onChange: () => {},
   onSelected: () => { },
-  shouldHighlightItem: () => false,
+  getClassNameOnSelect: () => false,
 };

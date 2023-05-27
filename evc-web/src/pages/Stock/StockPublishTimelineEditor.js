@@ -20,20 +20,11 @@ const Container = styled.div`
   .current-published {
     background-color: rgba(21,190,83, 0.1);
   }
-  .current-selected {
-    background-color: rgba(250, 140, 22, 0.2);
-
-    &:hover {
-      .ant-table-cell {
-        background: none !important;
-      }
-    }
-  }
 `;
 
 
 export const StockPublishTimelineEditor = (props) => {
-  const { onLoadList, onPublishNew, onChange, onSelected, shouldHighlightItem, disabled } = props;
+  const { onLoadList, onPublishNew, onChange, onSelected, getClassNameOnSelect, disabled } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [publishConfirmVisible, setPublishConfirmVisible] = React.useState(false);
@@ -126,7 +117,7 @@ export const StockPublishTimelineEditor = (props) => {
         dataSource={list}
         rowKey="id"
         rowClassName={(item, index) => {
-          return shouldHighlightItem(item) ? 'current-selected' : '';
+          return getClassNameOnSelect(item);
         }}
         onRow={(item, index) => {
           return {
@@ -144,13 +135,13 @@ StockPublishTimelineEditor.propTypes = {
   onPublishNew: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onSelected: PropTypes.func,
-  shouldHighlightItem: PropTypes.func,
+  getClassNameOnSelect: PropTypes.func,
   disabled: PropTypes.bool.isRequired,
 };
 
 StockPublishTimelineEditor.defaultProps = {
   onChange: () => { },
   onSelected: () => { },
-  shouldHighlightItem: () => false,
+  getClassNameOnSelect: () => false,
   disabled: false
 };

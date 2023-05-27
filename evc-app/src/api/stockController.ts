@@ -139,11 +139,11 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 
 export const searchStock = handlerWrapper(async (req, res) => {
   // assertRole(req, 'admin', 'agent', 'client');
-  const { text, history, from, to, page, size } = req.body;
+  const { text, history, from, to, tags, page, size } = req.body;
 
-  assert(page >= 0 && size > 0, 400, 'Invalid page and size parameter');
+  assert(page > 0 && size > 0, 400, 'Invalid page and size parameter');
   const pagenation = {
-    skip: page * size,
+    skip: (page - 1) * size,
     limit: size,
   };
 
@@ -171,15 +171,27 @@ export const searchStock = handlerWrapper(async (req, res) => {
       'pu', 'pu.symbol = s.symbol')
     .leftJoin(StockSupport, 'ss', 'pu."supportId" = ss.id')
     .leftJoin(StockResistance, 'sr', 'pu."resistanceId" = sr.id')
-    .leftJoin(StockValue, 'sv', 'pu."valueId" = sv.id')
-    .leftJoin(q => q.from('stock_tags_stock_tag', 'tg')
+    .leftJoin(StockValue, 'sv', 'pu."valueId" = sv.id');
+  if (tags?.length) {
+    // Filter by tags
+    query = query.innerJoin(q => q.from('stock_tags_stock_tag', 'tg')
+      .innerJoin(sq => sq.from('stock_tags_stock_tag', 'stg').where(`stg."stockTagId" IN (:...tags)`, { tags }), 'stg', 'stg."stockSymbol" = tg."stockSymbol"')
       .groupBy('tg."stockSymbol"')
       .select([
         'tg."stockSymbol" as symbol',
         'array_agg(tg."stockTagId") as tags'
       ]),
-      'tag', 'tag.symbol = s.symbol')
-    .orderBy('s.symbol')
+      'tag', 'tag.symbol = s.symbol');
+  } else {
+    query = query.leftJoin(q => q.from('stock_tags_stock_tag', 'tg')
+      .groupBy('tg."stockSymbol"')
+      .select([
+        'tg."stockSymbol" as symbol',
+        'array_agg(tg."stockTagId") as tags'
+      ]),
+      'tag', 'tag.symbol = s.symbol');
+  }
+  query = query.orderBy('s.symbol')
     .addOrderBy('pu."createdAt"', 'DESC')
     .select([
       's.*',

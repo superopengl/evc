@@ -30,9 +30,6 @@ export class StockValue {
   @Column({ default: false })
   special: boolean;
 
-  @Column('uuid', {nullable: true})
-  publishId: string;
-
   @Column('uuid', {array: true})
   epsIds: string[];
 

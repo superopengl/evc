@@ -21,17 +21,16 @@ const Container = styled.div`
   }
 
   .current-selected {
-    background-color: rgba(250, 140, 22, 0.1);
+    background-color: rgba(250, 140, 22, 0.2);
   }
 `;
 
 
 export const StockValueTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, clickable, showTime, publishedId, sourceEps, sourcePe } = props;
+  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, shouldHighlightItem, showTime, sourceEps, sourcePe } = props;
   const [disabled, setDisabled] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
-  const [currentItem, setCurrentItem] = React.useState();
   const [isSpecialFairValue, setIsSpecialFairValue] = React.useState(false);
   const [derivedValue, setDerivedValue] = React.useState({ lo: null, hi: null });
 
@@ -53,14 +52,16 @@ export const StockValueTimelineEditor = (props) => {
     loadEntity();
   }, []);
 
+
   React.useEffect(() => {
-    const enabled = !!(sourceEps?.length === 4 && sourcePe);
+    const enabled = sourceEps?.length >= 4 && sourcePe.length > 0;
     setDisabled(!enabled);
     if (enabled) {
-      const sum = _.sum(sourceEps.map(x => x.value));
+      const sum = _.sum(sourceEps.slice(0, 4).map(x => x.value));
+      const targetPe = sourcePe[0];
       setDerivedValue({
-        lo: _.isNumber(sourcePe.lo) ? sourcePe.lo * sum : null,
-        hi: _.isNumber(sourcePe.hi) ? sourcePe.hi * sum : null
+        lo: _.isNumber(targetPe.lo) ? targetPe.lo * sum : null,
+        hi: _.isNumber(targetPe.hi) ? targetPe.hi * sum : null
       });
     }
   }, [sourceEps, sourcePe])
@@ -72,8 +73,8 @@ export const StockValueTimelineEditor = (props) => {
         lo: range[0],
         hi: range[1],
         special: isSpecialFairValue,
-        epsIds: sourceEps.map(x => x.id),
-        peId: sourcePe.id,
+        epsIds: sourceEps.slice(0, 4).map(x => x.id),
+        peId: sourcePe[0].id,
       });
       setIsSpecialFairValue(false);
       updateList(await onLoadList());
@@ -82,10 +83,6 @@ export const StockValueTimelineEditor = (props) => {
     }
   }
 
-  const toggleCurrentItem = item => {
-    if (!clickable) return;
-    setCurrentItem(currentItem === item ? null : item);
-  }
 
   const handleSpecialFairSwitchChange = checked => {
     setIsSpecialFairValue(checked);
@@ -126,15 +123,11 @@ export const StockValueTimelineEditor = (props) => {
         locale={{ emptyText: ' ' }}
         renderItem={item => (
           <List.Item
-            onClick={() => toggleCurrentItem(item)}
+            onClick={() => onSelected(item)}
             style={{ position: 'relative' }}
-            className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
+            className={shouldHighlightItem(item) ? 'current-selected' : ''}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
-            {clickable && <div style={{ position: 'absolute', right: 10, top: 10 }}>
-              {item.id === publishedId ? <FlagFilled />
-                : item === currentItem ? <FlagOutlined /> : null}
-            </div>}
             <List.Item.Meta
               description={<NumberRangeDisplay value={item} showTime={showTime} />}
             />
@@ -149,20 +142,19 @@ export const StockValueTimelineEditor = (props) => {
 StockValueTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
-  onItemClick: PropTypes.func,
   onChange: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
-  publishedId: PropTypes.string,
+  onSelected: PropTypes.func,
+  shouldHighlightItem: PropTypes.func,
   showTime: PropTypes.bool,
-  clickable: PropTypes.bool,
   sourceEps: PropTypes.array.isRequired,
-  sourcePe: PropTypes.object.isRequired,
+  sourcePe: PropTypes.array.isRequired,
 };
 
 StockValueTimelineEditor.defaultProps = {
   showTime: true,
-  mode: null,
-  clickable: true,
   onChange: () => { },
-  onDelete: () => { }
+  onDelete: () => { },
+  onSelected: () => { },
+  shouldHighlightItem: () => false,
 };

@@ -20,13 +20,13 @@ const Container = styled.div`
     background-color: rgba(21,190,83, 0.1);
   }
   .current-selected {
-    background-color: rgba(250, 140, 22, 0.1);
+    background-color: rgba(250, 140, 22, 0.2);
   }
 `;
 
 
 export const StockEpsTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onDelete, onChange, mode, showTime, publishedId } = props;
+  const { onLoadList, onSaveNew, onDelete, onChange, onSelected, shouldHighlightItem } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [currentItem, setCurrentItem] = React.useState();
@@ -83,9 +83,11 @@ export const StockEpsTimelineEditor = (props) => {
         locale={{emptyText: ' '}}
         renderItem={(item, index) => (
           <List.Item
+            onClick={() => onSelected(item)}
             // onClick={() => toggleCurrentItem(item)}
             // style={{position: 'relative'}}
             // className={index <= 3 ? 'current-selected' : ''}
+            className={shouldHighlightItem(item) ? 'current-selected' : ''}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
@@ -110,14 +112,14 @@ StockEpsTimelineEditor.propTypes = {
   onSaveNew: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onChange: PropTypes.func,
-  onItemClick: PropTypes.func,
-  publishedId: PropTypes.string,
+  onSelected: PropTypes.func,
+  shouldHighlightItem: PropTypes.func,
   showTime: PropTypes.bool,
-  mode: PropTypes.string,
 };
 
 StockEpsTimelineEditor.defaultProps = {
   showTime: true,
-  mode: null,
-  onChange: () => {}
+  onChange: () => {},
+  onSelected: () => { },
+  shouldHighlightItem: () => false,
 };

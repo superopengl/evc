@@ -98,6 +98,16 @@ const span = {
   xxl: 8
 };
 
+const DEFAULT_SELECTED = {
+  source: '',
+  publishId: null,
+  resistanceId: null,
+  supportId: null,
+  valueId: null,
+  epsIds: [],
+  epId: null,
+};
+
 const StockForm = (props) => {
   const { symbol, onOk } = props;
   const formRef = React.createRef();
@@ -106,11 +116,13 @@ const StockForm = (props) => {
   const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [stock, setStock] = React.useState();
-  const [sourceEps, setSourceEps] = React.useState();
-  const [sourcePe, setSourcePe] = React.useState();
+  const [epsList, setEpsList] = React.useState();
+  const [peList, setPeList] = React.useState();
   const [supportList, setSupportList] = React.useState();
   const [resistanceList, setResistanceList] = React.useState();
   const [valueList, setValueList] = React.useState();
+  const [publishList, setPublishList] = React.useState();
+  const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
 
   const loadEntity = async () => {
     try {
@@ -224,6 +236,110 @@ const StockForm = (props) => {
     return <Loading />
   }
 
+  const shouldHighlightEpsItem = item => {
+    return selected.epsIds.includes(item.id);
+  }
+
+  const updateSelectedByEps = (item) => {
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'eps',
+      epsIds: [item.id]
+    });
+  }
+
+  const shouldHighlightPeItem = item => {
+    return item.id === selected.peId;
+  }
+
+  const updateSelectedByPe = (item) => {
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'pe',
+      peId: item.id
+    });
+  }
+
+  const shouldHighlightValueItem = item => {
+    switch (selected.source) {
+      case 'value':
+      case 'publish':
+        return item.id === selected.valueId;
+      case 'pe':
+        return item.peId === selected.peId;
+      case 'eps':
+        return item.epsIds.some(x => selected.epsIds.includes(x));
+      default:
+        return false;
+    }
+  }
+
+  const updateSelectedByValue = (item) => {
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'value',
+      valueId: item.id,
+      epsIds: item.epsIds,
+      peId: item.peId
+    });
+  }
+
+  const shouldHighlightSupportItem = support => {
+    return support.id === selected.supportId;
+  }
+
+  const updateSelectedBySupport = (item) => {
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'support',
+      supportId: item.id,
+    });
+  }
+
+  const shouldHighlightResistanceItem = resistance => {
+    return resistance.id === selected.resistanceId;
+  }
+
+  const updateSelectedByResistance = (item) => {
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'resistance',
+      resistanceId: item.id,
+    });
+  }
+
+  const updateSelectedByPublish = (item) => {
+    const value = valueList.find(x => x.id === item.valueId);
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'publish',
+      publishId: item.id,
+      resistanceId: item.resistanceId,
+      supportId: item.supportId,
+      valueId: item.valueId,
+      peId: value.peId,
+      epsIds: value.epsIds
+    });
+  }
+
+
+  const shouldHighlightPublishItem = publish => {
+    switch (selected.source) {
+      case 'publish':
+        return publish.id === selected.publishId;
+      case 'support':
+        return publish.supportId === selected.supportId;
+      case 'resistance':
+        return publish.resistanceId === selected.resistanceId;
+      case 'value':
+      case 'eps':
+      case 'pe':
+        return publish.valueId === selected.valueId;
+      default:
+    }
+
+    return false;
+  }
 
   return (<Container>
     <PageHeader
@@ -242,7 +358,9 @@ const StockForm = (props) => {
             onLoadList={() => listStockEps(symbol)}
             onSaveNew={values => saveStockEps(symbol, values)}
             onDelete={id => deleteStockEps(id)}
-            onChange={list => setSourceEps(list.slice(0, 4))}
+            onChange={list => setEpsList(list)}
+            onSelected={updateSelectedByEps}
+            shouldHighlightItem={shouldHighlightEpsItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -251,23 +369,25 @@ const StockForm = (props) => {
           <StockRangeTimelineEditor
             onLoadList={() => listStockPe(symbol)}
             onSaveNew={([lo, hi]) => saveStockPe(symbol, lo, hi)}
-            clickable={false}
-            onChange={list => setSourcePe(list[0])}
+            onChange={list => setPeList(list)}
             onDelete={id => deleteStockPe(id)}
+            onSelected={updateSelectedByPe}
+            shouldHighlightItem={shouldHighlightPeItem}
           />
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
-         <ColInnerCard title="Fair Value">
-         {(sourceEps && sourcePe) ? <StockValueTimelineEditor
+        <ColInnerCard title="Fair Value">
+          {(epsList && peList) ? <StockValueTimelineEditor
             onLoadList={() => listStockValue(symbol)}
             onSaveNew={payload => saveStockValue(symbol, payload)}
             onDelete={id => deleteStockValue(id)}
             onChange={list => setValueList(list)}
-            clickable={true}
-            sourceEps={sourceEps}
-            sourcePe={sourcePe}
-          /> : <Alert type="warning" message="Please setup EPS and PE before setting Fair Value" showIcon/>}
+            sourceEps={epsList}
+            sourcePe={peList}
+            onSelected={updateSelectedByValue}
+            shouldHighlightItem={shouldHighlightValueItem}
+          /> : <Alert type="warning" message="Please setup EPS and PE before setting Fair Value" showIcon />}
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
@@ -277,6 +397,8 @@ const StockForm = (props) => {
             onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)}
             onDelete={id => deleteStockSupport(id)}
             onChange={list => setSupportList(list)}
+            onSelected={updateSelectedBySupport}
+            shouldHighlightItem={shouldHighlightSupportItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -287,6 +409,8 @@ const StockForm = (props) => {
             onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)}
             onDelete={id => deleteStockResistance(id)}
             onChange={list => setResistanceList(list)}
+            onSelected={updateSelectedByResistance}
+            shouldHighlightItem={shouldHighlightResistanceItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -295,6 +419,10 @@ const StockForm = (props) => {
           <StockPublishTimelineEditor
             onLoadList={() => listStockPublish(symbol)}
             onPublishNew={() => handlePublish()}
+            onChange={list => setPublishList(list)}
+            onSelected={updateSelectedByPublish}
+            shouldHighlightItem={shouldHighlightPublishItem}
+            disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
           />
         </ColInnerCard>
       </ColStyled>

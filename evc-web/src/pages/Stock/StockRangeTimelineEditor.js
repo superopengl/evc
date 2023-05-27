@@ -18,16 +18,15 @@ const Container = styled.div`
   }
 
   .current-selected {
-    background-color: rgba(250, 140, 22, 0.1);
+    background-color: rgba(250, 140, 22, 0.2);
   }
 `;
 
 
 export const StockRangeTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, clickable, showTime, publishedId } = props;
+  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, shouldHighlightItem, showTime, publishedId } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
-  const [currentItem, setCurrentItem] = React.useState();
 
   const updateList = (list) => {
     setList(list);
@@ -57,11 +56,6 @@ export const StockRangeTimelineEditor = (props) => {
     }
   }
 
-  const toggleCurrentItem = item => {
-    if (!clickable) return;
-    setCurrentItem(currentItem === item ? null : item);
-  }
-
   const handleDeleteItem = async (item) => {
     try {
       setLoading(true);
@@ -87,15 +81,11 @@ export const StockRangeTimelineEditor = (props) => {
         </div>}
         renderItem={item => (
           <List.Item
-            onClick={() => toggleCurrentItem(item)}
+            onClick={() => onSelected(item)}
             style={{ position: 'relative' }}
-            className={item.id === publishedId ? 'current-published' : item === currentItem ? 'current-selected' : ''}
+            className={shouldHighlightItem(item) ? 'current-selected' : ''}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
-            {clickable && <div style={{ position: 'absolute', right: 10, top: 10 }}>
-              {item.id === publishedId ? <FlagFilled />
-                : item === currentItem ? <FlagOutlined /> : null}
-            </div>}
             <List.Item.Meta
               description={<NumberRangeDisplay value={item} showTime={showTime} />}
             />
@@ -110,18 +100,19 @@ StockRangeTimelineEditor.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSaveNew: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  onItemClick: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  onSelected: PropTypes.func,
+  shouldHighlightItem: PropTypes.func,
   publishedId: PropTypes.string,
   showTime: PropTypes.bool,
   mode: PropTypes.string,
-  clickable: PropTypes.bool
 };
 
 StockRangeTimelineEditor.defaultProps = {
   showTime: true,
   mode: null,
-  clickable: false,
   onChange: () => { },
-  onDelete: () => { }
+  onDelete: () => { },
+  onSelected: () => { },
+  shouldHighlightItem: () => false,
 };

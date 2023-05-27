@@ -15,9 +15,9 @@ export const listStockPublish = handlerWrapper(async (req, res) => {
   const list = await getRepository(StockPublish)
     .createQueryBuilder('sp')
     .where({ symbol })
-    .leftJoinAndMapMany('sp.support', StockSupport, 'ss', 'ss.id = sp."supportId"')
-    .leftJoinAndMapMany('sp.resistance', StockResistance, 'sr', 'sr.id = sp."resistanceId"')
-    .leftJoinAndMapMany('sp.value', StockValue, 'sv', 'sv.id = sp."valueId"')
+    .leftJoinAndMapOne('sp.support', StockSupport, 'ss', 'ss.id = sp."supportId"')
+    .leftJoinAndMapOne('sp.resistance', StockResistance, 'sr', 'sr.id = sp."resistanceId"')
+    .leftJoinAndMapOne('sp.value', StockValue, 'sv', 'sv.id = sp."valueId"')
     .orderBy('sp."createdAt"', 'DESC')
     .limit(limit)
     .getMany();
@@ -51,9 +51,6 @@ export const saveStockPublish = handlerWrapper(async (req, res) => {
     publish.valueId = valueId;
 
     await tranc.getRepository(StockPublish).insert(publish);
-    await tranc.getRepository(StockSupport).update(supportId, { publishId: publish.id });
-    await tranc.getRepository(StockResistance).update(resistanceId, { publishId: publish.id });
-    await tranc.getRepository(StockValue).update(valueId, { publishId: publish.id });
   });
 
   res.json();

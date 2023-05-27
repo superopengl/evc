@@ -105,8 +105,8 @@ export async function deleteStockValue(id) {
   return httpDelete(`stock/value/${id}`);
 }
 
-export async function listStockPublish(symbol) {
-  return httpGet(`stock/s/${symbol}/publish`);
+export async function listStockPublish(symbol, verbose = false) {
+  return httpGet(`stock/s/${symbol}/publish`, { verbose });
 }
 
 export async function saveStockPublish(symbol, payload) {

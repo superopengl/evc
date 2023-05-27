@@ -116,12 +116,12 @@ const StockForm = (props) => {
   const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
   const [stock, setStock] = React.useState();
-  const [epsList, setEpsList] = React.useState();
-  const [peList, setPeList] = React.useState();
-  const [supportList, setSupportList] = React.useState();
-  const [resistanceList, setResistanceList] = React.useState();
-  const [valueList, setValueList] = React.useState();
-  const [publishList, setPublishList] = React.useState();
+  const [epsList, setEpsList] = React.useState([]);
+  const [peList, setPeList] = React.useState([]);
+  const [supportList, setSupportList] = React.useState([]);
+  const [resistanceList, setResistanceList] = React.useState([]);
+  const [valueList, setValueList] = React.useState([]);
+  const [publishList, setPublishList] = React.useState([]);
   const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
 
   const loadEntity = async () => {
@@ -136,25 +136,6 @@ const StockForm = (props) => {
   React.useEffect(() => {
     loadEntity();
   }, []);
-
-  const handleSave = async (values) => {
-    if (loading) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const stock = { ...values, tags: values.tags?.map(t => t.id) };
-      await saveStock(stock);
-      setDrawerVisible(false);
-      await loadEntity();
-
-      notify.success('Successfully saved stock!');
-
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const handleSaveForm = async (propName, e) => {
     const newStock = {
@@ -171,10 +152,6 @@ const StockForm = (props) => {
     } finally {
       setLoading(false);
     }
-  }
-
-  const handleValuesChange = (changedValues, allValues) => {
-    console.log(changedValues);
   }
 
   const handleCancel = () => {
@@ -356,7 +333,7 @@ const StockForm = (props) => {
       title={<StockName value={stock} />}
       extra={[
         <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
-        <Button key="1" disabled={loading} onClick={() => loadEntity()} icon={<SyncOutlined />} />,
+        // <Button key="1" disabled={loading} onClick={() => loadEntity()} icon={<SyncOutlined />} />,
         <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
         <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
       ]}
@@ -388,7 +365,7 @@ const StockForm = (props) => {
       </ColStyled>
       <ColStyled {...span}>
         <ColInnerCard title="Fair Value">
-          {(epsList && peList) ? <StockValueTimelineEditor
+          <StockValueTimelineEditor
             onLoadList={() => listStockValue(symbol)}
             onSaveNew={payload => saveStockValue(symbol, payload)}
             onDelete={id => deleteStockValue(id)}
@@ -397,7 +374,7 @@ const StockForm = (props) => {
             sourcePe={peList}
             onSelected={updateSelectedByValue}
             getClassNameOnSelect={getClassNameOnSelectForValueItem}
-          /> : <Alert type="warning" message="Please setup EPS and PE before setting Fair Value" showIcon />}
+          />
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>

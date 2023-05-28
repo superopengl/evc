@@ -103,8 +103,10 @@ const span = {
 const DEFAULT_SELECTED = {
   source: '',
   publishId: null,
-  resistanceId: null,
-  supportId: null,
+  resistanceShortId: null,
+  resistanceLongId: null,
+  supportShortId: null,
+  supportLongId: null,
   valueId: null,
   epsIds: [],
   epId: null,
@@ -120,8 +122,10 @@ const StockForm = (props) => {
   const [stock, setStock] = React.useState();
   const [epsList, setEpsList] = React.useState([]);
   const [peList, setPeList] = React.useState([]);
-  const [supportList, setSupportList] = React.useState([]);
-  const [resistanceList, setResistanceList] = React.useState([]);
+  const [supportShortList, setSupportShortList] = React.useState([]);
+  const [supportLongList, setSupportLongList] = React.useState([]);
+  const [resistanceShortList, setResistanceShortList] = React.useState([]);
+  const [resistanceLongList, setResistanceLongList] = React.useState([]);
   const [valueList, setValueList] = React.useState([]);
   const [publishList, setPublishList] = React.useState([]);
   const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
@@ -201,8 +205,10 @@ const StockForm = (props) => {
     try {
       setLoading(true);
       const payload = {
-        supportId: supportList[0].id,
-        resistanceId: resistanceList[0].id,
+        supportShortId: supportShortList[0].id,
+        supportLongId: supportLongList[0].id,
+        resistanceShortId: resistanceShortList[0].id,
+        resistanceLongId: resistanceLongList[0].id,
         valueId: valueList[0].id
       };
       await saveStockPublish(symbol, payload);
@@ -267,27 +273,51 @@ const StockForm = (props) => {
     });
   }
 
-  const getClassNameOnSelectForSupportItem = support => {
-    return `${support.id === selected.supportId ? 'current-selected-datepoint' : ''} ${selected.source === 'support' ? 'source' : ''}`;
+  const getClassNameOnSelectForSupportShortItem = item => {
+    return `${item.id === selected.supportShortId ? 'current-selected-datepoint' : ''} ${selected.source === 'support_short' ? 'source' : ''}`;
   }
 
-  const updateSelectedBySupport = (item) => {
+  const getClassNameOnSelectForSupportLongItem = item => {
+    return `${item.id === selected.supportLongId ? 'current-selected-datepoint' : ''} ${selected.source === 'support_long' ? 'source' : ''}`;
+  }
+
+  const updateSelectedBySupportShort = (item) => {
     setSelected({
       ...DEFAULT_SELECTED,
-      source: 'support',
-      supportId: item.id,
+      source: 'support_short',
+      supportShortId: item.id,
     });
   }
 
-  const getClassNameOnSelectForResistanceItem = resistance => {
-    return `${resistance.id === selected.resistanceId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance' ? 'source' : ''}`;
-  }
-
-  const updateSelectedByResistance = (item) => {
+  const updateSelectedBySupportLong = (item) => {
     setSelected({
       ...DEFAULT_SELECTED,
-      source: 'resistance',
-      resistanceId: item.id,
+      source: 'support_long',
+      supportLongId: item.id,
+    });
+  }
+
+  const getClassNameOnSelectForResistanceShortItem = item => {
+    return `${item.id === selected.resistanceShortId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance_short' ? 'source' : ''}`;
+  }
+
+  const getClassNameOnSelectForResistanceLongItem = item => {
+    return `${item.id === selected.resistanceLongId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance_long' ? 'source' : ''}`;
+  }
+
+  const updateSelectedByResistanceShort = (item) => {
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'resistance_short',
+      resistanceShortId: item.id,
+    });
+  }
+
+  const updateSelectedByResistanceLong = (item) => {
+    setSelected({
+      ...DEFAULT_SELECTED,
+      source: 'resistance_long',
+      resistanceLongId: item.id,
     });
   }
 
@@ -297,8 +327,10 @@ const StockForm = (props) => {
       ...DEFAULT_SELECTED,
       source: 'publish',
       publishId: item.id,
-      resistanceId: item.resistanceId,
-      supportId: item.supportId,
+      supportShortId: item.supportShortId,
+      supportLongId: item.supportLongId,
+      resistanceShortId: item.resistanceShortId,
+      resistanceLongId: item.resistanceLongId,
       valueId: item.valueId,
       peId: value.peId,
       epsIds: value.epsIds
@@ -311,10 +343,14 @@ const StockForm = (props) => {
       switch (selected.source) {
         case 'publish':
           return item.id === selected.publishId;
-        case 'support':
-          return item.supportId === selected.supportId;
-        case 'resistance':
-          return item.resistanceId === selected.resistanceId;
+        case 'support_short':
+          return item.supportShortId === selected.supportShortId;
+          case 'support_long':
+            return item.supportLongId === selected.supportLongId;
+        case 'resistance_short':
+          return item.resistanceShortId === selected.resistanceShortId;
+          case 'resistance_long':
+            return item.resistanceLongId === selected.resistanceLongId;
         case 'value':
         case 'eps':
         case 'pe':
@@ -336,8 +372,8 @@ const StockForm = (props) => {
       extra={[
         <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
         // <Button key="1" disabled={loading} onClick={() => loadEntity()} icon={<SyncOutlined />} />,
-        <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
-        <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
+        // <Button key="0" type="danger" disabled={loading} onClick={handleDelete} icon={<DeleteOutlined />}></Button>,
+        // <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
       ]}
     />
     <Row gutter={20} style={{marginTop: 20}}>
@@ -380,16 +416,16 @@ const StockForm = (props) => {
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
-        {/* <ColInnerCard title="Publish History">
+        <ColInnerCard title="Publish History">
           <StockPublishTimelineEditor
-            onLoadList={() => listStockPublish(symbol)}
+            onLoadList={() => listStockPublish(symbol, true)}
             onPublishNew={() => handlePublish()}
             onChange={list => setPublishList(list)}
             onSelected={updateSelectedByPublish}
             getClassNameOnSelect={getClassNameOnSelectForPublishItem}
-            disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
+            disabled={!valueList?.length || !supportShortList?.length || !resistanceShortList?.length}
           />
-        </ColInnerCard> */}
+        </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
         <ColInnerCard title="Support (short)">
@@ -397,9 +433,9 @@ const StockForm = (props) => {
             onLoadList={() => listStockSupportShort(symbol)}
             onSaveNew={([lo, hi]) => saveStockSupportShort(symbol, lo, hi)}
             onDelete={id => deleteStockSupportShort(id)}
-            onChange={list => setSupportList(list)}
-            onSelected={updateSelectedBySupport}
-            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
+            onChange={list => setSupportShortList(list)}
+            onSelected={updateSelectedBySupportShort}
+            getClassNameOnSelect={getClassNameOnSelectForSupportShortItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -409,9 +445,9 @@ const StockForm = (props) => {
             onLoadList={() => listStockSupportLong(symbol)}
             onSaveNew={([lo, hi]) => saveStockSupportLong(symbol, lo, hi)}
             onDelete={id => deleteStockSupportLong(id)}
-            onChange={list => setSupportList(list)}
-            onSelected={updateSelectedBySupport}
-            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
+            onChange={list => setSupportLongList(list)}
+            onSelected={updateSelectedBySupportLong}
+            getClassNameOnSelect={getClassNameOnSelectForSupportLongItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -421,9 +457,9 @@ const StockForm = (props) => {
             onLoadList={() => listStockResistanceShort(symbol)}
             onSaveNew={([lo, hi]) => saveStockResistanceShort(symbol, lo, hi)}
             onDelete={id => deleteStockResistanceShort(id)}
-            onChange={list => setResistanceList(list)}
-            onSelected={updateSelectedByResistance}
-            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
+            onChange={list => setResistanceShortList(list)}
+            onSelected={updateSelectedByResistanceShort}
+            getClassNameOnSelect={getClassNameOnSelectForResistanceShortItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -433,9 +469,9 @@ const StockForm = (props) => {
             onLoadList={() => listStockResistanceLong(symbol)}
             onSaveNew={([lo, hi]) => saveStockResistanceLong(symbol, lo, hi)}
             onDelete={id => deleteStockResistanceLong(id)}
-            onChange={list => setResistanceList(list)}
-            onSelected={updateSelectedByResistance}
-            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
+            onChange={list => setResistanceLongList(list)}
+            onSelected={updateSelectedByResistanceLong}
+            getClassNameOnSelect={getClassNameOnSelectForResistanceLongItem}
           />
         </ColInnerCard>
       </ColStyled>
@@ -466,7 +502,7 @@ const StockForm = (props) => {
     </Modal>
 
 
-    <Drawer
+    {/* <Drawer
       visible={drawerVisible}
       destroyOnClose={true}
       closable={true}
@@ -476,8 +512,6 @@ const StockForm = (props) => {
       onClose={() => setDrawerVisible(false)}
       footer={
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
-          {/* <Button block type="primary" disabled={loading} onClick={() => formRef.current.submit()}>Save</Button> */}
-          {/* <Button block onClick={() => setDrawerVisible(false)}>Cancel</Button> */}
           <Button block disabled={loading} onClick={() => setSimulatorVisible(true)}>Set Market Price</Button>
         </Space>
       }
@@ -485,9 +519,6 @@ const StockForm = (props) => {
       <Form
         layout="vertical"
         ref={formRef}
-        // onFinish={handleSave}
-        // onValuesChange={handleValuesChange}
-        // style={{ textAlign: 'left' }}
         initialValues={stock}>
         <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
           <Input placeholder="Stock symbol" allowClear={true} maxLength="100" onBlur={e => handleSaveForm('symbol', e.target.value)} disabled={true} readOnly={true} />
@@ -499,7 +530,7 @@ const StockForm = (props) => {
           <StockTagSelect onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} />
         </Form.Item>
       </Form>
-    </Drawer>
+    </Drawer> */}
   </Container >);
 }
 

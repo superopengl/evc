@@ -83,7 +83,7 @@ export const StockRangeTimelineEditor = (props) => {
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             <List.Item.Meta
-              description={<NumberRangeDisplay value={item} showTime={showTime} />}
+              description={<NumberRangeDisplay lo={item.lo} hi={item.hi} time={item.createdAt} />}
             />
           </List.Item>
         )}

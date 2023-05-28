@@ -52,8 +52,7 @@ export const StockRangeTimelineEditor = (props) => {
     }
   }
 
-  const handleDeleteItem = async (e, item) => {
-    e.stopPropagation();
+  const handleDeleteItem = async (item) => {
     try {
       setLoading(true);
       await onDelete(item.id);
@@ -81,7 +80,7 @@ export const StockRangeTimelineEditor = (props) => {
             onClick={() => onSelected(item)}
             style={{ position: 'relative' }}
             className={getClassNameOnSelect(item)}
-            extra={<ConfirmDeleteButton onOk={e => handleDeleteItem(e, item)} />}
+            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             <List.Item.Meta
               description={<NumberRangeDisplay value={item} showTime={showTime} />}

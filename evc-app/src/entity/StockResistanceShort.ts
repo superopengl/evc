@@ -1,14 +1,12 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, OneToMany, PrimaryColumn } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
 import { StockPublish } from './StockPublish';
-import { StockEps } from './StockEps';
-import { StockPe } from './StockPe';
 
 
 @Entity()
 @Index(['symbol', 'createdAt'])
-export class StockValue {
+export class StockResistanceShort {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
@@ -32,13 +30,5 @@ export class StockValue {
 
   @Column({nullable: true})
   hiTrend: boolean;
-
-  @Column({ default: false })
-  special: boolean;
-
-  @Column('uuid', {array: true})
-  epsIds: string[];
-
-  @Column('uuid')
-  peId: string;
 }
+

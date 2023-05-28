@@ -20,6 +20,5 @@ export * from './referralPolicyController';
 export * from './stockValueController';
 export * from './stockPeController';
 export * from './stockEpsController';
-export * from './stockResistanceController';
-export * from './stockSupportController';
+export * from './stockSupportResistanceController';
 export * from './stockPublishController';

@@ -20,8 +20,8 @@ import { searchStock } from '../utils/searchStock';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { Role } from '../types/Role';
 import { StockPublish } from '../entity/StockPublish';
-import { StockResistance } from '../entity/StockResistance';
-import { StockSupport } from '../entity/StockSupport';
+import { StockResistanceShort } from '../entity/StockResistanceShort';
+import { StockSupportShort } from '../entity/StockSupportShort';
 import { StockValue } from '../entity/StockValue';
 
 
@@ -146,8 +146,8 @@ export const listHotStock = handlerWrapper(async (req, res) => {
         .orderBy('pu.symbol')
         .addOrderBy('pu.createdAt', 'DESC'),
         'pu', 'pu.symbol = s.symbol')
-      .innerJoin(StockSupport, 'ss', 'pu."supportId" = ss.id')
-      .innerJoin(StockResistance, 'sr', 'pu."resistanceId" = sr.id')
+      .innerJoin(StockSupportShort, 'ss', 'pu."supportId" = ss.id')
+      .innerJoin(StockResistanceShort, 'sr', 'pu."resistanceId" = sr.id')
       .innerJoin(StockValue, 'sv', 'pu."valueId" = sv.id')
       .select([
         's.*',

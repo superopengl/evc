@@ -15,8 +15,10 @@ import { LocaleSelector } from 'components/LocaleSelector';
 import { CountrySelector } from 'components/CountrySelector';
 import {
   deleteStock, getStock, updateStock,
-  listStockSupport, saveStockSupport, deleteStockSupport,
-  listStockResistance, saveStockResistance, deleteStockResistance,
+  listStockSupportShort, saveStockSupportShort, deleteStockSupportShort,
+  listStockSupportLong, saveStockSupportLong, deleteStockSupportLong,
+  listStockResistanceShort, saveStockResistanceShort, deleteStockResistanceShort,
+  listStockResistanceLong, saveStockResistanceLong, deleteStockResistanceLong,
   listStockPe, saveStockPe, deleteStockPe,
   listStockEps, saveStockEps, deleteStockEps,
   listStockValue, saveStockValue, deleteStockValue,
@@ -94,8 +96,8 @@ const span = {
   sm: 24,
   md: 12,
   lg: 12,
-  xl: 8,
-  xxl: 8
+  xl: 6,
+  xxl: 6
 };
 
 const DEFAULT_SELECTED = {
@@ -378,31 +380,7 @@ const StockForm = (props) => {
         </ColInnerCard>
       </ColStyled>
       <ColStyled {...span}>
-        <ColInnerCard title="Support">
-          <StockRangeTimelineEditor
-            onLoadList={() => listStockSupport(symbol)}
-            onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)}
-            onDelete={id => deleteStockSupport(id)}
-            onChange={list => setSupportList(list)}
-            onSelected={updateSelectedBySupport}
-            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
-          />
-        </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
-        <ColInnerCard title="Resistance">
-          <StockRangeTimelineEditor
-            onLoadList={() => listStockResistance(symbol)}
-            onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)}
-            onDelete={id => deleteStockResistance(id)}
-            onChange={list => setResistanceList(list)}
-            onSelected={updateSelectedByResistance}
-            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
-          />
-        </ColInnerCard>
-      </ColStyled>
-      <ColStyled {...span}>
-        <ColInnerCard title="Publish History">
+        {/* <ColInnerCard title="Publish History">
           <StockPublishTimelineEditor
             onLoadList={() => listStockPublish(symbol)}
             onPublishNew={() => handlePublish()}
@@ -410,6 +388,54 @@ const StockForm = (props) => {
             onSelected={updateSelectedByPublish}
             getClassNameOnSelect={getClassNameOnSelectForPublishItem}
             disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
+          />
+        </ColInnerCard> */}
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Support (short)">
+          <StockRangeTimelineEditor
+            onLoadList={() => listStockSupportShort(symbol)}
+            onSaveNew={([lo, hi]) => saveStockSupportShort(symbol, lo, hi)}
+            onDelete={id => deleteStockSupportShort(id)}
+            onChange={list => setSupportList(list)}
+            onSelected={updateSelectedBySupport}
+            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Support (long)">
+          <StockRangeTimelineEditor
+            onLoadList={() => listStockSupportLong(symbol)}
+            onSaveNew={([lo, hi]) => saveStockSupportLong(symbol, lo, hi)}
+            onDelete={id => deleteStockSupportLong(id)}
+            onChange={list => setSupportList(list)}
+            onSelected={updateSelectedBySupport}
+            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Resistance (short)">
+          <StockRangeTimelineEditor
+            onLoadList={() => listStockResistanceShort(symbol)}
+            onSaveNew={([lo, hi]) => saveStockResistanceShort(symbol, lo, hi)}
+            onDelete={id => deleteStockResistanceShort(id)}
+            onChange={list => setResistanceList(list)}
+            onSelected={updateSelectedByResistance}
+            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
+          />
+        </ColInnerCard>
+      </ColStyled>
+      <ColStyled {...span}>
+        <ColInnerCard title="Resistance (long)">
+          <StockRangeTimelineEditor
+            onLoadList={() => listStockResistanceLong(symbol)}
+            onSaveNew={([lo, hi]) => saveStockResistanceLong(symbol, lo, hi)}
+            onDelete={id => deleteStockResistanceLong(id)}
+            onChange={list => setResistanceList(list)}
+            onSelected={updateSelectedByResistance}
+            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
           />
         </ColInnerCard>
       </ColStyled>

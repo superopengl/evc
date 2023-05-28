@@ -1,12 +1,10 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
-import { Stock } from './Stock';
-import { StockPublish } from './StockPublish';
 
 
 @Entity()
 @Index(['symbol', 'createdAt'])
-export class StockSupport {
+export class StockSupportLong {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
@@ -24,4 +22,10 @@ export class StockSupport {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   hi: number;
+
+  @Column({ nullable: true })
+  loTrend: boolean;
+
+  @Column({ nullable: true })
+  hiTrend: boolean;
 }

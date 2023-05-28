@@ -827,9 +827,9 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/support:
+  /stock/s/{symbol}/support/short:
     get:
-      operationId: listStockSupport
+      operationId: listStockSupportShort
       parameters:
         - name: symbol
           in: path
@@ -839,7 +839,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: saveStockSupport
+      operationId: saveStockSupportShort
       parameters:
         - name: symbol
           in: path
@@ -848,9 +848,9 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/resistance:
+  /stock/s/{symbol}/support/long:
     get:
-      operationId: listStockResistance
+      operationId: listStockSupportLong
       parameters:
         - name: symbol
           in: path
@@ -860,7 +860,49 @@ paths:
         200:
           description: OK
     post:
-      operationId: saveStockResistance
+      operationId: saveStockSupportLong
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/resistance/short:
+    get:
+      operationId: listStockResistanceShort
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveStockResistanceShort
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/s/{symbol}/resistance/long:
+    get:
+      operationId: listStockResistanceLong
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveStockResistanceLong
       parameters:
         - name: symbol
           in: path
@@ -953,9 +995,9 @@ paths:
       responses:
         200:
           description: OK
-  /stock/support/{id}:
+  /stock/support/short/{id}:
     delete:
-      operationId: deleteStockSupport
+      operationId: deleteStockSupportShort
       parameters:
         - name: id
           in: path
@@ -965,9 +1007,33 @@ paths:
       responses:
         200:
           description: OK
-  /stock/resistance/{id}:
+  /stock/support/long/{id}:
     delete:
-      operationId: deleteStockResistance
+      operationId: deleteStockSupportLong
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/resistance/short/{id}:
+    delete:
+      operationId: deleteStockResistanceShort
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock/resistance/long/{id}:
+    delete:
+      operationId: deleteStockResistanceLong
       parameters:
         - name: id
           in: path

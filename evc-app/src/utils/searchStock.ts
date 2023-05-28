@@ -1,10 +1,10 @@
 import { getManager } from 'typeorm';
 import { Stock } from '../entity/Stock';
 import { StockPublish } from '../entity/StockPublish';
-import { StockSupport } from '../entity/StockSupport';
-import { StockResistance } from '../entity/StockResistance';
+import { StockSupportShort } from '../entity/StockSupportShort';
+import { StockResistanceShort } from '../entity/StockResistanceShort';
 import { StockValue } from '../entity/StockValue';
-import { StockSearchParams } from "../types/StockSearchParams";
+import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 
 export async function searchStock(queryInfo: StockSearchParams) {
@@ -37,8 +37,8 @@ export async function searchStock(queryInfo: StockSearchParams) {
       .orderBy('pu.symbol')
       .addOrderBy('pu.createdAt', 'DESC'),
       'pu', 'pu.symbol = s.symbol')
-    .leftJoin(StockSupport, 'ss', 'pu."supportId" = ss.id')
-    .leftJoin(StockResistance, 'sr', 'pu."resistanceId" = sr.id')
+    .leftJoin(StockSupportShort, 'ss', 'pu."supportId" = ss.id')
+    .leftJoin(StockResistanceShort, 'sr', 'pu."resistanceId" = sr.id')
     .leftJoin(StockValue, 'sv', 'pu."valueId" = sv.id');
   if (tags?.length) {
     // Filter by tags

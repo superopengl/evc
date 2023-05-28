@@ -149,8 +149,6 @@ export const searchStock = handlerWrapper(async (req, res) => {
 
   let query = getManager()
     .createQueryBuilder()
-    // .relation(Stock, 'tags')
-    // .loadMany()
     .from(history ? StockHistory : Stock, 's')
     .where('1 = 1');
   if (text) {
@@ -175,7 +173,12 @@ export const searchStock = handlerWrapper(async (req, res) => {
   if (tags?.length) {
     // Filter by tags
     query = query.innerJoin(q => q.from('stock_tags_stock_tag', 'tg')
-      .innerJoin(sq => sq.from('stock_tags_stock_tag', 'stg').where(`stg."stockTagId" IN (:...tags)`, { tags }), 'stg', 'stg."stockSymbol" = tg."stockSymbol"')
+      .innerJoin(
+        sq => sq.from('stock_tags_stock_tag', 'stg')
+          .where(`stg."stockTagId" IN (:...tags)`, { tags }),
+        'stg',
+        'stg."stockSymbol" = tg."stockSymbol"'
+      )
       .groupBy('tg."stockSymbol"')
       .select([
         'tg."stockSymbol" as symbol',
@@ -212,7 +215,7 @@ export const searchStock = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const saveStock = handlerWrapper(async (req, res) => {
+export const createStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
@@ -225,7 +228,26 @@ export const saveStock = handlerWrapper(async (req, res) => {
     stock.tags = await getRepository(StockTag).find({ id: In(tags) });
   }
 
+  await getRepository(Stock).insert(stock);
+
+  res.json();
+});
+
+export const updateStock = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { user: { id: userId } } = req as any;
+  const { symbol } = req.params;
   const repo = getRepository(Stock);
+  const { tags, ...other } = req.body;
+  const stock = await repo.findOne(symbol.toUpperCase());
+
+  assert(stock, 404);
+  Object.assign(stock, other);
+  stock.by = userId;
+  if (tags?.length) {
+    stock.tags = await getRepository(StockTag).find({ id: In(tags) });
+  }
+
   await repo.save(stock);
 
   res.json();

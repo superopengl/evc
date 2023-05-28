@@ -118,14 +118,14 @@ const HomeHeaderRaw = props => {
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><Link to="/board">Board</Link></Menu.Item>} */}
             {isClient && <Menu.Item key="landing"><Link to="/">Home</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="stock"><Link to="/stock">Stocks</Link></Menu.Item>} */}
-            {isClient && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>}
+            {/* {isClient && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="clients"><Link to="/clients">Users</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="admin"><Link to="/admin">Admin</Link></Menu.Item>} */}
             {/* {!isGuest && <Menu.Item key="message"><Link to="/message"><Badge count={notifyCount} showZero={false} offset={[10, 0]}>Messages</Badge></Link></Menu.Item>} */}
             {isAdmin && <Menu.SubMenu key="settings" title="Settings">
-              <Menu.Item key="task_template"><Link to="/task_template">Task Templates</Link></Menu.Item>
-              <Menu.Item key="doc_template"><Link to="/doc_template">Doc Templates</Link></Menu.Item>
-              <Menu.Item key="recurring"><Link to="/recurring">Recurring</Link></Menu.Item>
+              {/* <Menu.Item key="task_template"><Link to="/task_template">Task Templates</Link></Menu.Item> */}
+              {/* <Menu.Item key="doc_template"><Link to="/doc_template">Doc Templates</Link></Menu.Item> */}
+              {/* <Menu.Item key="recurring"><Link to="/recurring">Recurring</Link></Menu.Item> */}
               <Menu.Item key="stocktag"><Link to="/stocktag">Stock Tags</Link></Menu.Item>
               <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>
               <Menu.Item key="referral_policy"><Link to="/referral_policy">Referral Policy</Link></Menu.Item>
@@ -167,10 +167,10 @@ const HomeHeaderRaw = props => {
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><DashboardOutlined /> <Link to="/board">Board</Link></Menu.Item>} */}
             {isClient && <Menu.Item key="landing"><DashboardOutlined /> <Link to="/">Home</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="stock"><SnippetsOutlined /> <Link to="/stock">Stocks</Link></Menu.Item>} */}
-            {isClient && <Menu.Item key="portfolio"><IdcardOutlined /> <Link to="/portfolios">Portfolios</Link></Menu.Item>}
-            {isAdmin && <Menu.Item key="task_template"><ToolOutlined /> <Link to="/task_template">Task Template</Link></Menu.Item>}
-            {isAdmin && <Menu.Item key="doc_template"><ReconciliationOutlined /> <Link to="/doc_template">Doc Template</Link></Menu.Item>}
-            {isAdmin && <Menu.Item key="recurring"><CalendarOutlined /> <Link to="/recurring">Recurring</Link></Menu.Item>}
+            {/* {isClient && <Menu.Item key="portfolio"><IdcardOutlined /> <Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
+            {/* {isAdmin && <Menu.Item key="task_template"><ToolOutlined /> <Link to="/task_template">Task Template</Link></Menu.Item>} */}
+            {/* {isAdmin && <Menu.Item key="doc_template"><ReconciliationOutlined /> <Link to="/doc_template">Doc Template</Link></Menu.Item>} */}
+            {/* {isAdmin && <Menu.Item key="recurring"><CalendarOutlined /> <Link to="/recurring">Recurring</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="clients"><SettingOutlined /> <Link to="/clients">Users</Link></Menu.Item>} */}
             {isAdmin && <Menu.Item key="stocktag"><TeamOutlined /> <Link to="/stocktag">Stock Tags</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="referral_policy"><TeamOutlined /> <Link to="/referral_policy">Referral Policy</Link></Menu.Item>}

@@ -1002,9 +1002,20 @@ paths:
       responses:
         200:
           description: OK
-  /stock:
+  /stock/{symbol}:
     post:
-      operationId: saveStock
+      operationId: updateStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /stock:
+    put:
+      operationId: createStock
       responses:
         200:
           description: OK

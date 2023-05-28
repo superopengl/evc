@@ -5,7 +5,7 @@ import HomeHeader from 'components/HomeHeader';
 import { listMessages } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
-import { saveStock, searchStock } from 'services/stockService';
+import { createStock, searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
@@ -116,7 +116,7 @@ const StockListPage = (props) => {
     try {
       setLoading(true);
       const stock = { ...values, tags: values.tags?.map(t => t.id) };
-      await saveStock(stock);
+      await createStock(stock);
 
       props.history.push(`/stock/${stock.symbol.toUpperCase()}`)
     } finally {
@@ -182,6 +182,7 @@ const StockListPage = (props) => {
         destroyOnClose={true}
         title="New Stock"
         footer={null}
+        width={300}
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
       >
@@ -198,9 +199,9 @@ const StockListPage = (props) => {
             <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
               <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
             </Form.Item>
-            <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
+            {/* <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
               <StockTagSelect />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item>
               <Button type="primary" block htmlType="submit">Create</Button>
             </Form.Item>

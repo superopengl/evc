@@ -9,7 +9,6 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { Loading } from 'components/Loading';
 import { Modal } from 'antd';
 import StockTagSelect from 'components/StockTagSelect';
-import { saveStock } from 'services/stockService';
 
 const { Title, Paragraph, Link } = Typography;
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Input, Layout, Modal, Select, Space, Table, Card, Typography } from 'antd';
+import { Button, Row, Col, Modal, Select, Space, Table, Card, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { countUnreadMessage } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -9,10 +9,11 @@ import { withRouter } from 'react-router-dom';
 import { Loading } from './Loading';
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
-import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { List } from 'antd';
 import { StockName } from './StockName';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
+import { ImRocket } from 'react-icons/im';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -109,11 +110,11 @@ const StockList = (props) => {
     <List
       grid={{
         gutter: 10,
-        xs: 1,
-        sm: 2,
+        xs: 2,
+        sm: 3,
         md: 3,
         lg: 4,
-        xl: 6,
+        xl: 5,
         xxl: 6,
       }}
       size="small"
@@ -128,23 +129,41 @@ const StockList = (props) => {
             onClick={() => props.history.push(`/stock/${stock.symbol}`)}
             title={<StockName value={stock} />}
           >
-            <Space direction="vertical">
-            <Space>
-              Published At
-            <TimeAgo value={stock.publishedAt} accurate={true} />
-            </Space>
-            <Space>
-              Resistance
-            <NumberRangeDisplay value={{ lo: stock.resistanceLo, hi: stock.resistanceHi }} showTime={false} />
-            </Space>
-            <Space>
-              Value
-            <NumberRangeDisplay value={{ lo: stock.valueLo, hi: stock.valueHi }} showTime={false} />
-            </Space>
-            <Space>
-              Support
-            <NumberRangeDisplay value={{ lo: stock.supportLo, hi: stock.supportHi }} showTime={false} />
-            </Space>
+            <Space direction="vertical" style={{ width: '100%' }}>
+
+              <Row>
+                <Col span={12}>
+                  <Text type="secondary">Resistance</Text>
+                </Col>
+                <Col span={12}>
+                  <NumberRangeDisplay value={{ lo: stock.resistanceLo, hi: stock.resistanceHi }} showTime={false} />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <Text type="secondary">Value</Text>
+
+                </Col>
+                <Col span={12}>
+                  <NumberRangeDisplay value={{ lo: stock.valueLo, hi: stock.valueHi }} showTime={false} />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <Text type="secondary">Support</Text>
+                </Col>
+                <Col span={12}>
+                  <NumberRangeDisplay value={{ lo: stock.supportLo, hi: stock.supportHi }} showTime={false} />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <Text type="secondary">Published</Text>
+                </Col>
+                <Col span={12}>
+                  <TimeAgo value={stock.publishedAt} accurate={true} />
+                </Col>
+              </Row>
             </Space>
           </Card>
         </List.Item>

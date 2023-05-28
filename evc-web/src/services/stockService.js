@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpDelete } from './http';
+import { httpGet, httpPost, httpDelete , httpPut} from './http';
 
 export async function searchStock(payload) {
   return httpPost(`stock/search`, { page: 0, size: 20, ...payload });
@@ -28,8 +28,12 @@ export async function deleteStock(symbol) {
   return httpDelete(`stock/s/${symbol}`);
 }
 
-export async function saveStock(stock) {
-  return httpPost(`stock`, stock);
+export async function createStock(stock) {
+  return httpPut(`stock`, stock);
+}
+
+export async function updateStock(stock) {
+  return httpPost(`stock/${stock.symbol}`, stock);
 }
 
 export async function getWatchList() {

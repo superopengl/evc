@@ -9,7 +9,7 @@ import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { GlobalOutlined, SearchOutlined } from '@ant-design/icons';
 import SignUpForm from 'components/SignUpForm';
 import { LogoTextDark } from 'components/LogoTextDark';
-import { SearchStockInput } from 'components/SearchStockInput';
+import { StockSearchInput } from 'components/StockSearchInput';
 import { getStockHistory, incrementStock } from 'services/stockService';
 import HotStockList from 'components/HotStockList';
 import { LocaleSelector } from 'components/LocaleSelector';
@@ -158,7 +158,7 @@ const HomeCarouselAreaRaw = props => {
           </Col>
           <Col {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <SearchPanel direction="vertical" >
-              <SearchStockInput
+              <StockSearchInput
                 onFetchData={handleFetchSearchedSymbol}
                 onChange={handleSearchChange}
                 traceSearch={true}

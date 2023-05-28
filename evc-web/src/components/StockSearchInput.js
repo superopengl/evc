@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-export const SearchStockInput = (props) => {
+export const StockSearchInput = (props) => {
   const { onChange, onFetchData, excluding, traceSearch, mode, style, value } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
@@ -77,16 +77,16 @@ export const SearchStockInput = (props) => {
         <Highlighter highlightClassName="search-highlighting"
           searchWords={[text]}
           autoEscape={true}
-          textToHighlight={item.company} /> (<Highlighter highlightClassName="search-highlighting"
+          textToHighlight={item.symbol} /> (<Highlighter highlightClassName="search-highlighting"
             searchWords={[text]}
             autoEscape={true}
-            textToHighlight={item.symbol} />)
+            textToHighlight={item.company} />)
     </Select.Option>)}
     </Select>
   );
 }
 
-SearchStockInput.propTypes = {
+StockSearchInput.propTypes = {
   onFetchData: PropTypes.func,
   onChange: PropTypes.func,
   excluding: PropTypes.array.isRequired,
@@ -94,10 +94,10 @@ SearchStockInput.propTypes = {
   mode: PropTypes.string,
 };
 
-SearchStockInput.defaultProps = {
+StockSearchInput.defaultProps = {
   excluding: [],
   onFetchData: x => x,
-  onChange: x => { },
+  onChange: () => { },
   traceSearch: false,
   mode: ''
 };

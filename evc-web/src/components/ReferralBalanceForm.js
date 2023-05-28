@@ -16,7 +16,7 @@ import { Tooltip } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { isProfileComplete } from 'util/isProfileComplete';
-import { SearchStockInput } from 'components/SearchStockInput';
+import { StockSearchInput } from 'components/StockSearchInput';
 import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';

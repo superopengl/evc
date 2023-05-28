@@ -16,10 +16,10 @@ import { Tooltip } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { isProfileComplete } from 'util/isProfileComplete';
-import { SearchStockInput } from 'components/SearchStockInput';
-import { getStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
+import { StockSearchInput } from 'components/StockSearchInput';
+import { searchSingleStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
 import { List } from 'antd';
-import StockCard from 'components/StockCard';
+import StockCardClientSearch from 'components/StockCardClientSearch';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { StockName } from 'components/StockName';
 
@@ -101,7 +101,7 @@ const ClientHomePage = (props) => {
   }
 
   const handleFetchSearchedSymbol = async symbol => {
-    const data = await getStock(symbol);
+    const data = await searchSingleStock(symbol);
     return data;
   }
 
@@ -146,9 +146,8 @@ const ClientHomePage = (props) => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <SearchStockInput
+        <StockSearchInput
           onFetchData={handleFetchSearchedSymbol}
-          onChange={handleSearchChange}
           onChange={handleSearchChange}
           style={{ width: '100%', maxWidth: 400 }} />
         {/* <SubscriptionArea /> */}
@@ -162,7 +161,7 @@ const ClientHomePage = (props) => {
           dataSource={watchList}
           renderItem={item => (
             <List.Item>
-              <StockCard
+              <StockCardClientSearch
                 value={item}
                 onUnwatch={() => handleUnwatch(item)}
                 showUnwatch={true} />
@@ -182,7 +181,7 @@ const ClientHomePage = (props) => {
       >
         <Space direction="vertical" style={{ width: '100%' }}>
 
-          <StockCard value={searchResult} />
+          <StockCardClientSearch value={searchResult} />
           <Button block type="primary" icon={<EyeOutlined />} onClick={() => handleAddToWatchlist(searchResult)}>Add to watchlist</Button>
           <Button block onClick={handleCloseSearchResult}>Cancel</Button>
         </Space>

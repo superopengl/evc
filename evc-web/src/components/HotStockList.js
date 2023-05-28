@@ -100,7 +100,7 @@ HotStockList.propTypes = {
 };
 
 HotStockList.defaultProps = {
-  size: 10,
+  size: 6,
 };
 
 export default withRouter(HotStockList);

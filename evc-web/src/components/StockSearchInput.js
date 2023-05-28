@@ -7,6 +7,7 @@ import Highlighter from "react-highlight-words";
 import * as _ from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import { StockName } from './StockName';
 
 export const StockSearchInput = (props) => {
   const { onChange, onFetchData, excluding, traceSearch, mode, style, value } = props;
@@ -74,13 +75,14 @@ export const StockSearchInput = (props) => {
       }}
     >
       {list.map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
-        <Highlighter highlightClassName="search-highlighting"
+        {/* <Highlighter highlightClassName="search-highlighting"
           searchWords={[text]}
           autoEscape={true}
           textToHighlight={item.symbol} /> (<Highlighter highlightClassName="search-highlighting"
             searchWords={[text]}
             autoEscape={true}
-            textToHighlight={item.company} />)
+            textToHighlight={item.company} />) */}
+            <StockName value={item} />
     </Select.Option>)}
     </Select>
   );

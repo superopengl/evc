@@ -10,6 +10,7 @@ import { withRouter } from 'react-router-dom';
 import { Loading } from './Loading';
 import { listHotStock } from 'services/stockService';
 import Highlighter from "react-highlight-words";
+import { StockName } from './StockName';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -59,27 +60,19 @@ const HotStockList = (props) => {
 
   const columnDef = [
     {
-      title: 'Stock',
-      render: (value, item) => <>
-        {item.symbol}<br />
-        <Text type="secondary"><small>{item.company}</small></Text>
-      </>,
-    },
-    {
-      title: 'PE',
-      render: (text, item) => <>{item.peLo} - {item.peHi}</>
+      render: (value, item) => <StockName value={item} />
     },
     {
       title: 'Value',
-      render: (text, item) => <>{item.value}</>
+      render: (text, item) => <>{item.valueLo} / {item.valueHi}</>
     },
     {
       title: 'Support',
-      render: (text, item) => <>{item.supportPriceLo} - {item.supportPriceHi}</>
+      render: (text, item) => <>{item.supportLo} / {item.supportHi}</>
     },
     {
       title: 'Pressure',
-      render: (text, item) => <>{item.pressurePriceLo} - {item.pressurePriceHi}</>
+      render: (text, item) => <>{item.resistanceLo} / {item.resistanceHi}</>
     },
   ];
   return (

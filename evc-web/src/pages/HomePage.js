@@ -11,7 +11,7 @@ import React from 'react';
 import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
 import { HomeSubscriptionArea } from 'components/homeAreas/HomeSubscriptionArea';
-
+import CookieConsent from "react-cookie-consent";
 const { Content } = Layout;
 
 const LayoutStyled = styled(Layout)`
@@ -67,11 +67,14 @@ class HomePage extends React.Component {
           <HomeSubscriptionArea />
           {/* <section><HomeSearchArea /></section> */}
           <HashAnchorPlaceholder id="services" />
-          <section><HomeServiceArea bgColor="#135200"/></section>
+          <section><HomeServiceArea bgColor="#135200" /></section>
           {/* <HashAnchorPlaceholder id="team" /> */}
           {/* <section><HomeTeamArea /></section> */}
-        <HomeFooter />
+          <HomeFooter />
         </ContentStyled>
+        <CookieConsent location="bottom" overlay expires={999} buttonStyle={{borderRadius: 4}}>
+          This website uses cookies to enhance the user experience.
+        </CookieConsent>
       </LayoutStyled>
     );
   }

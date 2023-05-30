@@ -29,6 +29,7 @@ dependencies:
   react-beautiful-dnd: 13.0.0_react-dom@16.13.1+react@16.13.1
   react-chat-elements: 10.10.2_eb0d650be231ffd0ace4a30b38162117
   react-color: 2.19.3_react@16.13.1
+  react-cookie-consent: 6.1.0_react@16.13.1
   react-copy-to-clipboard: 5.0.2_react@16.13.1
   react-dom: 16.13.1_react@16.13.1
   react-file-icon: 1.0.0_react-dom@16.13.1+react@16.13.1
@@ -7691,6 +7692,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-YvkBL1Zm7d2B1+h5fHEOdyjCG+sGMz4f8D86/0HiqJ6MB4MnDc8FgP5vdWsGnemOQro7lnYo8UakZ3+5A0jxGw==
+  /js-cookie/2.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
   /js-tokens/3.0.2:
     dev: false
     resolution:
@@ -11117,6 +11122,16 @@ packages:
       react: '*'
     resolution:
       integrity: sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==
+  /react-cookie-consent/6.1.0_react@16.13.1:
+    dependencies:
+      js-cookie: 2.2.1
+      prop-types: 15.7.2
+      react: 16.13.1
+    dev: false
+    peerDependencies:
+      react: ^16.13.1 || ^17.0.0
+    resolution:
+      integrity: sha512-IQDT6DGESjv7E5v4iCeGSh3NvZP2BhSdg8R9FNuQzWkEuFPXSoQlCTuOxSzbLsH3lzgIgGly415tN9iHFD+lGQ==
   /react-copy-to-clipboard/5.0.2_react@16.13.1:
     dependencies:
       copy-to-clipboard: 3.3.1
@@ -14281,6 +14296,7 @@ specifiers:
   react-beautiful-dnd: ^13.0.0
   react-chat-elements: ^10.10.2
   react-color: ^2.19.3
+  react-cookie-consent: ^6.1.0
   react-copy-to-clipboard: ^5.0.2
   react-dom: ^16.13.1
   react-file-icon: ^1.0.0

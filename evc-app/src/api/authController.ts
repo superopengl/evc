@@ -25,7 +25,7 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
 
 async function getLoginUser(email) {
   const repo = getRepository(User);
-  const user: User = await repo
+  const user = await repo
     .createQueryBuilder()
     .where(
       'LOWER(email) = LOWER(:email) AND status != :status',

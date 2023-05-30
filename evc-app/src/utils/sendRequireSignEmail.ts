@@ -10,7 +10,7 @@ export async function sendRequireSignEmail(task: Task) {
   const { id: taskId, name: taskName, forWhom } = task;
 
   await sendEmail({
-    to: user.email,
+    to: user.emailHash,
     template: 'taskToSign',
     vars: {
       toWhom: getEmailRecipientName(user),

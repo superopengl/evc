@@ -10,7 +10,7 @@ export async function sendNewPortfolioEmail(portfolio: Portfolio) {
   const user = await getRepository(User).findOne(portfolio.userId);
 
   await sendEmail({
-    to: user.email,
+    to: user.emailHash,
     template: 'createPortfolio',
     vars: {
       toWhom: getEmailRecipientName(user),

@@ -24,7 +24,7 @@ export const authMiddleware = async (req, res, next) => {
       const repo = getRepository(User);
       if (moment(expires).isBefore()) {
         // JWT token expired. Needs to refresh
-        const existingUser = await repo.findOne({ id, status: Not(UserStatus.Disabled) });
+        const existingUser = await getActive;
         if (!existingUser) {
           // User not existing anymore
           clearJwtCookie(res);

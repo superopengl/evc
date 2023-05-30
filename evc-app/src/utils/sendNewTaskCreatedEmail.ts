@@ -10,7 +10,7 @@ export async function sendNewTaskCreatedEmail(task: Task) {
   const { id: taskId, name: taskName, forWhom } = task;
 
   await sendEmail({
-    to: user.email,
+    to: user.emailHash,
     template: 'taskCreated',
     vars: {
       toWhom: getEmailRecipientName(user),

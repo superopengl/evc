@@ -284,7 +284,7 @@ async function sendTaskMessage(Task, senderId, content) {
   await getRepository(Message).save(message);
 
   sendEmail({
-    to: user.email,
+    to: user.emailHash,
     vars: {
       toWhom: getEmailRecipientName(user),
       name: Task.name

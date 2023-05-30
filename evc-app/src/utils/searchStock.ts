@@ -3,7 +3,7 @@ import { Stock } from '../entity/Stock';
 import { StockPublish } from '../entity/StockPublish';
 import { StockSupportShort } from '../entity/StockSupportShort';
 import { StockResistanceShort } from '../entity/StockResistanceShort';
-import { StockValue } from '../entity/StockValue';
+import { StockFairValue } from '../entity/StockFairValue';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 

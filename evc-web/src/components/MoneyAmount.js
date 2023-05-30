@@ -20,7 +20,7 @@ const MoneyAmount = (props) => {
 
 MoneyAmount.propTypes = {
   value: PropTypes.number.isRequired,
-  showSymbol: PropTypes.bool
+  showSymbol: PropTypes.bool,
 };
 
 MoneyAmount.defaultProps = {

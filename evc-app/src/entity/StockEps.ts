@@ -1,7 +1,7 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
-import { StockValue } from './StockValue';
+import { StockFairValue } from './StockFairValue';
 
 
 @Entity()
@@ -31,4 +31,7 @@ export class StockEps {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   value: number;
+
+  @Column({nullable: true})
+  trend: boolean;
 }

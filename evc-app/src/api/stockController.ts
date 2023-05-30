@@ -22,7 +22,7 @@ import { Role } from '../types/Role';
 import { StockPublish } from '../entity/StockPublish';
 import { StockResistanceShort } from '../entity/StockResistanceShort';
 import { StockSupportShort } from '../entity/StockSupportShort';
-import { StockValue } from '../entity/StockValue';
+import { StockFairValue } from '../entity/StockFairValue';
 import { StockSupportLong } from '../entity/StockSupportLong';
 import { StockResistanceLong } from '../entity/StockResistanceLong';
 

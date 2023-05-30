@@ -19,17 +19,20 @@ export class StockSupportShort {
   @Column('uuid')
   author: string;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   lo: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   hi: number;
 
-  @Column({nullable: true})
-  loTrend: boolean;
+  @Column('int2', { default: 0 })
+  loTrend: number;
 
-  @Column({nullable: true})
-  hiTrend: boolean;
+  @Column('int2', { default: 0 })
+  hiTrend: number;
+
+  @Column({default: false})
+  published: boolean;
 }
 
 

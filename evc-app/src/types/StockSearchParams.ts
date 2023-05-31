@@ -5,6 +5,6 @@ export type StockSearchParams = {
   tags?: string[];
   orderField?: string;
   orderDirection?: 'ASC' | 'DESC';
-  skip?: number;
-  limit?: number;
+  page?: number;
+  size?: number;
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Space, Button, Input, Form, Modal } from 'antd';
+import { Typography, Layout, Space, Button, Input, Form, Modal, Pagination, List } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
@@ -13,6 +13,7 @@ import { Loading } from 'components/Loading';
 import StockTagSelect from 'components/StockTagSelect';
 import { Divider } from 'antd';
 import StockTagFilter from 'components/StockTagFilter';
+import StockInfoCard from 'components/StockInfoCard';
 
 const { Title, Paragraph } = Typography;
 
@@ -46,23 +47,16 @@ const DEFAULT_QUERY_INFO = {
   tags: [],
   page: 1,
   size: 50,
-  total: 0,
-  saved: true,
-  published: true,
   orderField: 'createdAt',
   orderDirection: 'DESC'
 };
 
 const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
-const size = 50;
-
 const StockListPage = (props) => {
 
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
-  const [hasMore, setHasMore] = React.useState(true);
-  const [page, setPage] = React.useState(0);
-  const [text, setText] = React.useState('');
+  const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [visible, setVisible] = React.useState(false);
@@ -71,10 +65,14 @@ const StockListPage = (props) => {
     try {
       if (!dryRun) {
         setLoading(true);
-        const data = await searchStock(queryInfo);
-        setList(data);
+        const { count, page, data } = await searchStock(queryInfo);
+        setTotal(count);
+        setList([...data]);
+        setQueryInfo({...queryInfo, page});
+      }else {
+        setQueryInfo(queryInfo);
+
       }
-      setQueryInfo(queryInfo);
       // Not remember the search text in local storage
       reactLocalStorage.setObject(LOCAL_STORAGE_QUERY_KEY, { ...queryInfo, text: '' });
     } finally {
@@ -85,23 +83,6 @@ const StockListPage = (props) => {
   React.useEffect(() => {
     searchByQueryInfo(queryInfo);
   }, []);
-
-  const fetchListByPage = async (page) => {
-    setLoading(true);
-    try {
-      const data = await searchStock({ ...queryInfo, page, size })
-      setList(data);
-      setPage(page + 1);
-      const shouldStopLoading = data.length < size;
-      setHasMore(!shouldStopLoading);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleFetchNextPageData = async () => {
-    await fetchListByPage(page);
-  }
 
   const addNewStock = () => {
     setVisible(true);
@@ -137,6 +118,10 @@ const StockListPage = (props) => {
     searchByQueryInfo({ ...queryInfo, tags });
   }
 
+  const handlePaginationChange = (page, pageSize) => {
+    searchByQueryInfo({ ...queryInfo, page, size: pageSize });
+  }
+
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
@@ -170,6 +155,23 @@ const StockListPage = (props) => {
               loader={<Space key="loader" style={{ width: '100%', justifyContent: 'center' }}><Loading /></Space>}
             > */}
             <StockList data={list} />
+            <Pagination
+              total={85}
+              current={queryInfo.page}
+              pageSize={queryInfo.size}
+              total={total}
+              defaultCurrent={queryInfo.page}
+              defaultPageSize={queryInfo.size}
+              pageSizeOptions={[10, 20, 50]}
+              showSizeChanger
+              showQuickJumper
+              showTotal={total => `Total ${total}`}
+              disabled={loading}
+              onChange={handlePaginationChange}
+              onShowSizeChange={(current, size) => {
+                searchByQueryInfo({ ...queryInfo, page: current, size });
+              }}
+            />
             {/* </InfiniteScroll> */}
           </Space>
         </Loading>

@@ -65,8 +65,8 @@ export const NumberRangeDisplay = (props) => {
 NumberRangeDisplay.propTypes = {
   lo: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   hi: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  loTrend: PropTypes.oneOf([-1, 0, 1]).isRequired,
-  hiTrend: PropTypes.oneOf([-1, 0, 1]).isRequired,
+  loTrend: PropTypes.oneOf([-1, 0, 1]),
+  hiTrend: PropTypes.oneOf([-1, 0, 1]),
   time: PropTypes.any,
 };
 

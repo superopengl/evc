@@ -1,7 +1,6 @@
 
-import { getRepository, IsNull, Not } from 'typeorm';
+import { getRepository, IsNull, Not, getManager } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { Portfolio } from '../entity/Portfolio';
 import { User } from '../entity/User';
 import { UserStatus } from '../types/UserStatus';
 import { assert, assertRole } from '../utils/assert';
@@ -10,23 +9,13 @@ import { computeUserSecret } from '../utils/computeUserSecret';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
 import { sendEmail } from '../services/emailService';
 import { TaskStatus } from '../types/TaskStatus';
-import { Task } from '../entity/Task';
 import { handleInviteUser } from './authController';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { attachJwtCookie } from '../utils/jwt';
-
-export const getProfile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client');
-  const { id } = (req as any).user as User;
-
-  const profileRepo = getRepository(Portfolio);
-  const profile = await profileRepo.findOne(id);
-
-  res.json(profile);
-});
-
+import { UserProfile } from '../entity/UserProfile';
+import { computeEmailHash } from '../utils/computeEmailHash';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -53,22 +42,34 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   }
   const { email } = req.body;
   const repo = getRepository(User);
-  const user = await repo.findOne(id);
+  const user = await repo.findOne(id, { relations: ['profile'] });
   assert(user, 404);
 
-  Object.assign(user, req.body);
+  Object.assign(user.profile, req.body);
 
-  const newEmail = email?.trim().toLowerCase();
-  const hasEmailChange = newEmail && user.emailHash.toLowerCase() !== newEmail;
-  if (hasEmailChange) {
-    assert(user.emailHash !== 'system@easyvaluecheck.com', 400, 'Cannot change the email for the builtin admin');
-    user.emailHash = newEmail;
-    await handleInviteUser(user);
-  } else {
-    await repo.save(user);
+  let hasEmailChange = false;
+  if (email) {
+    const newEmailHash = computeEmailHash(email);
+    hasEmailChange = user.emailHash !== newEmailHash;
+
+    if (hasEmailChange) {
+      assert(user.emailHash !== BUILTIN_ADMIN_EMIAL_HASH, 400, 'Cannot change the email for the builtin admin');
+      user.emailHash = newEmailHash;
+      user.profile.email = email;
+
+      await getManager().save([user.profile, user]);
+
+      await handleInviteUser(user);
+    }
   }
 
-  attachJwtCookie(user, res);
+  if (!hasEmailChange) {
+    await getManager().save(user.profile);
+  }
+
+  if (role === 'client') {
+    attachJwtCookie(user, res);
+  }
 
   res.json();
 });
@@ -86,10 +87,10 @@ export const searchUsers = handlerWrapper(async (req, res) => {
 
   let query = getRepository(User)
     .createQueryBuilder('u')
-    .where({ deletedAt: IsNull() });
+    .innerJoin(UserProfile, 'p', 'u.id = p."userId"');
 
   if (text) {
-    query = query.andWhere(`(u.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text)`, { text: `%${text}%` })
+    query = query.andWhere(`(p.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text)`, { text: `%${text}%` })
   }
   query = query.leftJoin(q => q.from(Subscription, 's'), 's', `s."userId" = u.id`);
   if (subscription.length) {
@@ -101,7 +102,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
     .offset((page - 1) * size)
     .limit(size)
     .select([
-      'u.*',
+      'p.*',
       's.*',
       'u.id as id',
       'u."createdAt" as "createdAt"',
@@ -113,44 +114,31 @@ export const searchUsers = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-
-export const listAgents = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-
-  const list = await getRepository(User)
-    .createQueryBuilder()
-    .where({ role: 'agent' })
-    .select([
-      `id`,
-      `email`,
-      `"givenName"`,
-      `surname`,
-    ])
-    .execute();
-
-  res.json(list);
-});
+const BUILTIN_ADMIN_EMIAL_HASH = computeEmailHash('system@easyvaluecheck.com');
 
 export const deleteUser = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
 
   const repo = getRepository(User);
-  const user = await repo.findOne({ id, emailHash: Not('system@easyvaluecheck.com') });
+  const user = await repo.findOne({
+    where: {
+      id,
+      emailHash: Not(BUILTIN_ADMIN_EMIAL_HASH)
+    },
+    relations: ['profile']
+  });
 
   if (user) {
-    await getRepository(Portfolio).update({ userId: id }, { deleted: true });
-    await getRepository(Task).update({ userId: id }, { status: TaskStatus.ARCHIVE });
-    await repo.delete(id);
+    await repo.softDelete(id);
     await sendEmail({
-      to: user.emailHash,
+      to: user.profile.email,
       template: 'deleteUser',
       vars: {
         toWhom: getEmailRecipientName(user),
       },
       shouldBcc: false
     });
-
   }
 
   res.json();

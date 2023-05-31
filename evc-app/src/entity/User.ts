@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne, IsNull, Not } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { DeleteDateColumn } from 'typeorm-plus'
@@ -8,6 +8,15 @@ import { UserProfile } from './UserProfile';
 @Entity()
 @Index('user_email_hash_unique', { synchronize: false })
 export class User {
+  static scope = {
+    'default': {
+      deletedAt: IsNull()
+    },
+    'all': {
+      deletedAt: Not(IsNull())
+    }
+  }
+
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
@@ -53,8 +62,11 @@ export class User {
   deletedAt: Date;
 
   @OneToOne(() => UserProfile)
-  @JoinColumn()
+  @JoinColumn({ name: 'profileId', referencedColumnName: 'id' })
   profile: UserProfile;
+
+  @Column()
+  profileId: string;
 }
 
 

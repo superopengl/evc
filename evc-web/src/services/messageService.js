@@ -5,7 +5,7 @@ export async function getMessage(id) {
 }
 
 export async function countUnreadMessage() {
-  return httpGet(`message/count/unread`);
+  return 0;//httpGet(`message/count/unread`);
 }
 
 export async function listMessages(query) {

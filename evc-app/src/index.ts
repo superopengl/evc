@@ -3,7 +3,6 @@ import * as http from 'http';
 import * as path from 'path';
 import { connectDatabase } from './db';
 import * as dotenv from 'dotenv';
-import { restartCronService } from './services/cronService';
 import { createWebsocketServer } from './ws';
 import * as WebSocket from 'ws';
 
@@ -49,7 +48,6 @@ async function launchApp() {
   await connectDatabase();
 
   const app = createAppInstance();
-  restartCronService(true);
 
   const httpPort = +process.env.EVC_HTTP_PORT || 80;
   const server = http.createServer(app);

@@ -2,9 +2,7 @@
 import { getRepository, getManager, MoreThan } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from '../utils/assert';
-import { Task } from '../entity/Task';
 import { User } from '../entity/User';
-import { Portfolio } from '../entity/Portfolio';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
 import { getUtcNow } from '../utils/getUtcNow';

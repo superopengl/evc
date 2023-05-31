@@ -1,6 +1,6 @@
 import { v5 as uuidv5 } from 'uuid';
-import { EMAIL_HASH_NAMESPACE } from './computeUserSecret';
 
+const EMAIL_HASH_NAMESPACE = '3b11c365-5113-47a1-9215-83b4f0debb3c';
 
 export function computeEmailHash(email: string): string {
   const formatted = email.trim().toLowerCase();

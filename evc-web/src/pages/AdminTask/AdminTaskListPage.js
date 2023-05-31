@@ -9,7 +9,6 @@ import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { assignTask, deleteTask, searchTask } from '../../services/taskService';
-import { listAgents } from 'services/userService';
 import styled from 'styled-components';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
@@ -203,8 +202,8 @@ const AdminTaskListPage = (props) => {
   const loadList = async () => {
     setLoading(true);
     await loadTaskWithQuery(queryInfo);
-    const agentList = await listAgents();
-    setAgentList(agentList);
+    // const agentList = await listAgents();
+    // setAgentList(agentList);
     setLoading(false);
   }
 

@@ -1,5 +1,5 @@
 
-import { getRepository, getConnection, Not } from 'typeorm';
+import { getRepository, getConnection, Not, getManager } from 'typeorm';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
@@ -19,6 +19,7 @@ import { createReferral } from './accountController';
 import { createInitialFreeSubscription } from './subscriptionController';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
+import { UserProfile } from '../entity/UserProfile';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -55,54 +56,60 @@ export const logout = handlerWrapper(async (req, res) => {
 });
 
 
-function createUserEntity(email, password, role): User {
-  validatePasswordStrength(password);
+function createUserAndProfileEntity(payload): { user: User, profile: UserProfile } {
+  const { email, password, role, ...other } = payload;
+  const thePassword = password || uuidv4();
+  validatePasswordStrength(thePassword);
   assert([Role.Client, Role.Agent].includes(role), 400, `Unsupported role ${role}`);
 
-  const id = uuidv4();
+  const profileId = uuidv4();
+  const userId = uuidv4();
   const salt = uuidv4();
 
+  const profile = new UserProfile();
+  profile.id = profileId;
+  profile.email = email.trim().toLowerCase();
+  Object.assign(profile, other);
+
   const user = new User();
-  user.id = id;
+  user.id = userId;
   user.emailHash = computeEmailHash(email);
-  user.secret = computeUserSecret(password, salt);
+  user.secret = computeUserSecret(thePassword, salt);
   user.salt = salt;
   user.role = role;
   user.status = UserStatus.Enabled;
+  user.profileId = profileId;
 
-  return user;
+  return { user, profile };
 }
 
-
-async function createNewLocalUser(payload): Promise<User> {
-  const { email, password, role, ...other } = payload;
-  const user = createUserEntity(email, password, role);
-
-  Object.assign(user, other);
+async function createNewLocalUser(payload): Promise<{ user: User, profile: UserProfile }> {
+  const { user, profile } = createUserAndProfileEntity(payload);
 
   user.resetPasswordToken = uuidv4();
   user.status = UserStatus.ResetPassword;
-  const repo = getRepository(User);
-  await repo.save(user);
+
+  await getManager().save([profile, user]);
 
   await createReferral(user.id);
 
   await createInitialFreeSubscription(user.id);
 
-  return user;
+  return { user, profile };
 }
 
 
 export const signup = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
-  const user = await createNewLocalUser({
+  const { user, profile } = await createNewLocalUser({
     password: uuidv4(), // Temp password to fool the functions beneath
     ...payload,
     role: 'client'
   });
 
-  const { id, emailHash: email, resetPasswordToken } = user;
+  const { id, resetPasswordToken } = user;
+  const { email } = profile;
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
@@ -209,7 +216,7 @@ export const impersonate = handlerWrapper(async (req, res) => {
   res.json(sanitizeUser(user));
 });
 
-export const handleInviteUser = async (user: User) => {
+export const handleInviteUser = async (user) => {
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
@@ -237,7 +244,10 @@ export const inviteUser = handlerWrapper(async (req, res) => {
   const existingUser = await getActiveUserByEmail(email);
   assert(!existingUser, 400, 'User exists');
 
-  const user = createUserEntity(email, uuidv4(), role || 'client');
+  const user = createUserAndProfileEntity({
+    email,
+    role: role || 'client'
+  });
 
   await handleInviteUser(user);
 
@@ -258,33 +268,30 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
-  const repo = getRepository(User);
-  let user = await repo
-    .createQueryBuilder()
-    .where(
-      'LOWER(email) = LOWER(:email)',
-      { email })
-    .getOne();
+  let user = await getActiveUserByEmail(email);
 
   const isNewUser = !user;
-
-  if (isNewUser) {
-    user = createUserEntity(email, uuidv4(), 'client');
-    user.status = UserStatus.Enabled;
+  const now = getUtcNow();
+  const extra = {
+    loginType: 'google',
+    lastLoggedInAt: now,
+    lastNudgedAt: now,
   }
 
-  user.givenName = givenName || user.givenName;
-  user.surname = surname || user.surname;
-  user.loginType = 'google';
-  user.lastLoggedInAt = getUtcNow();
-  user.lastNudgedAt = getUtcNow();
-  user.referralCode = referralCode;
-
-  await getRepository(User).save(user);
-
   if (isNewUser) {
+    const { user: newUser, profile } = createUserAndProfileEntity({
+      email,
+      role: 'client'
+    });
+
+    user = Object.assign(newUser, extra);
+    await getManager().save([user, profile]);
+
     await createReferral(user.id);
     await createInitialFreeSubscription(user.id);
+  } else {
+    user = Object.assign(user, extra);
+    await getRepository(User).save(user);
   }
 
   attachJwtCookie(user, res);

@@ -59,17 +59,17 @@ const ProfileForm = (props) => {
 
       notify.success('Successfully saved profile!')
 
-      Object.assign(user, values);
+      Object.assign(user.profile, values);
       onOk(user);
     } finally {
       setSending(false);
     }
   }
 
-  const isBuiltinAdmin = user.email === 'system@easyvaluecheck.com';
+  const isBuiltinAdmin = user.profile.email === 'system@easyvaluecheck.com';
 
   return (
-    <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user}>
+    <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user.profile}>
       {!initial && <Form.Item
         label="Email"
         name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>

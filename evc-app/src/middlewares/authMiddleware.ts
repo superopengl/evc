@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { UserStatus } from '../types/UserStatus';
 import { Subscription } from '../entity/Subscription';
 import { getUserSubscription } from '../utils/getUserSubscription';
+import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 
 async function attachSubscriptionCredential(user) {
   const subscription = await getUserSubscription(user.id);
@@ -24,7 +25,7 @@ export const authMiddleware = async (req, res, next) => {
       const repo = getRepository(User);
       if (moment(expires).isBefore()) {
         // JWT token expired. Needs to refresh
-        const existingUser = await getActive;
+        const existingUser = await getActiveUserByEmail(user.profile.email);
         if (!existingUser) {
           // User not existing anymore
           clearJwtCookie(res);

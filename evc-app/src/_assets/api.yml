@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: AUA backend API
+  description: EVC backend API
   version: "1.0.0"
-  title: "AUA API"
+  title: "EVC API"
 basePath: "/api/v1"
 schemes:
   - http

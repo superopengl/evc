@@ -13,5 +13,3 @@ export class Stock {
   @JoinTable()
   tags: StockTag[];
 }
-
-

@@ -8,7 +8,7 @@ import {
   UserAddOutlined, UserOutlined, ReconciliationOutlined,
   PicLeftOutlined
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Drawer, Layout, Menu, Modal, Typography } from 'antd';
+import { Avatar, Badge, Button, Drawer, Layout, Menu, Modal, Typography, Divider } from 'antd';
 import React from 'react';
 import MediaQuery from 'react-responsive';
 import { Link, withRouter } from 'react-router-dom';
@@ -68,7 +68,7 @@ const HomeHeaderRaw = props => {
   const handleLogout = () => {
     Modal.confirm({
       title: "Logout",
-      content: <>Do you want to log out <Text code>{user.profile.email}</Text></>,
+      content: <>Do you want to log out?</>,
       async onOk() {
         await logout();
         setVisible(false);
@@ -133,6 +133,9 @@ const HomeHeaderRaw = props => {
               <Menu.Item key="stats"><Link to="/stats">Statistics</Link></Menu.Item>
             </Menu.SubMenu>}
             {!isGuest && <Menu.SubMenu key="me" title={<Avatar size={40} icon={<UserOutlined style={{ fontSize: 20 }} />} style={{ backgroundColor: isAdmin ? '#222222' : isAgent ? '#3273A4' : '#15be53' }} />}>
+              <Menu.Item key="email" disabled={true}>
+                <Text code>{user.profile.email}</Text>
+              </Menu.Item>
               <Menu.Item key="profile"><Link to="/profile">Profile</Link></Menu.Item>
               {isClient && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}
               {canChangePassword && <Menu.Item key="changePassword"><Link to="/change_password">Change Password</Link></Menu.Item>}

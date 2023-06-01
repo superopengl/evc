@@ -30,7 +30,7 @@ const ContainerStyled = styled.div`
   margin: 6rem auto 2rem auto;
   padding: 0 1rem;
   width: 100%;
-  max-width: 1000px;
+  // max-width: 1000px;
 
   .ant-divider {
     margin: 8px 0 24px;
@@ -73,13 +73,12 @@ const ClientHomePage = (props) => {
   const [watchList, setWatchList] = React.useState([]);
 
   const loadList = async () => {
-
-    if (isProfileMissing) {
-      setProfileModalVisible(true);
-      return;
-    }
-
     try {
+      if (isProfileMissing) {
+        setProfileModalVisible(true);
+        return;
+      }
+
       setLoading(true);
       // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
       const watchList = await getWatchList();

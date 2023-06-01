@@ -13,7 +13,7 @@ export async function getUserSubscription(userId) {
     .where({
       userId,
       start: LessThan(now),
-      status: SubscriptionStatus.Enabled
+      status: SubscriptionStatus.Alive
     })
     .andWhere(`"end" IS NULL OR "end" > :now`, { now })
     .getOne();

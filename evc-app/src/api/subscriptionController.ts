@@ -1,5 +1,5 @@
 
-import { getManager, getRepository, Like, MoreThan } from 'typeorm';
+import { EntityManager, getManager, getRepository, Like, MoreThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
@@ -16,23 +16,43 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { getUserSubscription } from '../utils/getUserSubscription';
+import { Payment } from '../entity/Payment';
+import { PaymentMethod } from '../types/PaymentMethod';
+import { PaymentStatus } from '../types/PaymentStatus';
 
-export const listSubscriptionHistory = handlerWrapper(async (req, res) => {
-  assert(false, 501);
-
-});
-
-export async function createInitialFreeSubscription(userId) {
-  const sub = new Subscription();
-  Object.assign(sub, {
-    userId,
-    type: SubscriptionType.Free,
-    start: getUtcNow(),
-    status: SubscriptionStatus.Enabled
+async function getUserSubscriptionHistory(userId) {
+  const list = await getRepository(Subscription).find({
+    where: {
+      userId
+    },
+    order: {
+      start: 'DESC'
+    },
+    relations: [
+      'payment'
+    ]
   });
 
-  await getRepository(Subscription).save(sub);
+  return list;
 }
+
+export const listMySubscriptionHistory = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { user: { id: userId } } = req as any;
+
+  const list = await getUserSubscriptionHistory(userId);
+
+  res.json(list);
+});
+
+export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id } = req.params;
+
+  const list = await getUserSubscriptionHistory(id);
+
+  res.json(list);
+});
 
 export const cancelSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
@@ -41,27 +61,33 @@ export const cancelSubscription = handlerWrapper(async (req, res) => {
 
   await getRepository(Subscription).update(
     { id, userId },
-    { status: SubscriptionStatus.Disabled }
+    { status: SubscriptionStatus.Terminated }
   );
 
   res.json();
 });
 
-export const provisionSubscription = handlerWrapper(async (req, res) => {
+function createPaymentEntity(payload): Payment {
+  const { paymentMethod, balanceAmount, paymentInfo } = payload;
+  const entity = new Payment();
+  entity.id = uuidv4();
+  entity.balanceTransaction = balanceAmount;
+  entity.amount = 0;
+  entity.method = paymentMethod;
+  entity.status = PaymentStatus.OK;
+  return entity;
+}
+
+export const createSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { user: { id: userId } } = req as any;
   const { plan, recurring, symbols, alertDays } = req.body;
   const now = getUtcNow();
 
-  const repo = getRepository(Subscription);
-  const existing = await repo.findOne({
-    userId,
-    status: SubscriptionStatus.Provisioning,
-  });
-  assert(!existing, 500, 'Cannot provision this subscription as you already have a provisioning subscription.');
-
   const months = recurring ? null : plan === SubscriptionType.UnlimitedQuarterly ? 3 : 1;
   const end = months ? moment(now).add(months, 'month').toDate() : null;
+
+  const payment = createPaymentEntity(req.body);
 
   const subscriptionId = uuidv4();
   const subscription = new Subscription();
@@ -71,23 +97,21 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
   subscription.symbols = plan === SubscriptionType.SelectedMonthly ? symbols : [];
   subscription.start = now;
   subscription.end = end;
-  subscription.status = SubscriptionStatus.Provisioning;
+  subscription.status = SubscriptionStatus.Alive;
 
-  await getRepository(Subscription).insert(subscription);
+  await getManager().transaction(async m => {
+    // Terminates all ongoing subscriptions
+    await m.getRepository(Subscription).update(
+      { userId, status: SubscriptionStatus.Alive },
+      { status: SubscriptionStatus.Terminated }
+    );
+
+    await m.save(payment);
+
+    subscription.payments = [payment];
+    await m.save(subscription);
+  });
 
   res.json(subscription);
-});
-
-export const settleSubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
-  const { user: { id: userId } } = req as any;
-  const { id } = req.params;
-
-  await getRepository(Subscription).update(
-    { userId, id, status: SubscriptionStatus.Provisioning },
-    { status: SubscriptionStatus.Enabled }
-  );
-
-  res.json();
 });
 

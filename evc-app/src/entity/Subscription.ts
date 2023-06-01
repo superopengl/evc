@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { PaymentMethod } from '../types/PaymentMethod';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { SubscriptionType } from '../types/SubscriptionType';
-
-
-
+import { Payment } from './Payment';
 
 @Entity()
+@Index('idx_subscription_end_recurring', ['end', 'recurring'])
 @Index('idx_subscription_userId_start_end', ['userId', 'start', 'end'])
 @Index('idx_subscription_userId_createdAt', ['userId', 'createdAt'])
 export class Subscription {
@@ -21,10 +21,13 @@ export class Subscription {
   @Column()
   type: SubscriptionType;
 
-  @Column()
+  @Column('json', { nullable: true })
+  paymentMethodInfo: object;
+
+  @Column('date')
   start: Date;
 
-  @Column({nullable: true})
+  @Column('date')
   end: Date;
 
   @Column('text', { default: '{}', array: true})
@@ -33,10 +36,13 @@ export class Subscription {
   @Column({ default: true })
   recurring: boolean;
 
-  @Column({ type: 'int', default: 7 })
+  @Column({ type: 'int', default: 3 })
   alertDays: number;
 
-  @Column()
+  @Column({default: SubscriptionStatus.Alive})
   status: SubscriptionStatus;
+
+  @OneToMany(() => Payment, payment => payment.subscription)
+  payments: Payment[];
 }
 

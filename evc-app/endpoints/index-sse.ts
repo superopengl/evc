@@ -9,7 +9,7 @@ function handleMessage(data) {
   try {
     const event = JSON.parse(data)[0];
     if (event) {
-      console.error('Task', 'sse', 'message', event);
+      // console.error('Task', 'sse', 'message', event);
       publisher.publish(event);
     }
   } catch (err) {

@@ -1,4 +1,4 @@
 export const isProfileComplete = (user) => {
-  return user.givenName && user.surname && user.country && user.locale;
+  return user.profile.givenName && user.profile.surname && user.profile.country && user.profile.locale;
 }
 

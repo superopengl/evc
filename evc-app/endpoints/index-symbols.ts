@@ -29,8 +29,6 @@ export const start = async () => {
   } catch (e) {
     console.error('Task', 'sync_all_symbols', 'failed', errorToJson(e));
   } finally {
-    if (connection) {
-      connection.close();
-    }
+      connection?.close();
   }
 };

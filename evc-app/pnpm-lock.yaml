@@ -12,6 +12,7 @@ dependencies:
   dotenv: 8.2.0
   email-templates: 7.1.1
   error-to-json: 2.0.0
+  eventsource: 1.0.7
   express: 4.17.1
   express-async-handler: 1.1.4
   express-fileupload: 1.1.10
@@ -5488,6 +5489,7 @@ specifiers:
   dotenv: ^8.2.0
   email-templates: ^7.1.1
   error-to-json: ^2.0.0
+  eventsource: ^1.0.7
   express: ^4.17.1
   express-async-handler: ^1.1.4
   express-fileupload: ^1.1.7-alpha.3

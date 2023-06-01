@@ -27,10 +27,6 @@ export class UserProfile {
   @Column({ default: 'en-US' })
   locale: string;
 
-  @Column('uuid', { nullable: true })
-  @Index()
-  referralCode: string;
-
   @Column({ default: false })
   everPaid: boolean;
 }

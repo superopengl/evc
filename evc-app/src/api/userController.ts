@@ -67,7 +67,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
     await getManager().save(user.profile);
   }
 
-  if (role === 'client') {
+  if (id === loginUserId) {
     attachJwtCookie(user, res);
   }
 
@@ -106,6 +106,9 @@ export const searchUsers = handlerWrapper(async (req, res) => {
       's.*',
       'u.id as id',
       'u."loginType"',
+      'u.role as role',
+      'u."lastLoggedInAt"',
+      'u."lastNudgedAt"',
       'u."createdAt" as "createdAt"',
       's.type as "subscriptionType"'
     ]);

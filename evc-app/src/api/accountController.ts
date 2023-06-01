@@ -30,14 +30,13 @@ export const createReferral = async (userId) => {
 }
 
 const getAccountForUser = async (userId) => {
-  const referral = await getRepository(ReferralCode).findOne({ userId });
-  const referralUrl = `${process.env.EVC_WEB_DOMAIN_NAME}/signup?code=${referral.id}`;
+  // const user = await getRepository(User).findOne({ id: userId });
+  const referralUrl = `${process.env.EVC_WEB_DOMAIN_NAME}/signup?code=${userId}`;
 
-  const referralCountInfo = referral ? await getRepository(User)
+  const referralCount = await getRepository(User)
     .createQueryBuilder()
-    .where({ referralCode: referral.id })
-    .select('COUNT(*) AS count')
-    .getRawOne() : null;
+    .where({ referredBy: userId })
+    .getCount();
 
   const subscription = await getUserSubscription(userId);
 
@@ -54,7 +53,7 @@ const getAccountForUser = async (userId) => {
     subscription,
     referralPolicy,
     referralUrl,
-    referralCount: +(referralCountInfo?.count || 0),
+    referralCount,
     balance: +balance?.amount || 0
   };
 

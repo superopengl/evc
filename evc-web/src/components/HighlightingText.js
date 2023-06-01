@@ -11,7 +11,7 @@ const HighlightingText = (props) => {
     highlightClassName="search-highlighting" 
     searchWords={[search]} 
     autoEscape={true} 
-    textToHighlight={value} 
+    textToHighlight={value || ''} 
     />
   );
 };
@@ -19,11 +19,10 @@ const HighlightingText = (props) => {
 HighlightingText.propTypes = {
   // value: PropTypes.string.isRequired,
   search: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string
 };
 
 HighlightingText.defaultProps = {
-  value: ''
 };
 
 export default HighlightingText;

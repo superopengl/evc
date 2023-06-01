@@ -67,6 +67,10 @@ export class User {
 
   @Column()
   profileId: string;
+
+  @Column({type: 'uuid', nullable: true})
+  @Index()
+  referredBy: string;
 }
 
 

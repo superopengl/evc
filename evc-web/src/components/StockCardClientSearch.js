@@ -34,7 +34,7 @@ const StockCardClientSearch = (props) => {
 };
 
 StockCardClientSearch.propTypes = {
-  value: PropTypes.object.isRequired,
+  value: PropTypes.object,
   showRemove: PropTypes.bool.isRequired,
   showWatch: PropTypes.bool.isRequired,
   showUnwatch: PropTypes.bool.isRequired,

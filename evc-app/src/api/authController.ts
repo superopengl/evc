@@ -285,6 +285,9 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     });
 
     user = Object.assign(newUser, extra);
+    user.profile = profile;
+    profile.givenName = givenName;
+    profile.surname = surname;
     await getManager().save([user, profile]);
 
     await createReferral(user.id);

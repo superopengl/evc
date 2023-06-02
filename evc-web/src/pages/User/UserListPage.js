@@ -339,7 +339,7 @@ const UserListPage = () => {
             <Paragraph code>{currentUser?.email}</Paragraph>
           </Space>
           <Form.Item label="Password" name="password" rules={[{ required: true, message: ' ' }]}>
-            <Input placeholder="New password" autoComplete="new-password" disabled={loading} />
+            <Input placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Reset Password</Button>
@@ -388,7 +388,7 @@ const UserListPage = () => {
         onCancel={() => setProfileModalVisible(false)}
         footer={null}
       >
-        <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." />
+        {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
       </Modal>

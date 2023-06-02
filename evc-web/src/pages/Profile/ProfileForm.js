@@ -74,11 +74,11 @@ const ProfileForm = (props) => {
         label="Email"
         name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} 
-        disabled={isBuiltinAdmin}
-        maxLength="100" autoFocus={!isBuiltinAdmin} />
+        disabled={isBuiltinAdmin || true}
+        maxLength="100" />
       </Form.Item>}
       <Form.Item label="Given Name" name="givenName" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
-        <Input placeholder="Given name" autoComplete="given-name" allowClear={true} maxLength="100" autoFocus={isBuiltinAdmin} />
+        <Input placeholder="Given name" autoComplete="given-name" allowClear={true} maxLength="100" autoFocus />
       </Form.Item>
       <Form.Item label="Surname" name="surname" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="Surname" autoComplete="family-name" allowClear={true} maxLength="100" />

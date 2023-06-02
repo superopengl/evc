@@ -39,7 +39,7 @@ const PaymentModal = (props) => {
   const [modalVisible, setModalVisible] = React.useState(visible);
   const [recurring, setRecurring] = React.useState(true);
   const [selectedSymbols, setSelectedSymbols] = React.useState();
-  const [paymentDetail, setPaymentDetail] = React.useState({});
+  const [paymentDetail, setPaymentDetail] = React.useState();
   const [willUseBalance, setWillUseBalance] = React.useState(true);
   const wizardRef = React.useRef(null);
   const needsSelectSymbols = planType === 'selected_monthly';
@@ -160,27 +160,28 @@ const PaymentModal = (props) => {
           </Space>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Balance total amount:</Text>
-            <MoneyAmount value={paymentDetail.totalBalanceAmount} />
+            {paymentDetail ? <MoneyAmount value={paymentDetail.totalBalanceAmount} /> : '-'}
           </Space>
           <Divider />
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Total amount:</Text>
-            <MoneyAmount value={paymentDetail.price} />
+            {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
           </Space>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Balance deduction:</Text>
-            <MoneyAmount value={paymentDetail.balanceDeductAmount * -1} />
+            {paymentDetail ? <MoneyAmount value={paymentDetail.balanceDeductAmount * -1} /> : '-'}
           </Space>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text strong>Total payable amount:</Text>
-            <MoneyAmount strong value={paymentDetail.additionalPay} />
+            {paymentDetail ? <MoneyAmount strong value={paymentDetail.additionalPay} /> : '-'}
           </Space>
-          <Divider />
-          {isValidPlan && <PaymentButtonWidget 
-          paymentDetail={paymentDetail} 
-          onProvision={handleProvisionSubscription}
-          onCommit={handleCommitSubscription}
-          onOk={handlePurchaseDone} 
+          {isValidPlan && <Divider />}
+          {isValidPlan && <PaymentButtonWidget
+            paymentDetail={paymentDetail}
+            onProvision={handleProvisionSubscription}
+            onCommit={handleCommitSubscription}
+            onOk={handlePurchaseDone}
+            recurring={recurring}
           />}
         </Space>
       </Loading>

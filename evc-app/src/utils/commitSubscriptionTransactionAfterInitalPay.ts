@@ -9,6 +9,7 @@ import { PaymentStatus } from '../types/PaymentStatus';
 import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { now } from 'moment';
 import { getUtcNow } from './getUtcNow';
+import { User } from '../entity/User';
 
 
 export async function commitSubscriptionTransactionAfterInitalPay(
@@ -64,5 +65,13 @@ export async function commitSubscriptionTransactionAfterInitalPay(
 
     subscription.status = SubscriptionStatus.Alive;
     await m.save(subscription);
+
+    if (paidAmount > 0) {
+      await m.getRepository(User).update({
+        id: userId,
+        everPaid: false
+      },
+        { everPaid: true });
+    }
   });
 }

@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Subscription } from './Subscription';
-import { UserBalanceTransaction } from './UserBalanceLog';
+import { UserBalanceTransaction } from './UserBalanceTransaction';
 
 @Entity()
 export class Payment {
@@ -13,9 +13,6 @@ export class Payment {
   @Column({ default: () => `timezone('UTC', now())` })
   @Index()
   createdAt?: Date;
-
-  @OneToOne(() => UserBalanceTransaction)
-  balanceTransaction: UserBalanceTransaction;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
@@ -43,4 +40,8 @@ export class Payment {
 
   @ManyToOne(() => Subscription, subscription => subscription.payments)
   subscription: Subscription;
+
+  @OneToOne(() => UserBalanceTransaction, {nullable: true, cascade: true})
+  @JoinColumn()
+  balanceTransaction: UserBalanceTransaction;
 }

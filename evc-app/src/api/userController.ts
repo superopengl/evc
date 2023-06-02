@@ -16,6 +16,7 @@ import { SubscriptionType } from '../types/SubscriptionType';
 import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
+import { SubscriptionStatus } from '../types/SubscriptionStatus';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -92,7 +93,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
   if (text) {
     query = query.andWhere(`(p.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text)`, { text: `%${text}%` })
   }
-  query = query.leftJoin(q => q.from(Subscription, 's'), 's', `s."userId" = u.id`);
+  query = query.leftJoin(q => q.from(Subscription, 's').where(`status = :status`, {status: SubscriptionStatus.Alive}), 's', `s."userId" = u.id`);
   if (subscription.length) {
     query = query.andWhere(`(s.type IN (:...subscription))`, { subscription });
   }

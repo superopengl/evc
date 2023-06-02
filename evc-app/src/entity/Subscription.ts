@@ -39,10 +39,13 @@ export class Subscription {
   @Column({ type: 'int', default: 3 })
   alertDays: number;
 
-  @Column({default: SubscriptionStatus.Alive})
+  @Column({default: SubscriptionStatus.Provisioning})
   status: SubscriptionStatus;
 
-  @OneToMany(() => Payment, payment => payment.subscription)
+  @Column({default: true})
+  preferToUseBalance: boolean;
+
+  @OneToMany(() => Payment, payment => payment.subscription, {cascade: true})
   payments: Payment[];
 }
 

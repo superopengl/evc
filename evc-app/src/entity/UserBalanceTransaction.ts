@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
+import { Payment } from './Payment';
 
 @Entity()
 @Index('idx_userBalanceTransaction_user_createdAt', ['userId', 'createdAt'])

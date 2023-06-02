@@ -3,7 +3,6 @@ import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'reac
 export const subscriptionDef = [
   {
     key: 'free',
-    weight: 0,
     title:'Free',
     unit: 'forever',
     price: 0,
@@ -13,7 +12,6 @@ export const subscriptionDef = [
   },
   {
     key: 'selected_monthly',
-    weight: 10,
     title:'Selected Monthly',
     unit: 'per stock per month',
     price: 9.99,
@@ -23,7 +21,6 @@ export const subscriptionDef = [
   },
   {
     key: 'unlimited_monthly',
-    weight: 30,
     title:'Unlimited Monthly',
     unit: 'per month',
     price: 39.99,
@@ -33,7 +30,6 @@ export const subscriptionDef = [
   },
   {
     key: 'unlimited_quarterly',
-    weight: 90,
     title:'Unlimited Quarterly',
     unit: 'per quarter',
     price: 109.99,

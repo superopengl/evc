@@ -16,6 +16,10 @@ import { StockSearchInput } from './StockSearchInput';
 import * as _ from 'lodash';
 import MoneyAmount from './MoneyAmount';
 import { StripeCheckout } from './StripeCheckout';
+import { Row, Col } from 'antd';
+import { Loading } from './Loading';
+import PaymentButtonWidget from './PaymentButtonWidget';
+import { calculatePaymentDetail, commitSubscription, provisionSubscription } from 'services/subscriptionService';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -30,56 +34,41 @@ const ContainerStyled = styled.div`
 
 const PaymentModal = (props) => {
 
-  const { visible, oldPlan, newPlan, excluding, onOk, onCancel, balance } = props;
+  const { visible, planType, onOk, onCancel } = props;
   const [loading, setLoading] = React.useState(false);
-  const [recurring, setRecurring] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(visible);
+  const [recurring, setRecurring] = React.useState(true);
   const [selectedSymbols, setSelectedSymbols] = React.useState();
+  const [paymentDetail, setPaymentDetail] = React.useState({});
   const [willUseBalance, setWillUseBalance] = React.useState(true);
   const wizardRef = React.useRef(null);
+  const needsSelectSymbols = planType === 'selected_monthly';
+
+  const loadPaymentDetail = async (symbols, useBalance) => {
+    if (needsSelectSymbols && !symbols?.length) {
+      setPaymentDetail({});
+      return;
+    }
+    try {
+      setLoading(true)
+      const result = await calculatePaymentDetail(planType, symbols, useBalance);
+      setPaymentDetail(result);
+    } finally {
+      setLoading(false)
+    }
+  }
 
   React.useEffect(() => {
     setModalVisible(visible);
   }, [visible]);
 
+  React.useEffect(() => {
+    loadPaymentDetail(selectedSymbols, willUseBalance);
+  }, []);
 
-  const oldPlanDef = subscriptionDef.find(s => s.key === oldPlan);
-  const newPlanDef = subscriptionDef.find(s => s.key === newPlan);
+  const newPlanDef = subscriptionDef.find(s => s.key === planType);
 
   const payPalPlanId = newPlanDef.payPalPlanId;
-  const isDowngrade = oldPlanDef.weight > newPlanDef.weight;
-
-  const isUpgrade = oldPlanDef.weight < newPlanDef.weight;
-  const isLeavingFree = oldPlanDef.weight === 0 && isUpgrade;
-  const isBackToFree = newPlanDef.weight === 0 && isDowngrade;
-
-  const isAddSingle = newPlan === 'selected_monthly';
-
-  const alertMessage = isBackToFree ? 'Your currnet paid plan will ends after it expires' :
-    isDowngrade ? 'You are downgrading plan. The new plan will start after the current plan ends' :
-      (isUpgrade && !isLeavingFree) ? "You are upgrading plan. The new plan will start right away and the old plan will cease (no refund)" :
-        null;
-
-  const handleSignIn = async (values) => {
-    if (loading) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      await signUp(values);
-
-      onOk();
-      // Guest
-      notify.success(
-        '🎉 Successfully signed up!',
-        <>Congratulations and thank you very much for signing up Easy Value Check. The invitation email has been sent out to <Text strong>{values.email}</Text>.</>
-      );
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const handleSelectedStockChange = (values) => {
     const { symbols } = values;
@@ -88,42 +77,46 @@ const PaymentModal = (props) => {
 
   const handleUseBalanceChange = checked => {
     setWillUseBalance(checked);
+    loadPaymentDetail(selectedSymbols, checked);
   }
-  
+
   const handleRecurringChange = checked => {
     setRecurring(checked);
   }
 
-  const calculateTotalAmount = () => {
-    const price = newPlanDef.price;
-    const quantity = isAddSingle ? selectedSymbols?.length : 1;
-    const termAmount = price * quantity;
-    if (willUseBalance) {
-      const payments = [];
-      let remainingBalance = balance;
-      while (remainingBalance) {
-        let shouldPay = 0;
-        if (remainingBalance >= termAmount) {
-          shouldPay = 0;
-          remainingBalance -= termAmount;
-        } else {
-          // remainingBalance < unitPrice
-          shouldPay = termAmount - remainingBalance;
-          remainingBalance = 0;
-        }
-        payments.push(shouldPay);
-      }
-      payments.push(termAmount);
-      return payments;
-    } else {
-      return [termAmount];
-    }
+  const handleSymbolsChange = list => {
+    setSelectedSymbols([...list]);
+    loadPaymentDetail(list, willUseBalance);
   }
 
+  const isValidPlan = !needsSelectSymbols || selectedSymbols?.length > 0
 
-  const canShowPayButtons = !isAddSingle || selectedSymbols?.length > 0;
+  const handlePurchase = () => {
 
-  const paymentTermsPreview = calculateTotalAmount();
+  }
+
+  const handleProvisionSubscription = async () => {
+    const subscription = await provisionSubscription({
+      plan: planType,
+      recurring: recurring,
+      symbols: selectedSymbols,
+      preferToUseBalance: willUseBalance
+    });
+    return subscription;
+  }
+
+  const handleCommitSubscription = async (subscriptionId, paidAmount, req, resp) => {
+    await commitSubscription(subscriptionId, {
+      paidAmount: paidAmount,
+      paymentMethod: paymentDetail.paymentMethod,
+      rawRequest: req,
+      rawResponse: resp
+    });
+  }
+
+  const handlePurchaseDone = () => {
+    onOk();
+  }
 
   return (
     <Modal
@@ -133,70 +126,78 @@ const PaymentModal = (props) => {
       title="Subscribe plan"
       destroyOnClose={true}
       footer={null}
+      width={600}
       onOk={() => onCancel()}
       onCancel={() => onCancel()}
     >
-      <Space style={{ justifyContent: 'space-between', width: '100%' }}>
-        <Title level={3}>{newPlanDef.title}</Title>
-        <div><Text strong type="success">$ {newPlanDef.price}</Text> {newPlanDef.unit}</div>
-      </Space>
-      <Paragraph>{newPlanDef.description}</Paragraph>
-      {isBackToFree ? <>
-        <Paragraph>You are going back to free plan. Your current paid plan will cease after it expires.</Paragraph>
-        <Button block onClick={() => onOk()}>OK</Button>
-      </> :
+
+      <Loading loading={loading} >
         <Space direction="vertical" style={{ width: '100%' }} >
-          {alertMessage && <Alert message={alertMessage} />}
-          {isAddSingle && <div>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Title level={3}>{newPlanDef.title}</Title>
+            <div><Text strong type="success">$ {newPlanDef.price}</Text> {newPlanDef.unit}</div>
+          </Space>
+          <Paragraph>{newPlanDef.description}</Paragraph>
+
+          {needsSelectSymbols &&
             <Form layout="vertical"
               onFinish={() => wizardRef.current.nextStep()}
               onValuesChange={handleSelectedStockChange}
             >
-              <Paragraph type="secondary">Please choose a stock to subscribe.</Paragraph>
-              <Form.Item label="Stock" name="symbols" rules={[{ required: true, message: ' ' }]}>
-                <StockSearchInput mode="multiple" excluding={excluding} />
+              <Form.Item label="Please choose a stock to subscribe" name="symbols" rules={[{ required: true, message: ' ' }]}>
+                <StockSearchInput mode="multiple" onChange={handleSymbolsChange} />
               </Form.Item>
             </Form>
-          </div>}
-          {canShowPayButtons && <Divider />}
-          {canShowPayButtons && <Space size="large" direction="vertical" style={{ width: '100%' }} >
-            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Text>Recurring payment?</Text>
-              <Switch defaultChecked onChange={handleRecurringChange} />
-            </Space>
-            {balance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Text>Use balance <MoneyAmount strong value={balance} /> to deduct?</Text>
-              <Switch defaultChecked onChange={handleUseBalanceChange} />
-            </Space>}
-            {paymentTermsPreview.map((price, i) => <Space key={i} style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Text strong>Term {i + 1}{i === 0 ? ' (this time)' : i === paymentTermsPreview.length - 1 ? ' and following' : ''}</Text>
-              <MoneyAmount type="success" strong value={price} />
-            </Space>
-            )}
-          </Space>}
+          }
+          <Divider />
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text>Recurring payment?</Text>
+            <Switch defaultChecked onChange={handleRecurringChange} />
+          </Space>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text>Prefer to use balance?</Text>
+            <Switch defaultChecked onChange={handleUseBalanceChange} />
+          </Space>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text>Balance total amount:</Text>
+            <MoneyAmount value={paymentDetail.totalBalanceAmount} />
+          </Space>
+          <Divider />
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text>Total amount:</Text>
+            <MoneyAmount value={paymentDetail.price} />
+          </Space>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text>Balance deduction:</Text>
+            <MoneyAmount value={paymentDetail.balanceDeductAmount * -1} />
+          </Space>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text strong>Total payable amount:</Text>
+            <MoneyAmount strong value={paymentDetail.additionalPay} />
+          </Space>
+          <Divider />
+          {isValidPlan && <PaymentButtonWidget 
+          paymentDetail={paymentDetail} 
+          onProvision={handleProvisionSubscription}
+          onCommit={handleCommitSubscription}
+          onOk={handlePurchaseDone} 
+          />}
+        </Space>
+      </Loading>
 
-          <>
-            <PayPalCheckoutButton payPalPlanId={payPalPlanId} />
-            <StripeCheckout />
-          </>
-        </Space>}
+
     </Modal>);
 }
 
 PaymentModal.propTypes = {
-  oldPlan: PropTypes.string.isRequired,
-  newPlan: PropTypes.string.isRequired,
-  excluding: PropTypes.array,
+  planType: PropTypes.string.isRequired,
   visible: PropTypes.bool.isRequired,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
-  balance: PropTypes.number
 };
 
 PaymentModal.defaultProps = {
   visible: false,
-  excluding: [],
-  balance: 0
 };
 
 export default withRouter(PaymentModal);

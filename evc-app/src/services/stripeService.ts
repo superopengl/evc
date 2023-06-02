@@ -1,10 +1,18 @@
 import Stripe from 'stripe';
 import { assert } from '../utils/assert';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2020-08-27' });
 
-export async function createSession() {
 
-  const session = await stripe.checkout.sessions.create({
+let stripe = null;
+function getStripe() {
+  if (!stripe) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2020-08-27' });
+  }
+  return stripe;
+}
+
+export async function createStripeCheckoutSession() {
+
+  const session = await getStripe().checkout.sessions.create({
     payment_method_types: ['card'],
     mode: 'setup',
     customer: 'cus_FOsk5sbh3ZQpAU',
@@ -17,23 +25,19 @@ export async function createSession() {
 
 export async function retrieveCheckoutSession() {
   const checkoutSessionId = '';
-  const session = await stripe.checkout.sessions.retrieve(checkoutSessionId, {
+  const session = await getStripe().checkout.sessions.retrieve(checkoutSessionId, {
     expand: ['customer', 'setup_intent']
   });
   const setupIntentId = session.id;
 }
 
 
-export function getStripe() {
-  return stripe;
-}
-
 export async function parseStripeWebhookEvent(req) {
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SIGN_SECRET;
   const { body } = req;
   try {
-    const event = endpointSecret ? await stripe.webhooks.constructEvent(body, sig, endpointSecret) : JSON.parse(body);
+    const event = endpointSecret ? await getStripe().webhooks.constructEvent(body, sig, endpointSecret) : JSON.parse(body);
     return event;
   }
   catch (err) {

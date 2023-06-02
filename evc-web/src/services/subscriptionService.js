@@ -28,3 +28,7 @@ export async function commitSubscription(id, payload) {
 export async function calculatePaymentDetail(type, symbols?, preferToUseBalance) {
   return httpPost(`subscription/calc`, { type, symbols, preferToUseBalance });
 }
+
+export async function fetchStripeCheckoutSession() {
+  return httpGet(`/checkout/stripe/session`);
+}

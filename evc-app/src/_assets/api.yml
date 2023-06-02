@@ -810,3 +810,14 @@ paths:
       responses:
         200:
           description: OK
+  /webhook/stripe:
+    post:
+      operationId: webhookStripe
+      parameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK

@@ -12,6 +12,7 @@ import { authMiddleware } from './middlewares/authMiddleware';
 import * as cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
 import { sseMiddleware } from 'express-sse-middleware';
+import { webhookStripe } from './api/webhookController';
 
 
 function errorHandler(err, req, res, next) {
@@ -68,7 +69,15 @@ export function createAppInstance() {
   //   }
   // }));
   app.use(sseMiddleware);
-  app.use(bodyParser.json({ limit: '8mb' }));
+
+  // Need to pass the raw body to /webhoot/stripe
+  const shouldJsonParseRequest = req => !/\/webhook\/stripe/i.test(req.url);
+  const parseJSON = bodyParser.json({ limit: '4mb' });
+  const parseRaw = bodyParser.raw({ type: '*/*' });
+  app.use((req, res, next) => {
+    shouldJsonParseRequest(req) ? parseJSON(req, res, next) : parseRaw(req, res, next)
+  });
+
   app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
   // app.use(expressSession({
   //   name: 'session',
@@ -111,6 +120,7 @@ export function createAppInstance() {
   app.get('/healthcheck', (req, res) => res.send('OK'));
 
   app.get('/r/:token', (req, res) => res.redirect(`/api/v1/auth/r/${req.params.token}`));
+
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listEndpoints(app)));
   app.use('/', express.static(staticWwwDir));

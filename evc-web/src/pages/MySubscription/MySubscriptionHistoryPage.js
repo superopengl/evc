@@ -3,7 +3,6 @@ import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Loading } from 'components/Loading';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { TimeAgo } from 'components/TimeAgo';
 import { CheckOutlined } from '@ant-design/icons';
@@ -78,12 +77,12 @@ const MySubscriptionHistoryPage = () => {
     {
       title: 'Start',
       dataIndex: 'start',
-      render: (value) => <TimeAgo value={value} showTime={false} />
+      render: (value) => <TimeAgo value={value}/>
     },
     {
       title: 'End',
       dataIndex: 'end',
-      render: (value, item) => item.status === 'alive' && item.recurring ? null : <TimeAgo value={value} showTime={false} />
+      render: (value, item) => item.status === 'alive' && item.recurring ? null : <TimeAgo value={value} />
     },
   ];
 
@@ -96,7 +95,6 @@ const MySubscriptionHistoryPage = () => {
             <Table
               loading={loading}
               style={{width: '100%'}}
-              loading={loading}
               dataSource={list}
               columns={columnDef}
               size="small"

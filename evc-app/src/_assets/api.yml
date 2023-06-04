@@ -696,27 +696,15 @@ paths:
       responses:
         200:
           description: OK
-  /subscription/calc:
+  /subscription/preview:
     post:
-      operationId: calculateNewSubscriptionPayment
+      operationId: previewSubscriptionPayment
       responses:
         200:
           description: OK
   /subscription/history:
     get:
       operationId: listMySubscriptionHistory
-      responses:
-        200:
-          description: OK
-  /subscription/{id}/commit:
-    post:
-      operationId: commitSubscription
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
       responses:
         200:
           description: OK

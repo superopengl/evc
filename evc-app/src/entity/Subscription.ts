@@ -24,10 +24,10 @@ export class Subscription {
   @Column('json', { nullable: true })
   stripePaymentData: object;
 
-  @Column('date')
+  @Column()
   start: Date;
 
-  @Column('date')
+  @Column()
   end: Date;
 
   @Column('text', { default: '{}', array: true})

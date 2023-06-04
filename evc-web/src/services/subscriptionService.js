@@ -26,7 +26,7 @@ export async function confirmSubscriptionPayment(paymentId, payload) {
 }
 
 export async function calculatePaymentDetail(type, symbols?, preferToUseBalance) {
-  return httpPost(`subscription/calc`, { type, symbols, preferToUseBalance });
+  return httpPost(`subscription/preview`, { type, symbols, preferToUseBalance });
 }
 
 export async function fetchStripeCheckoutSession() {

@@ -23,6 +23,12 @@ export class Payment {
   @Column({ nullable: true })
   method: PaymentMethod;
 
+  @Column({ nullable: true })
+  stripeCustomerId?: string;
+
+  @Column({ nullable: true })
+  stripePaymentMethodId?: string;
+
   @Column('json', { nullable: true })
   rawResponse: object;
 

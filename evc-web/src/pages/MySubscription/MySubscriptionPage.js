@@ -20,10 +20,10 @@ import { StockSearchInput } from 'components/StockSearchInput';
 import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { PayPalCheckoutButton } from 'components/PayPalCheckoutButton';
+import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { Alert } from 'antd';
-import PaymentModal from 'components/PaymentModal';
+import PaymentModal from 'components/checkout/PaymentModal';
 import { StockName } from 'components/StockName';
 import { getMyAccount } from 'services/accountService';
 import MoneyAmount from 'components/MoneyAmount';
@@ -83,6 +83,7 @@ const StyledCol = styled(Col)`
 const MySubscriptionPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
+  const [modalVisible, setModalVisible] = React.useState(false);
   const [currentSubscription, changeToNewSubscription] = React.useState();
   const [planType, setPlanType] = React.useState();
 
@@ -143,21 +144,23 @@ const MySubscriptionPage = (props) => {
         },
         onOk: () => {
           setPlanType(subscription.key);
+          setModalVisible(true);
         },
         cancelText: 'No, keep the current plan',
       });
     } else {
       setPlanType(subscription.key);
+      setModalVisible(true);
     }
   }
 
   const handlePaymentOk = () => {
-    setPlanType(null);
+    setModalVisible(false);
     loadEntity();
   }
 
   const handleCancelPayment = () => {
-    setPlanType(null);
+    setModalVisible(false);
   }
 
   const terminateCurrentSubscription = async () => {
@@ -216,13 +219,13 @@ const MySubscriptionPage = (props) => {
               <Text>Started <TimeAgo value={currentSubscription.start} /></Text>
               <Text>Next payment <TimeAgo value={currentSubscription.end} /></Text>
             </>}
-            {planType && <PaymentModal
-              visible={!!planType}
+            <PaymentModal
+              visible={modalVisible}
               planType={planType}
               onOk={handlePaymentOk}
               onCancel={handleCancelPayment}
             // balance={list.balance}
-            />}
+            />
           </Space>
         </Loading>
       </ContainerStyled>

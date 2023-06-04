@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpDelete } from './http';
+import { httpGet, httpPost } from './http';
 
 
 export async function cancelSubscription(id) {
@@ -21,12 +21,8 @@ export async function provisionSubscription(payload) {
   return httpPost(`subscription`, payload);
 }
 
-export async function commitSubscription(id, payload) {
-  return httpPost(`subscription/${id}/commit`, payload);
-}
-
-export async function confirmCardPayment(paymentId, payload) {
-  return httpPost(`subscription/payment/${paymentId}/card/confirm`, payload);
+export async function confirmSubscriptionPayment(paymentId, payload) {
+  return httpPost(`subscription/payment/${paymentId}/confirm`, payload);
 }
 
 export async function calculatePaymentDetail(type, symbols?, preferToUseBalance) {

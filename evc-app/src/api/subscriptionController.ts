@@ -21,9 +21,11 @@ import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { calculateNewSubscriptionPaymentDetail } from '../utils/calculateNewSubscriptionPaymentDetail';
 import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
-import { provisionSubscriptionTransaction } from '../utils/provisionSubscriptionTransaction';
-import { commitSubscriptionTransactionAfterInitalPay } from '../utils/commitSubscriptionTransactionAfterInitalPay';
+import { provisionSubscriptionPurchase } from '../utils/provisionSubscriptionPurchase';
+import { commitSubscriptionPurchase } from '../utils/commitSubscriptionPurchase';
 import * as _ from 'lodash';
+import { UserStripeCustomer } from '../entity/UserStripeCustomer';
+import { previsionStripePayment } from '../services/stripeService';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -68,7 +70,7 @@ export const cancelSubscription = handlerWrapper(async (req, res) => {
 
   await getRepository(Subscription).update(
     { id, userId },
-    { 
+    {
       end: getUtcNow(),
       status: SubscriptionStatus.Terminated
     }
@@ -93,18 +95,56 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
   const { user: { id: userId } } = req as any;
   const { plan, recurring, symbols, preferToUseBalance, alertDays } = req.body;
 
-  const subscription = await provisionSubscriptionTransaction(userId, plan, recurring, symbols, preferToUseBalance, alertDays);
-  res.json(subscription);
+  const payment = await provisionSubscriptionPurchase(userId, plan, recurring, symbols, preferToUseBalance, alertDays, req.ip);
+  const { method } = payment;
+  const result: any = {};
+  switch (method) {
+    case PaymentMethod.Balance:
+      // Immidiately commit the subscription purchase if it can be paied fully by balance
+      await commitSubscriptionPurchase(payment.id, null, null);
+      break;
+    case PaymentMethod.BalanceCardMix:
+    case PaymentMethod.Card:
+      const clientSecret = await previsionStripePayment(payment);
+      result.clientSecret = clientSecret;
+      result.paymentId = payment.id;
+      result.subscriptionId = payment.subscription.id;
+      break;
+    case PaymentMethod.PayPal:
+      break;
+    case PaymentMethod.AliPay:
+      break;
+    default:
+      assert(false, 500, `Unknown payment method ${method}`);
+  }
+
+  res.json(result);
+});
+
+export const confirmStripePayment = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { id } = req.params;
+  const { user: { id: userId } } = req as any;
+  const { rawRequest, rawResponse } = req.body;
+
+  const payment = await getRepository(Payment).findOne({
+    id,
+    userId,
+  });
+  assert(payment, 404);
+
+  await commitSubscriptionPurchase(id, rawRequest, rawResponse);
+  res.json();
 });
 
 export const commitSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
-  const { id } = req.params;
-  const { user: { id: userId } } = req as any;
-  const { paidAmount, paymentMethod, rawRequest, rawResponse } = req.body;
-  assert(_.isNumber(paidAmount), 400, 'Invalid paidAmount');
+  // const { id: subscriptionId } = req.params;
+  // const { user: { id: userId } } = req as any;
+  // const { paidAmount, paymentMethod, rawRequest, rawResponse } = req.body;
+  // assert(_.isNumber(paidAmount), 400, 'Invalid paidAmount');
 
-  await commitSubscriptionTransactionAfterInitalPay(id, userId, paidAmount, paymentMethod, rawRequest, rawResponse, false, req.ip);
+  // await commitSubscriptionPurchase(id, rawRequest, rawResponse);
   res.json();
 });
 

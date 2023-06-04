@@ -22,7 +22,7 @@ export class Subscription {
   type: SubscriptionType;
 
   @Column('json', { nullable: true })
-  paymentMethodInfo: object;
+  stripePaymentData: object;
 
   @Column('date')
   start: Date;

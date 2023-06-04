@@ -720,6 +720,18 @@ paths:
       responses:
         200:
           description: OK
+  /subscription/payment/{id}/confirm:
+    post:
+      operationId: confirmStripePayment
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /subscription/{id}/cancel:
     post:
       operationId: cancelSubscription

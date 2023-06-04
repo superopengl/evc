@@ -6,13 +6,16 @@ import { Subscription } from './Subscription';
 import { UserBalanceTransaction } from './UserBalanceTransaction';
 
 @Entity()
+@Index(['userId', 'createdAt'])
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
   @Column({ default: () => `timezone('UTC', now())` })
-  @Index()
   createdAt?: Date;
+
+  @Column('uuid')
+  userId: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
@@ -41,7 +44,7 @@ export class Payment {
   @ManyToOne(() => Subscription, subscription => subscription.payments)
   subscription: Subscription;
 
-  @OneToOne(() => UserBalanceTransaction, {nullable: true, cascade: true})
+  @OneToOne(() => UserBalanceTransaction, { nullable: true, cascade: true })
   @JoinColumn()
   balanceTransaction: UserBalanceTransaction;
 }

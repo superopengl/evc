@@ -15,7 +15,7 @@ export class User {
     'all': {
       deletedAt: Not(IsNull())
     }
-  }
+  };
 
   @PrimaryGeneratedColumn('uuid')
   id?: string;

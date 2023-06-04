@@ -16,4 +16,7 @@ export class UserBalanceTransaction {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   amount: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  amountBeforeRollback: number;
 }

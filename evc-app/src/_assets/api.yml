@@ -720,9 +720,9 @@ paths:
       responses:
         200:
           description: OK
-  /subscription/payment/{id}/confirm:
+  /subscription/payment/{id}/card/confirm:
     post:
-      operationId: confirmStripePayment
+      operationId: confirmStripeCardPayment
       parameters:
         - name: id
           in: path
@@ -731,7 +731,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /subscription/{id}/cancel:
     post:
       operationId: cancelSubscription
@@ -835,7 +835,7 @@ paths:
         200:
           description: OK
   /checkout/stripe/session:
-    get: 
+    get:
       operationId: fetchCheckoutSession
       responses:
         200:

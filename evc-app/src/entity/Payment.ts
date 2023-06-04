@@ -24,9 +24,6 @@ export class Payment {
   method: PaymentMethod;
 
   @Column('json', { nullable: true })
-  rawRequest: object;
-
-  @Column('json', { nullable: true })
   rawResponse: object;
 
   @Column()

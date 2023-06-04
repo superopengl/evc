@@ -4,13 +4,13 @@ import { Space, Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import { confirmSubscriptionPayment } from 'services/subscriptionService';
+import { confirmCardPayment } from 'services/subscriptionService';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 const StripeCardPaymentWidget = (props) => {
 
   const { onProvision, onOk } = props;
-  const [loading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [inputComplete, setInputComplete] = React.useState(false);
   const stripe = useStripe();
   const elements = useElements();
@@ -22,29 +22,33 @@ const StripeCardPaymentWidget = (props) => {
       return;
     }
 
-    const cardElement = elements.getElement('card');
+    try {
+      setLoading(true);
+      const cardElement = elements.getElement('card');
 
-    const paymentInfo = await onProvision();
-    const { clientSecret, paymentId } = paymentInfo;
+      const paymentInfo = await onProvision();
+      const { clientSecret, paymentId } = paymentInfo;
 
-    // Use your card Element with other Stripe.js APIs
-    const rawResponse = await stripe.confirmCardPayment(clientSecret,
-      {
-        payment_method: {
-          card: cardElement,
-        },
-        setup_future_usage: 'off_session'
-      });
+      // Use your card Element with other Stripe.js APIs
+      const rawResponse = await stripe.confirmCardSetup(clientSecret,
+        {
+          payment_method: {
+            card: cardElement,
+          }
+        });
 
-    const { error } = rawResponse;
+      const { error } = rawResponse;
 
-    if (error) {
-      notify.error('Failed to complete the payment', error.message);
-    } else {
-      await confirmSubscriptionPayment(paymentId, { rawResponse });
-      onOk();
+      if (error) {
+        notify.error('Failed to complete the payment', error.message);
+      } else {
+        const paymentMethodId = rawResponse.setupIntent.payment_method;
+        await confirmCardPayment(paymentId, { rawResponse, paymentMethodId });
+        onOk();
+      }
+    } finally {
+      setLoading(false);
     }
-
   };
 
   const handleCardInfoChange = (element) => {
@@ -73,7 +77,9 @@ const StripeCardPaymentWidget = (props) => {
             },
           }}
         />
-        <Button type="primary" htmlType="submit" block disabled={loading || !stripe || !inputComplete}>Pay by Card</Button>
+        <Button type="primary" htmlType="submit" block disabled={loading || !stripe || !inputComplete} loading={loading}>
+          Pay by Card
+        </Button>
       </Space>
     </form>
   )

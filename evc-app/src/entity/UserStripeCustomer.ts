@@ -3,7 +3,6 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, DeleteDateColumn, IsNull
 
 
 @Entity()
-@Index(['userId', 'customerId'])
 export class UserStripeCustomer {
   static scope = {
     'default': {
@@ -21,10 +20,15 @@ export class UserStripeCustomer {
   createdAt?: Date;
 
   @Column('uuid')
+  @Index()
   userId: string;
 
   @Column()
+  @Index()
   customerId: string;
+
+  @Column({nullable: true})
+  paymentMethodId: string;
 
   @DeleteDateColumn()
   deletedAt: Date;

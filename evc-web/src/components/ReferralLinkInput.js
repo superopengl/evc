@@ -18,11 +18,26 @@ const StyledInput = styled(Input)`
 const ReferralLinkInput = (props) => {
 
   const { value } = props;
+  const MESSAGE_BEFORE_COPY = 'Click to copy to clipboard';
+  const MESSAGE_AFTER_COPY = 'Copied';
 
+  const [tipMessage, setTipMessage] = React.useState(MESSAGE_BEFORE_COPY);
+
+  const handleCopied = (text, result) => {
+    if (result) {
+      setTipMessage(MESSAGE_AFTER_COPY);
+    }
+  }
+
+  const handleTipVisibleChange = (visible) => {
+    if (visible) {
+      setTipMessage(MESSAGE_BEFORE_COPY);
+    }
+  }
 
   return (
-    <Tooltip title="Click to copy to clipboard">
-      <CopyToClipboard text={value}>
+    <Tooltip title={tipMessage} onVisibleChange={handleTipVisibleChange}>
+      <CopyToClipboard text={value} onCopy={handleCopied}>
         <div>
           <StyledInput value={value} addonBefore={<CopyOutlined />} readOnly={true} />
         </div>

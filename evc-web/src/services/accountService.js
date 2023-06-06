@@ -13,5 +13,11 @@ export async function adjustBalance(userId, amount) {
   return httpPost(`user/${userId}/balance`, {amount});
 }
 
+export async function listMyBalanceHistory() {
+  return httpGet(`balance/history`);
+}
 
+export async function listUserBalanceHistory(userId) {
+  return httpGet(`user/${userId}/balance/history`);
+}
 

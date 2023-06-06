@@ -102,6 +102,7 @@ const MySubscriptionPage = (props) => {
   }, []);
 
   const currentPlanKey = currentSubscription?.type || 'free';
+  const isCurrentFree = currentPlanKey === 'free';
 
   const handleCancelCurrentPlan = () => {
     Modal.confirm({
@@ -177,6 +178,7 @@ const MySubscriptionPage = (props) => {
         try {
           setLoading(true);
           await cancelSubscription(currentSubscription.id);
+          loadEntity();
         } finally {
           setLoading(false);
         }
@@ -197,8 +199,8 @@ const MySubscriptionPage = (props) => {
               title={<Title>Subscription</Title>}
               extra={[
                 <Button key={0} onClick={() => props.history.push('/subscription/history')}>Subscription History</Button>,
-                <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terimnate</Button>
-              ]}
+                isCurrentFree ? null :  <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate</Button>
+              ].filter(x => !!x)}
             />
             <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
             <StyledRow gutter={20}>

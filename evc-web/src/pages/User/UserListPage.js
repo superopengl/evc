@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Select, Divider } from 'antd';
+import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Divider } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
@@ -392,21 +392,20 @@ const UserListPage = () => {
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
       </Modal>
-      <Modal
+      <Drawer
         visible={referralBalanceModal}
         destroyOnClose={true}
-        maskClosable={false}
+        maskClosable={true}
         title="Referral & Balance"
-        onOk={() => setReferralBalanceModal(false)}
-        onCancel={() => setReferralBalanceModal(false)}
-        footer={null}
+        onClose={() => setReferralBalanceModal(false)}
+        width={400}
       >
         {currentUser && <Space size="large" direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
           <Text code>{currentUser.email}</Text>
           <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
 
         </Space>}
-      </Modal>
+      </Drawer>
     </LayoutStyled >
 
   );

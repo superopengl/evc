@@ -1,4 +1,4 @@
-import { Button, Layout, Modal, Space, Typography, Input, Row, Col } from 'antd';
+import { Button, Layout, PageHeader, Space, Typography, Modal, Row, Col } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -25,9 +25,11 @@ import { getSubscriptionName } from 'util/getSubscriptionName';
 import { Alert } from 'antd';
 import PaymentModal from 'components/checkout/PaymentModal';
 import { StockName } from 'components/StockName';
-import { getMyAccount } from 'services/accountService';
+import { getMyAccount, listMyBalanceHistory } from 'services/accountService';
 import MoneyAmount from 'components/MoneyAmount';
 import ReferralLinkInput from 'components/ReferralLinkInput';
+import { TimeAgo } from 'components/TimeAgo';
+import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
@@ -78,7 +80,7 @@ const StyledCol = styled(Col)`
 const MyAccountPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
-  const [newPlan, setNewPlan] = React.useState();
+  const [balanceHistoryVisible, setBalanceHistoryVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
 
   const loadSubscrptions = async () => {
@@ -100,42 +102,17 @@ const MyAccountPage = (props) => {
   const isFree = !!currentSubscription;
   const currentPlan = currentSubscription?.type || 'free';
 
-  const handleChangePlan = (subscription) => {
-    if (subscription.key === currentPlan) {
-      return;
-    }
-    if (currentSubscription) {
-      Modal.confirm({
-        title: 'Change subscription',
-        icon: <WarningOutlined />,
-        description: 'Changing subscription will terminate your current subscription without refund. Continue?',
-        okText: 'Yes, continue',
-        okButtonProps: {
-          danger: true
-        },
-        onOk: () => {
-          setNewPlan(subscription.key);
-        },
-        cancelText: 'No, keep the current plan',
-      });
-    }
+  const handleFetchMyBalanceHistoryList = async () => {
+    const data = await listMyBalanceHistory();
+    return (data || []).filter(x => x.amount);
   }
-
-  const handlePaymentOk = () => {
-    setNewPlan(null);
-  }
-
-  const handleCancelPayment = () => {
-    setNewPlan(null);
-  }
-
 
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
-          <Title>Subscription</Title>
+        <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch' }}>
+          {/* <Title>Subscription</Title>
           {currentSubscription && <>
             <Title>{currentSubscription.title}</Title>
             {currentSubscription.stocks?.map((s, i) => <div key={i}>
@@ -164,22 +141,30 @@ const MyAccountPage = (props) => {
             onCancel={handleCancelPayment}
             balance={account.balance}
           />}
-          <Divider></Divider>
+          <Divider></Divider> */}
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title>Balance</Title>
             <Title><MoneyAmount type="success" value={account.balance} /></Title>
           </Space>
+
+          <Space style={{width: '100%', justifyContent:'space-between'}}>
           <Paragraph type="secondary">The money can be used deduct future payment.</Paragraph>
+
+          <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Balance History</Button>
+          </Space>
           <Divider></Divider>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title>Referral Link</Title>
             <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
           </Space>
           <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
-          <ReferralLinkInput value={account?.referralUrl}/>
+          <ReferralLinkInput value={account?.referralUrl} />
         </Space>
       </ContainerStyled>
-
+      <BalanceHistoryListModal visible={balanceHistoryVisible}
+        onOk={() => setBalanceHistoryVisible(false)}
+        onFetch={handleFetchMyBalanceHistoryList}
+      />
     </LayoutStyled >
   );
 };

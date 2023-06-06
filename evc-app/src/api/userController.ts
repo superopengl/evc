@@ -17,6 +17,7 @@ import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
+import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -93,7 +94,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
   if (text) {
     query = query.andWhere(`(p.email ILIKE :text OR u."givenName" ILIKE :text OR u."surname" ILIKE :text)`, { text: `%${text}%` })
   }
-  query = query.leftJoin(q => q.from(Subscription, 's').where(`status = :status`, {status: SubscriptionStatus.Alive}), 's', `s."userId" = u.id`);
+  query = query.leftJoin(q => q.from(Subscription, 's').where(`status = :status`, { status: SubscriptionStatus.Alive }), 's', `s."userId" = u.id`);
   if (subscription.length) {
     query = query.andWhere(`(s.type IN (:...subscription))`, { subscription });
   }
@@ -161,4 +162,38 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
   await repo.update(id, { secret: newSecret, salt: newSalt });
 
   res.json();
+});
+
+export const listMyBalanceHistory = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const { user: { id: userId } } = req as any;
+  const list = await getRepository(UserBalanceTransaction)
+  .createQueryBuilder()
+  .where({userId})
+  .andWhere(`amount > 0`)
+  .select([
+    '"createdAt"',
+    'amount',
+  ])
+  .execute();
+  res.json(list);
+});
+
+export const listUserBalanceHistory = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id } = req.params;
+  const list = await getRepository(UserBalanceTransaction)
+    .createQueryBuilder('ubt')
+    .where('ubt."userId" = :id', { id })
+    .innerJoin(q => q.from(User, 'u'), 'u', 'ubt."referredUserId" = u.id')
+    .innerJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
+    .orderBy('ubt."createdAt"', 'DESC')
+    .select([
+      'ubt."createdAt" as "createdAt"',
+      'ubt.amount as amount',
+      'ubt."amountBeforeRollback" as "amountBeforeRollback"',
+      'p.email as "referredUserEmail"',
+    ])
+    .execute();
+  res.json(list);
 });

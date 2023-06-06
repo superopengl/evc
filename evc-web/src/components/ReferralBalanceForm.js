@@ -25,13 +25,14 @@ import { getSubscriptionName } from 'util/getSubscriptionName';
 import { Alert } from 'antd';
 import PaymentModal from 'components/checkout/PaymentModal';
 import { StockName } from 'components/StockName';
-import { adjustBalance, getAccount, getMyAccount } from 'services/accountService';
+import { adjustBalance, getAccount, getMyAccount, listUserBalanceHistory } from 'services/accountService';
 import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
 import MoneyAmount from './MoneyAmount';
 import { notify } from 'util/notify';
 import ReferralLinkInput from './ReferralLinkInput';
 import { saveReferralUserPolicy } from 'services/referralPolicyService';
+import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
 
 const { Paragraph, Text, Title, Link: LinkText } = Typography;
 
@@ -76,6 +77,7 @@ const ReferralBalanceForm = (props) => {
 
   const { user, onOK } = props;
   const [loading, setLoading] = React.useState(true);
+  const [balanceHistoryVisible, setBalanceHistoryVisible] = React.useState(false);
   const [account, setAccount] = React.useState();
   const [balanceAfter, setBalanceAfter] = React.useState();
   const formRef = React.useRef();
@@ -117,14 +119,18 @@ const ReferralBalanceForm = (props) => {
   }
 
   const handleSaveReferralUserPolicy = async values => {
-    try{
+    try {
       setLoading(true);
       await saveReferralUserPolicy(user.id, values);
       notify.success(<>Successfully set special referral policy to the user</>);
       await loadData();
-    }finally{
+    } finally {
       setLoading(false);
     }
+  }
+
+  const handleFetchMyBalanceHistoryList = async () => {
+    return await listUserBalanceHistory(user.id);
   }
 
   return (
@@ -143,13 +149,13 @@ const ReferralBalanceForm = (props) => {
         <Paragraph type="secondary">Setting this policy will override the global referral policy.</Paragraph>
         {account && <Form onFinish={handleSaveReferralUserPolicy} initialValues={account.referralPolicy}>
           <Form.Item label="Override global policy" name="active"
-          rules={[{ required: true, message: ' ' }]}
-          valuePropName="checked"
+            rules={[{ required: true, message: ' ' }]}
+            valuePropName="checked"
           >
             <Switch />
           </Form.Item>
           <Form.Item label="Amount per referral" name="amount"
-            rules={[{ required: true, type: 'number', min: 0,message: ' ', whitespace: true }]}
+            rules={[{ required: true, type: 'number', min: 0, message: ' ', whitespace: true }]}
           >
             <InputNumber block disabled={loading} />
           </Form.Item>
@@ -173,7 +179,7 @@ const ReferralBalanceForm = (props) => {
         </Space>
         <Paragraph type="secondary">
           Adjust the user's balance by adding up some amount. Either + or - number is avaiable.
-      </Paragraph>
+        </Paragraph>
         <Form
           ref={formRef}
           onFinish={handleAdjustBalance}
@@ -184,11 +190,18 @@ const ReferralBalanceForm = (props) => {
             <InputNumber block disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" loading={loading}>Adjust Balance</Button>
+            <Button block type="primary" htmlType="submit" loading={loading} icon={<PlusOutlined/>}>Adjust Balance</Button>
+          </Form.Item>
+          <Form.Item>
+            <Button block onClick={() => setBalanceHistoryVisible(true)}>Balance History</Button>
           </Form.Item>
         </Form>
 
       </Space>
+      <BalanceHistoryListModal visible={balanceHistoryVisible}
+        onOk={() => setBalanceHistoryVisible(false)}
+        onFetch={handleFetchMyBalanceHistoryList}
+      />
     </Container>
   );
 };

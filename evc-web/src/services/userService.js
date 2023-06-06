@@ -19,3 +19,4 @@ export async function setPasswordForUser(id, password) {
 export async function saveProfile(userId, profile) {
   return httpPost(`user/${userId}/profile`, profile);
 }
+

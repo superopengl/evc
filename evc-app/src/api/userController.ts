@@ -18,6 +18,7 @@ import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { Payment } from '../entity/Payment';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -166,16 +167,21 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
 
 export const listMyBalanceHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
-  const { user: { id: userId } } = req as any;
+  const { user: { id } } = req as any;
   const list = await getRepository(UserBalanceTransaction)
-  .createQueryBuilder()
-  .where({userId})
-  .andWhere(`amount > 0`)
-  .select([
-    '"createdAt"',
-    'amount',
-  ])
-  .execute();
+    .createQueryBuilder('ubt')
+    .where(`ubt."userId" = :id`, {id})
+    .andWhere(`ubt.amount != 0`)
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."balanceTransactionId"')
+    .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
+    .orderBy('ubt."createdAt"', 'DESC')
+    .select([
+      'ubt."createdAt" as "createdAt"',
+      'ubt.amount as amount',
+      'py.id as "paymentId"',
+      'sub.type as type'
+    ])
+    .execute();
   res.json(list);
 });
 
@@ -185,14 +191,18 @@ export const listUserBalanceHistory = handlerWrapper(async (req, res) => {
   const list = await getRepository(UserBalanceTransaction)
     .createQueryBuilder('ubt')
     .where('ubt."userId" = :id', { id })
-    .innerJoin(q => q.from(User, 'u'), 'u', 'ubt."referredUserId" = u.id')
-    .innerJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
+    .leftJoin(q => q.from(User, 'u'), 'u', 'ubt."referredUserId" = u.id')
+    .leftJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."balanceTransactionId"')
+    .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('ubt."createdAt"', 'DESC')
     .select([
       'ubt."createdAt" as "createdAt"',
       'ubt.amount as amount',
       'ubt."amountBeforeRollback" as "amountBeforeRollback"',
       'p.email as "referredUserEmail"',
+      'py.id as "paymentId"',
+      'sub.type as type'
     ])
     .execute();
   res.json(list);

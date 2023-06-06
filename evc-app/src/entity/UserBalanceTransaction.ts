@@ -14,7 +14,7 @@ export class UserBalanceTransaction {
   @Column('uuid')
   userId: string;
 
-  @Column('uuid')
+  @Column('uuid', {nullable: true})
   referredUserId: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })

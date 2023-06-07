@@ -46,7 +46,7 @@ paths:
       responses:
         200:
           description: OK
-  /file/{id}:
+  /file/:id:
     get:
       operationId: getFile
       # security:
@@ -596,7 +596,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/support/short/{id}:
+  /stock/support/short/:id:
     delete:
       operationId: deleteStockSupportShort
       parameters:
@@ -608,7 +608,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/support/long/{id}:
+  /stock/support/long/:id:
     delete:
       operationId: deleteStockSupportLong
       parameters:
@@ -620,7 +620,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/resistance/short/{id}:
+  /stock/resistance/short/:id:
     delete:
       operationId: deleteStockResistanceShort
       parameters:
@@ -632,7 +632,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/resistance/long/{id}:
+  /stock/resistance/long/:id:
     delete:
       operationId: deleteStockResistanceLong
       parameters:
@@ -644,7 +644,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/pe/{id}:
+  /stock/pe/:id:
     delete:
       operationId: deleteStockPe
       parameters:
@@ -656,7 +656,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/eps/{id}:
+  /stock/eps/:id:
     delete:
       operationId: deleteStockEps
       parameters:
@@ -668,7 +668,7 @@ paths:
       responses:
         200:
           description: OK
-  /stock/value/{id}:
+  /stock/value/:id:
     delete:
       operationId: deleteStockFairValue
       parameters:
@@ -720,7 +720,7 @@ paths:
       responses:
         200:
           description: OK
-  /subscription/payment/{id}/confirm:
+  /subscription/payment/:id/confirm:
     post:
       operationId: confirmSubscriptionPayment
       parameters:
@@ -732,7 +732,7 @@ paths:
       responses:
         200:
           description: OK
-  /subscription/{id}/cancel:
+  /subscription/:id/cancel:
     post:
       operationId: cancelSubscription
       parameters:
@@ -784,7 +784,7 @@ paths:
       responses:
         200:
           description: OK
-  /stocktag/{id}:
+  /stocktag/:id:
     delete:
       operationId: deleteStockTag
       parameters:
@@ -806,7 +806,7 @@ paths:
       responses:
         200:
           description: OK
-  /referral_policy/global/{id}:
+  /referral_policy/global/:id:
     get:
       operationId: getReferralGlobalPolicy
       parameters:
@@ -817,7 +817,7 @@ paths:
       responses:
         200:
           description: OK
-  /referral_policy/{id}/enable:
+  /referral_policy/:id/enable:
     post:
       operationId: enableReferralGlobalPolicy
       parameters:
@@ -836,7 +836,6 @@ paths:
           in: path
           type: string
           required: true
-
       responses:
         200:
           description: OK
@@ -846,3 +845,42 @@ paths:
       responses:
         200:
           description: OK
+  /i18n/resource:
+    get:
+      operationId: getAllLocaleResource
+      responses:
+        200:
+          description: OK
+  /i18n/resource/:locale:
+    get:
+      operationId: getLocaleResource
+      parameters:
+        - name: locale
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /i18n/resource/:locale/value/:key:
+    post:
+      operationId: saveLocaleResourceItem
+      parameters:
+        - name: locale
+          in: path
+          type: string
+          required: true
+        - name: key
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /i18n/resource/flush:
+    post:
+      operationId: flushLocaleResource
+      responses:
+        200:
+          description: OK
+

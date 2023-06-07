@@ -15,6 +15,14 @@ class RedisCache {
     });
   }
 
+  async del(key) {
+    return new Promise((res, rej) => {
+      this.redisCache.del(key, (err, value) => {
+        return err ? rej(err) : res(value);
+      });
+    });
+  }
+
 
   async set(key: string, value: any) {
     return new Promise((res, rej) => {

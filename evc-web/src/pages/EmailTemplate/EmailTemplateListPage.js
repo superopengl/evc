@@ -150,6 +150,10 @@ const EmailTemplateListPage = () => {
     }
   }
 
+  const handleBodyChange = value => {
+    debugger;
+  }
+
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
@@ -182,7 +186,7 @@ const EmailTemplateListPage = () => {
         <Form
           layout="vertical"
           onFinish={handleSaveNew}
-          initialValues={currentItem}
+          initialValues={{...currentItem, body: currentItem?.body || ''}}
         >
           <Form.Item label="Key" name="key" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <Input allowClear autoFocus />
@@ -194,7 +198,7 @@ const EmailTemplateListPage = () => {
             <Input.TextArea allowClear />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <ReactQuill />
+            <ReactQuill/>
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit">Save</Button>

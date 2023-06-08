@@ -10,10 +10,9 @@ import { getRepository } from 'typeorm';
 import { EmailTemplate } from '../entity/EmailTemplate';
 import * as handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
+import { getConfigValue } from './configService';
 
 let emailTransporter = null;
-const NO_REPLY_SYSTEM_SENDER = 'EasyValueCheck <noreply@easyvaluecheck.com>';
-const BCC_SYSTEM_EMAIL = 'EasyValueCheck Admin <admin@easyvaluecheck.com>';
 
 function getEmailer() {
   if (!emailTransporter) {
@@ -36,13 +35,24 @@ async function getEmailTemplate(templateName: string, locale: Locale): Promise<E
   return template;
 }
 
+async function getEmailSignature(locale: Locale): Promise<string> {
+  if (!locale) {
+    locale = Locale.Engish;
+  }
+
+  const { body } = await getRepository(EmailTemplate).findOne({ key: 'signature', locale });
+  assert(body, 500, `Cannot find email signature for locale ${locale}`);
+
+  return body;
+}
+
 async function composeEmailOption(req: EmailRequest) {
   const { subject, text, html } = await compileEmailBody(req);
 
   return {
-    from: req.from || NO_REPLY_SYSTEM_SENDER,
+    from: req.from || await getConfigValue('email.sender.noreply'),
     to: req.to,
-    bcc: req.shouldBcc ? BCC_SYSTEM_EMAIL : undefined,
+    bcc: req.shouldBcc ? await getConfigValue('email.sender.bcc') : undefined,
     subject: subject,
     text: text,
     html: html,
@@ -52,6 +62,7 @@ async function composeEmailOption(req: EmailRequest) {
 async function compileEmailBody(req: EmailRequest) {
   const { template, vars, locale } = req;
   const { subject, body } = await getEmailTemplate(template, locale);
+  const signature = await getEmailSignature(locale);
 
   const allVars = {
     website: process.env.EVC_API_DOMAIN_NAME,
@@ -59,7 +70,7 @@ async function compileEmailBody(req: EmailRequest) {
   };
 
   const compiledBody = handlebars.compile(body);
-  const html = compiledBody(allVars);
+  const html = compiledBody(allVars) + signature;
 
   return { subject, html, text: htmlToText(html) };
 }

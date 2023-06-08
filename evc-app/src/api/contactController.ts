@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { sendEmail } from '../services/emailService';
 import * as delay from 'delay';
+import { getConfigValue } from '../services/configService';
 
 
 export const saveContact = handlerWrapper(async (req, res) => {
@@ -17,7 +18,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
 
   await sendEmail({
     template: 'contact',
-    to: 'techseeding2020@gmail.com',
+    to: await getConfigValue('email.contact.recipient'),
     from: email,
     vars: {
       name: recipentName,

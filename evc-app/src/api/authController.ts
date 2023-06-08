@@ -113,7 +113,7 @@ export const signup = handlerWrapper(async (req, res) => {
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
   sendEmail({
-    template: 'welcome',
+    template: 'signup',
     to: email,
     vars: {
       email,
@@ -291,6 +291,15 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     await getManager().save([user, profile]);
 
     await createReferral(user.id);
+
+    sendEmail({
+      to: user.profile.email,
+      template: 'googleSsoWelcome',
+      vars: {
+        toWhom: getEmailRecipientName(user),
+      },
+      shouldBcc: false
+    });
   } else {
     user = Object.assign(user, extra);
     await getRepository(User).save(user);

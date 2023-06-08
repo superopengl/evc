@@ -57,6 +57,22 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
+const modules = {
+  toolbar: [
+    [{ 'header': [1, 2, false] }],
+    ['bold', 'italic', 'underline','strike', 'blockquote'],
+    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+    ['link', 'image'],
+    ['clean']
+  ],
+};
+
+const formats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image'
+];
 
 const EmailTemplateListPage = () => {
 
@@ -214,7 +230,7 @@ const EmailTemplateListPage = () => {
             <Input allowClear />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <ReactQuill scrollingContainer="#scrolling-container"/>
+            <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}/>
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit">Save</Button>

@@ -130,7 +130,8 @@ const HomeHeaderRaw = props => {
               {/* <Menu.Item key="recurring"><Link to="/recurring">Recurring</Link></Menu.Item> */}
               <Menu.Item key="stocktag"><Link to="/stocktag">Stock Tags</Link></Menu.Item>
               <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>
-              <Menu.Item key="translation"><Link to="/translation">Translations</Link></Menu.Item>
+              <Menu.Item key="translation"><Link to="/translation">Translation</Link></Menu.Item>
+              <Menu.Item key="config"><Link to="/config">Config</Link></Menu.Item>
               <Menu.Item key="email_template"><Link to="/email_template">Email Template</Link></Menu.Item>
               <Menu.Item key="referral_policy"><Link to="/referral_policy">Referral Policy</Link></Menu.Item>
               {/* <Menu.Item key="blog_admin"><HashLink to="/blogs/admin">Blog</HashLink></Menu.Item> */}
@@ -184,6 +185,7 @@ const HomeHeaderRaw = props => {
             {isAdmin && <Menu.Item key="referral_policy"><TeamOutlined /> <Link to="/referral_policy">Referral Policy</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="user"><TeamOutlined /> <Link to="/user">User</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="translation"><TeamOutlined /> <Link to="/translation">Translation</Link></Menu.Item>}
+            {isAdmin && <Menu.Item key="config"><TeamOutlined /> <Link to="/config">Config</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="email_template"><TeamOutlined /> <Link to="/email_template">Email Template</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="message"><BellOutlined /> <Link to="/message">Messages <Badge count={notifyCount} showZero={false} /></Link></Menu.Item>} */}
             {(isAdmin || isAgent) && <Menu.Item key="stats"><DashboardOutlined /> <Link to="/stats">Statistics</Link></Menu.Item>}

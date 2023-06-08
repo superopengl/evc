@@ -102,6 +102,15 @@ const EmailTemplateListPage = () => {
       },
     },
     {
+      title: 'Variables',
+      dataIndex: 'vars',
+      render: (vars, item) => {
+        return <Space direction="vertical" style={{ width: '100%' }} size="small">
+          {vars?.map((v, i) => <Tag key={i} color="success">{v}</Tag>)}
+        </Space>
+      },
+    },
+    {
       render: (text, item) => {
         return (
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
@@ -202,7 +211,7 @@ const EmailTemplateListPage = () => {
             <LocaleSelector disabled={currentItem} />
           </Form.Item>
           <Form.Item label="Subject" name="subject" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <Input.TextArea allowClear />
+            <Input allowClear />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <ReactQuill scrollingContainer="#scrolling-container"/>

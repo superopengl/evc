@@ -920,3 +920,14 @@ paths:
       responses:
         200:
           description: OK
+  /config:
+    get:
+      operationId: listConfig
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveConfig
+      responses:
+        200:
+          description: OK

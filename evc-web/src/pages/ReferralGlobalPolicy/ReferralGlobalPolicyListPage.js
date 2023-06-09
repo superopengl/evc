@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Input } from 'antd';
 import HomeHeader from 'components/HomeHeader';
-import * as moment from 'moment';
 import Text from 'antd/lib/typography/Text';
 import {
   DeleteOutlined, EditOutlined, StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
@@ -20,6 +19,14 @@ import { enableReferralGlobalPolicy, listReferalGlobalPolicies, saveReferralGlob
 import { Form } from 'antd';
 import { InputNumber } from 'antd';
 import { DatePicker } from 'antd';
+import { Calendar, momentLocalizer } from 'react-big-calendar'
+import moment from 'moment';
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+
+const localizer = momentLocalizer(moment);
+const DnDCalendar = withDragAndDrop(Calendar);
 
 const { Title, Link: TextLink } = Typography;
 
@@ -107,7 +114,12 @@ const ReferralGlobalPolicyListPage = (props) => {
     try {
       setLoading(true);
       const list = await listReferalGlobalPolicies();
-      setList(list);
+      setList(list.map(a => ({
+        title: `$${a.amount.toFixed(2)} ${a.description}`,
+        start: moment(a.start).toDate(),
+        end: moment(a.end).toDate(),
+        allDay: true
+      })));
     } finally {
       setLoading(false);
     }
@@ -172,11 +184,32 @@ const ReferralGlobalPolicyListPage = (props) => {
     }
   }
 
+  const onEventResize = (data) => {
+    const { start, end, event } = data;
+    event.start = start;
+    event.end = end;
+    setList([...list]);
+  };
+
+  const onEventDrop = (data) => {
+    console.log(data);
+  };
+
+  const handleSelectEvent = (event, e) => {
+    const {amount, start, end, description, active} = event;
+    setNewPolicy({
+      amount,
+      range: [moment(start), moment(end)],
+      description,
+      active,
+    })
+  }
+
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%'}}>
+        <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Global Referral Policy</Title>
           </StyledTitleRow>
@@ -185,6 +218,22 @@ const ReferralGlobalPolicyListPage = (props) => {
             <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Policy</Button>
           </Space>
 
+          <div>
+            <DnDCalendar
+              localizer={localizer}
+              events={list}
+              defaultView="month"
+              views={['month']}
+              defaultDate={moment().toDate()}
+              startAccessor="start"
+              endAccessor="end"
+              onEventDrop={onEventDrop}
+              onEventResize={onEventResize}
+              onSelectEvent={handleSelectEvent}
+              resizable
+              style={{ height: "100vh", maxHeight: 700 }}
+            />
+          </div>
           <Table columns={columnDef}
             dataSource={list}
             size="small"
@@ -204,18 +253,18 @@ const ReferralGlobalPolicyListPage = (props) => {
         </Space>
 
       </ContainerStyled>
-      <Modal
+      <Drawer
         title="New Global Referral Policy"
         visible={newPolicy}
         destroyOnClose={true}
         closable={true}
         maskClosable={false}
-        onOk={() => setNewPolicy()}
-        onCancel={() => setNewPolicy()}
+        width={400}
+        onClose={() => setNewPolicy()}
         footer={null}
       >
         <Form layout="vertical" onFinish={handleSave} initialValues={newPolicy}>
-          <Form.Item label="Amount per Referral" name="amount" rules={[{ required: true, type: 'number', min: 0,message: ' ' }]}>
+          <Form.Item label="Amount per Referral" name="amount" rules={[{ required: true, type: 'number', min: 0, message: ' ' }]}>
             <InputNumber />
           </Form.Item>
           <Form.Item label="Time Range" name="range" rules={[{ required: true, message: ' ' }]}>
@@ -227,8 +276,11 @@ const ReferralGlobalPolicyListPage = (props) => {
           <Form.Item>
             <Button type="primary" block htmlType="submit">Create</Button>
           </Form.Item>
+          <Form.Item>
+            <Button type="primary" danger block>Disable</Button>
+          </Form.Item>
         </Form>
-      </Modal>
+      </Drawer>
     </LayoutStyled >
 
   );

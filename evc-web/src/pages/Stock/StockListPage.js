@@ -4,7 +4,7 @@ import { Typography, Layout, Space, Button, Input, Form, Modal, Pagination, List
 import HomeHeader from 'components/HomeHeader';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
-import { createStock, searchStock } from 'services/stockService';
+import { createStock, searchStock, syncStockList } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
@@ -68,8 +68,8 @@ const StockListPage = (props) => {
         const { count, page, data } = await searchStock(queryInfo);
         setTotal(count);
         setList([...data]);
-        setQueryInfo({...queryInfo, page});
-      }else {
+        setQueryInfo({ ...queryInfo, page });
+      } else {
         setQueryInfo(queryInfo);
 
       }
@@ -122,6 +122,10 @@ const StockListPage = (props) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
+  const handleSyncStockList = () => {
+    syncStockList();
+  }
+
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
@@ -142,7 +146,10 @@ const StockListPage = (props) => {
                 value={queryInfo?.text}
                 allowClear
               />
-              <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
+              <Space>
+                <Button ghost type="primary" icon={<SyncOutlined />} onClick={() => handleSyncStockList()}>Sync Stock List</Button>
+                <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
+              </Space>
             </Space>
             <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
             <Pagination

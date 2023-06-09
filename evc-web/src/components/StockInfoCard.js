@@ -30,6 +30,7 @@ const StockInfoCard = (props) => {
       hoverable={hoverable}
       actions={actions}
     >
+      xx
       <Space direction="vertical" style={{ width: '100%' }}>
         <Row>
           <Col span={10}>

@@ -24,6 +24,7 @@ import { StockFairValue } from '../entity/StockFairValue';
 import { StockSupportLong } from '../entity/StockSupportLong';
 import { StockResistanceLong } from '../entity/StockResistanceLong';
 import { redisCache } from '../services/redisCache';
+import { syncStockSymbols } from '../services/iexService';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -217,4 +218,8 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-
+export const syncStockList = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  await syncStockSymbols();
+  res.json();
+});

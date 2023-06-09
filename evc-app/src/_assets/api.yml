@@ -697,6 +697,12 @@ paths:
       responses:
         200:
           description: OK
+  /stock/data/sync:
+    post:
+      operationId: syncStockList
+      responses:
+        200:
+          description: OK          
   /subscription:
     get:
       operationId: getMyCurrnetSubscription

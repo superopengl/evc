@@ -7,27 +7,25 @@ const { Text } = Typography;
 
 const MoneyAmount = (props) => {
 
-  const { value, symbol, postfix, digital, ...other } = props;
-
+  const { value, postfix, digital, ...other } = props;
+  const isGreen = value >= 0;
   return (
-    <Text {...other}>
-      {symbol ? `${symbol} `: ''}{(+value || 0).toFixed(digital)}{postfix ? ` ${postfix}`: ''}
+    <Text type={isGreen ? 'success' : 'danger'} {...other}>
+      {isGreen ? '+' : ''}{(+value || 0).toFixed(digital)}{postfix ? ` ${postfix}`: ''}
     </Text>
   );
 };
 
 MoneyAmount.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  symbol: PropTypes.string,
   postfix: PropTypes.string,
   digital: PropTypes.number,
 };
 
 MoneyAmount.defaultProps = {
   value: 0,
-  symbol: '$',
   postfix: '',
-  digital: 2
+  digital: 4
 };
 
 export default MoneyAmount;

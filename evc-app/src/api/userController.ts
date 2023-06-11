@@ -21,17 +21,20 @@ import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { Payment } from '../entity/Payment';
 
 export const changePassword = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client');
+  assertRole(req, 'admin', 'agent', 'client');
   const { password, newPassword } = req.body;
   validatePasswordStrength(newPassword);
 
-  const { user } = req as any;
+  const repo = getRepository(User);
+  const { user: {id} } = req as any;
+  const user = await repo.findOne(id);
   assert(password && newPassword && user.secret === computeUserSecret(password, user.salt), 400, 'Invalid password');
 
-  const repo = getRepository(User);
   const newSalt = uuidv4();
   const newSecret = computeUserSecret(newPassword, newSalt);
-  await repo.update(user.id, { secret: newSecret, salt: newSalt });
+  user.salt = newSalt;
+  user.secret = newSecret;
+  await repo.save(user);
 
   res.json();
 });

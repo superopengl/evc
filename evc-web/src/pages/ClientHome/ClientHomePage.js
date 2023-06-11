@@ -22,6 +22,7 @@ import { List } from 'antd';
 import StockCardClientSearch from 'components/StockCardClientSearch';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { StockName } from 'components/StockName';
+import StockClientPanel from 'components/StockClientPanel';
 
 const { Paragraph, Text } = Typography;
 
@@ -32,9 +33,9 @@ const ContainerStyled = styled.div`
   width: 100%;
   // max-width: 1000px;
 
-  .ant-divider {
-    margin: 8px 0 24px;
-  }
+  // .ant-divider {
+  //   margin: 8px 0 24px;
+  // }
 `;
 
 
@@ -54,10 +55,10 @@ const LayoutStyled = styled(Layout)`
 const span = {
   xs: 1,
   sm: 1,
-  md: 2,
-  lg: 3,
-  xl: 4,
-  xxl: 4
+  md: 1,
+  lg: 1,
+  xl: 1,
+  xxl: 1
 };
 
 const ClientHomePage = (props) => {
@@ -150,18 +151,15 @@ const ClientHomePage = (props) => {
           onChange={handleSearchChange}
           style={{ width: '100%', maxWidth: 400 }} />
         {/* <SubscriptionArea /> */}
+        {/* <Paragraph>You can go to the <Link to="/account">Account</Link> page to upgrade your subscription plan to get better service.</Paragraph> */}
         <Divider />
-        <Paragraph type="secondary">You can go to the <Link to="/account">Account</Link> page to upgrade your subscription plan to get better service.</Paragraph>
         <List
           grid={{ gutter: 20, ...span }}
           dataSource={watchList}
           loading={loading}
           renderItem={item => (
             <List.Item>
-              <StockCardClientSearch
-                value={item}
-                onUnwatch={() => handleUnwatch(item)}
-                showUnwatch={true} />
+              <StockClientPanel value={item}/>
             </List.Item>
           )}
         />

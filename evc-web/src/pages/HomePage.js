@@ -12,6 +12,7 @@ import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
 import { HomeSubscriptionArea } from 'components/homeAreas/HomeSubscriptionArea';
 import CookieConsent from "react-cookie-consent";
+import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
 const { Content } = Layout;
 
 const LayoutStyled = styled(Layout)`
@@ -64,6 +65,7 @@ class HomePage extends React.Component {
           <section>
             <HomeCarouselArea></HomeCarouselArea>
           </section>
+          <HomeMarketArea />
           <HomeSubscriptionArea />
           {/* <section><HomeSearchArea /></section> */}
           <HashAnchorPlaceholder id="services" />

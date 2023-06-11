@@ -32,6 +32,7 @@ dependencies:
   node-fetch: 2.6.1
   nodemailer: 6.4.14
   pg: 8.3.3_pg@8.3.3
+  query-string: 6.13.7
   redis: 3.0.2
   rxjs: 6.6.3
   serialize-error: 7.0.1
@@ -1290,7 +1291,6 @@ packages:
     resolution:
       integrity: sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
   /decode-uri-component/0.2.0:
-    dev: true
     engines:
       node: '>=0.10'
     resolution:
@@ -3991,6 +3991,16 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-A1kFqHekCTM7cz0udomYUoYNWjBebHm/5wzU/XqrBRBNWectVH0QIiN+NEcZ0Dte5hvzHwbr8+XQmguPhJ6WdQ==
+  /query-string/6.13.7:
+    dependencies:
+      decode-uri-component: 0.2.0
+      split-on-first: 1.1.0
+      strict-uri-encode: 2.0.0
+    dev: false
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-CsGs8ZYb39zu0WLkeOhe0NMePqgYdAuCqxOYKDR5LVCytDZYMGx3Bb+xypvQvPHVPijRXB0HZNFllCzHRe4gEA==
   /querystring/0.2.0:
     dev: false
     engines:
@@ -4485,6 +4495,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-J+FWzZoynJEXGphVIS+XEh3kFSjZX/1i9gFBaWQcB+/tmpe2qUsSBABpcxqxnAxFdiUFEgAX1bjYGQvIZmoz9Q==
+  /split-on-first/1.1.0:
+    dev: false
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-43ZssAJaMusuKWL8sKUBQXHWOpq8d6CfN/u1p4gUzfJkM05C8rxTmYrkIPTXapZpORA6LkkzcUulJ8FqA7Uudw==
   /split-string/3.1.0:
     dependencies:
       extend-shallow: 3.0.2
@@ -4527,6 +4543,12 @@ packages:
       node: '>=0.8.0'
     resolution:
       integrity: sha1-gIudDlb8Jz2Am6VzOOkpkZoanxo=
+  /strict-uri-encode/2.0.0:
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-ucczDHBChi9rFC3CdLvMWGbONUY=
   /string-width/1.0.2:
     dependencies:
       code-point-at: 1.1.0
@@ -5422,6 +5444,7 @@ specifiers:
   nodemailer: ^6.4.14
   nodemon: ^2.0.4
   pg: ^8.3.3
+  query-string: ^6.13.7
   redis: ^3.0.2
   rxjs: ^6.6.3
   serialize-error: ^7.0.1

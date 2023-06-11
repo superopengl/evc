@@ -66,6 +66,7 @@
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.4.14",
     "pg": "^8.3.3",
+    "query-string": "^6.13.7",
     "redis": "^3.0.2",
     "rxjs": "^6.6.3",
     "serialize-error": "^7.0.1",

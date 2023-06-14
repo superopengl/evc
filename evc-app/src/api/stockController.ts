@@ -24,7 +24,16 @@ import { StockFairValue } from '../entity/StockFairValue';
 import { StockSupportLong } from '../entity/StockSupportLong';
 import { StockResistanceLong } from '../entity/StockResistanceLong';
 import { redisCache } from '../services/redisCache';
-import { getMarketGainers, getMarketLosers, getMarketMostActive, syncStockSymbols } from '../services/iexService';
+import {
+  getNews,
+  getInsiderRoster,
+  getInsiderSummary,
+  getInsiderTransactions,
+  getMarketGainers,
+  getMarketLosers,
+  getMarketMostActive,
+  syncStockSymbols
+} from '../services/iexService';
 
 
 export const incrementStock = handlerWrapper(async (req, res) => {
@@ -234,4 +243,24 @@ export const getGainers = handlerWrapper(async (req, res) => {
 
 export const getLosers = handlerWrapper(async (req, res) => {
   res.json(await getMarketLosers());
+});
+
+export const getStockInsider = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const [roster, summary, transactions] = await Promise.all([
+    getInsiderRoster(symbol),
+    getInsiderSummary(symbol),
+    getInsiderTransactions(symbol)
+  ]);
+
+  res.json({
+    roster,
+    summary,
+    transactions
+  });
+});
+
+export const getStockNews = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  res.json(await getNews(symbol));
 });

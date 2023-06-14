@@ -7,6 +7,8 @@ import StockInfoCard from './StockInfoCard';
 import { StockName } from './StockName';
 import { FaCrown } from 'react-icons/fa';
 import { IconContext } from "react-icons";
+import StockInsiderPanel from './StockInsiderPanel';
+import StockNewsPanel from './StockNewsPanel';
 const { Paragraph, Text } = Typography;
 
 const MemberOnlyIcon = () => <Text type="danger"><LockFilled/></Text>
@@ -38,7 +40,7 @@ const StockClientPanel = (props) => {
           <StockInfoCard value={stock} />
         </Tabs.TabPane>
         <Tabs.TabPane key="2" tab={<>Insider Transactions  <MemberOnlyIcon /></>}>
-
+          <StockInsiderPanel symbol={stock.symbol} />
         </Tabs.TabPane>
         <Tabs.TabPane key="3" tab={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
           前十高管持仓明细（Top Ten Insider Roster）：调用Insider Roster
@@ -51,7 +53,7 @@ const StockClientPanel = (props) => {
 
 </Tabs.TabPane>
         <Tabs.TabPane key="5" tab="News">
-          调用Core News
+          <StockNewsPanel symbol={stock.symbol} />
 
 </Tabs.TabPane>
       </Tabs>

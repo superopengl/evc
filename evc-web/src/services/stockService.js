@@ -162,3 +162,11 @@ export async function getMarketGainers() {
 export async function getMarketLosers() {
   return httpGet(`/stock/data/losers`);
 }
+
+export async function getStockInsider(symbol) {
+  return httpGet(`/stock/s/${symbol}/insider`);
+}
+
+export async function getStockNews(symbol) {
+  return httpGet(`/stock/s/${symbol}/news`);
+}

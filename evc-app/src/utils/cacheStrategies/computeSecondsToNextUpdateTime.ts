@@ -15,10 +15,3 @@ export function getNextTickMoment(scheduledEtTimes: number[], now: moment.Moment
   const tomorrowFirstTick = moment(todayStart).add(1, 'day').set({ hour: scheduledEtTimes[0] });
   return tomorrowFirstTick;
 }
-
-export function computeSecondsToNextUpdateTime(scheduledEtTimes: number[]) {
-  const now = moment();
-  const nextTickMoment = getNextTickMoment(scheduledEtTimes, now);
-  const duration = moment.duration(nextTickMoment.diff(now));
-  return Math.ceil(duration.asSeconds());
-}

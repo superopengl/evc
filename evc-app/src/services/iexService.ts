@@ -3,7 +3,10 @@ import { getManager } from 'typeorm';
 import * as fetch from 'node-fetch';
 import * as queryString from 'query-string';
 import { redisCache } from './redisCache';
-import { computeSecondsToNextUpdateTime } from '../utils/computeSecondsToNextUpdateTime';
+import { ICacheStrategy } from '../utils/cacheStrategies/ICacheStrategy';
+import { ScheduledClockCacheStrategy } from '../utils/cacheStrategies/ScheduledClockCacheStrategy';
+import { FixedPeriodCacheStrategy } from '../utils/cacheStrategies/FixedPeriodCacheStrategy';
+import { NoCacheStrategy } from '../utils/cacheStrategies/NoCacheStrategy';
 
 function composeSingleLine(stock) {
   const { symbol, name } = stock;
@@ -20,7 +23,7 @@ async function updateDatabase(stockList) {
   return await getManager().query(sql);
 }
 
-async function request(relativeApiPath: string, query?: object) {
+async function requestIexApi(relativeApiPath: string, query?: object) {
   const path = relativeApiPath.replace(/^\/+|\/+$/g, '');
   const queryParams = queryString.stringify({
     ...query,
@@ -29,57 +32,64 @@ async function request(relativeApiPath: string, query?: object) {
   const url = `${process.env.IEXCLOUD_API_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/${path}?${queryParams}`;
   console.debug('iex call', url);
   const resp = await fetch(url, query);
+  if (/^4/.test(resp.status)) {
+    // 429 Too Many Requests
+    // 404 Sandbox doesn't return data
+    return null;
+  }
   return resp.json();
 }
 
-async function fetchOrCache(apiPath: string, scheduledEtTimes: number[] = null, options?: object) {
-  if (!scheduledEtTimes) {
+async function requestAndCache(apiPath: string, cacheStrategy: ICacheStrategy, options?: object) {
+  const expireSeconds = cacheStrategy?.getExpireSeconds();
+  if (!expireSeconds) {
     // No cache
-    return await request(apiPath, options);
+    return await requestIexApi(apiPath, options);
   }
 
-  let cached = await redisCache.get(apiPath);
-  if (!cached) {
-    const cached = await request(apiPath, options);
-    const expireSeconds = computeSecondsToNextUpdateTime(scheduledEtTimes);
-    await redisCache.setex(apiPath, expireSeconds, cached);
+  let data = await redisCache.get(apiPath);
+  if (!data) {
+    data = await requestIexApi(apiPath, options);
+    if (data) {
+      await redisCache.setex(apiPath, expireSeconds, data);
+    }
   }
-  return cached;
+  return data;
 }
 
 export async function syncStockSymbols() {
-  const data = await request('/ref-data/symbols');
+  const data = await requestIexApi('/ref-data/symbols');
   // const stocks = await request('/ref-data/region/us/symbols');
   await updateDatabase(data);
 }
 
 export async function getMarketMostActive() {
-  return await request('/stock/market/list/mostactive');
+  return await requestAndCache('/stock/market/list/mostactive', new FixedPeriodCacheStrategy('1 minute'));
 }
 
 export async function getMarketGainers() {
   // Cannot add listLimit=5 query param because iex API has a bug that adding listLimit will return nothing.
-  return await request('/stock/market/list/gainers');
+  return await requestAndCache('/stock/market/list/gainers', new FixedPeriodCacheStrategy('1 minute'));
 }
 
 export async function getMarketLosers() {
-  return await request('/stock/market/list/losers');
+  return await requestAndCache('/stock/market/list/losers', new FixedPeriodCacheStrategy('1 minute'));
 }
 
 export async function getInsiderRoster(symbol: string) {
-  return await fetchOrCache(`/stock/${symbol}/insider-roster`, [5, 6]);
+  return await requestAndCache(`/stock/${symbol}/insider-roster`, new ScheduledClockCacheStrategy(5, 6));
 }
 
 export async function getInsiderSummary(symbol: string) {
-  return await fetchOrCache(`/stock/${symbol}/insider-summary`, [5, 6]);
+  return await requestAndCache(`/stock/${symbol}/insider-summary`, new ScheduledClockCacheStrategy(5, 6));
 }
 
 export async function getInsiderTransactions(symbol: string) {
-  return await fetchOrCache(`/stock/${symbol}/insider-transactions`, [5, 6]);
+  return await requestAndCache(`/stock/${symbol}/insider-transactions`, new ScheduledClockCacheStrategy(5, 6));
 }
 
 export async function getNews(symbol: string) {
-  const list = await request(`/stock/${symbol}/news/last/10`);
+  const list = await requestAndCache(`/stock/${symbol}/news/last/10`, new FixedPeriodCacheStrategy('10 minute'));
   return list
     .filter(x => x.lang === 'en')
     .map(x => ({
@@ -90,18 +100,19 @@ export async function getNews(symbol: string) {
 }
 
 export async function getChartIntraday(symbol: string) {
-  return await request(`/stock/${symbol}/intraday-prices`);
+  return await requestAndCache(`/stock/${symbol}/intraday-prices`, new FixedPeriodCacheStrategy('1 minute'));
 }
 
 export async function getChart5D(symbol: string) {
-  return await request(`/stock/${symbol}/chart/5d`);
+  return await requestAndCache(`/stock/${symbol}/chart/5d`, new FixedPeriodCacheStrategy('6 hours'));
 }
 
 export async function getEarnings(symbol: string, last = 1) {
-  const { earnings } = await request(`/stock/${symbol}/earnings/${last}`);
+  const { earnings } = await requestIexApi(`/stock/${symbol}/earnings/${last}`);
   return earnings;
 }
 
 export async function getQuote(symbol: string) {
-  return await request(`/stock/${symbol}/quote`);
+  const data = await requestIexApi(`/stock/${symbol}/quote`);
+  return data;
 }

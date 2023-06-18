@@ -3,30 +3,34 @@ import * as EventSource from 'eventsource';
 import * as dotenv from 'dotenv';
 import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService';
 import { redisCache } from '../src/services/redisCache';
+import { StockLastPrice } from '../src/types/StockLastPrice';
+import 'colors';
 
 const publisher = new RedisRealtimePricePubService();
 
-type LastPrice = {
-  symbol: string,
-  price: number,
-  size: number,
-  time: Date
+async function updateLastPriceInCache(priceList: StockLastPrice[]) {
+  for(const p of priceList) {
+    const {symbol, ...data} = p;
+    const key = `stock.${symbol}.lastPrice`;
+    redisCache.set(key, data);
+  }
 }
 
-async function updateLastPriceInCache(priceList: LastPrice[]) {
+async function publishPriceEvents(priceList: StockLastPrice[]) {
   for(const p of priceList) {
-    const key = `stock.${p.symbol}.lastPrice`;
-    redisCache.set(key, p);
+    const event = {
+      type: 'price',
+      data: p
+    }
+    publisher.publish(event);
   }
 }
 
 function handleMessage(data) {
   try {
-    const priceList = JSON.parse(data) as LastPrice[];
-    if (priceList) {
-      
-      // Publish prices.
-      publisher.publish(data);
+    const priceList = JSON.parse(data) as StockLastPrice[];
+    if (priceList?.length) {
+      publishPriceEvents(priceList);
       updateLastPriceInCache(priceList);
     }
   } catch (err) {
@@ -47,11 +51,11 @@ export const start = async () => {
       console.log('Task', 'sse', 'opened');
     };
     es.onerror = (err) => {
-      console.log('Task', 'sse', 'error', err);
+      console.log('Task sse error'.red, err);
     };
     es.onmessage = (e) => handleMessage(e.data);
   } catch (err) {
-    console.error('Task', 'sse', 'failed', errorToJson(err));
+    console.error('Task sse failed'.red, errorToJson(err));
     es?.close();
   }
 };

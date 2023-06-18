@@ -114,7 +114,6 @@ export const searchUsers = handlerWrapper(async (req, res) => {
       'u."loginType"',
       'u.role as role',
       'u."lastLoggedInAt"',
-      'u."lastNudgedAt"',
       'u."createdAt" as "createdAt"',
       's.type as "subscriptionType"'
     ]);

@@ -108,11 +108,6 @@ const UserListPage = () => {
       render: (text) => <TimeAgo value={text} />,
     },
     {
-      title: 'Last Action At',
-      dataIndex: 'lastNudgedAt',
-      render: (text) => <TimeAgo value={text} />,
-    },
-    {
       // title: 'Action',
       // fixed: 'right',
       // width: 200,

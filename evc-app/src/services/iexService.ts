@@ -7,6 +7,7 @@ import { ICacheStrategy } from '../utils/cacheStrategies/ICacheStrategy';
 import { ScheduledClockCacheStrategy } from '../utils/cacheStrategies/ScheduledClockCacheStrategy';
 import { FixedPeriodCacheStrategy } from '../utils/cacheStrategies/FixedPeriodCacheStrategy';
 import { NoCacheStrategy } from '../utils/cacheStrategies/NoCacheStrategy';
+import 'colors';
 
 function composeSingleLine(stock) {
   const { symbol, name } = stock;
@@ -30,8 +31,8 @@ async function requestIexApi(relativeApiPath: string, query?: object) {
     token: process.env.IEXCLOUD_PUBLIC_KEY
   })
   const url = `${process.env.IEXCLOUD_API_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/${path}?${queryParams}`;
-  console.debug('iex call', url);
   const resp = await fetch(url, query);
+  console.debug('iex request'.bgMagenta.white, resp.status, url.magenta);
   if (/^4/.test(resp.status)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data

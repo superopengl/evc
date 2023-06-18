@@ -34,7 +34,7 @@ const StockInsiderPanel = (props) => {
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
       <Loading loading={loading}>
-        <em>{JSON.stringify(data, null, 2)}</em>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
       </Loading>
     </Space>
   );

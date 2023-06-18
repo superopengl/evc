@@ -24,7 +24,7 @@ const StockChart = props => {
   }
 
   const formatTimeForRawData = (data) => {
-    const formatted =  data.filter(x => x.average !== null).map((x, i) => ({
+   const formatted =  data.filter(x => x.average !== null).map((x, i) => ({
       ...x,
       tradeTime: moment(`${x.date} ${x.minute}`).toString()
     }));

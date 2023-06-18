@@ -9,6 +9,7 @@ import { FaCrown } from 'react-icons/fa';
 import { IconContext } from "react-icons";
 import StockInsiderPanel from './StockInsiderPanel';
 import StockNewsPanel from './StockNewsPanel';
+import StockEarningsPanel from './StockEarningsPanel';
 import StockChart from './charts/StockChart';
 const { Paragraph, Text } = Typography;
 
@@ -51,7 +52,7 @@ const StockClientPanel = (props) => {
 
 </Tabs.TabPane>
         <Tabs.TabPane key="4" tab="Earnings Today">
-          调用Earnings Today
+          <StockEarningsPanel symbol={stock.symbol} />
 
 </Tabs.TabPane>
         <Tabs.TabPane key="5" tab="News">

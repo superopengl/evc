@@ -24,6 +24,7 @@ import { StockFairValue } from '../entity/StockFairValue';
 import { StockSupportLong } from '../entity/StockSupportLong';
 import { StockResistanceLong } from '../entity/StockResistanceLong';
 import { redisCache } from '../services/redisCache';
+import { StockEps } from '../entity/StockEps';
 import {
   getNews,
   getInsiderRoster,
@@ -34,7 +35,8 @@ import {
   getMarketMostActive,
   syncStockSymbols,
   getChartIntraday,
-  getChart5D
+  getChart5D,
+  getEarnings
 } from '../services/iexService';
 
 
@@ -261,6 +263,20 @@ export const getStockInsider = handlerWrapper(async (req, res) => {
     summary,
     transactions
   });
+});
+
+export const getEarningToday = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const last = await getRepository(StockEps).findOne({
+    where: {
+      symbol
+    },
+    order: {
+      year: 'DESC',
+      quarter: 'DESC'
+    }
+  })
+  res.json(last);
 });
 
 export const getStockNews = handlerWrapper(async (req, res) => {

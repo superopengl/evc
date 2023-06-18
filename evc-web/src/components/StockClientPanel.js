@@ -11,6 +11,7 @@ import StockInsiderPanel from './StockInsiderPanel';
 import StockNewsPanel from './StockNewsPanel';
 import StockEarningsPanel from './StockEarningsPanel';
 import StockChart from './charts/StockChart';
+import StockQuotePanel from './StockQuotePanel';
 const { Paragraph, Text } = Typography;
 
 const MemberOnlyIcon = () => <Text type="danger"><LockFilled/></Text>
@@ -24,20 +25,7 @@ const StockClientPanel = (props) => {
       <StockName size={20} strong value={stock} />
       <Text type="secondary">Electronic Technology</Text>
       <StockChart symbol={stock.symbol} type="1d"/>
-      <Space size="large" style={{ alignItems: 'flex-end' }}>
-        <div>
-          <Text style={{ fontSize: 30 }} strong>125.45 <Text type="success"><small>+0.63 (+0.51%)</small></Text></Text>
-          <div><Text type="secondary"><small>Price At: 7:48AM EST</small></Text></div>
-        </div>
-        <div>
-          <Text style={{ fontSize: 20 }} strong>100.45 <Text type="success">+0.63 (+0.51%)</Text></Text>
-          <div><Text type="secondary"><small>pre market</small></Text></div>
-        </div>
-        <div>
-          <Text style={{ fontSize: 20 }} strong>200.45 <Text type="success">+0.63 (+0.51%)</Text></Text>
-          <div><Text type="secondary"><small>post market</small></Text></div>
-        </div>
-      </Space>
+      <StockQuotePanel symbol={stock.symbol} />
       <Tabs type="card">
         <Tabs.TabPane key="1" tab={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>}>
           <StockInfoCard value={stock} />

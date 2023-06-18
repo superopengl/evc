@@ -36,7 +36,7 @@ import {
   syncStockSymbols,
   getChartIntraday,
   getChart5D,
-  getEarnings
+  getQuote
 } from '../services/iexService';
 
 
@@ -265,7 +265,7 @@ export const getStockInsider = handlerWrapper(async (req, res) => {
   });
 });
 
-export const getEarningToday = handlerWrapper(async (req, res) => {
+export const getStockEarningToday = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const last = await getRepository(StockEps).findOne({
     where: {
@@ -292,5 +292,10 @@ export const getStockChartIntraday = handlerWrapper(async (req, res) => {
 export const getStockChart5D = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   res.json(await getChart5D(symbol));
+});
+
+export const getStockQuote = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  res.json(await getQuote(symbol));
 });
 

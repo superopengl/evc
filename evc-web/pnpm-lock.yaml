@@ -23,6 +23,7 @@ dependencies:
   markdown-it: 11.0.1
   mgr-pdf-viewer-react: 1.0.3_react-dom@16.13.1
   moment: 2.27.0
+  moment-timezone: 0.5.32
   object-hash: 2.0.3
   query-string: 6.13.1
   react: 16.13.1
@@ -8977,6 +8978,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-+GgHNg8xRhMXfEbv81iDtrVeTcWt0kWmTEY1XQK14dICTXnWJnT0dxdlPspwqF3keKMVPXwayEsk1DI0AA/jdA==
+  /moment-timezone/0.5.32:
+    dependencies:
+      moment: 2.29.1
+    dev: false
+    resolution:
+      integrity: sha512-Z8QNyuQHQAmWucp8Knmgei8YNo28aLjJq6Ma+jy1ZSpSk5nyfRT8xgUbSQvD2+2UajISfenndwvFuH3NGS+nvA==
   /moment/2.27.0:
     dev: false
     resolution:
@@ -14792,6 +14799,7 @@ specifiers:
   markdown-it: ^11.0.1
   mgr-pdf-viewer-react: ^1.0.3
   moment: ^2.25.3
+  moment-timezone: ^0.5.32
   nodemon: ^2.0.4
   object-hash: ^2.0.3
   prop-types: ^15.7.2

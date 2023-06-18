@@ -18,6 +18,7 @@ async function updateLastPriceInCache(priceList: StockLastPrice[]) {
 
 async function publishPriceEvents(priceList: StockLastPrice[]) {
   for(const p of priceList) {
+    p.symbol = 'GOOG';
     const event = {
       type: 'price',
       data: p

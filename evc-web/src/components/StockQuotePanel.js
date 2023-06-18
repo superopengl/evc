@@ -24,7 +24,7 @@ const StockQuotePanel = (props) => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const quote = await getStockQuote(symbol);
+      const quote = await getStockQuote(symbol) ?? {};
       setQuote(quote);
       setCurrentPrice(quote.latestPrice);
       setPreviousPrice(quote.latestPrice - quote.change);

@@ -5,12 +5,24 @@ import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService
 
 const publisher = new RedisRealtimePricePubService();
 
+type LastPrice = {
+  symbol: string,
+  price: number,
+  size: number,
+  time: Date
+}
+
+function updatePriceInCache(priceList: LastPrice[]) {
+  
+}
+
 function handleMessage(data) {
   try {
-    const event = JSON.parse(data)[0];
-    if (event) {
-      // console.error('Task', 'sse', 'message', event);
-      publisher.publish(event);
+    const priceList = JSON.parse(data) as LastPrice[];
+    if (priceList) {
+      
+      // Publish prices.
+      publisher.publish(data);
     }
   } catch (err) {
     console.error('Task', 'sse', 'message error', errorToJson(err));
@@ -35,5 +47,8 @@ export const start = async () => {
     es.onmessage = (e) => handleMessage(e.data);
   } catch (err) {
     console.error('Task', 'sse', 'failed', errorToJson(err));
+    es?.close();
   }
 };
+
+start();

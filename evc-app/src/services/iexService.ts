@@ -27,6 +27,7 @@ async function request(relativeApiPath: string, query?: object) {
     token: process.env.IEXCLOUD_PUBLIC_KEY
   })
   const url = `${process.env.IEXCLOUD_API_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/${path}?${queryParams}`;
+  console.debug('iex call', url);
   const resp = await fetch(url, query);
   return resp.json();
 }
@@ -78,5 +79,21 @@ export async function getInsiderTransactions(symbol: string) {
 }
 
 export async function getNews(symbol: string) {
-  return await request(`/stock/${symbol}/news/last/10`);
+  const list = await request(`/stock/${symbol}/news/last/10`);
+  return list
+  .filter(x => x.lang === 'en')
+  .map(x => ({
+    ...x,
+    image: `${x.image}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`,
+    url: `${x.url}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`
+  }));
 }
+
+export async function getChartIntraday(symbol: string) {
+  return await request(`/stock/${symbol}/intraday-prices`);
+}
+
+export async function getChart5D(symbol: string) {
+  return await request(`/stock/${symbol}/chart/5d`);
+}
+

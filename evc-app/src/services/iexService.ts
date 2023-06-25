@@ -118,11 +118,11 @@ export async function getQuote(symbol: string) {
   return await requestIexApi(`/stock/${symbol}/quote`);
 }
 
-async function singleBatchRequest(symbols: string[], types: string[], options: {}) {
+export async function singleBatchRequest(symbols: string[], types: string[], params: {}) {
   const len = symbols.length;
   assert(0 < len && len <= 100, 400, `Wrong size of iex batch request ${len}`);
   return await requestIexApi('/stock/market/batch', {
-    ...options,
+    ...params,
     symbols: symbols.join(','),
     types: types.join(',')
   })

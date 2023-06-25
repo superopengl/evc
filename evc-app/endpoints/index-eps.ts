@@ -1,34 +1,33 @@
 import * as iex from 'iexcloud_api_wrapper';
-import { Connection, getManager } from 'typeorm';
+import { Connection, getManager, getRepository } from 'typeorm';
 import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
+import { start } from './jobStarter';
+import { Stock } from '../src/entity/Stock';
+import * as iexService from '../src/services/iexService';
+import { StockIexEpsInfo, syncManyStockEps } from '../src/services/stockEpsService';
 
-function composeSingleLine(stock) {
-  const { symbol, name } = stock;
-  const companyName = name || `Company of ${symbol}`;
-  return `INSERT INTO public.stock(symbol, company) VALUES ('${symbol}', '${companyName}') ON CONFLICT (symbol) DO UPDATE SET company = '${companyName}'`;
-}
+start('stock-eps', async () => {
+  const stocks = await getRepository(Stock)
+    .createQueryBuilder()
+    .select('symbol')
+    .getRawMany();
+  const symbols = stocks.map(s => s.symbol);
+  const result = await iexService.batchRequest(symbols, ['earnings'], { last: 4 });
 
-function composeSqlStatement(stocks) {
-  return stocks.map(composeSingleLine).join(';\n');
-}
-
-async function updateDatabase(stockList) {
-  const sql = composeSqlStatement(stockList);
-  return await getManager().query(sql);
-}
-
-export const start = async () => {
-  let connection: Connection = null;
-  try {
-    connection = await connectDatabase();
-    const stocks = await iex.marketSymbols();
-    console.log('Task', 'sync_all_symbols', 'iex.marketSymbols', stocks.length);
-    await updateDatabase(stocks);
-    console.log('Task', 'sync_all_symbols', 'done');
-  } catch (e) {
-    console.error('Task', 'sync_all_symbols', 'failed', errorToJson(e));
-  } finally {
-      connection?.close();
+  const epsInfo: StockIexEpsInfo[] = [];
+  for (const item of Object.values(result)) {
+    const { symbol, earnings } = (item as any).earnings;
+    if (symbol && earnings?.length) {
+      for (const earning of earnings) {
+        epsInfo.push({
+          symbol,
+          fiscalPeriod: earning.fiscalPeriod,
+          value: earning.actualEPS,
+        });
+      }
+    }
   }
-};
+
+  await syncManyStockEps(epsInfo);
+});

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Typography, Space, Row, Col, Tooltip, Button, Tabs } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
+import { DeleteOutlined, SyncOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
 import StockInfoCard from './StockInfoCard';
 import { StockName } from './StockName';
 import { FaCrown } from 'react-icons/fa';
@@ -19,24 +19,29 @@ const MemberOnlyIcon = () => <Text type="danger"><LockFilled /></Text>
 const StockClientPanel = (props) => {
 
   const { value: stock, onUnwatch } = props;
+  const [key, setKey] = React.useState(0);
+
+  const handleRefresh = () => {
+    setKey(key + 1);
+  }
 
   return (
-    <Space direction="vertical" style={{ width: '100%' }}>
-      <div style={{ display: 'flex' }}>
-        <div style={{ flex: '1' }}>
-          <Space><StockName size={20} strong value={stock} />
-            {onUnwatch && <Button type="link" icon={<EyeInvisibleOutlined />} onClick={onUnwatch} />}
-          </Space>
-          <div><Text type="secondary">Electronic Technology</Text></div>
-          <StockQuotePanel symbol={stock.symbol} />
-        </div>
+    <Space direction="vertical" style={{ width: '100%' }} key={key}>
+      <Space style={{width: '100%', justifyContent: 'space-between'}}>
+        <StockName size={20} strong value={stock} />
         <div>
-          <StockChart symbol={stock.symbol} type="1d" />
+          <Button type="link" icon={<SyncOutlined />} onClick={handleRefresh} />
+          {onUnwatch && <Button type="link" icon={<EyeInvisibleOutlined />} onClick={onUnwatch} />}
         </div>
-      </div>
+      </Space>
+         <Text type="secondary">Electronic Technology</Text>
+          <StockQuotePanel symbol={stock.symbol} />
       <Tabs type="card">
         <Tabs.TabPane key="1" tab={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>}>
           <StockInfoCard value={stock} />
+        </Tabs.TabPane>
+        <Tabs.TabPane key="6" tab={<>Chart</>}>
+          <StockChart symbol={stock.symbol} type="1d" />
         </Tabs.TabPane>
         <Tabs.TabPane key="2" tab={<>Insider Transactions  <MemberOnlyIcon /></>}>
           <StockInsiderPanel symbol={stock.symbol} />
@@ -53,7 +58,6 @@ const StockClientPanel = (props) => {
         </Tabs.TabPane>
         <Tabs.TabPane key="5" tab="News">
           <StockNewsPanel symbol={stock.symbol} />
-
         </Tabs.TabPane>
       </Tabs>
     </Space>

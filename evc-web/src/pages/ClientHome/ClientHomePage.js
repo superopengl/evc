@@ -51,6 +51,12 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
+const StockPanelContainer = styled.div`
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 4px;
+  padding: 1rem;
+`;
+
 
 const span = {
   xs: 1,
@@ -125,7 +131,7 @@ const ClientHomePage = (props) => {
 
   const handleUnwatch = async (stock) => {
     Modal.confirm({
-      title: <>Remove <StockName value={stock}/> from watchlist</>,
+      title: <>Remove <StockName value={stock} /> from watchlist</>,
       async onOk() {
         await unwatchStock(stock.symbol);
         setWatchList(watchList.filter(x => x.symbol !== stock.symbol));
@@ -159,7 +165,9 @@ const ClientHomePage = (props) => {
           loading={loading}
           renderItem={item => (
             <List.Item>
-              <StockClientPanel value={item}/>
+              <StockPanelContainer>
+                <StockClientPanel value={item} onUnwatch={() => handleUnwatch(item)}/>
+              </StockPanelContainer>
             </List.Item>
           )}
         />

@@ -8,7 +8,7 @@ import {
   UserAddOutlined, UserOutlined, ReconciliationOutlined,
   PicLeftOutlined
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Drawer, Layout, Menu, Modal, Typography, Divider } from 'antd';
+import { Avatar, Badge, Button, Drawer, Layout, Menu, Modal, Typography, Space } from 'antd';
 import React from 'react';
 import MediaQuery from 'react-responsive';
 import { Link, withRouter } from 'react-router-dom';
@@ -17,6 +17,7 @@ import { logout } from 'services/authService';
 import styled from 'styled-components';
 import { GlobalContext } from '../contexts/GlobalContext';
 import PropTypes from 'prop-types';
+import { StockSearchInput } from './StockSearchInput';
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -100,12 +101,15 @@ const HomeHeaderRaw = props => {
 
   return (
     <HeaderStyled>
-      <HeaderLogo>
-        <HashLink to="/">
-          <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto" height="60" style={{ padding: '14px 0 14px 0' }}></img>
-        </HashLink>
-        {/* {isAdmin && <Text>Admin</Text>} */}
-      </HeaderLogo>
+      <Space>
+        <HeaderLogo>
+          <HashLink to="/">
+            <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto" height="60" style={{ padding: '14px 0 14px 0' }}></img>
+          </HashLink>
+          {/* {isAdmin && <Text>Admin</Text>} */}
+        </HeaderLogo>
+        {/* <StockSearchInput style={{ maxWidth: 500 }} /> */}
+      </Space>
       <MediaQuery minDeviceWidth={801}>
         <MenuContianer>
           <Menu

@@ -19,7 +19,7 @@ export const StockSearchInput = (props) => {
     const stocks = await listStock();
     const sorted = _.chain(stocks)
       .filter(s => !excluding.includes(s.symbol))
-      .orderBy(['company'], ['asc'])
+      // .orderBy(['symbol'], ['asc'])
       .value();
     setList(sorted);
   }

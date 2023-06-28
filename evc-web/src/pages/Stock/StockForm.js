@@ -436,7 +436,7 @@ const StockForm = (props) => {
             onChange={list => setPublishList(list)}
             onSelected={updateSelectedByPublish}
             getClassNameOnSelect={getClassNameOnSelectForPublishItem}
-            disabled={!valueList?.length || !supportShortList?.length || !resistanceShortList?.length}
+            disabled={!valueList?.length || !supportShortList?.length || !supportLongList?.length || !resistanceShortList?.length || !resistanceLongList?.length}
           />
         </ColInnerCard>
       </ColStyled>

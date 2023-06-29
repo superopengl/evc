@@ -18,7 +18,7 @@ const TooltipIcon = props => <Tooltip title={props.message}>
 
 const StockInfoCard = (props) => {
 
-  const { value, onClick, hoverable, actions } = props;
+  const { value, showTitle, hoverable, actions } = props;
 
   const [stock, setStock] = React.useState(value);
 
@@ -36,7 +36,7 @@ const StockInfoCard = (props) => {
       bordered={false}
       type="inner"
       // bordered={false}
-      title={<StockName value={stock} />}
+      title={showTitle ? <StockName value={stock} /> : null}
       onClick={props.onClick}
       hoverable={hoverable}
       actions={actions}
@@ -89,9 +89,11 @@ StockInfoCard.propTypes = {
   value: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   actions: PropTypes.array,
+  showTitle: PropTypes.bool,
 };
 
 StockInfoCard.defaultProps = {
+  showTitle: true,
 };
 
 export default withRouter(StockInfoCard);

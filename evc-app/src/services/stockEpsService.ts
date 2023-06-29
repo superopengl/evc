@@ -11,6 +11,9 @@ export type StockIexEpsInfo = {
 
 export const syncStockEps = async (symbol: string) => {
   const earnings = await getEarnings(symbol, 4);
+  if (!earnings?.length) {
+    return;
+  }
   const infoList = earnings.map(e => {
     const data: StockIexEpsInfo = {
       symbol,

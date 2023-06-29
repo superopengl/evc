@@ -27,13 +27,6 @@ export async function searchStock(queryInfo: StockSearchParams) {
     pageNo = 1;
   }
 
-
-  // if (from) {
-  //   query = query.andWhere('s."createdAt" >= :date', { data: moment(from).toDate() });
-  // }
-  // if (to) {
-  //   query = query.andWhere('s."createdAt" <= :date', { data: moment(to).toDate() });
-  // }
   query = query
     .leftJoin(q => q.from(StockPublish, 'pu')
       .distinctOn(['pu.symbol'])

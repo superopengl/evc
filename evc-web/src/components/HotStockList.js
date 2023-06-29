@@ -11,6 +11,7 @@ import { Loading } from './Loading';
 import { listHotStock } from 'services/stockService';
 import Highlighter from "react-highlight-words";
 import { StockName } from './StockName';
+import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -60,38 +61,44 @@ const HotStockList = (props) => {
 
   const columnDef = [
     {
-      render: (value, item) => <StockName value={item} />
+      render: (value, item) => <StockName value={item} direction="vertical" />
     },
     {
       title: 'Value',
-      render: (text, item) => <>{item.valueLo} / {item.valueHi}</>
+      render: (text, item) => <NumberRangeDisplay lo={item.fairValueLo} hi={item.fairValueHi} />
     },
     {
       title: 'Support',
-      render: (text, item) => <>{item.supportLo} / {item.supportHi}</>
+      render: (text, item) => <>
+        <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi} />
+        <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi} />
+      </>
     },
     {
       title: 'Resistance',
-      render: (text, item) => <>{item.resistanceLo} / {item.resistanceHi}</>
+      render: (text, item) => <>
+        <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} />
+        <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi} />
+      </>
     },
   ];
   return (
-      <Table
-        columns={columnDef}
-        dataSource={list}
-        rowKey="symbol"
-        size="small"
-        loading={loading}
-        pagination={false}
-        style={{width: '100%'}}
-        // onChange={handleTableChange}
-        // rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
-        onRow={(item) => ({
-          onDoubleClick: () => {
-            handleItemClick(item);
-          }
-        })}
-      />
+    <Table
+      columns={columnDef}
+      dataSource={list}
+      rowKey="symbol"
+      size="small"
+      loading={loading}
+      pagination={false}
+      style={{ width: '100%' }}
+      // onChange={handleTableChange}
+      // rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
+      onRow={(item) => ({
+        onDoubleClick: () => {
+          handleItemClick(item);
+        }
+      })}
+    />
   );
 };
 

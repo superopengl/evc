@@ -56,7 +56,7 @@ const StyledTable = styled(Table)`
 
 const columnDef = [
   {
-    title: 'Synbol',
+    title: 'Symbol',
     render: (text, item, index) => {
       const { symbol, companyName } = item;
       if (index % 2 === 0) {

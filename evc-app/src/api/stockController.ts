@@ -79,7 +79,7 @@ export const getStock = handlerWrapper(async (req, res) => {
 
 
 export const searchSingleStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'admin', 'agent', 'client');
   const { symbol } = req.params;
 
   const result = await searchStock({ symbols: [symbol] });

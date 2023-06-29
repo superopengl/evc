@@ -14,6 +14,7 @@ import StockTagSelect from 'components/StockTagSelect';
 import { Divider } from 'antd';
 import StockTagFilter from 'components/StockTagFilter';
 import StockInfoCard from 'components/StockInfoCard';
+import { StockSearchInput } from 'components/StockSearchInput';
 
 const { Title, Paragraph } = Typography;
 
@@ -53,7 +54,7 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
-const StockListPage = (props) => {
+const AdminStockListPage = (props) => {
 
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
   const [total, setTotal] = React.useState(0);
@@ -136,6 +137,11 @@ const StockListPage = (props) => {
             <Title level={2} style={{ margin: 'auto' }}>Stock List</Title>
           </StyledTitleRow> */}
             <Space style={{ width: '100%', justifyContent: 'space-between' }} >
+            {/* <StockSearchInput
+          onFetchData={handleSearch}
+          onChange={handleSearchChange}
+          style={{ width: '100%', maxWidth: 400 }} /> */}
+
               <Input.Search
                 placeholder="input search text"
                 enterButton={<SearchOutlined />}
@@ -170,7 +176,7 @@ const StockListPage = (props) => {
               }}
             />
             <Divider />
-            <StockList data={list} />
+            <StockList data={list} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
           </Space>
         </Loading>
       </ContainerStyled>
@@ -211,8 +217,8 @@ const StockListPage = (props) => {
   );
 };
 
-StockListPage.propTypes = {};
+AdminStockListPage.propTypes = {};
 
-StockListPage.defaultProps = {};
+AdminStockListPage.defaultProps = {};
 
-export default withRouter(StockListPage);
+export default withRouter(AdminStockListPage);

@@ -20,7 +20,7 @@ const { Text, Title, Paragraph } = Typography;
 
 const StockList = (props) => {
 
-  const { data, search, loading: propLoading } = props;
+  const { data, search, loading: propLoading, onItemClick } = props;
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(propLoading);
@@ -30,7 +30,7 @@ const StockList = (props) => {
   React.useEffect(() => {
     setList(data);
     setText(search);
-    setLoading(setLoading);
+    setLoading(propLoading);
   }, [data, search, propLoading]);
 
   return (
@@ -41,7 +41,7 @@ const StockList = (props) => {
         sm: 3,
         md: 3,
         lg: 4,
-        xl: 5,
+        xl: 4,
         xxl: 6,
       }}
       size="small"
@@ -52,7 +52,7 @@ const StockList = (props) => {
           <StockInfoCard 
           value={stock}
           hoverable
-          onClick={() => props.history.push(`/stock/${stock.symbol}`)}
+          onClick={() => onItemClick(stock)}
           />
         </List.Item>
       )}
@@ -65,11 +65,13 @@ StockList.propTypes = {
   data: PropTypes.array.isRequired,
   search: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  onItemClick: PropTypes.func,
 };
 
 StockList.defaultProps = {
   search: '',
-  loading: false
+  loading: false,
+  onItemClick: () => {}
 };
 
 export default withRouter(StockList);

@@ -22,13 +22,13 @@ const StockInfoCard = (props) => {
 
   const [stock, setStock] = React.useState(value);
 
-  const loadEntity = async () => {
-    setStock(await searchSingleStock(value.symbol));
-  }
+  // const loadEntity = async () => {
+  //   setStock(await searchSingleStock(value.symbol));
+  // }
 
-  React.useEffect(() => {
-    loadEntity();
-  }, [value]);
+  // React.useEffect(() => {
+  //   loadEntity();
+  // }, [value]);
 
   return (
     <Card

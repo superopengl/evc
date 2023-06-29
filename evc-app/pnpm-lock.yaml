@@ -41,6 +41,7 @@ dependencies:
   serialize-error: 7.0.1
   stripe: 8.126.0
   swagger-routes-express: 3.2.1
+  tinycolor2: 1.4.2
   typeorm: 0.2.25
   typeorm-plus: 0.1.2
   ua-parser-js: 0.7.22
@@ -7000,6 +7001,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
+  /tinycolor2/1.4.2:
+    dev: false
+    resolution:
+      integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
   /titleize/2.1.0:
     dev: false
     engines:
@@ -7939,6 +7944,7 @@ specifiers:
   serialize-error: ^7.0.1
   stripe: ^8.126.0
   swagger-routes-express: ^3.1.2
+  tinycolor2: ^1.4.2
   ts-clean: ^1.0.3
   ts-jest: ^26.4.4
   ts-node: ^8.10.2

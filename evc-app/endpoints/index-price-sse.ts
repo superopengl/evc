@@ -10,16 +10,16 @@ import { start } from './jobStarter';
 const publisher = new RedisRealtimePricePubService();
 
 async function updateLastPriceInCache(priceList: StockLastPrice[]) {
-  for(const p of priceList) {
-    const {symbol, ...data} = p;
+  for (const p of priceList) {
+    const { symbol, ...data } = p;
     const key = `stock.${symbol}.lastPrice`;
     redisCache.set(key, data);
   }
 }
 
 async function publishPriceEvents(priceList: StockLastPrice[]) {
-  for(const p of priceList) {
-    p.symbol = 'GOOG';
+  for (const p of priceList) {
+    // p.symbol = 'GOOG';
     const event = {
       type: 'price',
       data: p
@@ -56,7 +56,8 @@ start(JOB_NAME, async () => {
       console.log(`Task ${JOB_NAME} error`.red, err);
     };
     es.onmessage = (e) => handleMessage(e.data);
-  } finally {
+  } catch (err) {
+    console.log(`Task ${JOB_NAME} error`.red, err);
     es?.close();
   }
 });

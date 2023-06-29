@@ -11,7 +11,7 @@ import { getStockQuote } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
 import { Loading } from './Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { filter } from 'rxjs/operators';
+import { filter, debounceTime } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 
 const { Paragraph, Text, Title } = Typography;
@@ -53,7 +53,8 @@ const StockQuotePanel = (props) => {
   const subscribePriceEvent = () => {
     const subscription = context.event$.pipe(
       filter(e => e.type === 'price'),
-      filter(e => e.data?.symbol === symbol)
+      filter(e => e.data?.symbol === symbol),
+      debounceTime(1000),
     ).subscribe(e => {
       setPriceEvent(e.data);
     });

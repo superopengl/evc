@@ -30,7 +30,11 @@ export const StockSearchInput = (props) => {
 
 
   const handleChange = async (symbol) => {
+
     setText('');
+    if (!symbol) {
+      return;
+    }
     if (traceSearch) {
       incrementStock(symbol);
     }
@@ -82,8 +86,8 @@ export const StockSearchInput = (props) => {
             searchWords={[text]}
             autoEscape={true}
             textToHighlight={item.company} />) */}
-            <StockName value={item} />
-    </Select.Option>)}
+        <StockName value={item} />
+      </Select.Option>)}
     </Select>
   );
 }

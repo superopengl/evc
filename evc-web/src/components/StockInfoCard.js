@@ -18,16 +18,16 @@ const TooltipIcon = props => <Tooltip title={props.message}>
 
 const StockInfoCard = (props) => {
 
-  const { value, title, hoverable, actions } = props;
+  const { value: stock, title, hoverable, actions } = props;
 
-  const [stock, setStock] = React.useState(value);
+  // const [stock, setStock] = React.useState(value);
 
   // const loadEntity = async () => {
   //   setStock(await searchSingleStock(value.symbol));
   // }
 
   // React.useEffect(() => {
-  //   loadEntity();
+  //   setStock(value);
   // }, [value]);
 
   return (
@@ -35,7 +35,6 @@ const StockInfoCard = (props) => {
       size="small"
       bordered={false}
       type="inner"
-      // bordered={false}
       title={title ?? <StockName value={stock} />}
       onClick={props.onClick}
       hoverable={hoverable}

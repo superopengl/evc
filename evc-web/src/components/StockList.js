@@ -20,18 +20,7 @@ const { Text, Title, Paragraph } = Typography;
 
 const StockList = (props) => {
 
-  const { data, search, loading: propLoading, onItemClick } = props;
-
-  const [list, setList] = React.useState([]);
-  const [loading, setLoading] = React.useState(propLoading);
-  const [text, setText] = React.useState(search);
-
-
-  React.useEffect(() => {
-    setList(data);
-    setText(search);
-    setLoading(propLoading);
-  }, [data, search, propLoading]);
+  const { data, onItemClick } = props;
 
   return (
     <List
@@ -45,8 +34,7 @@ const StockList = (props) => {
         xxl: 6,
       }}
       size="small"
-      dataSource={list}
-      loading={loading}
+      dataSource={data}
       renderItem={stock => (
         <List.Item>
           <StockInfoCard 
@@ -63,14 +51,10 @@ const StockList = (props) => {
 
 StockList.propTypes = {
   data: PropTypes.array.isRequired,
-  search: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired,
   onItemClick: PropTypes.func,
 };
 
 StockList.defaultProps = {
-  search: '',
-  loading: false,
   onItemClick: () => {}
 };
 

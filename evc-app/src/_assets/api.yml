@@ -784,12 +784,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/data/sync:
-    post:
-      operationId: syncStockList
-      responses:
-        200:
-          description: OK
   /stock/data/mostactive:
     get:
       operationId: getMostActive

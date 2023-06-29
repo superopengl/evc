@@ -162,7 +162,7 @@ const StockForm = (props) => {
   }
 
   const handleCancel = () => {
-    props.history.push('/stock');
+    props.history.push('/');
   }
 
   const handleDelete = () => {

@@ -184,7 +184,7 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 });
 
 export const searchStockList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req, 'client', 'admin', 'agent');
   const query = req.body as StockSearchParams;
 
   const list = await searchStock(query);

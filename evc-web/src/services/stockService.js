@@ -151,10 +151,6 @@ export async function saveStockPublish(symbol, payload) {
   return httpPost(`stock/s/${symbol}/publish`, payload);
 }
 
-export async function syncStockList() {
-  return httpPost(`/stock/data/sync`);
-}
-
 export async function getMarketMostActive() {
   return httpGet(`/stock/data/mostactive`);
 }

@@ -54,7 +54,7 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
-const AdminStockListPage = (props) => {
+const StockListPage = (props) => {
 
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
   const [total, setTotal] = React.useState(0);
@@ -105,9 +105,8 @@ const AdminStockListPage = (props) => {
     searchByQueryInfo({ ...queryInfo, text });
   }
 
-  const handleSearchChange = async (value) => {
-    const text = value?.trim();
-    searchByQueryInfo({ ...queryInfo, text }, true);
+  const handleSelectedStock = (symbol) => {
+    props.history.push(`/stock/${symbol}`);
   }
 
   const handleTagFilterChange = (tags) => {
@@ -120,33 +119,17 @@ const AdminStockListPage = (props) => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      <HomeHeader>
+        <StockSearchInput
+          onChange={handleSelectedStock}
+          style={{ width: '100%', maxWidth: 400 }} />
+      </HomeHeader>
       <ContainerStyled>
         <Loading loading={loading}>
           <Space size="small" direction="vertical" style={{ width: '100%' }}>
             {/* <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Stock List</Title>
           </StyledTitleRow> */}
-            <Space style={{ width: '100%', justifyContent: 'space-between' }} >
-            {/* <StockSearchInput
-          onFetchData={handleSearch}
-          onChange={handleSearchChange}
-          style={{ width: '100%', maxWidth: 400 }} /> */}
-
-              <Input.Search
-                placeholder="input search text"
-                enterButton={<SearchOutlined />}
-                onSearch={value => handleSearch(value)}
-                onPressEnter={e => handleSearch(e.target.value)}
-                onChange={e => handleSearchChange(e.target.value)}
-                loading={false}
-                value={queryInfo?.text}
-                allowClear
-              />
-              {/* <Space>
-                <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
-              </Space> */}
-            </Space>
             <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
             <Pagination
               total={85}
@@ -174,8 +157,8 @@ const AdminStockListPage = (props) => {
   );
 };
 
-AdminStockListPage.propTypes = {};
+StockListPage.propTypes = {};
 
-AdminStockListPage.defaultProps = {};
+StockListPage.defaultProps = {};
 
-export default withRouter(AdminStockListPage);
+export default withRouter(StockListPage);

@@ -59,11 +59,11 @@ async function requestAndCache(apiPath: string, cacheStrategy: ICacheStrategy, o
   return data;
 }
 
-export async function syncStockSymbols() {
-  const data = await requestIexApi('/ref-data/symbols');
-  // const stocks = await request('/ref-data/region/us/symbols');
-  await updateDatabase(data);
-}
+// export async function syncStockSymbols() {
+//   const data = await requestIexApi('/ref-data/symbols');
+//   // const stocks = await request('/ref-data/region/us/symbols');
+//   await updateDatabase(data);
+// }
 
 export async function getMarketMostActive() {
   return await requestAndCache('/stock/market/list/mostactive', new FixedPeriodCacheStrategy('1 minute'));
@@ -92,7 +92,7 @@ export async function getInsiderTransactions(symbol: string) {
 
 export async function getNews(symbol: string) {
   const list = await requestAndCache(`/stock/${symbol}/news/last/10`, new FixedPeriodCacheStrategy('10 minute'));
-  return list
+  return (list ?? [])
     .filter(x => x.lang === 'en')
     .map(x => ({
       ...x,

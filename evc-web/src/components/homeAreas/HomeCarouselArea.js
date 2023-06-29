@@ -102,11 +102,8 @@ const HomeCarouselAreaRaw = props => {
     props.history.push('/signup')
   }
 
-  const handleFetchSearchedSymbol = async symbol => {
-    const data = await getStockHistory(symbol);
-    return data;
-  }
-  const handleSearchChange = async stock => {
+  const handleSearchChange = async symbol => {
+    const stock = await getStockHistory(symbol);
     setResultStock(stock);
   }
 
@@ -160,7 +157,6 @@ const HomeCarouselAreaRaw = props => {
           <Col {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <SearchPanel direction="vertical" >
               <StockSearchInput
-                onFetchData={handleFetchSearchedSymbol}
                 onChange={handleSearchChange}
                 traceSearch={true}
                  />

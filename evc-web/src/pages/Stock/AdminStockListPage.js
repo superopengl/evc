@@ -4,7 +4,7 @@ import { Typography, Layout, Space, Button, Input, Form, Modal, Pagination, List
 import HomeHeader from 'components/HomeHeader';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
-import { createStock, searchStock, syncStockList } from 'services/stockService';
+import { createStock, searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
@@ -60,7 +60,6 @@ const AdminStockListPage = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [visible, setVisible] = React.useState(false);
 
   const searchByQueryInfo = async (queryInfo, dryRun = false) => {
     try {
@@ -84,10 +83,6 @@ const AdminStockListPage = (props) => {
   React.useEffect(() => {
     searchByQueryInfo(queryInfo);
   }, []);
-
-  const addNewStock = () => {
-    setVisible(true);
-  }
 
   const handleCreateNew = async (values) => {
     if (loading) {
@@ -116,15 +111,11 @@ const AdminStockListPage = (props) => {
   }
 
   const handleTagFilterChange = (tags) => {
-    searchByQueryInfo({ ...queryInfo, tags });
+    searchByQueryInfo({ ...queryInfo, page: 1, tags });
   }
 
   const handlePaginationChange = (page, pageSize) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
-  }
-
-  const handleSyncStockList = () => {
-    syncStockList();
   }
 
   return (
@@ -152,10 +143,9 @@ const AdminStockListPage = (props) => {
                 value={queryInfo?.text}
                 allowClear
               />
-              <Space>
-                <Button ghost type="primary" icon={<SyncOutlined />} onClick={() => handleSyncStockList()}>Sync Stock List</Button>
+              {/* <Space>
                 <Button ghost type="primary" icon={<PlusOutlined />} onClick={() => addNewStock()}></Button>
-              </Space>
+              </Space> */}
             </Space>
             <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
             <Pagination
@@ -180,39 +170,6 @@ const AdminStockListPage = (props) => {
           </Space>
         </Loading>
       </ContainerStyled>
-      <Modal
-        visible={visible}
-        closable={true}
-        maskClosable={false}
-        destroyOnClose={true}
-        title="New Stock"
-        footer={null}
-        width={300}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-      >
-        <Loading loading={loading}>
-          <Form
-            layout="vertical"
-            onFinish={handleCreateNew}
-          // onValuesChange={handleValuesChange}
-          // style={{ textAlign: 'left' }}
-          >
-            <Form.Item label="Symbol" name="symbol" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-              <Input placeholder="Stock symbol" allowClear={true} maxLength="100" />
-            </Form.Item>
-            <Form.Item label="Company Name" name="company" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-              <Input placeholder="Company name" autoComplete="family-name" allowClear={true} maxLength="100" />
-            </Form.Item>
-            {/* <Form.Item label="Tags" name="tags" rules={[{ required: false }]}>
-              <StockTagSelect />
-            </Form.Item> */}
-            <Form.Item>
-              <Button type="primary" block htmlType="submit">Create</Button>
-            </Form.Item>
-          </Form>
-        </Loading>
-      </Modal>
     </LayoutStyled>
   );
 };

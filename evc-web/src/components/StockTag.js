@@ -16,33 +16,26 @@ const ClicableTag = styled(Tag)`
 
 const StockTag = (props) => {
 
-  const { children, clickable, checked, color: propColor, onClick, ...other } = props;
+  const { children, clickable, checked, color: propColor, style: propStyle, onClick, ...other } = props;
 
   const style = {
     color: tinycolor(propColor).isLight() ? '#000000' : '#ffffff',
     backgroundColor: propColor,
+    textAlign: 'center',
     border: `1px solid ${propColor}`,
+    ...propStyle,
   }
-  
+
   const TagComponent = clickable ? ClicableTag : Tag;
 
   return (
-    <TagComponent 
+    <TagComponent
       onClick={onClick}
-      style={{
-      // padding: '6px 16px', 
-      // borderRadius: 30, 
-      ...style,
-      // fontWeight: 'bold',
-      // width: '100%',
-      textAlign: 'center',
-      // fontWeight: checked ? 'bold' : 'normal',
-      // border: 'none'
-      }}
+      style={style}
       {...other}
-      >
-      {children}{checked && <CheckOutlined style={{marginLeft: 10}}/>}
-      </TagComponent>
+    >
+      {children}{checked && <CheckOutlined style={{ marginLeft: 10 }} />}
+    </TagComponent>
   );
 };
 
@@ -57,7 +50,7 @@ StockTag.propTypes = {
 StockTag.defaultProps = {
   checked: false,
   clickable: false,
-  onClick: () => {}
+  onClick: () => { }
 };
 
 export default StockTag;

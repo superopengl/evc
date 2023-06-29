@@ -13,7 +13,7 @@ import { getRepository } from 'typeorm';
 import { Stock } from '../src/entity/Stock';
 import { StockTag } from '../src/entity/StockTag';
 
-async function prepareStockTag(tagName: string): Promise<StockTag> {
+async function feedOneStockTag(tagName: string): Promise<StockTag> {
   const repo = getRepository(StockTag);
   let tag = await repo.findOne({ name: tagName });
   if (!tag) {
@@ -27,7 +27,7 @@ async function prepareStockTag(tagName: string): Promise<StockTag> {
   return tag;
 }
 
-async function prepareStock(symbol: string, company: string, tag: StockTag): Promise<Stock> {
+async function feedOneStock(symbol: string, company: string, tag: StockTag): Promise<Stock> {
   const repo = getRepository(Stock);
   let stock = await repo.findOne(symbol, { relations: ['tags'] });
   if (!stock) {
@@ -45,6 +45,27 @@ async function prepareStock(symbol: string, company: string, tag: StockTag): Pro
   return stock;
 }
 
+async function parseStockDataFromFile(filePath): Promise<Array<{ symbol: string, company: string }>> {
+  const stocks = [];
+  const stream = fs.createReadStream(filePath)
+    .pipe(csv())
+    .on('data', async data => {
+      const stock = {
+        symbol: data.Symbol,
+        company: data.Name
+      };
+      stocks.push(stock);
+    });
+
+  return new Promise((res, rej) => {
+    stream.on('end', () => {
+      res(stocks);
+    }).on('error', err => {
+      rej(err);
+    });
+  })
+}
+
 const CSV_DIR_PATH = path.resolve(__dirname, 'init-stock-list');
 
 async function feedInitStockList() {
@@ -54,16 +75,13 @@ async function feedInitStockList() {
     files.push(filePath);
   });
 
-  for(const filePath of files) {
+  for (const filePath of files) {
     const tagName = path.basename(filePath, '.csv');
-    const tag = await prepareStockTag(tagName);
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on('data', async data => {
-        const symbol = data.Symbol;
-        const company = data.Name;
-        await prepareStock(symbol, company, tag);
-      });
+    const tag = await feedOneStockTag(tagName);
+    const stocks = await parseStockDataFromFile(filePath);
+    for (const stock of stocks) {
+      await feedOneStock(stock.symbol, stock.company, tag);
+    }
   }
 }
 

@@ -114,7 +114,6 @@ const DEFAULT_SELECTED = {
 
 const StockForm = (props) => {
   const { symbol, onOk } = props;
-  const formRef = React.createRef();
   const [loading, setLoading] = React.useState(true);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
   const [drawerVisible, setDrawerVisible] = React.useState(false);
@@ -398,7 +397,6 @@ const StockForm = (props) => {
             onChange={list => setEpsList(list)}
             onSelected={updateSelectedByEps}
             getClassNameOnSelect={getClassNameOnSelectForEpsItem}
-            ref={epsEditorRef}
           />
         </ColInnerCard>
       </ColStyled>

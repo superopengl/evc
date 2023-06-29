@@ -48,17 +48,18 @@ const StockTagFilter = (props) => {
 
   return (
     <Loading loading={loading}>
-      <Space size="small" style={{padding: '1rem 0'}}>
+      <div style={{padding: '1rem 0'}}>
         {allTags.map((t, i) => <StockTag
           key={i}
           color={t.color}
           clickable={true}
+          style={{marginBottom: 10}}
           checked={isSelected(t)}
           onClick={() => toggleSelected(t)}
         >
           {t.name}
         </StockTag>)}
-      </Space>
+      </div>
     </Loading>
   );
 };

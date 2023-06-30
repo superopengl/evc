@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Typography, Space, Row, Col, Tooltip, Modal } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { DeleteOutlined, EyeOutlined, QuestionCircleFilled } from '@ant-design/icons';
+import { StarOutlined, StarFilled, QuestionCircleFilled } from '@ant-design/icons';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { TimeAgo } from 'components/TimeAgo';
+import { StockWatchButton } from 'components/StockWatchButton';
 import { StockName } from './StockName';
 import { searchSingleStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
+import { GlobalContext } from '../contexts/GlobalContext';
 
 const { Paragraph, Text } = Typography;
 
@@ -20,22 +22,30 @@ const StockInfoCard = (props) => {
 
   const { value: stock, title, hoverable, actions } = props;
 
-  // const [stock, setStock] = React.useState(value);
+  const [watched, setWatched] = React.useState(stock?.watched);
+  const context = React.useContext(GlobalContext);
+  const { user, role, setUser, notifyCount } = context;
+  const isClient = role === 'client';
 
-  // const loadEntity = async () => {
-  //   setStock(await searchSingleStock(value.symbol));
-  // }
 
-  // React.useEffect(() => {
-  //   setStock(value);
-  // }, [value]);
+  const handleWatchOrUnwatch = async watching => {
+    if (watching) {
+      await watchStock(stock.symbol);
+    } else {
+      await unwatchStock(stock.symbol);
+    }
+    setWatched(watching);
+  }
 
   return (
     <Card
       size="small"
       bordered={false}
       type="inner"
-      title={title ?? <StockName value={stock} />}
+      title={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {title ?? <StockName value={stock} />}
+        {isClient && <StockWatchButton value={watched} onChange={handleWatchOrUnwatch} />}
+      </Space>}
       onClick={props.onClick}
       hoverable={hoverable}
       actions={actions}

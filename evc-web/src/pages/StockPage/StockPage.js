@@ -22,7 +22,6 @@ import { List } from 'antd';
 import StockCardClientSearch from 'components/StockCardClientSearch';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { StockName } from 'components/StockName';
-import StockClientPanel from 'components/StockClientPanel';
 import { DeleteOutlined, EditOutlined, LockFilled, EyeInvisibleOutlined, SyncOutlined } from '@ant-design/icons';
 import StockInfoCard from 'components/StockInfoCard';
 import { FaCrown } from 'react-icons/fa';
@@ -167,9 +166,8 @@ const StockPage = (props) => {
               // <Button key="2" disabled={loading} onClick={() => setDrawerVisible(true)} icon={<EditOutlined />} />
             ]}
           />
-          {/* <StockClientPanel value={stock} /> */}
           <Space direction="vertical" style={{ width: '100%' }}>
-            <Text type="secondary">Electronic Technology</Text>
+            {/* <Text type="secondary">Electronic Technology</Text> */}
             <StockQuotePanel symbol={stock.symbol} />
             {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
 

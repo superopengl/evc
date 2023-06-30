@@ -7,4 +7,5 @@ export type StockSearchParams = {
   orderDirection?: 'ASC' | 'DESC';
   page?: number;
   size?: number;
+  watchOnly?: boolean;
 };

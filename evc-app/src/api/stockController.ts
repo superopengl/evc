@@ -78,7 +78,9 @@ export const getStock = handlerWrapper(async (req, res) => {
 
 export const searchSingleStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
+  // const { user: { id, role } } = req as any;
   const { symbol } = req.params;
+  // const option: SearchStockOption = role === 'client' ? {includesWatchForUserId: id} : null;
 
   const result = await searchStock({ symbols: [symbol] });
   const stock = result.data[0];
@@ -184,9 +186,11 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 
 export const searchStockList = handlerWrapper(async (req, res) => {
   assertRole(req, 'client', 'admin', 'agent');
+  const { user: { id, role } } = req as any;
   const query = req.body as StockSearchParams;
+  const includesWatchForUserId = role === 'client' ? id : null;
 
-  const list = await searchStock(query);
+  const list = await searchStock(query, includesWatchForUserId);
 
   res.json(list);
 });

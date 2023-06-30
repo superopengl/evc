@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout } from 'antd';
+import { Typography, Layout, Divider } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import StockList from '../../components/StockList';
 import { getWatchList } from 'services/stockService';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { StockSearchInput } from 'components/StockSearchInput';
+
+const {Paragraph} = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -35,6 +37,10 @@ const StockWatchListPage = (props) => {
     try {
       setLoading(true);
       const resp = await getWatchList();
+      if(!resp?.data?.length) {
+        // Go to /stock page if nothing gets watched.
+        props.history.push('/stock');
+      }
       ReactDOM.unstable_batchedUpdates(() => {
         const { data } = resp;
         setList(data);
@@ -61,6 +67,8 @@ const StockWatchListPage = (props) => {
           style={{ width: '100%', maxWidth: 400 }} />
       </HomeHeader>
       <ContainerStyled>
+        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">All Stocks</Link> to see all the stocks our platform supports</Paragraph>
+        <Divider />
         <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
       </ContainerStyled>
     </LayoutStyled>

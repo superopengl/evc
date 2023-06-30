@@ -13,8 +13,8 @@ import { GlobalContext } from '../contexts/GlobalContext';
 const { Paragraph, Text } = Typography;
 
 
-const TooltipIcon = props => <Tooltip title={props.message}>
-  <QuestionCircleFilled />
+const TooltipLabel = props => <Tooltip title={props.message}>
+  <Text type="secondary">{props.children}</Text>
 </Tooltip>
 
 
@@ -53,7 +53,8 @@ const StockInfoCard = (props) => {
       <Space direction="vertical" style={{ width: '100%' }}>
         <Row>
           <Col span={10}>
-            <Text type="secondary">Fair Value</Text> <TooltipIcon message="How to use fair value" />
+            <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel> 
+            {/* <TooltipIcon message="How to use fair value" /> */}
           </Col>
           <Col span={14}>
             <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} loTrend={stock.fairValueLoTrend} hiTrend={stock.fairValueHiTrend} />
@@ -61,7 +62,8 @@ const StockInfoCard = (props) => {
         </Row>
         <Row>
           <Col span={10}>
-            <Text type="secondary">Support</Text> <TooltipIcon message="How to use support" />
+            <TooltipLabel message="How to use support">Support</TooltipLabel> 
+            {/* <TooltipIcon message="How to use support" /> */}
           </Col>
           <Col span={14}>
             <Space size="small" direction="vertical">
@@ -72,7 +74,8 @@ const StockInfoCard = (props) => {
         </Row>
         <Row>
           <Col span={10}>
-            <Text type="secondary">Resistance</Text> <TooltipIcon message="How to use resistance" />
+            <TooltipLabel message="How to use resistance">Resistance</TooltipLabel> 
+            {/* <TooltipIcon message="How to use resistance" /> */}
           </Col>
           <Col span={14}>
             <Space size="small" direction="vertical">

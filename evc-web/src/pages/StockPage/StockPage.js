@@ -1,4 +1,4 @@
-import { Button, Layout, Modal, Space, Typography, Row, Col, Card, PageHeader } from 'antd';
+import { Button, Layout, Modal, Space, Typography, Row, Col, Card, PageHeader, Drawer } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -95,7 +95,8 @@ const StockPage = (props) => {
   const [taskListByPortfolioMap, setTaskListByPortfolioMap] = React.useState({});
   const [searchList, setSearchList] = React.useState([]);
   const [watchList, setWatchList] = React.useState([]);
-  const [key, setKey] = React.useState(0);
+  const [newsVisible, setNewsVisible] = React.useState(false);
+  const [insiderVisible, setInsiderVisible] = React.useState(false);
 
   const isAdminOrAgent = ['admin', 'agent'].includes(role);
 
@@ -155,6 +156,8 @@ const StockPage = (props) => {
             onBack={() => props.history.push('/')}
             title={<StockName value={stock} />}
             extra={[
+              <Button key="insider" type="primary" ghost onClick={() => setInsiderVisible(true)}>Insider Transactions <MemberOnlyIcon /></Button>,
+              <Button key="news" type="primary" ghost onClick={() => setNewsVisible(true)}>News</Button>,
               <Button key="sync" type="primary" ghost icon={<SyncOutlined />} onClick={handleRefresh} />,
               <Button key="unwatch" type="primary" ghost icon={<EyeInvisibleOutlined />} onClick={handleUnwatch} />
 
@@ -171,17 +174,12 @@ const StockPage = (props) => {
             {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
 
             <Row gutter={20}>
-              <Col {...span}>
+              {!isAdminOrAgent && <Col {...span}>
                 <StockInfoCard value={stock} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
-              </Col>
+              </Col>}
               <Col {...span}>
                 <Card size="small" type="inner" title="Chart">
                   <StockChart symbol={stock.symbol} type="1d" />
-                </Card>
-              </Col>
-              <Col {...span}>
-                <Card size="small" type="inner" title={<>Insider Transactions  <MemberOnlyIcon /></>}>
-                  <StockInsiderPanel symbol={stock.symbol} />
                 </Card>
               </Col>
               <Col {...span}>
@@ -195,15 +193,32 @@ const StockPage = (props) => {
                   <StockEarningsPanel symbol={stock.symbol} />
                 </Card>
               </Col>
-              <Col {...span}>
-                <Card size="small" type="inner" title={<>News</>}>
-                  <StockNewsPanel symbol={stock.symbol} />
-                </Card>
-              </Col>
             </Row>
           </Space>
         </>}
       </ContainerStyled>
+      <Drawer
+        visible={newsVisible && stock}
+        title="News"
+        destroyOnClose={true}
+        closable={true}
+        maskClosable={true}
+        onClose={() => setNewsVisible(false)}
+        width="80vw"
+      >
+        {stock && <StockNewsPanel symbol={stock.symbol} />}
+      </Drawer>
+      <Drawer
+        visible={insiderVisible && stock}
+        title="Insider Transactions"
+        destroyOnClose={true}
+        closable={true}
+        maskClosable={true}
+        onClose={() => setInsiderVisible(false)}
+        width="80vw"
+      >
+        {stock && <StockInsiderPanel symbol={stock.symbol} />}
+      </Drawer>
     </LayoutStyled >
   );
 };

@@ -55,7 +55,7 @@ const HomeMarketArea = props => {
   return (
     <Container>
       <InnerContainer>
-        <Row gutter={20}>
+        <Row gutter={30}>
           <Col {...span}>
             <StockMostPanel onFetch={getMarketMostActive} title="Most Actives" />
             </Col>

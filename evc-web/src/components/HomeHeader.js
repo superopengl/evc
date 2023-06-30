@@ -118,13 +118,14 @@ const HomeHeaderRaw = props => {
             onClick={handleClick}
             selectedKeys={[current]}
             mode="horizontal" style={{ border: 0 }}>
-            {isGuest && <Menu.Item key="home"><HashLink to="/#home">Home</HashLink></Menu.Item>}
+            {isClient && <Menu.Item key="favorite"><Link to="/">Favorite</Link></Menu.Item>}
+            {isClient && <Menu.Item key="stock"><Link to="/stock">All Stocks</Link></Menu.Item>}
             {isGuest && <Menu.Item key="services"><HashLink to="/#services">Services</HashLink></Menu.Item>}
             {/* {isGuest && <Menu.Item key="blog"><HashLink to="/blogs">Blog</HashLink></Menu.Item>} */}
             {isGuest && <Menu.Item key="signup"><Link to="/signup">Sign Up</Link></Menu.Item>}
             {isGuest && <Menu.Item key="login"><Link to="/login">Log In</Link></Menu.Item>}
             {/* {(isAdmin || isAgent) && <Menu.Item key="board"><Link to="/board">Board</Link></Menu.Item>} */}
-            {isClient && <Menu.Item key="landing"><Link to="/">Home</Link></Menu.Item>}
+            {/* {isClient && <Menu.Item key="landing"><Link to="/">Home</Link></Menu.Item>} */}
             {isAdmin && <Menu.Item key="stocks"><Link to="/">Stocks</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="user"><Link to="/user">Users</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="stock"><Link to="/stock">Stocks</Link></Menu.Item>} */}
@@ -177,6 +178,8 @@ const HomeHeaderRaw = props => {
             mode="inline"
             style={{ border: 0 }}
           >
+            {isClient && <Menu.Item key="favorite"><LoginOutlined /> <Link to="/">Favorite</Link></Menu.Item>}
+            {isClient && <Menu.Item key="stock"><LoginOutlined /> <Link to="/stock">All Stocks</Link></Menu.Item>}
             {isGuest && <Menu.Item key="login"><LoginOutlined /> <Link to="/login">Log In</Link></Menu.Item>}
             {isGuest && <Menu.Item key="signup"><UserAddOutlined /> <Link to="/signup">Sign Up</Link></Menu.Item>}
             {/* {isAdmin && <Menu.Item key="admin"><SettingOutlined /> <Link to="/admin">Admin</Link></Menu.Item>} */}

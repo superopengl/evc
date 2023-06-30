@@ -35,6 +35,7 @@ import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
 import StockListPage from 'pages/Stock/StockListPage';
+import StockWatchListPage from 'pages/Stock/StockWatchListPage';
 import { ContactWidget } from 'components/ContactWidget';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import { getEventSource } from 'services/eventSourceService';
@@ -104,7 +105,7 @@ class App extends React.Component {
       <GlobalContext.Provider value={this.state}>
         <BrowserRouter basename="/">
           <Switch>
-            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : StockListPage} />
+            <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : isClient ? StockWatchListPage : StockListPage} />
             <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
@@ -130,6 +131,7 @@ class App extends React.Component {
             <RoleRoute visible={isAdmin} loading={loading} exact path="/config" component={ConfigListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
+            <RoleRoute visible={isClient} loading={loading} path="/stock" exact component={StockListPage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />
             {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
             <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />

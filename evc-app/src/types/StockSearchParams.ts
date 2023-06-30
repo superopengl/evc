@@ -8,4 +8,5 @@ export type StockSearchParams = {
   page?: number;
   size?: number;
   watchOnly?: boolean;
+  noCount?: boolean;
 };

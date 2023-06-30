@@ -13,6 +13,8 @@ import { Loading } from './Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { filter, debounceTime } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
+import ReactDOM from "react-dom";
+import * as _ from 'lodash';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -32,11 +34,14 @@ const StockQuotePanel = (props) => {
     try {
       setLoading(true);
       const quote = await getStockQuote(symbol) ?? {};
-      setQuote(quote);
-      setCurrentPrice(quote.latestPrice);
-      setPreviousPrice(quote.latestPrice - quote.change);
-      setUpdateTime(quote.latestUpdate);
-    } finally {
+      ReactDOM.unstable_batchedUpdates(() => {
+        setQuote(quote);
+        setCurrentPrice(quote.latestPrice);
+        setPreviousPrice(quote.latestPrice - quote.change);
+        setUpdateTime(quote.latestUpdate);
+        setLoading(false);
+      });
+    } catch {
       setLoading(false);
     }
   }
@@ -81,6 +86,9 @@ const StockQuotePanel = (props) => {
   }
 
   const getDeltaComponent = (changeValue, changePrecent) => {
+    if(_.isEmpty(changeValue) || _.isEmpty(changePrecent)) {
+      return null;
+    }
     if (changeValue === 0) {
       return <Text type="secondary">0 (0%)</Text>
     }

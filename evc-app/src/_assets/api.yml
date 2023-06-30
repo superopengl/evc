@@ -394,22 +394,15 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/chart/intraday:
+  /stock/s/{symbol}/chart/{period}:
     get:
-      operationId: getStockChartIntraday
+      operationId: getStockChart
       parameters:
         - name: symbol
           in: path
           type: string
           required: true
-      responses:
-        200:
-          description: OK
-  /stock/s/{symbol}/chart/5d:
-    get:
-      operationId: getStockChart5D
-      parameters:
-        - name: symbol
+        - name: period
           in: path
           type: string
           required: true

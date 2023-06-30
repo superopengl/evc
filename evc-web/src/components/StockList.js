@@ -26,8 +26,8 @@ const StockList = (props) => {
     <List
       grid={{
         gutter: 10,
-        xs: 2,
-        sm: 3,
+        xs: 1,
+        sm: 2,
         md: 3,
         lg: 4,
         xl: 4,

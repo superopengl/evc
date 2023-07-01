@@ -67,8 +67,7 @@ const StockWatchListPage = (props) => {
           style={{ width: '100%', maxWidth: 400 }} />
       </HomeHeader>
       <ContainerStyled>
-        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">All Stocks</Link> to see all the stocks our platform supports</Paragraph>
-        <Divider />
+        <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">All Stocks</Link> to find all the stocks our platform supports</Paragraph>
         <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
       </ContainerStyled>
     </LayoutStyled>

@@ -32,6 +32,8 @@ import StockEarningsPanel from 'components/StockEarningsPanel';
 import StockChart from 'components/charts/StockChart';
 import StockQuotePanel from 'components/StockQuotePanel';
 import AdminStockPublishPanel from '../Stock/AdminStockPublishPanel';
+import { StockWatchButton } from 'components/StockWatchButton';
+import ReactDOM from "react-dom";
 
 const { Paragraph, Text } = Typography;
 
@@ -89,6 +91,7 @@ const StockPage = (props) => {
   const { user, role, setUser } = context;
   const isProfileMissing = !isProfileComplete(user);
   const [stock, setStock] = React.useState();
+  const [watched, setWatched] = React.useState();
   const [loading, setLoading] = React.useState(true);
   const [searchResult, setSearchResult] = React.useState();
   const [taskListByPortfolioMap, setTaskListByPortfolioMap] = React.useState({});
@@ -98,13 +101,19 @@ const StockPage = (props) => {
   const [insiderVisible, setInsiderVisible] = React.useState(false);
 
   const isAdminOrAgent = ['admin', 'agent'].includes(role);
+  const isClient = role === 'client';
 
   const loadEntity = async () => {
     try {
       setLoading(true);
       // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
-      setStock(await getStock(symbol));
-    } finally {
+      const stock = await getStock(symbol);
+      ReactDOM.unstable_batchedUpdates(() => {
+        setStock(stock);
+        setWatched(stock.watched);
+        setLoading(false);
+      });
+    } catch {
       setLoading(false);
     }
   }
@@ -113,32 +122,14 @@ const StockPage = (props) => {
     loadEntity()
   }, []);
 
-
-  const handleCloseSearchResult = () => {
-    setSearchResult(null);
-  }
-
-  const handleAddToWatchlist = async (stock) => {
-    setSearchResult(null);
-    await watchStock(stock.symbol);
-    setWatchList([...watchList, stock]);
-  }
-
-  const handleUnwatch = async () => {
-    Modal.confirm({
-      title: <>Remove <StockName value={stock} /> from watchlist</>,
-      async onOk() {
-        await unwatchStock(stock.symbol);
-        setWatchList(watchList.filter(x => x.symbol !== stock.symbol));
-      },
-      maskClosable: true,
-      okText: 'Yes, unwatch it',
-      okButtonProps: {
-        danger: true
-      },
-      onCancel() {
-      },
-    });
+  const handleToggleWatch = async watching => {
+    stock.watched = watching;
+    if (watching) {
+      await watchStock(stock.symbol);
+    } else {
+      await unwatchStock(stock.symbol);
+    }
+    setWatched(watching);
   }
 
   const handleRefresh = () => {
@@ -152,13 +143,12 @@ const StockPage = (props) => {
         {loading ? <Loading /> : <>
           <PageHeader
             ghost={false}
-            onBack={() => props.history.push('/')}
-            title={<StockName value={stock} />}
+            onBack={() => props.history.goBack()}
+            title={<Space size="middle"><StockName value={stock} />{isClient && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}</Space>}
             extra={[
               <Button key="insider" type="primary" ghost onClick={() => setInsiderVisible(true)}>Insider Transactions <MemberOnlyIcon /></Button>,
               <Button key="news" type="primary" ghost onClick={() => setNewsVisible(true)}>News</Button>,
               <Button key="sync" type="primary" ghost icon={<SyncOutlined />} onClick={handleRefresh} />,
-              <Button key="unwatch" type="primary" ghost icon={<EyeInvisibleOutlined />} onClick={handleUnwatch} />
 
               // <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
               // <Button key="1" disabled={loading} onClick={() => handleSyncEps()} loading={epsSyncing}>Sync Last 4 EPS</Button>,
@@ -173,7 +163,7 @@ const StockPage = (props) => {
 
             <Row gutter={20}>
               {!isAdminOrAgent && <Col {...span}>
-                <StockInfoCard value={stock} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
+                <StockInfoCard value={stock} showWatch={false} title={<>EVC Fair Value / Support / Resistance <MemberOnlyIcon /></>} />
               </Col>}
               <Col {...span}>
                 <Card size="small" type="inner" title="Chart">

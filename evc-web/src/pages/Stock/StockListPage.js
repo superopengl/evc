@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Space, Button, Input, Form, Modal, Pagination, List } from 'antd';
+import { Typography, Layout, Space, Checkbox, Input, Form, Radio, Pagination, List } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
@@ -62,7 +62,7 @@ const StockListPage = (props) => {
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  const updateWithResponse = loadResponse => {
+  const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
       const { count, page, data } = loadResponse;
       ReactDOM.unstable_batchedUpdates(() => {
@@ -79,7 +79,7 @@ const StockListPage = (props) => {
       if (!dryRun) {
         setLoading(true);
         const resp = await searchStock(queryInfo);
-        updateWithResponse(resp);
+        updateWithResponse(resp, queryInfo);
       } else {
         setQueryInfo(queryInfo);
       }
@@ -106,6 +106,19 @@ const StockListPage = (props) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
+  const handleValueTypeChange = (e) => {
+    searchByQueryInfo({ ...queryInfo, valueType: e.target.value });
+  }
+
+  const handleToggleOverValued = e => {
+    const checked = e.target.checked;
+    searchByQueryInfo({ ...queryInfo, overValued: checked });
+  }
+
+  const handleToggleUnderValued = e => {
+    const checked = e.target.checked;
+    searchByQueryInfo({ ...queryInfo, underValued: checked });
+  }
   return (
     <LayoutStyled>
       <HomeHeader>
@@ -115,27 +128,29 @@ const StockListPage = (props) => {
       </HomeHeader>
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
+          <Space>
+            <Checkbox onChange={handleToggleOverValued}>Over valued</Checkbox>
+            <Checkbox onChange={handleToggleUnderValued}>Under valued</Checkbox>
+          </Space>
           <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Pagination
-              total={85}
-              current={queryInfo.page}
-              pageSize={queryInfo.size}
-              total={total}
-              defaultCurrent={queryInfo.page}
-              defaultPageSize={queryInfo.size}
-              pageSizeOptions={[10, 20, 50]}
-              showSizeChanger
-              showQuickJumper
-              showTotal={total => `Total ${total}`}
-              disabled={loading}
-              onChange={handlePaginationChange}
-              onShowSizeChange={(current, size) => {
-                searchByQueryInfo({ ...queryInfo, page: current, size });
-              }}
-            />
-          </Space>
+          <Pagination
+            total={85}
+            current={queryInfo.page}
+            pageSize={queryInfo.size}
+            total={total}
+            defaultCurrent={queryInfo.page}
+            defaultPageSize={queryInfo.size}
+            pageSizeOptions={[10, 20, 50]}
+            showSizeChanger
+            showQuickJumper
+            showTotal={total => `Total ${total}`}
+            disabled={loading}
+            onChange={handlePaginationChange}
+            onShowSizeChange={(current, size) => {
+              searchByQueryInfo({ ...queryInfo, page: current, size });
+            }}
+          />
         </Space>
       </ContainerStyled>
     </LayoutStyled>

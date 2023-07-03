@@ -1,24 +1,19 @@
 import errorToJson from 'error-to-json';
 import * as EventSource from 'eventsource';
-import * as dotenv from 'dotenv';
 import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService';
-import { redisCache } from '../src/services/redisCache';
 import { StockLastPriceInfo } from '../src/types/StockLastPriceInfo';
 import 'colors';
 import { start } from './jobStarter';
-import { getManager, getConnection, getRepository } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { StockLastPrice } from '../src/entity/StockLastPrice';
-import { connectDatabase } from '../src/db';
-import { executeSqlStatement } from './executeSqlStatement';
-import * as moment from 'moment';
 import { Stock } from '../src/entity/Stock';
 import { combineLatest, Subject } from 'rxjs';
-import { throttleTime, debounceTime, startWith } from 'rxjs/operators';
+import { debounceTime, startWith } from 'rxjs/operators';
 
 const JOB_NAME = 'price-sse';
-const publisher = new RedisRealtimePricePubService();
 const CLIENT_EVENT_FREQUENCY = 2 * 1000; //2 seconds
 const DB_UPDATE_FREQUENCY = 10 * 1000;  // 10 seconds.
+const redisPricePublisher = new RedisRealtimePricePubService();
 let symbolSourceMap: Map<string, Subject<StockLastPriceInfo>>;
 
 function createSourceForClientPublish() {
@@ -32,7 +27,7 @@ function createSourceForClientPublish() {
         type: 'price',
         data: p
       }
-      publisher.publish(event);
+      redisPricePublisher.publish(event);
     })
   return source$;
 }
@@ -87,7 +82,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
 
 async function publishPriceEventsToClient(priceList: StockLastPriceInfo[]) {
   for (const p of priceList) {
-    p.symbol = 'GOOG';
+    // p.symbol = 'GOOG';
     const subject$ = symbolSourceMap.get(p.symbol);
     if (subject$) {
       subject$.next(p);

@@ -76,7 +76,7 @@ const columnDef = [
   {
     title:  <div style={{width: '100%', textAlign: 'right'}}>Last price</div>,
     dataIndex: 'latestPrice',
-    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><Text>{value.toFixed(4)}</Text></div>
+    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><Text>{value?.toFixed(2)}</Text></div>
   },
   {
     title: <div style={{width: '100%', textAlign: 'right'}}>Change</div>,

@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import { Button, Space } from 'antd';
 import ReactDOM from "react-dom";
+import { Loading } from 'components/Loading';
 
 const StockChart = props => {
   const { symbol, type: propPeriod } = props;
@@ -122,14 +123,14 @@ const StockChart = props => {
     ]
   }
 
-  return <>
+  return <Loading loading={loading}>
     <Space style={{ justifyContent: 'flex-end', width: '100%' }}>
       {periods.map(p => <Button type="link" key={p} onClick={() => handleChangePeriod(p)} disabled={p === period}>{p}</Button>)}
 
     </Space>
     {/* <Area {...config}/> */}
     <DualAxes {...configDual} />
-  </>
+  </Loading>
 }
 
 StockChart.propTypes = {

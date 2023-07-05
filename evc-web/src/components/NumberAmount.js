@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from 'antd';
+import * as _ from 'lodash';
 
 const { Text } = Typography;
 
@@ -8,6 +9,11 @@ const { Text } = Typography;
 const MoneyAmount = (props) => {
 
   const { value, postfix, digital, ...other } = props;
+
+  // if(_.isEmpty(value)) {
+  //   return null;
+  // }
+
   const isGreen = value >= 0;
   return (
     <Text type={isGreen ? 'success' : 'danger'} {...other}>
@@ -17,7 +23,7 @@ const MoneyAmount = (props) => {
 };
 
 MoneyAmount.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   postfix: PropTypes.string,
   digital: PropTypes.number,
 };

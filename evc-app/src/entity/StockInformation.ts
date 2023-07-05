@@ -6,6 +6,7 @@ import { StockSupportLong } from './StockSupportLong';
 import { StockResistanceShort } from './StockResistanceShort';
 import { StockResistanceLong } from './StockResistanceLong';
 import { StockFairValue } from './StockFairValue';
+import { StockLastPrice } from './StockLastPrice';
 
 
 @ViewEntity({
@@ -56,8 +57,14 @@ import { StockFairValue } from './StockFairValue';
     )
     .addSelect('sfv.lo as "fairValueLo"')
     .addSelect('sfv.hi as "fairValueHi"')
+    .leftJoin(q => q.from(StockLastPrice, 'slp'),
+      'slp', 'slp.symbol = s.symbol'
+    )
+    .addSelect('slp.price as price')
+    .addSelect('CASE WHEN slp.price < sss.lo THEN TRUE ELSE FALSE END as "isUnder"')
+    .addSelect('CASE WHEN slp.price > srs.hi THEN TRUE ELSE FALSE END as "isOver"')
 })
-export class ViewStockPublish {
+export class StockInformation {
   @ViewColumn()
   symbol: string;
 
@@ -99,4 +106,13 @@ export class ViewStockPublish {
 
   @ViewColumn()
   fairValueHi: number;
+
+  @ViewColumn()
+  price: number;
+
+  @ViewColumn()
+  isUnder: boolean;
+
+  @ViewColumn()
+  isOver: boolean;
 }

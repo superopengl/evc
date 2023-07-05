@@ -77,8 +77,8 @@ const StockEpsTimelineEditor = (props, ref) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      {/* <StockEpsInput onSave={handleSave} disabled={loading} /> */}
       <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Sync Last 4 EPS</Button>
+      <StockEpsInput onSave={handleSave} disabled={loading} />
       <List
         dataSource={list}
         loading={loading}
@@ -102,7 +102,7 @@ const StockEpsTimelineEditor = (props, ref) => {
             <List.Item.Meta
               description={<Space>
                 <Text type="secondary">{item.year} Q{item.quarter}</Text>
-                <MoneyAmount value={item.value}/>
+                <MoneyAmount symbol="" value={item.value}/>
               </Space>}
             />
           </List.Item>

@@ -40,7 +40,7 @@ import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
-import { StockInformation } from '../entity/StockInformation';
+import { StockGuestPublishInformation, StockLastPublishInformation } from '../entity/StockLastPublishInformation';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -92,8 +92,7 @@ export const searchSingleStock = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   // const option: SearchStockOption = role === 'client' ? {includesWatchForUserId: id} : null;
 
-  const result = await searchStock({ symbols: [symbol] });
-  const stock = result.data[0];
+  const stock = await getRepository(StockLastPublishInformation).findOne({symbol});
 
   assert(stock, 404);
 
@@ -172,7 +171,7 @@ export const listHotStock = handlerWrapper(async (req, res) => {
 
   const list = await getManager()
     .createQueryBuilder()
-    .from(StockInformation, 'si')
+    .from(StockGuestPublishInformation, 'si')
     .innerJoin(q => q.from(StockHotSearch, 'h')
       .orderBy('h.count', 'DESC')
       .limit(limit), 'h', `si.symbol = h.symbol`

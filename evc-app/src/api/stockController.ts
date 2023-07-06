@@ -7,7 +7,7 @@ import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 import * as moment from 'moment';
-import { StockSearch } from '../entity/StockSearch';
+import { StockHotSearch } from '../entity/StockHotSearch';
 import { logError } from '../utils/logger';
 import * as geoip from 'geoip-lite';
 import * as uaParser from 'ua-parser-js';
@@ -40,28 +40,21 @@ import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
+import { StockInformation } from '../entity/StockInformation';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
-export const incrementStock = handlerWrapper(async (req, res) => {
+export const incrementStock = handlerWrapper((req, res) => {
   const symbol = req.params.symbol.toUpperCase();
-  const { user } = req as any;
 
-  const stock = await getRepository(Stock).findOne(symbol);
-  assert(stock, 404);
-
-  const entity = new StockSearch();
-  entity.symbol = symbol;
-  entity.by = user?.id;
-  entity.ipAddress = req.ip;
-  entity.location = geoip.lookup(req.ip);
-  entity.userAgent = uaParser(req.headers['user-agent']);
-
-  try {
-    await getRepository(StockSearch).insert(entity);
-  } catch (err) {
-    logError(err, req, null);
-  }
+  getManager()
+    .createQueryBuilder()
+    .insert()
+    .into(StockHotSearch)
+    .values({ symbol, count: 1 })
+    .onConflict(`(symbol) DO UPDATE SET count = stock_hot_search.count + 1`)
+    .execute()
+    .catch(() => {});
 
   res.json();
 });
@@ -164,16 +157,12 @@ export const unwatchStock = handlerWrapper(async (req, res) => {
 });
 
 export const listStock = handlerWrapper(async (req, res) => {
-  let list = getCache('stock-list');
-  if (!list) {
-    list = await getRepository(Stock).find({
-      select: ['symbol', 'company'],
-      order: {
-        symbol: 'ASC'
-      }
-    }) as any;
-    setCache('stock-list', list, 1200);
-  }
+  const list = await getRepository(Stock).find({
+    select: ['symbol', 'company'],
+    order: {
+      symbol: 'ASC'
+    }
+  });
   res.json(list);
 });
 
@@ -181,31 +170,19 @@ export const listHotStock = handlerWrapper(async (req, res) => {
   const { size } = req.query;
   const limit = +size || 6;
 
-  const cacheKey = 'hotStockList';
-  let list = getCache(cacheKey);
-  if (!list) {
-    list = await getManager()
-      .createQueryBuilder()
-      .from(Stock, 's')
-      .leftJoin(q => q.from(StockSearch, 'h')
-        .select('h.symbol, COUNT(1) AS count')
-        .groupBy('h.symbol'), 'h', `s.symbol = h.symbol`
-      )
-      .innerJoin(q => q.from(StockPublish, 'pu')
-        .distinctOn(['pu.symbol'])
-        .orderBy('pu.symbol')
-        .addOrderBy('pu.createdAt', 'DESC'),
-        'pu', 'pu.symbol = s.symbol')
-      .select([
-        's.*',
-        'pu.*',
-        'pu."createdAt" as "publishedAt"',
-      ])
-      .orderBy(`h.count`, 'DESC')
-      .limit(limit)
-      .execute();
-    setCache(cacheKey, list, 1);
-  }
+  const list = await getManager()
+    .createQueryBuilder()
+    .from(StockInformation, 'si')
+    .innerJoin(q => q.from(StockHotSearch, 'h')
+      .select('h.symbol, COUNT(1) AS count')
+      .groupBy('h.symbol'), 'h', `si.symbol = h.symbol`
+    )
+    .select([
+      'si.*',
+    ])
+    .orderBy(`h.count`, 'DESC')
+    .limit(limit)
+    .getMany();
 
   res.json(list);
 });

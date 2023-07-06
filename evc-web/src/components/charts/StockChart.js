@@ -30,11 +30,20 @@ const StockChart = props => {
 
   const formatTimeForRawData = (data, period) => {
     const minuteOnly = ['1h', '4h', '1d'].includes(period);
-    const formatted = (data ?? []).filter(x => x.average !== null).map((x, i) => ({
-      price: x.average || x.close,
-      time: minuteOnly ? x.minute : getTime(x),
-      volume: x.volume,
-    }));
+    if (_.isNil(data)) {
+      return [];
+    }
+    const formatted = [];
+    for (let i = 0, len = data.length; i < len; i++) {
+      const rawItem = data[i];
+      const rawPrice = rawItem.average ?? rawItem.marketAverage;
+      const datapoint = {
+        price: rawPrice ?? (i === 0 ? rawItem.open : formatted[i - 1].price),
+        time: minuteOnly ? rawItem.minute : getTime(rawItem),
+        volume: rawItem.volume ?? rawItem.marketVolume ?? 0,
+      }
+      formatted.push(datapoint);
+    }
     return formatted;
   }
 

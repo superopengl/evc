@@ -71,15 +71,18 @@ const columnDef = [
   {
     title: 'Symbol',
     render: (text, item, index) => {
-      const { symbol, company } = item;
+      const { symbol, company, publishedAt } = item;
       if (index % 2 === 0) {
         return <Text style={{ fontSize: '1rem' }} strong>{symbol}</Text>;
       }
       return {
-        children: <Text type="secondary"><small>{company}</small></Text>,
         props: {
           colSpan: 4,
         },
+        children: <Space style={{width: '100%', justifyContent: 'space-between'}}>
+          <Text type="secondary"><small>{company}</small></Text>
+          <TimeAgo direction="horizontal" value={publishedAt} showAgo={false} prefix={<Text type="secondary"><small>published:</small></Text>} />
+        </Space>
       };
     }
   },

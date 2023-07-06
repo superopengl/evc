@@ -129,8 +129,8 @@ const StockListPage = (props) => {
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
           <Space>
-            <Checkbox onChange={handleToggleOverValued}>Over valued</Checkbox>
-            <Checkbox onChange={handleToggleUnderValued}>Under valued</Checkbox>
+            <Checkbox onChange={handleToggleOverValued} checked={queryInfo.overValued}>Over valued</Checkbox>
+            <Checkbox onChange={handleToggleUnderValued} checked={queryInfo.underValued}>Under valued</Checkbox>
           </Space>
           <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />

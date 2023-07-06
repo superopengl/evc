@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Divider } from 'antd';
+import { Typography, Layout, Modal } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import StockList from '../../components/StockList';
 import { getWatchList } from 'services/stockService';
 import { Link, withRouter } from 'react-router-dom';
 import { StockSearchInput } from 'components/StockSearchInput';
+import { StarOutlined, StarFilled } from '@ant-design/icons';
+import { notify } from 'util/notify';
 
-const {Paragraph} = Typography;
+const { Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -37,13 +39,18 @@ const StockWatchListPage = (props) => {
     try {
       setLoading(true);
       const resp = await getWatchList();
-      if(!resp?.data?.length) {
+      if (!resp?.data?.length) {
         // Go to /stock page if nothing gets watched.
+        notify.info(
+          'Empty Watchlist',
+          <Paragraph>You are not watching any stock. Showing all stocks. Clicking <StarOutlined style={{ fontSize: 18, color: '#d9d9d9' }} /> icon to add stock to your watchlist.</Paragraph>
+        );
         props.history.push('/stock');
+        return;
       }
       ReactDOM.unstable_batchedUpdates(() => {
         const { data } = resp;
-        setList(data);
+        setList(data ?? []);
         setLoading(false);
       });
     } catch {

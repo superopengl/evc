@@ -10,11 +10,12 @@ import { GlobalOutlined, SearchOutlined } from '@ant-design/icons';
 import SignUpForm from 'components/SignUpForm';
 import { LogoTextDark } from 'components/LogoTextDark';
 import { StockSearchInput } from 'components/StockSearchInput';
-import { getStockHistory, incrementStock } from 'services/stockService';
+import { getStockHistory, listHotStock } from 'services/stockService';
 import HotStockList from 'components/HotStockList';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { HiOutlineTranslate } from 'react-icons/hi';
 import SearchResultModal from 'components/SearchResultModal';
+import StockMostSearched from 'components/StockMostSearched';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -160,8 +161,7 @@ const HomeCarouselAreaRaw = props => {
                 onChange={handleSearchChange}
                 traceSearch={true}
                  />
-              <Text>most searched</Text>
-              <HotStockList size={6} />
+              <StockMostSearched onFetch={listHotStock} title="most searched" />
             </SearchPanel>
           </Col>
         </Row>

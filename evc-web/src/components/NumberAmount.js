@@ -31,7 +31,7 @@ MoneyAmount.propTypes = {
 MoneyAmount.defaultProps = {
   value: 0,
   postfix: '',
-  digital: 4
+  digital: 2
 };
 
 export default MoneyAmount;

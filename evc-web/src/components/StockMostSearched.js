@@ -22,15 +22,18 @@ import { mergeMap, filter } from 'rxjs/operators';
 
 const { Text, Title, Paragraph } = Typography;
 
-const StyledTable = styled(Table)`
+const Container = styled.div`
+`;
 
+const StyledTable = styled(Table)`
 .ant-typography {
   font-size: 0.8rem;
 }
 
 .ant-table-cell {
   background-color: white !important;
-  padding: 2px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
 }
 
 .ant-table-thead {
@@ -52,21 +55,28 @@ const StyledTable = styled(Table)`
 .odd-row {
   .ant-table-cell {
     padding-top: 0 !important;
-
   }
 }
+`;
+
+const CellSpace = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  text-align: right;
 `;
 
 const columnDef = [
   {
     title: 'Symbol',
     render: (text, item, index) => {
-      const { symbol, companyName } = item;
+      const { symbol, company } = item;
       if (index % 2 === 0) {
-        return <Text style={{ fontSize: '0.9rem' }} strong>{symbol}</Text>;
+        return <Text style={{ fontSize: '1rem' }} strong>{symbol}</Text>;
       }
       return {
-        children: <Text type="secondary"><small>{companyName}</small></Text>,
+        children: <Text type="secondary"><small>{company}</small></Text>,
         props: {
           colSpan: 4,
         },
@@ -74,31 +84,36 @@ const columnDef = [
     }
   },
   {
-    title:  <div style={{width: '100%', textAlign: 'right'}}>Last price</div>,
-    dataIndex: 'latestPrice',
-    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><Text>{value?.toFixed(2)}</Text></div>
+    title: <div style={{ width: '100%', textAlign: 'right' }}>Fair value</div>,
+    render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
+      <NumberRangeDisplay lo={item.fairValueLo} hi={item.fairValueHi} />
+    </CellSpace>
   },
   {
-    title: <div style={{width: '100%', textAlign: 'right'}}>Change</div>,
-    dataIndex: 'change',
-    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><NumberAmount value={value} /></div>
+    title: <div style={{ width: '100%', textAlign: 'right' }}>Support</div>,
+    render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
+      <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi} />
+      <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi} />
+    </CellSpace>
   },
   {
-    title: <div style={{width: '100%', textAlign: 'right'}}>% change</div>,
-    dataIndex: 'changePercent',
-    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><NumberAmount postfix="%" digital={2} value={value * 100} /></div>
+    title: <div style={{ width: '100%', textAlign: 'right' }}>Resistance</div>,
+    render: (value, item, index) => index % 2 ? { props: { colSpan: 0 } } : <CellSpace>
+      <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} />
+      <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi} />
+    </CellSpace>
   },
 ];
 
 
-const StockMostPanel = (props) => {
+const StockMostSearched = (props) => {
 
   const { title, onFetch } = props;
 
   const [list, setList] = React.useState([]);
 
   const pollData = () => {
-    return timer(0, 60 * 1000).pipe(
+    return timer(0, 15 * 1000).pipe(
       mergeMap(() => onFetch()),
       filter(data => !!data),
     ).subscribe(data => setList(data));
@@ -121,29 +136,29 @@ const StockMostPanel = (props) => {
   }
 
   return (
-    <>    
-      {title && <Title level={5}>{title}</Title>}
+    <Container>
+      {title && <Text>{title}</Text>}
       <StyledTable
-      dataSource={getFormattedList()}
-      columns={columnDef}
-      rowKey="key"
-      pagination={false}
-      rowClassName={(item, index) => {
-        return index % 2 === 1 ? 'odd-row' : 'even-row';
-      }}
-      size="small"
-    />
-    </>
+        dataSource={getFormattedList()}
+        columns={columnDef}
+        rowKey="key"
+        pagination={false}
+        rowClassName={(item, index) => {
+          return index % 2 === 1 ? 'odd-row' : 'even-row';
+        }}
+        size="small"
+      />
+    </Container>
   )
 
 };
 
-StockMostPanel.propTypes = {
+StockMostSearched.propTypes = {
   title: PropTypes.string,
   onFetch: PropTypes.func.isRequired,
 };
 
-StockMostPanel.defaultProps = {
+StockMostSearched.defaultProps = {
 };
 
-export default withRouter(StockMostPanel);
+export default withRouter(StockMostSearched);

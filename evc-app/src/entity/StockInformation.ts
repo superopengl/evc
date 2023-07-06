@@ -60,7 +60,7 @@ import { StockLastPrice } from './StockLastPrice';
     .leftJoin(q => q.from(StockLastPrice, 'slp'),
       'slp', 'slp.symbol = s.symbol'
     )
-    .addSelect('slp.price as price')
+    .addSelect('slp.price as "lastPrice"')
     .addSelect('CASE WHEN slp.price < sss.lo THEN TRUE ELSE FALSE END as "isUnder"')
     .addSelect('CASE WHEN slp.price > srs.hi THEN TRUE ELSE FALSE END as "isOver"')
 })
@@ -108,7 +108,7 @@ export class StockInformation {
   fairValueHi: number;
 
   @ViewColumn()
-  price: number;
+  lastPrice: number;
 
   @ViewColumn()
   isUnder: boolean;

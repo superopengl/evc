@@ -326,17 +326,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/search/{symbol}:
-    post:
-      operationId: searchSingleStock
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
   /stock/list:
     get:
       operationId: listStock

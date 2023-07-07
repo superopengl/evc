@@ -54,7 +54,7 @@ export const incrementStock = handlerWrapper((req, res) => {
     .values({ symbol, count: 1 })
     .onConflict(`(symbol) DO UPDATE SET count = stock_hot_search.count + 1`)
     .execute()
-    .catch(() => {});
+    .catch(() => { });
 
   res.json();
 });
@@ -64,8 +64,8 @@ export const getStock = handlerWrapper(async (req, res) => {
   const { user: { id, role } } = req as any;
   const symbol = req.params.symbol.toUpperCase();
 
-  const repo = getRepository(Stock);
-  let stock: Stock;
+  const repo = getRepository(StockLastPublishInformation);
+  let stock: StockLastPublishInformation;
   if (role === Role.Client) {
     const result = await repo.createQueryBuilder('s')
       .where(`s.symbol = :symbol`, { symbol })
@@ -78,26 +78,13 @@ export const getStock = handlerWrapper(async (req, res) => {
       .execute();
     stock = result ? result[0] : null;
   } else {
-    stock = await repo.findOne(symbol, { relations: ['tags'] });
+    stock = await repo.findOne({symbol});
   }
   assert(stock, 404);
 
   res.json(stock);
 });
 
-
-export const searchSingleStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  // const { user: { id, role } } = req as any;
-  const { symbol } = req.params;
-  // const option: SearchStockOption = role === 'client' ? {includesWatchForUserId: id} : null;
-
-  const stock = await getRepository(StockLastPublishInformation).findOne({symbol});
-
-  assert(stock, 404);
-
-  res.json(stock);
-});
 
 export const getStockHistory = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();

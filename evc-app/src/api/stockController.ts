@@ -41,6 +41,7 @@ import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockGuestPublishInformation, StockLastPublishInformation } from '../entity/StockLastPublishInformation';
+import { StockPublishInformationBase } from '../entity/StockPublishInformationBase';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -64,10 +65,10 @@ export const getStock = handlerWrapper(async (req, res) => {
   const { user: { id, role } } = req as any;
   const symbol = req.params.symbol.toUpperCase();
 
-  const repo = getRepository(StockLastPublishInformation);
-  let stock: StockLastPublishInformation;
+  let stock: StockPublishInformationBase;
   if (role === Role.Client) {
-    const result = await repo.createQueryBuilder('s')
+    const result = await getRepository(StockLastPublishInformation)
+      .createQueryBuilder('s')
       .where(`s.symbol = :symbol`, { symbol })
       .leftJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :id', { id }),
@@ -78,29 +79,13 @@ export const getStock = handlerWrapper(async (req, res) => {
       .execute();
     stock = result ? result[0] : null;
   } else {
-    stock = await repo.findOne({symbol});
+    stock = await getRepository(StockLastPublishInformation).findOne({ symbol });
   }
   assert(stock, 404);
 
   res.json(stock);
 });
 
-
-export const getStockHistory = handlerWrapper(async (req, res) => {
-  const symbol = req.params.symbol.toUpperCase();
-
-  // const list = await getRepository(StockHistory).find({
-  //   where: {
-  //     symbol
-  //   },
-  //   order: {
-  //     createdAt: 'DESC'
-  //   }
-  // });
-  // assert(list.length, 404);
-
-  res.json();
-});
 
 export const getWatchList = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');

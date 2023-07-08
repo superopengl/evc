@@ -69,11 +69,11 @@ const CellSpace = styled.div`
 
 const columnDef = [
   {
-    title: 'Symbol',
+    title: '',
     render: (text, item, index) => {
       const { symbol, company, publishedAt } = item;
       if (index % 2 === 0) {
-        return <Text style={{ fontSize: '1rem' }} strong>{symbol}</Text>;
+        return <Text style={{ fontSize: '1rem', color: '#3273A4' }} strong>{symbol}</Text>;
       }
       return {
         props: {
@@ -140,7 +140,7 @@ const StockMostSearched = (props) => {
 
   return (
     <Container>
-      {title && <Text>{title}</Text>}
+      {title && <Title level={5}>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         columns={columnDef}

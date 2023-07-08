@@ -17,7 +17,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { isProfileComplete } from 'util/isProfileComplete';
 import { StockSearchInput } from 'components/StockSearchInput';
-import { searchSingleStock, getStockHistory, getStock, unwatchStock, watchStock } from 'services/stockService';
+import { searchSingleStock, updateStock, getStock, unwatchStock, watchStock } from 'services/stockService';
 import { List } from 'antd';
 import StockCardClientSearch from 'components/StockCardClientSearch';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -34,6 +34,8 @@ import StockQuotePanel from 'components/StockQuotePanel';
 import AdminStockPublishPanel from '../Stock/AdminStockPublishPanel';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
+import StockTagSelect from 'components/StockTagSelect';
+import HeaderStockSearch from 'components/HeaderStockSearch';
 
 const { Paragraph, Text } = Typography;
 
@@ -136,9 +138,16 @@ const StockPage = (props) => {
     loadEntity();
   }
 
+  const handleChangeTags = async (tagIds) => {
+    stock.tags = tagIds.map(t => t.id || t);
+    await updateStock(stock);
+  }
+
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      <HomeHeader>
+        <HeaderStockSearch />
+      </HomeHeader>
       <ContainerStyled>
         {loading ? <Loading /> : <>
           <PageHeader
@@ -158,8 +167,8 @@ const StockPage = (props) => {
           />
           <Space direction="vertical" style={{ width: '100%' }}>
             {/* <Text type="secondary">Electronic Technology</Text> */}
+            <StockTagSelect value={stock.tags} readonly={!isAdminOrAgent} onChange={tags => handleChangeTags(tags.map(t => t.id))} />
             <StockQuotePanel symbol={stock.symbol} />
-            {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
 
             <Row gutter={20}>
               {!isAdminOrAgent && <Col {...span}>

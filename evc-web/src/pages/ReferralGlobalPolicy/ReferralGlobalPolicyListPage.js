@@ -114,7 +114,8 @@ const ReferralGlobalPolicyListPage = (props) => {
     try {
       setLoading(true);
       const list = await listReferalGlobalPolicies();
-      setList(list.map(a => ({
+      setList(list.map((a, i) => ({
+        id: i,
         title: `$${a.amount.toFixed(2)} ${a.description}`,
         start: moment(a.start).toDate(),
         end: moment(a.end).toDate(),
@@ -237,7 +238,6 @@ const ReferralGlobalPolicyListPage = (props) => {
           <Table columns={columnDef}
             dataSource={list}
             size="small"
-
             // scroll={{x: 1000}}
             rowKey="id"
             loading={loading}

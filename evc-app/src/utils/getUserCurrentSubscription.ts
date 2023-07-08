@@ -5,7 +5,7 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 
 
-export async function getUserSubscription(userId) {
+export async function getUserCurrentSubscription(userId) {
   const now = getUtcNow();
 
   const subscription = await getRepository(Subscription)
@@ -17,13 +17,6 @@ export async function getUserSubscription(userId) {
     })
     .andWhere(`"end" IS NULL OR "end" > :now`, { now })
     .getOne();
-
-  if (subscription) {
-    const stocks = subscription.symbols?.length ? await getRepository(Stock).find({
-      symbol: In(subscription.symbols)
-    }) : [];
-    Object.assign(subscription, { stocks });
-  }
 
   return subscription;
 }

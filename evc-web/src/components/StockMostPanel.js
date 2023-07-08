@@ -63,7 +63,7 @@ const columnDef = [
     render: (text, item, index) => {
       const { symbol, companyName } = item;
       if (index % 2 === 0) {
-        return <Text style={{ fontSize: '0.9rem' }} strong>{symbol}</Text>;
+        return <Text style={{ fontSize: '0.9rem', color: '#3273A4' }} strong>{symbol}</Text>;
       }
       return {
         children: <Text type="secondary"><small>{companyName}</small></Text>,

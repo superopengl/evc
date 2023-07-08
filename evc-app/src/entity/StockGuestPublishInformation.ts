@@ -5,12 +5,12 @@ import { StockHistoricalPublishInformation } from './StockHistoricalPublishInfor
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(StockHistoricalPublishInformation, 'h')
-    .select('*')
-    .distinctOn(['h.symbol'])
-    .orderBy('h.symbol')
-    .addOrderBy('h.publishedAt', 'DESC')
+    .select('x.*')
+    .from(q => q.from(StockHistoricalPublishInformation, 'h')
+      .select('*')
+      .addSelect('row_number() OVER(PARTITION BY symbol ORDER BY "publishedAt" DESC) AS row'),
+      'x')
+    .where(`x.row = 2`)
 })
-export class StockLastPublishInformation extends StockPublishInformationBase {
+export class StockGuestPublishInformation extends StockPublishInformationBase {
 }
-

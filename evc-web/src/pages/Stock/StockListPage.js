@@ -109,12 +109,12 @@ const StockListPage = (props) => {
 
   const handleToggleOverValued = e => {
     const checked = e.target.checked;
-    searchByQueryInfo({ ...queryInfo, overValued: checked });
+    searchByQueryInfo({ ...queryInfo, overValued: checked, page: 1 });
   }
 
   const handleToggleUnderValued = e => {
     const checked = e.target.checked;
-    searchByQueryInfo({ ...queryInfo, underValued: checked });
+    searchByQueryInfo({ ...queryInfo, underValued: checked, page: 1 });
   }
   return (
     <LayoutStyled>

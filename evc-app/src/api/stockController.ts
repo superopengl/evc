@@ -40,7 +40,8 @@ import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
-import { StockGuestPublishInformation, StockLastPublishInformation } from '../entity/StockLastPublishInformation';
+import { StockLastPublishInformation } from '../entity/StockLastPublishInformation';
+import { StockGuestPublishInformation } from "../entity/StockGuestPublishInformation";
 import { StockPublishInformationBase } from '../entity/StockPublishInformationBase';
 import { getAllowedSymbols } from '../utils/getAllowedSymbols';
 

@@ -223,7 +223,7 @@ const StockTagSelect = (props) => {
   }
 
   if(readonly) {
-    return <>{selectedOptions.map(x => <Tag color="#3273A4">{x.label}</Tag>)}</>
+    return <>{selectedOptions.map((x, i) => <Tag key={i} color="#3273A4">{x.label}</Tag>)}</>
   }
 
   return <CreatableSelect

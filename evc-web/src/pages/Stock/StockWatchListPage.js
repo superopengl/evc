@@ -69,9 +69,6 @@ const StockWatchListPage = (props) => {
   return (
     <LayoutStyled>
       <HomeHeader>
-        <StockSearchInput
-          onChange={handleSelectedStock}
-          style={{ width: '100%', maxWidth: 400 }} />
       </HomeHeader>
       <ContainerStyled>
         <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock">All Stocks</Link> to find all the stocks our platform supports</Paragraph>

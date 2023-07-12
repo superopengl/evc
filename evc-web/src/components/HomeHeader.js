@@ -120,7 +120,7 @@ const HomeHeaderRaw = props => {
             onClick={handleClick}
             selectedKeys={[current]}
             mode="horizontal" style={{ border: 0 }}>
-            {isClient && <Menu.Item key="favorite"><Link to="/">Favorite</Link></Menu.Item>}
+            {isClient && <Menu.Item key="favorite"><Link to="/">My Watch List</Link></Menu.Item>}
             {isClient && <Menu.Item key="stock"><Link to="/stock">All Stocks</Link></Menu.Item>}
             {isGuest && <Menu.Item key="services"><HashLink to="/#services">Services</HashLink></Menu.Item>}
             {/* {isGuest && <Menu.Item key="blog"><HashLink to="/blogs">Blog</HashLink></Menu.Item>} */}
@@ -180,7 +180,7 @@ const HomeHeaderRaw = props => {
             mode="inline"
             style={{ border: 0 }}
           >
-            {isClient && <Menu.Item key="favorite"><LoginOutlined /> <Link to="/">Favorite</Link></Menu.Item>}
+            {isClient && <Menu.Item key="favorite"><LoginOutlined /> <Link to="/">My Watch List</Link></Menu.Item>}
             {isClient && <Menu.Item key="stock"><LoginOutlined /> <Link to="/stock">All Stocks</Link></Menu.Item>}
             {isGuest && <Menu.Item key="login"><LoginOutlined /> <Link to="/login">Log In</Link></Menu.Item>}
             {isGuest && <Menu.Item key="signup"><UserAddOutlined /> <Link to="/signup">Sign Up</Link></Menu.Item>}

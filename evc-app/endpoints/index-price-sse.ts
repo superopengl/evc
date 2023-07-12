@@ -141,7 +141,7 @@ start(JOB_NAME, async () => {
       if (batch.length === BATCH_SIZE) {
         createSseForSymbols(batch);
         batch = [];
-        await sleep(50);
+        await sleep(200);
       }
     }
 

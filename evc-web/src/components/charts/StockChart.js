@@ -91,7 +91,7 @@ const StockChart = props => {
     const formatted = [];
     for (let i = 0, len = data.length; i < len; i++) {
       const rawItem = data[i];
-      const rawPrice = rawItem.average ?? rawItem.marketAverage;
+      const rawPrice = rawItem.average ?? rawItem.marketAverage ?? rawItem.close;
       const datapoint = {
         price: rawPrice ?? (i === 0 ? rawItem.open : formatted[i - 1].price),
         time: minuteOnly ? rawItem.minute : getTime(rawItem),
@@ -173,7 +173,24 @@ const StockChart = props => {
   const configDual = {
     data: [data, data],
     xField: 'time',
+    xAxis: {
+      label: {
+        autoRotate: true,
+        autoHide: false,
+        autoEllipsis: false,
+      },
+      tickCount: data.length / 10,
+    },
     yField: ['price', 'volume'],
+    // yAxis: {
+    //   volume: {
+    //     label: {
+    //       formatter: function formatter(v) {
+    //         return `${v/1000} k`;
+    //       },
+    //     },
+    //   }
+    // },
     geometryOptions: [
       {
         geometry: 'line',
@@ -185,6 +202,7 @@ const StockChart = props => {
       {
         geometry: 'column',
         color: '#fa8c16',
+        // columnWidthRatio: 0.1,
         // color: (_ref, x, y, z) => {
         //   const value = _ref.price;
         //   return value > 1800 ? '#f4664a' : '#30bf78';

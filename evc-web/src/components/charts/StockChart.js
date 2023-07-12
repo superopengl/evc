@@ -5,23 +5,78 @@ import styled from 'styled-components';
 import { getStockChart } from 'services/stockService';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { Button, Space } from 'antd';
+import { Button, Space, Select } from 'antd';
 import ReactDOM from "react-dom";
 import { Loading } from 'components/Loading';
 
+const PERIOD_X_INTERVAL = {
+  '1h': {
+    '1m': {
+      chartInterval: 1,
+      chartLast: 60
+    },
+  },
+  '4h': {
+    '1m': {
+      chartInterval: 1,
+      chartLast: 240
+    },
+    '3m': {
+      chartInterval: 3,
+      chartLast: 80
+    },
+    '5m': {
+      chartInterval: 5,
+      chartLast: 48
+    }
+  },
+  '1d': {
+    '1m': {
+      chartInterval: 1,
+    },
+    '5m': {
+      chartInterval: 5,
+    },
+    '15m': {
+      chartInterval: 15,
+    },
+  },
+  '5d': {
+    '10m': {
+      chartInterval: 1,
+    },
+    '30m': {
+      chartInterval: 3,
+    },
+    '1h': {
+      chartInterval: 6,
+    },
+  },
+  '1m': {
+    '30m': {
+      chartInterval: 1,
+    },
+    '1h': {
+      chartInterval: 2,
+    },
+  },
+  '1y': {
+    '1d': {
+      chartInterval: 1,
+    },
+  }
+};
+
 const StockChart = props => {
-  const { symbol, type: propPeriod } = props;
-  const [period, setPeriod] = React.useState(propPeriod);
+  const { symbol, period, interval } = props;
+  const [chartState, setChartState] = React.useState({
+    period: period,
+    interval
+  });
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const periods = [
-    '1h',
-    '4h',
-    '1d',
-    '5d',
-    '1m',
-    '1y'
-  ]
+  const periods = Object.keys(PERIOD_X_INTERVAL);
+  const intervals = _.uniq(Object.values(PERIOD_X_INTERVAL).reduce((pre, cur) => [...pre, ...Object.keys(cur)], []));
 
   const getTime = item => {
     const { date, minute } = item;
@@ -47,19 +102,25 @@ const StockChart = props => {
     return formatted;
   }
 
-  const loadChartData = async (symbol, period) => {
-    const rawData = await getStockChart(symbol, period);
+  const loadChartData = async (symbol, period, interval) => {
+    const rawData = await getStockChart(symbol, period, interval);
     const formatted = formatTimeForRawData(rawData, period);
     return formatted;
   }
 
-  const loadData = async (period) => {
+  const tryCheckInterval = (period, interval) => {
+    const validOptions = Object.keys(PERIOD_X_INTERVAL[period]);
+    return validOptions.includes(interval) ? interval : validOptions[0];
+  }
+
+  const loadData = async (period, interval) => {
     try {
       setLoading(true);
-      const data = await loadChartData(symbol, period);
+      interval = tryCheckInterval(period, interval);
+      const data = await loadChartData(symbol, period, interval);
       ReactDOM.unstable_batchedUpdates(() => {
         setData(data);
-        setPeriod(period);
+        setChartState({ period, interval });
         setLoading(false);
       });
     } catch {
@@ -68,12 +129,12 @@ const StockChart = props => {
   };
 
   React.useEffect(() => {
-    loadData(propPeriod);
+    loadData(period, interval);
   }, []);
 
-  const handleChangePeriod = async p => {
-    if (p !== period) {
-      loadData(p);
+  const handlePeriodIntervalChange = async (p, v) => {
+    if (p !== chartState.period || v !== chartState.interval) {
+      loadData(p, v);
     }
   }
 
@@ -134,9 +195,23 @@ const StockChart = props => {
 
   return <Loading loading={loading}>
     <Space style={{ justifyContent: 'flex-end', width: '100%' }}>
-      {periods.map(p => <Button type="link" key={p} onClick={() => handleChangePeriod(p)} disabled={p === period}>{p}</Button>)}
-
+      Period
+      {periods.map(p => <Button type="link" key={p} onClick={() => handlePeriodIntervalChange(p, chartState.interval)} disabled={p === chartState.period}>{p}</Button>)}
     </Space>
+    <Space style={{ justifyContent: 'flex-end', width: '100%' }}>
+      Interval
+      {Object.keys(PERIOD_X_INTERVAL[chartState.period]).map(v => <Button type="link" key={v} onClick={() => handlePeriodIntervalChange(chartState.period, v)} disabled={v === chartState.interval}>{v}</Button>)}
+    </Space>
+    {/* <Space style={{ justifyContent: 'flex-end', width: '100%' }}>
+      Period
+      <Select value={chartState.period} onChange={p => handlePeriodIntervalChange(p, chartState.interval)}>
+        {periods.map(p => <Select.Option key={p} disabled={p === chartState.period}>{p.toUpperCase()}</Select.Option>)}
+      </Select>
+      Interval
+      <Select value={chartState.interval} onChange={v => handlePeriodIntervalChange(chartState.period, v)}>
+        {Object.keys(PERIOD_X_INTERVAL[chartState.period]).map(v => <Select.Option key={v} disabled={v === chartState.interval}>{v}</Select.Option>)}
+      </Select>
+    </Space> */}
     {/* <Area {...config}/> */}
     <DualAxes {...configDual} />
   </Loading>
@@ -144,11 +219,13 @@ const StockChart = props => {
 
 StockChart.propTypes = {
   symbol: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired
+  period: PropTypes.string.isRequired,
+  interval: PropTypes.string.isRequired,
 };
 
 StockChart.defaultProps = {
-  type: '1d'
+  period: '1d',
+  interval: '5m'
 };
 
 export default StockChart;

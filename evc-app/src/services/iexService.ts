@@ -102,52 +102,88 @@ export async function getNews(symbol: string) {
     }));
 }
 
-export async function getChart(symbol: string, period: string) {
-  let chartInterval = undefined;
-  let chartLast = undefined;
+function getChartParam(period, interval): { chartInterval: number, chartLast?: number } {
+  const def = {
+    '1h': {
+      '1m': {
+        chartInterval: 1,
+        chartLast: 60
+      },
+    },
+    '4h': {
+      '1m': {
+        chartInterval: 1,
+        chartLast: 240
+      },
+      '3m': {
+        chartInterval: 3,
+        chartLast: 80
+      },
+      '5m': {
+        chartInterval: 5,
+        chartLast: 48
+      }
+    },
+    '1d': {
+      '1m': {
+        chartInterval: 1,
+      },
+      '5m': {
+        chartInterval: 5,
+      },
+      '15m': {
+        chartInterval: 15,
+      },
+    },
+    '5d': {
+      '10m': {
+        chartInterval: 1,
+      },
+      '30m': {
+        chartInterval: 3,
+      },
+      '1h': {
+        chartInterval: 6,
+      },
+    },
+    '1m': {
+      '30m': {
+        chartInterval: 1,
+      },
+      '1h': {
+        chartInterval: 2,
+      },
+    },
+    '1y': {
+      '1d': {
+        chartInterval: 1,
+      }
+    }
+  }[period];
+
+  const param = def ? def[interval] : null;
+
+  assert(param, 400, `period ${period} and interval ${interval} is an unsupported combination`);
+  return param;
+}
+
+export async function getChart(symbol: string, period: string, interval: string) {
   let apiPath = '';
-  let param = {};
+  const param = getChartParam(period, interval);
 
   switch (period) {
     case '1h':
-      // every 1 minute
-      param = {
-        chartInterval: 1,
-        chartLast: 60
-      }
-      apiPath = `/stock/${symbol}/intraday-prices`;
-      break;
     case '4h':
-      // every 1 minute
-      param = {
-        chartInterval: 1,
-        chartLast: 240
-      }
-      apiPath = `/stock/${symbol}/intraday-prices`;
-      break;
     case '1d':
-      // every 5 minutes
-      param = {
-        chartInterval: 5,
-      }
       apiPath = `/stock/${symbol}/intraday-prices`;
       break;
     case '5d':
-      // 10 minute intervals
-      param = {
-        chartInterval: 3,
-      }
       apiPath = `/stock/${symbol}/chart/5dm`;
       break;
     case '1m':
-      // 30 minute intervals
-      param = {
-        chartInterval: 2,
-      }
       apiPath = `/stock/${symbol}/chart/1mm`;
       break;
     case '1y':
-      // 30 minute intervals
       apiPath = `/stock/${symbol}/chart/1y`;
       break;
     default:

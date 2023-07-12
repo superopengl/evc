@@ -274,8 +274,8 @@ export const getStockNews = handlerWrapper(async (req, res) => {
 });
 
 export const getStockChart = handlerWrapper(async (req, res) => {
-  const { symbol, period } = req.params;
-  res.json(await getChart(symbol, period));
+  const { symbol, period, interval } = req.params;
+  res.json(await getChart(symbol, period, interval));
 });
 
 async function updateStockLastPrice(info: StockLastPriceInfo) {

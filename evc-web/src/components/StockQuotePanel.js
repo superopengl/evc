@@ -49,9 +49,11 @@ const StockQuotePanel = (props) => {
   React.useEffect(() => {
     if (priceEvent) {
       const { price, time } = priceEvent;
-      setPreviousPrice(currentPrice);
-      setCurrentPrice(price);
-      setUpdateTime(time);
+      if (price !== currentPrice) {
+        setPreviousPrice(currentPrice);
+        setCurrentPrice(price);
+        setUpdateTime(time);
+      }
     }
   }, [priceEvent]);
 
@@ -86,7 +88,7 @@ const StockQuotePanel = (props) => {
   }
 
   const getDeltaComponent = (changeValue, changePrecent) => {
-    if(_.isEmpty(changeValue) || _.isEmpty(changePrecent)) {
+    if (_.isEmpty(changeValue) || _.isEmpty(changePrecent)) {
       return null;
     }
     if (changeValue === 0) {

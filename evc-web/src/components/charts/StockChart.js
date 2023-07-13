@@ -138,39 +138,7 @@ const StockChart = props => {
     }
   }
 
-  const config = {
-    // width: 400,
-    // height: 500,
-    legend: false,
-    enterable: true,
-    data: data,
-    // tooltip: {
-    //   customContent: (title, items) => {
-    //     const item = items[0];
-    //     if(!item) return null;
-    //     return <div>
-    //       {item.data.minute}
-    //     </div>
-    //   },
-    // },
-    height: 200,
-    xField: 'time',
-    yField: 'price',
-    // areaStyle: {
-    //   fill: 'l(270) 0:#ffffff 0.5:#15be53 1:#15be53',
-    //   fillOpacity: 0.7,
-    // },
-    // line: { color: '#15be53' },
-    yAxis: {
-      min: _.min(data.map(x => x.price)),
-      max: _.max(data.map(x => x.price)),
-    },
-    // xAxis: {
-    //   tickInterval: 30
-    // }
-  };
-
-  const configDual = {
+  const chartConfig = {
     data: [data, data],
     xField: 'time',
     xAxis: {
@@ -201,11 +169,11 @@ const StockChart = props => {
       },
       {
         geometry: 'column',
-        color: '#fa8c16',
+        color: '#ffc069',
         // columnWidthRatio: 0.1,
         // color: (_ref, x, y, z) => {
         //   const value = _ref.price;
-        //   return value > 1800 ? '#f4664a' : '#30bf78';
+        //   return value > 100 ? '#f4664a' : '#30bf78';
         // }
       },
     ]
@@ -231,7 +199,7 @@ const StockChart = props => {
       </Select>
     </Space> */}
     {/* <Area {...config}/> */}
-    <DualAxes {...configDual} />
+    <DualAxes {...chartConfig} />
   </Loading>
 }
 

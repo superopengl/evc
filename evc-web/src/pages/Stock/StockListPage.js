@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Space, Checkbox, Input, Form, Radio, Pagination, List } from 'antd';
+import { Typography, Layout, Space, Checkbox, Input, Form, Radio, Pagination, Button } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
 import { createStock, searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
+import { CheckSquareOutlined, BorderOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Loading } from 'components/Loading';
 import StockTagSelect from 'components/StockTagSelect';
@@ -27,12 +27,31 @@ width: 100%;
 // max-width: 600px;
 `;
 
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
+const OverButton = styled(Button)`
+color: rgba(0, 0, 0, 0.85);
+
+&:active, &:focus, &:hover {
+  color: rgba(0, 0, 0, 0.85);
+  border-color: #d9d9d9;
+}
+
+&.selected {
+  border-color: #fadb14;
+  background: #ffffb8;
+}`;
+
+const UnderButton = styled(Button)`
+color: rgba(0, 0, 0, 0.85);
+
+&:active, &:focus, &:hover {
+  color: rgba(0, 0, 0, 0.85);
+  border-color: #d9d9d9;
+}
+
+&.selected {
+  border-color: #13c2c2;
+  background: #bffbff;
+}`;
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
@@ -107,14 +126,12 @@ const StockListPage = (props) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
-  const handleToggleOverValued = e => {
-    const checked = e.target.checked;
-    searchByQueryInfo({ ...queryInfo, overValued: checked, page: 1 });
+  const handleToggleOverValued = () => {
+    searchByQueryInfo({ ...queryInfo, page: 1, overValued: !queryInfo.overValued });
   }
 
-  const handleToggleUnderValued = e => {
-    const checked = e.target.checked;
-    searchByQueryInfo({ ...queryInfo, underValued: checked, page: 1 });
+  const handleToggleUnderValued = () => {
+    searchByQueryInfo({ ...queryInfo, page: 1, underValued: !queryInfo.underValued });
   }
   return (
     <LayoutStyled>
@@ -123,8 +140,12 @@ const StockListPage = (props) => {
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
           <Space>
-            <Checkbox onChange={handleToggleOverValued} checked={queryInfo.overValued}>Over valued</Checkbox>
-            <Checkbox onChange={handleToggleUnderValued} checked={queryInfo.underValued}>Under valued</Checkbox>
+            <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
+              {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
+            </OverButton>
+            <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
+              {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
+            </UnderButton>
           </Space>
           <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />

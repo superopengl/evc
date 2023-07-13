@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Row, Col, Tooltip, Modal } from 'antd';
+import { Card, Typography, Space, Row, Col, Tooltip, Tag } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { StarOutlined, StarFilled, QuestionCircleFilled } from '@ant-design/icons';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
@@ -16,6 +16,26 @@ const { Paragraph, Text } = Typography;
 const StyledTable = styled.table`
 border: none;
 width: 100%;
+`;
+
+const StyledCard = styled(Card)`
+&.over-valued {
+  .ant-card-head {
+    background: #ffffb8;
+  }
+  .ant-card-body {
+    background: #feffe6;
+  }
+}
+
+&.under-valued {
+  .ant-card-head {
+    background: #bffbff;
+  }
+  .ant-card-body {
+    background: #e8feff;
+  }
+}
 `;
 
 const TooltipLabel = props => <Tooltip title={props.message}>
@@ -42,13 +62,18 @@ const StockInfoCard = (props) => {
     setWatched(watching);
   }
 
+  const {isOver, isUnder} = stock;
+  const className = isOver ? 'over-valued' : isUnder ? 'under-valued' : null;
+  const titleSuffix = isOver ? 'over' : isUnder ? 'under' : null;
   return (
-    <Card
+    <StyledCard
       size="small"
+      className={className}
       bordered={false}
       type="inner"
       title={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
         {title ?? <StockName value={stock} />}
+        {/* {titleSuffix && <Tag>{titleSuffix}</Tag>} */}
         {isClient && showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
       </Space>}
       onClick={props.onClick}
@@ -95,7 +120,7 @@ const StockInfoCard = (props) => {
           </td>
         </tr>
       </StyledTable>
-    </Card>
+    </StyledCard>
   );
 };
 

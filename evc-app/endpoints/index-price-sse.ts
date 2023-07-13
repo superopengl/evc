@@ -8,7 +8,7 @@ import { getManager, getRepository } from 'typeorm';
 import { StockLastPrice } from '../src/entity/StockLastPrice';
 import { Stock } from '../src/entity/Stock';
 import { combineLatest, Subject } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
+import { debounceTime, startWith, throttleTime } from 'rxjs/operators';
 import { assert } from '../src/utils/assert';
 
 const JOB_NAME = 'price-sse';
@@ -22,7 +22,7 @@ function createSourceForClientPublish() {
   const source$ = new Subject<StockLastPriceInfo>();
   source$
     .pipe(
-      debounceTime(CLIENT_EVENT_FREQUENCY)
+      throttleTime(CLIENT_EVENT_FREQUENCY)
     )
     .subscribe(p => {
       const event = {
@@ -48,7 +48,7 @@ async function initialize() {
   const dbSources = Array.from(symbolSourceMap.values()).map(s => s.pipe(startWith(null)));
   combineLatest(dbSources)
     .pipe(
-      debounceTime(DB_UPDATE_FREQUENCY)
+      throttleTime(DB_UPDATE_FREQUENCY)
     )
     .subscribe(async (list: StockLastPriceInfo[]) => {
       try {
@@ -84,12 +84,10 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
 
 function publishPriceEventsToClient(priceList: StockLastPriceInfo[]) {
   for (const p of priceList) {
-    // if(p.symbol === 'APPL') {
     const subject$ = symbolSourceMap.get(p.symbol);
     if (subject$) {
       subject$.next(p);
     }
-    // }
   }
 }
 

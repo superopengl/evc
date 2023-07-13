@@ -9,9 +9,14 @@ import { StockWatchButton } from 'components/StockWatchButton';
 import { StockName } from './StockName';
 import { searchSingleStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
 import { GlobalContext } from '../contexts/GlobalContext';
+import styled from 'styled-components';
 
 const { Paragraph, Text } = Typography;
 
+const StyledTable = styled.table`
+border: none;
+width: 100%;
+`;
 
 const TooltipLabel = props => <Tooltip title={props.message}>
   <Text type="secondary">{props.children}</Text>
@@ -50,49 +55,46 @@ const StockInfoCard = (props) => {
       hoverable={hoverable}
       actions={actions}
     >
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Row>
-          <Col span={10}>
-            <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel> 
-            {/* <TooltipIcon message="How to use fair value" /> */}
-          </Col>
-          <Col span={14}>
+      <StyledTable>
+        <tr>
+          <td>
+            <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
+          </td>
+          <td>
             <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} loTrend={stock.fairValueLoTrend} hiTrend={stock.fairValueHiTrend} />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={10}>
-            <TooltipLabel message="How to use support">Support</TooltipLabel> 
-            {/* <TooltipIcon message="How to use support" /> */}
-          </Col>
-          <Col span={14}>
-            <div style={{display: 'flex', flexDirection: 'column'}}>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <TooltipLabel message="How to use support">Support</TooltipLabel>
+          </td>
+          <td>
+            <Space>
               <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} loTrend={stock.supportShortLoTrend} hiTrend={stock.supportShortHiTrend} />
               <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} loTrend={stock.supportLongLoTrend} hiTrend={stock.supportLongHiTrend} />
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={10}>
-            <TooltipLabel message="How to use resistance">Resistance</TooltipLabel> 
-            {/* <TooltipIcon message="How to use resistance" /> */}
-          </Col>
-          <Col span={14}>
-            <div style={{display: 'flex', flexDirection: 'column'}}>
+            </Space>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
+          </td>
+          <td>
+            <Space>
               <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} loTrend={stock.resistanceShortLoTrend} hiTrend={stock.resistanceShortHiTrend} />
               <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} loTrend={stock.resistanceLongLoTrend} hiTrend={stock.resistanceLongHiTrend} />
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={10}>
+            </Space>
+          </td>
+        </tr>
+        <tr>
+          <td>
             <Text type="secondary">Published</Text>
-          </Col>
-          <Col span={14}>
-            <TimeAgo value={stock.publishedAt} accurate={true} />
-          </Col>
-        </Row>
-      </Space>
+          </td>
+          <td>
+            <TimeAgo value={stock.publishedAt} type={null} direction="horizontal" accurate={true} />
+          </td>
+        </tr>
+      </StyledTable>
     </Card>
   );
 };

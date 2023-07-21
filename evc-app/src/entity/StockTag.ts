@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, Unique, CreateDateColumn } from 'typeorm';
 
 
 @Entity()
@@ -7,7 +7,7 @@ export class StockTag {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @CreateDateColumn()
   @Index()
   createdAt?: Date;
 

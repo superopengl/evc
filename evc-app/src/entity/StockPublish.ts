@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { StockResistanceShort } from './StockResistanceShort';
 import { StockSupportShort } from './StockSupportShort';
 import { StockFairValue } from './StockFairValue';
@@ -12,7 +12,7 @@ export class StockPublish {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ default: () => `timezone('UTC', now())` })
+  @CreateDateColumn()
   createdAt?: Date;
 
   @ManyToOne(() => Stock)

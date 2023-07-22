@@ -147,6 +147,7 @@ const StockPage = (props) => {
       <ContainerStyled>
         {loading ? <Loading /> : <>
           <PageHeader
+            style={{paddingTop: 0}}
             ghost={false}
             onBack={() => props.history.goBack()}
             title={<Space size="middle">

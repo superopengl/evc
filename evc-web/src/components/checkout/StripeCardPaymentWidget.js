@@ -62,7 +62,7 @@ const StripeCardPaymentForm = (props) => {
   return (
     <form onSubmit={handleSubmit}>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Text>Please input card information</Text>
+        {/* <Text>Please input card information</Text> */}
         <CardElement
           onChange={handleCardInfoChange}
           options={{

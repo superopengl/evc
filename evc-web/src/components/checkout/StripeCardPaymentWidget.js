@@ -82,7 +82,7 @@ const StripeCardPaymentForm = (props) => {
             },
           }}
         />
-        <Button type="primary" size="large" htmlType="submit" block disabled={loading || !stripe || !inputComplete} loading={loading}>
+        <Button type="primary" size="large" htmlType="submit" block disabled={loading || !stripe || !inputComplete} loading={loading} style={{fontWeight: 800,fontStyle: 'italic'}}>
           Pay by Card
         </Button>
       </Space>

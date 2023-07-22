@@ -21,6 +21,7 @@ import { Loading } from '../Loading';
 import { calculatePaymentDetail, confirmSubscriptionPayment, provisionSubscription } from 'services/subscriptionService';
 import FullBalancePayButton from './FullBalancePayButton';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
+import ReactDOM from 'react-dom';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -41,7 +42,7 @@ const PaymentModal = (props) => {
   const [recurring, setRecurring] = React.useState(true);
   const [selectedSymbols, setSelectedSymbols] = React.useState();
   const [paymentDetail, setPaymentDetail] = React.useState();
-  const [willUseBalance, setWillUseBalance] = React.useState(true);
+  const [willUseBalance, setWillUseBalance] = React.useState(false);
   const wizardRef = React.useRef(null);
   const needsSelectSymbols = planType === 'selected_monthly';
 
@@ -54,8 +55,11 @@ const PaymentModal = (props) => {
     try {
       setLoading(true)
       const detail = await calculatePaymentDetail(planType, symbols, useBalance);
-      setPaymentDetail(detail);
-    } finally {
+      ReactDOM.unstable_batchedUpdates(() => {
+        setPaymentDetail(detail);
+        setLoading(false)
+      });
+    } catch {
       setLoading(false)
     }
   }
@@ -74,7 +78,6 @@ const PaymentModal = (props) => {
 
   const newPlanDef = subscriptionDef.find(s => s.key === planType);
 
-  const payPalPlanId = newPlanDef.payPalPlanId;
 
   const handleSelectedStockChange = (values) => {
     const { symbols } = values;
@@ -171,27 +174,27 @@ const PaymentModal = (props) => {
           </Space>
           {paymentDetail?.totalBalanceAmount > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Prefer to use balance?</Text>
-            <Switch defaultChecked onChange={handleUseBalanceChange} />
+            <Switch defaultChecked={false} onChange={handleUseBalanceChange} />
           </Space>}
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          {willUseBalance && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Balance total amount:</Text>
             {paymentDetail ? <MoneyAmount value={paymentDetail.totalBalanceAmount} /> : '-'}
-          </Space>
+          </Space>}
           <Divider />
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Total amount:</Text>
             {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
           </Space>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          {willUseBalance && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Balance deduction:</Text>
             {paymentDetail ? <MoneyAmount value={paymentDetail.balanceDeductAmount * -1} /> : '-'}
-          </Space>
+          </Space>}
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text strong>Total payable amount:</Text>
             {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
           </Space>
-          {isValidPlan && <Space direction="vertical" style={{ width: '100%' }} size="large">
-            <Divider />
+          {isValidPlan && <Divider />}
+          {isValidPlan && <Space direction="vertical" style={{ width: '100%' }} size="middle">
             {shouldShowFullBalanceButton && <>
               <Alert type="info" message="Congratulations! You have enough balance to purchase this plan without any additional pay." showIcon />
               <FullBalancePayButton onProvision={() => handleProvisionSubscription('balance')} onCommit={handleSuccessfulPayment} />
@@ -199,8 +202,8 @@ const PaymentModal = (props) => {
             {showBalanceCardCombinedRecurringMessage && <Alert
               type="info" message="When each plan renew happens, system will try to use your balance as much before charging your card." showIcon />}
             {shouldShowCard && <StripeCardPaymentWidget onProvision={() => handleProvisionSubscription('card')} onCommit={handleSuccessfulPayment} />}
+            {shouldShowAliPay && <Button size="large" block style={{fontWeight: 800,fontStyle: 'italic'}}>Alipay</Button>}
             {shouldShowPayPal && <PayPalCheckoutButton onProvision={() => handleProvisionSubscription('paypal')} onCommit={handleSuccessfulPayment} />}
-            {shouldShowAliPay && <Button size="large" block>Alipay</Button>}
           </Space>}
         </Space>
       </Loading>

@@ -16,7 +16,6 @@ const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
 export const PayPalCheckoutButton = (props) => {
 
   const CURRENCY_USD = 'USD';
-  const { payPalPlanId, onSuccess, onApprove } = props;
   const { onProvision, onCommit } = props;
   const [loading, setLoading] = React.useState(true);
   const [paymentId, setPaymentId] = React.useState();

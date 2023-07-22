@@ -93,7 +93,7 @@ async function previsionStripePayment(payment: Payment): Promise<string> {
 export async function chargeStripe(payment: Payment, newStripePaymentMethodId?: string) {
   const { method, stripeCustomerId, stripePaymentMethodId } = payment;
 
-  assert(method === PaymentMethod.BalanceCardMix || PaymentMethod.Card, 400, 'Payment method not match');
+  assert(method === PaymentMethod.Card, 400, 'Payment method not match');
   assert(stripeCustomerId, 400, 'Stripe customer ID is missing');
   assert(stripePaymentMethodId || newStripePaymentMethodId, 400, 'Stripe payment method ID is missing');
 

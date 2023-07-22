@@ -83,26 +83,32 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { user: { id: userId } } = req as any;
-  const { plan, recurring, symbols, preferToUseBalance, alertDays } = req.body;
+  const { plan, recurring, symbols, preferToUseBalance, alertDays, method } = req.body;
 
-  const payment = await provisionSubscriptionPurchase(userId, plan, recurring, symbols, preferToUseBalance, alertDays, req.ip);
-  const { method } = payment;
+  const payment = await provisionSubscriptionPurchase({
+    userId,
+    subscriptionType: plan,
+    paymentMethod: method,
+    recurring,
+    symbols,
+    preferToUseBalance,
+    alertDays,
+    ipAddress: req.ip
+  });
   const result: any = {
     method,
+    amount: payment.amount,
     paymentId: payment.id,
     subscriptionId: payment.subscription.id,
   };
   switch (method) {
     case PaymentMethod.Balance:
-      // Does nothing
+    case PaymentMethod.PayPal:
+      // No need to do anything extra
       break;
-    case PaymentMethod.BalanceCardMix:
     case PaymentMethod.Card:
       const clientSecret = await createStripeClientSecret(payment);
       result.clientSecret = clientSecret;
-      break;
-    case PaymentMethod.PayPal:
-      assert(false, 501);
       break;
     case PaymentMethod.AliPay:
       assert(false, 501);
@@ -132,14 +138,13 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
       // Immidiately commit the subscription purchase if it can be paied fully by balance
       await commitSubscription(paymentId, null);
       break;
-    case PaymentMethod.BalanceCardMix:
     case PaymentMethod.Card:
       const { stripePaymentMethodId } = req.body;
       const rawResponse = await chargeStripe(payment, stripePaymentMethodId);
       await commitSubscription(paymentId, rawResponse);
       break;
     case PaymentMethod.PayPal:
-      assert(false, 501);
+      await commitSubscription(paymentId, req.body);
       break;
     case PaymentMethod.AliPay:
       assert(false, 501);

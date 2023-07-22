@@ -10,19 +10,24 @@ import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { calculateNewSubscriptionPaymentDetail } from './calculateNewSubscriptionPaymentDetail';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
+import { PaymentMethod } from '../types/PaymentMethod';
 
-export async function provisionSubscriptionPurchase(
+export type ProvisionSubscriptionRequest = {
   userId: string,
-  type: SubscriptionType,
+  subscriptionType: SubscriptionType,
+  paymentMethod: PaymentMethod,
   recurring: boolean,
   symbols: string[],
   preferToUseBalance: boolean,
   alertDays: number,
   ipAddress: string
-): Promise<Payment> {
+}
+
+export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {
+  const { userId, subscriptionType, paymentMethod, recurring, symbols, preferToUseBalance, alertDays, ipAddress } = request;
   const now = getUtcNow();
 
-  const months = type === SubscriptionType.UnlimitedQuarterly ? 3 : 1;
+  const months = subscriptionType === SubscriptionType.UnlimitedQuarterly ? 3 : 1;
   const end = moment(now).add(months, 'month').toDate();
   let payment: Payment = null;
 
@@ -31,8 +36,8 @@ export async function provisionSubscriptionPurchase(
     const subscription = new Subscription();
     subscription.id = subscriptionId;
     subscription.userId = userId;
-    subscription.type = type;
-    subscription.symbols = type === SubscriptionType.SelectedMonthly ? symbols : [];
+    subscription.type = subscriptionType;
+    subscription.symbols = subscriptionType === SubscriptionType.SelectedMonthly ? symbols : [];
     subscription.recurring = recurring;
     subscription.start = now;
     subscription.end = end;
@@ -42,8 +47,8 @@ export async function provisionSubscriptionPurchase(
 
     await m.save(subscription);
 
-    const detail = await calculateNewSubscriptionPaymentDetail(m, userId, type, preferToUseBalance, symbols);
-    const { balanceDeductAmount, additionalPay, paymentMethod } = detail;
+    const detail = await calculateNewSubscriptionPaymentDetail(m, userId, subscriptionType, preferToUseBalance, symbols);
+    const { balanceDeductAmount, additionalPay } = detail;
     let balanceTransaction: UserBalanceTransaction = null;
     if (balanceDeductAmount > 0) {
       balanceTransaction = new UserBalanceTransaction();

@@ -14,7 +14,6 @@ import { Payment } from '../src/entity/Payment';
 import { PaymentStatus } from '../src/types/PaymentStatus';
 import * as moment from 'moment';
 import { getUserBalance } from '../src/utils/getUserBalance';
-import { calculateAmountToPay } from '../src/utils/calculateAmountToPay';
 import { previewSubscriptionPayment } from '../src/api';
 import { calculateNewSubscriptionPaymentDetail } from '../src/utils/calculateNewSubscriptionPaymentDetail';
 
@@ -68,7 +67,7 @@ async function renewRecurringSubscription(subscription: Subscription) {
 
   const { rawRequest, rawResponse, status } = await handlePayWithCard(subscription);
   await getManager().transaction(async m => {
-    const { balanceDeductAmount, additionalPay, paymentMethod } = await calculateNewSubscriptionPaymentDetail(
+    const { balanceDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
       m,
       userId,
       subscription.type,
@@ -88,7 +87,7 @@ async function renewRecurringSubscription(subscription: Subscription) {
     payment.subscription = subscription;
     payment.balanceTransaction = balanceTransaction;
     payment.amount = additionalPay;
-    payment.method = paymentMethod;
+    // payment.method = paymentMethod;
     payment.rawResponse = rawResponse;
     payment.status = status;
     payment.auto = true;

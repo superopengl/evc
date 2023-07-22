@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-const loadingIndicator = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 export const Loading = props => {
-  const { loading, children } = props;
+  const { loading, message, children } = props;
 
-return <Spin spinning={loading} indicator={loadingIndicator}>{children}</Spin>
+  const loadingIndicator = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+  return <Spin spinning={loading} indicator={loadingIndicator} tip={message}>{children}</Spin>
 }
 
 Loading.propTypes = {
   loading: PropTypes.bool.isRequired,
+  message: PropTypes.string,
 };
 
 Loading.defaultProps = {

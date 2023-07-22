@@ -29,10 +29,13 @@ width: 100%;
 
 const OverButton = styled(Button)`
 color: rgba(0, 0, 0, 0.85);
+background-color: #feffe6;
+border-color: #fadb14;
 
 &:active, &:focus, &:hover {
   color: rgba(0, 0, 0, 0.85);
-  border-color: #d9d9d9;
+  background: #ffffb8;
+  border-color: #fadb14;
 }
 
 &.selected {
@@ -42,10 +45,13 @@ color: rgba(0, 0, 0, 0.85);
 
 const UnderButton = styled(Button)`
 color: rgba(0, 0, 0, 0.85);
+background: #e8feff;
+border-color: #13c2c2;
 
 &:active, &:focus, &:hover {
   color: rgba(0, 0, 0, 0.85);
-  border-color: #d9d9d9;
+  border-color: #13c2c2;
+  background: #bffbff;
 }
 
 &.selected {

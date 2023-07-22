@@ -31,6 +31,7 @@ border: 1px solid #f0f0f0;
 padding: 4px;
 border-radius: 4px;
 margin-left: 10px;
+cursor: pointer;
 `;
 
 const StyledListItem = styled(List.Item)`
@@ -76,7 +77,7 @@ const StockNewsPanel = (props) => {
           // onClick={() => handleOpenNews(item.url)}
           >
             <List.Item.Meta
-              avatar={item.image ? <NewsImage src={item.image} /> : null}
+              avatar={item.image ? <NewsImage preview={false} src={item.image} onClick={() => handleOpenNews(item.url)} /> : null}
               title={<>
                 <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ width: '100%' }}>
                   <TimeAgo value={item.datetime} showAgo={false} direction="horizontal" />

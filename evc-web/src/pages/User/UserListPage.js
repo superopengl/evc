@@ -78,14 +78,9 @@ const UserListPage = () => {
       render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
     {
-      title: 'Given Name',
+      title: 'Client Name',
       dataIndex: 'givenName',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
-    },
-    {
-      title: 'Surname',
-      dataIndex: 'surname',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
+      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName} ${item.surname}`} /> ,
     },
     {
       title: 'Subscription',

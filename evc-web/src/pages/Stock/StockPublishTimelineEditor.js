@@ -65,17 +65,15 @@ export const StockPublishTimelineEditor = (props) => {
       render: (value, item) => <TimeAgo value={value} accurate={true} />
     },
     {
-      title: 'Support (short)',
+      title: 'Support',
       render: (value, item) => <Space size="small" direction="vertical">
-      <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi} loTrend={item.supportShortLoTrend} hiTrend={item.supportShortHiTrend}/>
-      <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi} loTrend={item.supportLongLoTrend} hiTrend={item.supportLongHiTrend}/>
+      <NumberRangeDisplay lo={item.supportLo} hi={item.supportHi} loTrend={item.supportLoTrend} hiTrend={item.supportHiTrend}/>
       </Space>
     },
     {
-      title: 'Resistance (short)',
+      title: 'Resistance',
       render: (value, item) =>  <Space size="small" direction="vertical">
-        <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} loTrend={item.resistanceShortLoTrend} hiTrend={item.resistanceShortHiTrend}/>
-        <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi}  loTrend={item.resistanceLongLoTrend} hiTrend={item.resistanceLongHiTrend}/>
+        <NumberRangeDisplay lo={item.resistanceLo} hi={item.resistanceHi} loTrend={item.resistanceLoTrend} hiTrend={item.resistanceHiTrend}/>
         </Space>
     },
     {

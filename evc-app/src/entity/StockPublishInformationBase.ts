@@ -16,40 +16,22 @@ export abstract class StockPublishInformationBase {
   publishedAt: Date;
 
   @ViewColumn()
-  supportShortLo: number;
+  supportLo: number;
 
   @ViewColumn()
-  supportShortHi: number;
+  supportHi: number;
 
   @ViewColumn()
-  supportLongLo: number;
+  resistanceLo: number;
 
   @ViewColumn()
-  supportLongHi: number;
-
-  @ViewColumn()
-  resistanceShortLo: number;
-
-  @ViewColumn()
-  resistanceShortHi: number;
-
-  @ViewColumn()
-  resistanceLongLo: number;
-
-  @ViewColumn()
-  resistanceLongHi: number;
+  resistanceHi: number;
 
   @ViewColumn()
   fairValueLo: number;
 
   @ViewColumn()
   fairValueHi: number;
-
-  @ViewColumn()
-  rangeLo: number;
-
-  @ViewColumn()
-  rangeHi: number;
 
   @ViewColumn()
   lastPrice: number;

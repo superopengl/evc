@@ -1,20 +1,22 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, CreateDateColumn } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
-import { Stock } from './Stock';
-import { StockPublish } from './StockPublish';
+
 
 
 @Entity()
-@Index(['symbol', 'createdAt'])
-export class StockSupportShort {
+export class StockResistance {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
+  @Column()
+  @Index()
+  symbol: string;
+
   @CreateDateColumn()
   createdAt?: Date;
-  
-  @Column()
-  symbol: string;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @Column('uuid')
   author: string;
@@ -25,14 +27,6 @@ export class StockSupportShort {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   hi: number;
 
-  @Column('int2', { default: 0 })
-  loTrend: number;
-
-  @Column('int2', { default: 0 })
-  hiTrend: number;
-
   @Column({default: false})
   published: boolean;
 }
-
-

@@ -70,15 +70,13 @@ const HotStockList = (props) => {
     {
       title: 'Support',
       render: (text, item) => <>
-        <NumberRangeDisplay lo={item.supportShortLo} hi={item.supportShortHi} />
-        <NumberRangeDisplay lo={item.supportLongLo} hi={item.supportLongHi} />
+        <NumberRangeDisplay lo={item.supportLo} hi={item.supportHi} />
       </>
     },
     {
       title: 'Resistance',
       render: (text, item) => <>
-        <NumberRangeDisplay lo={item.resistanceShortLo} hi={item.resistanceShortHi} />
-        <NumberRangeDisplay lo={item.resistanceLongLo} hi={item.resistanceLongHi} />
+        <NumberRangeDisplay lo={item.resistanceLo} hi={item.resistanceHi} />
       </>
     },
   ];

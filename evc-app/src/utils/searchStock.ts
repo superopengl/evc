@@ -1,16 +1,11 @@
 import { getManager } from 'typeorm';
-import { Stock } from '../entity/Stock';
-import { StockPublish } from '../entity/StockPublish';
-import { StockSupportShort } from '../entity/StockSupportShort';
-import { StockResistanceShort } from '../entity/StockResistanceShort';
-import { StockFairValue } from '../entity/StockFairValue';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockLastPublishInformation } from '../entity/StockLastPublishInformation';
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
-  const { symbols, text, tags, page, size, orderField, orderDirection, watchOnly, noCount, overValued, underValued } = queryInfo;
+  const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued } = queryInfo;
 
   let pageNo = page || 1;
   const pageSize = size || 50;

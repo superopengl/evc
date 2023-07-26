@@ -98,8 +98,7 @@ const StockInfoCard = (props) => {
           </td>
           <td>
             <Space>
-              <NumberRangeDisplay lo={stock.supportShortLo} hi={stock.supportShortHi} loTrend={stock.supportShortLoTrend} hiTrend={stock.supportShortHiTrend} />
-              <NumberRangeDisplay lo={stock.supportLongLo} hi={stock.supportLongHi} loTrend={stock.supportLongLoTrend} hiTrend={stock.supportLongHiTrend} />
+              <NumberRangeDisplay lo={stock.supportLo} hi={stock.supportHi} />
             </Space>
           </td>
         </tr>
@@ -109,8 +108,7 @@ const StockInfoCard = (props) => {
           </td>
           <td>
             <Space>
-              <NumberRangeDisplay lo={stock.resistanceShortLo} hi={stock.resistanceShortHi} loTrend={stock.resistanceShortLoTrend} hiTrend={stock.resistanceShortHiTrend} />
-              <NumberRangeDisplay lo={stock.resistanceLongLo} hi={stock.resistanceLongHi} loTrend={stock.resistanceLongLoTrend} hiTrend={stock.resistanceLongHiTrend} />
+              <NumberRangeDisplay lo={stock.resistanceLo} hi={stock.resistanceHi} />
             </Space>
           </td>
         </tr>

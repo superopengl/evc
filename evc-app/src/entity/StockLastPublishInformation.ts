@@ -12,5 +12,8 @@ import { StockHistoricalPublishInformation } from './StockHistoricalPublishInfor
     .addOrderBy('h.publishedAt', 'DESC')
 })
 export class StockLastPublishInformation extends StockPublishInformationBase {
+  constructor() {
+    super();
+  }
 }
 

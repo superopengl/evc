@@ -83,14 +83,13 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { user: { id: userId } } = req as any;
-  const { plan, recurring, symbols, preferToUseBalance, alertDays, method } = req.body;
+  const { plan, recurring, preferToUseBalance, alertDays, method } = req.body;
 
   const payment = await provisionSubscriptionPurchase({
     userId,
     subscriptionType: plan,
     paymentMethod: method,
     recurring,
-    symbols,
     preferToUseBalance,
     alertDays,
     ipAddress: req.ip
@@ -160,8 +159,8 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { user: { id: userId } } = req as any;
-  const { type, symbols, preferToUseBalance } = req.body;
-  const result = await calculateNewSubscriptionPaymentDetail(null, userId, type, preferToUseBalance, symbols);
+  const { type, preferToUseBalance } = req.body;
+  const result = await calculateNewSubscriptionPaymentDetail(null, userId, type, preferToUseBalance);
   res.json(result);
 });
 

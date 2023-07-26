@@ -43,7 +43,6 @@ import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLastPublishInformation } from '../entity/StockLastPublishInformation';
 import { StockGuestPublishInformation } from "../entity/StockGuestPublishInformation";
 import { StockPublishInformationBase } from '../entity/StockPublishInformationBase';
-import { getAllowedSymbols } from '../utils/getAllowedSymbols';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -67,18 +66,9 @@ export const getStock = handlerWrapper(async (req, res) => {
   const { user } = req as any;
   const { id, role } = user;
   const symbol = req.params.symbol.toUpperCase();
-  const allowedSymbols = await getAllowedSymbols(user);
 
   let stock: any;
-  let entityClass: any;
-  if(allowedSymbols === null) {
-    entityClass = StockGuestPublishInformation;
-  } else if(allowedSymbols === '*') {
-    entityClass = StockLastPublishInformation;
-  } else {
-    entityClass = allowedSymbols.includes(symbol) ? StockLastPublishInformation : StockGuestPublishInformation;
-  }
-  entityClass = StockLastPublishInformation;
+  const entityClass = true ? StockLastPublishInformation : StockGuestPublishInformation;
 
   if (role === Role.Client) {
     const result = await getRepository(entityClass)

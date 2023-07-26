@@ -54,21 +54,14 @@ const PaymentModal = (props) => {
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
   const [recurring, setRecurring] = React.useState(true);
-  const [selectedSymbols, setSelectedSymbols] = React.useState();
   const [paymentDetail, setPaymentDetail] = React.useState();
   const [willUseBalance, setWillUseBalance] = React.useState(false);
-  const wizardRef = React.useRef(null);
-  const needsSelectSymbols = planType === 'selected_monthly';
 
 
-  const fetchPaymentDetail = async (symbols, useBalance) => {
-    if (needsSelectSymbols && !symbols?.length) {
-      setPaymentDetail({});
-      return;
-    }
+  const fetchPaymentDetail = async (useBalance) => {
     try {
       setLoading(true)
-      const detail = await calculatePaymentDetail(planType, symbols, useBalance);
+      const detail = await calculatePaymentDetail(planType, useBalance);
       ReactDOM.unstable_batchedUpdates(() => {
         setPaymentDetail(detail);
         setLoading(false)
@@ -84,7 +77,7 @@ const PaymentModal = (props) => {
 
   React.useEffect(() => {
     if (planType) {
-      fetchPaymentDetail(selectedSymbols, willUseBalance);
+      fetchPaymentDetail(willUseBalance);
     }
   }, [planType]);
 
@@ -92,33 +85,21 @@ const PaymentModal = (props) => {
 
   const newPlanDef = subscriptionDef.find(s => s.key === planType);
 
-
-  const handleSelectedStockChange = (values) => {
-    const { symbols } = values;
-    setSelectedSymbols(symbols);
-  }
-
   const handleUseBalanceChange = checked => {
+    fetchPaymentDetail(checked);
     setWillUseBalance(checked);
-    fetchPaymentDetail(selectedSymbols, checked);
   }
 
   const handleRecurringChange = checked => {
     setRecurring(checked);
   }
 
-  const handleSymbolsChange = list => {
-    setSelectedSymbols([...list]);
-    fetchPaymentDetail(list, willUseBalance);
-  }
-
-  const isValidPlan = (!needsSelectSymbols || selectedSymbols?.length > 0) && paymentDetail;
+  const isValidPlan = !!paymentDetail;
 
   const handleProvisionSubscription = async (method) => {
     const provisionData = await provisionSubscription({
       plan: planType,
       recurring: recurring,
-      symbols: selectedSymbols,
       preferToUseBalance: willUseBalance,
       method
     });
@@ -170,17 +151,6 @@ const PaymentModal = (props) => {
             <div><Text strong type="success">$ {newPlanDef.price}</Text> {newPlanDef.unit}</div>
           </Space>
           <Paragraph>{newPlanDef.description}</Paragraph>
-
-          {needsSelectSymbols &&
-            <Form layout="vertical"
-              onFinish={() => wizardRef.current.nextStep()}
-              onValuesChange={handleSelectedStockChange}
-            >
-              <Form.Item label="Please choose a stock to subscribe" name="symbols" rules={[{ required: true, message: ' ' }]}>
-                <StockSearchInput mode="multiple" onChange={handleSymbolsChange} />
-              </Form.Item>
-            </Form>
-          }
           <Divider />
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Recurring payment?</Text>

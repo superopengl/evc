@@ -48,7 +48,6 @@ function extendSubscriptionEndDate(subscription: Subscription) {
   const { end, type } = subscription;
   let newEnd = end;
   switch (type) {
-    case SubscriptionType.SelectedMonthly:
     case SubscriptionType.UnlimitedMontly:
       newEnd = moment(end).add(1, 'month').toDate();
       break;
@@ -71,8 +70,7 @@ async function renewRecurringSubscription(subscription: Subscription) {
       m,
       userId,
       subscription.type,
-      true,
-      subscription.symbols
+      true
     );
 
 

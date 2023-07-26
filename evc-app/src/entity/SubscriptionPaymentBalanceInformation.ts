@@ -24,7 +24,6 @@ import { UserBalanceTransaction } from './UserBalanceTransaction';
     `s.start as start`,
     `s.end as end`,
     `s.type as type`,
-    `s.symbols as symbols`,
     `s.status as "subscriptionStatus"`,
     `p."lastUpdatedAt" as "paymentLastUpdatedAt"`,
     `p."amount" as "paidAmount"`,
@@ -53,9 +52,6 @@ export class SubscriptionPaymentBalanceInformation {
 
   @ViewColumn()
   type: SubscriptionType;
-
-  @ViewColumn()
-  symbols: string[];
 
   @ViewColumn()
   subscriptionStatus: SubscriptionStatus;

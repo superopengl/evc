@@ -12,6 +12,7 @@
     "dev": "npm run clean && nodemon -w src --ext ts,yml --exec npm start",
     "dev:symbols": "TZ=utc ts-node ./endpoints/index-symbols.ts",
     "dev:eps": "TZ=utc ts-node ./endpoints/index-eps.ts",
+    "dev:feed": "TZ=utc ts-node ./endpoints/index-historical-pe.ts",
     "build": "npm run lint && npm run clean && npm run compile",
     "build:prod": "rm -rf www && npm run compile",
     "clean": "ts-clean && rm -rf www",

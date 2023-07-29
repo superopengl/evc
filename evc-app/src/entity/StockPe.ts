@@ -1,17 +1,17 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, OneToMany, CreateDateColumn } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, OneToMany } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
 import { StockFairValue } from './StockFairValue';
 
 
 @Entity()
-@Index(['symbol', 'createdAt'])
+@Index(['symbol', 'date'])
 export class StockPe {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @CreateDateColumn()
-  createdAt?: Date;
+  @Column({type: 'date', default: 'now()'})
+  date?: Date;
 
   @ManyToOne(() => Stock)
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
@@ -24,14 +24,11 @@ export class StockPe {
   author: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
+  dailyValue: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   lo: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   hi: number;
-
-  @Column('int2', { default: 0 })
-  loTrend: number;
-
-  @Column('int2', { default: 0 })
-  hiTrend: number;
 }

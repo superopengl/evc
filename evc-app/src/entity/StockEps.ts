@@ -5,7 +5,7 @@ import { StockFairValue } from './StockFairValue';
 
 
 @Entity()
-@Index('idx_stockEps_symbol_year_quarter', ['symbol', 'year', 'quarter'], {unique: true})
+@Index('idx_stockEps_symbol_reportDate', ['symbol', 'reportDate'], {unique: true})
 export class StockEps {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -26,9 +26,9 @@ export class StockEps {
   @Column('smallint')
   quarter: number;
 
+  @Column('date')
+  reportDate: string;
+
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   value: number;
-
-  @Column({nullable: true})
-  trend: boolean;
 }

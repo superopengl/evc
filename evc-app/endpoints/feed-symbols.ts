@@ -13,6 +13,8 @@ import { getRepository } from 'typeorm';
 import { Stock } from '../src/entity/Stock';
 import { StockTag } from '../src/entity/StockTag';
 
+const CSV_DIR_PATH = path.resolve(__dirname, 'init-stock-list');
+
 async function feedOneStockTag(tagName: string): Promise<StockTag> {
   const repo = getRepository(StockTag);
   let tag = await repo.findOne({ name: tagName });
@@ -66,7 +68,6 @@ async function parseStockDataFromFile(filePath): Promise<Array<{ symbol: string,
   })
 }
 
-const CSV_DIR_PATH = path.resolve(__dirname, 'init-stock-list');
 
 async function feedInitStockList() {
   const files = [];
@@ -87,4 +88,5 @@ async function feedInitStockList() {
 
 start('sync_all_symbols', async () => {
   await feedInitStockList();
+  process.exit();
 });

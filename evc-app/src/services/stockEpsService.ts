@@ -30,19 +30,6 @@ export const syncStockEps = async (symbol: string, howManyQuarters = 4) => {
 }
 
 export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
-  // await executeSqlStatement(epsInfo, item => {
-  //   const { symbol, fiscalPeriod, value } = item;
-  //   const matches = /Q([1-4]) ([0-9]{4})/.exec(fiscalPeriod);
-  //   if (!matches) {
-  //     // Wrong fiscal period format
-  //     return null;
-  //   }
-
-  //   const [full, quarter, year] = matches;
-
-  //   return `INSERT INTO public.stock_eps(symbol, "createdAt", year, quarter, value) VALUES ('${symbol}', now(), ${year}, '${quarter}', '${value}') ON CONFLICT (symbol, year, quarter) DO UPDATE SET value = excluded.value, "createdAt" = excluded."createdAt"`;
-  // });
-
   const entites = epsInfo.map(item => {
     const { symbol, fiscalPeriod, reportDate, value: value } = item;
     const matches = /Q([1-4]) ([0-9]{4})/.exec(fiscalPeriod);

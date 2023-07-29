@@ -10,11 +10,6 @@ import { StockClose } from '../src/entity/StockClose';
 
 
 async function feedHistoricalPeFor(symbol: string) {
-  await syncStockEps(symbol, 6);
-  await feedLastThreeMonthHistoricalCloseFor(symbol);
-}
-
-async function feedLastThreeMonthHistoricalCloseFor(symbol: string) {
   const historicalDailyPrices = await getLastThreeMonthDailyPrice(symbol);
   const historicalDailyCloses: StockClose[] = historicalDailyPrices.map(p => {
     const stockClose = new StockClose();
@@ -41,11 +36,13 @@ start(JOB_NAME, async () => {
   const stocks = await getRepository(Stock)
     .createQueryBuilder()
     .select('symbol')
-    .where(`symbol = 'AAPL'`)
+    // .where(`symbol = 'AAPL'`)
     .getRawMany();
   const symbols = stocks.map(s => s.symbol);
 
   for (const symbol of symbols) {
     await feedHistoricalPeFor(symbol);
   }
+
+  process.exit();
 });

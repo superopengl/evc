@@ -1,10 +1,10 @@
 import { ViewEntity, Connection } from 'typeorm';
-import { Stock } from './Stock';
-import { StockPublish } from './StockPublish';
-import { StockSupport } from './StockSupport';
-import { StockResistance } from './StockResistance';
-import { StockFairValue } from './StockFairValue';
-import { StockLastPrice } from './StockLastPrice';
+import { Stock } from '../Stock';
+import { StockPublish } from '../StockPublish';
+import { StockSupport } from '../StockSupport';
+import { StockResistance } from '../StockResistance';
+import { StockFairValue } from '../StockFairValue';
+import { StockLastPrice } from '../StockLastPrice';
 import { StockPublishInformationBase } from './StockPublishInformationBase';
 
 @ViewEntity({
@@ -52,7 +52,7 @@ import { StockPublishInformationBase } from './StockPublishInformationBase';
     .addSelect('CASE WHEN slp.price < sfv.lo THEN TRUE ELSE FALSE END as "isUnder"')
     .addSelect('CASE WHEN slp.price > sfv.hi THEN TRUE ELSE FALSE END as "isOver"')
 })
-export class StockHistoricalPublishInformation extends StockPublishInformationBase {
+export class StockAllPublishInformation extends StockPublishInformationBase {
   constructor() {
     super();
   }

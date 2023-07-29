@@ -34,8 +34,8 @@ import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { webhookStripe } from './stripeController';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
-import { StockLastPublishInformation } from '../entity/StockLastPublishInformation';
-import { StockGuestPublishInformation } from "../entity/StockGuestPublishInformation";
+import { StockLastPublishInformation } from '../entity/views/StockLastPublishInformation';
+import { StockGuestPublishInformation } from "../entity/views/StockGuestPublishInformation";
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 

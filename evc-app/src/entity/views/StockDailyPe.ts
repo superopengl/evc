@@ -1,9 +1,10 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
-import { StockEps } from './StockEps';
-import { StockClose } from './StockClose';
+import { StockEps } from '../StockEps';
+import { StockClose } from '../StockClose';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: Connection) => connection
+    .createQueryBuilder()
     .from(q => q.from(StockEps, 'eps')
       .innerJoin(q => q.from(StockClose, 'sc'), 'sc', `sc.symbol = eps.symbol`)
       .where(`eps."reportDate" <= sc.date`)
@@ -19,7 +20,7 @@ import { StockClose } from './StockClose';
       'x.symbol',
       'x.date',
       'x.close',
-      'sum("epsValue") as "lastFourEpsSum"',
+      'sum("epsValue") as "ttmEps"',
       `x.close / sum("epsValue") as pe`
     ])
     .where('x.rank <= 4')
@@ -35,3 +36,4 @@ export class StockDailyPe {
   @ViewColumn()
   pe: number;
 }
+

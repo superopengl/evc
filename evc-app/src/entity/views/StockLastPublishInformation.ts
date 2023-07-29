@@ -1,11 +1,11 @@
 import { ViewEntity, Connection } from 'typeorm';
 import { StockPublishInformationBase } from './StockPublishInformationBase';
-import { StockHistoricalPublishInformation } from './StockHistoricalPublishInformation';
+import { StockAllPublishInformation } from './StockAllPublishInformation';
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(StockHistoricalPublishInformation, 'h')
+    .from(StockAllPublishInformation, 'h')
     .select('*')
     .distinctOn(['h.symbol'])
     .orderBy('h.symbol')

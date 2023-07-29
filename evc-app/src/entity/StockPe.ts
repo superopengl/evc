@@ -24,9 +24,6 @@ export class StockPe {
   author: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  dailyValue: number;
-
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   lo: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })

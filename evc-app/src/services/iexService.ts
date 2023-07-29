@@ -13,7 +13,7 @@ import { assert } from '../utils/assert';
 function composeSingleLine(stock) {
   const { symbol, name } = stock;
   const company = name || `Company of ${symbol}`;
-  return `INSERT INTO public.stock(symbol, company) VALUES ('${symbol}', '${company}') ON CONFLICT (symbol) DO UPDATE SET company = '${company}'`;
+  return `INSERT INTO stock(symbol, company) VALUES ('${symbol}', '${company}') ON CONFLICT (symbol) DO UPDATE SET company = '${company}'`;
 }
 
 function composeSqlStatement(stocks) {

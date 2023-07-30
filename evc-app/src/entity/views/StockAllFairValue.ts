@@ -42,7 +42,7 @@ group by pe.symbol, pe.date
       'x."ttmEps" * (x.avg + x.stddev) as "fairValueHi"',
     ])
 })
-export class StockDerivedFairValue {
+export class StockAllFairValue {
   @ViewColumn()
   symbol: string;
 

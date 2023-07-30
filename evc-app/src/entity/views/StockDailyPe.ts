@@ -3,6 +3,7 @@ import { StockEps } from '../StockEps';
 import { StockClose } from '../StockClose';
 
 @ViewEntity({
+  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q.from(StockEps, 'eps')
@@ -36,4 +37,3 @@ export class StockDailyPe {
   @ViewColumn()
   pe: number;
 }
-

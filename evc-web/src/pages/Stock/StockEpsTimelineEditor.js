@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { syncStockEps } from 'services/stockService';
+import { TimeAgo } from 'components/TimeAgo';
 const {Text} = Typography;
 
 const Container = styled.div`
@@ -77,7 +78,7 @@ const StockEpsTimelineEditor = (props, ref) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Load Last 4 EPS</Button>
+      {/* <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading}>Load Last 4 EPS</Button> */}
       <StockEpsInput onSave={handleSave} disabled={loading} />
       <List
         dataSource={list}
@@ -100,8 +101,9 @@ const StockEpsTimelineEditor = (props, ref) => {
               : item === currentItem ? <FlagOutlined /> : null}
             </div> */}
             <List.Item.Meta
-              description={<Space>
-                <Text type="secondary">{item.year} Q{item.quarter}</Text>
+              description={<Space style={{width: '100%', justifyContent: 'space-between'}}>
+                {/* <Text type="secondary">{item.year} Q{item.quarter}</Text> */}
+                <TimeAgo value={item.reportDate} showTime={false} direction="horizontal"/>
                 <MoneyAmount symbol="" value={item.value}/>
               </Space>}
             />

@@ -22,9 +22,6 @@ const { Paragraph, Text, Title } = Typography;
 const StockQuotePanel = (props) => {
 
   const { symbol } = props;
-  const [previousPrice, setPreviousPrice] = React.useState();
-  const [currentPrice, setCurrentPrice] = React.useState();
-  const [updateTime, setUpdateTime] = React.useState();
   const [quote, setQuote] = React.useState({});
   const [priceEvent, setPriceEvent] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -36,9 +33,6 @@ const StockQuotePanel = (props) => {
       const quote = await getStockQuote(symbol) ?? {};
       ReactDOM.unstable_batchedUpdates(() => {
         setQuote(quote);
-        setCurrentPrice(quote.latestPrice);
-        setPreviousPrice(quote.latestPrice - quote.change);
-        setUpdateTime(quote.latestUpdate);
         setLoading(false);
       });
     } catch {
@@ -49,10 +43,15 @@ const StockQuotePanel = (props) => {
   React.useEffect(() => {
     if (priceEvent) {
       const { price, time } = priceEvent;
-      if (price !== currentPrice) {
-        setPreviousPrice(currentPrice);
-        setCurrentPrice(price);
-        setUpdateTime(time);
+      const oldPirce = quote.latestPrice;
+      if (price !== oldPirce) {
+        setQuote({
+          ...quote,
+          latestPrice: price,
+          change: price - oldPirce,
+          changePercent: (price - oldPirce) / oldPirce,
+          latestUpdate: time,
+        })
       }
     }
   }, [priceEvent]);
@@ -76,52 +75,41 @@ const StockQuotePanel = (props) => {
     }
   }, []);
 
-  const getTrendComponent = (base, target) => {
-    if (base === target) {
-      return <Text type="secondary">0 (0%)</Text>
-    }
-    const symbol = target >= base ? '+' : '-';
-    const type = target >= base ? 'success' : 'danger';
-    const diffNumber = Math.abs(target - base);
-    const diffPercentage = (diffNumber / target * 100).toFixed(2);
-    return <Text type={type}><small>{symbol}{diffNumber.toFixed(2)} ({symbol}{diffPercentage}%)</small></Text>
-  }
-
   const getDeltaComponent = (changeValue, changePrecent) => {
-    if (_.isEmpty(changeValue) || _.isEmpty(changePrecent)) {
+    if (_.isNil(changeValue) || _.isNil(changePrecent)) {
       return null;
     }
     if (changeValue === 0) {
       return <Text type="secondary">0 (0%)</Text>
     }
-    const symbol = changeValue >= 0 ? '+' : '-';
+    const symbol = changeValue >= 0 ? '+' : '';
     const type = changeValue >= 0 ? 'success' : 'danger';
-    return <Text type={type}><small>{symbol}{changeValue.toFixed(2)} ({symbol}{changePrecent.toFixed(2)}%)</small></Text>
+    return <Text type={type}><small>{symbol}{changeValue} ({symbol}{changePrecent * 100}%)</small></Text>
   }
 
   if (loading) {
     return <Loading />
   }
 
+  const isIntra = quote.isUSMarketOpen;
+  const isBeforeHour = moment(quote.openTime).isAfter();
+  const isAfterHour = moment(quote.closeTime).isBefore();
+
   return (
     <Space size="large" style={{ alignItems: 'flex-end' }}>
       <div>
-        <Text style={{ fontSize: 30 }} strong>{currentPrice} {getTrendComponent(previousPrice, currentPrice)}</Text>
-        <div><Text type="secondary"><small>Price At: {moment(updateTime).format('h:mm a')} EST</small></Text></div>
+        <Text style={{ fontSize: 30 }} strong>{quote.latestPrice} {getDeltaComponent(quote.change, quote.changePercent)}</Text>
+        <div><Text type="secondary"><small>Price At: {moment(quote.latestUpdate).format('h:mm a')} EST</small></Text></div>
       </div>
-      <div>
-        <Text style={{ fontSize: 20 }} strong>{quote.open} {getTrendComponent(quote.open, currentPrice)}</Text>
-        <div><Text type="secondary"><small>pre market</small></Text></div>
-      </div>
-      <div>
+      {!isIntra && <div>
         <Text style={{ fontSize: 20 }} strong>{quote.extendedPrice} {getDeltaComponent(quote.extendedChange, quote.extendedChangePercent)}</Text>
         <div>
           <Space size="small">
-            <Text type="secondary"><small>After hours</small></Text>
+            <Text type="secondary"><small>extended hours</small></Text>
             <TimeAgo direction="horizontal" value={quote.extendedPriceTime} />
           </Space>
         </div>
-      </div>
+      </div>}
     </Space>
   );
 };

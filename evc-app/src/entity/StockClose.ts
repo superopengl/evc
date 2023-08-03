@@ -24,4 +24,7 @@ export class StockClose {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   close: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  extendedClose: number;
 }

@@ -1,10 +1,7 @@
-import { getRepository, getManager, In } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockFairValue } from '../entity/StockFairValue';
-import { StockEps } from '../entity/StockEps';
-import { v4 as uuidv4 } from 'uuid';
-import { StockPe } from '../entity/StockPe';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { compareTrend } from '../utils/compareTrend';
 

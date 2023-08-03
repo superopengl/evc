@@ -24,10 +24,12 @@ group by pe.symbol, pe.date
     .groupBy('pe.symbol')
     .addGroupBy('pe.date')
     .addGroupBy('pe."ttmEps"')
+    .addGroupBy('pe.pe')
     .select([
       'pe.symbol as symbol',
       'pe.date as date',
       'pe."ttmEps" as "ttmEps"',
+      'pe.pe as pe',
       'avg(back.pe) as avg',
       'stddev(back.pe) as stddev'
     ])
@@ -36,6 +38,7 @@ group by pe.symbol, pe.date
       'x.symbol',
       'x.date',
       'x."ttmEps"',
+      'x.pe',
       'x.avg - x.stddev as "peLo"',
       'x.avg + x.stddev as "peHi"',
       'x."ttmEps" * (x.avg - x.stddev) as "fairValueLo"',
@@ -51,6 +54,9 @@ export class StockAllFairValue {
 
   @ViewColumn()
   ttmEps: number;
+
+  @ViewColumn()
+  pe: number;
 
   @ViewColumn()
   peLo: number;

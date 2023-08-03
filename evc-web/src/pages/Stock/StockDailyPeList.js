@@ -11,6 +11,11 @@ import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
+import { listStockPe } from 'services/stockService';
+import { TimeAgo } from 'components/TimeAgo';
+import MoneyAmount from 'components/MoneyAmount';
+
+const {Text} = Typography;
 
 const Container = styled.div`
   .current-published {
@@ -19,8 +24,8 @@ const Container = styled.div`
 `;
 
 
-export const StockRangeTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, disableInput, publishedId } = props;
+export const StockDailyPeList = (props) => {
+  const { symbol, onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, disableInput, publishedId } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -32,7 +37,7 @@ export const StockRangeTimelineEditor = (props) => {
   const loadEntity = async () => {
     try {
       setLoading(true);
-      updateList(await onLoadList());
+      updateList(await listStockPe(symbol));
     } finally {
       setLoading(false);
     }
@@ -42,34 +47,13 @@ export const StockRangeTimelineEditor = (props) => {
     loadEntity();
   }, []);
 
-  const handleSaveSupport = async (range) => {
-    try {
-      setLoading(true);
-      await onSaveNew(range);
-      updateList(await onLoadList());
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleDeleteItem = async (item) => {
-    try {
-      setLoading(true);
-      await onDelete(item.id);
-      updateList(await onLoadList());
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return <Container>
-    <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      {!disableInput && <NumberRangeInput onSave={handleSaveSupport} disabled={loading} />}
       <List
         dataSource={list}
         loading={loading}
         itemLayout="horizontal"
-        rowKey="id"
+        rowKey="date"
         size="small"
         locale={{emptyText: ' '}}
         loadMore={list.length >= 6 && <div style={{ width: '100%', textAlign: 'center' }}>
@@ -80,22 +64,25 @@ export const StockRangeTimelineEditor = (props) => {
             onClick={() => onSelected(item)}
             style={{ position: 'relative' }}
             className={getClassNameOnSelect(item)}
-            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             <List.Item.Meta
-              description={<NumberRangeDisplay lo={item.lo} hi={item.hi} loTrend={item.loTrend} hiTrend={item.hiTrend} time={item.createdAt} />}
+              description={<Space style={{width: '100%', justifyContent: 'space-between'}}>
+              {/* <Text type="secondary">{item.year} Q{item.quarter}</Text> */}
+              <TimeAgo value={item.date} showTime={false} direction="horizontal"/>
+              {item.pe === null ? 'N/A' : <Space>
+                <MoneyAmount symbol="" value={item.pe}/>
+                <Text>({(+item.peLo).toFixed(2)} ~ {(+item.peHi).toFixed(2)})</Text>
+              </Space>}
+            </Space>}
             />
           </List.Item>
         )}
       />
-    </Space>
   </Container>
 }
 
-StockRangeTimelineEditor.propTypes = {
-  onLoadList: PropTypes.func.isRequired,
-  onSaveNew: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
+StockDailyPeList.propTypes = {
+  symbol: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onSelected: PropTypes.func,
   getClassNameOnSelect: PropTypes.func,
@@ -105,11 +92,10 @@ StockRangeTimelineEditor.propTypes = {
   disableInput: PropTypes.bool.isRequired,
 };
 
-StockRangeTimelineEditor.defaultProps = {
+StockDailyPeList.defaultProps = {
   showTime: true,
   mode: null,
   onChange: () => { },
-  onDelete: () => { },
   onSelected: () => { },
   getClassNameOnSelect: () => false,
   disableInput: false,

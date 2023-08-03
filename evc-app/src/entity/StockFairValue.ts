@@ -1,9 +1,5 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, OneToMany, PrimaryColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
-import { Stock } from './Stock';
-import { StockPublish } from './StockPublish';
-import { StockEps } from './StockEps';
-import { StockPe } from './StockPe';
 
 
 @Entity()

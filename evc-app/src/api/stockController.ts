@@ -36,6 +36,7 @@ import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLastPublishInformation } from '../entity/views/StockLastPublishInformation';
 import { StockGuestPublishInformation } from "../entity/views/StockGuestPublishInformation";
+import * as _ from 'lodash';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -225,16 +226,25 @@ export const getLosers = handlerWrapper(async (req, res) => {
 
 export const getStockInsider = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
-  const [roster, summary, transactions] = await Promise.all([
+  const [roster, summary] = await Promise.all([
     getInsiderRoster(symbol),
-    getInsiderSummary(symbol),
     getInsiderTransactions(symbol)
   ]);
 
   res.json({
-    roster,
-    summary,
-    transactions
+    roster: _.chain(roster).orderBy(['position'], ['desc']).take(10).value(),
+    summary: summary.map(x => _.pick(x, [
+      'fullName',
+      'reportedTitle',
+      'conversionOrExercisePrice',
+      'filingDate',
+      'postShares',
+      'transactionCode',
+      'transactionDate',
+      'transactionPrice',
+      'transactionShares',
+      'transactionValue',
+    ])),
   });
 });
 

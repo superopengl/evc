@@ -3,7 +3,7 @@ import { Stock } from '../Stock';
 import { StockPublish } from '../StockPublish';
 import { StockSupport } from '../StockSupport';
 import { StockResistance } from '../StockResistance';
-import { StockFairValue } from '../StockFairValue';
+import { StockSpecialFairValue } from '../StockSpecialFairValue';
 import { StockLastPrice } from '../StockLastPrice';
 import { StockPublishInformationBase } from './StockPublishInformationBase';
 import { StockLastFairValue } from './StockLastFairValue';

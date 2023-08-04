@@ -1,7 +1,7 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, CreateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
-import { StockFairValue } from './StockFairValue';
+import { StockSpecialFairValue } from './StockSpecialFairValue';
 
 
 @Entity()

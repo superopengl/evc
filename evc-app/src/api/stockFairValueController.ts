@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { StockFairValue } from '../entity/StockFairValue';
+import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { compareTrend } from '../utils/compareTrend';
 
@@ -11,7 +11,7 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const limit = +req.query.limit || 6;
 
-  const list = await getRepository(StockFairValue).find({
+  const list = await getRepository(StockSpecialFairValue).find({
     where: {
       symbol
     },
@@ -29,7 +29,7 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const { user: { id: userId } } = req as any;
   const { peId, epsIds, lo, hi, special } = normalizeLoHiValues(req.body, true);
-  const repo = getRepository(StockFairValue);
+  const repo = getRepository(StockSpecialFairValue);
   const pre = await repo.findOne({
     where: {
       symbol
@@ -39,16 +39,11 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
     }
   })
 
-  const entity = new StockFairValue();
+  const entity = new StockSpecialFairValue();
   entity.symbol = symbol;
   entity.author = userId;
-  entity.lo = lo;
-  entity.hi = hi;
-  entity.special = special;
-  entity.epsIds = epsIds;
-  entity.peId = peId;
-  entity.loTrend = compareTrend(lo, pre?.lo) || pre?.loTrend;
-  entity.hiTrend = compareTrend(hi, pre?.hi) || pre?.hiTrend;
+  entity.fairValueLo = lo;
+  entity.fairValueHi = hi;
 
   await repo.insert(entity);
 
@@ -58,6 +53,6 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
 export const deleteStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  await getRepository(StockFairValue).delete({ id, published: false });
+  await getRepository(StockSpecialFairValue).delete({ id, published: false });
   res.json();
 });

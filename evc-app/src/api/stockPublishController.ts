@@ -2,7 +2,7 @@ import { getRepository, getManager } from 'typeorm';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockPublish } from '../entity/StockPublish';
-import { StockFairValue } from '../entity/StockFairValue';
+import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { v4 as uuidv4 } from 'uuid';
 import { StockResistance } from '../entity/StockResistance';
 import { StockSupport } from '../entity/StockSupport';
@@ -39,7 +39,7 @@ export const saveStockPublish = handlerWrapper(async (req, res) => {
     const [support, resistance, fairValue] = await Promise.all([
       trans.getRepository(StockSupport).findOne(supportId),
       trans.getRepository(StockResistance).findOne(resistanceId),
-      trans.getRepository(StockFairValue).findOne(fairValueId)
+      trans.getRepository(StockSpecialFairValue).findOne(fairValueId)
     ]);
     const pre = await trans.getRepository(StockPublish).findOne({
       where: {
@@ -61,8 +61,8 @@ export const saveStockPublish = handlerWrapper(async (req, res) => {
     publish.supportHi = support.hi;
     publish.resistanceLo = resistance.lo;
     publish.resistanceHi = resistance.hi;
-    publish.fairValueLo = fairValue.lo;
-    publish.fairValueHi = fairValue.hi;
+    publish.fairValueLo = fairValue.fairValueLo;
+    publish.fairValueHi = fairValue.fairValueHi;
 
     support.published = true;
     resistance.published = true;

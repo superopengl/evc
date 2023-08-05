@@ -7,17 +7,18 @@ import { StockAllComputedFairValue } from './StockAllComputedFairValue';
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(StockAllComputedFairValue, 'c')
-    .leftJoin(StockSpecialFairValue, 's', `c.symbol = s.symbol AND c.date = s.date`)
+    .leftJoin(StockSpecialFairValue, 's', `c.symbol = s.symbol AND c.date = s.date AND s."deletedAt" IS NULL`)
     .select([
       'c.symbol as symbol',
       'c.date as date',
+      's.id as id',
       'c."ttmEps" as "ttmEps"',
       'c.pe as pe',
       'c."peLo" as "peLo"',
       'c."peHi" as "peHi"',
       'COALESCE(c."fairValueLo", s."fairValueLo") as "fairValueLo"',
       'COALESCE(c."fairValueHi", s."fairValueHi") as "fairValueHi"',
-      's.published as published'
+      's.published as published',
     ])
 })
 export class StockAllFairValue {
@@ -26,6 +27,9 @@ export class StockAllFairValue {
 
   @ViewColumn()
   date: string;
+
+  @ViewColumn()
+  id: string;
 
   @ViewColumn()
   ttmEps: number;
@@ -44,9 +48,6 @@ export class StockAllFairValue {
 
   @ViewColumn()
   fairValueHi: number;
-
-  @ViewColumn()
-  special: boolean;
 
   @ViewColumn()
   published: Date;

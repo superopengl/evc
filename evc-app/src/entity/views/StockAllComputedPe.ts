@@ -38,7 +38,7 @@ import { StockClose } from '../StockClose';
       `CASE WHEN "ttmEps" > 0 THEN COALESCE("extendedClose", close) / "ttmEps" ELSE NULL END as pe`,
     ])
 })
-export class StockDailyPe {
+export class StockAllComputedPe {
   @ViewColumn()
   symbol: string;
 

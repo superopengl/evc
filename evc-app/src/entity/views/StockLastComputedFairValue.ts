@@ -1,16 +1,16 @@
 import { ViewEntity, Connection } from 'typeorm';
-import { StockAllFairValue } from './StockAllFairValue';
+import { StockAllComputedFairValue } from './StockAllComputedFairValue';
 
 
 @ViewEntity({
   materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(StockAllFairValue, 'x')
+    .from(StockAllComputedFairValue, 'x')
     .select('*')
     .distinctOn(['symbol'])
     .orderBy('symbol')
     .addOrderBy('date', 'DESC')
 })
-export class StockLastFairValue extends StockAllFairValue {
+export class StockLastComputedFairValue extends StockAllComputedFairValue {
 }

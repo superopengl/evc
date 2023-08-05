@@ -11,6 +11,7 @@ import { getStockInsider } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import INSIDER_LEGEND_INFOS from '../def/insiderLegendDef';
+import * as moment from 'moment';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -67,6 +68,10 @@ const StockInsiderPanel = (props) => {
     loadData();
   }, []);
 
+  const formatDate = (dateString) => {
+    return dateString ? moment(dateString, 'YYYY-MM-DD').format('DD MMM YYYY') : null;
+  }
+
   return (
     <Loading loading={loading}>
       <Container direction="vertical" size="small" style={{ width: '100%' }}>
@@ -111,9 +116,9 @@ const StockInsiderPanel = (props) => {
                   extra={getBadgeComponent(item.transactionCode)}
                 >
                   <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
-                  <Descriptions.Item label="Filing date">{item.filingDate}</Descriptions.Item>
+                  <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
                   <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
-                  <Descriptions.Item label="Transaction date">{item.transactionDate}</Descriptions.Item>
+                  <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
                   <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
                   <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
                   <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>

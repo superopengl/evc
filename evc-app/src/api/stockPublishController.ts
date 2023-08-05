@@ -6,6 +6,7 @@ import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { v4 as uuidv4 } from 'uuid';
 import { StockResistance } from '../entity/StockResistance';
 import { StockSupport } from '../entity/StockSupport';
+import { getUtcNow } from '../utils/getUtcNow';
 
 export const listStockPublish = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -66,7 +67,7 @@ export const saveStockPublish = handlerWrapper(async (req, res) => {
 
     support.published = true;
     resistance.published = true;
-    fairValue.published = true;
+    fairValue.published = getUtcNow();
 
     await trans.save([publish, support, resistance, fairValue]);
   });

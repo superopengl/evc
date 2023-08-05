@@ -80,3 +80,5 @@ export class StockAllComputedFairValue {
   @ViewColumn()
   fairValueHi: number;
 }
+
+

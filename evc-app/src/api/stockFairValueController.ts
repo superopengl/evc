@@ -28,16 +28,8 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
   const { user: { id: userId } } = req as any;
-  const { peId, epsIds, lo, hi, special } = normalizeLoHiValues(req.body, true);
+  const { lo, hi } = normalizeLoHiValues(req.body, true);
   const repo = getRepository(StockSpecialFairValue);
-  const pre = await repo.findOne({
-    where: {
-      symbol
-    },
-    order: {
-      createdAt: 'DESC'
-    }
-  })
 
   const entity = new StockSpecialFairValue();
   entity.symbol = symbol;

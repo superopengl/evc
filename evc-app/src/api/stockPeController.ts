@@ -1,11 +1,11 @@
 import { getRepository } from 'typeorm';
-import { StockAllComputedPe } from '../entity/views/StockAllComputedPe';
+import { StockDailyPe } from '../entity/views/StockDailyPe';
 import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { v4 as uuidv4 } from 'uuid';
 import { compareTrend } from '../utils/compareTrend';
-import { StockAllComputedFairValue } from '../entity/views/StockAllComputedFairValue';
+import { StockComputedPe90 } from '../entity/views/StockComputedPe90';
 
 
 export const listStockPe = handlerWrapper(async (req, res) => {
@@ -13,7 +13,7 @@ export const listStockPe = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const limit = +req.query.limit || 6;
 
-  const list = await getRepository(StockAllComputedFairValue).find({
+  const list = await getRepository(StockDailyPe).find({
     where: {
       symbol
     },

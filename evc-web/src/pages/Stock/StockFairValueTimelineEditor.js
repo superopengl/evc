@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { List, Typography, Space, Alert, Table } from 'antd';
+import { List, Typography, Space, Alert, Table, Form, Input, Button } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
@@ -14,14 +14,114 @@ import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
 
+const EditableContext = React.createContext(null);
+
 const { Text } = Typography;
 
 const Container = styled.div`
   .current-published {
     background-color: rgba(21,190,83, 0.1);
   }
+
+  .editable-cell {
+    position: relative;
+  }
+  
+  .editable-cell-value-wrap {
+    padding: 5px 12px;
+    cursor: pointer;
+  }
+  
+  .editable-row:hover .editable-cell-value-wrap {
+    padding: 4px 11px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+  }
+  
+  [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+    border: 1px solid #434343;
+  }
 `;
 
+const EditableRow = ({ index, ...props }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
+
+const EditableCell = ({
+  title,
+  editable,
+  children,
+  dataIndex,
+  record,
+  handleSave,
+  ...restProps
+}) => {
+  const [editing, setEditing] = React.useState(false);
+  const inputRef = React.useRef(null);
+  const form = React.useContext(EditableContext);
+  React.useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
+
+  const toggleEdit = () => {
+    setEditing(!editing);
+    form.setFieldsValue({
+      [dataIndex]: record[dataIndex],
+    });
+  };
+
+  const save = async () => {
+    try {
+      const values = await form.validateFields();
+      toggleEdit();
+      handleSave({ ...record, ...values });
+    } catch (errInfo) {
+      console.log('Save failed:', errInfo);
+    }
+  };
+
+  let childNode = children;
+
+  if (editable) {
+    childNode = editing ? (
+      <Form.Item
+        style={{
+          margin: 0,
+        }}
+        name={dataIndex}
+        rules={[
+          {
+            required: true,
+            message: `${title} is required.`,
+          },
+        ]}
+      >
+        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+      </Form.Item>
+    ) : (
+        <div
+          className="editable-cell-value-wrap"
+          style={{
+            paddingRight: 24,
+          }}
+          onClick={toggleEdit}
+        >
+          {children}
+        </div>
+      );
+  }
+
+  return <td {...restProps}>{childNode}</td>;
+};
 
 export const StockFairValueTimelineEditor = (props) => {
   const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, showTime, sourceEps, sourcePe } = props;
@@ -50,40 +150,19 @@ export const StockFairValueTimelineEditor = (props) => {
   }, []);
 
 
-  React.useEffect(() => {
-    const enabled = sourceEps?.length >= 4 && sourcePe.length > 0;
-    setDisabled(!enabled);
-    if (enabled) {
-      const sum = _.sum(sourceEps.slice(0, 4).map(x => x.value));
-      const targetPe = sourcePe[0];
-      setDerivedValue({
-        lo: _.isNumber(targetPe.lo) ? targetPe.lo * sum : null,
-        hi: _.isNumber(targetPe.hi) ? targetPe.hi * sum : null
-      });
-    }
-  }, [sourceEps, sourcePe])
-
-  const handleSave = async (range) => {
-    try {
-      setLoading(true);
-      await onSaveNew({
-        lo: range[0],
-        hi: range[1],
-        special: isSpecialFairValue,
-        epsIds: sourceEps.slice(0, 4).map(x => x.id),
-        peId: sourcePe[0].id,
-      });
-      setIsSpecialFairValue(false);
-      updateList(await onLoadList());
-    } finally {
-      setLoading(false);
-    }
-  }
-
-
-  const handleSpecialFairSwitchChange = checked => {
-    setIsSpecialFairValue(checked);
-  }
+  // const handleSave = async (range) => {
+  //   try {
+  //     setLoading(true);
+  //     await onSaveNew({
+  //       lo: range[0],
+  //       hi: range[1],
+  //     });
+  //     setIsSpecialFairValue(false);
+  //     updateList(await onLoadList());
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   const handleDeleteSpecialFairValue = async (specialFairValueId) => {
     try {
@@ -99,6 +178,14 @@ export const StockFairValueTimelineEditor = (props) => {
     return _.isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value).toFixed(2);
   }
 
+  const handleSaveCell = (row) => {
+    const newData = [...list];
+    const index = newData.findIndex((item) => row.date === item.date);
+    const item = newData[index];
+    newData.splice(index, 1, { ...item, ...row });
+    setList(newData);
+  };
+
   const columnDef = [
     {
       title: 'Date',
@@ -107,28 +194,18 @@ export const StockFairValueTimelineEditor = (props) => {
     },
     {
       title: 'PE',
-      dataIndex: 'pe',
-      render: displayNumber
+      render: (value, item) => {
+        const {pe, peLo, peHi} = item;
+        return pe ? <>{displayNumber(pe)} ({displayNumber(peLo)} ~ {displayNumber(peHi)})</> : displayNumber()
+      },
     },
     {
-      title: 'PE (lo)',
-      dataIndex: 'peLo',
-      render: displayNumber
-    },
-    {
-      title: 'PE (hi)',
-      dataIndex: 'peHi',
-      render: displayNumber
-    },
-    {
-      title: 'FV (lo)',
-      dataIndex: 'fairValueLo',
-      render: displayNumber
-    },
-    {
-      title: 'FV (hi)',
-      dataIndex: 'fairValueHi',
-      render: displayNumber
+      title: 'Fair Value',
+      render: (value, item) => {
+        const {fairValueLo, fairValueHi} = item;
+        return fairValueLo ? <>{displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}</> : displayNumber()
+      },
+      editable: true,
     },
     {
       dataIndex: 'id',
@@ -143,27 +220,51 @@ export const StockFairValueTimelineEditor = (props) => {
     }
   ];
 
+  const columns = columnDef.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave: handleSaveCell,
+      }),
+    };
+  });
+
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
-      <Space direction="vertical" size="middle">
+      {/* <Space direction="vertical" size="middle">
         {disabled && <Alert type="warning" message="Please setup EPS and EP before setting up Fair Value" showIcon />}
         <Space>
           <Text>Special Fair Value</Text>
           <Switch checked={isSpecialFairValue} onChange={handleSpecialFairSwitchChange} disabled={loading || disabled} />
         </Space>
         <NumberRangeInput
-          onSave={handleSave}
+          onSave={handleSaveCell}
           value={[derivedValue?.lo, derivedValue?.hi]}
           disabled={loading || disabled}
           readOnly={!isSpecialFairValue}
           allowInputNone={true}
         />
-      </Space>
+      </Space> */}
       <Table
-        columns={columnDef}
+        components={{
+          body: {
+            row: EditableRow,
+            cell: EditableCell,
+          },
+        }}
+        columns={columns}
         dataSource={list}
         size="small"
         rowKey={item => item.id ?? item.date}
+        rowClassName={() => 'editable-row'}
         loading={loading}
         pagination={false}
         style={{ width: '100%' }}

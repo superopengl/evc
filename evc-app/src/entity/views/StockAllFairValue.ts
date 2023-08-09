@@ -1,12 +1,14 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { Stock } from '../Stock';
 import { StockSpecialFairValue } from '../StockSpecialFairValue';
-import { StockAllComputedFairValue } from './StockAllComputedFairValue';
+import { StockComputedPe90 } from './StockComputedPe90';
+import { StockLastTtmEps } from './StockLastTtmEps';
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(StockAllComputedFairValue, 'c')
+    .from(StockComputedPe90, 'c')
     .leftJoin(StockSpecialFairValue, 's', `c.symbol = s.symbol AND c.date = s.date AND s."deletedAt" IS NULL`)
     .select([
       'c.symbol as symbol',
@@ -51,4 +53,62 @@ export class StockAllFairValue {
 
   @ViewColumn()
   published: Date;
+}
+@ViewEntity({
+  materialized: true,
+  expression: (connection: Connection) => connection
+    .createQueryBuilder()
+    .from(Stock, 's')
+    .leftJoin(StockLastTtmEps, 'eps', `s.symbol = eps.symbol`)
+    .leftJoin(q => q
+      .from(StockComputedPe90, 'pe')
+      .distinctOn(['symbol'])
+      .orderBy('symbol')
+      .addOrderBy('date', 'DESC'),
+      'pe', `s.symbol = pe.symbol`)
+    .leftJoin(q => q
+      .from(StockSpecialFairValue, 'sp')
+      .distinctOn(['symbol'])
+      .orderBy('symbol')
+      .addOrderBy('date', 'DESC'),
+      'sp', 'sp.symbol = s.symbol')
+    .select([
+      `s.symbol as symbol`,
+      `eps."reportDate" as "reportDate"`,
+      `eps."ttmEps"`,
+      `pe."fairValueLo" as "fairValueLo"`,
+      `pe."fairValueHi" as "fairValueHi"`,
+      `sp."fairValueLo" as "specialFairValueLo"`,
+      `sp."fairValueHi" as "specialFairValueHi"`,
+      `sp."author" as "specialAuthor"`,
+      `sp."createdAt" as "specialCreatedAt"`,
+    ])
+})
+export class StockFairValue {
+  @ViewColumn()
+  symbol: string;
+
+  @ViewColumn()
+  reportDate: string;
+
+  @ViewColumn()
+  ttmEps: number;
+
+  @ViewColumn()
+  fairValueLo: number;
+
+  @ViewColumn()
+  fairValueHi: number;
+
+  @ViewColumn()
+  specialFairValueLo: number;
+
+  @ViewColumn()
+  specialFairValueHi: number;
+
+  @ViewColumn()
+  specialAuthor: string;
+
+  @ViewColumn()
+  specialCreatedAt: Date;
 }

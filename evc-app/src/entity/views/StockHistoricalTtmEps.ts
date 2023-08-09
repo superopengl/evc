@@ -2,6 +2,7 @@ import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockEps } from '../StockEps';
 
 @ViewEntity({
+  materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q
@@ -36,7 +37,7 @@ import { StockEps } from '../StockEps';
       `sum."ttmEps" as "ttmEps"`,
     ])
 })
-export class StockLastTtmEps {
+export class StockHistoricalTtmEps {
   @ViewColumn()
   symbol: string;
 

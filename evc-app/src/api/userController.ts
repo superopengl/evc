@@ -96,7 +96,7 @@ export const searchUsers = handlerWrapper(async (req, res) => {
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id');
 
   if (text) {
-    query = query.andWhere(`(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)`, { text: `%${text}%` })
+    query = query.andWhere(`(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)`, { text: `%${text}%` });
   }
   query = query.leftJoin(q => q.from(Subscription, 's').where(`status = :status`, { status: SubscriptionStatus.Alive }), 's', `s."userId" = u.id`);
   if (subscription.length) {

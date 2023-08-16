@@ -92,7 +92,7 @@ export const newLocaleResource = handlerWrapper(async (req, res) => {
     const entity = new Translation();
     entity.key = key;
     entity.locale = locale;
-    entity.value = req.body[locale]
+    entity.value = req.body[locale];
     return entity;
   });
   await getRepository(Translation).insert(entities);

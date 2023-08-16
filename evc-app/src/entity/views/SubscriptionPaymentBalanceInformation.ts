@@ -42,7 +42,7 @@ export class SubscriptionPaymentBalanceInformation {
   paymentId: string;
 
   @ViewColumn()
-  userId: string; 
+  userId: string;
 
   @ViewColumn()
   start: Date;

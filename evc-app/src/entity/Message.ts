@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn } from 
 export class Message {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
- 
+
   @CreateDateColumn()
   @Index()
   createdAt?: Date;

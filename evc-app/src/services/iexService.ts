@@ -30,7 +30,7 @@ async function requestIexApi(relativeApiPath: string, query?: object) {
   const queryParams = queryString.stringify({
     ...query,
     token: process.env.IEXCLOUD_PUBLIC_KEY
-  })
+  });
   const url = `${process.env.IEXCLOUD_API_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/${path}?${queryParams}`;
   const resp = await fetch(url, query);
   console.debug('iex request'.bgMagenta.white, resp.status, url.magenta);
@@ -219,7 +219,7 @@ export async function singleBatchRequest(symbols: string[], types: string[], par
     ...params,
     symbols: symbols.join(','),
     types: types.join(',')
-  })
+  });
 }
 
 export async function batchRequest(symbols: string[], types: string[], options?: {}) {

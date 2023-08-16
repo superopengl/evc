@@ -28,7 +28,7 @@ export async function createStripeCheckoutSession() {
   });
 
   return session;
-};
+}
 
 export async function parseStripeWebhookEvent(req) {
   const sig = req.headers['stripe-signature'];

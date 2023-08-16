@@ -9,6 +9,7 @@ dependencies:
   cookie-parser: 1.4.5
   cors: 2.8.5
   cron: 1.8.2
+  csv-parser: 3.0.0
   delay: 4.4.0
   dotenv: 8.2.0
   email-templates: 7.1.1
@@ -2053,6 +2054,15 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
+  /csv-parser/3.0.0:
+    dependencies:
+      minimist: 1.2.5
+    dev: false
+    engines:
+      node: '>= 10'
+    hasBin: true
+    resolution:
+      integrity: sha512-s6OYSXAK3IdKqYO33y09jhypG/bSDHPuyCme/IdEHfWpLf/jKcpitVFyOC6UemgGk8v7Q5u2XE0vvwmanxhGlQ==
   /currently-unhandled/0.4.1:
     dependencies:
       array-find-index: 1.0.2
@@ -7910,6 +7920,7 @@ specifiers:
   cookie-parser: ^1.4.5
   cors: ^2.8.5
   cron: ^1.8.2
+  csv-parser: ^3.0.0
   delay: ^4.4.0
   dotenv: ^8.2.0
   email-templates: ^7.1.1

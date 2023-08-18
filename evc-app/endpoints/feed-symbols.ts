@@ -88,5 +88,4 @@ async function feedInitStockList() {
 
 start('sync_all_symbols', async () => {
   await feedInitStockList();
-  process.exit();
 });

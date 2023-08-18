@@ -61,6 +61,4 @@ start(JOB_NAME, async () => {
     console.log(JOB_NAME, `${++round}/${total}`);
     await syncIexToDatabase(batchSymbols);
   }
-
-  process.exit();
 });

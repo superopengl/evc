@@ -9,9 +9,9 @@ const HeaderStockSearch = (props) => {
   }
 
   return (
-        <StockSearchInput
-          onChange={handleSelectedStock}
-          style={{ width: '100%', maxWidth: 400 }} />
+    <StockSearchInput
+      onChange={handleSelectedStock}
+      style={{ width: '100%', maxWidth: 400 }} />
   );
 };
 

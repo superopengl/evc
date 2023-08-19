@@ -111,14 +111,6 @@ export async function deleteStockFairValue(id) {
   return httpDelete(`stock/value/${id}`);
 }
 
-export async function listStockPublish(symbol, verbose = false) {
-  return httpGet(`stock/s/${symbol}/publish`, { verbose });
-}
-
-export async function saveStockPublish(symbol, payload) {
-  return httpPost(`stock/s/${symbol}/publish`, payload);
-}
-
 export async function getMarketMostActive() {
   return httpGet(`/stock/data/mostactive`);
 }

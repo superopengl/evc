@@ -4,12 +4,13 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
+@Index('idx_support_symbol_lo', ['symbol', 'lo'])
+@Index('idx_support_symbol_created', ['symbol', 'createdAt'])
 export class StockSupport {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
   @Column()
-  @Index()
   symbol: string;
 
   @CreateDateColumn()
@@ -26,7 +27,4 @@ export class StockSupport {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   hi: number;
-
-  @Column({default: false})
-  published: boolean;
 }

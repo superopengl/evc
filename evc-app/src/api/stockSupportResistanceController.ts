@@ -10,7 +10,7 @@ function factoryListHandler(EntityType) {
   return handlerWrapper(async (req, res) => {
     assertRole(req, 'admin', 'agent');
     const { symbol } = req.params;
-    const limit = +req.query.limit || 6;
+    const limit = +req.query.limit || 100;
 
     const list = await getRepository(EntityType).find({
       where: {

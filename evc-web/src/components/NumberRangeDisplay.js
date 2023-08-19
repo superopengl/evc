@@ -29,7 +29,7 @@ export const NumberRangeDisplay = (props) => {
   const { lo, hi, loTrend, hiTrend, time } = props;
 
   if (!lo && lo !== 0 && !hi && hi !== 0) {
-    return <Text type="secondary"><DashOutlined /></Text>
+    return props.empty;
   }
 
   const formatNumber = num => {
@@ -70,11 +70,13 @@ NumberRangeDisplay.propTypes = {
   loTrend: PropTypes.oneOf([-1, 0, 1]),
   hiTrend: PropTypes.oneOf([-1, 0, 1]),
   time: PropTypes.any,
+  empty: PropTypes.any,
 };
 
 NumberRangeDisplay.defaultProps = {
   lo: null,
   hi: null,
   loTrend: 0,
-  hiTrend: 0
+  hiTrend: 0,
+  empty: null
 };

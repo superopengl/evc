@@ -63,7 +63,7 @@ const StockInfoCard = (props) => {
     setWatched(watching);
   }
 
-  const {isOver, isUnder} = stock;
+  const { isOver, isUnder } = stock;
   const className = isOver ? 'over-valued' : isUnder ? 'under-valued' : null;
   const titleSuffix = isOver ? 'over' : isUnder ? 'under' : null;
   return (
@@ -84,42 +84,30 @@ const StockInfoCard = (props) => {
       <StyledTable>
         <tbody>
 
-        <tr>
-          <td>
-            <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
-          </td>
-          <td>
-            <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} loTrend={stock.fairValueLoTrend} hiTrend={stock.fairValueHiTrend} />
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <TooltipLabel message="How to use support">Support</TooltipLabel>
-          </td>
-          <td>
-            <Space>
-              <NumberRangeDisplay lo={stock.supportLo} hi={stock.supportHi} />
-            </Space>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
-          </td>
-          <td>
-            <Space>
-              <NumberRangeDisplay lo={stock.resistanceLo} hi={stock.resistanceHi} />
-            </Space>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <Text type="secondary"><small>Published</small></Text>
-          </td>
-          <td>
-            <TimeAgo value={stock.publishedAt} type={null} accurate={true} />
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
+            </td>
+            <td>
+              <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} empty={<Text type="warning"><small>N/A Cannot calculate</small></Text>} />
+            </td>
+          </tr>
+          <tr>
+            <td style={{ verticalAlign: 'top' }}>
+              <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
+            </td>
+            <td style={{ display: 'flex', flexDirection: 'column' }}>
+              {stock.resistances?.length > 0 && stock.resistances.map((r, i) => <NumberRangeDisplay key={i} lo={r.lo} hi={r.hi} />)}
+            </td>
+          </tr>
+          <tr>
+            <td style={{ verticalAlign: 'top' }}>
+              <TooltipLabel message="How to use support">Support</TooltipLabel>
+            </td>
+            <td style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+              {stock.supports?.length > 0 && stock.supports.map((s, i) => <NumberRangeDisplay key={i} lo={s.lo} hi={s.hi} />)}
+            </td>
+          </tr>
         </tbody>
       </StyledTable>
     </StyledCard>

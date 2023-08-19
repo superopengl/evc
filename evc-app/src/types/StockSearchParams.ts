@@ -11,4 +11,5 @@ export type StockSearchParams = {
   noCount?: boolean;
   overValued?: boolean;
   underValued?: boolean;
+  inValued?: boolean;
 };

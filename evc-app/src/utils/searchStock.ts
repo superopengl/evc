@@ -2,10 +2,10 @@ import { getManager } from 'typeorm';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
-import { StockLastPublishInformation } from '../entity/views/StockLastPublishInformation';
+import { StockLatestStockInformation } from '../entity/views/StockLatestStockInformation';
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
-  const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued } = queryInfo;
+  const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued, inValued } = queryInfo;
 
   const pageNo = page || 1;
   const pageSize = size || 50;
@@ -13,7 +13,7 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
 
   let query = getManager()
     .createQueryBuilder()
-    .from(StockLastPublishInformation, 's')
+    .from(StockLatestStockInformation, 's')
     .where('1 = 1');
 
   if (symbols?.length) {
@@ -46,12 +46,18 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
     query = query.andWhere(`(s.tags && array[:...tags]::uuid[]) IS TRUE`, { tags });
   }
 
-  if (overValued && underValued) {
-    query = query.andWhere(`s."isOver" IS TRUE OR s."isUnder" IS TRUE`);
-  } else if (overValued) {
-    query = query.andWhere(`s."isOver" IS TRUE`);
-  } else if (underValued) {
-    query = query.andWhere(`s."isUnder" IS TRUE`);
+  const orClause = [];
+  if (overValued) {
+    orClause.push(`s."isOver" IS TRUE`);
+  }
+  if (underValued) {
+    orClause.push(`s."isUnder" IS TRUE`);
+  }
+  if (inValued) {
+    orClause.push(`(s."isOver" IS FALSE AND s."isUnder" IS FALSE)`);
+  }
+  if(orClause.length) {
+    query = query.andWhere(`(${orClause.join(' OR ')})`);
   }
 
   const count = noCount ? null : await query.getCount();

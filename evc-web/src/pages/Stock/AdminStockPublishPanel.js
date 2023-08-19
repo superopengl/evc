@@ -19,7 +19,7 @@ import {
   listStockResistance, saveStockResistance, deleteStockResistance,
   listStockPe, listStockEps, saveStockEps, deleteStockEps,
   listStockFairValue, saveStockFairValue, deleteStockFairValue,
-  listStockPublish, saveStockPublish, syncStockEps,
+  syncStockEps,
 } from 'services/stockService';
 import { Loading } from 'components/Loading';
 import { StockName } from 'components/StockName';
@@ -133,15 +133,6 @@ const AdminStockPublishPanel = (props) => {
     } finally {
       setPublishingPrice(false);
     }
-  }
-
-  const handlePublish = async () => {
-    const payload = {
-      supportId: supportList[0].id,
-      resistanceId: resistanceList[0].id,
-      fairValueId: valueList[0].id
-    };
-    await saveStockPublish(symbol, payload);
   }
 
   if (symbol && !stock) {
@@ -303,7 +294,7 @@ const AdminStockPublishPanel = (props) => {
           />
         </ColInnerCard>
       </Col>
-      <Col flex="auto">
+      {/* <Col flex="auto">
         <ColInnerCard title="Publish History">
           <StockPublishTimelineEditor
             onLoadList={() => listStockPublish(symbol, true)}
@@ -314,7 +305,7 @@ const AdminStockPublishPanel = (props) => {
             disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
           />
         </ColInnerCard>
-      </Col>
+      </Col> */}
       <Col flex="auto">
         <ColInnerCard title="Support">
           <StockRangeTimelineEditor

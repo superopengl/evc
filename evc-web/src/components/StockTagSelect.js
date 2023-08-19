@@ -259,7 +259,7 @@ const StockTagSelect = (props) => {
 
 StockTagSelect.propTypes = {
   // value: PropTypes.string.isRequired,
-  value: PropTypes.arrayOf(PropTypes.string).isRequired,
+  value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   onChange: PropTypes.func
 };

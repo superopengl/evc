@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Typography, Input, Button, Form, Layout, Space, Modal } from 'antd';
 import { Logo } from 'components/Logo';
 import isEmail from 'validator/es/lib/isEmail';
@@ -11,6 +11,9 @@ import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { createStock, existsStock } from 'services/stockService';
 import PropTypes from 'prop-types';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { notify } from 'util/notify';
+
+const { Text, Link } = Typography;
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto 0 auto;
@@ -66,10 +69,15 @@ const CreateStockModal = props => {
 
     try {
       setLoading(true);
+      const { symbol } = values;
       await createStock(values);
       onOk();
 
       context.event$.next({ type: 'stock.created' });
+
+      notify.success(
+        <>Successfully created stock <Link strong onClick={() => props.history.push(`/stock/${symbol}`)}>{symbol}</Link></>
+      )
     } catch {
       setLoading(false);
     }
@@ -79,6 +87,9 @@ const CreateStockModal = props => {
     <Modal
       title="Create Stock"
       visible={modalVisible}
+      destroyOnClose={true}
+      onOk={onOk}
+      onCancel={onCancel}
       closable={true}
       maskClosable={false}
       footer={null}

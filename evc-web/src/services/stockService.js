@@ -63,6 +63,10 @@ export async function saveStockSupport(symbol, lo, hi) {
   return httpPost(`stock/s/${symbol}/support`, { lo, hi });
 }
 
+export async function existsStock(symbol) {
+  return httpGet(`stock/s/${symbol}/exists`);
+}
+
 export async function deleteStockSupport(id) {
   return httpDelete(`stock/support/${id}`);
 }

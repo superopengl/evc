@@ -167,7 +167,7 @@ const StockTagSelect = (props) => {
       const allTags = await listStockTags();
       const allOptions = convertTagsToOptions(allTags);
       setOptions(allOptions);
-      const selectedOptions = allOptions.filter(x => selectedTagIds.some(tagId => tagId === x.value));
+      const selectedOptions = allOptions.filter(x => selectedTagIds?.some(tagId => tagId === x.value));
       setSelectedOptions(selectedOptions);
     } finally {
       setLoading(false);

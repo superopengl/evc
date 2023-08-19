@@ -17,6 +17,7 @@ import StockTagFilter from 'components/StockTagFilter';
 import StockInfoCard from 'components/StockInfoCard';
 import { StockSearchInput } from 'components/StockSearchInput';
 import HeaderStockSearch from 'components/HeaderStockSearch';
+import CreateStockModal from './CreateStockModal';
 
 const { Text, Paragraph } = Typography;
 
@@ -87,6 +88,7 @@ const StockListPage = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const [createModalVisible, setCreateModalVisible] = React.useState(false);
 
   const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
@@ -162,7 +164,7 @@ const StockListPage = (props) => {
                 {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
             </Space>
-            <Button type="primary" ghost icon={<PlusOutlined/>}>New Stock</Button>
+            <Button type="primary" ghost icon={<PlusOutlined/>} onClick={() => setCreateModalVisible(true)}>New Stock</Button>
           </Space>
           <StockTagFilter value={queryInfo.tags} onChange={handleTagFilterChange} />
           <StockList data={list} loading={loading} onItemClick={stock => props.history.push(`/stock/${stock.symbol}`)} />
@@ -185,6 +187,11 @@ const StockListPage = (props) => {
           />
         </Space>
       </ContainerStyled>
+      <CreateStockModal
+        visible={createModalVisible}
+        onOk={() => setCreateModalVisible(false)}
+        onCancel={() => setCreateModalVisible(false)}
+      />
     </LayoutStyled>
   );
 };

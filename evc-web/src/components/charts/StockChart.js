@@ -10,6 +10,8 @@ import ReactDOM from "react-dom";
 import { Loading } from 'components/Loading';
 import Chart from './Chart';
 import { timeParse } from "d3-time-format";
+import TradingViewWidget from 'react-tradingview-widget';
+
 const parseDate = timeParse("%Y-%m-%d");
 const PERIOD_X_INTERVAL = {
   '1h': {
@@ -71,6 +73,11 @@ const PERIOD_X_INTERVAL = {
 
 const StockChart = props => {
   const { symbol, period, interval } = props;
+
+
+return <TradingViewWidget symbol={`${symbol}`} />
+
+
   const [chartState, setChartState] = React.useState({
     period: period,
     interval

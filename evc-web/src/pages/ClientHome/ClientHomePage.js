@@ -1,26 +1,16 @@
-import { Button, Layout, Modal, Space, Typography, Tabs, Row, Col } from 'antd';
+import { Button, Layout, Modal, Space, Typography } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { listTask } from 'services/taskService';
-import { listPortfolio } from 'services/portfolioService';
-import { EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { withRouter } from 'react-router-dom';
+import { EyeOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Divider } from 'antd';
-import MyTaskList from 'pages/MyTask/MyTaskList';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
-import { groupBy } from 'lodash';
-import { Empty } from 'antd';
-import { Loading } from 'components/Loading';
-import { Tooltip } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { isProfileComplete } from 'util/isProfileComplete';
 import { StockSearchInput } from 'components/StockSearchInput';
-import { searchSingleStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
-import { List } from 'antd';
+import { searchSingleStock, getWatchList, unwatchStock, watchStock } from 'services/stockService';
 import StockCardClientSearch from 'components/StockCardClientSearch';
-import { reactLocalStorage } from 'reactjs-localstorage';
 import { StockName } from 'components/StockName';
 import StockList from 'components/StockList';
 
@@ -56,11 +46,6 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
-const StockPanelContainer = styled.div`
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: 4px;
-  padding: 1rem;
-`;
 
 const ClientHomePage = (props) => {
 
@@ -70,8 +55,8 @@ const ClientHomePage = (props) => {
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [searchResult, setSearchResult] = React.useState();
-  const [taskListByPortfolioMap, setTaskListByPortfolioMap] = React.useState({});
-  const [searchList, setSearchList] = React.useState([]);
+  const [] = React.useState({});
+  const [] = React.useState([]);
   const [watchList, setWatchList] = React.useState([]);
 
   const loadList = async () => {
@@ -119,24 +104,6 @@ const ClientHomePage = (props) => {
     setWatchList([...watchList, stock]);
   }
 
-  const handleUnwatch = async (stock) => {
-    Modal.confirm({
-      title: <>Remove <StockName value={stock} /> from watchlist</>,
-      async onOk() {
-        await unwatchStock(stock.symbol);
-        setWatchList(watchList.filter(x => x.symbol !== stock.symbol));
-      },
-      maskClosable: true,
-      okText: 'Yes, unwatch it',
-      okButtonProps: {
-        danger: true
-      },
-      onCancel() {
-      },
-    });
-
-
-  }
 
   return (
     <LayoutStyled>

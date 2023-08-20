@@ -1,40 +1,20 @@
-import { Button, Layout, Modal, Space, Typography, Table, Row, Col } from 'antd';
+import { Button, Layout, Modal, Space, Typography, Row, Col } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
-import { listTask } from 'services/taskService';
-import { listPortfolio } from 'services/portfolioService';
-import { CopyOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons';
+import { withRouter } from 'react-router-dom';
+import { WarningOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { Divider } from 'antd';
-import MyTaskList from 'pages/MyTask/MyTaskList';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
-import { groupBy } from 'lodash';
-import { Empty, List } from 'antd';
 import { Loading } from 'components/Loading';
-import { Tooltip } from 'antd';
-import { GlobalContext } from 'contexts/GlobalContext';
-import ProfileForm from 'pages/Profile/ProfileForm';
-import { isProfileComplete } from 'util/isProfileComplete';
-import { StockSearchInput } from 'components/StockSearchInput';
-import { getStockHistory } from 'services/stockService';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
 import { getSubscriptionName } from 'util/getSubscriptionName';
-import { Alert } from 'antd';
 import PaymentModal from 'components/checkout/PaymentModal';
-import { StockName } from 'components/StockName';
-import { getMyAccount } from 'services/accountService';
-import MoneyAmount from 'components/MoneyAmount';
-import ReferralLinkInput from 'components/ReferralLinkInput';
 import { cancelSubscription, getMyCurrentSubscription } from 'services/subscriptionService';
 import { TimeAgo } from 'components/TimeAgo';
 import { PageHeader } from 'antd';
-import StockTag from 'components/StockTag';
 import { Tag } from 'antd';
 
-const { Paragraph, Text, Title, Link: LinkText } = Typography;
+const { Paragraph, Text, Title } = Typography;
 
 
 const ContainerStyled = styled.div`

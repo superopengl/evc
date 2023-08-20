@@ -12,24 +12,13 @@ import SignUpPage from 'pages/SignUpPage';
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import Error404 from 'pages/Error404';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
-import MyTaskListPage from 'pages/MyTask/MyTaskListPage';
 import TaskTemplatePage from 'pages/TaskTemplate/TaskTemplatePage';
-import DocTemplatePage from 'pages/DocTemplate/DocTemplatePage';
-import PortfolioListPage from 'pages/Portfolio/PortfolioListPage';
-import AdminTaskListPage from 'pages/AdminTask/AdminTaskListPage';
-import ProceedTaskPage from 'pages/AdminTask/ProceedTaskPage';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
-import MyTaskPage from 'pages/MyTask/MyTaskPage';
-import RecurringListPage from 'pages/Recurring/RecurringListPage';
 import MessagePage from 'pages/Message/MessagePage';
 import UserListPage from 'pages/User/UserListPage';
 import ImpersonatePage from 'pages/Impersonate/ImpersonatePage';
 import { countUnreadMessage } from 'services/messageService';
-import PortfolioFormPage from 'pages/Portfolio/PortfolioFormPage';
-import DeclarationPage from 'pages/DeclarationPage';
-import ClientHomePage from 'pages/ClientHome/ClientHomePage';
-import AdminStatsPage from 'pages/AdminStats/AdminStatsPage';
 import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
@@ -99,7 +88,6 @@ class App extends React.Component {
     const isAdmin = role === 'admin';
     const isGuest = role === 'guest';
     const isClient = role === 'client';
-    const isAgent = role === 'agent';
 
     return (
       <GlobalContext.Provider value={this.state}>

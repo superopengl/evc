@@ -380,7 +380,24 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK         
+  /stock/plea:
+    get:
+      operationId: listStockPleas
+      responses:
+        200:
+          description: OK               
+  /stock/plea/{symbol}:
+    post:
+      operationId: submitStockPlea
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK                    
   /stock/s/{symbol}/insider:
     get:
       operationId: getStockInsider

@@ -146,3 +146,11 @@ export async function getStockQuote(symbol) {
 export async function getStockChart(symbol, period, interval) {
   return httpGet(`/stock/s/${symbol}/chart/${period}/${interval}`);
 }
+
+export async function submitStockPlea(symbol) {
+  return httpPost(`stock/plea/${symbol}`);
+}
+
+export async function listStockPleas() {
+  return httpGet(`stock/plea`);
+}

@@ -21,3 +21,4 @@ export * from './stripeController';
 export * from './translationController';
 export * from './emailTemplateController';
 export * from './configController';
+export * from './dashboardController';

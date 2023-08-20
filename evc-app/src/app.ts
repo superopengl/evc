@@ -13,7 +13,7 @@ import * as cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
 import { sseMiddleware } from 'express-sse-middleware';
 import { webhookStripe } from './api/stripeController';
-
+import * as serveStatic from 'serve-static';
 
 function errorHandler(err, req, res, next) {
   if (err && !/^4/.test(res.status)) {
@@ -123,7 +123,12 @@ export function createAppInstance() {
 
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listEndpoints(app)));
-  app.use('/', express.static(staticWwwDir));
+  app.use('/', serveStatic(staticWwwDir, {
+    cacheControl: true,
+    setHeaders: (res, path) => {
+      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+    }
+  }));
 
   app.use(errorHandler);
 

@@ -74,8 +74,15 @@ const PERIOD_X_INTERVAL = {
 const StockChart = props => {
   const { symbol, period, interval } = props;
 
-
-return <TradingViewWidget symbol={`${symbol}`} />
+  return <div style={{height: 500}}>
+    <TradingViewWidget 
+    symbol={`${symbol}`} 
+    timezone="America/New_York"
+    allow_symbol_change={false}
+    save_image={false}
+    autosize
+    />
+    </div>
 
 
   const [chartState, setChartState] = React.useState({
@@ -217,7 +224,7 @@ return <TradingViewWidget symbol={`${symbol}`} />
     {/* <Area {...config}/> */}
     {/* <DualAxes {...chartConfig} /> */}
     {/* https://github.com/rrag/react-stockcharts-examples2 */}
-   {chartData.length > 0 && <Chart type="hybrid" data={chartData} />}
+    {chartData.length > 0 && <Chart type="hybrid" data={chartData} />}
   </Loading>
 }
 

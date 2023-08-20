@@ -14,3 +14,4 @@ ubc-app/www
 file_storage
 terraform.tfstate.*
 .terraform.tfstate.*
+devops/evc-key.pem

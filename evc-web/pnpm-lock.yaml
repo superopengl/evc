@@ -9,10 +9,9 @@ dependencies:
   abbreviate: 0.0.3
   abnacn-validator: 0.0.5
   antd: 4.12.3_react-dom@16.14.0+react@16.14.0
-  axios: 0.19.2
+  axios: 0.21.1
   chroma-js: 2.1.0
   craco-less: 1.17.1_71e5802795276374eac6b2316a3aecf2
-  cron-parser: 2.18.0
   cronstrue: 1.109.0
   d3-format: 2.0.0
   d3-time-format: 3.0.0
@@ -30,7 +29,7 @@ dependencies:
   react: 16.14.0
   react-async-script-loader: 0.3.0_react@16.14.0
   react-beautiful-dnd: 13.0.0_react-dom@16.14.0+react@16.14.0
-  react-big-calendar: 0.29.0_react-dom@16.14.0+react@16.14.0
+  react-big-calendar: 0.32.0_react-dom@16.14.0+react@16.14.0
   react-chat-elements: 10.14.0_0106054ed56650b7cf08997e12b36ef5
   react-color: 2.19.3_react@16.14.0
   react-cookie-consent: 6.2.3_react@16.14.0
@@ -38,7 +37,7 @@ dependencies:
   react-dom: 16.14.0_react@16.14.0
   react-file-icon: 1.0.0_react-dom@16.14.0+react@16.14.0
   react-google-login: 5.2.2_react-dom@16.14.0+react@16.14.0
-  react-highlight-words: 0.16.0_react@16.14.0
+  react-highlight-words: 0.17.0_react@16.14.0
   react-icons: 3.11.0_react@16.14.0
   react-image-lightbox: 5.1.1_react-dom@16.14.0+react@16.14.0
   react-infinite-scroller: 1.2.4_react@16.14.0
@@ -3053,13 +3052,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
-  /axios/0.19.2:
+  /axios/0.21.1:
     dependencies:
-      follow-redirects: 1.5.10
-    deprecated: 'Critical security vulnerability fixed in v0.21.1. For more information, see https://github.com/axios/axios/pull/3410'
+      follow-redirects: 1.13.2_debug@4.3.1
     dev: false
     resolution:
-      integrity: sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
+      integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   /axobject-query/2.2.0:
     dev: false
     resolution:
@@ -4285,15 +4283,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-QZv4sFWG9S5RUvkTYWbflxeZX+JG7Cz0Tn33rQBJ+WFQTqTfUTjMjiv9tnfXazjsO5r0KhPs+AqCjyrQX6h2ng==
-  /cron-parser/2.18.0:
-    dependencies:
-      is-nan: 1.3.2
-      moment-timezone: 0.5.33
-    dev: false
-    engines:
-      node: '>=0.8'
-    resolution:
-      integrity: sha512-s4odpheTyydAbTBQepsqd2rNWGa2iV3cyo8g7zbI2QQYGLVsfbhmwukayS1XHppe02Oy1fg7mg6xoaraVJeEcg==
   /cronstrue/1.109.0:
     dev: false
     resolution:
@@ -4825,12 +4814,6 @@ packages:
       ms: 2.0.0
     resolution:
       integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
-  /debug/3.1.0:
-    dependencies:
-      ms: 2.0.0
-    dev: false
-    resolution:
-      integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
   /debug/3.2.7:
     dependencies:
       ms: 2.1.3
@@ -6117,14 +6100,6 @@ packages:
         optional: true
     resolution:
       integrity: sha512-6mPTgLxYm3r6Bkkg0vNM0HTjfGrOEtsfbhagQvbxDEsEkpNhw582upBaoRZylzen6krEmxXJgt9Ju6HiI4O7BA==
-  /follow-redirects/1.5.10:
-    dependencies:
-      debug: 3.1.0
-    dev: false
-    engines:
-      node: '>=4.0'
-    resolution:
-      integrity: sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
   /for-each/0.3.3:
     dependencies:
       is-callable: 1.2.3
@@ -7331,15 +7306,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-wZ8x1js7Ia0kecP/CHM/3ABkAmujX7WPvQk6uu3Fly/Mk44pySulQpnHG46OMjHGXApINnV4QhY3SWnECO2z5g==
-  /is-nan/1.3.2:
-    dependencies:
-      call-bind: 1.0.2
-      define-properties: 1.1.3
-    dev: false
-    engines:
-      node: '>= 0.4'
-    resolution:
-      integrity: sha512-E+zBKpQ2t6MEo1VsonYmluk9NxGrbzpeeLC2xIViuO2EjU2xsXsBPwTr3Ykv9l08UYEVEdWeRZNouaZqF6RN0w==
   /is-negative-zero/2.0.1:
     dev: false
     engines:
@@ -11490,7 +11456,7 @@ packages:
       react-dom: ^16.8.5
     resolution:
       integrity: sha512-87It8sN0ineoC3nBW0SbQuTFXM6bUqM62uJGY4BtTf0yzPl8/3+bHMWkgIe0Z6m8e+gJgjWxefGRVfpE3VcdEg==
-  /react-big-calendar/0.29.0_react-dom@16.14.0+react@16.14.0:
+  /react-big-calendar/0.32.0_react-dom@16.14.0+react@16.14.0:
     dependencies:
       '@babel/runtime': 7.12.18
       clsx: 1.1.1
@@ -11510,7 +11476,7 @@ packages:
       react: ^16.6.1
       react-dom: ^16.6.1
     resolution:
-      integrity: sha512-iaZoi6TMELH+MAYCdGaCQQriHrKTRDl6Jcl7jnCiwubmqid9v1TXELj3tvBKJQ1cWAEsUTgB3SXTUhtsD9DQ2Q==
+      integrity: sha512-IidodG2oCd9VH7f9AsZAMyPZw12wLoicjHzEECrqdg3PIOuKOTScYhsqrSdNq+5j3vfy5sby5cWdBxgViMz9Mg==
   /react-chat-elements/10.14.0_0106054ed56650b7cf08997e12b36ef5:
     dependencies:
       classnames: 2.2.6
@@ -11648,7 +11614,7 @@ packages:
       react-dom: ^16 || ^17
     resolution:
       integrity: sha512-JUngfvaSMcOuV0lFff7+SzJ2qviuNMQdqlsDJkUM145xkGPVIfqWXq9Ui+2Dr6jdJWH5KYdynz9+4CzKjI5u6g==
-  /react-highlight-words/0.16.0_react@16.14.0:
+  /react-highlight-words/0.17.0_react@16.14.0:
     dependencies:
       highlight-words-core: 1.2.2
       memoize-one: 4.0.3
@@ -11656,9 +11622,9 @@ packages:
       react: 16.14.0
     dev: false
     peerDependencies:
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0-0
+      react: ^0.14.0 || ^15.0.0 || ^16.0.0-0 || ^17.0.0-0
     resolution:
-      integrity: sha512-q34TwCSJOL+5pVDv6LUj3amaoyXdNDwd7zRqVAvceOrO9g1haWLAglK6WkGLMNUa3PFN8EgGedLg/k8Gpndxqg==
+      integrity: sha512-uX1Qh5IGjnLuJT0Zok234QDwRC8h4hcVMnB99Cb7aquB1NlPPDiWKm0XpSZOTdSactvnClCk8LOmVlP+75dgHA==
   /react-icon-base/2.1.0_0106054ed56650b7cf08997e12b36ef5:
     dependencies:
       prop-types: 15.7.2
@@ -14779,11 +14745,10 @@ specifiers:
   abbreviate: ^0.0.3
   abnacn-validator: ^0.0.5
   antd: ^4.12.3
-  axios: ^0.19.2
+  axios: ^0.21.1
   babel-plugin-import: ^1.13.3
   chroma-js: ^2.1.0
   craco-less: ^1.17.1
-  cron-parser: ^2.18.0
   cronstrue: ^1.109.0
   cross-env: ^7.0.3
   d3-format: ^2.0.0
@@ -14804,7 +14769,7 @@ specifiers:
   react: ^16.14.0
   react-async-script-loader: ^0.3.0
   react-beautiful-dnd: ^13.0.0
-  react-big-calendar: ^0.29.0
+  react-big-calendar: ^0.32.0
   react-chat-elements: ^10.14.0
   react-color: ^2.19.3
   react-cookie-consent: ^6.2.3
@@ -14812,7 +14777,7 @@ specifiers:
   react-dom: ^16.14.0
   react-file-icon: ^1.0.0
   react-google-login: ^5.2.2
-  react-highlight-words: ^0.16.0
+  react-highlight-words: ^0.17.0
   react-icons: ^3.11.0
   react-image-lightbox: ^5.1.1
   react-infinite-scroller: ^1.2.4

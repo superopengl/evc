@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Divider } from 'antd';
+import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
@@ -80,7 +80,7 @@ const UserListPage = () => {
     {
       title: 'Client Name',
       dataIndex: 'givenName',
-      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName} ${item.surname}`} /> ,
+      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} /> ,
     },
     {
       title: 'Subscription',
@@ -244,8 +244,8 @@ const UserListPage = () => {
   }
 
   const handleInviteUser = async values => {
-    const { email } = values;
-    await inviteUser(email);
+    const { email, role } = values;
+    await inviteUser(email, role);
     setInviteVisible(false);
     loadList();
   }
@@ -350,6 +350,12 @@ const UserListPage = () => {
         <Form layout="vertical" onFinish={handleInviteUser}>
           <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
             <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
+          </Form.Item>
+          <Form.Item label="Role" name="role">
+            <Radio.Group defaultValue="client" disabled={loading} optionType="button" buttonStyle="solid">
+              <Radio.Button value="client">Client</Radio.Button>
+              <Radio.Button value="admin">Admin</Radio.Button>
+            </Radio.Group>
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Invite</Button>

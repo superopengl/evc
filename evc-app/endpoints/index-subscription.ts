@@ -73,7 +73,6 @@ async function renewRecurringSubscription(subscription: Subscription) {
       true
     );
 
-
     let balanceTransaction: UserBalanceTransaction = null;
     if (balanceDeductAmount) {
       balanceTransaction = new UserBalanceTransaction();

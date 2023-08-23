@@ -5,6 +5,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { sendEmail } from '../services/emailService';
 import * as delay from 'delay';
 import { getConfigValue } from '../services/configService';
+import { EmailTemplateType } from '../types/EmailTemplateType';
 
 
 export const saveContact = handlerWrapper(async (req, res) => {
@@ -17,7 +18,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
   assert(recipentName && recipentContact && message, 404, 'Invalid contact information');
 
   await sendEmail({
-    template: 'contact',
+    template: EmailTemplateType.Contact,
     to: await getConfigValue('email.contact.recipient'),
     from: email,
     vars: {

@@ -1,25 +1,16 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Space, Checkbox, Input, Form, Radio, Pagination, Button } from 'antd';
+import { Typography, Layout, Space, Pagination, Button } from 'antd';
 import HomeHeader from 'components/HomeHeader';
-import { GlobalContext } from 'contexts/GlobalContext';
 import StockList from '../../components/StockList';
-import { createStock, searchStock } from 'services/stockService';
+import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { CheckSquareOutlined, BorderOutlined, SearchOutlined, SyncOutlined, PlusOutlined, MessageOutlined } from '@ant-design/icons';
-import InfiniteScroll from 'react-infinite-scroller';
-import { Loading } from 'components/Loading';
-import StockTagSelect from 'components/StockTagSelect';
-import { Divider } from 'antd';
+import { CheckSquareOutlined, BorderOutlined, PlusOutlined } from '@ant-design/icons';
 import StockTagFilter from 'components/StockTagFilter';
-import StockInfoCard from 'components/StockInfoCard';
-import { StockSearchInput } from 'components/StockSearchInput';
-import HeaderStockSearch from 'components/HeaderStockSearch';
 import CreateStockModal from './CreateStockModal';
-
-const { Text, Paragraph } = Typography;
+import * as queryString from 'query-string';
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -84,11 +75,13 @@ const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
 const StockListPage = (props) => {
 
+  const { create } = queryString.parse(props.location.search);
+
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_QUERY_KEY, DEFAULT_QUERY_INFO, true))
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [createModalVisible, setCreateModalVisible] = React.useState(false);
+  const [createModalVisible, setCreateModalVisible] = React.useState(create);
 
   const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
@@ -122,9 +115,6 @@ const StockListPage = (props) => {
     searchByQueryInfo(queryInfo);
   }, []);
 
-  const handleSelectedStock = (symbol) => {
-    props.history.push(`/stock/${symbol}`);
-  }
 
   const handleTagFilterChange = (tags) => {
     searchByQueryInfo({ ...queryInfo, page: 1, tags });
@@ -189,6 +179,7 @@ const StockListPage = (props) => {
       </ContainerStyled>
       <CreateStockModal
         visible={createModalVisible}
+        defaultSymbol={create}
         onOk={() => setCreateModalVisible(false)}
         onCancel={() => setCreateModalVisible(false)}
       />

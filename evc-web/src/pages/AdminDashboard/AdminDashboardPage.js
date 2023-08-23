@@ -1,17 +1,13 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Row, Col, Card, Badge, Alert } from 'antd';
+import { Typography, Layout, Row, Col, Alert } from 'antd';
 import HomeHeader from 'components/HomeHeader';
-import StockList from '../../components/StockList';
-import { getWatchList } from 'services/stockService';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
-import { StarOutlined, StarFilled } from '@ant-design/icons';
-import { notify } from 'util/notify';
 import { getDashboard } from 'services/dashboardService';
 
-const { Text, Title, Paragraph } = Typography;
+const { Text } = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem auto 2rem auto;
@@ -35,21 +31,7 @@ const LayoutStyled = styled(Layout)`
   }
 `;
 
-const StyledBadge = styled(Badge)`
-
-  .ant-badge-count {
-    color: #999;
-    background-color: #fff;
-    box-shadow: 0 0 0 1px #d9d9d9 inset;
-  }
-`;
-const StockTile = props => <StyledBadge count={props.count}>
-  <Card size="small">
-    {props.symbol}
-  </Card>
-</StyledBadge>
-
-const AdminDashboardPage = (props) => {
+const AdminDashboardPage = () => {
 
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -72,10 +54,6 @@ const AdminDashboardPage = (props) => {
     loadList();
   }, []);
 
-  const handleSelectedStock = (symbol) => {
-    props.history.push(`/stock/${symbol}`);
-  }
-
   return (
     <LayoutStyled>
       <HomeHeader>
@@ -84,7 +62,7 @@ const AdminDashboardPage = (props) => {
         <Loading loading={loading}>
           <Row gutter={[20, 20]}>
             <Col>
-              {data.pleas?.map(x => <Alert type="info" showIcon key={x.symbol} message={<><Text strong>{x.symbol}</Text> has {x.count} requests.</>} />)}
+              {data.pleas?.map(x => <Alert type="info" showIcon key={x.symbol} message={<><Text strong>{x.symbol}</Text> has {x.count} requests. <Link to={`/stock?create=${x.symbol}`}>Click to create</Link></>} />)}
             </Col>
             <Col>
               {data.noFairValues?.map(x => <Alert type="error" showIcon key={x} message={<><Link to={`/stock/${x}`}>{x}</Link> has no fair value.</>} />)}

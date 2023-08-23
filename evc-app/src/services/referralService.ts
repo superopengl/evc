@@ -16,7 +16,7 @@ export async function getCurrentReferralAmountForReferrer(userId) {
   const globalPolicy = await getRepository(ReferralGlobalPolicy)
     .createQueryBuilder()
     .where({ active: true })
-    .andWhere(`"start" <= :now AND ("end" IS NULL OR "end" > :now)`, { now })
+    .andWhere('"start" <= :now AND ("end" IS NULL OR "end" > :now)', { now })
     .getOne();
 
   return globalPolicy?.amount || 0;

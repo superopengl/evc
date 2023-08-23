@@ -15,7 +15,7 @@ export async function getUserCurrentSubscription(userId) {
       start: LessThan(now),
       status: SubscriptionStatus.Alive
     })
-    .andWhere(`("end" IS NULL OR "end" > now())`)
+    .andWhere('("end" IS NULL OR "end" > now())')
     .getOne();
 
   return subscription;

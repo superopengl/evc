@@ -6,12 +6,12 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 
 async function listMessageForClient(clientId, pagenation, unreadOnly) {
-   const query =  getManager()
+  const query =  getManager()
     .createQueryBuilder()
     .select('*')
     .from(q => q.from(Message, 'x')
-      .where(`"clientUserId" = :id`, { id: clientId })
-      .andWhere(unreadOnly ? `"readAt" IS NULL` : '1 = 1')
+      .where('"clientUserId" = :id', { id: clientId })
+      .andWhere(unreadOnly ? '"readAt" IS NULL' : '1 = 1')
       .orderBy('"taskId"')
       .addOrderBy('"createdAt"', 'DESC')
       .distinctOn(['"taskId"'])
@@ -39,7 +39,7 @@ async function listMessageForAdmin(pagenation, unreadOnly) {
     .createQueryBuilder()
     .select('*')
     .from(q => q.from(Message, 'x')
-      .andWhere(unreadOnly ? `"readAt" IS NULL` : '1 = 1')
+      .andWhere(unreadOnly ? '"readAt" IS NULL' : '1 = 1')
       .orderBy('"taskId"')
       .addOrderBy('"createdAt"', 'DESC')
       .distinctOn(['"taskId"'])
@@ -73,17 +73,17 @@ export const listMessage = handlerWrapper(async (req, res) => {
 
   let list: Promise<any>;
   switch (role) {
-    case 'client':
-      list = await listMessageForClient(id, pagenation, unreadOnly);
-      break;
-    case 'agent':
-      // list = await listMessageForAgent(id, pagenation, unreadOnly);
-      // break;
-    case 'admin':
-      list = await listMessageForAdmin(pagenation, unreadOnly);
-      break;
-    default:
-      assert(false, 500, `Unsupported role ${role}`);
+  case 'client':
+    list = await listMessageForClient(id, pagenation, unreadOnly);
+    break;
+  case 'agent':
+    // list = await listMessageForAgent(id, pagenation, unreadOnly);
+    // break;
+  case 'admin':
+    list = await listMessageForAdmin(pagenation, unreadOnly);
+    break;
+  default:
+    assert(false, 500, `Unsupported role ${role}`);
   }
 
   res.json(list);
@@ -103,13 +103,13 @@ export const getMessage = handlerWrapper(async (req, res) => {
   const result = await repo.createQueryBuilder('x')
     .where(query)
     .select([
-      `x.id as id`,
-      `x.content as content`,
-      `x."createdAt" as "createdAt"`,
-      `x."readAt" as "readAt"`,
-      `x."taskId" as "taskId"`,
-      `l."name" as name`,
-      `l."forWhom" as "forWhom"`,
+      'x.id as id',
+      'x.content as content',
+      'x."createdAt" as "createdAt"',
+      'x."readAt" as "readAt"',
+      'x."taskId" as "taskId"',
+      'l."name" as name',
+      'l."forWhom" as "forWhom"',
     ])
     .execute();
 

@@ -56,7 +56,7 @@ export const logout = handlerWrapper(async (req, res) => {
 });
 
 
-function createUserAndProfileEntity(payload): { user: User, profile: UserProfile } {
+function createUserAndProfileEntity(payload): { user: User; profile: UserProfile } {
   const { email, password, role, referralCode, ...other } = payload;
   const thePassword = password || uuidv4();
   validatePasswordStrength(thePassword);
@@ -84,7 +84,7 @@ function createUserAndProfileEntity(payload): { user: User, profile: UserProfile
   return { user, profile };
 }
 
-async function createNewLocalUser(payload): Promise<{ user: User, profile: UserProfile }> {
+async function createNewLocalUser(payload): Promise<{ user: User; profile: UserProfile }> {
   const { user, profile } = createUserAndProfileEntity(payload);
 
   user.resetPasswordToken = uuidv4();

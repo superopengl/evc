@@ -4,10 +4,10 @@ import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './iexService';
 
 export type StockIexEpsInfo = {
-  symbol: string,
-  fiscalPeriod: string,
-  reportDate: string,
-  value: number,
+  symbol: string;
+  fiscalPeriod: string;
+  reportDate: string;
+  value: number;
 };
 
 export const syncStockEps = async (symbol: string, howManyQuarters = 4) => {
@@ -53,6 +53,6 @@ export const syncManyStockEps = async (epsInfo: StockIexEpsInfo[]) => {
     .insert()
     .into(StockEps)
     .values(entites)
-    .onConflict(`(symbol, "reportDate") DO NOTHING`)
+    .onConflict('(symbol, "reportDate") DO NOTHING')
     .execute();
 };

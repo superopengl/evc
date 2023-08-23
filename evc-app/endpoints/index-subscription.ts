@@ -22,18 +22,18 @@ async function expireSubscriptions() {
     .createQueryBuilder()
     .update(Subscription)
     .set({ status: SubscriptionStatus.Expired })
-    .where(`status = :status`, { status: SubscriptionStatus.Alive })
-    .andWhere(`"end" < now()`)
+    .where('status = :status', { status: SubscriptionStatus.Alive })
+    .andWhere('"end" < now()')
     .execute();
 }
 
 async function sendAlertForExpiringSubscriptions() {
   const list = await getRepository(Subscription)
     .createQueryBuilder()
-    .where(`status = :status`, { status: SubscriptionStatus.Alive })
-    .andWhere(`DATEADD(day, "alertDays", now()) >= "end"`)
+    .where('status = :status', { status: SubscriptionStatus.Alive })
+    .andWhere('DATEADD(day, "alertDays", now()) >= "end"')
     .execute();
-  // TODO: send notificaiton emails to them
+    // TODO: send notificaiton emails to them
 }
 
 async function handlePayWithCard(subscription: Subscription) {
@@ -48,13 +48,13 @@ function extendSubscriptionEndDate(subscription: Subscription) {
   const { end, type } = subscription;
   let newEnd = end;
   switch (type) {
-    case SubscriptionType.UnlimitedMontly:
-      newEnd = moment(end).add(1, 'month').toDate();
-      break;
-    case SubscriptionType.UnlimitedYearly:
-      newEnd = moment(end).add(12, 'month').toDate();
-    default:
-      throw new Error(`Unkonwn subscription type ${type}`);
+  case SubscriptionType.UnlimitedMontly:
+    newEnd = moment(end).add(1, 'month').toDate();
+    break;
+  case SubscriptionType.UnlimitedYearly:
+    newEnd = moment(end).add(12, 'month').toDate();
+  default:
+    throw new Error(`Unkonwn subscription type ${type}`);
   }
 
   subscription.end = newEnd;
@@ -100,9 +100,9 @@ async function renewRecurringSubscription(subscription: Subscription) {
 async function handleRecurringPayments() {
   const list: Subscription[] = await getRepository(Subscription)
     .createQueryBuilder()
-    .where(`status = :status`, { status: SubscriptionStatus.Alive })
-    .andWhere(`recurring = TRUE`)
-    .andWhere(`DATEADD(day, "alertDays", now()) >= "end"`)
+    .where('status = :status', { status: SubscriptionStatus.Alive })
+    .andWhere('recurring = TRUE')
+    .andWhere('DATEADD(day, "alertDays", now()) >= "end"')
     .leftJoinAndSelect('payments', 'payment')
     .execute();
 

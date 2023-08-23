@@ -14,7 +14,7 @@ async function syncManyStockClose(closeEntities: StockClose[]) {
       .createQueryBuilder()
       .insert()
       .into(StockClose)
-      .onConflict(`("symbol", "date") DO NOTHING`)
+      .onConflict('("symbol", "date") DO NOTHING')
       .values(closeEntities)
       .execute();
   }

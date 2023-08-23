@@ -49,7 +49,7 @@ export const incrementStock = handlerWrapper((req, res) => {
     .insert()
     .into(StockHotSearch)
     .values({ symbol, count: 1 })
-    .onConflict(`(symbol) DO UPDATE SET count = stock_hot_search.count + 1`)
+    .onConflict('(symbol) DO UPDATE SET count = stock_hot_search.count + 1')
     .execute()
     .catch(() => { });
 
@@ -68,11 +68,11 @@ export const getStock = handlerWrapper(async (req, res) => {
   if (role === Role.Client) {
     const result = await getRepository(entityClass)
       .createQueryBuilder('s')
-      .where(`s.symbol = :symbol`, { symbol })
+      .where('s.symbol = :symbol', { symbol })
       .leftJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :id', { id }),
-        'sw',
-        'sw.symbol = s.symbol')
+      'sw',
+      'sw.symbol = s.symbol')
       .select('s.*')
       .addSelect('sw."createdAt" as watched')
       .execute();
@@ -156,7 +156,7 @@ export const listHotStock = handlerWrapper(async (req, res) => {
     .from(StockGuestPublishInformation, 'si')
     .innerJoin(q => q.from(StockHotSearch, 'h')
       .orderBy('h.count', 'DESC')
-      .limit(limit), 'h', `si.symbol = h.symbol`
+      .limit(limit), 'h', 'si.symbol = h.symbol'
     )
     .orderBy('h.count', 'DESC')
     .select([
@@ -310,7 +310,7 @@ async function updateStockLastPrice(info: StockLastPriceInfo) {
     .insert()
     .into(StockLastPrice)
     .values(lastPrice)
-    .onConflict(`(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"`)
+    .onConflict('(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"')
     .execute();
 }
 

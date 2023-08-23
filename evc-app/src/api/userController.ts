@@ -96,11 +96,11 @@ export const searchUsers = handlerWrapper(async (req, res) => {
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id');
 
   if (text) {
-    query = query.andWhere(`(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)`, { text: `%${text}%` });
+    query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
   }
-  query = query.leftJoin(q => q.from(Subscription, 's').where(`status = :status`, { status: SubscriptionStatus.Alive }), 's', `s."userId" = u.id`);
+  query = query.leftJoin(q => q.from(Subscription, 's').where('status = :status', { status: SubscriptionStatus.Alive }), 's', 's."userId" = u.id');
   if (subscription.length) {
-    query = query.andWhere(`(s.type IN (:...subscription))`, { subscription });
+    query = query.andWhere('(s.type IN (:...subscription))', { subscription });
   }
 
   query = query.orderBy(orderField, orderDirection)
@@ -172,8 +172,8 @@ export const listMyBalanceHistory = handlerWrapper(async (req, res) => {
   const { user: { id } } = req as any;
   const list = await getRepository(UserBalanceTransaction)
     .createQueryBuilder('ubt')
-    .where(`ubt."userId" = :id`, {id})
-    .andWhere(`ubt.amount != 0`)
+    .where('ubt."userId" = :id', {id})
+    .andWhere('ubt.amount != 0')
     .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."balanceTransactionId"')
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('ubt."createdAt"', 'DESC')

@@ -14,14 +14,14 @@ import { StockResistance } from '../StockResistance';
         q.from(StockSupport, 'x')
           .orderBy('x.lo', 'DESC')
           .limit(3),
-        'sup')
+      'sup')
         .groupBy('sup.symbol')
         .select('symbol')
-        .addSelect(`array_agg(json_build_object('lo', lo, 'hi', hi)) as supports`),
-      'supports', 'supports.symbol = s.symbol')
+        .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as supports'),
+    'supports', 'supports.symbol = s.symbol')
     .select([
-      `s.symbol as symbol`,
-      `supports.supports as supports`
+      's.symbol as symbol',
+      'supports.supports as supports'
     ])
 })
 export class StockTopSupport {
@@ -30,7 +30,7 @@ export class StockTopSupport {
   symbol: string;
 
   @ViewColumn()
-  supports: { lo: number, hi: number }[];
+  supports: { lo: number; hi: number }[];
 }
 
 @ViewEntity({
@@ -46,7 +46,7 @@ export class StockTopSupport {
         'tg."stockSymbol" as symbol',
         'array_agg(tg."stockTagId") as tags'
       ]),
-      'tg', 'tg.symbol = s.symbol'
+    'tg', 'tg.symbol = s.symbol'
     )
     .addSelect('tg.tags')
     .leftJoin(q => q.from(StockLastFairValue, 'sfv'),
@@ -65,25 +65,25 @@ export class StockTopSupport {
         q.from(StockSupport, 'x')
           .orderBy('lo', 'DESC')
           .limit(4),
-        'sup')
+      'sup')
         .groupBy('symbol')
         .select('symbol')
-        .addSelect(`array_agg(json_build_object('lo', lo, 'hi', hi)) as values`),
-      'support', 'support.symbol = s.symbol'
+        .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
+    'support', 'support.symbol = s.symbol'
     )
-    .addSelect(`support.values as supports`)
+    .addSelect('support.values as supports')
     .leftJoin(q =>
       q.from(q =>
         q.from(StockResistance, 'x')
           .orderBy('lo', 'ASC')
           .limit(4),
-        'sup')
+      'sup')
         .groupBy('symbol')
         .select('symbol')
-        .addSelect(`array_agg(json_build_object('lo', lo, 'hi', hi)) as values`),
-      'resistance', 'resistance.symbol = s.symbol'
+        .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
+    'resistance', 'resistance.symbol = s.symbol'
     )
-    .addSelect(`resistance.values as resistances`)
+    .addSelect('resistance.values as resistances')
 })
 export class StockLatestStockInformation {
   @ViewColumn()
@@ -112,9 +112,9 @@ export class StockLatestStockInformation {
   isOver: boolean;
 
   @ViewColumn()
-  supports: { lo: number, hi: number }[];
+  supports: { lo: number; hi: number }[];
 
   @ViewColumn()
-  resistances: { lo: number, hi: number }[];
+  resistances: { lo: number; hi: number }[];
 }
 

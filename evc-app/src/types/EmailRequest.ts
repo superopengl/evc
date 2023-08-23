@@ -6,6 +6,6 @@ export class EmailRequest {
   locale?: Locale;
   template: string;
   vars: object;
-  attachments?: { filename: string; path: string; }[];
+  attachments?: { filename: string; path: string }[];
   shouldBcc?: boolean = false;
 }

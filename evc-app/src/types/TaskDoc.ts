@@ -15,7 +15,7 @@ export class TaskDoc {
   docTemplateId?: string;
 
   // @Column({ type: 'json', default: [] })
-  variables?: { name: string; value?: any; }[];
+  variables?: { name: string; value?: any }[];
 
   // @Column({ nullable: true })
   varHash?: string;

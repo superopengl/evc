@@ -1,12 +1,5 @@
-import * as aws from 'aws-sdk';
-import { awsConfig } from '../utils/awsConfig';
-import { assert } from '../utils/assert';
 import * as _ from 'lodash';
-import * as nodemailer from 'nodemailer';
-import * as Email from 'email-templates';
-import * as path from 'path';
-import { logError } from '../utils/logger';
-import { EntityManager, getRepository, MoreThan } from 'typeorm';
+import { EntityManager, getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';

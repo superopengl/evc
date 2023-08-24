@@ -66,7 +66,7 @@ const DEFAULT_QUERY_INFO = {
   text: '',
   tags: [],
   page: 1,
-  size: 50,
+  size: 60,
   orderField: 'createdAt',
   orderDirection: 'DESC'
 };
@@ -165,7 +165,7 @@ const StockListPage = (props) => {
             total={total}
             defaultCurrent={queryInfo.page}
             defaultPageSize={queryInfo.size}
-            pageSizeOptions={[10, 20, 50]}
+            pageSizeOptions={[10, 30, 60]}
             showSizeChanger
             showQuickJumper
             showTotal={total => `Total ${total}`}

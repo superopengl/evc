@@ -55,65 +55,52 @@ const responsive = {
   }
 };
 
-export class HomeRowArea extends React.Component {
+export const HomeRowArea = props => {
 
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      collapsed: true
-    }
+  const { title, style, bgColor, children, deviceType } = props;
+  const [collapsed, setCollapsed] = React.useState(true);
+
+  const toggle = (value) => {
+    setCollapsed(value);
   }
 
-  toggle = (value) => {
-    this.setState({
-      collapsed: value
-    })
-  }
-
-  renderChildComponent = (comp) => {
-    const { span } = this.props;
+  const renderChildComponent = (comp) => {
+    const { span } = props;
     return <Col {...span}>
       {comp}
     </Col>
   }
 
-  render() {
-    const { title, style, bgColor, children, deviceType } = this.props;
 
-    return (
-      <Container style={{ backgroundColor: bgColor || '#fff',  ...style }} >
-        <InnerContainer>
-          <Row>
-            <Col span={24}>
-              {title && <Title>{title}</Title>}
-            </Col>
+  return (
+    <Container style={{ backgroundColor: bgColor || '#fff', ...style }} >
+      <InnerContainer>
+        <Row>
+          <Col span={24}>
+            {title && <Title>{title}</Title>}
+          </Col>
 
-          </Row>
+        </Row>
 
-          <StyledRow gutter={12}>
+        <StyledRow gutter={12}>
 
-            {React.Children.map(children, this.renderChildComponent)}
-          </StyledRow>
+          {React.Children.map(children, renderChildComponent)}
+        </StyledRow>
 
-          {/* {totalRows > 1 && <CenterRowStyled style={{ padding: 0 }}>
-            {this.state.collapsed && <ExpandButton icon={<DownOutlined />} type="link" onClick={() => this.toggle(false)} />}
-            {!this.state.collapsed && <ExpandButton icon={<UpOutlined />} type="link" onClick={() => this.toggle(true)} />}
-          </CenterRowStyled>} */}
 
-          {false && <Carousel
-            responsive={responsive}
-            swipeable={true}
-            removeArrowOnDeviceType={["tablet", "mobile"]}
-            deviceType={deviceType}
-          >
-            {children}
-          </Carousel>}
-        </InnerContainer>
-      </Container>
+        {false && <Carousel
+          responsive={responsive}
+          swipeable={true}
+          removeArrowOnDeviceType={["tablet", "mobile"]}
+          deviceType={deviceType}
+        >
+          {children}
+        </Carousel>}
+      </InnerContainer>
+    </Container>
 
-    );
-  }
+  );
 }
 
 HomeRowArea.propTypes = {

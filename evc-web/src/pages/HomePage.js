@@ -26,60 +26,48 @@ const ContentStyled = styled(Content)`
 `;
 
 
-class HomePage extends React.Component {
-  constructor(props) {
-    super(props);
+const HomePage = props => {
 
-    this.state = {
-      modalVisible: false
-    }
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const contactFormRef = React.createRef();
 
-    this.contactFormRef = React.createRef();
-
+  const openContactForm = () => {
+    setModalVisible(true);
   }
 
-  openContactForm = () => {
-    this.setState({
-      modalVisible: true
-    });
+  const handleContactCancel = () => {
+    setModalVisible(false);
+    resetContactForm();
   }
 
-  handleContactCancel = () => {
-    this.setState({
-      modalVisible: false
-    }, () => this.resetContactForm());
-  }
-
-  resetContactForm = () => {
-    this.contactFormRef.current.reset();
+  const resetContactForm = () => {
+    contactFormRef.current?.reset();
   }
 
 
-  render() {
 
-    return (
-      <LayoutStyled>
-        {/* <BarStyled></BarStyled> */}
-        <ContentStyled>
-          <HashAnchorPlaceholder id="home" />
-          <section>
-            <HomeCarouselArea></HomeCarouselArea>
-          </section>
-          <HomeMarketArea />
-          <HomePricingArea />
-          {/* <section><HomeSearchArea /></section> */}
-          <HashAnchorPlaceholder id="services" />
-          <section><HomeServiceArea bgColor="#135200" /></section>
-          {/* <HashAnchorPlaceholder id="team" /> */}
-          {/* <section><HomeTeamArea /></section> */}
-          <HomeFooter />
-        </ContentStyled>
-        <CookieConsent location="top" overlay expires={999} buttonStyle={{borderRadius: 4}} buttonText="I understand">
-          This website uses cookies to enhance the user experience.
+  return (
+    <LayoutStyled>
+      {/* <BarStyled></BarStyled> */}
+      <ContentStyled>
+        <HashAnchorPlaceholder id="home" />
+        <section>
+          <HomeCarouselArea></HomeCarouselArea>
+        </section>
+        <HomeMarketArea />
+        <HomePricingArea />
+        {/* <section><HomeSearchArea /></section> */}
+        <HashAnchorPlaceholder id="services" />
+        <section><HomeServiceArea bgColor="#135200" /></section>
+        {/* <HashAnchorPlaceholder id="team" /> */}
+        {/* <section><HomeTeamArea /></section> */}
+        <HomeFooter />
+      </ContentStyled>
+      <CookieConsent location="top" overlay expires={999} buttonStyle={{ borderRadius: 4 }} buttonText="I understand">
+        This website uses cookies to enhance the user experience.
         </CookieConsent>
-      </LayoutStyled>
-    );
-  }
+    </LayoutStyled>
+  );
 }
 
 HomePage.propTypes = {};

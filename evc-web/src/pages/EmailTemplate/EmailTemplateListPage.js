@@ -1,32 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Divider } from 'antd';
+import { Typography, Layout, Button, Card, Input, Form, Tooltip, Tag, Drawer, List, Row } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import {
-  EditOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  IdcardOutlined, SearchOutlined,
-  UserOutlined,
-  PlusOutlined
+  EditOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space, Alert } from 'antd';
-import { listAllUsers, deleteUser, setPasswordForUser } from 'services/userService';
-import { inviteUser, impersonate } from 'services/authService';
-import { TimeAgo } from 'components/TimeAgo';
-import { FaTheaterMasks } from 'react-icons/fa';
-import { reactLocalStorage } from 'reactjs-localstorage';
-import { GlobalContext } from 'contexts/GlobalContext';
-import PortfolioList from 'pages/Portfolio/PortfolioList';
-import ProfileForm from 'pages/Profile/ProfileForm';
-import { BiDollar } from 'react-icons/bi';
-import ReferralBalanceForm from 'components/ReferralBalanceForm';
+import { Space } from 'antd';
 import * as _ from 'lodash';
-import { subscriptionDef } from 'def/subscriptionDef';
-import Highlighter from "react-highlight-words";
-import HighlightingText from 'components/HighlightingText';
-import CheckboxButton from 'components/CheckboxButton';
-import { flushTranslation, listAllTranslationsForEdit, saveTranslation, newLocaleResource } from 'services/translationService';
-import { notify } from 'util/notify';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';
 import ReactQuill from 'react-quill';
@@ -50,18 +31,38 @@ const LayoutStyled = styled(Layout)`
   background-color: #ffffff;
   height: 100%;
 
-  .ant-drawer-content {
+  .ant-list-item {
+    padding: 0;
+  }
+
+  .ant-drawer-body {
+   
     .ql-editor {
       height: 300px !important;
+      font-size: 14px !important;
     } 
   }
+
+  .ql-container {
+    font-size: 14px !important;
+  }
+
+  .body-preview {
+    .ql-editor {
+      padding: 0;
+    }
+  }
 `;
+
+const StyledLabel = props => <Text style={{width: '3rem'}} type="secondary">
+  <small>{props.children}</small>
+  </Text>
 
 const modules = {
   toolbar: [
     [{ 'header': [1, 2, false] }],
-    ['bold', 'italic', 'underline','strike', 'blockquote'],
-    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
     ['link', 'image'],
     ['clean']
   ],
@@ -74,6 +75,19 @@ const formats = [
   'link', 'image'
 ];
 
+const getLocaleTag = (locale) => {
+  switch (locale) {
+    case 'zh-CN':
+      return <Tag color="#f50">简</Tag>
+    case 'zh-TW':
+      return <Tag color="#3b5999">繁</Tag>
+    case 'en-US':
+      return <Tag color="#2db7f5">EN</Tag>
+    default:
+      return <Tag>{locale}</Tag>
+  }
+}
+
 const EmailTemplateListPage = () => {
 
   const [loading, setLoading] = React.useState(true);
@@ -81,79 +95,12 @@ const EmailTemplateListPage = () => {
   const [currentItem, setCurrentItem] = React.useState();
   const [list, setList] = React.useState([]);
 
-  const columnDef = [
-    {
-      title: 'Key',
-      dataIndex: 'key',
-      sorter: {
-        compare: (a, b) => a.key.localeCompare(b.keyy)
-      },
-      render: (text) => text,
-    },
-    {
-      title: 'Locale',
-      dataIndex: 'locale',
-      sorter: {
-        compare: (a, b) => a.locale.localeCompare(b.locale)
-      },
-      render: (text) => {
-        switch (text) {
-          case 'zh-CN':
-            return '简体中文';
-          case 'zh-TW':
-            return '繁體中文';
-          case 'en-US':
-          default:
-            return 'English';
-        }
-      },
-    },
-    {
-      title: 'Template',
-      render: (text, item) => {
-        return <Space direction="vertical" style={{ width: '100%' }}>
-          <Input value={item.subject} readOnly />
-          <ReactQuill value={item.body} readOnly modules={{toolbar:false}}/>
-        </Space>
-      },
-    },
-    {
-      title: 'Variables',
-      dataIndex: 'vars',
-      render: (vars, item) => {
-        return <Space direction="vertical" style={{ width: '100%' }} size="small">
-          {vars?.map((v, i) => <Tag key={i} color="success">{v}</Tag>)}
-        </Space>
-      },
-    },
-    {
-      render: (text, item) => {
-        return (
-          <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Tooltip placement="bottom" title="Edit">
-              <Button shape="circle" icon={<EditOutlined />}
-                onClick={() => handleEdit(item)} />
-            </Tooltip>
-          </Space>
-        )
-      },
-    },
-  ];
-
   const handleEdit = item => {
     setCurrentItem(item);
     setDrawerVisible(true);
   }
 
-  const handleCreateNew = () => {
-    setCurrentItem(undefined);
-    setDrawerVisible(true);
-  }
 
-  const handleInputChange = (item, value) => {
-    item.value = value;
-    setList([...list]);
-  }
 
   const loadList = async () => {
     try {
@@ -171,7 +118,7 @@ const EmailTemplateListPage = () => {
   const handleSaveNew = async (values) => {
     try {
       setLoading(true);
-      const {locale, key, ...payload} = values;
+      const { locale, key, ...payload } = values;
       await saveEmailTemplate(locale, key, payload);
       setDrawerVisible(false);
       await loadList();
@@ -181,9 +128,6 @@ const EmailTemplateListPage = () => {
     }
   }
 
-  const handleBodyChange = value => {
-    debugger;
-  }
 
   return (
     <LayoutStyled>
@@ -193,15 +137,58 @@ const EmailTemplateListPage = () => {
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
           </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          {/* <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button type="primary" ghost onClick={() => handleCreateNew()} icon={<PlusOutlined />} />
-          </Space>
-          <Table columns={columnDef}
+          </Space> */}
+          {/* <Table columns={columnDef}
             dataSource={list}
             size="small"
             rowKey={item => `${item.key}.${item.locale}`}
             loading={loading}
             pagination={false}
+          /> */}
+          <List
+            itemLayout="vertical"
+            size="large"
+            dataSource={list}
+            footer={null}
+            grid={{
+              gutter: 20,
+              xs: 1,
+              sm: 1,
+              md: 2,
+              lg: 2,
+              xl: 3,
+              xxl: 3
+            }}
+            renderItem={item => <List.Item
+              key={item.key}
+
+            >
+              <Card
+                title={<>{item.key} {getLocaleTag(item.locale)}</>}
+                extra={
+                  <Tooltip key="edit" placement="bottom" title="Edit">
+                    <Button type="link" icon={<EditOutlined />}
+                      onClick={() => handleEdit(item)} />
+                  </Tooltip>
+
+                }
+              >
+                <Row>
+                  <StyledLabel>Vars:</StyledLabel> 
+                  {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}</Row>
+                <Row>
+                  <StyledLabel>Subject:</StyledLabel>
+                  <Text>{item.subject || 'Email subject'}</Text></Row>
+                <Row>
+                  <StyledLabel>Body:</StyledLabel>
+                  <div style={{position:'relative', top: 2}}>
+                    <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
+                  </div>
+                  </Row>
+              </Card>
+            </List.Item>}
           />
         </Space>
       </ContainerStyled>
@@ -218,22 +205,27 @@ const EmailTemplateListPage = () => {
         <Form
           layout="vertical"
           onFinish={handleSaveNew}
-          initialValues={{...currentItem, body: currentItem?.body || ''}}
+          initialValues={{ ...currentItem, body: currentItem?.body || '' }}
         >
           <Form.Item label="Key" name="key" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <Input allowClear autoFocus disabled={currentItem}/>
+            <Input allowClear autoFocus disabled={true} />
           </Form.Item>
           <Form.Item label="Locale" name="locale" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <LocaleSelector disabled={currentItem} />
+            <LocaleSelector disabled={currentItem || loading} />
           </Form.Item>
           <Form.Item label="Subject" name="subject" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <Input allowClear />
+            <Input allowClear disabled={loading} />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}/>
+            <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}
+              style={{
+                padding: 0,
+                fontSize: 14,
+              }}
+              disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit">Save</Button>
+            <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
           </Form.Item>
         </Form>
       </Drawer>

@@ -10,6 +10,7 @@ import ChangePasswordPage from 'pages/ChangePasswordPage';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 
+const {Text} = Typography;
 
 const ContainerStyled = styled.div`
 margin: 6rem 0 2rem 0;
@@ -26,21 +27,22 @@ const LayoutStyled = styled(Layout)`
 
 const ClientSettingsPage = props => {
   const context = React.useContext(GlobalContext);
-  const { setUser, role } = context;
+  const { user, setUser, role } = context;
   const { path } = props.match;
   if (role !== 'client') {
-    debugger;
-    throw new Error(`Invalid role ${role}`);
+    return null;
   }
-
 
   return (
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Layout>
-          <Layout.Sider theme="light">
+          <Layout.Sider theme="light" collapsible={false}>
             <Menu>
+            <Menu.Item key="email" disabled={true}>
+                <Text code>{user.profile.email}</Text>
+              </Menu.Item>
               <Menu.Item key="profile"><Link to={`${path}`}>Profile</Link></Menu.Item>
               <Menu.Item key="account"><Link to={`${path}/account`}>Account</Link></Menu.Item>
               <Menu.Item key="subscription"><Link to={`${path}/subscription`}>Subscription</Link></Menu.Item>

@@ -134,11 +134,7 @@ const App = props => {
           <RoleRoute visible={!isGuest} loading={loading} path="/stock" exact component={StockListPage} />
           <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />
           {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
-          <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
-          <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
           <RoleRoute visible={isClient} loading={loading} path="/settings" component={ClientSettingsPage} />
-          <RoleRoute visible={isClient} loading={loading} path="/account" exact component={MyAccountPage} />
-          <RoleRoute visible={isClient} loading={loading} path="/subscription" exact component={MySubscriptionPage} />
           <RoleRoute visible={isClient} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
           <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
           <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />

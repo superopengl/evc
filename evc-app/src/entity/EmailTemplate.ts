@@ -20,3 +20,4 @@ export class EmailTemplate {
   @Column('text', { array: true, default: '{}' })
   vars: string[];
 }
+

@@ -6,6 +6,7 @@ export enum EmailTemplateType {
   GoogleSsoWelcome = 'google_sso_welcome',
   Contact = 'contact',
   DeleteUser = 'delete_user',
+  Signature = 'signature'
 }
 
 

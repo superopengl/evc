@@ -32,7 +32,9 @@ import { listConfig, saveConfig } from 'services/configService';
 const { Title, Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 6rem auto 2rem auto;
 `;
 
 const StyledTitleRow = styled.div`

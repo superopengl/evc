@@ -39,6 +39,7 @@ import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
 import TranslationListPage from 'pages/Translation/TranslationListPage';
 import StockPage from 'pages/StockPage/StockPage';
 import ReactDOM from 'react-dom';
+import ClientSettingsPage from 'pages/ClientSettings/ClientSettingsPage';
 
 
 const App = props => {
@@ -135,6 +136,7 @@ const App = props => {
           {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}
           <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
           <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
+          <RoleRoute visible={isClient} loading={loading} path="/settings" component={ClientSettingsPage} />
           <RoleRoute visible={isClient} loading={loading} path="/account" exact component={MyAccountPage} />
           <RoleRoute visible={isClient} loading={loading} path="/subscription" exact component={MySubscriptionPage} />
           <RoleRoute visible={isClient} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />

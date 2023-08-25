@@ -169,8 +169,6 @@ const MySubscriptionPage = (props) => {
 
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Loading loading={loading}>
           <Space direction="vertical" style={{ width: '100%', alignItems: 'center', alignItems: 'stretch' }}>
@@ -211,7 +209,6 @@ const MySubscriptionPage = (props) => {
           </Space>
         </Loading>
       </ContainerStyled>
-    </LayoutStyled >
   );
 };
 

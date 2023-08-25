@@ -70,8 +70,6 @@ const MyAccountPage = () => {
   }
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch' }}>
           {/* <Title>Subscription</Title>
@@ -122,12 +120,12 @@ const MyAccountPage = () => {
           <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
           <ReferralLinkInput value={account?.referralUrl} />
         </Space>
+
+        <BalanceHistoryListModal visible={balanceHistoryVisible}
+          onOk={() => setBalanceHistoryVisible(false)}
+          onFetch={handleFetchMyBalanceHistoryList}
+        />
       </ContainerStyled>
-      <BalanceHistoryListModal visible={balanceHistoryVisible}
-        onOk={() => setBalanceHistoryVisible(false)}
-        onFetch={handleFetchMyBalanceHistoryList}
-      />
-    </LayoutStyled >
   );
 };
 

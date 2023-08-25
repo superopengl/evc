@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class EmailSentOutLog {
+export class EmailLog {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,6 +18,6 @@ export class EmailSentOutLog {
   @Column('json')
   vars: any;
 
-  @Column()
-  result: 'sent' | 'error';
+  @Column('json', {nullable: true})
+  error: any;
 }

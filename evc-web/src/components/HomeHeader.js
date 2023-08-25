@@ -67,23 +67,11 @@ const HomeHeaderRaw = props => {
   const isGuest = role === 'guest';
   const canChangePassword = !isGuest && user?.loginType === 'local';
 
-  const handleLogout = () => {
-    Modal.confirm({
-      title: "Logout",
-      content: <>Do you want to log out?</>,
-      async onOk() {
-        await logout();
-        setVisible(false);
-        setUser(null);
-        history.push('/');
-      },
-      maskClosable: true,
-      okText: 'Yes, log me out!',
-      okButtonProps: {
-        danger: true,
-        ghost: true,
-      },
-    });
+  const handleLogout = async () => {
+    await logout();
+    setVisible(false);
+    setUser(null);
+    history.push('/');
   }
 
   const showDrawer = () => {

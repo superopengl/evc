@@ -29,7 +29,6 @@ dependencies:
   react-beautiful-dnd: 13.0.0_react-dom@17.0.1+react@17.0.1
   react-big-calendar: 0.32.0_react-dom@17.0.1+react@17.0.1
   react-chat-elements: 10.14.0_738bb8f954d12b6833bcb33fcfa7848e
-  react-color: 2.19.3_react@17.0.1
   react-cookie-consent: 6.2.3_react@17.0.1
   react-copy-to-clipboard: 5.0.3_react@17.0.1
   react-dom: 17.0.1_react@17.0.1
@@ -58,7 +57,6 @@ dependencies:
   rxjs: 6.6.3
   styled-components: 5.2.1_d56e21ef07fc37b6ee9b57ce562afcca
   tfn: 1.0.0
-  tinycolor2: 1.4.2
   uniqolor: 1.0.1
   uuid: 8.3.2
   validator: 13.5.2
@@ -1568,14 +1566,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-tAag0jEcjwH+P2quUfipd7liWCNX2F8NvYjQp2wtInsZxnMlypdw0FtAOLxtvvkO+GSRRbmNi8m/5y42PQJYCQ==
-  /@icons/material/0.2.4_react@17.0.1:
-    dependencies:
-      react: 17.0.1
-    dev: false
-    peerDependencies:
-      react: '*'
-    resolution:
-      integrity: sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
   /@istanbuljs/load-nyc-config/1.1.0:
     dependencies:
       camelcase: 5.3.1
@@ -8617,10 +8607,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Hlk20WQHRIm9EE9luN1kjRjYXAQToHOIAHPJn9buxBwuhfTHoKUcX+lXBbxc85DVQfXYbEQ4HcwQdd128E3qHQ==
-  /material-colors/1.2.6:
-    dev: false
-    resolution:
-      integrity: sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
   /md5.js/1.3.5:
     dependencies:
       hash-base: 3.1.0
@@ -11456,21 +11442,6 @@ packages:
       react-dom: '*'
     resolution:
       integrity: sha512-IEAEzWQbH91QuQBxk21XNdfdtK3OJq31sU6zhjnb1WubpSnqpfI4aqPheqsLSukqvWf/tIA2sO0WXz9Kg36YCA==
-  /react-color/2.19.3_react@17.0.1:
-    dependencies:
-      '@icons/material': 0.2.4_react@17.0.1
-      lodash: 4.17.21
-      lodash-es: 4.17.21
-      material-colors: 1.2.6
-      prop-types: 15.7.2
-      react: 17.0.1
-      reactcss: 1.2.3
-      tinycolor2: 1.4.2
-    dev: false
-    peerDependencies:
-      react: '*'
-    resolution:
-      integrity: sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==
   /react-cookie-consent/6.2.3_react@17.0.1:
     dependencies:
       js-cookie: 2.2.1
@@ -12059,12 +12030,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-lG9c9UuMHdcAexXtigOZLX8exLWkW0Ku29qPRU8uhF2R9BN96dLCt0psvzPLlHc5OWkgymP3qwTRgbnw5BKx3w==
-  /reactcss/1.2.3:
-    dependencies:
-      lodash: 4.17.21
-    dev: false
-    resolution:
-      integrity: sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==
   /reactjs-localstorage/1.0.1:
     dev: false
     resolution:
@@ -14930,7 +14895,6 @@ specifiers:
   react-beautiful-dnd: ^13.0.0
   react-big-calendar: ^0.32.0
   react-chat-elements: ^10.14.0
-  react-color: ^2.19.3
   react-cookie-consent: ^6.2.3
   react-copy-to-clipboard: ^5.0.3
   react-dom: ^17.0.1
@@ -14959,7 +14923,6 @@ specifiers:
   rxjs: ^6.6.3
   styled-components: ^5.2.1
   tfn: ^1.0.0
-  tinycolor2: ^1.4.2
   uniqolor: ^1.0.1
   uuid: ^8.3.2
   validator: ^13.5.2

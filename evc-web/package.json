@@ -33,7 +33,6 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-big-calendar": "^0.32.0",
     "react-chat-elements": "^10.14.0",
-    "react-color": "^2.19.3",
     "react-cookie-consent": "^6.2.3",
     "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "^17.0.1",
@@ -62,7 +61,6 @@
     "rxjs": "^6.6.3",
     "styled-components": "^5.2.1",
     "tfn": "^1.0.0",
-    "tinycolor2": "^1.4.2",
     "uniqolor": "^1.0.1",
     "uuid": "^8.3.2",
     "validator": "^13.5.2"

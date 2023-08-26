@@ -1,11 +1,9 @@
 
 import React from 'react';
-import { DatePicker, InputNumber, Popover, Button } from 'antd';
-import * as moment from 'moment';
+import { Popover, Button } from 'antd';
 import PropTypes from 'prop-types';
-import { DeleteOutlined, CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-import { Select } from 'antd';
 
 export const ConfirmDeleteButton = (props) => {
   const [visible, setVisible] = React.useState(false);

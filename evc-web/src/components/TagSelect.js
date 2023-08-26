@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tag } from 'antd';
-import * as tinycolor from 'tinycolor2';
-import { listStockTags, saveStockTag } from 'services/stockTagService';
-import StockTag from './StockTag';
+import { Tag as AntdTag } from 'antd';
+import Tag from './Tag';
 import CreatableSelect from 'react-select/creatable';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 const Option = props => {
   const { data, innerProps } = props;
   return <div {...innerProps} style={{ padding: 6 }}>
-    {data.color2 ? <StockTag color={data.color}>{data.label}</StockTag> : data.label}
+    {data.color2 ? <Tag color={data.color}>{data.label}</Tag> : data.label}
   </div>;
 }
 
@@ -108,9 +106,9 @@ function convertOptionToTag(option) {
   }
 }
 
-const StockTagSelect = (props) => {
+const TagSelect = (props) => {
 
-  const { value: selectedTagIds, readonly, onChange } = props;
+  const { value: selectedTagIds, readonly, onChange , onList, onSave} = props;
   const [loading, setLoading] = React.useState(true);
   const [options, setOptions] = React.useState([]);
   const [selectedOptions, setSelectedOptions] = React.useState([]);
@@ -118,7 +116,7 @@ const StockTagSelect = (props) => {
   const loadEntity = async () => {
     try {
       setLoading(true);
-      const allTags = await listStockTags();
+      const allTags = await onList();
       const allOptions = convertTagsToOptions(allTags);
       setOptions(allOptions);
       const selectedOptions = allOptions.filter(x => selectedTagIds?.some(tagId => tagId === x.value));
@@ -158,12 +156,11 @@ const StockTagSelect = (props) => {
     const newTag = {
       id: tagId,
       name: newTagName,
-      color: tinycolor.random().toHexString()
     };
     const newOption = convertTagToOption(newTag);
     try {
       setLoading(true);
-      await saveStockTag(newTag);
+      await onSave(newTag);
       setOptions([...options, newOption]);
       updateSelectedOptions([...selectedOptions, newOption]);
     } finally {
@@ -177,7 +174,7 @@ const StockTagSelect = (props) => {
   }
 
   if(readonly) {
-    return <>{selectedOptions.map((x, i) => <Tag key={i} color="#3273A4">{x.label}</Tag>)}</>
+    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color="#3273A4">{x.label}</AntdTag>)}</>
   }
 
   return <CreatableSelect
@@ -211,17 +208,19 @@ const StockTagSelect = (props) => {
   // );
 };
 
-StockTagSelect.propTypes = {
+TagSelect.propTypes = {
   // value: PropTypes.string.isRequired,
   value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  onList: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
-StockTagSelect.defaultProps = {
+TagSelect.defaultProps = {
   value: [],
   readonly: true,
   onChange: () => { }
 };
 
-export default StockTagSelect;
+export default TagSelect;

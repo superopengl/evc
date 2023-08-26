@@ -85,12 +85,12 @@ const LogInPage = props => {
         />
         <Divider>or</Divider>
         <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
-          <Form.Item label="Email" name="name"
+          <Form.Item label="" name="name"
             rules={[{ required: true, validator: validateName, whitespace: true, max: 100, message: 'Please input valid email address' }]}
           >
-            <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" disabled={sending} autoFocus={true} />
+            <Input placeholder="Email address" type="email" autoComplete="email" allowClear={true} maxLength="100" disabled={sending} autoFocus={true} />
           </Form.Item>
-          <Form.Item label="Password" name="password" autoComplete="current-password" rules={[{ required: true, message: 'Please input password' }]}>
+          <Form.Item label="" name="password" autoComplete="current-password" rules={[{ required: true, message: 'Please input password' }]}>
             <Input.Password placeholder="Password" autoComplete="current-password" maxLength="50" disabled={sending} />
           </Form.Item>
           <Form.Item>

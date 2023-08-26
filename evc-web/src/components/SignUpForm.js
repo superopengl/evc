@@ -19,7 +19,7 @@ const ContainerStyled = styled.div`
 
 const SignUpForm = (props) => {
 
-  const {onOk } = props;
+  const { onOk } = props;
 
   const [sending, setSending] = React.useState(false);
   const { code: referralCode } = queryString.parse(props.location.search);
@@ -32,7 +32,7 @@ const SignUpForm = (props) => {
     try {
       setSending(true);
 
-      Object.assign(values, {referralCode});
+      Object.assign(values, { referralCode });
 
       await signUp(values);
 
@@ -52,18 +52,20 @@ const SignUpForm = (props) => {
   return (
     <ContainerStyled>
       <Title level={2}>Sign Up</Title>
-
-      <Link to="/login"><Button size="small" block type="link">Already a user? Click to log in</Button></Link>
       <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'client' }}>
-        <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
-          <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
+        <Form.Item>
+          <Link to="/login"><Button size="small" block type="link">Already a user? Click to log in</Button></Link>
         </Form.Item>
-        <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
+        <Form.Item label="" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
+          <Input placeholder="Your email address" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
+        </Form.Item>
+        {/* <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
           validator: (_, value) =>
             value ? Promise.resolve() : Promise.reject('You have to agree to continue.'),
         }]}>
           <Checkbox disabled={sending}>I have read and agree to the <a target="_blank" href="/terms_and_conditions">terms & conditions</a> and <a target="_blank" href="/privacy_policy">privacy policy</a>.</Checkbox>
-        </Form.Item>
+        </Form.Item> */}
+        By signing up you agree with our <a target="_blank" href="/terms_and_conditions">Terms & Conditions</a> and <a target="_blank" href="/privacy_policy">Privacy Policy</a>.
         <Form.Item style={{ marginTop: '1rem' }}>
           <Button block type="primary" htmlType="submit" disabled={sending}>Sign Up</Button>
         </Form.Item>
@@ -88,7 +90,6 @@ const SignUpForm = (props) => {
           )}
         referralCode={referralCode}
       />
-
     </ContainerStyled>
   );
 }

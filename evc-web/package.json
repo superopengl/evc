@@ -13,7 +13,6 @@
     "abnacn-validator": "^0.0.5",
     "antd": "^4.12.3",
     "axios": "^0.21.1",
-    "chroma-js": "^2.1.0",
     "craco-less": "^1.17.1",
     "cronstrue": "^1.109.0",
     "d3-format": "^2.0.0",

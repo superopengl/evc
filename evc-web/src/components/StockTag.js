@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Tag } from 'antd';
-import * as tinycolor from 'tinycolor2';
-import chroma from 'chroma-js';
-import { CheckOutlined } from '@ant-design/icons';
+import { Tag } from 'antd';
 import styled from 'styled-components';
 
-const { Text } = Typography;
 
 const ClicableTag = styled(Tag)`
   &:hover {

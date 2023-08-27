@@ -73,7 +73,6 @@ const StockPage = (props) => {
   const [stock, setStock] = React.useState();
   const [watched, setWatched] = React.useState();
   const [loading, setLoading] = React.useState(true);
-  const [insiderVisible, setInsiderVisible] = React.useState(false);
 
   const isAdminOrAgent = ['admin', 'agent'].includes(role);
   const isClient = role === 'client';
@@ -134,7 +133,6 @@ const StockPage = (props) => {
               {isClient && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
             </Space>}
             extra={[
-              <Button key="insider" type="primary" ghost onClick={() => setInsiderVisible(true)}>Insider Transactions <MemberOnlyIcon /></Button>,
               <Button key="sync" type="primary" ghost icon={<SyncOutlined />} onClick={handleRefresh} />,
 
               // <Space key="tag"><StockTagSelect value={stock.tags} onChange={tags => handleSaveForm('tags', tags.map(t => t.id))} /></Space>,
@@ -173,32 +171,23 @@ const StockPage = (props) => {
                 </Card>
               </Col>
             </Row>
-            {stock && <Row >
-              <StockNewsPanel symbol={stock.symbol} />
+            {stock && <Row gutter={20}>
+              <Col span={12}>
+                <Card size="small" type="inner" title={<>News</>}>
+                  <StockNewsPanel symbol={stock.symbol} />
+                </Card>
+              </Col>
+              <Col span={12}>
+                <Card size="small" type="inner" title={<>Insider Transactions  <MemberOnlyIcon /></>}>
+
+                  <StockInsiderPanel symbol={stock.symbol} />
+
+                </Card>
+              </Col>
             </Row>}
           </Space>
         </>}
       </ContainerStyled>
-      <Drawer
-        visible={insiderVisible && stock}
-        title="Insider Transactions"
-        destroyOnClose={true}
-        closable={true}
-        maskClosable={true}
-        onClose={() => setInsiderVisible(false)}
-        width="80vw"
-        footer={
-          <Space direction="vertical" size="small">
-            {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
-              <Tag color={v.color}>{k}</Tag>
-              {v.message}
-            </div>)}
-          </Space>
-        }
-        footerStyle={{ padding: 24 }}
-      >
-        {stock && <StockInsiderPanel symbol={stock.symbol} />}
-      </Drawer>
     </LayoutStyled >
   );
 };

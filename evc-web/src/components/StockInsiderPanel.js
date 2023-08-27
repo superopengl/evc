@@ -80,11 +80,11 @@ const StockInsiderPanel = (props) => {
           grid={{
             gutter: 10,
             xs: 1,
-            sm: 2,
-            md: 2,
-            lg: 3,
-            xl: 4,
-            xxl: 4
+            sm: 1,
+            md: 1,
+            lg: 1,
+            xl: 2,
+            xxl: 3
           }}
           itemLayout="horizontal"
           size="small"
@@ -102,6 +102,14 @@ const StockInsiderPanel = (props) => {
           )}
         />
         <Title level={3}>Summary</Title>
+
+
+        <Space direction="vertical" size="small" style={{marginBottom: 24}}>
+                    {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
+                      <Tag color={v.color}>{k}</Tag>
+                      {v.message}
+                    </div>)}
+                  </Space>
         <RosterList
           grid={{ column: 1 }}
           itemLayout="horizontal"
@@ -109,7 +117,6 @@ const StockInsiderPanel = (props) => {
           dataSource={data.summary}
           renderItem={item => (
             <List.Item>
-              <Card size="small">
                 <Descriptions
                   title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{fontWeight: 400, fontSize: '0.8rem'}}>{item.reportedTitle}</Text>}</Space>}
                   size="small"
@@ -123,7 +130,6 @@ const StockInsiderPanel = (props) => {
                   <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
                   <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
                 </Descriptions>
-              </Card>
             </List.Item>
           )}
         />

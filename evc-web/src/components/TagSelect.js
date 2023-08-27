@@ -90,20 +90,11 @@ function convertTagToOption(tag) {
   return {
     label: tag.name,
     value: tag.id,
-    color: tag.color
   };
 }
 
 function convertTagsToOptions(tags) {
   return (tags || []).map(convertTagToOption);
-}
-
-function convertOptionToTag(option) {
-  return {
-    id: option.value,
-    name: option.label,
-    color: option.color
-  }
 }
 
 const TagSelect = (props) => {
@@ -136,6 +127,7 @@ const TagSelect = (props) => {
   }, [selectedTagIds]);
 
   // const handleChange = selected => {
+  //   debugger;
   //   setSelectedOptions(selected);
   //   onChange(selected.map(s => s.key));
   // }
@@ -170,7 +162,7 @@ const TagSelect = (props) => {
 
   const updateSelectedOptions = (newSelectedOptions) => {
     setSelectedOptions(newSelectedOptions);
-    onChange(newSelectedOptions.map(convertOptionToTag));
+    onChange(newSelectedOptions.map(x => x.value));
   }
 
   if(readonly) {

@@ -12,6 +12,8 @@ import { createStock, existsStock } from 'services/stockService';
 import PropTypes from 'prop-types';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
+import TagSelect from 'components/TagSelect';
+import { listStockTags, saveStockTag } from 'services/stockTagService';
 
 const { Text, Link } = Typography;
 
@@ -85,7 +87,7 @@ const CreateStockModal = props => {
 
   return (
     <Modal
-      title="Create Stock"
+      title="Add New Stock"
       visible={modalVisible}
       destroyOnClose={true}
       onOk={onOk}
@@ -103,10 +105,13 @@ const CreateStockModal = props => {
         <Form.Item label="Company Name" name="company" rules={[{ required: true, max: 100, message: 'Please input company name' }]}>
           <Input placeholder="Apple Inc." maxLength="100" disabled={sending} />
         </Form.Item>
+        <Form.Item label="Tags" name="tags"> 
+          <TagSelect onList={listStockTags} onSave={saveStockTag} readonly={false} />
+        </Form.Item>
         <Form.Item>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button block onClick={onCancel}>Cancel</Button>
-            <Button block type="primary" htmlType="submit" disabled={sending}>Create Stock</Button>
+            <Button block type="primary" htmlType="submit" disabled={sending}>Add Stock</Button>
           </Space>
         </Form.Item>
       </Form>
@@ -122,6 +127,7 @@ CreateStockModal.propTypes = {
 };
 
 CreateStockModal.defaultProps = {
+  visible: false,
   defaultSymbol: ''
 };
 

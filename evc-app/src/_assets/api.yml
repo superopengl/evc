@@ -366,6 +366,16 @@ paths:
       responses:
         200:
           description: OK
+    post:
+      operationId: updateStock
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
     delete:
       operationId: deleteStock
       parameters:
@@ -661,17 +671,6 @@ paths:
           in: path
           type: string
           format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /stock/{symbol}:
-    post:
-      operationId: updateStock
-      parameters:
-        - name: symbol
-          in: path
-          type: string
           required: true
       responses:
         200:

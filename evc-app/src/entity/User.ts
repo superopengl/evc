@@ -1,7 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne, IsNull, Not, DeleteDateColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne, IsNull, Not, DeleteDateColumn, CreateDateColumn, JoinTable, ManyToMany } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { UserProfile } from './UserProfile';
+import { UserTag } from './UserTag';
 
 @Entity()
 @Index('user_email_hash_unique', { synchronize: false })
@@ -62,6 +63,10 @@ export class User {
 
   @Column()
   profileId: string;
+
+  @ManyToMany(type => UserTag, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags: UserTag[];
 
   @Column({ type: 'uuid', nullable: true })
   @Index({ where: '"everPaid" = TRUE' })

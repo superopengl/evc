@@ -12,13 +12,10 @@ const ClicableTag = styled(AntdTag)`
 
 const Tag = (props) => {
 
-  const { children, clickable, checked, color: propColor, style: propStyle, onClick, ...other } = props;
+  const { children, clickable, checked, style: propStyle, onClick, ...other } = props;
 
   const style = {
-    // color: tinycolor(propColor).isLight() ? '#000000' : '#ffffff',
-    // backgroundColor: propColor,
     textAlign: 'center',
-    // border: `1px solid ${propColor}`,
     ...propStyle,
   }
 
@@ -41,7 +38,6 @@ const Tag = (props) => {
 
 Tag.propTypes = {
   // value: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
   checked: PropTypes.bool,
   clickable: PropTypes.bool,
   onClick: PropTypes.func,

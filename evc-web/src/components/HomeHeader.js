@@ -124,7 +124,7 @@ const HomeHeaderRaw = props => {
             {/* {isAdmin && <Menu.Item key="clients"><Link to="/clients">Users</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="admin"><Link to="/admin">Admin</Link></Menu.Item>} */}
             {/* {!isGuest && <Menu.Item key="message"><Link to="/message"><Badge count={notifyCount} showZero={false} offset={[10, 0]}>Messages</Badge></Link></Menu.Item>} */}
-            {isAdmin && <Menu.SubMenu key="settings" title="Settings">
+            {isAdmin && <Menu.SubMenu key="settings_old" title="Settings">
               {/* <Menu.Item key="task_template"><Link to="/task_template">Task Templates</Link></Menu.Item> */}
               {/* <Menu.Item key="doc_template"><Link to="/doc_template">Doc Templates</Link></Menu.Item> */}
               {/* <Menu.Item key="recurring"><Link to="/recurring">Recurring</Link></Menu.Item> */}

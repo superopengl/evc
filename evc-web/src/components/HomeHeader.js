@@ -68,7 +68,7 @@ const HomeHeaderRaw = props => {
   const canChangePassword = !isGuest && user?.loginType === 'local';
 
   const handleLogout = async () => {
-    await logout();
+    logout().catch(() => {});
     setVisible(false);
     setUser(null);
     history.push('/');
@@ -192,7 +192,6 @@ const HomeHeaderRaw = props => {
             {isAdmin && <Menu.Item key="email_template"><TeamOutlined /> <Link to="/email_template">Email Template</Link></Menu.Item>}
             {/* {!isGuest && <Menu.Item key="message"><BellOutlined /> <Link to="/message">Messages <Badge count={notifyCount} showZero={false} /></Link></Menu.Item>} */}
             {(isAdmin || isAgent) && <Menu.Item key="stats"><DashboardOutlined /> <Link to="/stats">Statistics</Link></Menu.Item>}
-            {/* {isAdmin && <Menu.Item key="impersonate"><SkinOutlined /> <Link to="/impersonate">Impersonate</Link></Menu.Item>} */}
             {!isGuest && <Menu.Item key="profile"><UserOutlined /> <Link to="/profile">Profile</Link></Menu.Item>}
             {isClient && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}
             {isClient && <Menu.Item key="subscription"><Link to="/subscription">Subscription</Link></Menu.Item>}

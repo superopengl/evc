@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
-  const { setUser, setNotifyCount } = context;
+  const { setUser } = context;
   const {render, referralCode} = props;
 
   const handleGoogleSso = async (response) => {
@@ -23,12 +23,6 @@ const GoogleSsoButton = props => {
     const user = await ssoGoogle(tokenId, referralCode);
     if (user) {
       setUser(user);
-
-      const count = await countUnreadMessage();
-      setNotifyCount(count);
-      
-      const isClient = user.role === 'client';
-
       props.history.push('/');
     } else {
       notify.error('Failed to log in with Google');

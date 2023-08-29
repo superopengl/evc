@@ -33,7 +33,7 @@ const { Title } = Typography;
 const LogInPage = props => {
   const [sending, setLoading] = React.useState(false);
   const context = React.useContext(GlobalContext);
-  const { setUser, setNotifyCount } = context;
+  const { setUser } = context;
 
 
   const validateName = async (rule, value) => {
@@ -53,9 +53,6 @@ const LogInPage = props => {
 
       const user = await login(values.name, values.password);
       setUser(user);
-
-      const count = await countUnreadMessage();
-      setNotifyCount(count);
 
       props.history.push('/');
     } catch {

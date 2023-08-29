@@ -1,14 +1,9 @@
 import {
-  BellOutlined, CalendarOutlined,
   DashboardOutlined, HeartOutlined, HomeOutlined,
-  IdcardOutlined,
   LoginOutlined, LogoutOutlined, MenuOutlined,
   SecurityScanOutlined,
-  SnippetsOutlined, TeamOutlined, ToolOutlined,
-  UserAddOutlined, UserOutlined, ReconciliationOutlined,
-  PicLeftOutlined
-} from '@ant-design/icons';
-import { Avatar, Badge, Button, Drawer, Layout, Menu, Modal, Typography, Space } from 'antd';
+  TeamOutlined, UserAddOutlined, UserOutlined} from '@ant-design/icons';
+import { Avatar, Badge, Button, Drawer, Layout, Menu, Typography } from 'antd';
 import React from 'react';
 import MediaQuery from 'react-responsive';
 import { Link, withRouter } from 'react-router-dom';
@@ -16,9 +11,8 @@ import { HashLink } from 'react-router-hash-link';
 import { logout } from 'services/authService';
 import styled from 'styled-components';
 import { GlobalContext } from '../contexts/GlobalContext';
-import PropTypes from 'prop-types';
-import { StockSearchInput } from './StockSearchInput';
 import HeaderStockSearch from 'components/HeaderStockSearch';
+import { reactLocalStorage } from 'reactjs-localstorage';
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -69,6 +63,7 @@ const HomeHeaderRaw = props => {
 
   const handleLogout = async () => {
     logout().catch(() => {});
+    reactLocalStorage.clear();
     setVisible(false);
     setUser(null);
     history.push('/');

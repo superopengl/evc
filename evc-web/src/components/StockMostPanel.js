@@ -1,26 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Row, Col, Modal, Select, Space, Table, Card, Typography } from 'antd';
-import { TimeAgo } from 'components/TimeAgo';
-import MoneyAmount from 'components/MoneyAmount';
+import { Table, Typography } from 'antd';
 import NumberAmount from 'components/NumberAmount';
-import { countUnreadMessage } from 'services/messageService';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { withRouter } from 'react-router-dom';
-import { Loading } from './Loading';
-import Highlighter from "react-highlight-words";
-import { Link } from 'react-router-dom';
-import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import { List } from 'antd';
-import { StockName } from './StockName';
-import { NumberRangeDisplay } from './NumberRangeDisplay';
-import { ImRocket } from 'react-icons/im';
-import StockInfoCard from './StockInfoCard';
 import { timer } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 
-const { Text, Title, Paragraph } = Typography;
+const { Text, Title } = Typography;
 
 const StyledTable = styled(Table)`
 

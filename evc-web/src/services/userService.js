@@ -5,7 +5,7 @@ export async function changePassword(password, newPassword) {
 }
 
 export async function listAllUsers(payload) {
-  return httpPost(`user/search`, {page: 0, size: 50, ...payload});
+  return httpPost(`user/search`, { page: 0, size: 50, ...payload });
 }
 
 export async function deleteUser(id) {
@@ -13,10 +13,14 @@ export async function deleteUser(id) {
 }
 
 export async function setPasswordForUser(id, password) {
-  return httpPost(`user/${id}/set_password`, {password});
+  return httpPost(`user/${id}/set_password`, { password });
 }
 
 export async function saveProfile(userId, profile) {
   return httpPost(`user/${userId}/profile`, profile);
+}
+
+export async function setUserTags(userId, tags) {
+  return httpPost(`user/${userId}/tags`, { tags });
 }
 

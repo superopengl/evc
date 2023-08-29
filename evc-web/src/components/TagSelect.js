@@ -99,38 +99,22 @@ function convertTagsToOptions(tags) {
 
 const TagSelect = (props) => {
 
-  const { value: selectedTagIds, readonly, onChange , onList, onSave} = props;
-  const [loading, setLoading] = React.useState(true);
-  const [options, setOptions] = React.useState([]);
-  const [selectedOptions, setSelectedOptions] = React.useState([]);
+  const { value: selectedTagIds, readonly, onChange, tags, onSave } = props;
+  const allOptions = convertTagsToOptions(tags);
 
-  const loadEntity = async () => {
-    try {
-      setLoading(true);
-      const allTags = await onList();
-      const allOptions = convertTagsToOptions(allTags);
-      setOptions(allOptions);
-      const selectedOptions = allOptions.filter(x => selectedTagIds?.some(tagId => tagId === x.value));
+  const [loading, setLoading] = React.useState(false);
+  const [options, setOptions] = React.useState(allOptions);
+  const initSelectedOptions = allOptions.filter(x => selectedTagIds?.some(tagId => tagId === x.value));
+  const [selectedOptions, setSelectedOptions] = React.useState(initSelectedOptions);
+
+  React.useEffect(() => {
+    if(!selectedTagIds || !selectedTagIds.length) {
+      setSelectedOptions([]);
+    } else {
+      const selectedOptions = options.filter(x => selectedTagIds.some(tagId => tagId === x.value));
       setSelectedOptions(selectedOptions);
-    } finally {
-      setLoading(false);
     }
-  }
-
-  React.useEffect(() => {
-    loadEntity();
-  }, []);
-
-  React.useEffect(() => {
-    const selectedOptions = options.filter(x => selectedTagIds.some(tagId => tagId === x.value));
-    setSelectedOptions(selectedOptions);
   }, [selectedTagIds]);
-
-  // const handleChange = selected => {
-  //   debugger;
-  //   setSelectedOptions(selected);
-  //   onChange(selected.map(s => s.key));
-  // }
 
   const handleChange = async (newValue, actionMeta) => {
     switch (actionMeta.action) {
@@ -165,7 +149,7 @@ const TagSelect = (props) => {
     onChange(newSelectedOptions.map(x => x.value));
   }
 
-  if(readonly) {
+  if (readonly) {
     return <>{selectedOptions.map((x, i) => <AntdTag key={i} color="#3273A4">{x.label}</AntdTag>)}</>
   }
 
@@ -202,10 +186,10 @@ const TagSelect = (props) => {
 
 TagSelect.propTypes = {
   // value: PropTypes.string.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.object),
   value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   onChange: PropTypes.func,
-  onList: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
 

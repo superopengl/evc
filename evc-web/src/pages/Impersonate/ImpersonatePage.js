@@ -10,7 +10,7 @@ const ImpersonatePage = () => {
   const [loading, setLoading] = React.useState(false);
   const [userOptions, setUserOptions] = React.useState([]);
 
-  const load = async () => {
+  const loadList = async () => {
     setLoading(true);
     const list = await listAllUsers();
     const options = list.filter(x => x.email !== context.user.email).map(x => ({ value: x.email }));
@@ -18,7 +18,9 @@ const ImpersonatePage = () => {
     setLoading(false);
   }
 
-  React.useEffect(load, []);
+  React.useEffect(() => {
+    loadList();
+  }, []);
 
   const handleSubmit = async values => {
     if (loading) {

@@ -2,46 +2,35 @@ import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Typography, Input, Button, Form, Layout, Space, Modal } from 'antd';
-import { Logo } from 'components/Logo';
-import isEmail from 'validator/es/lib/isEmail';
-import { login } from 'services/authService';
-import { countUnreadMessage } from 'services/messageService';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { createStock, existsStock } from 'services/stockService';
 import PropTypes from 'prop-types';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 import TagSelect from 'components/TagSelect';
 import { listStockTags, saveStockTag } from 'services/stockTagService';
+import ReactDOM from 'react-dom';
 
-const { Text, Link } = Typography;
+const { Link } = Typography;
 
-const LayoutStyled = styled(Layout)`
-margin: 0 auto 0 auto;
-background-color: #ffffff;
-height: 100%;
-`;
-
-const ContainerStyled = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
-  max-width: 400px;
-  background-color: #ffffff;
-  height: 100%;
-`;
-
-const LogoContainer = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const { Title } = Typography;
 const CreateStockModal = props => {
   const { visible, onOk, onCancel } = props;
   const [sending, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
+  const [stockTags, setStockTags] = React.useState([]);
   const context = React.useContext(GlobalContext);
+
+  const Load = async () => {
+    setLoading(true);
+    const tags = await listStockTags();
+    ReactDOM.unstable_batchedUpdates(() => {
+      setStockTags(tags);
+      setLoading(false);
+    })
+  }
+
+  React.useEffect(() => {
+    Load();
+  }, []);
 
   React.useEffect(() => {
     setModalVisible(visible);
@@ -96,7 +85,7 @@ const CreateStockModal = props => {
       maskClosable={false}
       footer={null}
     >
-      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }} initialValues={{symbol: props.defaultSymbol?.toUpperCase()}}>
+      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }} initialValues={{ symbol: props.defaultSymbol?.toUpperCase() }}>
         <Form.Item label="Symbol" name="symbol"
           rules={[{ required: true, validator: validateExsitsSymbol, whitespace: true, max: 10 }]}
         >
@@ -105,8 +94,8 @@ const CreateStockModal = props => {
         <Form.Item label="Company Name" name="company" rules={[{ required: true, max: 100, message: 'Please input company name' }]}>
           <Input placeholder="Apple Inc." maxLength="100" disabled={sending} />
         </Form.Item>
-        <Form.Item label="Tags" name="tags"> 
-          <TagSelect onList={listStockTags} onSave={saveStockTag} readonly={false} />
+        <Form.Item label="Tags" name="tags">
+          <TagSelect tags={stockTags} onSave={saveStockTag} readonly={false} />
         </Form.Item>
         <Form.Item>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>

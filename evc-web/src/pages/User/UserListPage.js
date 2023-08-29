@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space, Alert } from 'antd';
-import { listAllUsers, deleteUser, setPasswordForUser } from 'services/userService';
+import { listAllUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
 import { inviteUser, impersonate } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
@@ -26,6 +26,7 @@ import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
 import TagSelect from 'components/TagSelect';
 import { listUserTags, saveUserTag } from 'services/userTagService';
+import ReactDOM from 'react-dom';
 
 
 const { Title, Text, Paragraph } = Typography;
@@ -69,9 +70,14 @@ const UserListPage = () => {
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
+  const [tags, setTags] = React.useState([]);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
+
+  const handleTagChange = async (user, tags) => {
+    await setUserTags(user.id, tags);
+  }
 
   const columnDef = [
     {
@@ -82,7 +88,7 @@ const UserListPage = () => {
     {
       title: 'Client Name',
       dataIndex: 'givenName',
-      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} /> ,
+      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />,
     },
     {
       title: 'Subscription',
@@ -98,6 +104,11 @@ const UserListPage = () => {
       title: 'Login Type',
       dataIndex: 'loginType',
       render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
     },
     {
       title: 'Last Logged In At',
@@ -140,9 +151,14 @@ const UserListPage = () => {
     try {
       setLoading(true);
       const list = await listAllUsers(qi);
-      setList(list);
-      updateQueryInfo(qi);
-    } finally {
+      const tags = await listUserTags();
+      ReactDOM.unstable_batchedUpdates(() => {
+        setList(list);
+        setTags(tags);
+        updateQueryInfo(qi);
+        setLoading(false);
+      });
+    } catch {
       setLoading(false);
     }
   }
@@ -360,7 +376,7 @@ const UserListPage = () => {
             </Radio.Group>
           </Form.Item>
           <Form.Item label="Tags" name="tags">
-            <TagSelect onList={listUserTags} onSave={saveUserTag}/>
+            <TagSelect tags={tags} onSave={saveUserTag} />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Invite</Button>

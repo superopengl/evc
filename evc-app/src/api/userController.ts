@@ -1,5 +1,5 @@
 
-import { getRepository, IsNull, Not, getManager } from 'typeorm';
+import { getRepository, IsNull, Not, getManager, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
 import { UserStatus } from '../types/UserStatus';
@@ -20,6 +20,8 @@ import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { Payment } from '../entity/Payment';
 import { EmailTemplateType } from '../types/EmailTemplateType';
+import { searchUser } from '../utils/searchUser';
+import { UserTag } from '../entity/UserTag';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
@@ -27,7 +29,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
   validatePasswordStrength(newPassword);
 
   const repo = getRepository(User);
-  const { user: {id} } = req as any;
+  const { user: { id } } = req as any;
   const user = await repo.findOne(id);
   assert(password && newPassword && user.secret === computeUserSecret(password, user.salt), 400, 'Invalid password');
 
@@ -79,7 +81,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const searchUsers = handlerWrapper(async (req, res) => {
+export const searchUserList = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const page = +req.body.page;
   const size = +req.body.size;
@@ -87,37 +89,17 @@ export const searchUsers = handlerWrapper(async (req, res) => {
   const orderDirection = req.body.orderDirection || 'ASC';
   const text = req.body.text?.trim();
   const subscription = (req.body.subscription || []);
+  const tags = (req.body.tags || []);
 
-  assert(page > 0 && size > 0, 400, 'Invalid page and size parameter');
-
-  let query = getRepository(User)
-    .createQueryBuilder('u')
-    .innerJoin(UserProfile, 'p', 'u."profileId" = p.id');
-
-  if (text) {
-    query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
-  }
-  query = query.leftJoin(q => q.from(Subscription, 's').where('status = :status', { status: SubscriptionStatus.Alive }), 's', 's."userId" = u.id');
-  if (subscription.length) {
-    query = query.andWhere('(s.type IN (:...subscription))', { subscription });
-  }
-
-  query = query.orderBy(orderField, orderDirection)
-    .addOrderBy('p.email', 'ASC')
-    .offset((page - 1) * size)
-    .limit(size)
-    .select([
-      'p.*',
-      's.*',
-      'u.id as id',
-      'u."loginType"',
-      'u.role as role',
-      'u."lastLoggedInAt"',
-      'u."createdAt" as "createdAt"',
-      's.type as "subscriptionType"'
-    ]);
-
-  const list = await query.execute();
+  const list = await searchUser({
+    text,
+    page,
+    size,
+    orderField,
+    orderDirection,
+    subscription,
+    tags
+  });
 
   res.json(list);
 });
@@ -153,6 +135,26 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+export const setUserTags = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { id } = req.params;
+
+  const { tags } = req.body;
+  const repo = getRepository(User);
+  const user = await repo.findOne(id);
+  if (tags?.length) {
+    user.tags = await getRepository(UserTag).find({
+      where: {
+        id: In(tags)
+      }
+    });
+  } else {
+    user.tags = [];
+  }
+  await repo.save(user);
+  res.json();
+});
+
 export const setUserPassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
@@ -172,7 +174,7 @@ export const listMyBalanceHistory = handlerWrapper(async (req, res) => {
   const { user: { id } } = req as any;
   const list = await getRepository(UserBalanceTransaction)
     .createQueryBuilder('ubt')
-    .where('ubt."userId" = :id', {id})
+    .where('ubt."userId" = :id', { id })
     .andWhere('ubt.amount != 0')
     .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."balanceTransactionId"')
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')

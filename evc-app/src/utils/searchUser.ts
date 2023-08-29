@@ -9,13 +9,13 @@ import { UserProfile } from '../entity/UserProfile';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 
 export type StockUserParams = {
-  text?: string,
-  page: number,
-  size: number,
-  orderField: string,
-  orderDirection: 'ASC' | 'DESC',
-  subscription: string[],
-  tags: string[]
+  text?: string;
+  page: number;
+  size: number;
+  orderField: string;
+  orderDirection: 'ASC' | 'DESC';
+  subscription: string[];
+  tags: string[];
 };
 
 export async function searchUser(queryInfo: StockUserParams) {
@@ -44,15 +44,19 @@ export async function searchUser(queryInfo: StockUserParams) {
       'tg."userId" as "userId"',
       'array_agg(tg."userTagId") as tags'
     ]),
-    'tg', 'tg."userId" = u.id')
+  'tg', 'tg."userId" = u.id');
+
   if (tags?.length) {
     query = query.andWhere('(tg.tags && array[:...tags]::uuid[]) IS TRUE', { tags });
   }
 
+  const count = await query.getCount();
+
+
   query = query.orderBy(orderField, orderDirection)
     .addOrderBy('p.email', 'ASC')
-    .offset((page - 1) * size)
-    .limit(size)
+    .offset((pageNo - 1) * pageSize)
+    .limit(pageSize)
     .select([
       'p.*',
       's.*',
@@ -65,6 +69,11 @@ export async function searchUser(queryInfo: StockUserParams) {
       's.type as "subscriptionType"'
     ]);
 
-  const list = await query.execute();
-  return list;
+  const data = await query.execute();
+
+  return {
+    count,
+    page: pageNo,
+    data
+  };
 }

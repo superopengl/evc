@@ -5,10 +5,11 @@ import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   IdcardOutlined, SearchOutlined,
-  UserOutlined
+  UserOutlined,
+  ClearOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space, Alert } from 'antd';
+import { Space, Pagination } from 'antd';
 import { listAllUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
 import { inviteUser, impersonate } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
@@ -27,6 +28,7 @@ import CheckboxButton from 'components/CheckboxButton';
 import TagSelect from 'components/TagSelect';
 import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
+import TagFilter from 'components/TagFilter';
 
 
 const { Title, Text, Paragraph } = Typography;
@@ -52,6 +54,7 @@ const subscriptionDefMap = _.keyBy(subscriptionDef, 'key');
 
 const DEFAULT_QUERY_INFO = {
   text: '',
+  tags: [],
   page: 1,
   size: 50,
   subscription: [],
@@ -66,6 +69,7 @@ const UserListPage = () => {
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [portfolioModalVisible, setPortfolioModalVisible] = React.useState(false);
   const [referralBalanceModal, setReferralBalanceModal] = React.useState(false);
+  const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
@@ -147,17 +151,12 @@ const UserListPage = () => {
     },
   ];
 
-  const loadList = async (qi = queryInfo) => {
+  const loadList = async () => {
     try {
       setLoading(true);
-      const list = await listAllUsers(qi);
+      await searchByQueryInfo(queryInfo)
       const tags = await listUserTags();
-      ReactDOM.unstable_batchedUpdates(() => {
-        setList(list);
-        setTags(tags);
-        updateQueryInfo(qi);
-        setLoading(false);
-      });
+      setTags(tags);
     } catch {
       setLoading(false);
     }
@@ -192,6 +191,23 @@ const UserListPage = () => {
     await loadList(newQueryInfo);
   }
 
+  const searchByQueryInfo = async (queryInfo) => {
+    try {
+      setLoading(true);
+      const resp = await listAllUsers(queryInfo);
+      const { count, page, data } = resp;
+      ReactDOM.unstable_batchedUpdates(() => {
+        setTotal(count);
+        setList(data);
+        setQueryInfo({ ...queryInfo, page });
+        setLoading(false);
+      });
+      reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
+    } catch {
+      setLoading(false);
+    }
+  }
+
   const handleDelete = async (e, item) => {
     e.stopPropagation();
     const { id, email } = item;
@@ -201,8 +217,7 @@ const UserListPage = () => {
       onOk: async () => {
         setLoading(true);
         await deleteUser(id);
-        await loadList();
-        setLoading(false);
+        await searchByQueryInfo(queryInfo);
       },
       maskClosable: true,
       okButtonProps: {
@@ -229,7 +244,6 @@ const UserListPage = () => {
       }
     })
   }
-
 
   const openReferralBalanceModal = async (e, user) => {
     e.stopPropagation();
@@ -268,6 +282,10 @@ const UserListPage = () => {
     loadList();
   }
 
+  const handleTagFilterChange = (tags) => {
+    searchByQueryInfo({ ...queryInfo, page: 1, tags });
+  }
+
   const handleSubscriptionChange = (type, checked) => {
     let subscription = [...queryInfo.subscription];
     if (checked) {
@@ -279,7 +297,15 @@ const UserListPage = () => {
       ...queryInfo,
       subscription
     }
-    loadList(newQueryInfo);
+    searchByQueryInfo(newQueryInfo);
+  }
+
+  const handleClearFilter = () => {
+    searchByQueryInfo(DEFAULT_QUERY_INFO);
+  }
+
+  const handlePaginationChange = (page, pageSize) => {
+    searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
   return (
@@ -290,7 +316,7 @@ const UserListPage = () => {
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>User Management</Title>
           </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Input.Search
               placeholder="Input search text"
               enterButton={<SearchOutlined />}
@@ -301,18 +327,21 @@ const UserListPage = () => {
               value={queryInfo?.text}
               allowClear
             />
-
             <Space>
-              {subscriptionDef.map((x, i) => <CheckboxButton key={i} value={x.key}
-                onChange={checked => handleSubscriptionChange(x.key, checked)}
-                value={queryInfo.subscription.includes(x.key)}
-              >
-                {x.title}
-              </CheckboxButton>)}
+              <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
+              <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}></Button>
+              <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
             </Space>
-            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}></Button>
-            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
+          <Space>
+            {subscriptionDef.map((x, i) => <CheckboxButton key={i}
+              onChange={checked => handleSubscriptionChange(x.key, checked)}
+              value={queryInfo.subscription.includes(x.key)}
+            >
+              {x.title}
+            </CheckboxButton>)}
+          </Space>
+          {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
           <Table columns={columnDef}
             dataSource={list}
             size="small"
@@ -329,6 +358,22 @@ const UserListPage = () => {
           //     setFormVisible(true);
           //   }
           // })}
+          />
+          <Pagination
+            current={queryInfo.page}
+            pageSize={queryInfo.size}
+            total={total}
+            defaultCurrent={queryInfo.page}
+            defaultPageSize={queryInfo.size}
+            pageSizeOptions={[10, 30, 60]}
+            showSizeChanger
+            showQuickJumper
+            showTotal={total => `Total ${total}`}
+            disabled={loading}
+            onChange={handlePaginationChange}
+            onShowSizeChange={(current, size) => {
+              searchByQueryInfo({ ...queryInfo, page: current, size });
+            }}
           />
         </Space>
       </ContainerStyled>

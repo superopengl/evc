@@ -1,30 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tag from './Tag';
-import { Loading } from './Loading';
-
-
 
 const TagFilter = (props) => {
 
-  const { onChange, onList, value, loading: propLoading } = props;
-  const [loading, setLoading] = React.useState(propLoading);
+  const { onChange, tags, value } = props;
   const [selected, setSelected] = React.useState(value);
-  const [allTags, setAllTags] = React.useState([]);
-
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      const list = await onList();
-      setAllTags(list);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  React.useEffect(() => {
-    loadList();
-  }, []);
 
   const isSelected = (tag) => {
     return selected.includes(tag.id);
@@ -42,9 +23,8 @@ const TagFilter = (props) => {
   }
 
   return (
-    <Loading loading={loading}>
       <div style={{padding: '1rem 0'}}>
-        {allTags.map((t, i) => <Tag
+        {tags.map((t, i) => <Tag
           key={i}
           color={t.color}
           clickable={true}
@@ -55,21 +35,19 @@ const TagFilter = (props) => {
           {t.name}
         </Tag>)}
       </div>
-    </Loading>
   );
 };
 
 TagFilter.propTypes = {
   // value: PropTypes.string.isRequired,
   value: PropTypes.array,
-  loading: PropTypes.bool,
   onChange: PropTypes.func,
-  onList: PropTypes.func.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.object),
 };
 
 TagFilter.defaultProps = {
   value: [],
-  loading: true,
+  tags: [],
   onChange: () => { }
 };
 

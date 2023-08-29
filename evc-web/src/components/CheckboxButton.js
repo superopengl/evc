@@ -16,6 +16,10 @@ const CheckboxButton = (props) => {
     onChange(newValue);
   }
 
+  React.useEffect(() => {
+    setChecked(value);
+  }, [value]);
+
   return (
     <Button type="primary" ghost={!checked} {...other} onClick={handleToggle} 
     size="small" style={{borderRadius: 80, fontSize: 12}}>

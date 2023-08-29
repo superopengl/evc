@@ -14,7 +14,6 @@ import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import TaskTemplatePage from 'pages/TaskTemplate/TaskTemplatePage';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
-import MessagePage from 'pages/Message/MessagePage';
 import UserListPage from 'pages/User/UserListPage';
 import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
@@ -118,7 +117,6 @@ const App = () => {
           <RoleRoute visible={isAdmin} loading={loading} exact path="/translation" component={TranslationListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/config" component={ConfigListPage} />
           <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
-          <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
           <RoleRoute visible={!isGuest} loading={loading} path="/stock" exact component={StockListPage} />
           <RoleRoute visible={!isGuest} loading={loading} path="/stock/:symbol" exact component={StockPage} />
           {/* <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/stock" exact component={StockListPage} /> */}

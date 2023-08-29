@@ -123,7 +123,6 @@ const HomeHeaderRaw = props => {
             {/* {isClient && <Menu.Item key="portfolio"><Link to="/portfolios">Portfolios</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="clients"><Link to="/clients">Users</Link></Menu.Item>} */}
             {/* {isAdmin && <Menu.Item key="admin"><Link to="/admin">Admin</Link></Menu.Item>} */}
-            {/* {!isGuest && <Menu.Item key="message"><Link to="/message"><Badge count={notifyCount} showZero={false} offset={[10, 0]}>Messages</Badge></Link></Menu.Item>} */}
             {isAdmin && <Menu.SubMenu key="settings_old" title="Settings">
               {/* <Menu.Item key="task_template"><Link to="/task_template">Task Templates</Link></Menu.Item> */}
               {/* <Menu.Item key="doc_template"><Link to="/doc_template">Doc Templates</Link></Menu.Item> */}
@@ -190,7 +189,6 @@ const HomeHeaderRaw = props => {
             {isAdmin && <Menu.Item key="translation"><TeamOutlined /> <Link to="/translation">Translation</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="config"><TeamOutlined /> <Link to="/config">Config</Link></Menu.Item>}
             {isAdmin && <Menu.Item key="email_template"><TeamOutlined /> <Link to="/email_template">Email Template</Link></Menu.Item>}
-            {/* {!isGuest && <Menu.Item key="message"><BellOutlined /> <Link to="/message">Messages <Badge count={notifyCount} showZero={false} /></Link></Menu.Item>} */}
             {(isAdmin || isAgent) && <Menu.Item key="stats"><DashboardOutlined /> <Link to="/stats">Statistics</Link></Menu.Item>}
             {!isGuest && <Menu.Item key="profile"><UserOutlined /> <Link to="/profile">Profile</Link></Menu.Item>}
             {isClient && <Menu.Item key="account"><Link to="/account">Account</Link></Menu.Item>}

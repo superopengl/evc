@@ -1,14 +1,13 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToOne, CreateDateColumn } from 'typeorm';
+import { Entity, Column, JoinColumn, ManyToOne, CreateDateColumn, PrimaryColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
-import { StockSpecialFairValue } from './StockSpecialFairValue';
-
-
 @Entity()
-@Index('idx_stockEps_symbol_reportDate', ['symbol', 'reportDate'], {unique: true})
 export class StockEps {
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  @PrimaryColumn()
+  symbol: string;
+
+  @PrimaryColumn('date')
+  reportDate: string;
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -17,8 +16,6 @@ export class StockEps {
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
   stock: Stock;
 
-  @Column()
-  symbol: string;
 
   @Column('smallint')
   year: number;
@@ -26,8 +23,6 @@ export class StockEps {
   @Column('smallint')
   quarter: number;
 
-  @Column('date')
-  reportDate: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   value: number;

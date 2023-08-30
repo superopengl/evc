@@ -16,6 +16,8 @@
     "feed:eps:prod": "TZ=utc node ./endpoints/feed-eps",
     "feed:pe": "TZ=utc ts-node ./endpoints/feed-pe.ts",
     "feed:pe:prod": "TZ=utc node ./endpoints/feed-pe",
+    "daily:fetch": "TZ=utc ts-node ./endpoints/index-daily-fetch.ts",
+    "daily:fetch:prod": "TZ=utc node ./endpoints/index-daily-fetch",
     "feed": "pnpm feed:symbols; pnpm feed:eps; pnpm feed:pe",
     "feed:prod": "pnpm feed:symbols:prod; pnpm feed:eps:prod; pnpm feed:pe:prod",
     "build": "npm run lint && npm run clean && npm run compile",

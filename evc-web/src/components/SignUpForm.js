@@ -52,7 +52,7 @@ const SignUpForm = (props) => {
   return (
     <ContainerStyled>
       <Title level={2}>Sign Up</Title>
-      <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'client' }}>
+      <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'member' }}>
         <Form.Item>
           <Link to="/login"><Button size="small" block type="link">Already a user? Click to log in</Button></Link>
         </Form.Item>

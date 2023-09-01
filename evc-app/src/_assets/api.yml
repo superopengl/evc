@@ -436,7 +436,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
+          description: OK     
   /stock/s/{symbol}/chart/putcallratio:
     get:
       operationId: getPutCallRatioChart

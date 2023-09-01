@@ -24,7 +24,7 @@ import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
 
 export const changePassword = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member');
   const { password, newPassword } = req.body;
   validatePasswordStrength(newPassword);
 
@@ -43,7 +43,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
 });
 
 export const saveProfile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
   if (role !== 'admin') {
@@ -170,7 +170,7 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
 });
 
 export const listMyBalanceHistory = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { user: { id } } = req as any;
   const list = await getRepository(UserBalanceTransaction)
     .createQueryBuilder('ubt')

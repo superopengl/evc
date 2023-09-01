@@ -127,7 +127,7 @@ const UserListPage = () => {
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Tooltip placement="bottom" title="Referral & balance">
               <Button shape="circle" icon={<BiDollar style={{ position: 'relative', top: 2 }} />}
-                disabled={user.role !== 'client'}
+                disabled={user.role !== 'member'}
                 onClick={e => openReferralBalanceModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Update profile">

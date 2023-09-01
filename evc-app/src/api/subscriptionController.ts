@@ -36,7 +36,7 @@ async function getUserSubscriptionHistory(userId) {
 }
 
 export const listMySubscriptionHistory = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
 
   const list = await getUserSubscriptionHistory(userId);
@@ -54,7 +54,7 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
 });
 
 export const cancelSubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { id } = req.params;
   const { user: { id: userId } } = req as any;
 
@@ -70,7 +70,7 @@ export const cancelSubscription = handlerWrapper(async (req, res) => {
 });
 
 export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
 
   const subscription = await getRepository(Subscription).findOne(
@@ -81,7 +81,7 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 });
 
 export const provisionSubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
   const { plan, recurring, preferToUseBalance, alertDays, method } = req.body;
 
@@ -120,7 +120,7 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
 });
 
 export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { id: paymentId } = req.params;
   const { user } = req as any;
   const userId = user.id;
@@ -157,7 +157,7 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 });
 
 export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
   const { type, preferToUseBalance } = req.body;
   const result = await calculateNewSubscriptionPaymentDetail(null, userId, type, preferToUseBalance);

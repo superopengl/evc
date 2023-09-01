@@ -1,15 +1,7 @@
 
-import { getRepository, LessThan, MoreThan, Not } from 'typeorm';
-import { User } from '../entity/User';
-import { getUtcNow } from '../utils/getUtcNow';
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import * as moment from 'moment';
-import { UserStatus } from '../types/UserStatus';
-import { Subscription } from '../entity/Subscription';
-import { getUserCurrentSubscription } from '../utils/getUserCurrentSubscription';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
-import { Role } from '../types/Role';
-import { SubscriptionType } from '../types/SubscriptionType';
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -17,8 +9,7 @@ export const authMiddleware = async (req, res, next) => {
 
     if (user) {
       // Logged in users
-      const { id, expires } = user;
-      const repo = getRepository(User);
+      const { expires } = user;
       if (moment(expires).isBefore()) {
         // JWT token expired. Needs to refresh
         const existingUser = await getActiveUserByEmail(user.profile.email);

@@ -11,7 +11,7 @@ import { StockLatestStockInformation } from '../entity/views/StockLatestStockInf
 
 
 export const getAdminDashboard = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
 
   const pleas = await getRepository(StockPlea).find({
     order: {

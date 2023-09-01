@@ -30,7 +30,7 @@ export async function impersonate(email) {
   return httpPost(`auth/impersonate`, { email });
 }
 
-export async function inviteUser(email, role = 'client') {
+export async function inviteUser(email, role = 'member') {
   return httpPost(`auth/invite`, { email, role });
 }
 

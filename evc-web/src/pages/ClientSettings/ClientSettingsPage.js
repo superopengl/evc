@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {keyframes} from 'styled-components';
+import { keyframes } from 'styled-components';
 import { Typography, Layout, Menu } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { Link, withRouter } from 'react-router-dom';
@@ -11,6 +11,7 @@ import ChangePasswordPage from 'pages/ChangePasswordPage';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 import { DollarCircleFilled, DollarOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
+import ProLayout from '@ant-design/pro-layout';
 
 const { Text } = Typography;
 
@@ -18,6 +19,11 @@ const ContainerStyled = styled.div`
 margin: 64px 0 0 0;
 width: 100%;
 height: 100%;
+
+.ant-pro-sider-layout-side {
+  margin-top: 64px;
+  height: calc(100vh - 64px) !important;
+}
 `;
 
 
@@ -27,34 +33,34 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
-const slide = keyframes`
-from {
-  margin-left: 80px;
-
+const routes = {
+  routes: [
+    {
+      path: '/settings/',
+      name: 'Profile',
+      icon: <UserOutlined />,
+      component: './Welcome',
+    },
+    {
+      path: '/settings/account',
+      name: 'Account',
+      icon: <DollarOutlined />,
+      component: './Welcome',
+    },
+    {
+      path: '/settings/subscription',
+      name: 'Subscription',
+      icon: <DollarCircleFilled />,
+      component: './Welcome',
+    },
+    {
+      path: '/settings/change_password',
+      name: 'Change Password',
+      icon: <SafetyCertificateOutlined />,
+      component: './Welcome',
+    },
+  ],
 }
-
-to {
-  margin-left: 200px;
-}
-`;
-
-const StyledLayoutContent = styled(Layout.Content)`
-padding: 20px;
-animation-name: ${slide}
-animation-duration: 0.4s;
-animation-iteration-count: 10;
-// animation-timing-function: linear;
-// animation-fill-mode: forwards;
-
-&.collapsed {
-  // animation-direction: reverse;
-}
-
-&.expand {
-  // animation-direction: normal;
-}
-`;
-
 
 const ClientSettingsPage = props => {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -70,7 +76,7 @@ const ClientSettingsPage = props => {
     <LayoutStyled>
       <HomeHeader></HomeHeader>
       <ContainerStyled>
-        <Layout style={{ height: '100%' }}>
+        {/* <Layout style={{ height: '100%' }}>
           <Layout.Sider collapsible collapsed={collapsed} theme="dark" onCollapse={c => setCollapsed(c)}
             style={{
               paddingTop: 20,
@@ -94,7 +100,29 @@ const ClientSettingsPage = props => {
               <Route path={`${path}/change_password`} exact component={ChangePasswordPage} />
             </Switch>
           </StyledLayoutContent>
-        </Layout>
+        </Layout> */}
+        <ProLayout
+          route={routes}
+          navTheme="dark"
+          menuHeaderRender={false}
+          fixSiderbar
+          headerRender={false}
+          menuItemRender={(item, dom) => (
+            <Link to={item.path}>
+              {dom}
+            </Link>
+          )}
+        >
+          <div style={{display: 'flex', justifyContent: 'center'}}>
+          <Switch>
+            <Route path={`${path}`} exact component={ProfilePage} />
+            <Route path={`${path}/account`} exact component={MyAccountPage} />
+            <Route path={`${path}/subscription`} exact component={MySubscriptionPage} />
+            <Route path={`${path}/change_password`} exact component={ChangePasswordPage} />
+          </Switch>
+
+          </div>
+        </ProLayout>
       </ContainerStyled>
     </LayoutStyled >
   );

@@ -122,7 +122,7 @@ const App = () => {
           <RoleRoute visible={isLoggedIn} loading={loading} path="/stock" exact component={StockListPage} />
           <RoleRoute visible={isLoggedIn} loading={loading} path="/stock/:symbol" exact component={StockPage} />
           {/* <RoleRoute visible={isAdmin || isAgent || isMember} loading={loading} path="/stock" exact component={StockListPage} /> */}
-          <RoleRoute visible={isLoggedIn} loading={loading} path="/settings" component={isGuest ? ClientSettingsPage : AdminSettingsPage} />
+          <RoleRoute visible={isLoggedIn} loading={loading} path="/settings" component={(isMember || isFree) ? ClientSettingsPage : AdminSettingsPage} />
           <RoleRoute visible={isMember || isFree} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
           <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
           <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />

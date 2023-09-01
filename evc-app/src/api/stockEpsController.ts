@@ -1,5 +1,5 @@
 import { getRepository, getManager } from 'typeorm';
-import { assertRole } from '../utils/assert';
+import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockEps } from '../entity/StockEps';
 import * as stockEpsService from '../services/stockEpsService';
@@ -28,12 +28,16 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const { period, value } = req.body;
   const reportDate = moment(period);
+  assert(reportDate.isBefore(), 404, 'EPS report date cannot be future date');
+
   const entity = new StockEps();
   entity.symbol = symbol;
   entity.reportDate = reportDate.format('YYYY-MM-DD');
   entity.year = reportDate.year();
   entity.quarter = reportDate.quarter();
   entity.value = value;
+  entity.source = 'manual';
+  entity.author = (req as any).user.id;
 
   await getRepository(StockEps).insert(entity);
 

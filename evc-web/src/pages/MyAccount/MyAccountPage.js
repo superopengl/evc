@@ -1,5 +1,4 @@
-import { Button, Layout, Space, Typography, Row, Col } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+import { Button, Layout, Space, Typography } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,8 +12,6 @@ const { Paragraph, Text, Title } = Typography;
 
 
 const ContainerStyled = styled.div`
-  margin: 6rem auto 2rem auto;
-  padding: 0 1rem 4rem;
   width: 100%;
   max-width: 1000px;
   display: flex;
@@ -25,20 +22,6 @@ const ContainerStyled = styled.div`
   //   margin: 20px 0 8px;
   // }
 `;
-
-
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-
-  .task-count .ant-badge-count {
-    background-color: #15be53;
-    color: #eeeeee;
-    // box-shadow: 0 0 0 1px #15be53 inset;
-  }
-`;
-
 
 
 const MyAccountPage = () => {
@@ -62,7 +45,6 @@ const MyAccountPage = () => {
     loadSubscrptions();
   }, []);
 
-  const currentSubscription = account.subscription;
 
   const handleFetchMyBalanceHistoryList = async () => {
     const data = await listMyBalanceHistory();

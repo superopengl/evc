@@ -6,8 +6,6 @@ import { changePassword } from 'services/userService';
 import { notify } from 'util/notify';
 
 const ContainerStyled = styled.div`
-  margin: 4rem auto 2rem auto;
-  padding: 2rem 1rem;
   text-align: center;
   max-width: 300px;
   width: 100%;

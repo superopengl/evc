@@ -1,17 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Row, Col, Tooltip, Tag } from 'antd';
+import { Card, Typography, Space, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { StarOutlined, StarFilled, QuestionCircleFilled } from '@ant-design/icons';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
-import { TimeAgo } from 'components/TimeAgo';
 import { StockWatchButton } from 'components/StockWatchButton';
 import { StockName } from './StockName';
-import { searchSingleStock, getStockHistory, getWatchList, unwatchStock, watchStock } from 'services/stockService';
+import { unwatchStock, watchStock } from 'services/stockService';
 import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 
-const { Paragraph, Text } = Typography;
+const { Text } = Typography;
 
 const StyledTable = styled.table`
 border: none;
@@ -50,7 +48,7 @@ const StockInfoCard = (props) => {
 
   const [watched, setWatched] = React.useState(stock?.watched);
   const context = React.useContext(GlobalContext);
-  const { user, role, setUser, notifyCount } = context;
+  const { role } = context;
   const isClient = role === 'member' || role === 'free';
 
 
@@ -65,7 +63,6 @@ const StockInfoCard = (props) => {
 
   const { isOver, isUnder } = stock;
   const className = isOver ? 'over-valued' : isUnder ? 'under-valued' : null;
-  const titleSuffix = isOver ? 'over' : isUnder ? 'under' : null;
   return (
     <StyledCard
       size="small"

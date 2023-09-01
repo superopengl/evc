@@ -10,7 +10,7 @@ import { filter } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 export const StockSearchInput = (props) => {
   const { onChange, excluding, traceSearch, mode, style } = props;
@@ -27,12 +27,12 @@ export const StockSearchInput = (props) => {
       .value();
     setList(sorted);
   }
-  
+
   const subscribeStockListUpdate = () => {
     return context.event$.pipe(
       filter(e => e.type === 'stock.created')
     )
-    .subscribe(() => loadEntities());
+      .subscribe(() => loadEntities());
   }
 
   React.useEffect(() => {
@@ -50,10 +50,10 @@ export const StockSearchInput = (props) => {
       if (traceSearch) {
         incrementStock(symbol);
       }
-      try{ 
+      try {
         setLoading(true);
         await onChange(symbol);
-      }finally{
+      } finally {
         setLoading(false);
       }
     }
@@ -91,7 +91,7 @@ export const StockSearchInput = (props) => {
         const { symbol, company } = option.data;
         return symbol.toLowerCase().includes(match) || company.toLowerCase().includes(match);
       }}
-      notFoundContent={<Button type="primary" block onClick={handleStockPlea}>Request to support stock <strong style={{marginLeft: 4}}>{text.toUpperCase()}</strong></Button>}
+      notFoundContent={<Button type="primary" block onClick={handleStockPlea}>Request to support stock <strong style={{ marginLeft: 4 }}>{text.toUpperCase()}</strong></Button>}
     >
       {list.map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         {/* <Highlighter highlightClassName="search-highlighting"

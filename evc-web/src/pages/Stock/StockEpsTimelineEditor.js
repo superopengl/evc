@@ -59,7 +59,7 @@ const StockEpsTimelineEditor = (props, ref) => {
   const handleDeleteItem = async (item) => {
     try {
       setLoading(true);
-      await onDelete(item.id);
+      await onDelete(item.symbol, item.reportDate);
       updateList(await onLoadList());
     } finally {
       setLoading(false);

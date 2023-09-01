@@ -197,13 +197,14 @@ TagSelect.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   onChange: PropTypes.func,
-  onSave: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
 };
 
 TagSelect.defaultProps = {
   value: [],
   readonly: false,
-  onChange: () => { }
+  onChange: () => { },
+  onSave: () => { },
 };
 
 export default TagSelect;

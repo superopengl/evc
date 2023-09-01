@@ -398,6 +398,17 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/preview:
+    get:
+      operationId: getStockPreview
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/exists:
     get:
       operationId: existsStock
@@ -436,7 +447,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK     
+          description: OK
   /stock/s/{symbol}/chart/putcallratio:
     get:
       operationId: getPutCallRatioChart
@@ -674,14 +685,17 @@ paths:
       responses:
         200:
           description: OK
-  /stock/eps/:id:
+  /stock/eps/:symbol/:reportDate:
     delete:
       operationId: deleteStockEps
       parameters:
-        - name: id
+        - name: symbol
           in: path
           type: string
-          format: uuid
+          required: true
+        - name: reportDate
+          in: path
+          type: string
           required: true
       responses:
         200:

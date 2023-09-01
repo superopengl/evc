@@ -30,7 +30,7 @@ export const TimeAgo = props => {
     <Space direction={direction} size="small">
       {prefix}
       {showAgo && <Text strong={strong} type={type}><ReactTimeAgo date={m.toDate()} /></Text>}
-      {accurate && <Text strong={strong} type={type}><small>{m.format(showTime ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</small></Text>}
+      {showTime && <Text strong={strong} type={type}><small>{m.format(accurate ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</small></Text>}
     </Space>
     {extra}
   </StyledSpace>

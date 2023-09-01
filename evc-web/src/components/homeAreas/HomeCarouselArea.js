@@ -1,23 +1,18 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Space, Row, Col, Dropdown, Menu } from 'antd';
+import { Typography, Button, Space, Row, Col, Modal } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
-import { GlobalOutlined, SearchOutlined } from '@ant-design/icons';
-import SignUpForm from 'components/SignUpForm';
-import { LogoTextDark } from 'components/LogoTextDark';
 import { StockSearchInput } from 'components/StockSearchInput';
-import { getStockHistory, listHotStock } from 'services/stockService';
-import HotStockList from 'components/HotStockList';
 import { LocaleSelector } from 'components/LocaleSelector';
-import { HiOutlineTranslate } from 'react-icons/hi';
-import SearchResultModal from 'components/SearchResultModal';
-import StockMostSearched from 'components/StockMostSearched';
+import ReactDOM from 'react-dom';
+import StockFreePage from 'pages/StockPage/StockFreePage';
+import StockGuestPage from 'pages/StockPage/StockGuestPage';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
 
 const Container = styled.div`
@@ -84,12 +79,9 @@ const HomeCarouselAreaRaw = props => {
 
   const windowWidth = useWindowWidth();
   const context = useContext(GlobalContext);
-  const [resultStock, setResultStock] = React.useState();
-  const isGuest = context.role === 'guest';
+  const [resultStockSymbol, setResultStockSymbol] = React.useState();
+  const [stockModalVisible, setStockModalVisible] = React.useState(false);
 
-  const posterHeight = windowWidth < 576 ? 300 :
-    windowWidth < 992 ? 350 :
-      400;
 
   const catchPhraseSize = windowWidth < 576 ? 32 :
     windowWidth < 992 ? 40 :
@@ -100,8 +92,12 @@ const HomeCarouselAreaRaw = props => {
   }
 
   const handleSearchChange = async symbol => {
-    const stock = await getStockHistory(symbol);
-    setResultStock(stock);
+    if (symbol) {
+      ReactDOM.unstable_batchedUpdates(() => {
+        setResultStockSymbol(symbol);
+        setStockModalVisible(true);
+      })
+    }
   }
 
   const span = {
@@ -169,7 +165,22 @@ const HomeCarouselAreaRaw = props => {
               </Title> */}
 
       </InnerContainer>
-      <SearchResultModal stock={resultStock} />
+      <Modal
+        visible={stockModalVisible}
+        closable={true}
+        maskClosable={true}
+        destroyOnClose={true}
+        onOk={() => setStockModalVisible(false)}
+        onCancel={() => setStockModalVisible(false)}
+        footer={null}
+        size="large"
+        title="Stock preview"
+        centered
+        width={'90vw'}
+        style={{ top: 20 }}
+      >
+        <StockGuestPage symbol={resultStockSymbol} />
+      </Modal>
     </Container>
   );
 }

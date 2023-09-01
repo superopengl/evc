@@ -17,11 +17,15 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
             `"fairValueHi"`,
             `rank() over (partition by symbol order by x."reportDate" desc)`
           ]), 'x')
-        .where(`2 <= rank AND rank <=5`)
+        .where(`rank <=5`)
         .andWhere(`"fairValueLo" IS NOT NULL AND "fairValueHi" IS NOT NULL`)
         .groupBy('symbol')
         .select('symbol')
-        .addSelect(`array_agg(json_build_object('date', "reportDate", 'lo', "fairValueLo", 'hi', "fairValueHi")) as "fairValues"`)
+        .addSelect(`array_agg(json_build_object(
+          'date', "reportDate", 
+          'lo', case rank when 1 then null else "fairValueLo" end, 
+          'hi', case rank when 1 then null else "fairValueHi" end)
+          ) as "fairValues"`)
         , 'f')
       , 'f', 'h.symbol = f.symbol')
     .select([

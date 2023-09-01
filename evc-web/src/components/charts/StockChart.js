@@ -6,7 +6,7 @@ import TradingViewWidget from 'react-tradingview-widget';
 const StockChart = props => {
   const { symbol } = props;
 
-  return <div style={{height: 500}}>
+  return <div style={{height: 500, minWidth: 400}}>
     <TradingViewWidget 
     symbol={`${symbol}`} 
     timezone="America/New_York"

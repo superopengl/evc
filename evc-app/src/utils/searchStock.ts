@@ -2,7 +2,7 @@ import { getManager } from 'typeorm';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
-import { StockLatestStockInformation } from '../entity/views/StockLatestStockInformation';
+import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
   const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued, inValued } = queryInfo;
@@ -13,7 +13,7 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
 
   let query = getManager()
     .createQueryBuilder()
-    .from(StockLatestStockInformation, 's')
+    .from(StockLatestPaidInformation, 's')
     .where('1 = 1');
 
   if (symbols?.length) {

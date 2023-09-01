@@ -2,7 +2,7 @@ import { getManager, getRepository } from 'typeorm';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
-import { StockLatestStockInformation } from '../entity/views/StockLatestStockInformation';
+import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 import { Subscription } from '../entity/Subscription';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';

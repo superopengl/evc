@@ -7,7 +7,7 @@ import { StockPlea } from '../entity/StockPlea';
 import { StockLastFairValue } from '../entity/views/StockLastFairValue';
 import { StockSupport } from '../entity/StockSupport';
 import { StockResistance } from '../entity/StockResistance';
-import { StockLatestStockInformation } from '../entity/views/StockLatestStockInformation';
+import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 
 
 export const getAdminDashboard = handlerWrapper(async (req, res) => {
@@ -60,7 +60,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
   const noSupports = await getManager()
     .createQueryBuilder()
     .from(q => q
-      .from(StockLatestStockInformation, 'v')
+      .from(StockLatestPaidInformation, 'v')
       .where('supports IS NULL')
       .select('symbol'),
     'sub')
@@ -70,7 +70,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
   const noResistances = await getManager()
     .createQueryBuilder()
     .from(q => q
-      .from(StockLatestStockInformation, 'v')
+      .from(StockLatestPaidInformation, 'v')
       .where('resistances IS NULL')
       .select('symbol'),
     'sub')

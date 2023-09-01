@@ -17,7 +17,7 @@ import { StockResistance } from '../StockResistance';
       'sup')
         .groupBy('sup.symbol')
         .select('symbol')
-        .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as supports'),
+        .addSelect(`array_agg(json_build_object('lo', lo, 'hi', hi)) as supports`),
     'supports', 'supports.symbol = s.symbol')
     .select([
       's.symbol as symbol',
@@ -85,7 +85,7 @@ export class StockTopSupport {
     )
     .addSelect('resistance.values as resistances')
 })
-export class StockLatestStockInformation {
+export class StockLatestPaidInformation {
   @ViewColumn()
   @PrimaryColumn()
   symbol: string;

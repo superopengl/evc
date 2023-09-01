@@ -4,7 +4,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { compareTrend } from '../utils/compareTrend';
-import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalFairValue';
+import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalComputedFairValue';
 
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {

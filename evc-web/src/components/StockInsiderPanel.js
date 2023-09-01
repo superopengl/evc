@@ -59,6 +59,7 @@ const StockInsiderPanel = (props) => {
 
   const getBadgeComponent = (transactionType) => {
     const info = INSIDER_LEGEND_INFOS[transactionType];
+    if (!info) return null;
     return <Tooltip title={info?.message ?? transactionType}>
       <Tag color={info?.color ?? '#888888'}>{transactionType}</Tag>
     </Tooltip>
@@ -104,12 +105,12 @@ const StockInsiderPanel = (props) => {
         <Title level={3}>Summary</Title>
 
 
-        <Space direction="vertical" size="small" style={{marginBottom: 24}}>
-                    {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
-                      <Tag color={v.color}>{k}</Tag>
-                      {v.message}
-                    </div>)}
-                  </Space>
+        <Space direction="vertical" size="small" style={{ marginBottom: 24 }}>
+          {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
+            <Tag color={v.color}>{k}</Tag>
+            {v.message}
+          </div>)}
+        </Space>
         <RosterList
           grid={{ column: 1 }}
           itemLayout="horizontal"
@@ -117,19 +118,19 @@ const StockInsiderPanel = (props) => {
           dataSource={data.summary}
           renderItem={item => (
             <List.Item>
-                <Descriptions
-                  title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{fontWeight: 400, fontSize: '0.8rem'}}>{item.reportedTitle}</Text>}</Space>}
-                  size="small"
-                  extra={getBadgeComponent(item.transactionCode)}
-                >
-                  <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
-                  <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
-                  <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
-                  <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
-                  <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
-                  <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
-                  <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
-                </Descriptions>
+              <Descriptions
+                title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
+                size="small"
+                extra={getBadgeComponent(item.transactionCode)}
+              >
+                <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
+                <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
+                <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
+                <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
+                <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
+                <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
+                <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
+              </Descriptions>
             </List.Item>
           )}
         />

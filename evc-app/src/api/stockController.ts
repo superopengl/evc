@@ -38,6 +38,7 @@ import { StockLatestStockInformation } from '../entity/views/StockLatestStockInf
 import { StockGuestPublishInformation } from '../entity/views/StockGuestPublishInformation';
 import * as _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
+import { StockPutCallRatio90 } from '../entity/views/StockPutCallRatio90';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -294,6 +295,19 @@ export const getStockNews = handlerWrapper(async (req, res) => {
 export const getStockChart = handlerWrapper(async (req, res) => {
   const { symbol, period, interval } = req.params;
   res.json(await getChart(symbol, period, interval));
+});
+
+export const getPutCallRatioChart = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const list = await getRepository(StockPutCallRatio90).find({
+    where: {
+      symbol
+    },
+    order: {
+      date: 'DESC'
+    }
+  })
+  res.json(list);
 });
 
 async function updateStockLastPrice(info: StockLastPriceInfo) {

@@ -11,6 +11,13 @@ import { User } from '../entity/User';
 const cookieName = 'jwt';
 const isProd = process.env.NODE_ENV === 'prod';
 
+export const COOKIE_OPTIONS = {
+  httpOnly: true,
+  signed: false,
+  sameSite: isProd ? 'strict' : undefined,
+  secure: isProd ? true : undefined,
+};
+
 export function attachJwtCookie(user, res) {
   assert(user.id, 500, 'User has no id');
   const payload = sanitizeUser(user);
@@ -19,12 +26,9 @@ export function attachJwtCookie(user, res) {
   const token = jwt.sign(payload, JwtSecret);
 
   res.cookie(cookieName, token, {
-    httpOnly: true,
+    ...COOKIE_OPTIONS,
     maxAge: 1000 * 60 * 60 * 24, // 24 hours
     expires: moment(getUtcNow()).add(24, 'hours').toDate(),
-    signed: false,
-    sameSite: isProd ? 'strict' : undefined,
-    secure: isProd ? true : undefined,
   });
 }
 
@@ -43,5 +47,5 @@ export function verifyJwtFromCookie(req) {
 }
 
 export function clearJwtCookie(res) {
-  res.clearCookie(cookieName);
+  res.clearCookie(cookieName, COOKIE_OPTIONS);
 }

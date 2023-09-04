@@ -23,13 +23,25 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     ]
   });
 
-  const noFairValues = await getManager()
+  const noFairValuesByInvalidTtmEps = await getManager()
     .createQueryBuilder()
     .from(q => q
       .from(StockLastFairValue, 'v')
       .where('"fairValueLo" IS NULL')
+      .andWhere('"ttmEps" <= 0')
       .select('symbol'),
-    'sub')
+      'sub')
+    .select('array_agg(symbol) as value')
+    .getRawOne();
+
+  const noFairValuesByMissingEpsData = await getManager()
+    .createQueryBuilder()
+    .from(q => q
+      .from(StockLastFairValue, 'v')
+      .where('"fairValueLo" IS NULL')
+      .andWhere('"ttmEps" IS NULL')
+      .select('symbol'),
+      'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
 
@@ -40,7 +52,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .groupBy('symbol')
       .having('COUNT(*) = 1')
       .select('symbol'),
-    'sub'
+      'sub'
     )
     .select('array_agg(symbol) as value')
     .getRawOne();
@@ -52,7 +64,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .groupBy('symbol')
       .having('COUNT(*) = 1')
       .select('symbol'),
-    'sub'
+      'sub'
     )
     .select('array_agg(symbol) as value')
     .getRawOne();
@@ -63,7 +75,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .from(StockLatestPaidInformation, 'v')
       .where('supports IS NULL')
       .select('symbol'),
-    'sub')
+      'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
 
@@ -73,13 +85,14 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .from(StockLatestPaidInformation, 'v')
       .where('resistances IS NULL')
       .select('symbol'),
-    'sub')
+      'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
 
   const data = {
     pleas,
-    noFairValues : noFairValues.value,
+    noFairValuesByInvalidTtmEps: noFairValuesByInvalidTtmEps.value,
+    noFairValuesByMissingEpsData: noFairValuesByMissingEpsData.value,
     noSupports: noSupports.value,
     noResistances: noResistances.value,
     oneSupports: oneSupports.value,

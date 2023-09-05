@@ -398,17 +398,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/preview:
-    get:
-      operationId: getStockPreview
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK          
   /stock/s/{symbol}/exists:
     get:
       operationId: existsStock

@@ -87,7 +87,7 @@ const StockFreePage = (props) => {
           </Space>}
         />
 
-        <TagSelect value={stock.tags} tags={stockTags} readonly={true} />
+        {hasPaid && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
         <Row gutter={[20, 20]} wrap={true} style={{ marginTop: 20 }}>
           <Col flex="0 0 auto">
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>

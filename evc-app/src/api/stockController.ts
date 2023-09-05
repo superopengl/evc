@@ -58,9 +58,10 @@ export const incrementStock = handlerWrapper((req, res) => {
 });
 
 export const getStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member', 'free');
+  // assertRole(req, 'admin', 'agent', 'member', 'free');
   const { user } = req as any;
-  const { id, role } = user;
+  const userId = user?.id;
+  const role = user?.role || Role.Guest;
   const symbol = req.params.symbol.toUpperCase();
 
   let stock: any;
@@ -76,7 +77,7 @@ export const getStock = handlerWrapper(async (req, res) => {
         .createQueryBuilder('s')
         .where('s.symbol = :symbol', { symbol })
         .leftJoin(q => q.from(StockWatchList, 'sw')
-          .where('sw."userId" = :id', { id }),
+          .where('sw."userId" = :id', { id: userId }),
           'sw',
           'sw.symbol = s.symbol')
         .select('s.*')
@@ -90,7 +91,7 @@ export const getStock = handlerWrapper(async (req, res) => {
         .createQueryBuilder('s')
         .where('s.symbol = :symbol', { symbol })
         .leftJoin(q => q.from(StockWatchList, 'sw')
-          .where('sw."userId" = :id', { id }),
+          .where('sw."userId" = :id', { id: userId }),
           'sw',
           'sw.symbol = s.symbol')
         .select('s.*')
@@ -99,19 +100,14 @@ export const getStock = handlerWrapper(async (req, res) => {
       stock = result ? result[0] : null;
       break;
     }
+    case Role.Guest: {
+      // Guest user, who has no req.user
+      stock = await getRepository(StockLatestFreeInformation).findOne({ symbol });
+      break;
+    }
     default:
-      assert(false, 500, 'Impossible code path');
+      assert(false, 400, `Unsupported role ${role}`);
   }
-
-  assert(stock, 404);
-
-  res.json(stock);
-});
-
-export const getStockPreview = handlerWrapper(async (req, res) => {
-  const symbol = req.params.symbol.toUpperCase();
-
-  const stock = await getRepository(StockLatestFreeInformation).findOne({ symbol });
 
   assert(stock, 404);
 

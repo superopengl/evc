@@ -15,10 +15,6 @@ export async function getStock(symbol) {
   return httpGet(`stock/s/${symbol}`);
 }
 
-export async function getStockPreview(symbol) {
-  return httpGet(`stock/s/${symbol}/preview`);
-}
-
 export async function incrementStock(symbol) {
   return httpGet(`stock/s/${symbol}/inc`);
 }

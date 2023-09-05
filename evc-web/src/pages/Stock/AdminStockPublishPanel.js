@@ -11,6 +11,7 @@ import {
   listStockFairValue, saveStockFairValue, deleteStockFairValue,
 } from 'services/stockService';
 import { Loading } from 'components/Loading';
+import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import { StockName } from 'components/StockName';
 import { publishEvent } from 'services/eventSourceService';
 
@@ -41,16 +42,7 @@ const Container = styled.div`
 // height: 100%;
 // `;
 
-const ColInnerCard = props => (
-  <Card
-    size="small"
-    type="inner"
-    {...props}
-    style={{ height: '100%' }}
-  >
-    {props.children}
-  </Card>
-)
+const ColInnerCard = MemberOnlyCard;
 
 
 

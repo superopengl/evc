@@ -8,6 +8,7 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { StockSearchInput } from 'components/StockSearchInput';
 import { LocaleSelector } from 'components/LocaleSelector';
+import { StockGuestPreviewDrawer } from 'components/StockGuestPreviewDrawer';
 import ReactDOM from 'react-dom';
 import StockFreePage from 'pages/StockPage/StockFreePage';
 
@@ -164,19 +165,11 @@ const HomeCarouselAreaRaw = props => {
               </Title> */}
 
       </InnerContainer>
-      <Drawer
+      <StockGuestPreviewDrawer
+        symbol={resultStockSymbol}
         visible={stockModalVisible}
-        placement="bottom"
-        closable={true}
-        maskClosable={true}
-        destroyOnClose={true}
         onClose={() => setStockModalVisible(false)}
-        footer={null}
-        title={null}
-        height="95vh"
-      >
-        <StockFreePage symbol={resultStockSymbol} />
-      </Drawer>
+      />
     </Container>
   );
 }

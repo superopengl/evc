@@ -13,7 +13,7 @@ margin-bottom: 20px;
 `;
 
 export const MemberOnlyCard = (props) => {
-  const { paidOnly, message, children, ...otherProps } = props;
+  const { paidOnly, message, children, blockedComponent, ...otherProps } = props;
   const context = React.useContext(GlobalContext);
   const { role } = context;
   const shouldBlock = paidOnly && !['admin', 'agent', 'member'].includes(role);
@@ -43,7 +43,7 @@ export const MemberOnlyCard = (props) => {
       bodyStyle={bodyStyle}
       headStyle={headStyle}
     >
-      {shouldBlock ? <MemberOnlyPanel message={message} /> : children}
+      {shouldBlock ? <><MemberOnlyPanel message={message} />{blockedComponent}</> : children}
     </StyledCard>
   );
 };
@@ -51,6 +51,7 @@ export const MemberOnlyCard = (props) => {
 MemberOnlyCard.propTypes = {
   paidOnly: PropTypes.bool,
   message: PropTypes.string,
+  blockedComponent: PropTypes.any,
 };
 
 MemberOnlyCard.defaultProps = {

@@ -14,6 +14,7 @@ color: rgba(255,255,255,0.75);
 width: 100%;
 justify-content: center;
 align-items: center;
+text-align: center;
 
 .ant-typography {
   color:rgba(255,255,255,0.75);

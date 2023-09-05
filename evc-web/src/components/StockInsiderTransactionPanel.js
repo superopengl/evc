@@ -1,19 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, List, Tooltip, Descriptions, Tag, Row, Col } from 'antd';
+import { Card, Typography, Space, List, Tooltip, Descriptions, Tag } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
-import StockInfoCard from './StockInfoCard';
-import { StockName } from './StockName';
-import { FaCrown } from 'react-icons/fa';
-import { IconContext } from "react-icons";
 import { getStockInsider } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import INSIDER_LEGEND_INFOS from '../def/insiderLegendDef';
 import * as moment from 'moment';
+import ReactDOM from 'react-dom';
 
-const { Paragraph, Text, Title } = Typography;
+const { Text } = Typography;
 
 const RosterList = styled(List)`
 .ant-list-item {
@@ -22,11 +18,6 @@ const RosterList = styled(List)`
 }
 `;
 
-const RosterCard = styled(Card)`
-.ant-card-body {
-  padding: 12px;
-}
-`;
 
 const Container = styled(Space)`
 .ant-descriptions-title {
@@ -42,7 +33,7 @@ const Container = styled(Space)`
 }
 `;
 
-const StockInsiderPanel = (props) => {
+const StockInsiderTransactionPanel = (props) => {
 
   const { symbol } = props;
   const [data, setData] = React.useState({});
@@ -51,8 +42,12 @@ const StockInsiderPanel = (props) => {
   const loadData = async () => {
     try {
       setLoading(true);
-      setData(await getStockInsider(symbol));
-    } finally {
+      const data = await getStockInsider(symbol);
+      ReactDOM.unstable_batchedUpdates(() => {
+        setData(data);
+        setLoading(false);
+      })
+    } catch {
       setLoading(false);
     }
   }
@@ -76,35 +71,6 @@ const StockInsiderPanel = (props) => {
   return (
     <Loading loading={loading}>
       <Container direction="vertical" size="small" style={{ width: '100%' }}>
-        <Title level={3}>Roster</Title>
-        <RosterList
-          grid={{
-            gutter: 10,
-            xs: 1,
-            sm: 1,
-            md: 1,
-            lg: 1,
-            xl: 2,
-            xxl: 3
-          }}
-          itemLayout="horizontal"
-          size="small"
-          dataSource={data.roster}
-          renderItem={item => (
-            <List.Item>
-              <RosterCard card="small">
-                <Descriptions
-                  title={item.entityName}
-                  size="small"
-                  extra={item.position.toLocaleString()}
-                ></Descriptions>
-              </RosterCard>
-            </List.Item>
-          )}
-        />
-        <Title level={3}>Summary</Title>
-
-
         <Space direction="vertical" size="small" style={{ marginBottom: 24 }}>
           {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
             <Tag color={v.color}>{k}</Tag>
@@ -139,11 +105,11 @@ const StockInsiderPanel = (props) => {
   );
 };
 
-StockInsiderPanel.propTypes = {
+StockInsiderTransactionPanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockInsiderPanel.defaultProps = {
+StockInsiderTransactionPanel.defaultProps = {
 };
 
-export default withRouter(StockInsiderPanel);
+export default withRouter(StockInsiderTransactionPanel);

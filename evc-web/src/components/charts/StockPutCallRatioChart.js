@@ -69,6 +69,7 @@ StockPutCallRatioChart.propTypes = {
 };
 
 StockPutCallRatioChart.defaultProps = {
+  width: 500
 };
 
 export default StockPutCallRatioChart;

@@ -7,7 +7,7 @@ import { updateStock, getStock, unwatchStock, watchStock } from 'services/stockS
 import { StockName } from 'components/StockName';
 import { SyncOutlined } from '@ant-design/icons';
 import StockInfoCard from 'components/StockInfoCard';
-import StockInsiderPanel from 'components/StockInsiderPanel';
+import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
 import StockNewsPanel from 'components/StockNewsPanel';
 import StockEarningsPanel from 'components/StockEarningsPanel';
 import StockChart from 'components/charts/StockChart';
@@ -19,7 +19,8 @@ import TagSelect from 'components/TagSelect';
 import { listStockTags, saveStockTag } from 'services/stockTagService';
 import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import PropTypes from "prop-types";
-import {MemberOnlyIcon} from 'components/MemberOnlyIcon';
+import { MemberOnlyIcon } from 'components/MemberOnlyIcon';
+import StockRosterPanel from 'components/StockRosterPanel';
 
 
 const span = {
@@ -32,7 +33,7 @@ const span = {
 };
 
 const StockAdminPage = (props) => {
-  const {symbol} = props;
+  const { symbol } = props;
 
   const context = React.useContext(GlobalContext);
   const { role } = context;
@@ -123,7 +124,6 @@ const StockAdminPage = (props) => {
               <StockChart symbol={stock.symbol} period="1d" interval="5m" />
             </Col>
           </Row>
-          {isAdminOrAgent && stock && <AdminStockPublishPanel stock={stock} />}
           <Row gutter={20} >
             <Col {...span}>
               <Card size="small" type="inner" title={<>Option Put-Call Ratio  <MemberOnlyIcon /></>}>
@@ -143,10 +143,11 @@ const StockAdminPage = (props) => {
               </Card>
             </Col>
             <Col span={12}>
-              <Card size="small" type="inner" title={<>Insider Transactions  <MemberOnlyIcon /></>}>
-
-                <StockInsiderPanel symbol={stock.symbol} />
-
+              <Card size="small" type="inner" title={<>Roster</>} style={{marginBottom: 20}}>
+                <StockRosterPanel symbol={stock.symbol} />
+              </Card>
+              <Card size="small" type="inner" title={<>Insider Transactions</>}>
+                <StockInsiderTransactionPanel symbol={stock.symbol} />
               </Card>
             </Col>
           </Row>}

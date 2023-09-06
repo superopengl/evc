@@ -107,6 +107,10 @@ const ROUTES = [
       {
         path: '/translation',
         name: 'Translations',
+      },
+      {
+        path: '/referral_policy',
+        name: 'Global Referral Policy',
       }
     ]
   },

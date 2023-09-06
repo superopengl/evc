@@ -4,14 +4,20 @@ import { Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { List } from 'antd';
 import StockInfoCard from './StockInfoCard';
+import styled from 'styled-components';
 
+const StyledList = styled(List)`
+.ant-list-item {
+  padding: 0;
+}
+`;
 
 const StockList = (props) => {
 
   const { data, loading, onItemClick } = props;
 
   return (
-    <List
+    <StyledList
       grid={{
         gutter: 10,
         xs: 1,

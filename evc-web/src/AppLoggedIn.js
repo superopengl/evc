@@ -23,11 +23,12 @@ import {
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { Avatar, Space, Dropdown, Menu, Typography, Divider } from 'antd';
+import { Avatar, Space, Dropdown, Menu, Typography, Modal, Button } from 'antd';
 import ChangePasswordModal from 'pages/ChangePasswordModal';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
+import ContactForm from 'components/ContactForm';
 
 const { Text, Link: LinkText } = Typography;
 
@@ -36,8 +37,12 @@ const StyledLayout = styled(ProLayout)`
   background-color: white;
 }
 
-.ant-pro-sider-footer {
-  padding: 16px;
+.ant-pro-global-header {
+  padding-left: 24px;
+}
+
+.ant-pro-global-header-collapsed-button {
+  margin-right: 16px;
 }
 
 `;
@@ -114,6 +119,7 @@ const AppLoggedIn = props => {
   const context = React.useContext(GlobalContext);
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
+  const [contactVisible, setContactVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
 
   const { user, role, setUser } = context;
@@ -179,11 +185,10 @@ const AppLoggedIn = props => {
     //   ]
     // }}
     headerContentRender={() => (
-      <Space>
         <HeaderStockSearch />
-      </Space>
     )}
     rightContentRender={() => (
+      <div style={{marginLeft: 16}}>
       <Dropdown overlay={avatarMenu} trigger={['click']}>
         <a onClick={e => e.preventDefault()}>
           <Avatar size={40}
@@ -192,11 +197,12 @@ const AppLoggedIn = props => {
           />
         </a>
       </Dropdown>
+      </div>
     )}
     menuFooterRender={props => (
       props?.collapsed ? null : <Space direction="vertical" style={{width: '100%'}}>
-        <LinkText href="/privacy_policy" target="_blank">Contact Us</LinkText>
-        <LinkText href="/privacy_policy" target="_blank">About</LinkText>
+        <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
+        <LinkText href="/about" target="_blank">About</LinkText>
         <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
         <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
       </Space>
@@ -225,6 +231,17 @@ const AppLoggedIn = props => {
       onOk={() => setProfileVisible(false)}
       onCancel={() => setProfileVisible(false)}
     />
+    <Modal
+      title="Contact Us"
+      visible={contactVisible}
+      onOk={() => setContactVisible(false)}
+      onCancel={() => setContactVisible(false)}
+      footer={null}
+      destroyOnClose={true}
+      maskClosable={false}
+    >
+      <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
+    </Modal>
   </StyledLayout>
 }
 

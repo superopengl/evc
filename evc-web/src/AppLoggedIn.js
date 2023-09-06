@@ -10,7 +10,6 @@ import StockListPage from 'pages/Stock/StockListPage';
 import StockWatchListPage from 'pages/Stock/StockWatchListPage';
 import TagsSettingPage from 'pages/TagsSettingPage/TagsSettingPage';
 import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
-import MySubscriptionHistoryPage from 'pages/MySubscription/MySubscriptionHistoryPage';
 import ConfigListPage from 'pages/Config/ConfigListPage';
 import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
 import TranslationListPage from 'pages/Translation/TranslationListPage';
@@ -18,19 +17,19 @@ import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
 import {
   UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, TagsOutlined, DollarOutlined, MenuFoldOutlined, MenuUnfoldOutlined
-} from '@ant-design/icons';
+  DashboardOutlined, TagsOutlined, DollarOutlined} from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { Avatar, Space, Dropdown, Menu, Typography, Modal, Button } from 'antd';
+import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
 import ChangePasswordModal from 'pages/ChangePasswordModal';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
+import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 
-const { Text, Link: LinkText } = Typography;
+const { Link: LinkText } = Typography;
 
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
@@ -134,7 +133,6 @@ const AppLoggedIn = props => {
   const isFree = role === 'free';
   const isMember = role === 'member';
   const isAgent = role === 'agent';
-  const isGuest = role === 'guest';
 
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
@@ -213,17 +211,17 @@ const AppLoggedIn = props => {
     )}
   >
     <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
-    <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
-    <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
-    <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
-    <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
-    <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
-    <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
-    <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
     <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
     <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
     <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
-    <RoleRoute visible={isMember || isFree} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
+    <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
+    <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
+    <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
+    <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
+    <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
+    <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
+    <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
+    <RoleRoute visible={isMember || isFree} path="/account" exact component={MySubscriptionPage} />
     <Redirect to={isAdmin || isAgent ? '/dashboard' : '/stock'} />
     <ChangePasswordModal
       visible={changePasswordVisible}

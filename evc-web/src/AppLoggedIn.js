@@ -150,7 +150,7 @@ const AppLoggedIn = props => {
   }
 
   const avatarMenu = <StyledMenu>
-    <Menu.Item key="email">
+    <Menu.Item key="email" disabled={true}>
       <pre style={{ fontSize: 14, margin: 0 }}>{user.profile.email}</pre>
     </Menu.Item>
     <Menu.Divider />
@@ -166,7 +166,7 @@ const AppLoggedIn = props => {
     route={{ routes }}
     location={{ pathname: '/' }}
     navTheme="dark"
-    siderWidth={230}
+    siderWidth={220}
     fixSiderbar={true}
     fixedHeader={true}
     headerRender={true}

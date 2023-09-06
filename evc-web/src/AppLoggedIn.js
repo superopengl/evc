@@ -126,6 +126,7 @@ const AppLoggedIn = props => {
   const [contactVisible, setContactVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
+  const [pathname, setPathname] = React.useState(props.location.pathname);
 
   const { user, role, setUser } = context;
   if (!user) {
@@ -138,8 +139,6 @@ const AppLoggedIn = props => {
 
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
-
-
 
   const handleLogout = async () => {
     await logout();
@@ -164,7 +163,7 @@ const AppLoggedIn = props => {
     title="EasyValueCheck"
     logo="/favicon-32x32.png"
     route={{ routes }}
-    location={{ pathname: '/' }}
+    location={{ pathname }}
     navTheme="dark"
     siderWidth={220}
     fixSiderbar={true}
@@ -173,7 +172,9 @@ const AppLoggedIn = props => {
     collapsed={collapsed}
     onCollapse={setCollapsed}
     menuItemRender={(item, dom) => (
-      <Link to={item.path}>
+      <Link to={item.path} onClick={() => {
+        setPathname(item.path);
+      }}>
         {dom}
       </Link>
     )}

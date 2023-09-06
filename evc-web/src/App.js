@@ -11,7 +11,6 @@ import SignUpPage from 'pages/SignUpPage';
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import Error404 from 'pages/Error404';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
-import TaskTemplatePage from 'pages/TaskTemplate/TaskTemplatePage';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import UserListPage from 'pages/User/UserListPage';
@@ -34,6 +33,7 @@ import StockPage from 'pages/StockPage/StockPage';
 import ReactDOM from 'react-dom';
 import ClientSettingsPage from 'pages/ClientSettings/ClientSettingsPage';
 import AdminSettingsPage from 'pages/AdminSettings/AdminSettingsPage';
+import AppLoggedIn from 'AppLoggedIn';
 
 
 const App = () => {
@@ -95,41 +95,17 @@ const App = () => {
     <GlobalContext.Provider value={contextValue}>
       <BrowserRouter basename="/">
         <Switch>
-          <RoleRoute loading={loading} path="/" exact component={isGuest ? HomePage : (isMember || isFree) ? StockWatchListPage : AdminDashboardPage} />
+          <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />
           <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
           <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
           <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
           <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
-          {/* <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/stats" component={AdminStatsPage} /> */}
-          {/* <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/board" component={AdminBoardPage} /> */}
-          {/* <RoleRoute visible={isMember} loading={loading} exact path="/landing" component={ClientDashboardPage} /> */}
-          {/* <RoleRoute visible={isMember} loading={loading} exact path="/portfolios" component={PortfolioListPage} />
-            <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/:id" component={PortfolioFormPage} />
-            <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/new/:type" component={PortfolioFormPage} /> */}
-          <RoleRoute loading={loading} path="/reset_password" exact component={ResetPasswordPage} />
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template" component={TaskTemplatePage} />
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/debug" component={DebugPage} />
-          {/* <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template/:id" component={jmjm} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/doc_template" component={DocTemplatePage} /> */}
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/user" component={UserListPage} />
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/stocktag" component={StockTagPage} />
-          {/* <RoleRoute visible={isAdmin} loading={loading} exact path="/recurring" component={RecurringListPage} /> */}
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/translation" component={TranslationListPage} />
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/config" component={ConfigListPage} />
-          <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
-          <RoleRoute visible={isLoggedIn} loading={loading} path="/stock" exact component={StockListPage} />
-          <RoleRoute visible={isLoggedIn} loading={loading} path="/stock/:symbol" exact component={StockPage} />
-          {/* <RoleRoute visible={isAdmin || isAgent || isMember} loading={loading} path="/stock" exact component={StockListPage} /> */}
-          <RoleRoute visible={isLoggedIn} loading={loading} path="/settings" component={(isMember || isFree) ? ClientSettingsPage : AdminSettingsPage} />
-          <RoleRoute visible={isMember || isFree} loading={loading} path="/subscription/history" exact component={MySubscriptionHistoryPage} />
-          <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
-          <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
-          {/* <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} /> */}
+          <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
+          <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
+          <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
+          <RoleRoute visible={isLoggedIn} loading={loading} path="*" component={AppLoggedIn} />
           {/* <Redirect to="/" /> */}
           <RoleRoute loading={loading} component={Error404} />
-
         </Switch>
       </BrowserRouter>
       {(isMember || isGuest) && <ContactWidget />}

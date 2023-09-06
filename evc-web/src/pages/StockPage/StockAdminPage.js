@@ -133,12 +133,12 @@ const StockAdminPage = (props) => {
               </Card>
             </Col> */}
           <Row gutter={20}>
-            <Col span={12}>
+            <Col span={18}>
               <MemberOnlyCard title={<>News</>}>
                 <StockNewsPanel symbol={stock.symbol} />
               </MemberOnlyCard>
             </Col>
-            <Col span={12}>
+            <Col span={6}>
               <MemberOnlyCard title={<>Option Put-Call Ratio</>}>
                 <StockPutCallRatioChart symbol={stock.symbol} />
               </MemberOnlyCard>

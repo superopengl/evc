@@ -2,14 +2,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import ProfileForm from './ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
-import styled from 'styled-components';
+import { Modal } from 'antd';
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 400px;
-`;
-
-const ProfilePage = () => {
+const ProfileModal = props => {
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
 
@@ -18,14 +13,20 @@ const ProfilePage = () => {
   }
 
   return (
-    <Container>
+    <Modal
+      title="Update Profile"
+      closable={true}
+      maskClosable={true}
+      destroyOnClose={true}
+      footer={null}
+      {...props}>
       <ProfileForm user={user} onOk={updatedUser => handlePostSave(updatedUser)} />
-    </Container>
+    </Modal>
   );
 };
 
-ProfilePage.propTypes = {};
+ProfileModal.propTypes = {};
 
-ProfilePage.defaultProps = {};
+ProfileModal.defaultProps = {};
 
-export default withRouter(ProfilePage);
+export default withRouter(ProfileModal);

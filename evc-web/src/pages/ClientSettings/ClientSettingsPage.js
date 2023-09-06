@@ -5,7 +5,7 @@ import { Typography, Layout, Menu } from 'antd';
 import HomeHeader from 'components/HomeHeader';
 import { Link, withRouter } from 'react-router-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
-import ProfilePage from 'pages/Profile/ProfilePage';
+import ProfileModal from 'pages/Profile/ProfileModal';
 import { Route, Switch } from 'react-router-dom';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
@@ -89,7 +89,7 @@ const ClientSettingsPage = props => {
         >
           <div style={{display: 'flex', justifyContent: 'center'}}>
           <Switch>
-            <Route path={`${path}`} exact component={ProfilePage} />
+            <Route path={`${path}`} exact component={ProfileModal} />
             <Route path={`${path}/account`} exact component={MyAccountPage} />
             <Route path={`${path}/subscription`} exact component={MySubscriptionPage} />
           </Switch>

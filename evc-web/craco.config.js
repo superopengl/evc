@@ -9,7 +9,6 @@ const modifyVars = {
   '@error-color': '#d7183f',
   '@layout-header-background': '#00293d',
   '@font-size-base': '14px',
-  '@menu-item-height': '60px',
   // '@height-base': '40px',
   // '@height-lg': '48px',
   // '@height-sm': '32px',

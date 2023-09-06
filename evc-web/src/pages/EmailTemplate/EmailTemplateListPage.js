@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Divider, Input, Form, Tooltip, Tag, Drawer, List, Row } from 'antd';
-import HomeHeader from 'components/HomeHeader';
 import {
   EditOutlined
 } from '@ant-design/icons';
@@ -13,12 +12,10 @@ import { LocaleSelector } from 'components/LocaleSelector';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 const ContainerStyled = styled.div`
   width: 100%;
-  max-width: 1000px;
-  margin: 6rem auto 2rem auto;
 `;
 
 const StyledTitleRow = styled.div`
@@ -28,29 +25,6 @@ const StyledTitleRow = styled.div`
  width: 100%;
 `
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-
-  .ant-drawer-body {
-   
-    .ql-editor {
-      height: 300px !important;
-      font-size: 14px !important;
-    } 
-  }
-
-  .ql-container {
-    font-size: 14px !important;
-  }
-
-  .body-preview {
-    .ql-editor {
-      padding: 0;
-    }
-  }
-`;
 
 const StyledLabel = props => <Text style={{ width: '3rem' }} type="secondary">
   <small>{props.children}</small>
@@ -136,49 +110,46 @@ const EmailTemplateListPage = () => {
 
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
-          </StyledTitleRow>
-          {/* <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+    <ContainerStyled>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <StyledTitleRow>
+          <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
+        </StyledTitleRow>
+        {/* <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button type="primary" ghost onClick={() => handleCreateNew()} icon={<PlusOutlined />} />
           </Space> */}
-          {/* <Table columns={columnDef}
+        {/* <Table columns={columnDef}
             dataSource={list}
             size="small"
             rowKey={item => `${item.key}.${item.locale}`}
             loading={loading}
             pagination={false}
           /> */}
-          <List
-            itemLayout="vertical"
-            size="large"
-            dataSource={list}
-            footer={null}
-            renderItem={item => <List.Item
-              key={item.key}
-              extra={<Tooltip key="edit" placement="bottom" title="Edit">
-                <Button shape="circle" icon={<EditOutlined />}
-                  onClick={() => handleEdit(item)} ></Button>
-              </Tooltip>}
-            >
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Title level={3}>{item.key} {getLocaleTag(item.locale)}</Title>
-                {item.key !== 'signature' && <Row>
-                  <StyledLabel>vars:</StyledLabel>
-                  {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
-                </Row>}
-                <Divider dashed style={{ margin: '10px 0' }} />
-                {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
-                <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
-              </Space>
-            </List.Item>}
-          />
-        </Space>
-      </ContainerStyled>
+        <List
+          itemLayout="vertical"
+          size="large"
+          dataSource={list}
+          footer={null}
+          renderItem={item => <List.Item
+            key={item.key}
+            extra={<Tooltip key="edit" placement="bottom" title="Edit">
+              <Button shape="circle" icon={<EditOutlined />}
+                onClick={() => handleEdit(item)} ></Button>
+            </Tooltip>}
+          >
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Title level={3}>{item.key} {getLocaleTag(item.locale)}</Title>
+              {item.key !== 'signature' && <Row>
+                <StyledLabel>vars:</StyledLabel>
+                {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
+              </Row>}
+              <Divider dashed style={{ margin: '10px 0' }} />
+              {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
+              <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
+            </Space>
+          </List.Item>}
+        />
+      </Space>
       <Drawer
         // title=" "
         id="scrolling-container"
@@ -216,7 +187,7 @@ const EmailTemplateListPage = () => {
           </Form.Item>
         </Form>
       </Drawer>
-    </LayoutStyled >
+    </ContainerStyled>
 
   );
 };

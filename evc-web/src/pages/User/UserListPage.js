@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
-import HomeHeader from 'components/HomeHeader';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -33,7 +32,6 @@ import TagFilter from 'components/TagFilter';
 const { Title, Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
 `;
 
 const StyledTitleRow = styled.div`
@@ -42,12 +40,6 @@ const StyledTitleRow = styled.div`
  align-items: center;
  width: 100%;
 `
-
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
 
 const subscriptionDefMap = _.keyBy(subscriptionDef, 'key');
 
@@ -308,8 +300,6 @@ const UserListPage = () => {
   }
 
   return (
-    <LayoutStyled>
-      <HomeHeader></HomeHeader>
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
@@ -375,7 +365,6 @@ const UserListPage = () => {
             }}
           />
         </Space>
-      </ContainerStyled>
       <Modal
         visible={setPasswordVisible}
         destroyOnClose={true}
@@ -467,7 +456,7 @@ const UserListPage = () => {
 
         </Space>}
       </Drawer>
-    </LayoutStyled >
+      </ContainerStyled>
 
   );
 };

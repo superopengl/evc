@@ -1,17 +1,14 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Layout, Tag, Col, Alert, Card, Badge, Tabs } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+import { Typography, Layout, Tag, Badge, Tabs } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
-margin: 6rem auto 2rem auto;
-padding: 0 1rem 4rem 1rem;
 width: 100%;
 
 .ant-alert {
@@ -19,16 +16,6 @@ width: 100%;
 }
 `;
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-
-  .ant-list-item {
-    padding-left: 0;
-    padding-right: 0;
-  }
-`;
 
 const StyledTag = styled(Tag)`
 margin-bottom: 8px;
@@ -76,9 +63,6 @@ const AdminDashboardPage = () => {
   }, []);
 
   return (
-    <LayoutStyled>
-      <HomeHeader>
-      </HomeHeader>
       <ContainerStyled>
         <Loading loading={loading}>
           <Tabs type="card">
@@ -141,7 +125,6 @@ const AdminDashboardPage = () => {
           </Tabs>
         </Loading>
       </ContainerStyled>
-    </LayoutStyled>
   );
 };
 

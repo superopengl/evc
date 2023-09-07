@@ -227,7 +227,7 @@ const AppLoggedIn = props => {
     <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
     <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
     <RoleRoute visible={isMember || isFree} path="/account" exact component={MySubscriptionPage} />
-    <Redirect to={isAdmin || isAgent ? '/dashboard' : '/stock'} />
+    <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     <ChangePasswordModal
       visible={changePasswordVisible}
       onOk={() => setChangePasswordVisible(false)}

@@ -9,12 +9,7 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
     .createQueryBuilder()
     .from(Stock, 's')
     .leftJoin(StockHistoricalTtmEps, 'eps', 's.symbol = eps.symbol')
-    .leftJoin(q => q
-      .from(StockComputedPe90, 'pe')
-      .distinctOn(['symbol'])
-      .orderBy('symbol')
-      .addOrderBy('date', 'DESC'),
-    'pe', 's.symbol = pe.symbol')
+    .leftJoin(StockComputedPe90, 'pe', 's.symbol = pe.symbol AND pe.date = eps."reportDate"')
     .select([
       's.symbol as symbol',
       'eps."reportDate" as "reportDate"',

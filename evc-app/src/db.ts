@@ -57,7 +57,7 @@ async function syncDatabaseSchema(connection: Connection) {
   await connection.synchronize(false);
   await connection.runMigrations();
 
-  await refreshMaterializedView();
+  // await refreshMaterializedView();
 }
 
 async function dropView() {

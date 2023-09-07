@@ -1,15 +1,9 @@
 
 import React from 'react';
-import { List, Typography, Space, Alert, Table, Form, Input, Button } from 'antd';
-import * as moment from 'moment';
+import { Typography, Space, Table, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-import { NumberRangeInput } from 'components/NumberRangeInput';
-import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
-import { Switch } from 'antd';
 import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
@@ -124,12 +118,9 @@ const EditableCell = ({
 };
 
 export const StockFairValueTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, showTime, sourceEps, sourcePe } = props;
-  const [disabled, setDisabled] = React.useState(true);
+  const { onLoadList, onChange, onDelete } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
-  const [isSpecialFairValue, setIsSpecialFairValue] = React.useState(false);
-  const [derivedValue, setDerivedValue] = React.useState({ lo: null, hi: null });
 
   const updateList = list => {
     setList(list);
@@ -189,7 +180,7 @@ export const StockFairValueTimelineEditor = (props) => {
   const columnDef = [
     {
       title: 'Date',
-      dataIndex: 'date',
+      dataIndex: 'reportDate',
       render: (value) => <TimeAgo value={value} showTime={false} showAgo={false} direction="horizontal" />
     },
     {
@@ -263,7 +254,7 @@ export const StockFairValueTimelineEditor = (props) => {
         columns={columns}
         dataSource={list}
         size="small"
-        rowKey={item => item.id ?? item.date}
+        rowKey={item => item.id ?? item.reportDate}
         rowClassName={() => 'editable-row'}
         loading={loading}
         pagination={false}

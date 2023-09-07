@@ -100,15 +100,15 @@ export async function listStockPe(symbol) {
 }
 
 export async function listStockFairValue(symbol) {
-  return httpGet(`stock/s/${symbol}/value`);
+  return httpGet(`stock/s/${symbol}/fairvalue`);
 }
 
 export async function saveStockFairValue(symbol, payload) {
-  return httpPost(`stock/s/${symbol}/value`, payload);
+  return httpPost(`stock/s/${symbol}/fairvalue`, payload);
 }
 
 export async function deleteStockFairValue(id) {
-  return httpDelete(`stock/value/${id}`);
+  return httpDelete(`stock/fairvalue/${id}`);
 }
 
 export async function getMarketMostActive() {

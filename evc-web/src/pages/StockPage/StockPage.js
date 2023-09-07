@@ -25,7 +25,8 @@ const StockPage = (props) => {
 
   return (
       <ContainerStyled>
-        {isAdminOrAgent ? <StockAdminPage symbol={symbol} /> : <StockFreePage symbol={symbol} />}
+        <StockFreePage symbol={symbol} />
+        {/* {isAdminOrAgent ? <StockAdminPage symbol={symbol} /> : <StockFreePage symbol={symbol} />} */}
       </ContainerStyled>
   );
 };

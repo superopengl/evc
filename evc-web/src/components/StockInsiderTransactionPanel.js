@@ -91,7 +91,7 @@ const StockInsiderTransactionPanel = (props) => {
           grid={{ column: 1 }}
           itemLayout="horizontal"
           size="small"
-          dataSource={data.summary.reverse()}
+          dataSource={data.summary?.reverse()}
           renderItem={item => (
             <List.Item>
               <Descriptions

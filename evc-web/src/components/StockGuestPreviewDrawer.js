@@ -44,7 +44,7 @@ export const StockGuestPreviewDrawer = (props) => {
       destroyOnClose={true}
       onClose={onClose}
       footer={null}
-      title={stock ? <>Preview <StockName value={stock} /> - <Link to="/signup">More Information after Sign Up</Link></> : <Skeleton.Input active />}
+      title={stock ? <>Preview <StockName value={stock} /> - <Text type="warning"><Link to="/signup">Sign Up</Link> today to see more information!</Text></> : <Skeleton.Input active />}
       height="95vh"
     >
       {stock ? <StockDisplayPanel stock={stock} /> : <Loading loading={true} />}

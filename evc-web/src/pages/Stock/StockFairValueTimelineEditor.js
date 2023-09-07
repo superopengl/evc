@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
+import moment from 'moment';
 
 const EditableContext = React.createContext(null);
 
@@ -22,7 +23,7 @@ const Container = styled.div`
   }
   
   .editable-cell-value-wrap {
-    padding: 5px 12px;
+    // padding: 5px 12px;
     cursor: pointer;
   }
   
@@ -102,16 +103,16 @@ const EditableCell = ({
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
     ) : (
-        <div
-          className="editable-cell-value-wrap"
-          style={{
-            paddingRight: 24,
-          }}
-          onClick={toggleEdit}
-        >
-          {children}
-        </div>
-      );
+      <div
+        className="editable-cell-value-wrap"
+        style={{
+          paddingRight: 24,
+        }}
+        onClick={toggleEdit}
+      >
+        {children}
+      </div>
+    );
   }
 
   return <td {...restProps}>{childNode}</td>;
@@ -181,19 +182,21 @@ export const StockFairValueTimelineEditor = (props) => {
     {
       title: 'Date',
       dataIndex: 'reportDate',
-      render: (value) => <TimeAgo value={value} showTime={false} showAgo={false} direction="horizontal" />
+      render: (value) => <Text type="secondary"><small>
+        {moment(value, 'YYYY-MM-DD').format('D MMM YYYY')}
+      </small></Text>
     },
     {
       title: 'PE',
       render: (value, item) => {
-        const {pe, peLo, peHi} = item;
+        const { pe, peLo, peHi } = item;
         return pe ? <>{displayNumber(pe)} ({displayNumber(peLo)} ~ {displayNumber(peHi)})</> : displayNumber()
       },
     },
     {
-      title: 'Fair Value',
+      title: 'Computed',
       render: (value, item) => {
-        const {fairValueLo, fairValueHi} = item;
+        const { fairValueLo, fairValueHi } = item;
         return fairValueLo ? <>{displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}</> : displayNumber()
       },
       editable: true,

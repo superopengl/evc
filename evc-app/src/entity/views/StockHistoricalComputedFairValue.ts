@@ -14,6 +14,9 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
       's.symbol as symbol',
       'eps."reportDate" as "reportDate"',
       'eps."ttmEps"',
+      'pe.pe as pe',
+      'pe."peLo" as "peLo"',
+      'pe."peHi" as "peHi"',
       'pe."fairValueLo" as "fairValueLo"',
       'pe."fairValueHi" as "fairValueHi"',
     ])
@@ -27,6 +30,15 @@ export class StockHistoricalComputedFairValue {
 
   @ViewColumn()
   ttmEps: number;
+
+  @ViewColumn()
+  pe: number;
+
+  @ViewColumn()
+  peLo: number;
+
+  @ViewColumn()
+  peHi: number;
 
   @ViewColumn()
   fairValueLo: number;

@@ -1,22 +1,18 @@
 
-import { getRepository, IsNull, Not, getManager, In } from 'typeorm';
+import { getRepository, Not, getManager, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
-import { UserStatus } from '../types/UserStatus';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
 import { sendEmail } from '../services/emailService';
-import { TaskStatus } from '../types/TaskStatus';
 import { handleInviteUser } from './authController';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { Subscription } from '../entity/Subscription';
-import { SubscriptionType } from '../types/SubscriptionType';
 import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
-import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 import { Payment } from '../entity/Payment';
 import { EmailTemplateType } from '../types/EmailTemplateType';

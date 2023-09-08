@@ -13,6 +13,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 border: none;
+padding: 0;
 background-color: rgba(21, 190, 83, 0.8);
 color: white;
 // box-shadow: 1px 1px 5px #222222;

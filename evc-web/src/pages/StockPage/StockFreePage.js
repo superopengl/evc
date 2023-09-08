@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import { listStockTags } from 'services/stockTagService';
 import StockDisplayPanel from 'components/StockDisplayPanel';
 import { notify } from 'util/notify';
-import AdminStockPublishPanel from 'components/AdminStockPublishPanel';
+import StockAdminPanel from 'components/StockAdminPanel';
 import TagSelect from 'components/TagSelect';
 
 
@@ -85,7 +85,7 @@ const StockFreePage = (props) => {
         >
           {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={!isAdminOrAgent} />}
 
-          {isAdminOrAgent && <AdminStockPublishPanel stock={stock} />}
+          {isAdminOrAgent && <StockAdminPanel stock={stock} />}
 
         </PageHeader>
 

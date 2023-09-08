@@ -61,7 +61,7 @@ export const StockEpsInput = (props) => {
     </Select> */}
     <Form layout="inline" onFinish={handleSave}>
       <Form.Item label="" name="period" rules={[{ required: true, message: ' ' }]}>
-        <DatePicker onChange={handleReportPeriod} picker="quarter" disabled={disabled} />
+        <DatePicker placeholder="Report quarter" onChange={handleReportPeriod} picker="quarter" disabled={disabled} style={{width: 150}} />
       </Form.Item>
       <Form.Item label="" name="value" rules={[{ required: true, message : ' ' }]}>
         <InputNumber disabled={disabled} />

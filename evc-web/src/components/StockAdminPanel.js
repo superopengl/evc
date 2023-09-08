@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Form, Modal, InputNumber, Row, Col, Card } from 'antd';
+import { Typography, Button, Form, Modal, InputNumber, Row, Col, Card, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 import { notify } from 'util/notify';
 import {
@@ -17,8 +17,9 @@ import { publishEvent } from 'services/eventSourceService';
 
 import { StockRangeTimelineEditor } from '../pages/Stock/StockRangeTimelineEditor';
 import StockEpsTimelineEditor from '../pages/Stock/StockEpsTimelineEditor';
-import { StockFairValueTimelineEditor } from '../pages/Stock/StockFairValueTimelineEditor';
-const { Paragraph } = Typography;
+import { StockFairValueEditor } from '../pages/Stock/StockFairValueEditor';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+const { Text, Paragraph } = Typography;
 
 
 const Container = styled.div`
@@ -39,7 +40,12 @@ const Container = styled.div`
   }
 
   .ant-card-head, .ant-card {
-    background-color: transparent;
+    // background-color: rgba(0, 41, 61, 0.1);
+  }
+
+  .ant-card-body {
+    padding-left: 0;
+    padding-right: 0;
   }
 `;
 // const ColInnerCard = styled(Card)`
@@ -71,7 +77,7 @@ const DEFAULT_SELECTED = {
   epId: null,
 };
 
-const AdminStockPublishPanel = (props) => {
+const StockAdminPanel = (props) => {
   const [stock] = React.useState(props.stock);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
@@ -193,44 +199,6 @@ const AdminStockPublishPanel = (props) => {
           />
         </ColInnerCard>
       </Col>
-      {/* <Col flex="auto">
-        <ColInnerCard title="PE">
-          <StockDailyPeList
-            symbol={symbol}
-            onLoadList={() => listStockPe(symbol)}
-            onChange={list => setPeList(list)}
-            onSelected={updateSelectedByPe}
-            // getClassNameOnSelect={getClassNameOnSelectForPeItem}
-            disableInput={true}
-          />
-        </ColInnerCard>
-      </Col> */}
-      <Col flex="auto">
-        <ColInnerCard title="Fair Value">
-          <StockFairValueTimelineEditor
-            onLoadList={() => listStockFairValue(symbol)}
-            onSaveNew={payload => saveStockFairValue(symbol, payload)}
-            onDelete={id => deleteStockFairValue(id)}
-            onChange={list => setValueList(list)}
-            sourceEps={epsList}
-            sourcePe={peList}
-            onSelected={updateSelectedByValue}
-            getClassNameOnSelect={getClassNameOnSelectForValueItem}
-          />
-        </ColInnerCard>
-      </Col>
-      {/* <Col flex="auto">
-        <ColInnerCard title="Publish History">
-          <StockPublishTimelineEditor
-            onLoadList={() => listStockPublish(symbol, true)}
-            onPublishNew={() => handlePublish()}
-            onChange={list => setPublishList(list)}
-            onSelected={updateSelectedByPublish}
-            getClassNameOnSelect={getClassNameOnSelectForPublishItem}
-            disabled={!valueList?.length || !supportList?.length || !resistanceList?.length}
-          />
-        </ColInnerCard>
-      </Col> */}
       <Col flex="auto">
         <ColInnerCard title="Support">
           <StockRangeTimelineEditor
@@ -254,6 +222,27 @@ const AdminStockPublishPanel = (props) => {
             getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
           />
         </ColInnerCard>
+      </Col>
+      <Col span={24}>
+        <MemberOnlyCard title="Fair Value" extra={<Tooltip
+         placement="leftTop"
+         trigger="click"
+        title={<>
+          It requires at least 4 sequential EPS values and 90 days of close prices (for PE calculation) to compute fair value automatically.<br/>
+          If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br/>
+          Minus or zero <strong>TtmEps</strong> values are not valid to compute fair values. In this case, special fair values need to be specified manually.<br/>
+          If the <strong>TtmEps</strong> has value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.</>}
+        >
+          <QuestionCircleOutlined />
+        </Tooltip>}>
+          <StockFairValueEditor
+            symbol={stock.symbol}
+            onLoadList={() => listStockFairValue(symbol)}
+            onSaveNew={payload => saveStockFairValue(symbol, payload)}
+            onDelete={id => deleteStockFairValue(id)}
+            onChange={list => setValueList(list)}
+          />
+        </MemberOnlyCard>
       </Col>
     </Row>
 
@@ -283,11 +272,11 @@ const AdminStockPublishPanel = (props) => {
   </Container >);
 }
 
-AdminStockPublishPanel.propTypes = {
+StockAdminPanel.propTypes = {
   stock: PropTypes.object.isRequired
 };
 
-AdminStockPublishPanel.defaultProps = {
+StockAdminPanel.defaultProps = {
 };
 
-export default withRouter(AdminStockPublishPanel);
+export default withRouter(StockAdminPanel);

@@ -8,7 +8,6 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import { Route, Switch } from 'react-router-dom';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
-import MySubscriptionPage from 'pages/MySubscription/MySubscriptionPage';
 import { DollarCircleFilled, DollarOutlined, SafetyCertificateOutlined, UserOutlined } from '@ant-design/icons';
 import ProLayout from '@ant-design/pro-layout';
 
@@ -22,7 +21,8 @@ height: 100%;
 .ant-pro-sider-layout-side {
   margin-top: 64px;
   height: calc(100vh - 64px) !important;
-}
+}import { getMyAccount } from '../../../../evc-app/src/api/accountController';
+
 `;
 
 
@@ -91,7 +91,7 @@ const ClientSettingsPage = props => {
           <Switch>
             <Route path={`${path}`} exact component={ProfileModal} />
             <Route path={`${path}/account`} exact component={MyAccountPage} />
-            <Route path={`${path}/subscription`} exact component={MySubscriptionPage} />
+            <Route path={`${path}/subscription`} exact component={MyAccountPage} />
           </Switch>
 
           </div>

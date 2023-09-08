@@ -6,10 +6,10 @@ import { MemberOnlyPanel } from 'components/MemberOnlyPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const StyledCard = styled(Card)`
-margin-bottom: 20px;
+margin-bottom: 30px;
 `;
 
 export const MemberOnlyCard = (props) => {
@@ -20,11 +20,7 @@ export const MemberOnlyCard = (props) => {
 
   const bodyStyle = shouldBlock ? {
     backgroundColor: 'rgb(0, 41, 61)',
-    paddingLeft: 0,
-    paddingRight: 0,
   } : {
-      paddingLeft: 0,
-      paddingRight: 0,
     };
   const headStyle = shouldBlock ?
     {
@@ -32,11 +28,13 @@ export const MemberOnlyCard = (props) => {
       color: 'rgba(255,255,255,0.75)'
     } :
     {
-      backgroundColor: '#18b0d7',
-      color: 'rgba(255,255,255,0.75)'
+      // backgroundColor: 'rgba(0, 41, 61, 0.1)',
+      // backgroundColor: '#18b0d7',
+      // color: 'rgba(255,255,255,0.75)'
+      color: '#00293d'
     };
   return (
-    <StyledCard size="small"
+    <StyledCard size="middle"
       type="inner"
       bordered={false}
       {...otherProps}

@@ -70,11 +70,10 @@ const StockFreePage = (props) => {
       {(loading || !stock) ? <Loading /> : <>
         <PageHeader
           style={{ 
-            backgroundColor: 'rgba(0,41,61,0.04)',
+            backgroundColor: 'white',
             margin: -30,
             marginBottom: 0,
             padding: 30,
-            paddingBottom: 0
            }}
           ghost={false}
           onBack={() => props.history.goBack()}

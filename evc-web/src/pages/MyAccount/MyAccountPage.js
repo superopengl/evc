@@ -1,4 +1,4 @@
-import { Button, Modal, Space, Typography, Row, Col, Divider } from 'antd';
+import { Card, Button, Modal, Space, Typography, Row, Col, Divider } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { WarningOutlined } from '@ant-design/icons';
@@ -44,16 +44,16 @@ const span = {
 
 
 const StyledRow = styled(Row)`
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
+  // margin-top: 20px;
+  // margin-left: auto;
+  // margin-right: auto;
 `;
 
 const StyledCol = styled(Col)`
   margin-bottom: 20px;
 `;
 
-const MySubscriptionPage = (props) => {
+const MyAccountPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -177,8 +177,9 @@ const MySubscriptionPage = (props) => {
 
   return (
     <ContainerStyled>
-      <Loading loading={loading} style={{ width: '100%' }}>
-        <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch', justifyContent: 'center' }}>
+      <Loading loading={loading} style={{width: '100%'}}>
+        <Space direction="vertical" size="large" style={{ width: '100%', alignItems: 'stretch', justifyContent: 'center' }}>
+          <Card title={null} size="middle">
           <PageHeader
             style={{ padding: '16px 0' }}
             title={<Title>Subscription</Title>}
@@ -188,7 +189,7 @@ const MySubscriptionPage = (props) => {
             ].filter(x => !!x)}
           />
           <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
-          <StyledRow gutter={20} style={{ maxWidth: 800 }}>
+          <StyledRow gutter={[30, 30]} style={{ maxWidth: 800 }}>
             {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
               <SubscriptionCard
                 title={s.title}
@@ -199,32 +200,37 @@ const MySubscriptionPage = (props) => {
                 active={s.key === currentPlanKey}
                 unit={s.unit} />
             </StyledCol>)}
-          </StyledRow>
-          {currentSubscription && <>
+
+          {currentSubscription && <Col span={24}>
             <Title>{getSubscriptionName(currentSubscription.type)}</Title>
             <Space size="small">{currentSubscription.symbols?.map((s, i) => <Tag key={i}>{s}</Tag>)}</Space>
             <Text>Started <TimeAgo value={currentSubscription.start} /></Text>
             <Text>Next payment <TimeAgo value={currentSubscription.end} /></Text>
-          </>}
-          <Divider />
+          </Col>}
+          </StyledRow>
+          </Card>
+          <Card title={null} size="middle">
 
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Title>Balance</Title>
-            <Title><MoneyAmount type="success" value={account.balance} /></Title>
-          </Space>
+            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+              <Title>Balance</Title>
+              <Title><MoneyAmount type="success" value={account.balance} /></Title>
+            </Space>
 
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Paragraph type="secondary">The money can be used deduct future payment.</Paragraph>
+            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+              <Paragraph type="secondary">The money can be used deduct future payment.</Paragraph>
 
-            <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Balance History</Button>
-          </Space>
-          <Divider />
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Title>Referral Link</Title>
-            <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
-          </Space>
-          <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
-          <ReferralLinkInput value={account?.referralUrl} />
+              <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Balance History</Button>
+            </Space>
+          </Card>
+          <Card title={null} size="middle">
+
+            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+              <Title>Referral Link</Title>
+              <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
+            </Space>
+            <Paragraph type="secondary">Share this link to invite friends to earn balance.</Paragraph>
+            <ReferralLinkInput value={account?.referralUrl} />
+          </Card>
 
         </Space>
       </Loading>
@@ -235,21 +241,21 @@ const MySubscriptionPage = (props) => {
         onCancel={handleCancelPayment}
       // balance={list.balance}
       />
-      <BalanceHistoryListModal 
+      <BalanceHistoryListModal
         visible={balanceHistoryVisible}
         onOk={() => setBalanceHistoryVisible(false)}
         onFetch={handleFetchMyBalanceHistoryList}
       />
-      <MySubscriptionHistoryDrawer 
-      visible={subscriptionHistoryVisible}
-      onClose={() => setSubscriptionHistoryVisible(false)}
+      <MySubscriptionHistoryDrawer
+        visible={subscriptionHistoryVisible}
+        onClose={() => setSubscriptionHistoryVisible(false)}
       />
     </ContainerStyled>
   );
 };
 
-MySubscriptionPage.propTypes = {};
+MyAccountPage.propTypes = {};
 
-MySubscriptionPage.defaultProps = {};
+MyAccountPage.defaultProps = {};
 
-export default withRouter(MySubscriptionPage);
+export default withRouter(MyAccountPage);

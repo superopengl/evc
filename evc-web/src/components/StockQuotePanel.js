@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image, Tooltip, Modal, Tabs } from 'antd';
+import { List, Typography, Space, Image, Tooltip, Modal, Card } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
 import StockInfoCard from './StockInfoCard';
@@ -96,6 +96,11 @@ const StockQuotePanel = (props) => {
   const isAfterHour = moment(quote.closeTime).isBefore();
 
   return (
+    <Card
+    size="middle"
+    title={null}
+    >
+
     <Space size="small" direction="vertical">
       <div>
         <Text style={{ fontSize: 30 }} strong>{quote.latestPrice} {getDeltaComponent(quote.change, quote.changePercent)}</Text>
@@ -111,6 +116,7 @@ const StockQuotePanel = (props) => {
         </div>
       </div>}
     </Space>
+    </Card>
   );
 };
 

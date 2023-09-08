@@ -78,7 +78,7 @@ export const StockSearchInput = (props) => {
       showSearch
       allowClear={true}
       // autoFocus={true}
-      placeholder="Symbols or companies"
+      placeholder="Search symbols"
       onChange={handleChange}
       onSearch={handleSearch}
       // open={!!text}

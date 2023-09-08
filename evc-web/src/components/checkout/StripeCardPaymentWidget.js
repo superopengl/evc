@@ -1,17 +1,13 @@
 import React from 'react';
-import { Space, Button, Typography } from 'antd';
+import { Space, Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import { confirmSubscriptionPayment } from 'services/subscriptionService';
-import { CardElement, useStripe, useElements, Elements, CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js';
+import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import {AiFillCreditCard} from 'react-icons/ai';
 import {CreditCardOutlined} from '@ant-design/icons';
 
 const stripePromise = loadStripe(process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY);
-
-const { Title, Text, Paragraph } = Typography;
 
 const StripeCardPaymentForm = (props) => {
 

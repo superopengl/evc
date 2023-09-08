@@ -3,17 +3,24 @@ import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import 'colors';
 import * as dotenv from 'dotenv';
+import { logDataEvent } from '../src/services/dataLogService';
+import { v4 as uuidv4 } from 'uuid';
 
 export const start = async (jobName: string, jobFunc: () => Promise<any>) => {
   let connection: Connection = null;
+  const eventId = uuidv4();
+  await logDataEvent({ eventId, eventType: jobName, status: 'started', by: 'task' })
   try {
     dotenv.config();
     connection = await connectDatabase();
     console.log('Task', jobName, 'started');
     await jobFunc();
     console.log('Task', jobName, 'done');
+    await logDataEvent({ eventId, eventType: jobName, status: 'done', by: 'task' })
   } catch (e) {
-    console.error('Task', jobName, 'failed', errorToJson(e));
+    const jsonError = errorToJson(e);
+    console.error('Task', jobName, 'failed', jsonError);
+    await logDataEvent({ eventId, eventType: jobName, status: 'error', by: 'task', data: jsonError })
   } finally {
     try {
       await connection?.close();

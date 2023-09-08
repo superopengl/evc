@@ -7,11 +7,12 @@ import { StockAdvancedStatsInfo, syncManyStockPutCallRatio } from '../src/servic
 import { StockCloseInfo, syncManyStockClose } from '../src/services/sockCloseService';
 import * as moment from 'moment';
 import { refreshMaterializedView } from '../src/db';
-
+import { executeWithDataEvents, logDataEvent } from '../src/services/dataLogService';
+import { v4 as uuidv4 } from 'uuid';
 
 async function udpateDatabase(iexBatchResponse) {
   const epsInfo: StockIexEpsInfo[] = [];
-  const advancedStatsInfo: StockAdvancedStatsInfo[]= [];
+  const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
   const quoteInfo: StockCloseInfo[] = [];
   for (const [symbol, value] of Object.entries(iexBatchResponse)) {
     // advanced-stats
@@ -37,7 +38,7 @@ async function udpateDatabase(iexBatchResponse) {
     }
 
     // quote
-    const {close, closeTime} = value['quote'];
+    const { close, closeTime } = value['quote'];
     quoteInfo.push({
       symbol,
       close,
@@ -48,9 +49,10 @@ async function udpateDatabase(iexBatchResponse) {
   await syncManyStockEps(epsInfo);
   await syncManyStockPutCallRatio(advancedStatsInfo);
   await syncManyStockClose(quoteInfo);
-  
-  await refreshMaterializedView();
+
+  await executeWithDataEvents('refresh materialized views', 'daily fetch', refreshMaterializedView);
 }
+
 
 async function syncIexToDatabase(symbols: string[]) {
   const types = ['earnings', 'advanced-stats', 'quote'];

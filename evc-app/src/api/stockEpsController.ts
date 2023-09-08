@@ -1,10 +1,11 @@
-import { getRepository, getManager } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockEps } from '../entity/StockEps';
 import * as stockEpsService from '../services/stockEpsService';
 import * as moment from 'moment';
 import { refreshMaterializedView } from '../db';
+import { executeWithDataEvents } from '../services/dataLogService';
 
 export const listStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -42,7 +43,7 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
 
   await getRepository(StockEps).insert(entity);
 
-  refreshMaterializedView();
+  await executeWithDataEvents('refresh materialized views', 'ui save eps', refreshMaterializedView);
 
   res.json();
 });
@@ -55,7 +56,7 @@ export const deleteStockEps = handlerWrapper(async (req, res) => {
     reportDate
   });
 
-  refreshMaterializedView();
+  await executeWithDataEvents('refresh materialized views', 'ui delete eps', refreshMaterializedView);
 
   res.json();
 });

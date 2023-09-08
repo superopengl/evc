@@ -79,5 +79,4 @@ export async function refreshMaterializedView() {
     const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
     await getManager().query(`REFRESH MATERIALIZED VIEW "${schema}"."${tableName}"`);
   }
-
 }

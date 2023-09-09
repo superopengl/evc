@@ -1,11 +1,12 @@
 import * as iex from 'iexcloud_api_wrapper';
 import { Connection, getManager, getRepository } from 'typeorm';
 import errorToJson from 'error-to-json';
-import { connectDatabase } from '../src/db';
+import { connectDatabase, refreshMaterializedView } from '../src/db';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { singleBatchRequest } from '../src/services/iexService';
 import { StockIexEpsInfo, syncManyStockEps } from '../src/services/stockEpsService';
+import { executeWithDataEvents } from '../src/services/dataLogService';
 
 
 async function udpateDatabase(iexBatchResponse) {
@@ -61,4 +62,6 @@ start(JOB_NAME, async () => {
     console.log(JOB_NAME, `${++round}/${total}`);
     await syncIexToDatabase(batchSymbols);
   }
+
+  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
 });

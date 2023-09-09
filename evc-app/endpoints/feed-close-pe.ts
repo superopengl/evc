@@ -3,6 +3,8 @@ import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { singleBatchRequest } from '../src/services/iexService';
 import { StockDailyClose } from '../src/entity/StockDailyClose';
+import { refreshMaterializedView } from '../src/db';
+import { executeWithDataEvents } from '../src/services/dataLogService';
 
 
 async function syncManyStockClose(closeEntities: StockDailyClose[]) {
@@ -69,4 +71,6 @@ start(JOB_NAME, async () => {
     console.log(JOB_NAME, `${++round}/${total}`);
     await syncIexToDatabase(batchSymbols);
   }
+
+  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
 });

@@ -5,9 +5,9 @@ export function getUnitPricing(type: SubscriptionType) {
   case SubscriptionType.Free:
     return 0;
   case SubscriptionType.UnlimitedMontly:
-    return 39.99;
+    return 29;
   case SubscriptionType.UnlimitedYearly:
-    return 109.99;
+    return 319;
   default:
     throw new Error(`Unknown subscription type ${type}`);
   }

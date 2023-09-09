@@ -10,7 +10,6 @@ import { StockSearchInput } from 'components/StockSearchInput';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { StockGuestPreviewDrawer } from 'components/StockGuestPreviewDrawer';
 import ReactDOM from 'react-dom';
-import StockFreePage from 'pages/StockPage/StockFreePage';
 
 const { Title, Paragraph } = Typography;
 
@@ -21,7 +20,7 @@ const Container = styled.div`
 background-image: linear-gradient(160deg, #3273A4, #15be53);
 // background-image: linear-gradient(#135200, #15be53);
 // background-image: linear-gradient(150deg, #135200, #135200 25%, #15be53 25%, #15be53 50%, #15bead 50%, #15bead 75%, #18b0d7 75%, #18b0d7 100%);
-background-image: linear-gradient(150deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
+background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #15be53 50%, #15be53 75%, #f0f0f0 75%, #f0f0f0 100%);
 // background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
@@ -78,7 +77,6 @@ const SignUpButton = styled(Button)`
 const HomeCarouselAreaRaw = props => {
 
   const windowWidth = useWindowWidth();
-  const context = useContext(GlobalContext);
   const [resultStockSymbol, setResultStockSymbol] = React.useState();
   const [stockModalVisible, setStockModalVisible] = React.useState(false);
 
@@ -149,21 +147,8 @@ const HomeCarouselAreaRaw = props => {
                   )}
               />
             </Space>
-
           </Col>
-          {/* <Col {...span} style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <SearchPanel direction="vertical" >
-              <StockMostSearched onFetch={listHotStock} title="most searched" />
-            </SearchPanel>
-          </Col> */}
         </Row>
-
-        {/* <LogoTextDark /> */}
-        {/* <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
-        We are providing professional accounting and tax services to our clients including individuals, Sole traders, Partnerships, Companies, Trusts etc.
-        You’ve got the skills and the experience. We’ve got diverse projects and meaningful work. Let’s take your career to the next level.
-              </Title> */}
-
       </InnerContainer>
       <StockGuestPreviewDrawer
         symbol={resultStockSymbol}

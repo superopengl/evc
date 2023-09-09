@@ -10,6 +10,7 @@ import { StockSearchInput } from 'components/StockSearchInput';
 import { LocaleSelector } from 'components/LocaleSelector';
 import { StockGuestPreviewDrawer } from 'components/StockGuestPreviewDrawer';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 const { Title, Paragraph } = Typography;
 
@@ -76,10 +77,9 @@ const SignUpButton = styled(Button)`
 
 const HomeCarouselAreaRaw = props => {
 
-  const windowWidth = useWindowWidth();
-  const [resultStockSymbol, setResultStockSymbol] = React.useState();
-  const [stockModalVisible, setStockModalVisible] = React.useState(false);
+  const {onSymbolClick} = props;
 
+  const windowWidth = useWindowWidth();
 
   const catchPhraseSize = windowWidth < 576 ? 32 :
     windowWidth < 992 ? 40 :
@@ -89,12 +89,9 @@ const HomeCarouselAreaRaw = props => {
     props.history.push('/signup')
   }
 
-  const handleSearchChange = async symbol => {
+  const handleSearchChange = symbol => {
     if (symbol) {
-      ReactDOM.unstable_batchedUpdates(() => {
-        setResultStockSymbol(symbol);
-        setStockModalVisible(true);
-      })
+      onSymbolClick(symbol);
     }
   }
 
@@ -114,11 +111,9 @@ const HomeCarouselAreaRaw = props => {
           <LogoPlate>
             <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto"
               height="30"></img>
-
           </LogoPlate>
-
           <Space>
-            <Link to="/"><Button size="large" type="link">Blog</Button></Link>
+            <Button size="large" type="link" href="#pricing">Pricing</Button>
             <Link to="/signup"><Button size="large" type="link">Sign Up</Button></Link>
             <Link to="/login"><Button size="large" type="link">Login</Button></Link>
             <LocaleSelector bordered={false} style={{ color: 'white', width: 130 }} size="large" defaultValue="en-US" />
@@ -150,18 +145,17 @@ const HomeCarouselAreaRaw = props => {
           </Col>
         </Row>
       </InnerContainer>
-      <StockGuestPreviewDrawer
-        symbol={resultStockSymbol}
-        visible={stockModalVisible}
-        onClose={() => setStockModalVisible(false)}
-      />
     </Container>
   );
 }
 
-HomeCarouselAreaRaw.propTypes = {};
+HomeCarouselAreaRaw.propTypes = {
+  onSymbolClick: PropTypes.func,
+};
 
-HomeCarouselAreaRaw.defaultProps = {};
+HomeCarouselAreaRaw.defaultProps = {
+  onSymbolClick: () => { }
+};
 
 export const HomeCarouselArea = withRouter(HomeCarouselAreaRaw);
 

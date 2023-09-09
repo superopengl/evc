@@ -17,7 +17,7 @@ import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
 import {
   UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined
+  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined, AlertOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
@@ -66,13 +66,19 @@ const ROUTES = [
     path: '/watchlist',
     name: 'Watchlist',
     icon: <StarOutlined />,
-    roles: ['member', 'free']
+    roles: ['member']
   },
   {
     path: '/stock',
-    name: 'Stocks',
+    name: 'Stock Radar',
     icon: <UnorderedListOutlined />,
     roles: ['admin', 'agent', 'member', 'free']
+  },
+  {
+    path: '/options',
+    name: 'Unusual Options Activity',
+    icon: <AlertOutlined />,
+    roles: ['admin', 'agent', 'member']
   },
   {
     path: '/user',
@@ -172,7 +178,7 @@ const AppLoggedIn = props => {
     route={{ routes }}
     location={{ pathname }}
     navTheme="dark"
-    siderWidth={220}
+    siderWidth={240}
     fixSiderbar={true}
     fixedHeader={true}
     headerRender={true}

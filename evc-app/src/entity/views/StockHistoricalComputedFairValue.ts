@@ -8,7 +8,7 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(Stock, 's')
-    .innerJoin(StockHistoricalTtmEps, 'eps', 's.symbol = eps.symbol')
+    .leftJoin(StockHistoricalTtmEps, 'eps', 's.symbol = eps.symbol')
     .leftJoin(StockComputedPe90, 'pe', 's.symbol = pe.symbol AND pe.date = eps."reportDate"')
     .select([
       's.symbol as symbol',

@@ -21,14 +21,13 @@ export const StockGuestPreviewDrawer = (props) => {
   }, [propVisible]);
 
   const loadEntity = async () => {
-    if (!symbol) {
-      return;
-    }
     // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
-    const stock = await getStock(symbol);
-    ReactDOM.unstable_batchedUpdates(() => {
+    try {
+      const stock = symbol ? await getStock(symbol) : null;
       setStock(stock);
-    });
+    } catch {
+      onClose();
+    }
   }
 
   React.useEffect(() => {
@@ -50,7 +49,7 @@ export const StockGuestPreviewDrawer = (props) => {
       title={<Space direction="vertical" size="large" style={{width: '100%'}}>
         <Text>{stock ? <StockName value={stock} /> : symbol} - Preview</Text>
         <Alert
-          message={<><big>😉 </big><Text style={{fontStyle: 'italic'}} type="success">More information is available to signed up users</Text></>}
+          message={<><big>😉</big><Text style={{fontStyle: 'italic', marginLeft: 12}} type="success">More information is available to signed up users</Text></>}
           action={
             <Button type="primary" size="large" style={{width: 140}}>Sign Up Now</Button>
           }

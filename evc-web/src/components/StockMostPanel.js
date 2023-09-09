@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { timer } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 
-const { Text, Title } = Typography;
+const { Text, Title, Link: TextLink } = Typography;
 
 const StyledTable = styled(Table)`
 
@@ -49,43 +49,56 @@ const StyledTable = styled(Table)`
 }
 `;
 
-const columnDef = [
-  {
-    title: 'symbol',
-    render: (text, item, index) => {
-      const { symbol, companyName } = item;
-      if (index % 2 === 0) {
-        return <Text style={{ fontSize: '0.9rem', color: '#3273A4' }} strong>{symbol}</Text>;
-      }
-      return {
-        children: <Text type="secondary"><small>{companyName}</small></Text>,
-        props: {
-          colSpan: 4,
-        },
-      };
-    }
-  },
-  {
-    title:  'last price',
-    dataIndex: 'latestPrice',
-    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><Text>{value?.toFixed(2)}</Text></div>
-  },
-  {
-    title: 'change',
-    dataIndex: 'change',
-    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><NumberAmount value={value} /></div>
-  },
-  {
-    title: '% change',
-    dataIndex: 'changePercent',
-    render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{width: '100%', textAlign: 'right'}}><NumberAmount postfix="%" digital={2} value={value * 100} /></div>
-  },
-];
+const StyledSymbolTextLink = styled(TextLink)`
+&.ant-typography {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #3273A4;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+`;
+
+
 
 
 const StockMostPanel = (props) => {
+  const columnDef = [
+    {
+      title: 'symbol',
+      render: (text, item, index) => {
+        const { symbol, companyName } = item;
+        if (index % 2 === 0) {
+          return <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
+        }
+        return {
+          children: <Text type="secondary"><small>{companyName}</small></Text>,
+          props: {
+            colSpan: 4,
+          },
+        };
+      }
+    },
+    {
+      title: 'last price',
+      dataIndex: 'latestPrice',
+      render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{ width: '100%', textAlign: 'right' }}><Text>{value?.toFixed(2)}</Text></div>
+    },
+    {
+      title: 'change',
+      dataIndex: 'change',
+      render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{ width: '100%', textAlign: 'right' }}><NumberAmount value={value} /></div>
+    },
+    {
+      title: '% change',
+      dataIndex: 'changePercent',
+      render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div style={{ width: '100%', textAlign: 'right' }}><NumberAmount postfix="%" digital={2} value={value * 100} /></div>
+    },
+  ];
 
-  const { title, onFetch } = props;
+  const { title, onFetch, onSymbolClick } = props;
 
   const [list, setList] = React.useState([]);
 
@@ -113,18 +126,18 @@ const StockMostPanel = (props) => {
   }
 
   return (
-    <>    
+    <>
       {title && <Title level={5}>{title}</Title>}
       <StyledTable
-      dataSource={getFormattedList()}
-      columns={columnDef}
-      rowKey="key"
-      pagination={false}
-      rowClassName={(item, index) => {
-        return index % 2 === 1 ? 'odd-row' : 'even-row';
-      }}
-      size="small"
-    />
+        dataSource={getFormattedList()}
+        columns={columnDef}
+        rowKey="key"
+        pagination={false}
+        rowClassName={(item, index) => {
+          return index % 2 === 1 ? 'odd-row' : 'even-row';
+        }}
+        size="small"
+      />
     </>
   )
 
@@ -133,9 +146,11 @@ const StockMostPanel = (props) => {
 StockMostPanel.propTypes = {
   title: PropTypes.string,
   onFetch: PropTypes.func.isRequired,
+  onSymbolClick: PropTypes.func
 };
 
 StockMostPanel.defaultProps = {
+  onSymbolClick: () => { },
 };
 
 export default withRouter(StockMostPanel);

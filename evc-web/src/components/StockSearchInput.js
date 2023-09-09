@@ -19,6 +19,8 @@ export const StockSearchInput = (props) => {
   const [text, setText] = React.useState('');
   const context = React.useContext(GlobalContext);
 
+  const isAdminOrAgent = ['admin', 'agent'].includes(context.role);
+
   const loadEntities = async () => {
     const stocks = await listStock();
     const sorted = _.chain(stocks)
@@ -91,7 +93,7 @@ export const StockSearchInput = (props) => {
         const { symbol, company } = option.data;
         return symbol.toLowerCase().includes(match) || company.toLowerCase().includes(match);
       }}
-      notFoundContent={<Button type="primary" block onClick={handleStockPlea}>Request to support stock <strong style={{ marginLeft: 4 }}>{text.toUpperCase()}</strong></Button>}
+      notFoundContent={isAdminOrAgent ? null : <Button type="primary" block onClick={handleStockPlea}>Not Found. Click to request support to stock <strong style={{ marginLeft: 4 }}>{text.toUpperCase()}</strong></Button>}
     >
       {list.map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         {/* <Highlighter highlightClassName="search-highlighting"

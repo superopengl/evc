@@ -46,7 +46,23 @@ function facatorySaveHandler(EntityType) {
   });
 }
 
-export const listStockSupport = factoryListHandler(StockSupport);
+export const listStockSupport = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { symbol } = req.params;
+  const limit = +req.query.limit || 100;
+
+  const list = await getRepository(StockSupport).find({
+    where: {
+      symbol
+    },
+    order: {
+      lo: 'DESC'
+    },
+    take: limit
+  });
+
+  res.json(list);
+});;
 
 export const saveStockSupport = facatorySaveHandler(StockSupport);
 
@@ -57,7 +73,23 @@ export const deleteStockSupport = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const listStockResistance = factoryListHandler(StockResistance);
+export const listStockResistance = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { symbol } = req.params;
+  const limit = +req.query.limit || 100;
+
+  const list = await getRepository(StockResistance).find({
+    where: {
+      symbol
+    },
+    order: {
+      lo: 'ASC'
+    },
+    take: limit
+  });
+
+  res.json(list);
+});;
 
 export const saveStockResistance = facatorySaveHandler(StockResistance);
 

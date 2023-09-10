@@ -230,8 +230,8 @@ const StockAdminPanel = (props) => {
         title={<>
           It requires at least 4 sequential EPS values and 90 days of close prices (for PE calculation) to compute fair value automatically.<br/>
           If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br/>
-          Minus or zero <strong>TtmEps</strong> values are not valid to compute fair values. In this case, special fair values need to be specified manually.<br/>
-          If the <strong>TtmEps</strong> has value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.</>}
+          Minus or zero <strong>TtmEps</strong> values are not valid to compute out PE90 nor fair values. In this case, <strong>PE90</strong> will always be <Text type="danger">n/a</Text> and a special fair values need to be input manually.<br/>
+          If the <strong>TtmEps</strong> has positive value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.</>}
         >
           <QuestionCircleOutlined />
         </Tooltip>}>

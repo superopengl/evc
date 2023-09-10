@@ -224,7 +224,7 @@ const MyAccountPage = (props) => {
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">The money can be used deduct future payment.</Paragraph>
 
-              <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Balance History</Button>
+              <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Balance Transactions</Button>
             </Space>
           </Card>
           <Card title={null} size="middle">

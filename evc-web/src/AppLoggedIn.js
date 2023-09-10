@@ -102,7 +102,7 @@ const ROUTES = [
   },
   {
     path: '/referral',
-    name: 'Earn Commission',
+    name: 'Earn Commission 🔥',
     icon: <div style={{marginRight: 10, display: 'inline-block'}}><GiReceiveMoney /></div>,
     roles: ['member', 'free'],
   },
@@ -127,7 +127,15 @@ const ROUTES = [
       {
         path: '/referral_policy',
         name: 'Global Referral Policy',
-      }
+      },
+      {
+        path: '/cash_back',
+        name: 'Cash Back',
+      },
+      {
+        path: '/data',
+        name: 'Data Upload',
+      },
     ]
   },
 ];

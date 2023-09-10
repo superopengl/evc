@@ -149,7 +149,7 @@ const ReferralBalanceForm = (props) => {
             <Button block type="primary" htmlType="submit" loading={loading} icon={<PlusOutlined/>}>Adjust Balance</Button>
           </Form.Item>
           <Form.Item>
-            <Button block onClick={() => setBalanceHistoryVisible(true)}>Balance History</Button>
+            <Button block onClick={() => setBalanceHistoryVisible(true)}>Balance Transactions</Button>
           </Form.Item>
         </Form>
 

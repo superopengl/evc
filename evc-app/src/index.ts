@@ -21,10 +21,10 @@ function validateEnvVars() {
     throw new Error(`Env vars missing: ${missingVars.join(', ')}`);
   }
 }
+const env = (process.env.NODE_ENV || 'dev').toLowerCase();
+const isNonProd = env !== 'prod' && env !== 'production';
 
 function loadEnv() {
-  const env = (process.env.NODE_ENV || 'dev').toLowerCase();
-  const isNonProd = env !== 'prod' && env !== 'production';
   if (isNonProd) {
     // non prod
     const envPath = path.resolve(process.cwd(), `.env.${env}`);
@@ -43,7 +43,8 @@ async function launchApp() {
   loadEnv();
 
   console.log('Connecting database');
-  await connectDatabase();
+  const shouldSyncSchema = isNonProd;
+  await connectDatabase(shouldSyncSchema);
 
   const app = createAppInstance();
 

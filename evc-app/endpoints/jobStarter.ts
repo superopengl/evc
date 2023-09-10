@@ -6,12 +6,12 @@ import * as dotenv from 'dotenv';
 import { logDataEvent } from '../src/services/dataLogService';
 import { v4 as uuidv4 } from 'uuid';
 
-export const start = async (jobName: string, jobFunc: () => Promise<any>) => {
+export const start = async (jobName: string, jobFunc: () => Promise<any>, syncSchema = false) => {
   let connection: Connection = null;
   const eventId = uuidv4();
   try {
     dotenv.config();
-    connection = await connectDatabase();
+    connection = await connectDatabase(syncSchema);
     console.log('Task', jobName, 'started');
     await logDataEvent({ eventId, eventType: jobName, status: 'started', by: 'task' })
     await jobFunc();

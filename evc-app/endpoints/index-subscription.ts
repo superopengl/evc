@@ -1,20 +1,13 @@
-import * as iex from 'iexcloud_api_wrapper';
-import { Connection, getManager, getRepository, LessThan, Not } from 'typeorm';
+import { Connection, getManager, getRepository } from 'typeorm';
 import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
-import { getReferralGlobalPolicy } from '../src/api/referralPolicyController';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
-import { getUtcNow } from '../src/utils/getUtcNow';
 import { UserBalanceTransaction } from '../src/entity/UserBalanceTransaction';
-import { getUnitPricing } from '../src/utils/getUnitPricing';
 import { SubscriptionType } from '../src/types/SubscriptionType';
-import { getSubscriptionPrice } from '../src/utils/getSubscriptionPrice';
 import { Payment } from '../src/entity/Payment';
 import { PaymentStatus } from '../src/types/PaymentStatus';
 import * as moment from 'moment';
-import { getUserBalance } from '../src/utils/getUserBalance';
-import { previewSubscriptionPayment } from '../src/api';
 import { calculateNewSubscriptionPaymentDetail } from '../src/utils/calculateNewSubscriptionPaymentDetail';
 
 async function expireSubscriptions() {

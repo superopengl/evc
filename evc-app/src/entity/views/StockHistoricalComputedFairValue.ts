@@ -7,19 +7,28 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
   materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(Stock, 's')
-    .leftJoin(StockHistoricalTtmEps, 'eps', 's.symbol = eps.symbol')
-    .leftJoin(StockComputedPe90, 'pe', 's.symbol = pe.symbol AND pe.date = eps."reportDate"')
-    .select([
-      's.symbol as symbol',
-      'eps."reportDate" as "reportDate"',
-      'eps."ttmEps"',
-      'pe.pe as pe',
-      'pe."peLo" as "peLo"',
-      'pe."peHi" as "peHi"',
-      'pe."fairValueLo" as "fairValueLo"',
-      'pe."fairValueHi" as "fairValueHi"',
+    .from(q => q
+      .from(Stock, 's')
+      .leftJoin(StockHistoricalTtmEps, 'eps', 's.symbol = eps.symbol')
+      .leftJoin(StockComputedPe90, 'pe', 's.symbol = pe.symbol AND pe.date <= eps."reportDate"')
+      .select([
+        's.symbol as symbol',
+        'eps."reportDate" as "reportDate"',
+        'eps."ttmEps"',
+        'pe.pe as pe',
+        'pe.date as "peDate"',
+        'pe."peLo" as "peLo"',
+        'pe."peHi" as "peHi"',
+        'pe."fairValueLo" as "fairValueLo"',
+        'pe."fairValueHi" as "fairValueHi"',
+      ]), 'sub')
+    .distinctOn([
+      'symbol',
+      '"reportDate"'
     ])
+    .orderBy('"symbol"', 'ASC')
+    .addOrderBy('"reportDate"', 'DESC')
+    .addOrderBy('"peDate"', 'DESC')
 })
 export class StockHistoricalComputedFairValue {
   @ViewColumn()
@@ -33,6 +42,9 @@ export class StockHistoricalComputedFairValue {
 
   @ViewColumn()
   pe: number;
+
+  @ViewColumn()
+  peDate: string;
 
   @ViewColumn()
   peLo: number;

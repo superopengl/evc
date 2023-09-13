@@ -1001,12 +1001,24 @@ paths:
       responses:
         200:
           description: OK
-  /admin/data/upload/unusual_option_activity:
+  /admin/data/upload/uoa/stocks:
     post:
-      operationId: uploadUnusalOptionActivityCsv
+      operationId: uploadUoaStocksCsv
       responses:
         200:
           description: OK
+  /admin/data/upload/uoa/etfs:
+    post:
+      operationId: uploadUoaEtfsCsv
+      responses:
+        200:
+          description: OK          
+  /admin/data/upload/uoa/indices:
+    post:
+      operationId: uploadUoaIndicesCsv
+      responses:
+        200:
+          description: OK    
   /admin/operation/:operation/status:
     get:
       operationId: getOperationStatus

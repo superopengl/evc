@@ -1,17 +1,11 @@
 
 import React from 'react';
-import { Modal, Typography, Space, Button, Table, Popover, Alert } from 'antd';
-import * as moment from 'moment';
+import { Typography, Space, Button, Table, Popover, Alert } from 'antd';
 import PropTypes from 'prop-types';
-import { ClockCircleOutlined, PushpinOutlined, EllipsisOutlined, CheckOutlined, FlagFilled, FlagOutlined, DeleteOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-import MoneyAmount from 'components/MoneyAmount';
-import { NumberRangeInput } from 'components/NumberRangeInput';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
-import { StockEpsInput } from './StockEpsInput';
-import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
 import { ImRocket } from 'react-icons/im';
 const { Text } = Typography;
@@ -24,7 +18,7 @@ const Container = styled.div`
 
 
 export const StockPublishTimelineEditor = (props) => {
-  const { onLoadList, onPublishNew, onChange, onSelected, getClassNameOnSelect, disabled } = props;
+  const { onLoadList, onPublishNew, onChange, onSelected, disabled } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [publishConfirmVisible, setPublishConfirmVisible] = React.useState(false);
@@ -117,9 +111,6 @@ export const StockPublishTimelineEditor = (props) => {
         pagination={false}
         dataSource={list}
         rowKey="id"
-        rowClassName={(item, index) => {
-          return getClassNameOnSelect(item);
-        }}
         onRow={(item, index) => {
           return {
             onClick: () => onSelected(item),
@@ -136,13 +127,11 @@ StockPublishTimelineEditor.propTypes = {
   onPublishNew: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onSelected: PropTypes.func,
-  getClassNameOnSelect: PropTypes.func,
   disabled: PropTypes.bool.isRequired,
 };
 
 StockPublishTimelineEditor.defaultProps = {
   onChange: () => { },
   onSelected: () => { },
-  getClassNameOnSelect: () => false,
   disabled: false
 };

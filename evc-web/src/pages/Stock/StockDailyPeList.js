@@ -1,16 +1,10 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Modal } from 'antd';
-import * as moment from 'moment';
+import { List, Typography, Space, Button } from 'antd';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
+import { EllipsisOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
-import { NumberRangeInput } from 'components/NumberRangeInput';
-import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
-import { Divider } from 'antd';
-import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { listStockPe } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
 import MoneyAmount from 'components/MoneyAmount';
@@ -25,7 +19,7 @@ const Container = styled.div`
 
 
 export const StockDailyPeList = (props) => {
-  const { symbol, onLoadList, onSaveNew, onChange, onDelete, onSelected, getClassNameOnSelect, disableInput, publishedId } = props;
+  const { symbol, onChange, onSelected } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -63,7 +57,6 @@ export const StockDailyPeList = (props) => {
           <List.Item
             onClick={() => onSelected(item)}
             style={{ position: 'relative' }}
-            className={getClassNameOnSelect(item)}
           >
             <List.Item.Meta
               description={<Space style={{width: '100%', justifyContent: 'space-between'}}>
@@ -85,7 +78,6 @@ StockDailyPeList.propTypes = {
   symbol: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onSelected: PropTypes.func,
-  getClassNameOnSelect: PropTypes.func,
   publishedId: PropTypes.string,
   showTime: PropTypes.bool,
   mode: PropTypes.string,
@@ -97,6 +89,5 @@ StockDailyPeList.defaultProps = {
   mode: null,
   onChange: () => { },
   onSelected: () => { },
-  getClassNameOnSelect: () => false,
   disableInput: false,
 };

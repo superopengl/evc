@@ -18,8 +18,8 @@ const Container = styled.div`
 `;
 
 
-const StockEpsTimelineEditor = (props, ref) => {
-  const { onLoadList, onSaveNew, onDelete, onChange, onSelected, getClassNameOnSelect } = props;
+const StockEpsTimelineEditor = (props) => {
+  const { onLoadList, onSaveNew, onDelete, onChange, onSelected } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -82,13 +82,12 @@ const StockEpsTimelineEditor = (props, ref) => {
         rowKey="id"
         size="small"
         locale={{emptyText: ' '}}
-        renderItem={(item, index) => (
+        renderItem={(item) => (
           <List.Item
             onClick={() => onSelected(item)}
             // onClick={() => toggleCurrentItem(item)}
             // style={{position: 'relative'}}
             // className={index <= 3 ? 'current-selected' : ''}
-            className={getClassNameOnSelect(item)}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             {/* <div style={{position:'absolute', right: 10, top: 10}}>
@@ -115,7 +114,6 @@ StockEpsTimelineEditor.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   onSelected: PropTypes.func,
-  getClassNameOnSelect: PropTypes.func,
   showTime: PropTypes.bool,
   symbol: PropTypes.string.isRequired,
 };
@@ -124,7 +122,6 @@ StockEpsTimelineEditor.defaultProps = {
   showTime: true,
   onChange: () => {},
   onSelected: () => { },
-  getClassNameOnSelect: () => false,
 };
 
 export default StockEpsTimelineEditor;

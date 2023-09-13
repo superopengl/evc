@@ -114,9 +114,6 @@ const StockAdminPanel = (props) => {
     return <Loading />
   }
 
-  const getClassNameOnSelectForEpsItem = item => {
-    return `${selected.epsIds.includes(item.id) ? 'current-selected-datepoint' : ''} ${selected.source === 'eps' ? 'source' : ''}`;
-  }
 
   const updateSelectedByEps = (item) => {
     setSelected({
@@ -128,38 +125,6 @@ const StockAdminPanel = (props) => {
 
 
 
-  const getClassNameOnSelectForValueItem = item => {
-    const shouldHighlight = () => {
-      switch (selected.source) {
-        case 'value':
-        case 'publish':
-          return item.id === selected.fairValueId;
-        case 'pe':
-          return item.peId === selected.peId;
-        case 'eps':
-          return item.epsIds.some(x => selected.epsIds.includes(x));
-        default:
-          return false;
-      }
-    }
-
-    return `${shouldHighlight() ? 'current-selected-datepoint' : ''} ${selected.source === 'value' ? 'source' : ''}`;
-  }
-
-  const updateSelectedByValue = (item) => {
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'value',
-      fairValueId: item.id,
-      epsIds: item.epsIds,
-      peId: item.peId
-    });
-  }
-
-  const getClassNameOnSelectForSupportItem = item => {
-    return `${item.id === selected.supportId ? 'current-selected-datepoint' : ''} ${selected.source === 'support' ? 'source' : ''}`;
-  }
-
   const updateSelectedBySupport = (item) => {
     setSelected({
       ...DEFAULT_SELECTED,
@@ -169,9 +134,6 @@ const StockAdminPanel = (props) => {
   }
 
 
-  const getClassNameOnSelectForResistanceItem = item => {
-    return `${item.id === selected.resistanceId ? 'current-selected-datepoint' : ''} ${selected.source === 'resistance' ? 'source' : ''}`;
-  }
 
   const updateSelectedByResistance = (item) => {
     setSelected({
@@ -195,7 +157,6 @@ const StockAdminPanel = (props) => {
             onDelete={(symbol, reportDate) => deleteStockEps(symbol, reportDate)}
             onChange={list => setEpsList(list)}
             onSelected={updateSelectedByEps}
-            getClassNameOnSelect={getClassNameOnSelectForEpsItem}
           />
         </ColInnerCard>
       </Col>
@@ -207,7 +168,6 @@ const StockAdminPanel = (props) => {
             onDelete={id => deleteStockSupport(id)}
             onChange={list => setSupportList(list)}
             onSelected={updateSelectedBySupport}
-            getClassNameOnSelect={getClassNameOnSelectForSupportItem}
           />
         </ColInnerCard>
       </Col>
@@ -219,7 +179,6 @@ const StockAdminPanel = (props) => {
             onDelete={id => deleteStockResistance(id)}
             onChange={list => setResistanceList(list)}
             onSelected={updateSelectedByResistance}
-            getClassNameOnSelect={getClassNameOnSelectForResistanceItem}
           />
         </ColInnerCard>
       </Col>

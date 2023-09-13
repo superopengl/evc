@@ -15,14 +15,15 @@ import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
 import TranslationListPage from 'pages/Translation/TranslationListPage';
 import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
-import {
+import Icon, {
   UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined, AlertOutlined
+  DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined, AlertOutlined,
+  LeftCircleOutlined, RightCircleOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
+import { Avatar, Space, Dropdown, Menu, Typography, Modal, Button } from 'antd';
 import ChangePasswordModal from 'pages/ChangePasswordModal';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
@@ -31,9 +32,11 @@ import ContactForm from 'components/ContactForm';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
-import {GiReceiveMoney, GiRadarSweep} from 'react-icons/gi';
-import {BiDollar} from 'react-icons/bi';
+import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
+import { BiDollar } from 'react-icons/bi';
 import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
+import UnusualOptionsActivityPage from 'pages/AdminDashboard/UnusualOptionsActivityPage';
+import EarnCommissionModal from 'pages/EarnCommissionModal';
 
 const { Link: LinkText } = Typography;
 
@@ -74,11 +77,11 @@ const ROUTES = [
   {
     path: '/stock',
     name: 'Stock Radar',
-    icon:  <div style={{marginRight: 10, display: 'inline-block', position: 'relative', top: 2}}><GiRadarSweep /></div>,
+    icon: <Icon component={() => <GiRadarSweep />} />,
     roles: ['admin', 'agent', 'member', 'free']
   },
   {
-    path: '/options',
+    path: '/unsual_options_activiy',
     name: 'Unusual Options Activity',
     icon: <AlertOutlined />,
     roles: ['admin', 'agent', 'member']
@@ -98,13 +101,13 @@ const ROUTES = [
   {
     path: '/account',
     name: 'Account',
-    icon: <div style={{marginRight: 10, display: 'inline-block', position: 'relative', top: 2}}><BiDollar /></div>,
+    icon: <Icon component={() => <BiDollar />} />,
     roles: ['member', 'free'],
   },
   {
     path: '/referral',
     name: 'Earn Commission 🔥',
-    icon: <div style={{marginRight: 10, display: 'inline-block'}}><GiReceiveMoney /></div>,
+    icon: <Icon component={() => <GiReceiveMoney />} />,
     roles: ['member', 'free'],
   },
   {
@@ -141,7 +144,7 @@ const ROUTES = [
   },
 ];
 
-function getSanitizedPathName (pathname) {
+function getSanitizedPathName(pathname) {
   const match = /\/[^/]+/.exec(pathname);
   return match ? match[0] ?? pathname : pathname;
 }
@@ -155,6 +158,7 @@ const AppLoggedIn = props => {
   const [profileVisible, setProfileVisible] = React.useState(false);
   const [contactVisible, setContactVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
+  const [earnCommissionVisible, setEarnCommissionVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
   const [pathname, setPathname] = React.useState(getSanitizedPathName(props.location.pathname));
 
@@ -201,14 +205,21 @@ const AppLoggedIn = props => {
     headerRender={true}
     collapsed={collapsed}
     onCollapse={setCollapsed}
-    menuItemRender={(item, dom) => (
-      <Link to={item.path} onClick={() => {
-        setPathname(item.path);
-      }}>
-        {dom}
-      </Link>
-    )}
-    // collapsedButtonRender={true}
+    menuItemRender={(item, dom) => {
+      if (item.path === '/referral') {
+        return <div onClick={() => setEarnCommissionVisible(true)}>
+          {dom}
+        </div>
+      } else {
+
+        return <Link to={item.path} onClick={() => {
+          setPathname(item.path);
+        }}>
+          {dom}
+        </Link>
+      }
+    }}
+    // collapsedButtonRender={false}
     // postMenuData={menuData => {
     //   return [
     //     {
@@ -220,7 +231,24 @@ const AppLoggedIn = props => {
     //   ]
     // }}
     headerContentRender={() => (
-      <HeaderStockSearch />
+      <Space>
+        {/* <div
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              position: 'relative',
+              top: '20px',
+              left: '-24px',
+              cursor: 'pointer',
+              // fontSize: '16px',
+              backgroundColor: '#00293d',
+              width: '20px',
+              color: 'white'
+            }}
+          >
+            {collapsed ? <RightCircleOutlined /> : <LeftCircleOutlined />}
+          </div> */}
+        <HeaderStockSearch />
+      </Space>
     )}
     rightContentRender={() => (
       <div style={{ marginLeft: 16 }}>
@@ -250,6 +278,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
+      <RoleRoute visible={isAdmin} exact path="/unsual_options_activiy" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
       <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
@@ -286,6 +315,11 @@ const AppLoggedIn = props => {
     <AboutDrawer
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}
+    />
+    <EarnCommissionModal
+      visible={earnCommissionVisible}
+      onOk={() => setEarnCommissionVisible(false)}
+      onCancel={() => setEarnCommissionVisible(false)}
     />
   </StyledLayout>
 }

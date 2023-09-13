@@ -104,7 +104,7 @@ const App = () => {
             <RoleRoute loading={loading} component={Error404} />
           </Switch>
         </BrowserRouter>
-        {(isMember || isGuest) && <ContactWidget />}
+        {isGuest && <ContactWidget />}
       </ConfigProvider>
     </GlobalContext.Provider>
   );

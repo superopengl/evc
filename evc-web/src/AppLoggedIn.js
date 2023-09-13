@@ -16,7 +16,7 @@ import TranslationListPage from 'pages/Translation/TranslationListPage';
 import StockPage from 'pages/StockPage/StockPage';
 import ProLayout, { } from '@ant-design/pro-layout';
 import Icon, {
-  UnorderedListOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
+  UploadOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
   DashboardOutlined, TagsOutlined, DollarOutlined, QuestionOutlined, AlertOutlined,
   LeftCircleOutlined, RightCircleOutlined
 } from '@ant-design/icons';
@@ -32,11 +32,13 @@ import ContactForm from 'components/ContactForm';
 import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
-import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
+import { GiReceiveMoney, GiRadarSweep, GiPayMoney } from 'react-icons/gi';
+import {FaMoneyBillWave} from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
 import UnusualOptionsActivityPage from 'pages/AdminDashboard/UnusualOptionsActivityPage';
 import EarnCommissionModal from 'pages/EarnCommissionModal';
+import AdminCashBackRequestListPage from 'pages/AdminDashboard/AdminCashBackRequestListPage';
 
 const { Link: LinkText } = Typography;
 
@@ -93,12 +95,6 @@ const ROUTES = [
     roles: ['admin', 'agent']
   },
   {
-    path: '/tags',
-    name: 'Tags',
-    icon: <TagsOutlined />,
-    roles: ['admin', 'agent'],
-  },
-  {
     path: '/account',
     name: 'Account',
     icon: <Icon component={() => <BiDollar />} />,
@@ -111,11 +107,27 @@ const ROUTES = [
     roles: ['member', 'free'],
   },
   {
+    path: '/data',
+    name: 'Data Upload',
+    icon: <UploadOutlined />,
+    roles: ['admin', 'agent']
+  },
+  {
+    path: '/cash_back',
+    name: 'Cash Back',
+    icon: <Icon component={() => <FaMoneyBillWave />} />,
+    roles: ['admin', 'agent']
+  },
+  {
     path: '/settings',
     name: 'Settings',
     icon: <SettingOutlined />,
     roles: ['admin', 'agent'],
     routes: [
+      {
+        path: '/tags',
+        name: 'Tags',
+      },
       {
         path: '/config',
         name: 'Configuration',
@@ -129,16 +141,8 @@ const ROUTES = [
         name: 'Translations',
       },
       {
-        path: '/data',
-        name: 'Data Source',
-      },
-      {
         path: '/referral_policy',
         name: 'Global Referral Policy',
-      },
-      {
-        path: '/cash_back',
-        name: 'Cash Back',
       },
     ]
   },
@@ -287,6 +291,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
+      <RoleRoute visible={isAdmin} exact path="/cash_back" component={AdminCashBackRequestListPage} />
       <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>

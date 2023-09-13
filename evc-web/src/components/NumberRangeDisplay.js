@@ -10,18 +10,10 @@ const { Text } = Typography;
 
 const NumberPanel = styled.div`
   width: 100%;
-  // height: 100%;
-  // padding: 0;
-  // margin: 0;
-  // background-color: #f3f3f3;
-  // .ant-typography {
-  //   color: #000000;
-  // }
-  // font-size: 12px;
 `;
 
 export const NumberRangeDisplay = (props) => {
-  const { lo, hi, loTrend, hiTrend, time, accurateTime } = props;
+  const { lo, hi, loTrend, hiTrend, time, accurateTime, className } = props;
 
   if (!lo && lo !== 0 && !hi && hi !== 0) {
     return props.empty;
@@ -47,7 +39,7 @@ export const NumberRangeDisplay = (props) => {
 
   const isCompactMode = displayLo === displayHi && loTrend === hiTrend;
 
-  return <Space size="small" direction="horizontal">
+  return <Space size="small" direction="horizontal" className={className}>
     {time && <TimeAgo value={time} accurate={accurateTime} showAgo={false} />}
     <NumberPanel>
       {displayLo === null && displayHi === null ? <Text>None</Text> :

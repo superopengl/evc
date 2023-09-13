@@ -8,6 +8,8 @@ dependencies:
   compression: 1.7.4
   cookie-parser: 1.4.5
   cors: 2.8.5
+  csv: 5.4.0
+  csv-parse: 4.15.3
   csv-parser: 3.0.0
   delay: 5.0.0
   dotenv: 8.2.0
@@ -1857,6 +1859,14 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
+  /csv-generate/3.3.0:
+    dev: false
+    resolution:
+      integrity: sha512-EXSru4QwEWKwM7wwsJbhrZC+mHEJrhQFoXlohHs80CAU8Qhlv9gaw1sjzNiC3Hr3oUx5skDmEiAlz+tnKWV0RA==
+  /csv-parse/4.15.3:
+    dev: false
+    resolution:
+      integrity: sha512-jlTqDvLdHnYMSr08ynNfk4IAUSJgJjTKy2U5CQBSu4cN9vQOJonLVZP4Qo4gKKrIgIQ5dr07UwOJdi+lRqT12w==
   /csv-parser/3.0.0:
     dependencies:
       minimist: 1.2.5
@@ -1866,6 +1876,21 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-s6OYSXAK3IdKqYO33y09jhypG/bSDHPuyCme/IdEHfWpLf/jKcpitVFyOC6UemgGk8v7Q5u2XE0vvwmanxhGlQ==
+  /csv-stringify/5.6.2:
+    dev: false
+    resolution:
+      integrity: sha512-n3rIVbX6ylm1YsX2NEug9IaPV8xRnT+9/NNZbrA/bcHgOSSeqtWla6XnI/xmyu57wIw+ASCAoX1oM6EZtqJV0A==
+  /csv/5.4.0:
+    dependencies:
+      csv-generate: 3.3.0
+      csv-parse: 4.15.3
+      csv-stringify: 5.6.2
+      stream-transform: 2.0.4
+    dev: false
+    engines:
+      node: '>= 0.1.90'
+    resolution:
+      integrity: sha512-wtdhi5Q53Rhjm2qzi2iDBLI1FHXTECXOTQ/jrZD5gzEXS9ukUkHwbhHRrCvv/vYFisy6uSoUeuW11P7KgrrDRg==
   /currently-unhandled/0.4.1:
     dependencies:
       array-find-index: 1.0.2
@@ -4549,6 +4574,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA==
+  /mixme/0.4.0:
+    dev: false
+    engines:
+      node: '>= 8.0.0'
+    resolution:
+      integrity: sha512-B4Sm1CDC5+ov5AYxSkyeT5HLtiDgNOLKwFlq34wr8E2O3zRdTvQiLzo599Jt9cir6VJrSenOlgvdooVYCQJIYw==
   /mkdirp/1.0.4:
     engines:
       node: '>=10'
@@ -6000,6 +6031,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
+  /stream-transform/2.0.4:
+    dependencies:
+      mixme: 0.4.0
+    dev: false
+    resolution:
+      integrity: sha512-LQXH1pUksoef5Ijo6+2ihnjLLZtZuoqu1vhut6a7xZ77nrLA/shbbx2FAzVC/nkb6wwrPzOO98700mv4HDQcWg==
   /streamsearch/0.1.2:
     dev: false
     engines:
@@ -7003,6 +7040,8 @@ specifiers:
   compression: ^1.7.4
   cookie-parser: ^1.4.5
   cors: ^2.8.5
+  csv: ^5.4.0
+  csv-parse: ^4.15.3
   csv-parser: ^3.0.0
   delay: ^5.0.0
   dotenv: ^8.2.0

@@ -983,3 +983,38 @@ paths:
       responses:
         200:
           description: OK
+  /admin/refresh_mv:
+    post:
+      operationId: refreshMaterializedViews
+      responses:
+        200:
+          description: OK
+  /admin/data/upload/support:
+    post:
+      operationId: uploadSupportCsv
+      responses:
+        200:
+          description: OK
+  /admin/data/upload/resistance:
+    post:
+      operationId: uploadResistanceCsv
+      responses:
+        200:
+          description: OK
+  /admin/data/upload/unusual_option_activity:
+    post:
+      operationId: uploadUnusalOptionActivityCsv
+      responses:
+        200:
+          description: OK
+  /admin/operation/:operation/status:
+    get:
+      operationId: getOperationStatus
+      parameters:
+        - name: operation
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK

@@ -25,9 +25,7 @@ export class StockEps {
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   value: number;
 
-  @Column('uuid', { nullable: true })
-  author: string;
-
   @Column({ default: 'auto' })
   source: 'auto' | 'manual'
 }
+

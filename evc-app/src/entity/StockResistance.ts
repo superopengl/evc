@@ -20,9 +20,6 @@ export class StockResistance {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @Column('uuid')
-  author: string;
-
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   lo: number;
 

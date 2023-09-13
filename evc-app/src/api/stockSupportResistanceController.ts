@@ -36,7 +36,6 @@ function facatorySaveHandler(EntityType) {
     const repo = getRepository(EntityType);
     const entity = new EntityType();
     entity.symbol = symbol;
-    entity.author = userId;
     entity.lo = lo;
     entity.hi = hi;
 

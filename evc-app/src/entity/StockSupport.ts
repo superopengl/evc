@@ -4,8 +4,7 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-@Index('idx_support_symbol_lo', ['symbol', 'lo'])
-@Index('idx_support_symbol_created', ['symbol', 'createdAt'])
+@Index('idx_support_symbol_lo_hi', ['symbol', 'lo', 'hi'], {unique: true})
 export class StockSupport {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -18,9 +17,6 @@ export class StockSupport {
 
   @DeleteDateColumn()
   deletedAt: Date;
-
-  @Column('uuid')
-  author: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   lo: number;

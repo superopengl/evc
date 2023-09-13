@@ -5,34 +5,6 @@ import { StockLastFairValue } from './StockLastFairValue';
 import { StockSupport } from '../StockSupport';
 import { StockResistance } from '../StockResistance';
 
-
-@ViewEntity({
-  expression: connection => connection.createQueryBuilder()
-    .from(Stock, 's')
-    .leftJoin(q =>
-      q.from(q =>
-        q.from(StockSupport, 'x')
-          .orderBy('x.lo', 'DESC')
-          .limit(3),
-      'sup')
-        .groupBy('sup.symbol')
-        .select('symbol')
-        .addSelect(`array_agg(json_build_object('lo', lo, 'hi', hi)) as supports`),
-    'supports', 'supports.symbol = s.symbol')
-    .select([
-      's.symbol as symbol',
-      'supports.supports as supports'
-    ])
-})
-export class StockTopSupport {
-  @ViewColumn()
-  @PrimaryColumn()
-  symbol: string;
-
-  @ViewColumn()
-  supports: { lo: number; hi: number }[];
-}
-
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(Stock, 's')

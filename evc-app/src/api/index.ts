@@ -23,4 +23,4 @@ export * from './emailTemplateController';
 export * from './configController';
 export * from './dashboardController';
 export * from './userTagController';
-export * from './dataUploadController';
+export * from './dataController';

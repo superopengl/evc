@@ -11,3 +11,9 @@ export async function getOperationStatus(operation) {
   return httpGet(`admin/operation/${operation}/status`);
 }
 
+export async function listUnusalOptionsActivity(type, query) {
+  if(!type) {
+    throw new Error(`operation is not specified.`);
+  }
+  return httpGet(`/admin/data/uoa/${type}`, query);
+}

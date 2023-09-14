@@ -59,10 +59,10 @@ GOOG,2100,2200`}
         extra={
           <Space>
             <LongRunningActionButton
-              operationKey="upload-uoa-stocks"
-              buttonText="Stocks"
+              operationKey="upload-uoa-stock"
+              buttonText="Stock"
               type="upload"
-              uploadAction="/admin/data/uoa/stocks"
+              uploadAction="/admin/data/uoa/stock"
             />
             <LongRunningActionButton
               operationKey="upload-resistance-etfs"
@@ -72,10 +72,10 @@ GOOG,2100,2200`}
               onOk={handleUploadSupportCsv}
             />
             <LongRunningActionButton
-              operationKey="upload-resistance-indices"
-              buttonText="Indices"
+              operationKey="upload-resistance-index"
+              buttonText="Index"
               type="upload"
-              uploadAction="/admin/data/uoa/indices"
+              uploadAction="/admin/data/uoa/index"
               onOk={handleUploadSupportCsv}
             />
           </Space>

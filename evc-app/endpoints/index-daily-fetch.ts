@@ -88,4 +88,4 @@ start(JOB_NAME, async () => {
   }
 
   await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
-});
+}, { daemon: true });

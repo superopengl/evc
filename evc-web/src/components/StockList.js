@@ -23,8 +23,8 @@ const StockList = (props) => {
         xs: 1,
         sm: 2,
         md: 3,
-        lg: 4,
-        xl: 4,
+        lg: 3,
+        xl: 3,
         xxl: 6,
       }}
       size="small"

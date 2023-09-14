@@ -1,7 +1,7 @@
 
 import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
-import { UnusalOptionActivityStocks } from '../entity/UnusalOptionActivityStocks';
-import { UnusalOptionActivityIndices } from '../entity/UnusalOptionActivityIndices';
+import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
+import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
 import { assert } from './assert';
 import { getManager } from 'typeorm';
 
@@ -17,12 +17,12 @@ export type UnusalOptionsActivitySearchParams = {
 };
 
 
-export async function searchUnusalOptionsActivity(entityType: 'stocks' | 'etfs' | 'indices', q: any) {
+export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' | 'index', q: any) {
   const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size } = q as UnusalOptionsActivitySearchParams;
 
-  const entity = entityType === 'stocks' ? UnusalOptionActivityStocks :
+  const entity = entityType === 'stock' ? UnusalOptionActivityStock :
     entityType === 'etfs' ? UnusalOptionActivityEtfs :
-      entityType === 'indices' ? UnusalOptionActivityIndices :
+      entityType === 'index' ? UnusalOptionActivityIndex :
         null;
   assert(entity, 400, `Unsupported type ${entityType}`);
   const pageNo = +page || 1;

@@ -176,7 +176,7 @@ const UnusualOptionsActivityPanel = (props) => {
 };
 
 UnusualOptionsActivityPanel.propTypes = {
-  type: PropTypes.oneOf(['stocks', 'etfs', 'indices']).isRequired
+  type: PropTypes.oneOf(['stock', 'etfs', 'index']).isRequired
 };
 
 UnusualOptionsActivityPanel.defaultProps = {};

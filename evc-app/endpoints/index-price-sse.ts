@@ -63,10 +63,12 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
   const values = priceList
     .filter(p => !!p)
     .map(p => {
-      const { symbol, price, time } = p;
+      const { symbol, price, change, changePercent, time } = p;
       return {
         symbol,
         price,
+        change,
+        changePercent,
         updatedAt: new Date(time)
       };
     });
@@ -76,7 +78,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
       .createQueryBuilder()
       .insert()
       .into(StockLastPrice)
-      .onConflict('(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"')
+      .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent", "updatedAt" = excluded."updatedAt"')
       .values(values)
       .execute();
   }
@@ -148,7 +150,7 @@ start(JOB_NAME, async () => {
     if (batch.length) {
       createSseForSymbols(batch);
     }
-  } catch {
+  } catch (e) {
     process.exit(1);
   }
 });

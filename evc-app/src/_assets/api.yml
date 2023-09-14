@@ -1001,14 +1001,14 @@ paths:
       responses:
         200:
           description: OK
-  /admin/data/uoa/stocks:
+  /admin/data/uoa/stock:
     get:
       operationId: listUoaStocks
       responses:
         200:
           description: OK
     post:
-      operationId: uploadUoaStocksCsv
+      operationId: uploadUoaStockCsv
       responses:
         200:
           description: OK
@@ -1023,14 +1023,14 @@ paths:
       responses:
         200:
           description: OK
-  /admin/data/uoa/indices:
+  /admin/data/uoa/index:
     get:
-      operationId: listUoaIndices
+      operationId: listUoaindex
       responses:
         200:
           description: OK
     post:
-      operationId: uploadUoaIndicesCsv
+      operationId: uploadUoaIndexCsv
       responses:
         200:
           description: OK

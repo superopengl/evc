@@ -44,15 +44,15 @@ const UnusualOptionsActivityPage = () => {
 
   return (
     <Card title="Unusual Options Activity">
-      <Tabs defaultActiveKey="stocks" type="card">
-        <Tabs.TabPane tab="Stocks" key="stocks">
-          <UnusualOptionsActivityPanel type="stocks" />
+      <Tabs defaultActiveKey="stock" type="card">
+        <Tabs.TabPane tab="Stock" key="stocks">
+          <UnusualOptionsActivityPanel type="stock" />
         </Tabs.TabPane>
         <Tabs.TabPane tab="ETFS" key="etfs">
           <UnusualOptionsActivityPanel type="etfs" />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Indices" key="indices">
-          <UnusualOptionsActivityPanel type="indices" />
+        <Tabs.TabPane tab="Index" key="index">
+          <UnusualOptionsActivityPanel type="index" />
         </Tabs.TabPane>
       </Tabs>
     </Card>

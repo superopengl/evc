@@ -336,17 +336,19 @@ async function updateStockLastPrice(info: StockLastPriceInfo) {
     data: info
   });
 
-  const { symbol, price, time } = info;
+  const { symbol, price, change, changePercent, time } = info;
   const lastPrice = new StockLastPrice();
   lastPrice.symbol = symbol;
   lastPrice.price = price;
+  lastPrice.change = change;
+  lastPrice.changePercent = changePercent;
   lastPrice.updatedAt = new Date(time);
   await getManager()
     .createQueryBuilder()
     .insert()
     .into(StockLastPrice)
     .values(lastPrice)
-    .onConflict('(symbol) DO UPDATE SET price = excluded.price, "updatedAt" = excluded."updatedAt"')
+    .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent", "updatedAt" = excluded."updatedAt"')
     .execute();
 }
 
@@ -357,6 +359,8 @@ export const getStockQuote = handlerWrapper(async (req, res) => {
     await updateStockLastPrice({
       symbol,
       price: quote.latestPrice,
+      change: quote.change,
+      changePercent: quote.changePercent,
       time: quote.latestUpdate
     });
   }
@@ -372,6 +376,8 @@ export const getStockPrice = handlerWrapper(async (req, res) => {
     if (quote) {
       data = {
         price: quote.latestPrice,
+        change: quote.change,
+        changePercent: quote.changePercent,
         time: quote.latestUpdate
       };
 

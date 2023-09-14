@@ -30,6 +30,8 @@ import { StockResistance } from '../StockResistance';
       'slp', 'slp.symbol = s.symbol'
     )
     .addSelect('slp.price as "lastPrice"')
+    .addSelect('slp.change as "lastChange"')
+    .addSelect('slp."changePercent" as "lastChangePercent"')
     .addSelect('CASE WHEN slp.price < sfv."fairValueLo" THEN TRUE ELSE FALSE END as "isUnder"')
     .addSelect('CASE WHEN slp.price > sfv."fairValueHi" THEN TRUE ELSE FALSE END as "isOver"')
     .leftJoin(q =>
@@ -76,6 +78,12 @@ export class StockLatestPaidInformation {
 
   @ViewColumn()
   lastPrice: number;
+
+  @ViewColumn()
+  lastChange: number;
+
+  @ViewColumn()
+  lastChangePercent: number;
 
   @ViewColumn()
   isUnder: boolean;

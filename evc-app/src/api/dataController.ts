@@ -10,9 +10,9 @@ import { redisCache } from '../services/redisCache';
 import * as parse from 'csv-parse/lib/sync';
 import { StockSupport } from '../entity/StockSupport';
 import { StockResistance } from '../entity/StockResistance';
-import { UnusalOptionActivityStocks } from '../entity/UnusalOptionActivityStocks';
+import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
 import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
-import { UnusalOptionActivityIndices } from '../entity/UnusalOptionActivityIndices';
+import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
 import { searchUnusalOptionsActivity } from '../utils/searchUnusalOptionsActivity';
 
 function handleCsvUpload(onRow: (row: object) => Promise<void>) {
@@ -77,12 +77,12 @@ export const uploadResistanceCsv = handleCsvUpload(async row => {
     .execute();
 })
 
-export const uploadUoaStocksCsv = handleCsvUpload(async row => {
+export const uploadUoaStockCsv = handleCsvUpload(async row => {
   await getManager()
     .createQueryBuilder()
     .insert()
-    .into(UnusalOptionActivityStocks)
-    .values(row as UnusalOptionActivityStocks)
+    .into(UnusalOptionActivityStock)
+    .values(row as UnusalOptionActivityStock)
     .execute();
 })
 
@@ -95,18 +95,18 @@ export const uploadUoaEtfsCsv = handleCsvUpload(async row => {
     .execute();
 })
 
-export const uploadUoaIndicesCsv = handleCsvUpload(async row => {
+export const uploadUoaIndexCsv = handleCsvUpload(async row => {
   await getManager()
     .createQueryBuilder()
     .insert()
-    .into(UnusalOptionActivityIndices)
-    .values(row as UnusalOptionActivityIndices)
+    .into(UnusalOptionActivityIndex)
+    .values(row as UnusalOptionActivityIndex)
     .execute();
 })
 
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
-  const list = await searchUnusalOptionsActivity('stocks', req.query);
+  const list = await searchUnusalOptionsActivity('stock', req.query);
   res.json(list);
 });
 
@@ -116,9 +116,9 @@ export const listUoaEtfs = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const listUoaIndices = handlerWrapper(async (req, res) => {
+export const listUoaindex = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
-  const list = await searchUnusalOptionsActivity('indices', req.query);
+  const list = await searchUnusalOptionsActivity('index', req.query);
   res.json(list);
 });
 

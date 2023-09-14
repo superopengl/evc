@@ -34,6 +34,7 @@ const TagsSettingPage = () => {
           onList={listUserTags}
           onSave={saveUserTag}
           onDelete={deleteUserTag}
+          showOfficialOnly={false}
         />
 
       </Col>

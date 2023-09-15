@@ -2,63 +2,29 @@ import { getRepository } from 'typeorm';
 import { refreshMaterializedView } from '../src/db';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { singleBatchRequest } from '../src/services/iexService';
-import { StockIexEpsInfo, syncManyStockEps } from '../src/services/stockEpsService';
+import { syncStockEps } from '../src/services/stockEpsService';
 import { executeWithDataEvents } from '../src/services/dataLogService';
-
-
-async function udpateDatabase(iexBatchResponse) {
-  const epsInfo: StockIexEpsInfo[] = [];
-  for (const item of Object.values(iexBatchResponse)) {
-    const { symbol, earnings } = (item as any).earnings;
-    if (symbol && earnings?.length) {
-      for (const earning of earnings) {
-        epsInfo.push({
-          symbol,
-          fiscalPeriod: earning.fiscalPeriod,
-          reportDate: earning.EPSReportDate,
-          value: earning.actualEPS,
-        });
-      }
-    }
-  }
-
-  await syncManyStockEps(epsInfo);
-}
-
-async function syncIexToDatabase(symbols: string[]) {
-  const types = ['earnings'];
-  const params = { last: 6 };
-  const resp = await singleBatchRequest(symbols, types, params);
-  await udpateDatabase(resp);
-}
+import { from, interval } from 'rxjs';
+import { delay, concatMap, take, map } from 'rxjs/operators';
+import * as sleep from 'sleep-promise';
 
 const JOB_NAME = 'stock-eps';
 
+const MAX_CALL_TIMES_PER_MINUTE = 4;
+
 start(JOB_NAME, async () => {
+  const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
   const stocks = await getRepository(Stock)
     .createQueryBuilder()
     .select('symbol')
     .getRawMany();
   const symbols = stocks.map(s => s.symbol);
 
-  const batchSize = 100;
-  let round = 0;
-  const total = Math.ceil(symbols.length / batchSize);
-
-  let batchSymbols = [];
-  for (const symbol of symbols) {
-    batchSymbols.push(symbol);
-    if (batchSymbols.length === batchSize) {
-      console.log(JOB_NAME, `${++round}/${total}`);
-      await syncIexToDatabase(batchSymbols);
-      batchSymbols = [];
-    }
-  }
-
-  if (batchSymbols.length > 0) {
-    console.log(JOB_NAME, `${++round}/${total}`);
-    await syncIexToDatabase(batchSymbols);
+  let count = 0;
+  for await(const symbol of symbols) {
+        await syncStockEps(symbol);
+        console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
+        await sleep(sleepTime);
   }
 
   await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);

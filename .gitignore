@@ -16,3 +16,4 @@ terraform.tfstate.*
 .terraform.tfstate.*
 devops/evc-key.pem
 evc-app/www
+evc-app/.env

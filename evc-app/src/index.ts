@@ -13,6 +13,8 @@ function validateEnvVars() {
     'EVC_WEB_DOMAIN_NAME',
     'EVC_API_DOMAIN_NAME',
     'EVC_GOOGLE_SSO_CLIENT_SECRET',
+    'ALPHAVANTAGE_API_ENDPOINT',
+    'ALPHAVANTAGE_API_KEY',
   ];
 
   const missingVars = requiredEnvVars.filter(x => !process.env[x]);

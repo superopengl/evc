@@ -1,4 +1,4 @@
-import { Space, PageHeader, Tag } from 'antd';
+import { Space, PageHeader, Tag, Button, Modal } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -13,9 +13,10 @@ import StockDisplayPanel from 'components/StockDisplayPanel';
 import { notify } from 'util/notify';
 import StockAdminPanel from 'components/StockAdminPanel';
 import TagSelect from 'components/TagSelect';
+import { TagsOutlined } from '@ant-design/icons';
 
 
-const StockFreePage = (props) => {
+const StockDetailPage = (props) => {
   const { symbol } = props;
 
   const context = React.useContext(GlobalContext);
@@ -24,6 +25,7 @@ const StockFreePage = (props) => {
   const [watched, setWatched] = React.useState();
   const [loading, setLoading] = React.useState(true);
   const [stockTags, setStockTags] = React.useState([]);
+  const [editTagVisible, setEditTagVisible] = React.useState(false);
 
   const loadEntity = async () => {
     if (!symbol) {
@@ -82,12 +84,19 @@ const StockFreePage = (props) => {
             {stock?.isOver ? <Tag color="yellow">over valued</Tag> : stock?.isUnder ? <Tag color="cyan">under valued</Tag> : null}
             {isMemberOrFree && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
           </Space>}
+          extra={[
+            <Button type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button>
+          ]}
         >
-          {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={!isAdminOrAgent} />}
+          {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
 
           {isAdminOrAgent && <StockAdminPanel stock={stock} />}
 
         </PageHeader>
+        <Modal
+          title="Edit Tags"
+          visible={editTagVisible}
+        ></Modal>
 
         {stock && <StockDisplayPanel stock={stock} />}
       </>}
@@ -95,10 +104,10 @@ const StockFreePage = (props) => {
   );
 };
 
-StockFreePage.propTypes = {
+StockDetailPage.propTypes = {
   symbol: PropTypes.string.isRequired,
 };
 
-StockFreePage.defaultProps = {};
+StockDetailPage.defaultProps = {};
 
-export default withRouter(StockFreePage);
+export default withRouter(StockDetailPage);

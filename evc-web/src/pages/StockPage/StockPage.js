@@ -2,8 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { GlobalContext } from 'contexts/GlobalContext';
-import StockAdminPage from './StockAdminPage';
-import StockFreePage from './StockFreePage';
+import StockDetailPage from './StockDetailPage';
 
 
 const ContainerStyled = styled.div`
@@ -25,8 +24,7 @@ const StockPage = (props) => {
 
   return (
       <ContainerStyled>
-        <StockFreePage symbol={symbol} />
-        {/* {isAdminOrAgent ? <StockAdminPage symbol={symbol} /> : <StockFreePage symbol={symbol} />} */}
+        <StockDetailPage symbol={symbol} />
       </ContainerStyled>
   );
 };

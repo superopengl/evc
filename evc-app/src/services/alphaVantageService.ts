@@ -11,7 +11,11 @@ export async function getEarnings(symbol: string, howManyQuarters = 4) {
     symbol,
   });
   const quarterlyEarnings = resp?.quarterlyEarnings || [];
-  return _.take(quarterlyEarnings, howManyQuarters);
+  const result = _.chain(quarterlyEarnings)
+    .filter(x => _.isFinite(+(x.reportedEPS)))
+    .take(howManyQuarters)
+    .value();
+  return result;
 }
 
 async function requestAlphaVantageApi(query?: object) {

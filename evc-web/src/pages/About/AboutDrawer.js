@@ -26,7 +26,7 @@ const gitVersion = process.env.REACT_APP_GIT_HASH;
 
 const AboutDrawer = (props) => {
 
-  const {staticContext, ...other} = props;
+  const { staticContext, ...other } = props;
 
   return (
     <StyledDrawer
@@ -38,17 +38,20 @@ const AboutDrawer = (props) => {
       {...other}
     >
       <Paragraph>
-      About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck 
+        About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck
       </Paragraph>
       <Divider />
       <Paragraph>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</Paragraph>
       <Paragraph>Version {gitVersion}</Paragraph>
       <Paragraph><a href="/terms_and_conditions" target="_blank">Terms & Conditions</a> | <a href="/privacy_policy" target="_blank">Privacy Policy</a> </Paragraph>
       <Divider />
+      Data is provided by IEX Cloud <a href="https://iexcloud.io" target="_blank" rel="noreferrer">https://iexcloud.io</a>
+      <Divider />
       <Link href="https://www.techseeding.com.au" target="_blank">
         Technical solution by TECHSEEDING PTY LTD.
+        <br />https://www.techseeding.com.au
       <div style={{ marginTop: 5 }}><img src="https://www.techseeding.com.au/logo-bw.png" width="120px" height="auto" alt="Techseeding logo"></img></div>
-          </Link>
+      </Link>
     </StyledDrawer>
   );
 };

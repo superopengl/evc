@@ -10,7 +10,7 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>, option
   let connection: Connection = null;
   const eventId = uuidv4();
   const shouldSyncSchema = !!options?.syncSchema;
-  const oneTimeRun = !!options?.daemon;
+  const oneTimeRun = !options?.daemon;
   let error;
   try {
     dotenv.config();

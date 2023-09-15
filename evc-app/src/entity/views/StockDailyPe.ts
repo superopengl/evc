@@ -14,7 +14,6 @@ import { StockDailyClose } from '../StockDailyClose';
         'sc.symbol',
         'sc.date',
         'sc.close',
-        'sc."extendedClose"',
         'eps.value as "epsValue"',
         'rank() over (partition by sc.symbol, sc.date order by eps."reportDate" desc)'
       ]),
@@ -23,19 +22,17 @@ import { StockDailyClose } from '../StockDailyClose';
         'symbol',
         'date',
         'close',
-        '"extendedClose"',
         'sum("epsValue") as "ttmEps"',
       ])
       .where('rank <= 4')
-      .groupBy('symbol, date, close, "extendedClose"')
+      .groupBy('symbol, date, close')
     , 'x')
     .select([
       'symbol',
       'date',
       'close',
-      '"extendedClose"',
       '"ttmEps"',
-      'CASE WHEN "ttmEps" > 0 THEN COALESCE("extendedClose", close) / "ttmEps" ELSE NULL END as pe',
+      'CASE WHEN "ttmEps" > 0 THEN close / "ttmEps" ELSE NULL END as pe',
     ])
 })
 export class StockDailyPe {

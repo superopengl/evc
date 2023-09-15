@@ -14,9 +14,14 @@ const MAX_CALL_TIMES_PER_MINUTE = 70;
 start(JOB_NAME, async () => {
   const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
   const stocks = await getRepository(Stock)
-    .createQueryBuilder()
-    .select('symbol')
-    .getRawMany();
+    .find({
+      order: {
+        symbol: 'ASC'
+      },
+      select: [
+        'symbol'
+      ]
+    });
   const symbols = stocks.map(s => s.symbol);
 
   let count = 0;

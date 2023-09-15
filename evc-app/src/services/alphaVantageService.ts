@@ -18,6 +18,28 @@ export async function getEarnings(symbol: string, howManyQuarters = 4) {
   return result;
 }
 
+export async function getHistoricalClose(symbol: string, days = 1) {
+  const resp = await requestAlphaVantageApi({
+    function: 'TIME_SERIES_DAILY',
+    symbol,
+    datatype: 'json',
+    outputsize: days <= 100 ? 'compact' : 'full'
+  });
+  const list = resp['Time Series (Daily)'];
+
+  const result = _.chain(Object.entries(list))
+    .map(([date, value]) => ({
+      date,
+      close: value['4. close']
+    }))
+    .filter(x => _.isFinite(+(x.value)))
+    .take(days)
+    .value();
+
+  return result;
+}
+
+
 async function requestAlphaVantageApi(query?: object) {
   const queryParams = queryString.stringify({
     ...query,

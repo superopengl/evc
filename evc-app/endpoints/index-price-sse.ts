@@ -153,4 +153,4 @@ start(JOB_NAME, async () => {
   } catch (e) {
     process.exit(1);
   }
-});
+}, { daemon: true });

@@ -21,7 +21,7 @@ height: 100%;
 .ant-pro-sider-layout-side {
   margin-top: 64px;
   height: calc(100vh - 64px) !important;
-}import { getMyAccount } from '../../../../evc-app/src/api/accountController';
+}
 
 `;
 

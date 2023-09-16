@@ -33,7 +33,7 @@ import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
 import { GiReceiveMoney, GiRadarSweep, GiPayMoney } from 'react-icons/gi';
-import {FaMoneyBillWave} from 'react-icons/fa';
+import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
 import UnusualOptionsActivityPage from 'pages/AdminDashboard/UnusualOptionsActivityPage';
@@ -321,11 +321,11 @@ const AppLoggedIn = props => {
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}
     />
-    <EarnCommissionModal
+    {(isMember || isFree) && <EarnCommissionModal
       visible={earnCommissionVisible}
       onOk={() => setEarnCommissionVisible(false)}
       onCancel={() => setEarnCommissionVisible(false)}
-    />
+    />}
   </StyledLayout>
 }
 

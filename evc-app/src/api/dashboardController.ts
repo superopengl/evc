@@ -8,20 +8,29 @@ import { StockLastFairValue } from '../entity/views/StockLastFairValue';
 import { StockSupport } from '../entity/StockSupport';
 import { StockResistance } from '../entity/StockResistance';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
+import { Stock } from '../entity/Stock';
+import { notExistsQuery } from '../utils/existsQuery';
 
 
 export const getAdminDashboard = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
 
-  const pleas = await getRepository(StockPlea).find({
-    order: {
-      count: 'DESC'
-    },
-    select: [
+  const pleas = await getManager()
+    .getRepository(StockPlea)
+    .createQueryBuilder('p')
+    .where(
+      notExistsQuery(
+        getRepository(Stock)
+          .createQueryBuilder('s')
+          .where('s.symbol = p.symbol')
+      )
+    )
+    .select([
       'symbol',
       'count'
-    ]
-  });
+    ])
+    .orderBy('count', 'DESC')
+    .getRawMany();
 
   const noFairValuesByInvalidTtmEps = await getManager()
     .createQueryBuilder()

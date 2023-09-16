@@ -989,6 +989,12 @@ paths:
       responses:
         200:
           description: OK
+  /admin/flush_cache:
+    post:
+      operationId: flushCache
+      responses:
+        200:
+          description: OK
   /admin/data/support:
     post:
       operationId: uploadSupportCsv

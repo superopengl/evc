@@ -71,9 +71,9 @@ start(JOB_NAME, async () => {
 
   let count = 0;
   for await(const symbol of symbols) {
-        await syncStockEps(symbol);
+        // await syncStockEps(symbol);
         console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
-        await sleep(sleepTime);
+        // await sleep(sleepTime);
   }
 
   await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);

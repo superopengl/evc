@@ -1,9 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Typography, Button, Space, Card } from 'antd';
+import { Typography, Space, Card } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { MemberOnlyCard } from 'components/MemberOnlyCard';
-import { refreshMaterializedViews } from 'services/dataService';
+import { refreshMaterializedViews, flushCache } from 'services/dataService';
 import { LongRunningActionButton } from 'components/LongRunningActionButton';
 
 const { Text } = Typography;
@@ -16,10 +14,6 @@ const DataSourcePage = () => {
   React.useEffect(() => {
     loadList();
   }, []);
-
-  const handleUploadSupportCsv = async () => {
-
-  }
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -69,14 +63,12 @@ GOOG,2100,2200`}
               buttonText="ETFS"
               type="upload"
               uploadAction="/admin/data/uoa/etfs"
-              onOk={handleUploadSupportCsv}
             />
             <LongRunningActionButton
               operationKey="upload-resistance-index"
               buttonText="Index"
               type="upload"
               uploadAction="/admin/data/uoa/index"
-              onOk={handleUploadSupportCsv}
             />
           </Space>
         }
@@ -124,6 +116,19 @@ GOOG,MM/DD/YY,0.85`}
           onOk={refreshMaterializedViews}
         />}>
         Refresh Materialized Views. This operation should only be executed by data admins.
+      </Card>
+
+
+      <Card
+        bordered={false}
+        title="Flush Cache"
+        extra={<LongRunningActionButton
+          operationKey="flush-cache"
+          buttonText="Flush Cache"
+          type="button"
+          onOk={flushCache}
+        />}>
+        Flush all from the Redis cache.
       </Card>
     </Space>
   );

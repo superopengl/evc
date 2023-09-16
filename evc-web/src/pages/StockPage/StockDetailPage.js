@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { getStock, unwatchStock, watchStock } from 'services/stockService';
+import { deleteStock, getStock, unwatchStock, watchStock } from 'services/stockService';
 import { StockName } from 'components/StockName';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
@@ -13,7 +13,7 @@ import StockDisplayPanel from 'components/StockDisplayPanel';
 import { notify } from 'util/notify';
 import StockAdminPanel from 'components/StockAdminPanel';
 import TagSelect from 'components/TagSelect';
-import { TagsOutlined } from '@ant-design/icons';
+import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
 
 
 const StockDetailPage = (props) => {
@@ -67,6 +67,30 @@ const StockDetailPage = (props) => {
     setWatched(watching);
   }
 
+  const handleDeleteStock = () => {
+    Modal.confirm({
+      title: `Permanately delete ${symbol} from EVC`,
+      closable: true,
+      maskClosable: true,
+      content: 'This operation is not revertable. All the associabled data (supports, resistances, fair values) with this stock will be deleted. If you want to add this stock back, you can choose add new stock and manually fetch EPS, close data again.',
+      okButtonProps: {
+        type: 'primary',
+        danger: true
+      },
+      okText: `Yes, delete!`,
+      onOk: async () => {
+        try {
+          setLoading(true);
+          await deleteStock(symbol);
+          props.history.push('/stock');
+        } catch {
+          setLoading(false);
+        }
+      },
+      cancelText: `No, keep it`
+    });
+  }
+
   return (
     <>
       {(loading || !stock) ? <Loading /> : <>
@@ -85,8 +109,9 @@ const StockDetailPage = (props) => {
             {isMemberOrFree && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
           </Space>}
           extra={[
-            <Button type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button>
-          ]}
+            <Button type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button>,
+            isAdminOrAgent ? <Button type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null
+          ].filter(x => !!x)}
         >
           {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
 

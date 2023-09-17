@@ -1,8 +1,56 @@
-import { getManager } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
+import { Stock } from '../entity/Stock';
+
+export async function searchStockForGuest(queryInfo: StockSearchParams) {
+  const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued, inValued } = queryInfo;
+
+  const pageNo = +page || 1;
+  const pageSize = +size || 60;
+  assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
+
+  let query = getManager()
+    .createQueryBuilder()
+    .from(StockLatestPaidInformation, 's')
+
+  const orClause = [];
+  if (overValued) {
+    orClause.push('s."isOver" IS TRUE');
+  }
+  if (underValued) {
+    orClause.push('s."isUnder" IS TRUE');
+  }
+  if (inValued) {
+    orClause.push('(s."isOver" IS FALSE AND s."isUnder" IS FALSE)');
+  }
+  if (orClause.length) {
+    query = query.andWhere(`(${orClause.join(' OR ')})`);
+  }
+
+  const count = noCount ? null : await query.getCount();
+
+  const data = await query
+    .orderBy('symbol', 'ASC')
+    .offset((pageNo - 1) * pageSize)
+    .limit(pageSize)
+    .select([
+      `s.symbol as symbol`,
+      `s.company as company`,
+      `s."lastPrice" as "lastPrice"`,
+      `s."isUnder" as "isUnder"`,
+      `s."isOver" as "isOver"`,
+    ])
+    .execute();
+
+  return {
+    count,
+    page: pageNo,
+    data
+  };
+}
 
 export async function searchStock(queryInfo: StockSearchParams, includesWatchForUserId?: string) {
   const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued, inValued } = queryInfo;
@@ -31,13 +79,13 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
     if (watchOnly) {
       query = query.innerJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :userId', { userId }),
-      'sw',
-      'sw.symbol = s.symbol');
+        'sw',
+        'sw.symbol = s.symbol');
     } else {
       query = query.leftJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :userId', { userId }),
-      'sw',
-      'sw.symbol = s.symbol');
+        'sw',
+        'sw.symbol = s.symbol');
     }
   }
 

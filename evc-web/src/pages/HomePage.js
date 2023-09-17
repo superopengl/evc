@@ -60,6 +60,10 @@ const HomePage = (props) => {
   const [selectedSymbol, setSelectedSymbol] = React.useState();
   const [stockRadarVisible, setStockRadarVisible] = React.useState(false);
 
+  const handleStockListSymbolClick = (symbol) => {
+    setSelectedSymbol(symbol);
+  }
+
   return (
     <LayoutStyled>
       {/* <BarStyled></BarStyled> */}
@@ -96,6 +100,7 @@ const HomePage = (props) => {
       <StockGuestStockRadarDrawer 
         visible={stockRadarVisible}
         onClose={() => setStockRadarVisible(false)}
+        onSymbolClick={handleStockListSymbolClick}
       />
       <StockGuestPreviewDrawer
         symbol={selectedSymbol}

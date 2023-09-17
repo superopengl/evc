@@ -14,6 +14,8 @@ import { notify } from 'util/notify';
 import StockAdminPanel from 'components/StockAdminPanel';
 import TagSelect from 'components/TagSelect';
 import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
+import StockEditTagModal from 'components/StockEditTagModal';
+import { updateStock } from 'services/stockService';
 
 
 const StockDetailPage = (props) => {
@@ -91,16 +93,22 @@ const StockDetailPage = (props) => {
     });
   }
 
+  const handleTagChange = async (value) => {
+    stock.tags = value;
+    await updateStock(stock);
+    setEditTagVisible(false)
+  }
+
   return (
     <>
       {(loading || !stock) ? <Loading /> : <>
         <PageHeader
-          style={{ 
+          style={{
             backgroundColor: 'white',
             margin: -30,
             marginBottom: 0,
             padding: 30,
-           }}
+          }}
           ghost={false}
           onBack={() => props.history.goBack()}
           title={<Space size="middle">
@@ -118,10 +126,13 @@ const StockDetailPage = (props) => {
           {isAdminOrAgent && <StockAdminPanel stock={stock} />}
 
         </PageHeader>
-        <Modal
-          title="Edit Tags"
+        <StockEditTagModal
           visible={editTagVisible}
-        ></Modal>
+          value={stock.tags}
+          tags={stockTags}
+          onOk={handleTagChange}
+          onCancel={() => setEditTagVisible(false)}
+        />
 
         {stock && <StockDisplayPanel stock={stock} />}
       </>}

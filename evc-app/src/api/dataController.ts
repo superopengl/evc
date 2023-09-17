@@ -1,5 +1,5 @@
 
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager, LessThan } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert, assertRole } from '../utils/assert';
 import { User } from '../entity/User';
@@ -15,8 +15,10 @@ import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
 import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
 import { searchUnusalOptionsActivity } from '../utils/searchUnusalOptionsActivity';
 import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
+import { getUtcNow } from '../utils/getUtcNow';
+import * as moment from 'moment';
 
-function handleCsvUpload(onRow: (row: object) => Promise<void>) {
+function handleCsvUpload(onRow: (row: object) => Promise<void>, onFinish: () => Promise<void> = async () => { }) {
   return handlerWrapper(async (req, res) => {
     assertRole(req, 'admin', 'agent');
 
@@ -38,6 +40,8 @@ function handleCsvUpload(onRow: (row: object) => Promise<void>) {
       for (const row of rows) {
         await onRow(row);
       }
+
+      await onFinish();
     } finally {
       await redisCache.del(key);
     }
@@ -100,32 +104,53 @@ export const uploadPutCallRatioCsv = handleCsvUpload(async row => {
     .execute();
 })
 
-export const uploadUoaStockCsv = handleCsvUpload(async row => {
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(UnusalOptionActivityStock)
-    .values(row as UnusalOptionActivityStock)
-    .execute();
-})
+async function cleanUpOldUoaData(table) {
+  const now = getUtcNow();
+  const threeMonthAgo = moment(now).add(-3, 'month').toDate();
 
-export const uploadUoaEtfsCsv = handleCsvUpload(async row => {
   await getManager()
     .createQueryBuilder()
-    .insert()
-    .into(UnusalOptionActivityEtfs)
-    .values(row as UnusalOptionActivityEtfs)
+    .delete()
+    .from(table)
+    .where('time < :date', { date: threeMonthAgo })
     .execute();
-})
+}
 
-export const uploadUoaIndexCsv = handleCsvUpload(async row => {
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(UnusalOptionActivityIndex)
-    .values(row as UnusalOptionActivityIndex)
-    .execute();
-})
+export const uploadUoaStockCsv = handleCsvUpload(
+  async row => {
+    await getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(UnusalOptionActivityStock)
+      .values(row as UnusalOptionActivityStock)
+      .execute();
+  },
+  () => cleanUpOldUoaData(UnusalOptionActivityStock)
+);
+
+export const uploadUoaEtfsCsv = handleCsvUpload(
+  async row => {
+    await getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(UnusalOptionActivityEtfs)
+      .values(row as UnusalOptionActivityEtfs)
+      .execute();
+  },
+  () => cleanUpOldUoaData(UnusalOptionActivityEtfs)
+);
+
+export const uploadUoaIndexCsv = handleCsvUpload(
+  async row => {
+    await getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(UnusalOptionActivityIndex)
+      .values(row as UnusalOptionActivityIndex)
+      .execute();
+  },
+  () => cleanUpOldUoaData(UnusalOptionActivityIndex)
+);
 
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');

@@ -294,6 +294,8 @@ export const deleteStock = handlerWrapper(async (req, res) => {
     await getRepository(table).delete({ symbol });
   }
 
+  refreshMaterializedView().catch(() => {});
+
   res.json();
 });
 

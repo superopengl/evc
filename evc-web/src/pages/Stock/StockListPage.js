@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Layout, Space, Pagination, Button } from 'antd';
+import { Tooltip, Space, Pagination, Button } from 'antd';
 import StockList from '../../components/StockList';
 import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
@@ -64,7 +64,7 @@ const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
 const StockListPage = (props) => {
 
-  const {onItemClick} = props;
+  const { onItemClick } = props;
 
   const { create } = queryString.parse(props.location.search);
 
@@ -118,7 +118,7 @@ const StockListPage = (props) => {
 
 
   const handleItemClick = stock => {
-    if(onItemClick) {
+    if (onItemClick) {
       onItemClick(stock.symbol);
     } else {
       props.history.push(`/stock/${stock.symbol}`)
@@ -145,49 +145,52 @@ const StockListPage = (props) => {
     searchByQueryInfo({ ...queryInfo, page: 1, inValued: !queryInfo.inValued });
   }
 
+
+
   return (
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Space>
-              <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
-                {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
+    <>
+      <Space direction="vertical" style={{ width: '100%' }}>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Space>
+            <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
+              {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
             </OverButton>
-              <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
-                {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
+            <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
+              {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
             </UnderButton>
-              <Button type="default" onClick={handleToggleInValued}>
-                {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
+            <Button type="default" onClick={handleToggleInValued}>
+              {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
-            </Space>
-            {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
           </Space>
-          {(tags && !isGuest) && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
-          <StockList data={list} loading={loading} onItemClick={handleItemClick} />
-          <Pagination
-            current={queryInfo.page}
-            pageSize={queryInfo.size}
-            total={total}
-            defaultCurrent={queryInfo.page}
-            defaultPageSize={queryInfo.size}
-            pageSizeOptions={[10, 30, 60]}
-            showSizeChanger
-            showQuickJumper
-            showTotal={total => `Total ${total}`}
-            disabled={loading}
-            onChange={handlePaginationChange}
-            onShowSizeChange={(current, size) => {
-              searchByQueryInfo({ ...queryInfo, page: current, size });
-            }}
-          />
+          {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
         </Space>
-        <CreateStockModal
-          visible={createModalVisible}
-          defaultSymbol={create}
-          onOk={() => setCreateModalVisible(false)}
-          onCancel={() => setCreateModalVisible(false)}
-        />
-      </ContainerStyled>
+        {(tags) && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
+
+      </Space>
+      <StockList data={list} loading={loading} onItemClick={handleItemClick} />
+      <Pagination
+        current={queryInfo.page}
+        pageSize={queryInfo.size}
+        total={total}
+        defaultCurrent={queryInfo.page}
+        defaultPageSize={queryInfo.size}
+        pageSizeOptions={[10, 30, 60]}
+        showSizeChanger
+        showQuickJumper
+        showTotal={total => `Total ${total}`}
+        disabled={loading || isGuest}
+        onChange={handlePaginationChange}
+        onShowSizeChange={(current, size) => {
+          searchByQueryInfo({ ...queryInfo, page: current, size });
+        }}
+      />
+      <CreateStockModal
+        visible={createModalVisible}
+        defaultSymbol={create}
+        onOk={() => setCreateModalVisible(false)}
+        onCancel={() => setCreateModalVisible(false)}
+      />
+    </>
   );
 };
 
@@ -196,7 +199,6 @@ StockListPage.propTypes = {
 };
 
 StockListPage.defaultProps = {
-  onItemClick: () => {}
 };
 
 export default withRouter(StockListPage);

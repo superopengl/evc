@@ -10,12 +10,14 @@ import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 import { initializeConfig } from './utils/initializeConfig';
 import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
+import { StockDataInformation } from './entity/views/StockDataInformation';
 
 const views = [
   StockLatestPaidInformation,
   StockLatestFreeInformation,
   SubscriptionPaymentBalanceInformation,
   StockLastFairValue,
+  StockDataInformation,
 ];
 const mviews = [
   StockDailyPe,

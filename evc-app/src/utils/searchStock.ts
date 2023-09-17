@@ -6,31 +6,15 @@ import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInfor
 import { Stock } from '../entity/Stock';
 
 export async function searchStockForGuest(queryInfo: StockSearchParams) {
-  const { symbols, tags, page, size, watchOnly, noCount, overValued, underValued, inValued } = queryInfo;
-
-  const pageNo = +page || 1;
-  const pageSize = +size || 60;
+  const pageNo = 1;
+  const pageSize = 24;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
   let query = getManager()
     .createQueryBuilder()
     .from(StockLatestPaidInformation, 's')
 
-  const orClause = [];
-  if (overValued) {
-    orClause.push('s."isOver" IS TRUE');
-  }
-  if (underValued) {
-    orClause.push('s."isUnder" IS TRUE');
-  }
-  if (inValued) {
-    orClause.push('(s."isOver" IS FALSE AND s."isUnder" IS FALSE)');
-  }
-  if (orClause.length) {
-    query = query.andWhere(`(${orClause.join(' OR ')})`);
-  }
-
-  const count = noCount ? null : await query.getCount();
+  const count = await query.getCount();
 
   const data = await query
     .orderBy('symbol', 'ASC')

@@ -50,6 +50,7 @@ import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
 import { syncStockEps } from '../services/stockEpsService';
 import { syncStockHistoricalClose } from '../services/stockCloseService';
 import { refreshMaterializedView } from '../db';
+import { StockDataInformation } from '../entity/views/StockDataInformation';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -66,6 +67,14 @@ export const incrementStock = handlerWrapper((req, res) => {
     .catch(() => { });
 
   res.json();
+});
+
+export const getStockDataInfo = handlerWrapper(async (req, res) => {
+  const symbol = req.params.symbol.toUpperCase();
+
+  const result = await getRepository(StockDataInformation).findOne(symbol);
+
+  res.json(result);
 });
 
 export const getStock = handlerWrapper(async (req, res) => {

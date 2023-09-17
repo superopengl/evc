@@ -47,6 +47,9 @@ import { StockSupport } from '../entity/StockSupport';
 import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
 import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
 import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
+import { syncStockEps } from '../services/stockEpsService';
+import { syncStockHistoricalClose } from '../services/stockCloseService';
+import { refreshMaterializedView } from '../db';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -207,13 +210,24 @@ export const searchStockList = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+const initilizedNewStockData = async (symbol) => {
+  if (!symbol) {
+    return;
+  }
+  await syncStockEps(symbol, 5);
+  await syncStockHistoricalClose(symbol, 200);
+  await refreshMaterializedView();
+}
+
 export const createStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id: userId } } = req as any;
   const stock = new Stock();
-  const { symbol, company, tags } = req.body;
+  const { symbol: reqSymbol, company, tags } = req.body;
 
-  stock.symbol = symbol.toUpperCase();
+  const symbol = reqSymbol.toUpperCase();
+
+  stock.symbol = symbol;
   stock.company = company;
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({
@@ -224,6 +238,8 @@ export const createStock = handlerWrapper(async (req, res) => {
   }
 
   await getRepository(Stock).save(stock);
+
+  initilizedNewStockData(symbol).catch(err => {});
 
   res.json();
 });
@@ -275,7 +291,7 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   ];
 
   for (const table of tables) {
-    await getRepository(table).delete({symbol});
+    await getRepository(table).delete({ symbol });
   }
 
   res.json();

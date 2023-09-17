@@ -67,7 +67,7 @@ const CreateStockModal = props => {
       context.event$.next({ type: 'stock.created' });
 
       notify.success(
-        <>Successfully created stock <Link strong onClick={() => props.history.push(`/stock/${symbol}`)}>{symbol}</Link></>
+        <>Successfully created stock <Link strong onClick={() => props.history.push(`/stock/${symbol}`)}>{symbol}</Link>. System may take several minutes to prepare its EPS and historical close prices.</>
       )
     } catch {
       setLoading(false);

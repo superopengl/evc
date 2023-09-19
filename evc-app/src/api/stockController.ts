@@ -185,6 +185,8 @@ export const listStock = handlerWrapper(async (req, res) => {
       symbol: 'ASC'
     }
   });
+
+  res.set('Cache-Control', `public, max-age=600`);
   res.json(list);
 });
 
@@ -205,6 +207,7 @@ export const listHotStock = handlerWrapper(async (req, res) => {
     ])
     .getRawMany();
 
+  res.set('Cache-Control', `public, max-age=300`);
   res.json(list);
 });
 
@@ -212,7 +215,7 @@ export const searchStockList = handlerWrapper(async (req, res) => {
   const { user } = req as any;
   const query = req.body as StockSearchParams;
   let list: { count: number, page: number, data: any } = null;
-  
+
   if (user) {
     // For logged in users
     const { id, role } = user;
@@ -235,6 +238,32 @@ const initilizedNewStockData = async (symbol) => {
   await syncStockHistoricalClose(symbol, 200);
   await refreshMaterializedView();
 }
+
+async function addAndInitializeStock(symbol, companyName) {
+  const stock = new Stock();
+  stock.symbol = 'XXX'; // symbol.toUpperCase();
+  stock.company = companyName;
+
+  console.log(`Try auto-adding stock ${symbol}`);
+
+  try {
+    await getRepository(Stock).insert(stock);
+    await syncStockEps(symbol, 5);
+    await syncStockHistoricalClose(symbol, 200);
+
+    console.log(`Auto-added stock ${symbol} together with its EPS and its historical close prices`);
+  } catch {
+    // Does nothing
+  }
+}
+
+async function addAndInitlizedStockList(list: { symbol: string, companyName: string }[]) {
+  for (const item of list) {
+    await addAndInitializeStock(item.symbol, item.companyName);
+  }
+  await refreshMaterializedView();
+}
+
 
 export const createStock = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -287,7 +316,7 @@ export const updateStock = handlerWrapper(async (req, res) => {
 });
 
 export const deleteStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'member');
+  assertRole(req, 'admin');
   const symbol = req.params.symbol.toUpperCase();
 
   const tables = [
@@ -317,19 +346,24 @@ export const deleteStock = handlerWrapper(async (req, res) => {
 });
 
 export const getMostActive = handlerWrapper(async (req, res) => {
+  const data = await getMarketMostActive();
+  addAndInitlizedStockList(data).catch(() => { });
   res.set('Cache-Control', `public, max-age=300`);
-  res.json(await getMarketMostActive());
+  res.json(data);
 });
 
 export const getGainers = handlerWrapper(async (req, res) => {
-  res.set('Cache-Control', `public, max-age=300`);
   const data = await getMarketGainers();
+  addAndInitlizedStockList(data).catch(() => { });
+  res.set('Cache-Control', `public, max-age=300`);
   res.json(data);
 });
 
 export const getLosers = handlerWrapper(async (req, res) => {
+  const data = await getMarketLosers();
+  addAndInitlizedStockList(data).catch(() => { });
   res.set('Cache-Control', `public, max-age=300`);
-  res.json(await getMarketLosers());
+  res.json(data);
 });
 
 export const getStockInsider = handlerWrapper(async (req, res) => {
@@ -339,6 +373,7 @@ export const getStockInsider = handlerWrapper(async (req, res) => {
     getInsiderTransactions(symbol)
   ]);
 
+  res.set('Cache-Control', `public, max-age=600`);
   res.json({
     roster: _.chain(roster).orderBy(['position'], ['desc']).take(10).value(),
     summary: summary?.map(x => _.pick(x, [
@@ -372,6 +407,7 @@ export const getStockEarningToday = handlerWrapper(async (req, res) => {
 
 export const getStockNews = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
+  res.set('Cache-Control', `public, max-age=600`);
   res.json(await getNews(symbol));
 });
 
@@ -390,6 +426,7 @@ export const getPutCallRatioChart = handlerWrapper(async (req, res) => {
       date: 'DESC'
     }
   })
+  res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
@@ -431,6 +468,7 @@ export const getStockQuote = handlerWrapper(async (req, res) => {
 });
 
 export const getStockEvcInfo = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'member');
   const { symbol } = req.params;
   const result = await getRepository(StockLatestPaidInformation).findOne(symbol);
 

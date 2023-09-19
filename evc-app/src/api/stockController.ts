@@ -427,6 +427,13 @@ export const getStockQuote = handlerWrapper(async (req, res) => {
   res.json(quote);
 });
 
+export const getStockEvcInfo = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const result = await getRepository(StockLatestPaidInformation).findOne(symbol);
+
+  res.json(result);
+});
+
 export const getStockPrice = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const cacheKey = `stock.${symbol}.lastPrice`;

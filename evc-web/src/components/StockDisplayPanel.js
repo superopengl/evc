@@ -22,6 +22,7 @@ import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import styled from 'styled-components';
 import * as moment from 'moment';
 import StockAdminPanel from 'components/StockAdminPanel';
+import StockEvcInfoPanel from './StockEvcInfoPanel';
 const { Text } = Typography;
 
 const OldFairValueContainer = styled.div`
@@ -81,19 +82,21 @@ const StockDisplayPanel = (props) => {
           <Col flex="0 0 auto">
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
               <StockQuotePanel symbol={stock.symbol} />
-              {!hasPaid && <MemberOnlyCard
+              <MemberOnlyCard
                 title="Fair Value"
                 message="The latest fair value is only accessible to paid user"
                 paidOnly={true}
                 blockedComponent={
                   <OldFairValueContainer >
                     {stock.fairValues?.map((fv, i) => <Space key={i}>
-                      {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{color: 'white', fontWeight: 900}}>XXXX ~ XXXX</Text>}
+                      {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ color: 'white', fontWeight: 900 }}>XXXX ~ XXXX</Text>}
                       <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
                     </Space>)}
                   </OldFairValueContainer>
-                } />}
+                }>
+                <StockEvcInfoPanel symbol={stock.symbol} />
 
+              </MemberOnlyCard>
             </Space>
           </Col>
           <Col flex="1 0 auto">

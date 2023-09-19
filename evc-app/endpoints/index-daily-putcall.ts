@@ -9,7 +9,6 @@ import * as moment from 'moment';
 import { refreshMaterializedView } from '../src/db';
 import { executeWithDataEvents, logDataEvent } from '../src/services/dataLogService';
 import { v4 as uuidv4 } from 'uuid';
-import * as sleep from 'sleep-promise';
 
 async function udpateDatabase(iexBatchResponse) {
   const epsInfo: StockIexEpsInfo[] = [];
@@ -60,7 +59,7 @@ async function syncIexToDatabase(symbols: string[]) {
   await udpateDatabase(resp);
 }
 
-const JOB_NAME = 'daily-fatch';
+const JOB_NAME = 'daily-putCallRatio';
 
 start(JOB_NAME, async () => {
   const stocks = await getRepository(Stock)
@@ -69,12 +68,24 @@ start(JOB_NAME, async () => {
     .getRawMany();
   const symbols = stocks.map(s => s.symbol);
 
-  let count = 0;
-  for await(const symbol of symbols) {
-        // await syncStockEps(symbol);
-        console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
-        // await sleep(sleepTime);
+  const batchSize = 100;
+  let round = 0;
+  const total = Math.ceil(symbols.length / batchSize);
+
+  let batchSymbols = [];
+  for (const symbol of symbols) {
+    batchSymbols.push(symbol);
+    if (batchSymbols.length === batchSize) {
+      console.log(JOB_NAME, `${++round}/${total}`);
+      await syncIexToDatabase(batchSymbols);
+      batchSymbols = [];
+    }
+  }
+
+  if (batchSymbols.length > 0) {
+    console.log(JOB_NAME, `${++round}/${total}`);
+    await syncIexToDatabase(batchSymbols);
   }
 
   await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
-}, { daemon: true });
+});

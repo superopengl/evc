@@ -6,6 +6,7 @@ import NumberAmount from 'components/NumberAmount';
 import { withRouter } from 'react-router-dom';
 import { timer } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
+import ReactDOM from 'react-dom';
 
 const { Text, Title, Link: TextLink } = Typography;
 
@@ -100,13 +101,19 @@ const StockMostPanel = (props) => {
 
   const { title, onFetch, onSymbolClick } = props;
 
+  const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
   const pollData = () => {
-    return timer(0, 60 * 1000).pipe(
+    return timer(0, 5 * 60 * 1000).pipe(
       mergeMap(() => onFetch()),
       filter(data => !!data),
-    ).subscribe(data => setList(data));
+    ).subscribe(data => {
+      ReactDOM.unstable_batchedUpdates(() => {
+        setList(data);
+        setLoading(false);
+      })
+    });
   }
 
   React.useEffect(() => {
@@ -130,6 +137,7 @@ const StockMostPanel = (props) => {
       {title && <Title level={5}>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
+        loading={loading}
         columns={columnDef}
         rowKey="key"
         pagination={false}

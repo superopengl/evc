@@ -317,15 +317,18 @@ export const deleteStock = handlerWrapper(async (req, res) => {
 });
 
 export const getMostActive = handlerWrapper(async (req, res) => {
+  res.set('Cache-Control', `public, max-age=300`);
   res.json(await getMarketMostActive());
 });
 
 export const getGainers = handlerWrapper(async (req, res) => {
+  res.set('Cache-Control', `public, max-age=300`);
   const data = await getMarketGainers();
   res.json(data);
 });
 
 export const getLosers = handlerWrapper(async (req, res) => {
+  res.set('Cache-Control', `public, max-age=300`);
   res.json(await getMarketLosers());
 });
 

@@ -4,15 +4,6 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 @Entity()
 export class ReferralUserPolicy {
-  static scope = {
-    'default': {
-      deletedAt: IsNull()
-    },
-    'all': {
-      deletedAt: Not(IsNull())
-    }
-  };
-
   @PrimaryColumn('uuid')
   userId: string;
 
@@ -26,5 +17,6 @@ export class ReferralUserPolicy {
   by: string;
 
   @DeleteDateColumn()
+  @Index()
   deletedAt: Date;
 }

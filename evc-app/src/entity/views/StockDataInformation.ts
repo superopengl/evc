@@ -10,6 +10,7 @@ import { StockComputedPe90 } from './StockComputedPe90';
 
 
 @ViewEntity({
+  materialized: true,
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(Stock, 's')
     .leftJoin(q => q

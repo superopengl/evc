@@ -18,6 +18,7 @@ export class StockResistance {
   createdAt?: Date;
 
   @DeleteDateColumn()
+  @Index()
   deletedAt: Date;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })

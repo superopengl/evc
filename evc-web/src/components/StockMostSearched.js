@@ -100,7 +100,7 @@ const StockMostSearched = (props) => {
   const [list, setList] = React.useState([]);
 
   const pollData = () => {
-    return timer(0, 15 * 1000).pipe(
+    return timer(0, 5 * 60 * 1000).pipe(
       mergeMap(() => onFetch()),
       filter(data => !!data),
     ).subscribe(data => setList(data));

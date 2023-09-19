@@ -25,6 +25,6 @@ export async function initializeConfig() {
     .insert()
     .into(Config)
     .values(entities)
-    .onConflict(`(key) DO NOTHING`)
+    .orIgnore()
     .execute();
 }

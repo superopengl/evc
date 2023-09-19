@@ -80,7 +80,7 @@ export const uploadSupportCsv = handleCsvUpload(async row => {
     .insert()
     .into(StockSupport)
     .values(row as StockSupport)
-    .onConflict(`(symbol, lo, hi) DO NOTHING`)
+    .orIgnore()
     .execute();
 })
 
@@ -90,7 +90,7 @@ export const uploadResistanceCsv = handleCsvUpload(async row => {
     .insert()
     .into(StockResistance)
     .values(row as StockResistance)
-    .onConflict(`(symbol, lo, hi) DO NOTHING`)
+    .orIgnore()
     .execute();
 })
 

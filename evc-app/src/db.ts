@@ -77,7 +77,7 @@ async function dropMaterializedView() {
 }
 
 async function createIndexOnMaterilializedView() {
-  const list: {tableEntity: any, fields: string[]} [] = [
+  const list: { tableEntity: any, fields: string[] }[] = [
     {
       tableEntity: StockDataInformation,
       fields: ['symbol'],
@@ -107,17 +107,18 @@ async function createIndexOnMaterilializedView() {
       fields: ['symbol', 'date'],
     },
   ];
-  
-  for(const item of list) {
-    const {schema, tableName} = getRepository(item.tableEntity).metadata;
+
+  for (const item of list) {
+    const { schema, tableName } = getRepository(item.tableEntity).metadata;
     const idxName = `${tableName}_${item.fields.map(x => x.replace(/"/g, '')).join('_')}`;
     const fields = item.fields.join(',');
     await getManager().query(`CREATE INDEX ${idxName} ON "${schema}"."${tableName}" (${fields})`);
   }
 }
 
-export async function refreshMaterializedView() {
-  for (const viewEntity of mviews) {
+export async function refreshMaterializedView(mviewEnitity?: any) {
+  const targetViews = mviewEnitity ? [mviewEnitity] : mviews;
+  for (const viewEntity of targetViews) {
     const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
     await getManager().query(`REFRESH MATERIALIZED VIEW "${schema}"."${tableName}"`);
   }

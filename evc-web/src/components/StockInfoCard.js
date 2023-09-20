@@ -5,10 +5,11 @@ import { Link, withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
 import { StockName } from './StockName';
-import { unwatchStock, watchStock } from 'services/stockService';
+import { unwatchStock, watchStock, bellStock, unbellStock } from 'services/stockService';
 import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 import { LockFilled, LockOutlined } from '@ant-design/icons';
+import { StockBellButton } from './StockBellButton';
 
 const { Text } = Typography;
 
@@ -91,14 +92,15 @@ const TooltipLabel = props => <Tooltip title={props.message}>
 
 const HiddenNumber = props => {
   const list = new Array(props.count || 1).fill(null);
-  return list.map((x, i) => <Text className={`hidden-info`} key={i}><LockFilled/> paid member only</Text>)
+  return list.map((x, i) => <Text className={`hidden-info`} key={i}><LockFilled /> paid member only</Text>)
 }
 
 const StockInfoCard = (props) => {
 
-  const { value: stock, title, hoverable, actions, showWatch } = props;
+  const { value: stock, title, hoverable, actions, showWatch, showBell } = props;
 
   const [watched, setWatched] = React.useState(stock?.watched);
+  const [belled, setBelled] = React.useState(stock?.belled);
   const context = React.useContext(GlobalContext);
   const { role } = context;
   const isMember = role === 'member';
@@ -114,6 +116,15 @@ const StockInfoCard = (props) => {
     setWatched(watching);
   }
 
+  const handleToggleBell = async belling => {
+    if (belling) {
+      await bellStock(stock.symbol);
+    } else {
+      await unbellStock(stock.symbol);
+    }
+    setBelled(belling);
+  }
+
   const { isOver, isUnder } = stock;
   const className = isOver ? 'over-valued' : isUnder ? 'under-valued' : null;
 
@@ -123,14 +134,17 @@ const StockInfoCard = (props) => {
     bordered={false}
     type="inner"
     title={title ?? <StockName value={stock} />}
-    extra={isMember && showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
+    extra={<Space>
+      {isMember && showBell && <StockBellButton value={belled} onChange={handleToggleBell} />}
+      {isMember && showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
+    </Space>}
     onClick={props.onClick}
     hoverable={hoverable}
     actions={actions}
   >
-    <div align="start" style={{display: 'flex', width: '100%', justifyContent: 'stretch'}}>
+    <div align="start" style={{ display: 'flex', width: '100%', justifyContent: 'stretch' }}>
       <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{stock.lastPrice ?? 'N/A'}</Text>
-      <StyledTable style={{flexGrow: 1}}>
+      <StyledTable style={{ flexGrow: 1 }}>
         <tbody>
           {/* <tr>
           <td>
@@ -187,11 +201,13 @@ StockInfoCard.propTypes = {
   actions: PropTypes.array,
   title: PropTypes.object,
   showWatch: PropTypes.bool,
+  showBell: PropTypes.bool,
 };
 
 StockInfoCard.defaultProps = {
   title: null,
   showWatch: true,
+  showBell: false
 };
 
 export default withRouter(StockInfoCard);

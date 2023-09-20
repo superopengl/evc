@@ -14,7 +14,7 @@ const StyledList = styled(List)`
 
 const StockList = (props) => {
 
-  const { data, loading, onItemClick } = props;
+  const { data, loading, onItemClick, showBell } = props;
 
   return (
     <StyledList
@@ -36,6 +36,7 @@ const StockList = (props) => {
           value={stock}
           hoverable
           onClick={() => onItemClick(stock)}
+          showBell={showBell}
           />
         </List.Item>
       )}
@@ -47,9 +48,11 @@ const StockList = (props) => {
 StockList.propTypes = {
   data: PropTypes.array.isRequired,
   onItemClick: PropTypes.func,
+  showBell: PropTypes.bool,
 };
 
 StockList.defaultProps = {
+  showBell: false,
   onItemClick: () => {}
 };
 

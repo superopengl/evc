@@ -15,4 +15,7 @@ export class StockWatchList {
 
   @Column('uuid')
   userId: string;
+
+  @Column({default: true})
+  belled: boolean;
 }

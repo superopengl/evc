@@ -9,7 +9,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 const { Text, Title } = Typography;
 
 const StyledCard = styled(Card)`
-margin-bottom: 30px;
+// margin-bottom: 30px;
 `;
 
 export const MemberOnlyCard = (props) => {

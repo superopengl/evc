@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Typography, Space, List, Tooltip, Descriptions, Tag } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { getStockInsider } from 'services/stockService';
+import { getStockInsiderTransaction } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import INSIDER_LEGEND_INFOS from '../def/insiderLegendDef';
@@ -46,13 +46,13 @@ const span = {
 const StockInsiderTransactionPanel = (props) => {
 
   const { symbol } = props;
-  const [data, setData] = React.useState({});
+  const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const loadData = async () => {
     try {
       setLoading(true);
-      const data = await getStockInsider(symbol);
+      const data = await getStockInsiderTransaction(symbol) ?? [];
       ReactDOM.unstable_batchedUpdates(() => {
         setData(data);
         setLoading(false);
@@ -91,7 +91,7 @@ const StockInsiderTransactionPanel = (props) => {
           grid={{ column: 1 }}
           itemLayout="horizontal"
           size="small"
-          dataSource={data.summary?.reverse()}
+          dataSource={data}
           renderItem={item => (
             <List.Item>
               <Descriptions

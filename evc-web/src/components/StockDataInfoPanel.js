@@ -35,7 +35,7 @@ const StockDataInfoPanel = (props) => {
     return Object.entries(info).map(([key, value]) => ({
       key,
       value
-    }))
+    })).filter(x => x.key !== 'symbol')
   }
 
   React.useEffect(() => {

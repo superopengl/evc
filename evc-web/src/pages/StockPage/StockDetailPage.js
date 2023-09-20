@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { deleteStock, getStock, unwatchStock, watchStock } from 'services/stockService';
+import { deleteStock, getStock, unwatchStock, watchStock, bellStock, unbellStock } from 'services/stockService';
 import { StockName } from 'components/StockName';
 import { StockWatchButton } from 'components/StockWatchButton';
 import ReactDOM from "react-dom";
@@ -16,6 +16,7 @@ import TagSelect from 'components/TagSelect';
 import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
 import StockEditTagModal from 'components/StockEditTagModal';
 import { updateStock } from 'services/stockService';
+import { StockBellButton } from 'components/StockBellButton';
 
 const { Paragraph } = Typography;
 
@@ -26,6 +27,7 @@ const StockDetailPage = (props) => {
   const { role } = context;
   const [stock, setStock] = React.useState();
   const [watched, setWatched] = React.useState();
+  const [belled, setBelled] = React.useState(stock?.belled);
   const [loading, setLoading] = React.useState(true);
   const [stockTags, setStockTags] = React.useState([]);
   const [editTagVisible, setEditTagVisible] = React.useState(false);
@@ -55,6 +57,7 @@ const StockDetailPage = (props) => {
   }, [symbol]);
 
   const isMemberOrFree = ['member', 'free'].includes(role);
+  const isMember = 'member' === role;
   const isAdminOrAgent = ['admin', 'agent'].includes(role);
   const isGuest = role === 'guest';
 
@@ -107,6 +110,15 @@ const StockDetailPage = (props) => {
     setEditTagVisible(false)
   }
 
+  const handleToggleBell = async belling => {
+    if (belling) {
+      await bellStock(stock.symbol);
+    } else {
+      await unbellStock(stock.symbol);
+    }
+    setBelled(belling);
+  }
+
   return (
     <>
       {(loading || !stock) ? <Loading /> : <>
@@ -122,10 +134,12 @@ const StockDetailPage = (props) => {
           title={<Space size="middle">
             <StockName value={stock} />
             {stock?.isOver ? <Tag color="yellow">over valued</Tag> : stock?.isUnder ? <Tag color="cyan">under valued</Tag> : null}
-            {isMemberOrFree && <StockWatchButton size={20} value={watched} onChange={handleToggleWatch} />}
+
           </Space>}
           extra={[
-            <Button key="tag" type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button>,
+            isMember ? <StockBellButton key="bell" size={20} value={belled} onChange={handleToggleBell} /> : null,
+            isMemberOrFree ? <StockWatchButton key="watch" size={20} value={watched} onChange={handleToggleWatch} /> : null,
+            isAdminOrAgent ? <Button key="tag" type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button> : null,
             isAdminOrAgent ? <Button key="delete" type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null
           ].filter(x => !!x)}
         >

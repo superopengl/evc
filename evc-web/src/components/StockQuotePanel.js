@@ -1,20 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image, Tooltip, Modal, Card } from 'antd';
+import { Typography, Space, Card } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined, LockFilled } from '@ant-design/icons';
-import StockInfoCard from './StockInfoCard';
-import { StockName } from './StockName';
-import { FaCrown } from 'react-icons/fa';
-import { IconContext } from "react-icons";
 import { getStockQuote } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
-import { Loading } from './Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { filter, debounceTime } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
 import * as _ from 'lodash';
+import { Skeleton } from 'antd';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -84,38 +79,34 @@ const StockQuotePanel = (props) => {
     }
     const symbol = changeValue >= 0 ? '+' : '';
     const type = changeValue >= 0 ? 'success' : 'danger';
-    return <Text type={type}><small>{symbol}{changeValue} ({symbol}{changePrecent.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 3})})</small></Text>
-  }
-
-  if (loading) {
-    return <Loading />
+    return <Text type={type}><small>{symbol}{changeValue} ({symbol}{changePrecent.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 3 })})</small></Text>
   }
 
   const isIntra = quote.isUSMarketOpen;
-  const isBeforeHour = moment(quote.openTime).isAfter();
-  const isAfterHour = moment(quote.closeTime).isBefore();
 
   return (
     <Card
-    size="middle"
-    title={null}
+      size="middle"
+      title={null}
     >
-
-    <Space size="small" direction="vertical">
-      <div>
-        <Text style={{ fontSize: 30 }} strong>{quote.latestPrice} {getDeltaComponent(quote.change, quote.changePercent)}</Text>
-        <div><Text type="secondary"><small>Price At: {moment(quote.latestUpdate).format('h:mm a')} EST</small></Text></div>
-      </div>
-      {!isIntra && quote.extendedPrice && <div>
-        <Text style={{ fontSize: 20 }} strong>{quote.extendedPrice} {getDeltaComponent(quote.extendedChange, quote.extendedChangePercent)}</Text>
-        <div>
-          <Space size="small">
-            <Text type="secondary"><small>extended hours</small></Text>
-            <TimeAgo direction="horizontal" value={quote.extendedPriceTime} />
-          </Space>
-        </div>
-      </div>}
-    </Space>
+      {loading ?
+        <Skeleton active />
+        :
+        <Space size="small" direction="vertical">
+          <div>
+            <Text style={{ fontSize: 30 }} strong>{quote.latestPrice} {getDeltaComponent(quote.change, quote.changePercent)}</Text>
+            <div><Text type="secondary"><small>Price At: {moment(quote.latestUpdate).format('h:mm a')} EST</small></Text></div>
+          </div>
+          {!isIntra && quote.extendedPrice && <div>
+            <Text style={{ fontSize: 20 }} strong>{quote.extendedPrice} {getDeltaComponent(quote.extendedChange, quote.extendedChangePercent)}</Text>
+            <div>
+              <Space size="small">
+                <Text type="secondary"><small>extended hours</small></Text>
+                <TimeAgo direction="horizontal" value={quote.extendedPriceTime} />
+              </Space>
+            </div>
+          </div>}
+        </Space>}
     </Card>
   );
 };

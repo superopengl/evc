@@ -1,6 +1,4 @@
 import { getManager } from 'typeorm';
-import { StockEps } from '../entity/StockEps';
-import { StockIexEpsInfo } from './stockEpsService';
 import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 
 

@@ -11,11 +11,13 @@ import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 import { initializeConfig } from './utils/initializeConfig';
 import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
+import { StockDeprecateSupport } from './entity/views/StockDeprecateSupport';
 
 const views = [
   StockLatestPaidInformation,
   StockLatestFreeInformation,
   SubscriptionPaymentBalanceInformation,
+  StockDeprecateSupport,
 ];
 const mviews = [
   StockDataInformation,

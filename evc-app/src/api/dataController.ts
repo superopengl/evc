@@ -155,18 +155,21 @@ export const uploadUoaIndexCsv = handleCsvUpload(
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
   const list = await searchUnusalOptionsActivity('stock', req.query);
+  res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaEtfs = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
   const list = await searchUnusalOptionsActivity('etfs', req.query);
+  res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaindex = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
   const list = await searchUnusalOptionsActivity('index', req.query);
+  res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 

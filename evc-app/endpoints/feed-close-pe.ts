@@ -36,7 +36,7 @@ start(JOB_NAME, async () => {
   const failed = [];
   for await (const symbol of symbols) {
     try {
-      await syncStockHistoricalClose(symbol);
+      await syncStockHistoricalClose(symbol, 10);
       console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
       await sleep(sleepTime);
     } catch (e) {

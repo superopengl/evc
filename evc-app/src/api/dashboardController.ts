@@ -4,7 +4,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from '../utils/assert';
 import { User } from '../entity/User';
 import { StockPlea } from '../entity/StockPlea';
-import { StockLastFairValue } from '../entity/views/StockLastFairValue';
+import { StockLatestFairValue } from '../entity/views/StockLatestFairValue';
 import { StockSupport } from '../entity/StockSupport';
 import { StockResistance } from '../entity/StockResistance';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
@@ -35,7 +35,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
   const noFairValuesByInvalidTtmEps = await getManager()
     .createQueryBuilder()
     .from(q => q
-      .from(StockLastFairValue, 'v')
+      .from(StockLatestFairValue, 'v')
       .where('"fairValueLo" IS NULL')
       .andWhere('"ttmEps" <= 0')
       .select('symbol'),
@@ -46,7 +46,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
   const noFairValuesByMissingEpsData = await getManager()
     .createQueryBuilder()
     .from(q => q
-      .from(StockLastFairValue, 'v')
+      .from(StockLatestFairValue, 'v')
       .where('"fairValueLo" IS NULL')
       .andWhere('"ttmEps" IS NULL')
       .select('symbol'),

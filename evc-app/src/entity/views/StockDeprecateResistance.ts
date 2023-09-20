@@ -2,7 +2,7 @@ import { ViewEntity, Connection, PrimaryColumn, ViewColumn } from 'typeorm';
 import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
 import { StockSupport } from '../StockSupport';
-import { StockLastFairValue } from './StockLastFairValue';
+import { StockLatestFairValue } from './StockLatestFairValue';
 import { StockWatchList } from '../StockWatchList';
 import { Stock } from '../Stock';
 import { StockResistance } from '../StockResistance';
@@ -12,7 +12,7 @@ import { StockResistance } from '../StockResistance';
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(StockResistance, 'sr')
     .innerJoin(Stock, 's', 'sr.symbol = s.symbol')
-    .innerJoin(StockLastFairValue, 'fv', 'fv.symbol = sr.symbol AND fv."fairValueLo" > sr.hi')
+    .innerJoin(StockLatestFairValue, 'fv', 'fv.symbol = sr.symbol AND fv."fairValueLo" > sr.hi')
     .leftJoin(StockWatchList, 'wh', 'sr.symbol = wh.symbol AND wh.belled IS TRUE')
     .select([
       `sr.id as "resistanceId"`,
@@ -25,7 +25,7 @@ import { StockResistance } from '../StockResistance';
       `wh."userId" as "userId"`,
     ])
 })
-export class StockDeprecateSupport {
+export class StockDeprecateResistance {
   @ViewColumn()
   resistanceId: string;
 

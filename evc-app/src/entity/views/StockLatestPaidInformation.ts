@@ -1,7 +1,7 @@
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
 import { Stock } from '../Stock';
 import { StockLastPrice } from '../StockLastPrice';
-import { StockLastFairValue } from './StockLastFairValue';
+import { StockLatestFairValue } from './StockLatestFairValue';
 import { StockSupport } from '../StockSupport';
 import { StockResistance } from '../StockResistance';
 
@@ -21,7 +21,7 @@ import { StockResistance } from '../StockResistance';
     'tg', 'tg.symbol = s.symbol'
     )
     .addSelect('tg.tags')
-    .leftJoin(q => q.from(StockLastFairValue, 'sfv'),
+    .leftJoin(q => q.from(StockLatestFairValue, 'sfv'),
       'sfv', 'sfv.symbol = s.symbol'
     )
     .addSelect('sfv."fairValueLo"')

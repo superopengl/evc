@@ -30,7 +30,7 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
       'COALESCE(sp."fairValueHi", s."fairValueHi") as "fairValueHi"',
     ])
 })
-export class StockLastFairValue {
+export class StockLatestFairValue {
   @ViewColumn()
   symbol: string;
 

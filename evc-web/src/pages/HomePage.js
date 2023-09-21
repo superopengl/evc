@@ -12,7 +12,7 @@ import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
 import { StockGuestPreviewDrawer } from 'components/StockGuestPreviewDrawer';
 import { Link, withRouter } from 'react-router-dom';
 import { StockGuestStockRadarDrawer } from 'components/StockGuestStockRadarDrawer';
-
+import {LocaleSelector} from 'components/LocaleSelector';
 
 const { Content } = Layout;
 
@@ -81,7 +81,7 @@ const HomePage = (props) => {
               <Button size="large" type="link" href="#pricing">Pricing</Button>
               {/* <Link to="/signup"><Button size="large" type="link">Sign Up</Button></Link> */}
               <Link to="/login"><Button size="large" type="link">Login</Button></Link>
-              {/* <LocaleSelector bordered={false} style={{ color: 'white', width: 130 }} size="large" defaultValue="en-US" /> */}
+              <LocaleSelector bordered={false} style={{ color: 'white', width: 100 }} size="large" defaultValue="en-US" />
             </Space>
           </HeadMenu>
         </div>
@@ -107,8 +107,8 @@ const HomePage = (props) => {
         visible={!!selectedSymbol}
         onClose={() => setSelectedSymbol()}
       />
-      <CookieConsent location="top" overlay expires={999} buttonStyle={{ borderRadius: 4 }} buttonText="I understand">
-        This website uses cookies to enhance the user experience.
+      <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
+        We use cookies to improve your experiences on our website.
         </CookieConsent>
     </LayoutStyled>
   );

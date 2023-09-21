@@ -9,6 +9,15 @@ const cloudwatchevents = new AWS.CloudWatchEvents();
 const NY_TIMEZONE = 'America/New_York';
 const UTC_TIMEZONE = 'UTC'
 
+/**
+ * The cron to trigger this task should be
+ *  In March, the second Sunday 03:10 New York time => 07:10 UTC time
+ *      cron(10 7 ? MAR 1#2 *)
+ * 
+ *  In November, the first Sunday 01:10 New York time => 05:10 UTC time
+ *      cron(10 5 ? NOV 1#1 *)
+ */
+
 const defs = [
     {
         name: 'daily-eps',

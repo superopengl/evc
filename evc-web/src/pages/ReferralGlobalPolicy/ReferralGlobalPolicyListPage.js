@@ -243,7 +243,7 @@ const ReferralGlobalPolicyListPage = () => {
         visible={newPolicy}
         destroyOnClose={true}
         closable={true}
-        maskClosable={false}
+        maskClosable={true}
         width={400}
         onClose={() => setNewPolicy()}
         footer={null}

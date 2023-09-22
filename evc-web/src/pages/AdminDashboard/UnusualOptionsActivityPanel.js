@@ -23,7 +23,7 @@ width: 100%;
 
 const DEFAULT_QUERY_INFO = {
   page: 1,
-  size: 60,
+  size: 50,
 };
 
 const columnDef = [
@@ -48,12 +48,12 @@ const columnDef = [
     render: (value) => value,
   },
   {
-    title: 'Exp Date',
+    title: 'Expiration Date',
     dataIndex: 'expDate',
     render: (value) => moment(value).format('D MMM YYYY'),
   },
   {
-    title: 'DTE',
+    title: 'Days To Expiration',
     dataIndex: 'dte',
     render: (value) => value,
   },
@@ -78,12 +78,12 @@ const columnDef = [
     render: (value) => value,
   },
   {
-    title: 'Open Int',
+    title: 'Open Interest',
     dataIndex: 'openInt',
     render: (value) => value,
   },
   {
-    title: 'Vol/OI',
+    title: 'Volume/Open Interest',
     dataIndex: 'voloi',
     render: (value) => `${value} %`,
   },
@@ -93,7 +93,7 @@ const columnDef = [
     render: (value) => value,
   },
   {
-    title: 'Time',
+    title: 'Trade Date',
     dataIndex: 'time',
     render: (value) => moment(value).format('D MMM YYYY'),
   }
@@ -153,7 +153,8 @@ const UnusualOptionsActivityPanel = (props) => {
         dataSource={list}
         loading={loading}
         pagination={false}
-        style={{marginBottom: '2rem'}}
+        style={{marginBottom: '2rem', height: 'calc(100vh - 320px)'}}
+        scroll={{y: 'calc(100vh - 400px)'}}
       ></Table>
       <Pagination
         current={queryInfo.page}
@@ -161,7 +162,7 @@ const UnusualOptionsActivityPanel = (props) => {
         total={total}
         defaultCurrent={queryInfo.page}
         defaultPageSize={queryInfo.size}
-        pageSizeOptions={[10, 30, 60]}
+        pageSizeOptions={[20, 50, 100]}
         showSizeChanger
         showQuickJumper
         showTotal={total => `Total ${total}`}

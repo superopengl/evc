@@ -13,13 +13,6 @@ const JOB_NAME = 'feed-eps';
 const MAX_CALL_TIMES_PER_MINUTE = 50;
 
 start(JOB_NAME, async () => {
-
-  const isMarketOpen = await isUSMarketOpen();
-  if (isMarketOpen) {
-    console.warn('Market is still open');
-    return;
-  }
-
   const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
   const stocks = await getRepository(Stock)
     .find({

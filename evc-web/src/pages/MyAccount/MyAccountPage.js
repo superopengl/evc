@@ -20,7 +20,7 @@ import BalanceHistoryListModal from 'components/BalanceHistoryListModal';
 import MySubscriptionHistoryDrawer from './MySubscriptionHistoryDrawer';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
-import CashBackRequestForm from 'pages/Profile/CashBackRequestForm';
+import CommissionWithdrawalForm from 'pages/Profile/CommissionWithdrawalForm';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -281,7 +281,7 @@ const MyAccountPage = (props) => {
         onOk={() => setCashBackVisible(false)}
         onCancel={() => setCashBackVisible(false)}
         >
-        <CashBackRequestForm onOk={() => setCashBackVisible(false)} />
+        <CommissionWithdrawalForm onOk={() => setCashBackVisible(false)} />
       </Modal>
     </ContainerStyled>
   );

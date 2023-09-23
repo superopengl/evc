@@ -41,51 +41,10 @@ const Container = styled.div`
   }
 }`;
 
-const FileIconContainer = styled.div`
-  display: inline-block;
-  position: relative;
-`;
 
-
-const FileIconWithOverlay = props => {
-  const { id, name, showsLastReadAt, showsSignedAt } = props
-
-  const [file, setFile] = React.useState();
-
-  const loadEntity = async () => {
-    if (showsLastReadAt || showsSignedAt) {
-      const file = await getFile(id);
-      setFile(file);
-    }
-  }
-
-  React.useEffect(() => {
-    loadEntity();
-  }, []);
-
-  if (!file) {
-    return <FileIcon name={name} />
-  }
-
-  const { lastReadAt, signedAt } = file;
-
-  return <Popover content={
-    <Space direction="vertical">
-        <TimeAgo value={lastReadAt} prefix="Last read:" direction="horizontal" defaultContent="Unread"/>
-        <TimeAgo value={signedAt} prefix="Signed at:" direction="horizontal" defaultContent="Unsigned"/>
-    </Space>
-  } trigger="click">
-    <FileIconContainer>
-      <FileIcon name={name} />
-      {!lastReadAt ? <Badge color="blue" style={{ position: 'absolute', top: -8, left: -8 }} /> : 
-        !signedAt ? <Badge color="red" style={{ position: 'absolute', top: -8, left: -8 }} /> : 
-        null}
-    </FileIconContainer>
-  </Popover>
-}
 
 export const FileUploader = (props) => {
-  const { onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList } = props;
+  const { onUploadingChange, showUploadList } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -120,8 +79,8 @@ export const FileUploader = (props) => {
     const { file, fileList } = info;
     setFileList(fileList);
 
-    if(file.status === 'done') {
-      props.onAdd( _.get(file, 'response.id', file.uid));
+    if (file.status === 'done') {
+      props.onAdd(_.get(file, 'response.id', file.uid));
     }
 
     const uploading = file.status === 'uploading';
@@ -130,7 +89,7 @@ export const FileUploader = (props) => {
 
   const handlePreview = file => {
     const fileName = file.name || file.response.fileName;
-    const url = file.url || file.response.location;
+    const url = file.url || `${process.env.REACT_APP_EVC_API_ENDPOINT}/file/${file.response.id}/download`;
     saveAs(url, fileName);
   }
 
@@ -140,14 +99,7 @@ export const FileUploader = (props) => {
 
   const { size, disabled } = props;
 
-  const maxSize = size || 30;
-
-  const getFileIcon = file => <FileIconWithOverlay
-    id={file.uid}
-    name={file.name}
-    showsLastReadAt={showsLastReadAt}
-    showsSignedAt={showsSignedAt}
-  />
+  const maxSize = size || 3;
 
   return (
     <Container className="clearfix">
@@ -155,8 +107,8 @@ export const FileUploader = (props) => {
         multiple={true}
         action={`${process.env.REACT_APP_EVC_API_ENDPOINT}/file`}
         withCredentials={true}
-        accept="*/*"
-        listType="text"
+        accept="image/*"
+        listType="picture"
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
@@ -166,13 +118,12 @@ export const FileUploader = (props) => {
         // showUploadList={false}
         // iconRender={() => <UploadOutlined />}
         disabled={disabled || fileList.length >= maxSize}
-        iconRender={getFileIcon}
       // showUploadList={true}
       >
         {disabled ? <Text type="secondary">File upload is disabled</Text>
           : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
             <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-          Click or drag file to this area to upload
+          Click or drag file to this area to upload. Up to 3 files.
         </div>}
       </Dragger>
       {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
@@ -185,17 +136,14 @@ FileUploader.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   size: PropTypes.number,
   disabled: PropTypes.bool,
-  showsLastReadAt: PropTypes.bool,
-  showsSignedAt: PropTypes.bool,
   showUploadList: PropTypes.any,
 };
 
 FileUploader.defaultProps = {
   disabled: false,
-  showsLastReadAt: false,
-  showsSignedAt: false,
   showUploadList: {
-    showDownloadIcon: false,
+    showPreviewIcon: true,
+    showDownloadIcon: true,
     showRemoveIcon: true,
   },
 };

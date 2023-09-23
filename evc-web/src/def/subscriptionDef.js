@@ -12,7 +12,7 @@ export const subscriptionDef = [
   {
     key: 'unlimited_monthly',
     title:'Unlimited Monthly',
-    unit: 'per month',
+    unit: 'USD per month',
     price: 29,
     icon: <GiSawedOffShotgun/>,
     description: "Tracking unlimited stocks per month. Best for professtional investor as a trial.",
@@ -20,7 +20,7 @@ export const subscriptionDef = [
   {
     key: 'unlimited_yearly',
     title:'Unlimited Yearly',
-    unit: 'per year',
+    unit: 'USD per year',
     price: 319,
     icon: <GiPirateCannon/>,
     description: "Tracking unlimited stocks per year. Money saver for porfessinal investors.",

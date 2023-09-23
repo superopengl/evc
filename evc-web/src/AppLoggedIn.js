@@ -33,12 +33,14 @@ import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
 import { GiReceiveMoney, GiRadarSweep, GiPayMoney } from 'react-icons/gi';
+import {BsCalendar} from 'react-icons/bs';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
 import UnusualOptionsActivityPage from 'pages/AdminDashboard/UnusualOptionsActivityPage';
 import EarnCommissionModal from 'pages/EarnCommissionModal';
 import AdminCashBackRequestListPage from 'pages/AdminDashboard/AdminCashBackRequestListPage';
+import EarningCalendarPage from 'pages/AdminDashboard/EarningCalendarPage';
 
 const { Link: LinkText } = Typography;
 
@@ -80,6 +82,12 @@ const ROUTES = [
     path: '/stock',
     name: 'Stock Radar',
     icon: <Icon component={() => <GiRadarSweep />} />,
+    roles: ['admin', 'agent', 'member', 'free']
+  },
+  {
+    path: '/earnings_calendar',
+    name: 'Earnings Calendar',
+    icon: <Icon component={() => <BsCalendar />} />,
     roles: ['admin', 'agent', 'member', 'free']
   },
   {
@@ -283,6 +291,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={!isFree} exact path="/unsual_options_activity" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
+      <RoleRoute visible={true} exact path="/earnings_calendar" component={EarningCalendarPage} />
       <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
       <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />

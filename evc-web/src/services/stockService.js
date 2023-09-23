@@ -1,11 +1,11 @@
-import { httpGet, httpPost, httpDelete , httpPut} from './http';
+import { httpGet, httpPost, httpDelete, httpPut } from './http';
 
 export async function searchStock(payload) {
   return httpPost(`stock/search`, { page: 0, size: 20, ...payload });
 }
 
 export async function searchSingleStock(symbol) {
-  if(!symbol) {
+  if (!symbol) {
     throw new Error(`Symbol is not specified`);
   }
   return httpPost(`stock/search/${symbol}`);
@@ -137,6 +137,10 @@ export async function getMarketGainers() {
 
 export async function getMarketLosers() {
   return httpGet(`/stock/data/losers`);
+}
+
+export async function getEarningsCalender(week = 0) {
+  return httpGet(`/stock/data/earnings_calendar`, { week });
 }
 
 export async function getStockInsiderTransaction(symbol) {

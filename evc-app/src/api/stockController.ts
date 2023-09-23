@@ -1,5 +1,4 @@
-
-import { getManager, getRepository, In } from 'typeorm';
+import { Between, getManager, getRepository, In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { Stock } from '../entity/Stock';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -26,7 +25,6 @@ import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 import { StockLatestFreeInformation } from '../entity/views/StockLatestFreeInformation';
-import * as _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
 import { StockPutCallRatio90 } from '../entity/views/StockPutCallRatio90';
 import { StockDailyClose } from '../entity/StockDailyClose';
@@ -41,6 +39,9 @@ import { syncStockEps } from '../services/stockEpsService';
 import { syncStockHistoricalClose } from '../services/stockCloseService';
 import { refreshMaterializedView } from '../db';
 import { StockDataInformation } from '../entity/views/StockDataInformation';
+import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
+import * as moment from 'moment-timezone';
+import * as _ from 'lodash';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -382,6 +383,34 @@ export const getLosers = handlerWrapper(async (req, res) => {
   addAndInitlizedStockList(data).catch(() => { });
   res.set('Cache-Control', `public, max-age=300`);
   res.json(data);
+});
+
+export const getEarningsCalendar = handlerWrapper(async (req, res) => {
+  const week = +(req.query.week) ?? 0;
+  const NY_TIMEZONE = 'America/New_York';
+  const theWeek = moment.tz(NY_TIMEZONE).add(week, 'week');
+
+  const data = await getRepository(Stock)
+    .createQueryBuilder('s')
+    .innerJoin(StockEarningsCalendar, 'c', 's.symbol = c.symbol')
+    .where(`c."reportDate" BETWEEN :start AND :end`, {
+      start: theWeek.startOf('week').toDate(),
+      end: theWeek.endOf('week').toDate()
+    })
+    .orderBy(`c."reportDate"`)
+    .addOrderBy(`s.symbol`)
+    .select([
+      `c."reportDate" as "reportDate"`,
+      `s.symbol as symbol`,
+      `s.company as company`,
+      `s."logoUrl" as "logoUrl"`
+    ])
+    .execute();
+
+  const result = _.groupBy(data, x => moment(x.reportDate).format('ddd'));
+
+  res.set('Cache-Control', `public, max-age=1800`);
+  res.json(result);
 });
 
 export const getStockInsiderTransaction = handlerWrapper(async (req, res) => {

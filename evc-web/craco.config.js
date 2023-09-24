@@ -1,12 +1,12 @@
 const CracoLessPlugin = require('craco-less');
 
 const modifyVars = {
-  '@primary-color': '#15be53',
+  '@primary-color': '#15be53', // rgb(21,190,83)
   '@info-color': '#18b0d7',
   '@link-color': '#18b0d7',
   '@success-color': '#15be53',
   '@warning-color': '#fa8c16',
-  '@error-color': '#d7183f',
+  '@error-color': '#d7183f', // rgb(215,24,63)
   '@layout-header-background': '#00293d',
   '@heading-color': '#00293d',
   '@font-size-base': '14px',

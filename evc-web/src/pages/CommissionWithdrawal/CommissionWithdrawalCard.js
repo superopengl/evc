@@ -1,10 +1,11 @@
-import { Typography, Tag, Descriptions } from 'antd';
+import { Typography, Tag, Descriptions, Space } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { TimeAgo } from 'components/TimeAgo';
 import countryList from 'react-select-country-list'
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
+import { Image } from 'antd';
 
 
 const country = countryList();
@@ -30,7 +31,7 @@ const CommissionWithdrawalCard = (props) => {
   const getStatusTag = (status) => {
     switch (status) {
       case 'submitted':
-        return <Tag color="processing">Processing</Tag>
+        return <Tag>Processing</Tag>
       case 'rejected':
         return <Tag color="error">Rejected</Tag>
       case 'done':
@@ -42,13 +43,18 @@ const CommissionWithdrawalCard = (props) => {
 
   return (
     <Descriptions
-      style={{ width: '100%', backgroundColor: 'white' }}
+      style={{ width: '100%', backgroundColor: value.status === 'rejected' ? 'rgb(215,24,63, 0.05)' : value.status === 'done' ? 'rgb(21,190,83, 0.05)' : 'white' }}
+      labelStyle={{ verticalAlign: 'top', backgroundColor: 'rgba(0,0,0,0.03)' }}
+      contentStyle={{ verticalAlign: 'top' }}
       bordered
       size="small"
       column={grid}
     >
-      <Descriptions.Item label="Status" span={2}>{getStatusTag(value.status)} {value.handledResult}</Descriptions.Item>
-      <Descriptions.Item label="Amount"><MoneyAmount value={value.amount} postfix="USD" strong /></Descriptions.Item>
+      <Descriptions.Item label="Status" span={2}>
+        {getStatusTag(value.status)}
+        <Text type={value.status === 'rejected' ? 'danger' : value.status === 'done' ? 'success' : null}>{value.comment}</Text>
+      </Descriptions.Item>
+      <Descriptions.Item label="Amount"><MoneyAmount value={value.amount} postfix="USD" strong delete={value.status==='rejected'}/></Descriptions.Item>
       <Descriptions.Item label="Reference ID" span={2}><Text code>{value.id}</Text></Descriptions.Item>
       <Descriptions.Item label="PayPal Account">{value.payPalAccount}</Descriptions.Item>
       <Descriptions.Item label="Name">{value.givenName} {value.surname}</Descriptions.Item>
@@ -58,6 +64,11 @@ const CommissionWithdrawalCard = (props) => {
       <Descriptions.Item label="Identity">{getIdLabel(value.identityType)} {value.identityNumber}</Descriptions.Item>
       <Descriptions.Item label="Created At"><TimeAgo value={value.createdAt} /></Descriptions.Item>
       <Descriptions.Item label="Completed At"><TimeAgo value={value.handledAt} /></Descriptions.Item>
+      <Descriptions.Item label="Files">
+        <Space>
+        {value.files?.map(fid => <Image key={fid} width={120} src={`${process.env.REACT_APP_EVC_API_ENDPOINT}/file/${fid}/download`} />)}
+        </Space>
+      </Descriptions.Item>
     </Descriptions>
   )
 };

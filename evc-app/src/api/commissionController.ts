@@ -7,6 +7,8 @@ import { CommissionWithdrawal } from '../entity/CommissionWithdrawal';
 import * as moment from 'moment';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
+import { getUtcNow } from '../utils/getUtcNow';
+import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
 
 export const searchCommissionWithdrawal = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -84,7 +86,26 @@ export const createCommissionWithdrawal = handlerWrapper(async (req, res) => {
       userId,
     }
   );
-  await getRepository(CommissionWithdrawal).insert(entity);
+
+  const { amount } = entity;
+
+  assert(amount > 0, 400, 'Amount must be a positive number');
+
+  let hasEnoughBalance = false;
+  await getManager().transaction(async m => {
+    hasEnoughBalance = await getRepository(UserBalanceTransaction)
+      .createQueryBuilder()
+      .where({ userId })
+      .groupBy(`"userId"`)
+      .having(`SUM(amount) >= :amount`, { amount })
+      .select(`"userId"`)
+      .getRawOne();
+    if (hasEnoughBalance) {
+      await m.insert(CommissionWithdrawal, entity);
+    }
+  });
+
+  assert(hasEnoughBalance, 400, 'No enough balance');
 
   res.json(entity.id);
 });
@@ -101,30 +122,65 @@ export const getCommissionWithdrawal = handlerWrapper(async (req, res) => {
   res.json(entity);
 });
 
+async function approveAndAdjustBalance(withdrawal: CommissionWithdrawal, comment) {
+  const { amount, userId } = withdrawal;
+
+  assert(amount > 0, 400, `Amount must be a positive number`);
+
+  let hasEnoughBalance = false;
+  await getManager().transaction(async m => {
+    hasEnoughBalance = await getRepository(UserBalanceTransaction)
+      .createQueryBuilder()
+      .where({ userId })
+      .groupBy(`"userId"`)
+      .having(`SUM(amount) >= :amount`, { amount })
+      .select(`"userId"`)
+      .getRawOne();
+
+    if (hasEnoughBalance) {
+      const balance = new UserBalanceTransaction();
+      balance.id = uuidv4();
+      balance.userId = userId;
+      balance.amount = -amount;
+
+      withdrawal.status = 'done';
+      withdrawal.comment = comment;
+      withdrawal.handledAt = getUtcNow();
+
+      await m.save([balance, withdrawal]);
+    }
+  });
+
+  assert(hasEnoughBalance, 400, 'No enough balance');
+}
+
 export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const { status, comment } = req.body;
 
-  const application = await getRepository(CommissionWithdrawal).findOne(id);
-  assert(application, 404);
+  const withdrawal = await getRepository(CommissionWithdrawal).findOne(id);
+  assert(withdrawal, 404);
 
-  switch (application.status) {
+  switch (withdrawal.status) {
     case 'submitted':
-      if (['rejected', 'done'].includes(status)) {
-        application.status = status;
-        application.comment = comment;
-        await getManager().save(application);
+      if (status === 'rejected') {
+        withdrawal.status = status;
+        withdrawal.comment = comment;
+        withdrawal.handledAt = getUtcNow();
+        await getManager().save(withdrawal);
+      } else if (status === 'done') {
+        await approveAndAdjustBalance(withdrawal, comment);
       } else {
         assert(false, 400, `Unknown target status ${status}`);
       }
-
+      break;
     case 'rejected':
     case 'done':
       assert(false, 400, `This commission withdrawal application was finished already`);
       break;
     default:
-      assert(false, 500, `Unknown status ${application.status}`);
+      assert(false, 500, `Unknown status ${withdrawal.status}`);
   }
 
   res.json();

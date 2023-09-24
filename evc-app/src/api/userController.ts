@@ -18,6 +18,7 @@ import { Payment } from '../entity/Payment';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
+import { existsQuery } from '../utils/existsQuery';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -102,6 +103,23 @@ export const searchUserList = handlerWrapper(async (req, res) => {
 
 const BUILTIN_ADMIN_EMIAL_HASH = computeEmailHash('system@easyvaluecheck.com');
 
+export const listAllUsers = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+
+  const list = await getRepository(UserProfile)
+    .createQueryBuilder('p')
+    .innerJoin(User, 'u', `u."profileId" = p.id AND u."deletedAt" IS NULL`)
+    .select([
+      'u.id as id',
+      '"givenName"',
+      'surname',
+      'email'
+    ])
+    .execute();
+
+  res.json(list);
+});
+
 export const deleteUser = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
@@ -116,7 +134,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   });
 
   if (user) {
-    const {profileId} = user;
+    const { profileId } = user;
     await repo.softDelete(id);
     await getRepository(UserProfile).delete(profileId);
 

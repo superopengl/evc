@@ -4,8 +4,12 @@ export async function changePassword(password, newPassword) {
   return httpPost(`user/change_password`, { password, newPassword });
 }
 
-export async function listAllUsers(payload) {
+export async function searchUsers(payload) {
   return httpPost(`user/search`, { page: 0, size: 50, ...payload });
+}
+
+export async function listAllUsers() {
+  return httpGet(`user`);
 }
 
 export async function deleteUser(id) {

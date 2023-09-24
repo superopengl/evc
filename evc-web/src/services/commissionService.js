@@ -9,14 +9,14 @@ export async function listMyCommissionWithdrawal() {
 }
 
 export async function searchCommissionWithdrawal(query) {
-  return httpPost(`commission_withdrawal/search`);
+  return httpPost(`commission_withdrawal/search`, query);
 }
 
 export async function createCommissionWithdrawal(payload) {
   return httpPost(`commission_withdrawal`, payload);
 }
 
-export async function changeCommissionWithdrawalStatus(id, status) {
-  return httpPost(`commission_withdrawal/${id}`, { status });
+export async function changeCommissionWithdrawalStatus(id, status, comment) {
+  return httpPost(`commission_withdrawal/${id}`, { status, comment });
 }
 

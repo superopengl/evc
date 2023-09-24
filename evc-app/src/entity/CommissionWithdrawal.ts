@@ -60,6 +60,6 @@ export class CommissionWithdrawal {
   handledAt: Date;
 
   @Column({ nullable: true })
-  handledResult: string;
+  comment: string;
 }
 

@@ -143,7 +143,7 @@ const ReferralCreditForm = (props) => {
         >
           <Form.Item label="Adjust amount" name="amount" rules={[{ required: true, type: 'number', message: ' ', whitespace: true }]}
           >
-            <InputNumber block disabled={loading} />
+            <InputNumber disabled={loading} />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" loading={loading} icon={<PlusOutlined/>}>Adjust Credit</Button>

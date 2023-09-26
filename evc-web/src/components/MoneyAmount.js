@@ -17,7 +17,7 @@ const MoneyAmount = (props) => {
 };
 
 MoneyAmount.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  value: PropTypes.any.isRequired,
   symbol: PropTypes.string,
   postfix: PropTypes.string,
   digital: PropTypes.number,

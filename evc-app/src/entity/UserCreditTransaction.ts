@@ -24,5 +24,5 @@ export class UserCreditTransaction {
   amountBeforeRollback: number;
 
   @Column()
-  type: 'credit' | 'withdrawal' | 'recurring' | 'user-pay'
+  type: 'adjust' | 'withdrawal' | 'recurring' | 'user-pay'
 }

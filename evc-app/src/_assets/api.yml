@@ -215,9 +215,9 @@ paths:
       responses:
         200:
           description: OK
-  /user/:id/balance:
+  /user/:id/credit:
     post:
-      operationId: adjustBalance
+      operationId: adjustCredit
       parameters:
         - name: id
           in: path
@@ -239,9 +239,9 @@ paths:
       responses:
         200:
           description: OK
-  /user/:id/balance/history:
+  /user/:id/credit/history:
     get:
-      operationId: listUserBalanceHistory
+      operationId: listUserCreditHistory
       parameters:
         - name: id
           in: path
@@ -843,9 +843,9 @@ paths:
       responses:
         200:
           description: OK
-  /balance/history:
+  /credit/history:
     get:
-      operationId: listMyBalanceHistory
+      operationId: listMyCreditHistory
       responses:
         200:
           description: OK

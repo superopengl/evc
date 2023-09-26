@@ -3,7 +3,7 @@ import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
-import { UserBalanceTransaction } from '../src/entity/UserBalanceTransaction';
+import { UserCreditTransaction } from '../src/entity/UserCreditTransaction';
 import { SubscriptionType } from '../src/types/SubscriptionType';
 import { Payment } from '../src/entity/Payment';
 import { PaymentStatus } from '../src/types/PaymentStatus';
@@ -59,23 +59,23 @@ async function renewRecurringSubscription(subscription: Subscription) {
 
   const { rawRequest, rawResponse, status } = await handlePayWithCard(subscription);
   await getManager().transaction(async m => {
-    const { balanceDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
+    const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
       m,
       userId,
       subscription.type,
       true
     );
 
-    let balanceTransaction: UserBalanceTransaction = null;
-    if (balanceDeductAmount) {
-      balanceTransaction = new UserBalanceTransaction();
-      balanceTransaction.userId = userId;
-      balanceTransaction.amount = -1 * balanceDeductAmount;
-      await m.save(balanceTransaction);
+    let creditTransaction: UserCreditTransaction = null;
+    if (creditDeductAmount) {
+      creditTransaction = new UserCreditTransaction();
+      creditTransaction.userId = userId;
+      creditTransaction.amount = -1 * creditDeductAmount;
+      await m.save(creditTransaction);
     }
     const payment = new Payment();
     payment.subscription = subscription;
-    payment.balanceTransaction = balanceTransaction;
+    payment.creditTransaction = creditTransaction;
     payment.amount = additionalPay;
     // payment.method = paymentMethod;
     payment.rawResponse = rawResponse;

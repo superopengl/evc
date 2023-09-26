@@ -17,7 +17,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { BiDollar } from 'react-icons/bi';
-import ReferralBalanceForm from 'components/ReferralBalanceForm';
+import ReferralCreditForm from 'components/ReferralCreditForm';
 import * as _ from 'lodash';
 import { subscriptionDef } from 'def/subscriptionDef';
 import HighlightingText from 'components/HighlightingText';
@@ -57,7 +57,7 @@ const LOCAL_STORAGE_KEY = 'user_query';
 const UserListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
-  const [referralBalanceModal, setReferralBalanceModal] = React.useState(false);
+  const [referralCreditModal, setReferralCreditModal] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
@@ -117,10 +117,10 @@ const UserListPage = () => {
       render: (text, user) => {
         return (
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Tooltip placement="bottom" title="Referral & balance">
+            <Tooltip placement="bottom" title="Referral & credit">
               <Button shape="circle" icon={<BiDollar style={{ position: 'relative', top: 2 }} />}
                 disabled={!['member', 'free'].includes(user.role)}
-                onClick={e => openReferralBalanceModal(e, user)} />
+                onClick={e => openReferralCreditModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Update profile">
               <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
@@ -236,10 +236,10 @@ const UserListPage = () => {
     })
   }
 
-  const openReferralBalanceModal = async (e, user) => {
+  const openReferralCreditModal = async (e, user) => {
     e.stopPropagation();
     setCurrentUser(user);
-    setReferralBalanceModal(true);
+    setReferralCreditModal(true);
   }
 
   const openSetPasswordModal = async (e, user) => {
@@ -429,16 +429,16 @@ const UserListPage = () => {
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} />}
       </Drawer>
       <Drawer
-        visible={referralBalanceModal}
+        visible={referralCreditModal}
         destroyOnClose={true}
         maskClosable={true}
         title="Referral & Credit"
-        onClose={() => setReferralBalanceModal(false)}
+        onClose={() => setReferralCreditModal(false)}
         width={400}
       >
         {currentUser && <Space size="large" direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
           <Text code>{currentUser.email}</Text>
-          <ReferralBalanceForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
+          <ReferralCreditForm user={currentUser} onOk={() => setProfileModalVisible(false)} />
 
         </Space>}
       </Drawer>

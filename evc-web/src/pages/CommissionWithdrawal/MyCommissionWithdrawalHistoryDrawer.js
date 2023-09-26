@@ -31,8 +31,6 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
     }
   }, [visible]);
 
-
-
   return (
     <Drawer
       title="Commission Withdrawal Applications"
@@ -40,7 +38,7 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
       destroyOnClose={true}
       maskClosable={true}
       closable={true}
-      {...props}
+      visible={visible}
     >
       <List
         title={false}

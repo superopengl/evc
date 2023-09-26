@@ -1,19 +1,19 @@
-export function calculateAmountToPay(balanceAmount, price) {
-  let balanceDeductAmount = 0;
+export function calculateAmountToPay(creditAmount, price) {
+  let creditDeductAmount = 0;
   let additionalPay = price;
-  if (balanceAmount >= price) {
-    // Full balance pay. Pay 0
-    balanceDeductAmount = price;
+  if (creditAmount >= price) {
+    // Full credit pay. Pay 0
+    creditDeductAmount = price;
     additionalPay = 0;
-  } else if (balanceAmount > 0) {
+  } else if (creditAmount > 0) {
     // Mix pay
-    balanceDeductAmount = balanceAmount;
-    additionalPay = price - balanceAmount;
+    creditDeductAmount = creditAmount;
+    additionalPay = price - creditAmount;
   } else {
     // Full pay
-    balanceDeductAmount = 0;
+    creditDeductAmount = 0;
     additionalPay = price;
   }
 
-  return { balanceDeductAmount, additionalPay };
+  return { creditDeductAmount, additionalPay };
 }

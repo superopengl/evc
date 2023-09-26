@@ -6,7 +6,7 @@ import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
 import { getUserCurrentSubscription } from '../utils/getUserCurrentSubscription';
-import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 
 export const createReferral = async (userId) => {
@@ -28,7 +28,7 @@ const getAccountForUser = async (userId) => {
 
   const subscription = await getUserCurrentSubscription(userId);
 
-  const balance = await getRepository(UserBalanceTransaction)
+  const credit = await getRepository(UserCreditTransaction)
     .createQueryBuilder()
     .where({ userId })
     .select('SUM(amount) AS amount')
@@ -42,7 +42,7 @@ const getAccountForUser = async (userId) => {
     referralPolicy,
     referralUrl,
     referralCount,
-    balance: +balance?.amount || 0
+    credit: +credit?.amount || 0
   };
 
   return result;
@@ -65,17 +65,17 @@ export const getMyAccount = handlerWrapper(async (req, res) => {
 });
 
 
-export const adjustBalance = handlerWrapper(async (req, res) => {
+export const adjustCredit = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const { amount } = req.body;
   if (amount !== 0) {
-    const entity = new UserBalanceTransaction();
+    const entity = new UserCreditTransaction();
     entity.id = uuidv4();
     entity.userId = id;
     entity.amount = amount;
 
-    await getRepository(UserBalanceTransaction).insert(entity);
+    await getRepository(UserCreditTransaction).insert(entity);
   }
 
   res.json();

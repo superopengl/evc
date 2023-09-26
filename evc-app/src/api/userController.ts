@@ -13,7 +13,7 @@ import { Subscription } from '../entity/Subscription';
 import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
-import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { Payment } from '../entity/Payment';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { searchUser } from '../utils/searchUser';
@@ -186,14 +186,14 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const listMyBalanceHistory = handlerWrapper(async (req, res) => {
+export const listMyCreditHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id } } = req as any;
-  const list = await getRepository(UserBalanceTransaction)
+  const list = await getRepository(UserCreditTransaction)
     .createQueryBuilder('ubt')
     .where('ubt."userId" = :id', { id })
     .andWhere('ubt.amount != 0')
-    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."balanceTransactionId"')
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."creditTransactionId"')
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('ubt."createdAt"', 'DESC')
     .select([
@@ -206,15 +206,15 @@ export const listMyBalanceHistory = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const listUserBalanceHistory = handlerWrapper(async (req, res) => {
+export const listUserCreditHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const list = await getRepository(UserBalanceTransaction)
+  const list = await getRepository(UserCreditTransaction)
     .createQueryBuilder('ubt')
     .where('ubt."userId" = :id', { id })
     .leftJoin(q => q.from(User, 'u'), 'u', 'ubt."referredUserId" = u.id')
     .leftJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
-    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."balanceTransactionId"')
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'ubt.id = py."creditTransactionId"')
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('ubt."createdAt"', 'DESC')
     .select([

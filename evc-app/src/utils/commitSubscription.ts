@@ -4,7 +4,7 @@ import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { assert } from './assert';
 import { Payment } from '../entity/Payment';
-import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { now } from 'moment';

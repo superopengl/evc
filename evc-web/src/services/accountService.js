@@ -9,15 +9,15 @@ export async function getAccount(userId) {
   return httpGet(`user/${userId}/account`);
 }
 
-export async function adjustBalance(userId, amount) {
-  return httpPost(`user/${userId}/balance`, {amount});
+export async function adjustCredit(userId, amount) {
+  return httpPost(`user/${userId}/credit`, {amount});
 }
 
-export async function listMyBalanceHistory() {
-  return httpGet(`balance/history`);
+export async function listMyCreditHistory() {
+  return httpGet(`credit/history`);
 }
 
-export async function listUserBalanceHistory(userId) {
-  return httpGet(`user/${userId}/balance/history`);
+export async function listUserCreditHistory(userId) {
+  return httpGet(`user/${userId}/credit/history`);
 }
 

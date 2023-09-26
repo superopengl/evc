@@ -3,7 +3,7 @@ import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Subscription } from './Subscription';
-import { UserBalanceTransaction } from './UserBalanceTransaction';
+import { UserCreditTransaction } from './UserCreditTransaction';
 
 @Entity()
 @Index(['userId', 'createdAt'])
@@ -50,10 +50,10 @@ export class Payment {
   @ManyToOne(() => Subscription, subscription => subscription.payments)
   subscription: Subscription;
 
-  @OneToOne(() => UserBalanceTransaction, { nullable: true, cascade: true })
-  @JoinColumn({name: 'balanceTransactionId', referencedColumnName: 'id'})
-  balanceTransaction: UserBalanceTransaction;
+  @OneToOne(() => UserCreditTransaction, { nullable: true, cascade: true })
+  @JoinColumn({name: 'creditTransactionId', referencedColumnName: 'id'})
+  creditTransaction: UserCreditTransaction;
 
   @Column('uuid', {nullable: true})
-  balanceTransactionId: string;
+  creditTransactionId: string;
 }

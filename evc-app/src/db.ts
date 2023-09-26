@@ -1,7 +1,7 @@
 import { Connection, createConnection, getManager, getRepository } from 'typeorm';
 import { StockComputedPe90 } from './entity/views/StockComputedPe90';
 import { StockLatestPaidInformation } from './entity/views/StockLatestPaidInformation';
-import { SubscriptionPaymentBalanceInformation } from './entity/views/SubscriptionPaymentBalanceInformation';
+import { SubscriptionPaymentCreditInformation } from './entity/views/SubscriptionPaymentCreditInformation';
 import { StockLatestFreeInformation } from './entity/views/StockLatestFreeInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
 import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalComputedFairValue';
@@ -17,7 +17,7 @@ import { StockDeprecateResistance } from './entity/views/StockDeprecateResistanc
 const views = [
   StockLatestPaidInformation,
   StockLatestFreeInformation,
-  SubscriptionPaymentBalanceInformation,
+  SubscriptionPaymentCreditInformation,
   StockDeprecateSupport,
   StockDeprecateResistance,
 ];

@@ -4,7 +4,7 @@ import { User } from '../entity/User';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
 import { getUtcNow } from '../utils/getUtcNow';
-import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 
 export async function getCurrentReferralAmountForReferrer(userId) {
   const policy = await getRepository(ReferralUserPolicy).findOne(userId);
@@ -34,7 +34,7 @@ export async function handleReferralKickbackWhenPaid(m: EntityManager, userId: s
   if (referrerUserId) {
     const amount = await getCurrentReferralAmountForReferrer(referrerUserId);
     if (amount > 0) {
-      const ubt = new UserBalanceTransaction();
+      const ubt = new UserCreditTransaction();
       ubt.referredUserId = userId;
       ubt.userId = referrerUserId;
       ubt.amount = amount;

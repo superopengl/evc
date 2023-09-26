@@ -16,7 +16,7 @@ const StyledDrawer = styled(Drawer)`
   }
 `
 
-const BalanceHistoryListModal = (props) => {
+const CreditHistoryListModal = (props) => {
 
   const { visible: propVisible, onFetch, onOk } = props;
   const [visible, setVisible] = React.useState(propVisible);
@@ -77,14 +77,14 @@ const BalanceHistoryListModal = (props) => {
 
 
 
-BalanceHistoryListModal.propTypes = {
+CreditHistoryListModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   onFetch: PropTypes.func.isRequired,
   onOk: PropTypes.func.isRequired,
 };
 
-BalanceHistoryListModal.defaultProps = {
+CreditHistoryListModal.defaultProps = {
   visible: false
 };
 
-export default BalanceHistoryListModal;
+export default CreditHistoryListModal;

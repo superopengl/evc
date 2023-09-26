@@ -5,7 +5,7 @@ import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { Subscription } from '../Subscription';
 import { Payment } from '../Payment';
-import { UserBalanceTransaction } from '../UserBalanceTransaction';
+import { UserCreditTransaction } from '../UserCreditTransaction';
 
 
 
@@ -13,26 +13,26 @@ import { UserBalanceTransaction } from '../UserBalanceTransaction';
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(Subscription, 's')
     .innerJoin(q => q.from(Payment, 'p').where('p.status = \'paid\''), 'p', 'p."subscriptionId" = s.id')
-    .leftJoin(q => q.from(UserBalanceTransaction, 'b'), 'b', 'p."balanceTransactionId" = b.id')
+    .leftJoin(q => q.from(UserCreditTransaction, 'b'), 'b', 'p."creditTransactionId" = b.id')
     .orderBy('s.start', 'DESC')
     .addOrderBy('p."lastUpdatedAt"', 'DESC')
     .select([
       's."userId" as "userId"',
       's.id as "subscriptionId"',
       'p.id as "paymentId"',
-      'p."balanceTransactionId" as "balanceTransactionId"',
+      'p."creditTransactionId" as "creditTransactionId"',
       's.start as start',
       's.end as end',
       's.type as type',
       's.status as "subscriptionStatus"',
       'p."lastUpdatedAt" as "paymentLastUpdatedAt"',
       'p."amount" as "paidAmount"',
-      '-b."amount" as "usedBalanceAmount"',
+      '-b."amount" as "usedCreditAmount"',
       'p."method" as "method"',
       'p."auto" as "autoPaid"',
     ])
 })
-export class SubscriptionPaymentBalanceInformation {
+export class SubscriptionPaymentCreditInformation {
   @ViewColumn()
   @PrimaryColumn()
   subscriptionId: string;
@@ -69,8 +69,8 @@ export class SubscriptionPaymentBalanceInformation {
   autoPaid: boolean;
 
   @ViewColumn()
-  balanceTransactionId: string;
+  creditTransactionId: string;
 
   @ViewColumn()
-  usedBalanceAmount: number;
+  usedCreditAmount: number;
 }

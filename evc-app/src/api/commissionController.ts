@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
 import { getUtcNow } from '../utils/getUtcNow';
-import { UserBalanceTransaction } from '../entity/UserBalanceTransaction';
+import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 
 export const searchCommissionWithdrawal = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -91,21 +91,21 @@ export const createCommissionWithdrawal = handlerWrapper(async (req, res) => {
 
   assert(amount > 0, 400, 'Amount must be a positive number');
 
-  let hasEnoughBalance = false;
+  let hasEnoughCredit = false;
   await getManager().transaction(async m => {
-    hasEnoughBalance = await getRepository(UserBalanceTransaction)
+    hasEnoughCredit = await getRepository(UserCreditTransaction)
       .createQueryBuilder()
       .where({ userId })
       .groupBy(`"userId"`)
       .having(`SUM(amount) >= :amount`, { amount })
       .select(`"userId"`)
       .getRawOne();
-    if (hasEnoughBalance) {
+    if (hasEnoughCredit) {
       await m.insert(CommissionWithdrawal, entity);
     }
   });
 
-  assert(hasEnoughBalance, 400, 'No enough balance');
+  assert(hasEnoughCredit, 400, 'No enough credit');
 
   res.json(entity.id);
 });
@@ -122,14 +122,14 @@ export const getCommissionWithdrawal = handlerWrapper(async (req, res) => {
   res.json(entity);
 });
 
-async function approveAndAdjustBalance(withdrawal: CommissionWithdrawal, comment) {
+async function approveAndAdjustCredit(withdrawal: CommissionWithdrawal, comment) {
   const { amount, userId } = withdrawal;
 
   assert(amount > 0, 400, `Amount must be a positive number`);
 
-  let hasEnoughBalance = false;
+  let hasEnoughCredit = false;
   await getManager().transaction(async m => {
-    hasEnoughBalance = await getRepository(UserBalanceTransaction)
+    hasEnoughCredit = await getRepository(UserCreditTransaction)
       .createQueryBuilder()
       .where({ userId })
       .groupBy(`"userId"`)
@@ -137,21 +137,21 @@ async function approveAndAdjustBalance(withdrawal: CommissionWithdrawal, comment
       .select(`"userId"`)
       .getRawOne();
 
-    if (hasEnoughBalance) {
-      const balance = new UserBalanceTransaction();
-      balance.id = uuidv4();
-      balance.userId = userId;
-      balance.amount = -amount;
+    if (hasEnoughCredit) {
+      const credit = new UserCreditTransaction();
+      credit.id = uuidv4();
+      credit.userId = userId;
+      credit.amount = -amount;
 
       withdrawal.status = 'done';
       withdrawal.comment = comment;
       withdrawal.handledAt = getUtcNow();
 
-      await m.save([balance, withdrawal]);
+      await m.save([credit, withdrawal]);
     }
   });
 
-  assert(hasEnoughBalance, 400, 'No enough balance');
+  assert(hasEnoughCredit, 400, 'No enough credit');
 }
 
 export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) => {
@@ -170,7 +170,7 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
         withdrawal.handledAt = getUtcNow();
         await getManager().save(withdrawal);
       } else if (status === 'done') {
-        await approveAndAdjustBalance(withdrawal, comment);
+        await approveAndAdjustCredit(withdrawal, comment);
       } else {
         assert(false, 400, `Unknown target status ${status}`);
       }

@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
 import { calculatePaymentDetail, confirmSubscriptionPayment, provisionSubscription } from 'services/subscriptionService';
-import FullBalancePayButton from './FullBalancePayButton';
+import FullCreditPayButton from './FullCreditPayButton';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -39,13 +39,13 @@ const PaymentModal = (props) => {
   const [modalVisible, setModalVisible] = React.useState(visible);
   const [recurring, setRecurring] = React.useState(true);
   const [paymentDetail, setPaymentDetail] = React.useState();
-  const [willUseBalance, setWillUseBalance] = React.useState(false);
+  const [willUseCredit, setWillUseCredit] = React.useState(false);
   const context = React.useContext(GlobalContext);
 
-  const fetchPaymentDetail = async (useBalance) => {
+  const fetchPaymentDetail = async (useCredit) => {
     try {
       setLoading(true)
-      const detail = await calculatePaymentDetail(planType, useBalance);
+      const detail = await calculatePaymentDetail(planType, useCredit);
       ReactDOM.unstable_batchedUpdates(() => {
         setPaymentDetail(detail);
         setLoading(false)
@@ -61,7 +61,7 @@ const PaymentModal = (props) => {
 
   React.useEffect(() => {
     if (planType) {
-      fetchPaymentDetail(willUseBalance);
+      fetchPaymentDetail(willUseCredit);
     }
   }, [planType]);
 
@@ -69,9 +69,9 @@ const PaymentModal = (props) => {
 
   const newPlanDef = subscriptionDef.find(s => s.key === planType);
 
-  const handleUseBalanceChange = checked => {
+  const handleUseCreditChange = checked => {
     fetchPaymentDetail(checked);
-    setWillUseBalance(checked);
+    setWillUseCredit(checked);
   }
 
   const handleRecurringChange = checked => {
@@ -84,7 +84,7 @@ const PaymentModal = (props) => {
     const provisionData = await provisionSubscription({
       plan: planType,
       recurring: recurring,
-      preferToUseBalance: willUseBalance,
+      preferToUseCredit: willUseCredit,
       method
     });
     return provisionData;
@@ -111,11 +111,11 @@ const PaymentModal = (props) => {
   //   });
   // }
 
-  const shouldShowFullBalanceButton = isValidPlan && !recurring && willUseBalance && paymentDetail.additionalPay === 0;
+  const shouldShowFullCreditButton = isValidPlan && !recurring && willUseCredit && paymentDetail.additionalPay === 0;
   const shouldShowCard = isValidPlan && (paymentDetail.additionalPay > 0 || recurring);
   const shouldShowPayPal = isValidPlan && !recurring && paymentDetail.additionalPay > 0;
   const shouldShowAliPay = isValidPlan && !recurring && paymentDetail.additionalPay > 0;
-  const showBalanceCardCombinedRecurringMessage = recurring && willUseBalance;
+  const showCreditCardCombinedRecurringMessage = recurring && willUseCredit;
 
   return (
     <Modal
@@ -142,22 +142,22 @@ const PaymentModal = (props) => {
             <Text>Recurring payment?</Text>
             <Switch defaultChecked onChange={handleRecurringChange} />
           </Space>
-          {paymentDetail?.totalBalanceAmount > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Text>Prefer to use balance?</Text>
-            <Switch defaultChecked={false} onChange={handleUseBalanceChange} />
+          {paymentDetail?.totalCreditAmount > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Text>Prefer to use credit?</Text>
+            <Switch defaultChecked={false} onChange={handleUseCreditChange} />
           </Space>}
-          {willUseBalance && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          {willUseCredit && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Total credit:</Text>
-            {paymentDetail ? <MoneyAmount value={paymentDetail.totalBalanceAmount} /> : '-'}
+            {paymentDetail ? <MoneyAmount value={paymentDetail.totalCreditAmount} /> : '-'}
           </Space>}
           <Divider />
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Total amount:</Text>
             {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
           </Space>
-          {willUseBalance && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          {willUseCredit && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Credit deduction:</Text>
-            {paymentDetail ? <MoneyAmount value={paymentDetail.balanceDeductAmount * -1} /> : '-'}
+            {paymentDetail ? <MoneyAmount value={paymentDetail.creditDeductAmount * -1} /> : '-'}
           </Space>}
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text strong>Total payable amount:</Text>
@@ -165,12 +165,12 @@ const PaymentModal = (props) => {
           </Space>
           {isValidPlan && <Divider />}
           {isValidPlan && <Space direction="vertical" style={{ width: '100%' }} size="middle">
-            {shouldShowFullBalanceButton && <>
-              <Alert type="info" description="Congratulations! You have enough balance to purchase this plan without any additional pay." showIcon />
-              <FullBalancePayButton onProvision={() => handleProvisionSubscription('balance')} onCommit={handleSuccessfulPayment} />
+            {shouldShowFullCreditButton && <>
+              <Alert type="info" description="Congratulations! You have enough credit to purchase this plan without any additional pay." showIcon />
+              <FullCreditPayButton onProvision={() => handleProvisionSubscription('credit')} onCommit={handleSuccessfulPayment} />
             </>}
-            {showBalanceCardCombinedRecurringMessage && <Alert
-              type="info" description="When each plan renew happens, system will try to use your balance as much before charging your card." showIcon />}
+            {showCreditCardCombinedRecurringMessage && <Alert
+              type="info" description="When each plan renew happens, system will try to use your credit as much before charging your card." showIcon />}
             {shouldShowCard && <StripeCardPaymentWidget onProvision={() => handleProvisionSubscription('card')} onCommit={handleSuccessfulPayment} />}
             {shouldShowAliPay && <AlipayButton size="large" icon={<AlipayCircleOutlined />} block style={{fontWeight: 800,fontStyle: 'italic'}}>Alipay</AlipayButton>}
             {shouldShowPayPal && <PayPalCheckoutButton onProvision={() => handleProvisionSubscription('paypal')} onCommit={handleSuccessfulPayment} />}

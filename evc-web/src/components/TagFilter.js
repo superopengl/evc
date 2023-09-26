@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tag from './Tag';
+import { groupBy } from 'lodash';
 
-const TagFilter = (props) => {
+export const TagFilter = (props) => {
 
-  const { onChange, tags, value } = props;
+  const { onChange, tags, group, value } = props;
   const [selected, setSelected] = React.useState(value);
 
   const isSelected = (tag) => {
@@ -22,19 +23,28 @@ const TagFilter = (props) => {
     onChange(newSelected);
   }
 
+  if(!tags?.length) {
+    return null;
+  }
+
+
+  const tagGroups = group ? Object.values(groupBy(tags, t => `${t.sortGroup}`.charAt(0))) : [tags];
+
   return (
-      <div style={{padding: '1rem 0'}}>
+    <div style={{ padding: '1rem 0' }}>
+      {tagGroups.map((tags, gIdx) => <div key={gIdx} style={{margin: '10px 0'}}>
         {tags.map((t, i) => <Tag
           key={i}
           color={t.color}
           clickable={true}
-          style={{marginBottom: 10}}
+          style={{ marginBottom: 10 }}
           checked={isSelected(t)}
           onClick={() => toggleSelected(t)}
         >
           {t.name}
         </Tag>)}
-      </div>
+      </div>)}
+    </div>
   );
 };
 
@@ -43,12 +53,14 @@ TagFilter.propTypes = {
   value: PropTypes.array,
   onChange: PropTypes.func,
   tags: PropTypes.arrayOf(PropTypes.object),
+  group: PropTypes.bool,
 };
 
 TagFilter.defaultProps = {
   value: [],
   tags: [],
-  onChange: () => { }
+  onChange: () => { },
+  group: false
 };
 
 export default TagFilter;

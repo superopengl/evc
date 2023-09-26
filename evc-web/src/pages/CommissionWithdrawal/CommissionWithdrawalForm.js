@@ -88,17 +88,17 @@ const CommissionWithdrawalForm = (props) => {
       <Form.Item label="Phone" name="phone" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="Phone number" autoComplete="tel" allowClear={true} maxLength="100" />
       </Form.Item>
-      <Form.Item label="Type of Identity" name="identityType" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
+      <Form.Item label="Type of identity" name="identityType" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
         <Radio.Group optionType="button" buttonStyle="solid">
           <Radio.Button value="id">ID</Radio.Button>
           <Radio.Button value="passport">Passport</Radio.Button>
           <Radio.Button value="driver">Driver license</Radio.Button>
         </Radio.Group>
       </Form.Item>
-      <Form.Item label="Identity Number" name="identityNumber" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
+      <Form.Item label="Identity number" name="identityNumber" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
         <Input placeholder="ID / passport / driver license number" autoComplete="address" allowClear={true} maxLength="200" />
       </Form.Item>
-      <Form.Item label="PayPal Account (email that you use for PayPal)" name="payPalAccount" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
+      <Form.Item label="PayPal account (email that you use for PayPal)" name="payPalAccount" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" />
       </Form.Item>
       <Form.Item

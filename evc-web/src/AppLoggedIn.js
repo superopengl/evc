@@ -6,7 +6,7 @@ import { RoleRoute } from 'components/RoleRoute';
 import UserListPage from 'pages/User/UserListPage';
 import AdminDashboardPage from 'pages/AdminDashboard/AdminDashboardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
-import StockListPage from 'pages/Stock/StockListPage';
+import StockRadarPage from 'pages/Stock/StockRadarPage';
 import StockWatchListPage from 'pages/Stock/StockWatchListPage';
 import TagsSettingPage from 'pages/TagsSettingPage/TagsSettingPage';
 import ReferralGlobalPolicyListPage from 'pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage';
@@ -289,7 +289,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
       <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
       <RoleRoute visible={!isFree} exact path="/unsual_options_activity" component={UnusualOptionsActivityPage} />
-      <RoleRoute visible={true} path="/stock" exact component={StockListPage} />
+      <RoleRoute visible={true} path="/stock" exact component={StockRadarPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
       <RoleRoute visible={true} exact path="/earnings_calendar" component={EarningCalendarPage} />
       <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />

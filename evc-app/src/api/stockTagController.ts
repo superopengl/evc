@@ -36,6 +36,9 @@ export const listStockTags = handlerWrapper(async (req, res) => {
 export const deleteStockTag = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  await getRepository(StockTag).delete(id);
+  await getRepository(StockTag).delete({
+    id,
+    builtIn: false
+  });
   res.json();
 });

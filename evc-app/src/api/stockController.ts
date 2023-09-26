@@ -42,6 +42,7 @@ import { StockDataInformation } from '../entity/views/StockDataInformation';
 import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import * as moment from 'moment-timezone';
 import * as _ from 'lodash';
+import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -251,6 +252,11 @@ async function addAndInitializeStock(symbol, companyName): Promise<boolean> {
   const stock = new Stock();
   stock.symbol = symbol.toUpperCase();
   stock.company = companyName;
+
+  const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
+  if (stockTag) {
+    stock.tags = [stockTag];
+  }
 
   console.log(`Try auto-adding stock ${symbol}`);
 

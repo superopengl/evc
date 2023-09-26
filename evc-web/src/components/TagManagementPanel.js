@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Table, Input, Switch, InputNumber } from 'antd';
+import { Button, Table, Input, Switch, InputNumber, Typography } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
@@ -9,6 +9,7 @@ import { Space } from 'antd';
 import * as _ from 'lodash';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 
+const {Text} = Typography;
 
 const NEW_TAG_ITEM = Object.freeze({
   isNew: true,
@@ -60,7 +61,7 @@ const TagManagementPanel = (props) => {
     {
       render: (text, item) => <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
         {item.isNew && <Button type="primary" icon={<PlusOutlined />} disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)}></Button>}
-        {!item.isNew && <ConfirmDeleteButton shape="circle" onOk={() => handleDelete(item)} />}
+        {item.builtIn ? <Text type="secondary"><small>builtin</small></Text> : item.isNew ? null : <ConfirmDeleteButton shape="circle" onOk={() => handleDelete(item)} />}
       </Space>
     },
   ].filter(x => !!x);

@@ -13,6 +13,9 @@ export class StockTag {
   @Column()
   name: string;
 
+  @Column({default: false})
+  builtIn: boolean;
+
   @Column({ default: false })
   officialOnly: boolean;
 

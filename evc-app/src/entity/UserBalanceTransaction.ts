@@ -22,4 +22,7 @@ export class UserBalanceTransaction {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   amountBeforeRollback: number;
+
+  @Column()
+  type: 'credit' | 'withdrawal' | 'recurring' | 'user-pay'
 }

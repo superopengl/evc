@@ -432,7 +432,7 @@ const UserListPage = () => {
         visible={referralBalanceModal}
         destroyOnClose={true}
         maskClosable={true}
-        title="Referral & Balance"
+        title="Referral & Credit"
         onClose={() => setReferralBalanceModal(false)}
         width={400}
       >

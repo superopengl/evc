@@ -147,7 +147,7 @@ const PaymentModal = (props) => {
             <Switch defaultChecked={false} onChange={handleUseBalanceChange} />
           </Space>}
           {willUseBalance && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Text>Balance total amount:</Text>
+            <Text>Total credit:</Text>
             {paymentDetail ? <MoneyAmount value={paymentDetail.totalBalanceAmount} /> : '-'}
           </Space>}
           <Divider />
@@ -156,7 +156,7 @@ const PaymentModal = (props) => {
             {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
           </Space>
           {willUseBalance && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-            <Text>Balance deduction:</Text>
+            <Text>Credit deduction:</Text>
             {paymentDetail ? <MoneyAmount value={paymentDetail.balanceDeductAmount * -1} /> : '-'}
           </Space>}
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>

@@ -127,7 +127,7 @@ const ReferralBalanceForm = (props) => {
         <ReferralLinkInput value={account?.referralUrl} />
         <Divider></Divider>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Title level={4}>Balance</Title>
+          <Title level={4}>Credit</Title>
           <Title><MoneyAmount type="success" value={account?.balance} /></Title>
         </Space>
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
@@ -146,10 +146,10 @@ const ReferralBalanceForm = (props) => {
             <InputNumber block disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" loading={loading} icon={<PlusOutlined/>}>Adjust Balance</Button>
+            <Button block type="primary" htmlType="submit" loading={loading} icon={<PlusOutlined/>}>Adjust Credit</Button>
           </Form.Item>
           <Form.Item>
-            <Button block onClick={() => setBalanceHistoryVisible(true)}>Balance Transactions</Button>
+            <Button block onClick={() => setBalanceHistoryVisible(true)}>Credit History</Button>
           </Form.Item>
         </Form>
 

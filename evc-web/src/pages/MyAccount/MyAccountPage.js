@@ -232,15 +232,15 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title="Balance"
+            title="Credit"
             extra={
               <Title><MoneyAmount type="success" value={account.balance} /></Title>
             }
           >
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Paragraph type="secondary">The money can be used deduct future payment.</Paragraph>
+              <Paragraph type="secondary">The credit can be used for future payment.</Paragraph>
 
-              <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Balance Transactions</Button>
+              <Button key={0} onClick={() => setBalanceHistoryVisible(true)}>Credit History</Button>
             </Space>
           </Card>
           <Card

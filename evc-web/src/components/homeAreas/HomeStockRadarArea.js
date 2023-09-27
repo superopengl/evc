@@ -37,6 +37,7 @@ width: 100%;
 text-align: center;
 padding: 4rem 2rem;
 background: #ffffff;
+background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
 `;
 
 const InnerContainer = styled.div`
@@ -45,7 +46,9 @@ margin-right: auto;
 width: 100%;
 border: 1px solid #f0f0f0;
 padding: 2rem;
-background: #fafafa;
+background: rgb(240, 242, 245);
+// filter: contrast(0.6);
+// transform: scale(0.8);
 
 // max-width: 1200px;
 `;
@@ -59,10 +62,16 @@ export const HomeStockRadarArea = props => {
         <Title>Stock Radar - Preview</Title>
         <Alert
           message={<>
-            <big>😉</big>
-            <Text style={{ fontStyle: 'italic', marginLeft: 12 }} type="success">More information is available to signed up users! <Link to="/signup">Sign Up Now</Link></Text>
+          <Text style={{ fontStyle: 'italic', marginLeft: 12 }} type="success">
+            This is Stock Radar preview. 
+            Full feature is available after sign up! 
+          </Text>
+            <big> 😉 </big>
+            <Link to="/signup">Sign Up Now</Link>
           </>}
-          type="success" />
+          type="success" 
+          style={{marginBottom: 20}}
+          />
       </Space>
       <InnerContainer>
         <StockRadarPage onItemClick={onSymbolClick} />

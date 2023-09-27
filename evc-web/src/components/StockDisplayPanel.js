@@ -89,7 +89,7 @@ const StockDisplayPanel = (props) => {
               blockedComponent={
                 <OldFairValueContainer >
                   {stock.fairValues?.map((fv, i) => <Space key={i}>
-                    {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ color: 'white', fontWeight: 900 }}>XXXX ~ XXXX</Text>}
+                    {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <Text strong style={{ color: 'white', fontWeight: 900, filter: 'blur(4px)' }}>XXXX ~ XXXX</Text>}
                     <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
                   </Space>)}
                 </OldFairValueContainer>

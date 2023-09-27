@@ -19,10 +19,10 @@ width: 100%;
 font-size: 0.8rem;
 
 .hidden-info{
-  color: rgba(0,0,0,0.35);
-  background-color: rgba(0,0,0,0.05);
-  border-radius: 4px;
-  padding: 0 8px;
+  // color: rgba(0,0,0,0.35);
+  // background-color: rgba(0,0,0,0.05);
+  // border-radius: 4px;
+  // padding: 0 8px;
 }
 
 .text-color-level-0 {
@@ -96,7 +96,7 @@ const TooltipLabel = props => <Tooltip title={props.message}>
 
 const HiddenNumber = props => {
   const list = new Array(props.count || 1).fill(null);
-  return list.map((x, i) => <Text className={`hidden-info`} key={i}><LockFilled /> paid member only</Text>)
+  return list.map((x, i) => <Text className={`hidden-info`} key={i}><span style={{filter: 'blur(4px)'}}>123.40 ~ 567.89</span></Text>)
 }
 
 const StockInfoCard = (props) => {

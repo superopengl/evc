@@ -29,7 +29,8 @@ export const StockGuestStockRadarDrawer = (props) => {
       title={<Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Text>Stock Radar - Preview</Text>
         <Alert
-          message={<><big>😉</big><Text style={{ fontStyle: 'italic', marginLeft: 12 }} type="success">More information is available to signed up users</Text></>}
+          message={<><big>😉</big>
+          <Text style={{ fontStyle: 'italic', marginLeft: 12 }} type="success">More information is available to signed up users</Text></>}
           action={
             <Button type="primary" size="large" style={{ width: 140 }}>Sign Up Now</Button>
           }

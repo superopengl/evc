@@ -12,7 +12,8 @@ import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
 import { StockGuestPreviewDrawer } from 'components/StockGuestPreviewDrawer';
 import { Link, withRouter } from 'react-router-dom';
 import { StockGuestStockRadarDrawer } from 'components/StockGuestStockRadarDrawer';
-import {LocaleSelector} from 'components/LocaleSelector';
+import { LocaleSelector } from 'components/LocaleSelector';
+import { HomeStockRadarArea } from 'components/homeAreas/HomeStockRadarArea';
 
 const { Content } = Layout;
 
@@ -58,10 +59,17 @@ position: absolute;
 const HomePage = (props) => {
 
   const [selectedSymbol, setSelectedSymbol] = React.useState();
-  const [stockRadarVisible, setStockRadarVisible] = React.useState(false);
 
   const handleStockListSymbolClick = (symbol) => {
     setSelectedSymbol(symbol);
+  }
+
+  const scrollToElement = (selector) => {
+    document.querySelector(selector).scrollIntoView({
+      behavior: 'smooth',
+      block: "start",
+      inline: "nearest"
+    });
   }
 
   return (
@@ -77,8 +85,8 @@ const HomePage = (props) => {
             </LogoPlate>
             <Space>
               <Button size="large" type="link" href="#pre">Pro Member</Button>
-              <Button size="large" type="link" onClick={() => setStockRadarVisible(true)}>Stock Radar</Button>
-              <Button size="large" type="link" href="#pricing">Pricing</Button>
+              <Button size="large" type="link" onClick={() => scrollToElement('#stock-radar')}>Stock Radar</Button>
+              <Button size="large" type="link" onClick={() => scrollToElement('#pricing')}>Pricing</Button>
               {/* <Link to="/signup"><Button size="large" type="link">Sign Up</Button></Link> */}
               <Link to="/login"><Button size="large" type="link">Login</Button></Link>
               <LocaleSelector bordered={false} style={{ color: 'white', width: 100 }} size="large" defaultValue="en-US" />
@@ -89,19 +97,20 @@ const HomePage = (props) => {
           <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
         </section>
         <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
-        <section id="pricing"><HomePricingArea /></section>
+        <section id="pricing">
+          <HomePricingArea />
+        </section>
         {/* <section><HomeSearchArea /></section> */}
-        <HashAnchorPlaceholder id="services" />
-        <section><HomeServiceArea bgColor="#135200" /></section>
+        <section>
+          <HomeServiceArea bgColor="#135200" />
+        </section>
+        <section id="stock-radar">
+          <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
+        </section>
         {/* <HashAnchorPlaceholder id="team" /> */}
         {/* <section><HomeTeamArea /></section> */}
         <HomeFooter />
       </ContentStyled>
-      <StockGuestStockRadarDrawer 
-        visible={stockRadarVisible}
-        onClose={() => setStockRadarVisible(false)}
-        onSymbolClick={handleStockListSymbolClick}
-      />
       <StockGuestPreviewDrawer
         symbol={selectedSymbol}
         visible={!!selectedSymbol}

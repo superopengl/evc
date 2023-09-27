@@ -1,6 +1,5 @@
 import React from 'react';
 import 'antd/dist/antd.less';
-import 'react-image-lightbox/style.css';
 import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import UserListPage from 'pages/User/UserListPage';

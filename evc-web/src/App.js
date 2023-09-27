@@ -1,6 +1,5 @@
 import React from 'react';
 import 'antd/dist/antd.less';
-import 'react-image-lightbox/style.css';
 import { BrowserRouter, Switch } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
 import LogInPage from 'pages/LogInPage';

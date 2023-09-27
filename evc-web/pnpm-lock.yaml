@@ -36,7 +36,6 @@ dependencies:
   react-google-login: 5.2.2_react-dom@17.0.1+react@17.0.1
   react-highlight-words: 0.17.0_react@17.0.1
   react-icons: 4.2.0_react@17.0.1
-  react-image-lightbox: 5.1.1_react-dom@17.0.1+react@17.0.1
   react-markdown-editor-lite: 1.2.4_react@17.0.1
   react-multi-carousel: 2.6.2
   react-paypal-button-v2: 2.6.3_react-dom@17.0.1+react@17.0.1
@@ -6228,10 +6227,6 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-j5W0//W7f8UxAn8hXVnwG8tLwdiUy4FJLcSupCg6maBYZDpyBvTApK7KyuI4bKj8KOh1r2YH+6ucuYtJv1bTZA==
-  /exenv/1.2.2:
-    dev: false
-    resolution:
-      integrity: sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
   /exit/0.1.2:
     dev: false
     engines:
@@ -12094,18 +12089,6 @@ packages:
       react: '*'
     resolution:
       integrity: sha512-rmzEDFt+AVXRzD7zDE21gcxyBizD/3NqjbX6cmViAgdqfJ2UiLer8927/QhhrXQV7dEj/1EGuOTPp7JnLYVJKQ==
-  /react-image-lightbox/5.1.1_react-dom@17.0.1+react@17.0.1:
-    dependencies:
-      prop-types: 15.7.2
-      react: 17.0.1
-      react-dom: 17.0.1_react@17.0.1
-      react-modal: 3.12.1_react-dom@17.0.1+react@17.0.1
-    dev: false
-    peerDependencies:
-      react: ^16.x
-      react-dom: ^16.x
-    resolution:
-      integrity: sha512-GprldD8AqpRb2hsOdns3sI7Xeo9hJlcybDxuli4RB+ml1J/GaFaUuRkT/7IrTLv2+4vkR74ahz2LD0HOUHI7wA==
   /react-input-autosize/3.0.0_react@17.0.1:
     dependencies:
       prop-types: 15.7.2
@@ -12135,22 +12118,6 @@ packages:
       react: ^16.9.0
     resolution:
       integrity: sha512-zUMDsrRxmjNeZEaVkL2oXlOpSJOmVtI5wwRv71MevyvwA/gZQOE7oJP6dSRe84HMccuoU2v1+FxNWKYJtMdPdw==
-  /react-modal/3.12.1_react-dom@17.0.1+react@17.0.1:
-    dependencies:
-      exenv: 1.2.2
-      prop-types: 15.7.2
-      react: 17.0.1
-      react-dom: 17.0.1_react@17.0.1
-      react-lifecycles-compat: 3.0.4
-      warning: 4.0.3
-    dev: false
-    engines:
-      node: '>=8'
-    peerDependencies:
-      react: ^0.14.0 || ^15.0.0 || ^16 || ^17
-      react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17
-    resolution:
-      integrity: sha512-WGuXn7Fq31PbFJwtWmOk+jFtGC7E9tJVbFX0lts8ZoS5EPi9+WWylUJWLKKVm3H4GlQ7ZxY7R6tLlbSIBQ5oZA==
   /react-multi-carousel/2.6.2:
     dev: false
     engines:
@@ -15457,7 +15424,6 @@ specifiers:
   react-google-login: ^5.2.2
   react-highlight-words: ^0.17.0
   react-icons: ^4.2.0
-  react-image-lightbox: ^5.1.1
   react-markdown-editor-lite: ^1.2.4
   react-multi-carousel: ^2.6.1
   react-paypal-button-v2: ^2.6.3

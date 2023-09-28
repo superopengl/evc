@@ -52,6 +52,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
       creditTransaction = new UserCreditTransaction();
       creditTransaction.userId = userId;
       creditTransaction.amount = -1 * creditDeductAmount;
+      creditTransaction.type = 'user-pay';
       await m.save(creditTransaction);
     }
 

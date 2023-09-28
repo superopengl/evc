@@ -29,6 +29,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
 });
 
 export const getFile = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   const { id } = req.params;
   const repo = getRepository(File);
   const file = await repo.findOne(id);
@@ -39,6 +40,7 @@ export const getFile = handlerWrapper(async (req, res) => {
 });
 
 export const searchFileList = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   const { ids } = req.body;
   const files = await getRepository(File)
     .createQueryBuilder()
@@ -48,7 +50,7 @@ export const searchFileList = handlerWrapper(async (req, res) => {
 });
 
 export const uploadFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member');
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   const { user } = req as any;
   const { file } = (req as any).files;
   assert(file, 404, 'No file to upload');

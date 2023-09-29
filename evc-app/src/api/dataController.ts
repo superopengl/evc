@@ -19,6 +19,20 @@ import { getUtcNow } from '../utils/getUtcNow';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
+const convertHeaderToPropName = header => {
+  return header.split(' ')
+  .map(x => x.replace(/[\/ ]/g, ''))
+  .map((w, i) => i === 0 ? w.toLowerCase() : _.capitalize(w))
+  .join('');
+}
+
+const formatUoaUploadRow = row => {
+  row.expDate = moment(row.expDate, 'MM/DD/YY').toDate();
+  row.time = moment(row.time, 'MM/DD/YY').toDate();
+  row.iv = row.iv.replace(/%/g, '');
+  return row;
+}
+
 function handleCsvUpload(onRows: (rows: []) => Promise<void>, onFinish: () => Promise<void> = async () => { }) {
   return handlerWrapper(async (req, res) => {
     assertRole(req, 'admin', 'agent');
@@ -35,7 +49,7 @@ function handleCsvUpload(onRows: (rows: []) => Promise<void>, onFinish: () => Pr
     try {
       await redisCache.set(key, 'in-progress');
       const list = parse(data, {
-        columns: true,
+        columns: headers => headers.map(convertHeaderToPropName),
         skip_empty_lines: true
       });
 
@@ -122,11 +136,12 @@ async function cleanUpOldUoaData(table) {
 
 export const uploadUoaStockCsv = handleCsvUpload(
   async rows => {
+    const formattedRows = rows.map(formatUoaUploadRow);
     await getManager()
       .createQueryBuilder()
       .insert()
       .into(UnusalOptionActivityStock)
-      .values(rows as UnusalOptionActivityStock[])
+      .values(formattedRows as UnusalOptionActivityStock[])
       .execute();
   },
   () => cleanUpOldUoaData(UnusalOptionActivityStock)

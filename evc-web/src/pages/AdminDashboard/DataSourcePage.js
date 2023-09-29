@@ -39,7 +39,7 @@ const DataSourcePage = () => {
         }>
         Bulk upload from CSV file. The CSV file must have a header row with three columns <Text code>symbol</Text>, <Text code>lo</Text>, <Text code>hi</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once. A sample is as below.
           <Text><pre><small>
-          {`symbol,lo,hi
+          {`Symbol,lo,hi
 AAPL,120,150
 AAPL,160,180
 GOOG,1000,2000
@@ -75,11 +75,11 @@ GOOG,2100,2200`}
       >
         Bulk upload from CSV file. The CSV file must have a header row as below.
           <Text><pre><small>
-          {`symbol,price,type,strike,expDate,dte,bid,midpoint,ask,last,volume,openInt,voloi,iv,time
-GM,56.83,Call,65,04/01/21,21,0.74,0.76,0.77,0.74,20184,230,87.76,57.69,03/10/21
-SBH,20.9,Put,17.5,04/16/21,36,0.4,0.43,0.45,0.44,5054,105,48.13,66.65,03/10/21
-ETSY,205.93,Call,205,03/19/21,8,9.15,9.48,9.8,9.74,5037,111,45.38,76.40,03/10/21
-BA,245.34,Put,240,03/12/21,2,1.75,1.8,1.85,1.75,13246,292,45.36,53.66,03/10/21`}
+          {`Symbol,Price,Type,Strike,"Exp Date",DTE,Bid,Midpoint,Ask,Last,Volume,"Open Int",Vol/OI,IV,Time
+CCJ,16.5,Call,35,09/17/21,172,0.36,0.37,0.38,0.38,15103,256,59,74.80%,03/29/21
+GSX,31.78,Call,40,04/16/21,18,1.8,1.99,2.18,1.85,6521,133,49.03,155.62%,03/29/21
+KTOS,27.43,Call,30,04/16/21,18,1.1,1.18,1.25,1.15,25473,575,44.3,86.68%,03/29/21
+DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/21`}
         </small> </pre></Text>
       </Card>
 
@@ -98,11 +98,11 @@ BA,245.34,Put,240,03/12/21,2,1.75,1.8,1.85,1.75,13246,292,45.36,53.66,03/10/21`}
         }>
         Bulk upload from CSV file. The CSV file must have a header row as below.
           <Text><pre><small>
-          {`symbol,date,putCallRatio
-AAPL,MM/DD/YY,0.3
-AAPL,MM/DD/YY,0.5
-GOOG,MM/DD/YY,0.75
-GOOG,MM/DD/YY,0.85`}
+          {`Symbol,Date,"Put Call Ratio"
+AAPL,09/17/21,0.3
+AAPL,09/18/21,0.5
+GOOG,09/17/21,0.75
+GOOG,09/18/21,0.85`}
         </small> </pre></Text>
       </Card>
 

@@ -50,6 +50,6 @@ export const saveStockFairValue = handlerWrapper(async (req, res) => {
 export const deleteStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  await getRepository(StockSpecialFairValue).softDelete(id);
+  await getRepository(StockSpecialFairValue).delete(id);
   res.json();
 });

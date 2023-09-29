@@ -15,10 +15,6 @@ export class StockSupport {
   @CreateDateColumn()
   createdAt?: Date;
 
-  @DeleteDateColumn()
-  @Index()
-  deletedAt: Date;
-
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   lo: number;
 

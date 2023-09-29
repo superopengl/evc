@@ -14,7 +14,6 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
     's')
     .leftJoin(q => q
       .from(StockSpecialFairValue, 'sp')
-      .where('sp."deletedAt" IS NULL')
       .distinctOn(['symbol'])
       .orderBy('symbol')
       .addOrderBy('"reportDate"', 'DESC'),

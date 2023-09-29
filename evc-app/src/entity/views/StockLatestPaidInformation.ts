@@ -37,9 +37,14 @@ import { StockResistance } from '../StockResistance';
     .leftJoin(q =>
       q.from(q =>
         q.from(StockSupport, 'x')
-          .orderBy('lo', 'DESC')
-          .limit(4),
+          .select([
+            'symbol',
+            'lo',
+            'hi',
+            `RANK() OVER (PARTITION BY symbol ORDER BY lo DESC, hi DESC) AS rank`
+          ]),
       'sup')
+        .where(`rank <= 3`)
         .groupBy('symbol')
         .select('symbol')
         .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
@@ -49,9 +54,14 @@ import { StockResistance } from '../StockResistance';
     .leftJoin(q =>
       q.from(q =>
         q.from(StockResistance, 'x')
-          .orderBy('lo', 'ASC')
-          .limit(4),
+        .select([
+          'symbol',
+          'lo',
+          'hi',
+          `RANK() OVER (PARTITION BY symbol ORDER BY lo ASC, hi ASC) AS rank`
+        ]),
       'sup')
+        .where(`rank <= 3`)
         .groupBy('symbol')
         .select('symbol')
         .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),

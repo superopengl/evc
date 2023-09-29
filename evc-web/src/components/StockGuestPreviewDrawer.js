@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer, Button, Typography, Alert, Space } from 'antd';
-import { getStock } from 'services/stockService';
+import { getStockForGuest } from 'services/stockService';
 import { StockName } from 'components/StockName';
 import ReactDOM from "react-dom";
 import { Link, withRouter } from 'react-router-dom';
@@ -23,7 +23,7 @@ export const StockGuestPreviewDrawer = (props) => {
   const loadEntity = async () => {
     // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
     try {
-      const stock = symbol ? await getStock(symbol) : null;
+      const stock = symbol ? await getStockForGuest(symbol) : null;
       setStock(stock);
     } catch {
       onClose();

@@ -52,7 +52,7 @@ const StockPutCallRatioChart = props => {
     yAxis: {
       label: {
         formatter: function formatter(v) {
-          return v.toLocaleString();
+          return v?.toLocaleString();
         },
       },
     },

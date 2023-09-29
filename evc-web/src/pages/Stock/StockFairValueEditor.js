@@ -73,7 +73,7 @@ export const StockFairValueEditor = (props) => {
   }
 
   const displayNumber = value => {
-    return _.isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value).toLocaleString();
+    return _.isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value)?.toLocaleString();
   }
 
 

@@ -232,7 +232,7 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title="Credit"
+            title="Credit Balance"
             extra={
               <Title><MoneyAmount type="success" value={account.credit} /></Title>
             }

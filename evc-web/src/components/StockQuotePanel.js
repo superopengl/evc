@@ -79,7 +79,7 @@ const StockQuotePanel = (props) => {
     }
     const symbol = changeValue >= 0 ? '+' : '';
     const type = changeValue >= 0 ? 'success' : 'danger';
-    return <Text type={type}><small>{symbol}{changeValue} ({symbol}{changePrecent.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 3 })})</small></Text>
+    return <Text type={type}><small>{symbol}{changeValue} ({symbol}{changePrecent?.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 3 })})</small></Text>
   }
 
   const isIntra = quote.isUSMarketOpen;

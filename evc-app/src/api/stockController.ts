@@ -70,8 +70,26 @@ export const getStockDataInfo = handlerWrapper(async (req, res) => {
   res.json(result);
 });
 
+export const getStockNextReportDate = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'member', 'free');
+  const symbol = req.params.symbol.toUpperCase();
+
+  const entity = await getRepository(StockEarningsCalendar).findOne({
+    where: {
+      symbol,
+      reportDate: MoreThanOrEqual(moment().startOf('day').toDate())
+    },
+    order: {
+      reportDate: 'ASC'
+    }
+  });
+
+  res.set('Cache-Control', `public, max-age=3600`);
+  res.json(entity?.reportDate);
+});
+
 export const getStock = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'member', 'free');
+  assertRole(req, 'admin', 'agent', 'member', 'free');
   const { user } = req as any;
   const userId = user?.id;
   const role = user?.role || Role.Guest;
@@ -126,6 +144,17 @@ export const getStock = handlerWrapper(async (req, res) => {
 
   assert(stock, 404);
 
+  res.json(stock);
+});
+
+export const getStockForGuest = handlerWrapper(async (req, res) => {
+  const symbol = req.params.symbol.toUpperCase();
+
+  const stock = await getRepository(StockLatestFreeInformation).findOne({ symbol });
+
+  assert(stock, 404);
+
+  res.set('Cache-Control', `public, max-age=600`);
   res.json(stock);
 });
 
@@ -265,9 +294,10 @@ async function addAndInitializeStock(symbol, companyName): Promise<boolean> {
     if (has) {
       return false;
     }
-    await getRepository(Stock).insert(stock);
+    await getRepository(Stock).save(stock);
     await syncStockEps(symbol, 5);
     await syncStockHistoricalClose(symbol, 200);
+    await getAndFeedStockQuote(symbol);
 
     console.log(`Auto-added stock ${symbol} together with its EPS and its historical close prices`);
     return true;
@@ -510,8 +540,7 @@ async function updateStockLastPrice(info: StockLastPriceInfo) {
     .execute();
 }
 
-export const getStockQuote = handlerWrapper(async (req, res) => {
-  const { symbol } = req.params;
+const getAndFeedStockQuote = async (symbol) => {
   const quote = await getQuote(symbol);
   if (quote) {
     await updateStockLastPrice({
@@ -522,6 +551,15 @@ export const getStockQuote = handlerWrapper(async (req, res) => {
       time: quote.latestUpdate
     });
   }
+  return quote;
+};
+
+
+export const getStockQuote = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const quote = await getAndFeedStockQuote(symbol);
+
+  res.set('Cache-Control', `public, max-age=10`);
   res.json(quote);
 });
 
@@ -530,6 +568,7 @@ export const getStockEvcInfo = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const result = await getRepository(StockLatestPaidInformation).findOne(symbol);
 
+  res.set('Cache-Control', `public, max-age=600`);
   res.json(result);
 });
 
@@ -554,6 +593,8 @@ export const getStockPrice = handlerWrapper(async (req, res) => {
     price: data?.price,
     time: data?.time
   };
+
+  res.set('Cache-Control', `public, max-age=10`);
   res.json(result);
 });
 

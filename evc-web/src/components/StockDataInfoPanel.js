@@ -54,7 +54,7 @@ const StockDataInfoPanel = (props) => {
         const time = moment(value);
         if(_.isFinite(+value)) {
           // Number
-          return +value.toLocaleString();
+          return +value?.toLocaleString();
         } else if(time.isValid()) {
           // Date
           return time.format('D MMM YYYY');

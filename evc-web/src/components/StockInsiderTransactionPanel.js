@@ -22,7 +22,7 @@ const RosterList = styled(List)`
 const Container = styled(Space)`
 .ant-descriptions-title {
   font-size: 14px;
-  color: #3273A4 !important;
+  // color: #3273A4 !important;
 }
 
 .ant-descriptions-header {

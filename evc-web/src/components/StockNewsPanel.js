@@ -29,9 +29,13 @@ cursor: pointer;
 `;
 
 const StyledListItem = styled(List.Item)`
+
+.news-title {
+  font-weight: 400;
+}
 &:hover {
   .news-title {
-    color: #3273A4;
+    color: #18b0d7;
     text-decoration: underline;
   }
 }

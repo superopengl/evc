@@ -100,15 +100,16 @@ right: 0;
 display: flex;
 align-items: center;
 justify-content: center;
-// background-color: rgba(255,255,255,0.7);
-background-color: rgba(0,0,0,0.3);
+background-color: rgba(255,255,255,0.5);
+// background-color: rgba(0,0,0,0.3);
 display: flex;
 flex-direction: column;
 
   &, .ant-typography {
     font-weight: 500;
-    font-size: 1.2rem;
-    color: #eeeeee;
+    // font-size: 1.2rem;
+    // color: #eeeeee;
+    color: rgba(0,0,0,0.85);
   }
   // transform: rotate(-15deg);
 `;

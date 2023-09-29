@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Spin, Typography, Col, Row } from 'antd';
+import { Spin, Typography, Col, Row, Button, Alert, Space } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
@@ -8,7 +8,11 @@ import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'reac
 import { VscRocket } from 'react-icons/vsc';
 import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
+import StockRadarPage from 'pages/Stock/StockRadarPage';
+import { Link, withRouter } from 'react-router-dom';
+import EarningsCalendarPage from 'pages/AdminDashboard/EarningsCalendarPage';
 
+const { Text, Title } = Typography;
 
 const StyledRow = styled(Row)`
   margin-top: 10px;
@@ -32,46 +36,41 @@ justify-content: center;
 margin-bottom: 0rem;
 width: 100%;
 text-align: center;
-padding: 2rem;
-background: #fafafa;
-// background: rgb(240, 242, 245);
+padding: 4rem 2rem;
+background: rgb(240, 242, 245);
+// background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
 `;
 
 const InnerContainer = styled.div`
 margin-left: auto;
 margin-right: auto;
 width: 100%;
+// border: 1px solid #f0f0f0;
+// padding: 2rem;
+// background: rgb(240, 242, 245);
+// filter: contrast(0.6);
+// transform: scale(0.8);
+
 max-width: 1200px;
 `;
 
 
-const { Title, Text } = Typography;
-
-export const HomePricingArea = props => {
-  const { onClick } = props;
+export const HomeEarningsCalendarArea = props => {
+  const { onSymbolClick } = props;
   return (
     <Container>
+      <Title>Earnings Calendar</Title>
       <InnerContainer>
-        <StyledRow gutter={20}>
-          <StyledRow gutter={20}>
-            {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
-              <SubscriptionCard
-                title={s.title}
-                icon={s.icon}
-                description={s.description}
-                price={s.price}
-                interactive={false}
-                unit={s.unit} />
-            </StyledCol>)}
-          </StyledRow>
-        </StyledRow>
+        <EarningsCalendarPage onSymbolClick={onSymbolClick}/>
       </InnerContainer>
     </Container>
   )
 }
 
-HomePricingArea.propTypes = {
+HomeEarningsCalendarArea.propTypes = {
+  onSymbolClick: PropTypes.func,
 };
 
-HomePricingArea.defaultProps = {
+HomeEarningsCalendarArea.defaultProps = {
+  onSymbolClick: () => { }
 };

@@ -32,14 +32,14 @@ import MyAccountPage from 'pages/MyAccount/MyAccountPage';
 import AboutDrawer from 'pages/About/AboutDrawer';
 import { Route, Switch } from 'react-router-dom';
 import { GiReceiveMoney, GiRadarSweep, GiPayMoney } from 'react-icons/gi';
-import {BsCalendar} from 'react-icons/bs';
+import { BsCalendar } from 'react-icons/bs';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import DataSourcePage from 'pages/AdminDashboard/DataSourcePage';
 import UnusualOptionsActivityPage from 'pages/AdminDashboard/UnusualOptionsActivityPage';
 import EarnCommissionModal from 'pages/EarnCommissionModal';
 import AdminCommissionWithdrawalListPage from 'pages/CommissionWithdrawal/AdminCommissionWithdrawalListPage';
-import EarningCalendarPage from 'pages/AdminDashboard/EarningCalendarPage';
+import EarningsCalendarPage from 'pages/AdminDashboard/EarningsCalendarPage';
 
 const { Link: LinkText } = Typography;
 
@@ -290,7 +290,8 @@ const AppLoggedIn = props => {
       <RoleRoute visible={!isFree} exact path="/unsual_options_activity" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockRadarPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
-      <RoleRoute visible={true} exact path="/earnings_calendar" component={EarningCalendarPage} />
+
+      <RoleRoute visible={true} exact path="/earnings_calendar" component={() => <EarningsCalendarPage onSymbolClick={symbol => props.history.push(`/stock/${symbol}`)} />} />
       <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} />
       <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />

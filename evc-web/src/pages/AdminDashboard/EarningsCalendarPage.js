@@ -173,6 +173,7 @@ const EarningsCalendarPage = props => {
         bordered={true}
         pagination={false}
         rowKey="key"
+        scroll={{x: 500}}
         style={{ marginBottom: '2rem' }}
       />
     </Space>

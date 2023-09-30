@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Tooltip, Skeleton } from 'antd';
+import { Card, Typography, Space, Tooltip, Row, Col } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
@@ -170,42 +170,46 @@ const StockInfoCard = (props) => {
     hoverable={hoverable}
     actions={actions}
   >
-    <div align="start" style={{ display: 'flex', width: '100%', justifyContent: 'stretch' }}>
-      <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{stock.lastPrice ? (+stock.lastPrice).toFixed(2) : 'N/A'}</Text>
-      <StyledTable style={{ flexGrow: 1 }}>
-        <tbody>
-          <tr>
-            <td>
-              <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
-            </td>
-            <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} empty={<Text type="warning"><small>N/A Cannot calculate</small></Text>} />}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ verticalAlign: 'top' }}>
-              <TooltipLabel message="How to use support">Support</TooltipLabel>
-            </td>
-            <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
-            </td>
-          </tr>
-          <tr>
-            <td style={{ verticalAlign: 'top' }}>
-              <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
-            </td>
-            <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
-            </td>
-          </tr>
-        </tbody>
-      </StyledTable>
-    </div>
+      <Row>
+        <Col flex="none">
+          <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{stock.lastPrice ? (+stock.lastPrice).toFixed(2) : 'N/A'}</Text>
+        </Col>
+        <Col flex="auto">
+          <StyledTable>
+            <tbody>
+              <tr>
+                <td>
+                  <TooltipLabel message="How to use fair value">Fair Value</TooltipLabel>
+                </td>
+                <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} empty={<Text type="warning"><small>N/A Cannot calculate</small></Text>} />}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ verticalAlign: 'top' }}>
+                  <TooltipLabel message="How to use support">Support</TooltipLabel>
+                </td>
+                <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ verticalAlign: 'top' }}>
+                  <TooltipLabel message="How to use resistance">Resistance</TooltipLabel>
+                </td>
+                <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
+                </td>
+              </tr>
+            </tbody>
+          </StyledTable>
+        </Col>
+      </Row>
 
     {shouldHideData && <StyledGuestCover>
       <LockFilled />
       <Text>Full feature is available after pay</Text>
-        {/* {isGuest ?
+      {/* {isGuest ?
         <Link to="/signup" onClick={e => e.stopPropagation()}>Click to sign up</Link> :
         <Link to="/account" onClick={e => e.stopPropagation()}>Click to upgrade</Link>} */}
     </StyledGuestCover>}

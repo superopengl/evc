@@ -13,6 +13,7 @@ import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockDeprecateSupport } from './entity/views/StockDeprecateSupport';
 import { StockDeprecateResistance } from './entity/views/StockDeprecateResistance';
+import { redisCache } from './services/redisCache';
 
 const views = [
   StockLatestPaidInformation,
@@ -120,10 +121,21 @@ async function createIndexOnMaterilializedView() {
   }
 }
 
+const REFRESHING_MV_CACHE_KEY = 'database.mv.refreshing'
+
 export async function refreshMaterializedView(mviewEnitity?: any) {
-  const targetViews = mviewEnitity ? [mviewEnitity] : mviews;
-  for (const viewEntity of targetViews) {
-    const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
-    await getManager().query(`REFRESH MATERIALIZED VIEW "${schema}"."${tableName}"`);
+  const refreshing = await redisCache.get(REFRESHING_MV_CACHE_KEY);
+  if (refreshing) {
+    return;
+  }
+  try {
+    const targetViews = mviewEnitity ? [mviewEnitity] : mviews;
+    for (const viewEntity of targetViews) {
+      await redisCache.setex(REFRESHING_MV_CACHE_KEY, 5 * 60, true);
+      const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
+      await getManager().query(`REFRESH MATERIALIZED VIEW "${schema}"."${tableName}"`);
+    }
+  } finally {
+    await redisCache.del(REFRESHING_MV_CACHE_KEY);
   }
 }

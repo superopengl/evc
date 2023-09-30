@@ -6,17 +6,13 @@ import * as _ from 'lodash';
 import styled from 'styled-components';
 import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
-import { TimeAgo } from 'components/TimeAgo';
 import moment from 'moment';
 import { NumberRangeInput } from 'components/NumberRangeInput';
 import {
-  listStockSupport, saveStockSupport, deleteStockSupport,
-  listStockResistance, saveStockResistance, deleteStockResistance,
-  listStockEps, saveStockEps, deleteStockEps,
-  listStockFairValue, saveStockFairValue, deleteStockFairValue,
+  listStockFairValue,
 } from 'services/stockService';
 import ReactDOM from 'react-dom';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined } from '@ant-design/icons';
 
 const { Text, Paragraph } = Typography;
 

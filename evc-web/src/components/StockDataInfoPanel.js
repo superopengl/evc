@@ -42,10 +42,24 @@ const StockDataInfoPanel = (props) => {
     loadData();
   }, []);
 
+  const getLabel = (key) => {
+    return {
+      closeFrom: 'Earliest close price',
+      closeTo: 'Latest close price',
+      closeCount: 'Total close price data points',
+      epsFrom: 'Earliest EPS',
+      epsTo: 'Latest EPS',
+      epsCount: 'Total EPS data points',
+      pe90From: 'Earliest PE90',
+      pe90To: 'Latest PE90',
+      pe90Count: 'Total PE90 data points'
+    }[key] || key;
+  }
+
   const columnDef = [
     {
       dataIndex: 'key',
-      render: (value, item) => <Text type="secondary"><small>{value}</small></Text>
+      render: (value, item) => <Text type="secondary"><small>{getLabel(value)}</small></Text>
     },
     {
       dataIndex: 'value',

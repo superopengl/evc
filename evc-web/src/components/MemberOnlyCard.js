@@ -13,15 +13,19 @@ const StyledCard = styled(Card)`
 `;
 
 export const MemberOnlyCard = (props) => {
-  const { paidOnly, message, children, blockedComponent, ...otherProps } = props;
+  const { paidOnly, message, children, blockedComponent, bodyStyle: propBodyStyle, ...otherProps } = props;
   const context = React.useContext(GlobalContext);
   const { role } = context;
   const shouldBlock = paidOnly && !['admin', 'agent', 'member'].includes(role);
 
   const bodyStyle = shouldBlock ? {
+    ...propBodyStyle,
+    overflow:'auto',
     backgroundColor: 'rgb(0, 41, 61)',
   } : {
-    };
+    ...propBodyStyle,
+    overflow:'auto'
+  };
   const headStyle = shouldBlock ?
     {
       backgroundColor: 'rgba(0, 41, 61, 0.8)',

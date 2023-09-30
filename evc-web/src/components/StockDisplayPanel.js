@@ -82,10 +82,11 @@ const StockDisplayPanel = (props) => {
           <Col flex="0 0 auto">
             <StockQuotePanel symbol={stock.symbol} />
             <MemberOnlyCard
-              title="Fair Value / Support / Resistance"
+              title="EVC Core Info"
               message="The latest fair value is only accessible to paid user"
               paidOnly={true}
               style={{ marginTop: 30 }}
+              bodyStyle={{height: 303}}
               blockedComponent={
                 <OldFairValueContainer >
                   {stock.fairValues?.map((fv, i) => <Space key={i}>
@@ -101,18 +102,18 @@ const StockDisplayPanel = (props) => {
             <StockChart symbol={stock.symbol} period="1d" interval="5m" />
           </Col>
           <Col span={18}>
-            <MemberOnlyCard title={<>News</>}>
+            <MemberOnlyCard title={<>News</>} bodyStyle={{height: 500}}>
               <StockNewsPanel symbol={stock.symbol} />
             </MemberOnlyCard>
-            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true} style={{ marginTop: 30 }}>
+            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true} style={{ marginTop: 30 }} bodyStyle={{height: 500}}>
               <StockInsiderTransactionPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
           <Col span={6}>
-            <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true}>
+            <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true} bodyStyle={{height: 500}}>
               <StockPutCallRatioChart symbol={stock.symbol} />
             </MemberOnlyCard>
-            <MemberOnlyCard title={<>Roster</>} style={{ marginTop: 30 }}>
+            <MemberOnlyCard title={<>Roster</>} style={{ marginTop: 30 }} bodyStyle={{height: 500}}>
               <StockRosterPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>

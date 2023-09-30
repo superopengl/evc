@@ -145,6 +145,7 @@ export const StockFairValueEditor = (props) => {
       loading={loading}
       pagination={false}
       style={{ width: '100%' }}
+      scroll={{y: 300}}
     />
   </Container>
 }

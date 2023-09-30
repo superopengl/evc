@@ -8,46 +8,10 @@ import * as _ from 'lodash';
 import { Select } from 'antd';
 
 export const StockEpsInput = (props) => {
-  const { onChange, onSave, value: propValue, disabled } = props;
-  const [year, setYear] = React.useState(propValue?.year || new Date().getFullYear());
-  const [quarter, setQuarter] = React.useState(propValue?.quarter);
-  const [value, setValue] = React.useState(propValue?.value);
-
-  const handleChangeValue = v => {
-    handleChange(year, quarter, v);
-  }
-
-  const handleChangeYear = (y) => {
-    handleChange(y, quarter, value);
-  }
-
-  const handleChangeQuarter = q => {
-    handleChange(year, q, value);
-  }
-
-  const handleChange = (y, q, n) => {
-    setYear(y);
-    setQuarter(q);
-    setValue(n);
-    onChange({
-      year: y,
-      quarter: q,
-      value: n
-    });
-  }
+  const { onChange, onSave, disabled } = props;
 
   const handleSave = (values) => {
     onSave(values);
-    setQuarter(null);
-    setValue(null);
-  }
-
-  const isValidValue = () => {
-    return _.isNumber(year) && _.isNumber(quarter) && _.isNumber(value);
-  }
-
-  const handleReportPeriod = () => {
-
   }
 
   return <Space>
@@ -61,7 +25,7 @@ export const StockEpsInput = (props) => {
     </Select> */}
     <Form layout="inline" onFinish={handleSave}>
       <Form.Item label="" name="period" rules={[{ required: true, message: ' ' }]}>
-        <DatePicker placeholder="Report quarter" onChange={handleReportPeriod} picker="quarter" disabled={disabled} style={{width: 150}} />
+        <DatePicker placeholder="Report quarter" picker="quarter" disabled={disabled} style={{width: 150}} />
       </Form.Item>
       <Form.Item label="" name="value" rules={[{ required: true, message : ' ' }]}>
         <InputNumber disabled={disabled} />

@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 
+const {Text} = Typography;
+
 const Container = styled.div`
   .current-published {
     background-color: rgba(21,190,83, 0.1);
@@ -82,7 +84,10 @@ export const StockRangeTimelineEditor = (props) => {
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
             <List.Item.Meta
-              description={<NumberRangeDisplay lo={item.lo} hi={item.hi} loTrend={item.loTrend} hiTrend={item.hiTrend} time={item.createdAt} />}
+              description={<Space size="small">
+                <Text type="secondary">{moment(item.createdAt).format('D MMM YYYY')}</Text>
+              <NumberRangeDisplay lo={item.lo} hi={item.hi} />
+              </Space>}
             />
           </List.Item>
         )}

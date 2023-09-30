@@ -40,7 +40,7 @@ export const NumberRangeDisplay = (props) => {
   const isCompactMode = displayLo === displayHi && loTrend === hiTrend;
 
   return <Space size="small" direction="horizontal" className={className}>
-    {time && <TimeAgo value={time} accurate={accurateTime} showAgo={false} />}
+    {time && <TimeAgo value={time} accurate={accurateTime} showAgo={false} direction="vertical"/>}
     <NumberPanel>
       {displayLo === null && displayHi === null ? <Text>None</Text> :
         isCompactMode ? getComponent(displayLo, loTrend) :

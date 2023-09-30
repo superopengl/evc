@@ -36,13 +36,12 @@ const Container = styled.div`
 `;
 
 export const StockFairValueEditor = (props) => {
-  const { symbol, onLoadList, onChange, onDelete } = props;
+  const { symbol, onLoadList, onSaveNew, onDelete } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
   const updateList = list => {
     setList(list);
-    onChange(list);
   }
 
   const load = async () => {
@@ -80,7 +79,7 @@ export const StockFairValueEditor = (props) => {
   const handleSaveFairValue = async (values) => {
     const { reportDate, range } = values;
     const [lo, hi] = range;
-    await saveStockFairValue(symbol, {
+    await onSaveNew({
       reportDate,
       lo,
       hi

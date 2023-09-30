@@ -65,30 +65,13 @@ const ColInnerCard = props => {
   </Card>
 };
 
-
-
-
-const DEFAULT_SELECTED = {
-  source: '',
-  publishId: null,
-  resistanceId: null,
-  supportId: null,
-  fairValueId: null,
-  epsIds: [],
-  epId: null,
-};
-
 const StockAdminPanel = (props) => {
+
+  const {onDataChange} = props;
+
   const [stock] = React.useState(props.stock);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
   const [publishingPrice, setPublishingPrice] = React.useState(false);
-  const [epsList, setEpsList] = React.useState([]);
-  const [peList] = React.useState([]);
-  const [, setSupportList] = React.useState([]);
-  const [, setResistanceList] = React.useState([]);
-  const [valueList, setValueList] = React.useState([]);
-  const [] = React.useState([]);
-  const [selected, setSelected] = React.useState(DEFAULT_SELECTED);
 
   const { symbol } = stock;
 
@@ -115,38 +98,6 @@ const StockAdminPanel = (props) => {
     return <Loading />
   }
 
-
-  const updateSelectedByEps = (item) => {
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'eps',
-      epsIds: [item.id]
-    });
-  }
-
-
-
-  const updateSelectedBySupport = (item) => {
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'support',
-      supportId: item.id,
-    });
-  }
-
-
-
-  const updateSelectedByResistance = (item) => {
-    setSelected({
-      ...DEFAULT_SELECTED,
-      source: 'resistance',
-      resistanceId: item.id,
-    });
-  }
-
-
-
-
   return (<Container>
     <Row gutter={[30, 30]} style={{ marginTop: 20 }} wrap={true}>
       <Col flex="auto">
@@ -163,8 +114,6 @@ const StockAdminPanel = (props) => {
             onLoadList={() => listStockEps(symbol)}
             onSaveNew={values => saveStockEps(symbol, values)}
             onDelete={(symbol, reportDate) => deleteStockEps(symbol, reportDate)}
-            onChange={list => setEpsList(list)}
-            onSelected={updateSelectedByEps}
           />
         </ColInnerCard>
       </Col>
@@ -172,10 +121,14 @@ const StockAdminPanel = (props) => {
         <ColInnerCard title="Support">
           <StockRangeTimelineEditor
             onLoadList={() => listStockSupport(symbol)}
-            onSaveNew={([lo, hi]) => saveStockSupport(symbol, lo, hi)}
-            onDelete={id => deleteStockSupport(id)}
-            onChange={list => setSupportList(list)}
-            onSelected={updateSelectedBySupport}
+            onSaveNew={async ([lo, hi]) => {
+              await saveStockSupport(symbol, lo, hi);
+              onDataChange();
+            }}
+            onDelete={async id => {
+              await deleteStockSupport(id);
+              onDataChange();
+            }}
           />
         </ColInnerCard>
       </Col>
@@ -183,10 +136,14 @@ const StockAdminPanel = (props) => {
         <ColInnerCard title="Resistance">
           <StockRangeTimelineEditor
             onLoadList={() => listStockResistance(symbol)}
-            onSaveNew={([lo, hi]) => saveStockResistance(symbol, lo, hi)}
-            onDelete={id => deleteStockResistance(id)}
-            onChange={list => setResistanceList(list)}
-            onSelected={updateSelectedByResistance}
+            onSaveNew={async ([lo, hi]) => {
+              await saveStockResistance(symbol, lo, hi);
+              onDataChange();
+            }}
+            onDelete={async id => {
+              await deleteStockResistance(id);
+              onDataChange();
+            }}
           />
         </ColInnerCard>
       </Col>
@@ -205,9 +162,14 @@ const StockAdminPanel = (props) => {
           <StockFairValueEditor
             symbol={stock.symbol}
             onLoadList={() => listStockFairValue(symbol)}
-            onSaveNew={payload => saveStockFairValue(symbol, payload)}
-            onDelete={id => deleteStockFairValue(id)}
-            onChange={list => setValueList(list)}
+            onSaveNew={async payload => {
+              await saveStockFairValue(symbol, payload);
+              onDataChange();
+            }}
+            onDelete={async id => {
+              await deleteStockFairValue(id);
+              onDataChange();
+            }}
           />
         </MemberOnlyCard>
       </Col>
@@ -240,10 +202,12 @@ const StockAdminPanel = (props) => {
 }
 
 StockAdminPanel.propTypes = {
-  stock: PropTypes.object.isRequired
+  stock: PropTypes.object.isRequired,
+  onDataChange: PropTypes.func,
 };
 
 StockAdminPanel.defaultProps = {
+  onDataChange: () => {}
 };
 
 export default withRouter(StockAdminPanel);

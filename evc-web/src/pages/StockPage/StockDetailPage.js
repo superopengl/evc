@@ -153,7 +153,7 @@ const StockDetailPage = (props) => {
           {reportDate && <Paragraph>Next report date is {moment(reportDate).format('D MMM YYYY')}</Paragraph>}
           {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
 
-          {isAdminOrAgent && <StockAdminPanel stock={stock} />}
+          {isAdminOrAgent && <StockAdminPanel stock={stock} onDataChange={loadEntity}/>}
 
         </PageHeader>
         <StockEditTagModal

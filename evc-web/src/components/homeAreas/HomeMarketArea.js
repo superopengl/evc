@@ -10,7 +10,6 @@ import { BiDollar } from 'react-icons/bi';
 import { listHotStock, getMarketGainers, getMarketMostActive, getMarketLosers } from 'services/stockService';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';
-import { propTypes } from 'mgr-pdf-viewer-react/dist/mgr-pdf-viewer-react';
 import PropTypes from 'prop-types';
 
 const { Title, Paragraph } = Typography;

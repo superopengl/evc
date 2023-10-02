@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Row, Col } from 'antd';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
 
 const Title = styled.h1`
   font-size: 2rem;
@@ -18,10 +16,6 @@ margin-bottom: 0rem;
 width: 100%;
 text-align: center;
 padding: 2rem 0;
-
-& .react-multi-carousel-list {
-  padding: 12px;
-}
 `;
 
 const InnerContainer = styled.div`
@@ -87,16 +81,6 @@ export const HomeRowArea = props => {
 
           {React.Children.map(children, renderChildComponent)}
         </StyledRow>
-
-
-        {false && <Carousel
-          responsive={responsive}
-          swipeable={true}
-          removeArrowOnDeviceType={["tablet", "mobile"]}
-          deviceType={deviceType}
-        >
-          {children}
-        </Carousel>}
       </InnerContainer>
     </Container>
 

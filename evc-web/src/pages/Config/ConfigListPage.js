@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Table, Input } from 'antd';
-import HomeHeader from 'components/HomeHeader';
 import {
   PlusOutlined
 } from '@ant-design/icons';
@@ -23,11 +22,6 @@ const StyledTitleRow = styled.div`
  width: 100%;
 `
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
 
 const NEW_ITEM = Object.freeze({
   isNew: true,

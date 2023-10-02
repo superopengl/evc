@@ -1,11 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Space, Row, Col, Input } from 'antd';
+import { Typography, Button, Input } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
 
 const { Title } = Typography;
 

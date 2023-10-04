@@ -10,6 +10,7 @@ import { Loading } from 'components/Loading';
 
 const { Text } = Typography;
 
+
 export const StockGuestPreviewDrawer = (props) => {
   const { symbol, visible: propVisible, onClose } = props;
 
@@ -69,3 +70,4 @@ StockGuestPreviewDrawer.propTypes = {
 
 StockGuestPreviewDrawer.defaultProps = {};
 
+export default StockGuestPreviewDrawer;

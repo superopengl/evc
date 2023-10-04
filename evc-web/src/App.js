@@ -2,25 +2,28 @@ import React from 'react';
 import 'antd/dist/antd.less';
 import { BrowserRouter, Switch } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
-import LogInPage from 'pages/LogInPage';
-import ResetPasswordPage from 'pages/ResetPasswordPage';
 import { GlobalContext } from './contexts/GlobalContext';
-import ForgotPasswordPage from 'pages/ForgotPasswordPage';
-import SignUpPage from 'pages/SignUpPage';
-import TermAndConditionPage from 'pages/TermAndConditionPage';
-import Error404 from 'pages/Error404';
-import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import { ContactWidget } from 'components/ContactWidget';
 import { getEventSource } from 'services/eventSourceService';
 import { Subject } from 'rxjs';
 import ReactDOM from 'react-dom';
-import AppLoggedIn from 'AppLoggedIn';
 import { ConfigProvider } from 'antd';
 import enUS from 'antd/lib/locale/en_US';
 import zhCN from 'antd/lib/locale/zh_CN';
 import zhTW from 'antd/lib/locale/zh_TW';
+import loadable from '@loadable/component'
+
+const SignUpPage = loadable(() => import('pages/SignUpPage'));
+const Error404 = loadable(() => import('pages/Error404'));
+const LogInPage = loadable(() => import('pages/LogInPage'));
+const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
+const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
+const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
+const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
+const AppLoggedIn = loadable(() => import('AppLoggedIn'));
+
 
 const localeDic = {
   'en-US': enUS,

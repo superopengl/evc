@@ -1,13 +1,9 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Switch, Radio } from 'antd';
-import { Link, withRouter } from 'react-router-dom';
-import { Loading } from 'components/Loading';
-import { getDashboard } from 'services/dashboardService';
-import { CaretRightOutlined } from '@ant-design/icons';
+import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Radio } from 'antd';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { listUnusalOptionsActivity } from 'services/dataService';
 import moment from 'moment';
 import { getEarningsCalender } from 'services/stockService';
 import {

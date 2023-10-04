@@ -9,8 +9,10 @@ import { Space } from 'antd';
 import * as _ from 'lodash';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import loadable from '@loadable/component'
+
+const ReactQuill = loadable(() => import('react-quill'));
 
 const { Title, Text } = Typography;
 
@@ -24,7 +26,6 @@ const StyledTitleRow = styled.div`
  align-items: center;
  width: 100%;
 `
-
 
 const StyledLabel = props => <Text style={{ width: '3rem' }} type="secondary">
   <small>{props.children}</small>

@@ -9,14 +9,13 @@ import styled from 'styled-components';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
 import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
-import { Link, withRouter } from 'react-router-dom';
-import { StockGuestStockRadarDrawer } from 'components/StockGuestStockRadarDrawer';
+import { Link } from 'react-router-dom';
 import { LocaleSelector } from 'components/LocaleSelector';
 import loadable from '@loadable/component'
 
-const  StockGuestPreviewDrawer  = loadable(() => import( 'components/StockGuestPreviewDrawer'));
-const  HomeEarningsCalendarArea  = loadable(() => import( 'components/homeAreas/HomeEarningsCalendarArea'));
-const  HomeStockRadarArea  = loadable(() => import( 'components/homeAreas/HomeStockRadarArea'));
+const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
+const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
+const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStockRadarArea'));
 
 const { Content } = Layout;
 

@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import { listHotStock, getMarketGainers, getMarketMostActive, getMarketLosers } from 'services/stockService';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';
 import PropTypes from 'prop-types';
 
-const { Title, Paragraph } = Typography;
 
 const Container = styled.div`
 justify-content: center;
@@ -31,14 +30,6 @@ width: 100%;
 
 
 const HomeMarketArea = props => {
-  const span = {
-    xs: 24,
-    sm: 24,
-    md: 12,
-    lg: 6,
-    xl: 6,
-    xxl: 6
-  };
 
   const {onSymbolClick} = props;
 

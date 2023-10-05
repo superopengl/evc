@@ -1,12 +1,6 @@
 import React from 'react';
-import HomeRowArea from "./HomeRowArea";
 import styled from 'styled-components';
-import { Typography, Row, Col, Space } from 'antd';
-import { IconContext } from "react-icons";
-import { GiGraduateCap } from 'react-icons/gi';
-import { BsLightning } from 'react-icons/bs';
-import { AiOutlineGlobal } from 'react-icons/ai';
-import { BiDollar } from 'react-icons/bi';
+import { Typography, Row, Col } from 'antd';
 import { listHotStock, getMarketGainers, getMarketMostActive, getMarketLosers } from 'services/stockService';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';

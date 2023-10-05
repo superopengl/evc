@@ -25,6 +25,8 @@
     "daily:putcall:prod": "TZ=utc node ./endpoints/index-daily-putcall",
     "daily:calendar": "TZ=utc ts-node ./endpoints/index-earnings-calendar.ts",
     "daily:calendar:prod": "TZ=utc node ./endpoints/index-earnings-calendar",
+    "daily:watchlist": "TZ=utc ts-node ./endpoints/index-daily-watchlist-email.ts",
+    "daily:watchlist:prod": "TZ=utc node ./endpoints/index-daily-watchlist-email",    
     "adjust:cron": "TZ=utc ts-node ./endpoints/adjust-cron.ts",
     "adjust:cron:prod": "TZ=utc node ./endpoints/adjust-cron",
     "daily:sr": "TZ=utc ts-node ./endpoints/index-daily-sr.ts",

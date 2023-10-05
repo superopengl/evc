@@ -10,6 +10,7 @@ export enum EmailTemplateType {
   CommissionWithdrawalSubmitted = 'commission_withdrawal_submitted',
   CommissionWithdrawalCompleted = 'commission_withdrawal_completed',
   CommissionWithdrawalRejected = 'commission_withdrawal_rejected',
+  WatchlistCoreDataChangedEmail = 'watchlist_core_data_changed_email'
 }
 
 

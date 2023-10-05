@@ -53,6 +53,11 @@ export async function initializeEmailTemplates() {
   commissionWithdrawalRejectedEmailDef.locale = Locale.Engish;
   commissionWithdrawalRejectedEmailDef.vars = ['website', 'toWhom', 'referenceId', 'comment'];
 
+  const WatchlistCoreDataChangedEmailDef = new EmailTemplate();
+  WatchlistCoreDataChangedEmailDef.key = EmailTemplateType.WatchlistCoreDataChangedEmail;
+  WatchlistCoreDataChangedEmailDef.locale = Locale.Engish;
+  WatchlistCoreDataChangedEmailDef.vars = ['website', 'toWhom', 'symbol'];
+
   const entities = [
     signatureDef,
     signUpEmailDef,
@@ -64,6 +69,7 @@ export async function initializeEmailTemplates() {
     commissionWithdrawalSubmittedEmailDef,
     commissionWithdrawalCompletedEmailDef,
     commissionWithdrawalRejectedEmailDef,
+    WatchlistCoreDataChangedEmailDef,
   ];
 
   await getManager()

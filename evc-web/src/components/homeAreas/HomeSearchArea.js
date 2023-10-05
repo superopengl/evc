@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Input } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Title } = Typography;
@@ -53,7 +52,6 @@ const span = {
 
 const HomeSearchAreaRaw = props => {
 
-  const windowWidth = useWindowWidth();
   const context = useContext(GlobalContext);
 
   const handleSignIn = () => {

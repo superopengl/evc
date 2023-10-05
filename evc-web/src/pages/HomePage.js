@@ -66,7 +66,6 @@ const HomePage = (props) => {
   const context = React.useContext(GlobalContext);
 
   const handleStockListSymbolClick = (symbol) => {
-    debugger;
     setSelectedSymbol(symbol);
   }
 

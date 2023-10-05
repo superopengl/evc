@@ -1103,15 +1103,9 @@ paths:
       responses:
         200:
           description: OK
-  /admin/data/support:
+  /admin/data/sr:
     post:
-      operationId: uploadSupportCsv
-      responses:
-        200:
-          description: OK
-  /admin/data/resistance:
-    post:
-      operationId: uploadResistanceCsv
+      operationId: uploadSupportResistanceCsv
       responses:
         200:
           description: OK

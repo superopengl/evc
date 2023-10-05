@@ -12,7 +12,6 @@ import { Stock } from '../Stock';
     .from(StockSupport, 'sp')
     .innerJoin(Stock, 's', 'sp.symbol = s.symbol')
     .innerJoin(StockLatestFairValue, 'fv', 'fv.symbol = sp.symbol AND fv."fairValueHi" < sp.lo')
-    .leftJoin(StockWatchList, 'wh', 'sp.symbol = wh.symbol AND wh.belled IS TRUE')
     .select([
       `sp.id as "supportId"`,
       `sp.symbol as symbol`,
@@ -21,7 +20,6 @@ import { Stock } from '../Stock';
       `sp.hi as "supportHi"`,
       `fv."fairValueLo" as "fairValueLo"`,
       `fv."fairValueHi" as "fairValueHi"`,
-      `wh."userId" as "userId"`,
     ])
 })
 export class StockDeprecateSupport {
@@ -45,7 +43,4 @@ export class StockDeprecateSupport {
 
   @ViewColumn()
   fairValueHi: number;
-
-  @ViewColumn()
-  bellingUserId: string;
 }

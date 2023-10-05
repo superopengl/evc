@@ -13,7 +13,6 @@ import { StockResistance } from '../StockResistance';
     .from(StockResistance, 'sr')
     .innerJoin(Stock, 's', 'sr.symbol = s.symbol')
     .innerJoin(StockLatestFairValue, 'fv', 'fv.symbol = sr.symbol AND fv."fairValueLo" > sr.hi')
-    .leftJoin(StockWatchList, 'wh', 'sr.symbol = wh.symbol AND wh.belled IS TRUE')
     .select([
       `sr.id as "resistanceId"`,
       `sr.symbol as symbol`,
@@ -22,7 +21,6 @@ import { StockResistance } from '../StockResistance';
       `sr.hi as "resistanceHi"`,
       `fv."fairValueLo" as "fairValueLo"`,
       `fv."fairValueHi" as "fairValueHi"`,
-      `wh."userId" as "userId"`,
     ])
 })
 export class StockDeprecateResistance {
@@ -46,7 +44,4 @@ export class StockDeprecateResistance {
 
   @ViewColumn()
   fairValueHi: number;
-
-  @ViewColumn()
-  bellingUserId: string;
 }

@@ -36,7 +36,7 @@ justify-content: center;
 margin-bottom: 0rem;
 width: 100%;
 text-align: center;
-padding: 4rem 2rem;
+padding: 4rem 1rem;
 background: rgb(240, 242, 245);
 // background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
 `;
@@ -51,7 +51,7 @@ width: 100%;
 // filter: contrast(0.6);
 // transform: scale(0.8);
 
-max-width: 1200px;
+// max-width: 1200px;
 `;
 
 

@@ -21,7 +21,7 @@ background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #15be53 50%, #15be53 75%, #f0f0f0 75%, #f0f0f0 100%);
 // background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
 margin: 0 auto 0;
-padding: 2rem;
+padding: 1rem;
 width: 100%;
 // height: 100%;
 .signup-panel .ant-typography {

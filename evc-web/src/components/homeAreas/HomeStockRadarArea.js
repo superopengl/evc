@@ -1,28 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Col, Row, Button, Space } from 'antd';
+import { Typography, Button, Space } from 'antd';
 import styled from 'styled-components';
 import StockRadarPage from 'pages/Stock/StockRadarPage';
 import { Link } from 'react-router-dom';
 
-const { Text, Title } = Typography;
-
-const StyledRow = styled(Row)`
-  margin-top: 10px;
-`;
-
-const StyledCol = styled(Col)`
-  margin-bottom: 20px;
-`;
-
-const span = {
-  xs: 24,
-  sm: 24,
-  md: 24,
-  lg: 8,
-  xl: 8,
-  xxl: 8
-};
+const { Title } = Typography;
 
 const Container = styled.div`
 justify-content: center;

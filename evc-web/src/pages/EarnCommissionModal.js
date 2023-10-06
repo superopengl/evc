@@ -38,7 +38,7 @@ const EarnCommissionModal = props => {
   return (
     <Modal
       title="Earn Commission"
-      width={480}
+      width={680}
       closable={true}
       maskClosable={true}
       destroyOnClose={true}

@@ -3,26 +3,28 @@ import 'antd/dist/antd.less';
 import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import StockPage from 'pages/StockPage/StockPage';
-import ProLayout, { } from '@ant-design/pro-layout';
+import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   UploadOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, QuestionOutlined, AlertOutlined} from '@ant-design/icons';
-  import { Link, withRouter, Redirect } from 'react-router-dom';
-  import { logout } from 'services/authService';
-  import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
-  import HeaderStockSearch from 'components/HeaderStockSearch';
-  import styled from 'styled-components';
-  import ProfileModal from 'pages/Profile/ProfileModal';
-  import ContactForm from 'components/ContactForm';
-  import AboutDrawer from 'pages/About/AboutDrawer';
-  import { Switch } from 'react-router-dom';
-  import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
-  import { BsCalendar } from 'react-icons/bs';
-  import { FaMoneyBillWave } from 'react-icons/fa';
-  import { BiDollar } from 'react-icons/bi';
-  import EarnCommissionModal from 'pages/EarnCommissionModal';
-  import loadable from '@loadable/component'
-  
+  DashboardOutlined, QuestionOutlined, AlertOutlined
+} from '@ant-design/icons';
+import { Link, withRouter, Redirect } from 'react-router-dom';
+import { logout } from 'services/authService';
+import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
+import HeaderStockSearch from 'components/HeaderStockSearch';
+import styled from 'styled-components';
+import ProfileModal from 'pages/Profile/ProfileModal';
+import ContactForm from 'components/ContactForm';
+import AboutDrawer from 'pages/About/AboutDrawer';
+import { Switch } from 'react-router-dom';
+import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
+import { BsCalendar } from 'react-icons/bs';
+import { FaMoneyBillWave } from 'react-icons/fa';
+import { BiDollar } from 'react-icons/bi';
+import EarnCommissionModal from 'pages/EarnCommissionModal';
+import loadable from '@loadable/component'
+import { FormattedMessage } from 'react-intl';
+
 const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
 const StockWatchListPage = loadable(() => import('pages/Stock/StockWatchListPage'));
 const StockRadarPage = loadable(() => import('pages/Stock/StockRadarPage'));
@@ -65,89 +67,89 @@ const StyledMenu = styled(Menu)`
 const ROUTES = [
   {
     path: '/dashboard',
-    name: 'Dashboard',
+    name: <FormattedMessage id="menu.dashboard" />,
     icon: <DashboardOutlined />,
     roles: ['admin', 'agent']
   },
   {
     path: '/watchlist',
-    name: 'Watchlist',
+    name: <FormattedMessage id="menu.watchlist" />,
     icon: <StarOutlined />,
     roles: ['member']
   },
   {
     path: '/stock',
-    name: 'Stock Radar',
+    name: <FormattedMessage id="menu.stockRadar" />,
     icon: <Icon component={() => <GiRadarSweep />} />,
     roles: ['admin', 'agent', 'member', 'free']
   },
   {
     path: '/earnings_calendar',
-    name: 'Earnings Calendar',
+    name: <FormattedMessage id="menu.earningsCalendar" />,
     icon: <Icon component={() => <BsCalendar />} />,
     roles: ['admin', 'agent', 'member', 'free']
   },
   {
     path: '/unsual_options_activity',
-    name: 'Unusual Options Activity',
+    name: <FormattedMessage id="menu.unsualOptionsActivity" />,
     icon: <AlertOutlined />,
     roles: ['admin', 'agent', 'member']
   },
   {
     path: '/user',
-    name: 'Users',
+    name: <FormattedMessage id="menu.users" />,
     icon: <TeamOutlined />,
     roles: ['admin', 'agent']
   },
   {
     path: '/account',
-    name: 'Account',
+    name: <FormattedMessage id="menu.account" />,
     icon: <Icon component={() => <BiDollar />} />,
     roles: ['member', 'free'],
   },
   {
     path: '/referral',
-    name: 'Earn Commission 🔥',
+    name: <><FormattedMessage id="menu.earnCommission" /> 🔥</>,
     icon: <Icon component={() => <GiReceiveMoney />} />,
     roles: ['member', 'free'],
   },
   {
     path: '/data',
-    name: 'Data Management',
+    name: <FormattedMessage id="menu.dataManagement" />,
     icon: <UploadOutlined />,
     roles: ['admin', 'agent']
   },
   {
     path: '/comission',
-    name: 'Commission Withdrawal',
+    name: <FormattedMessage id="menu.commissionWithdrawal" />,
     icon: <Icon component={() => <FaMoneyBillWave />} />,
     roles: ['admin', 'agent']
   },
   {
     path: '/settings',
-    name: 'Settings',
+    name: <FormattedMessage id="menu.settings" />,
     icon: <SettingOutlined />,
     roles: ['admin', 'agent'],
     routes: [
       {
         path: '/tags',
-        name: 'Tags',
+        name: <FormattedMessage id="menu.tags" />,
       },
       {
         path: '/config',
-        name: 'Configuration',
+        name: <FormattedMessage id="menu.config" />,
       },
       {
         path: '/email_template',
-        name: 'Email Templates',
+        name: <FormattedMessage id="menu.emailTemplate" />,
       },
-      {
-        path: '/translation',
-        name: 'Translations',
-      },
+      // {
+      //   path: '/translation',
+      //   name: 'Translations',
+      // },
       {
         path: '/referral_policy',
-        name: 'Global Referral Policy',
+        name: <FormattedMessage id="menu.globalReferralPolicy" />,
       },
     ]
   },
@@ -195,10 +197,16 @@ const AppLoggedIn = props => {
       <pre style={{ fontSize: 14, margin: 0 }}>{user.profile.email}</pre>
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>Profile</Menu.Item>
-    <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>Change Password</Menu.Item>
+    <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
+      <FormattedMessage id="menu.profile" />
+    </Menu.Item>
+    <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
+      <FormattedMessage id="menu.changePassword" />
+    </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key="logout" danger onClick={handleLogout}>Log Out</Menu.Item>
+    <Menu.Item key="logout" danger onClick={handleLogout}>
+      <FormattedMessage id="menu.logout" />
+    </Menu.Item>
   </StyledMenu>
 
   return <StyledLayout

@@ -9,6 +9,7 @@ import { StockName } from './StockName';
 import { filter } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
+import { FormattedMessage } from 'react-intl';
 
 const { Text } = Typography;
 
@@ -80,7 +81,7 @@ export const StockSearchInput = (props) => {
       showSearch
       allowClear={true}
       // autoFocus={true}
-      placeholder="Search symbols"
+      placeholder={<FormattedMessage id="placeholder.searchSymbol" />}
       onChange={handleChange}
       onSearch={handleSearch}
       // open={!!text}

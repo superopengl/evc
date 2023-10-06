@@ -1,6 +1,5 @@
 // import 'App.css';
-import { Layout, Space, Button, Menu, Dropdown } from 'antd';
-import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
+import { Menu, Dropdown } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeFooter from 'components/HomeFooter';
@@ -9,20 +8,18 @@ import styled from 'styled-components';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
 import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
-import { Link, withRouter } from 'react-router-dom';
-import { LocaleSelector } from 'components/LocaleSelector';
+import { withRouter } from 'react-router-dom';
 import loadable from '@loadable/component'
-import { getDefaultLocale } from 'util/getDefaultLocale';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
-import Icon, { GlobalOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
 import {IoLanguage} from 'react-icons/io5';
+import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
 const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStockRadarArea'));
-
-const { Header, Content } = Layout;
 
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
@@ -61,49 +58,6 @@ const StyledLayout = styled(ProLayout)`
   color: rgba(255,255,255,0.85);;
   font-weight: 400;
 }
-
-.anticon {
-  color: white;
-}
-`;
-
-const LayoutStyled = styled(Layout)`
-  margin: 0;
-  background-color: #ffffff;
-`;
-
-const ContentStyled = styled(Content)`
-  margin: 0 auto 0 auto;
-  width: 100%;
-`;
-
-const LogoPlate = styled.div`
-margin: 4px 0 0;
-padding: 8px;
-// background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95), rgba(255,255,255,0.75));
-// border-radius: 2px;
-`;
-
-const HeadMenu = styled(Space)`
-margin-left: auto;
-margin-right: auto;
-width: 100%;
-max-width: 1200px;
-justify-content: space-between;
-position: absolute;
-
-
-.ant-select, .ant-btn-link {
-  color: rgba(0,0,0,0.65) !important;
-
-  .ant-select-arrow {
-    color: rgba(0,0,0,0.65) !important;
-  }
-  &:hover {
-    color: black !important;
-  }
-}
-
 `;
 
 const scrollToElement = (selector) => {
@@ -115,11 +69,11 @@ const scrollToElement = (selector) => {
 }
 
 
-
 const HomePage = (props) => {
 
   const [selectedSymbol, setSelectedSymbol] = React.useState();
   const context = React.useContext(GlobalContext);
+  const intl = useIntl();
 
   const handleStockListSymbolClick = (symbol) => {
     setSelectedSymbol(symbol);
@@ -132,23 +86,23 @@ const HomePage = (props) => {
   const ROUTES = [
     {
       path: '/#member',
-      name: 'Pro Member',
+      name: <FormattedMessage id="menu.proMember" />,
     },
     {
       path: '/#stock-radar',
-      name: 'Stock Radar',
+      name: <FormattedMessage id="menu.stockRadar" />,
     },
     {
       path: '/#pricing',
-      name: 'Pricing',
+      name: <FormattedMessage id="menu.pricing" />,
     },
     {
       path: '/signup',
-      name: 'Sign Up',
+      name: <FormattedMessage id="menu.signUp" />,
     },
     {
       path: '/login',
-      name: 'Log In',
+      name: <FormattedMessage id="menu.login" />,
     }
   ];
 
@@ -182,7 +136,7 @@ const HomePage = (props) => {
         <Icon style={{fontSize: 20, color: 'rgba(255,255,255,0.85)'}} component={() => <IoLanguage/>} />
       </Dropdown>
     }}
-  >
+    >
     <section>
       <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>

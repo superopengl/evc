@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Layout, Space, Button } from 'antd';
+import { Layout, Space, Button, Menu, Dropdown } from 'antd';
 import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
@@ -15,6 +15,8 @@ import loadable from '@loadable/component'
 import { getDefaultLocale } from 'util/getDefaultLocale';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
+import Icon, { GlobalOutlined } from '@ant-design/icons';
+import {IoLanguage} from 'react-icons/io5';
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
@@ -169,19 +171,16 @@ const HomePage = (props) => {
     fixedHeader={true}
     menuItemRender={(item, dom) => <div onClick={() => handleMenuClick(item.path)}>{dom}</div>}
     rightContentRender={props => {
-      let style = {
-        color: 'white', 
-        width: 100, 
-        textAlign: 'right'
-      };
-      if(props.collapsed) {
-        style = {
-          ...style,
-          display: 'flex', 
-          alignItems: 'center',
-        }
-      }
-      return <LocaleSelector bordered={false} style={style} defaultValue={getDefaultLocale()} onChange={handleLocaleChange} />
+      const style = props.collapsed ? { display: 'flex', alignItems: 'center', } : {};
+
+      const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
+        <Menu.Item key="en-US">English</Menu.Item>
+        <Menu.Item key="zh-CN">中 文</Menu.Item>
+      </Menu>
+      return <Dropdown overlay={menu} trigger={['click']} style={style}>
+        {/* <GlobalOutlined /> */}
+        <Icon style={{fontSize: 20, color: 'rgba(255,255,255,0.85)'}} component={() => <IoLanguage/>} />
+      </Dropdown>
     }}
   >
     <section>
@@ -211,86 +210,7 @@ const HomePage = (props) => {
     <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
       We use cookies to improve your experiences on our website.
         </CookieConsent>
-    {/* <ProLayout.Footer
-  copyright="2019 蚂蚁金服体验技术部出品"
-  links={[
-    {
-      key: 'Ant Design Pro',
-      title: 'Ant Design Pro',
-      href: 'https://pro.ant.design',
-      blankTarget: true,
-    },
-    {
-      key: 'github',
-      href: 'https://github.com/ant-design/ant-design-pro',
-      blankTarget: true,
-    },
-    {
-      key: 'Ant Design',
-      title: 'Ant Design',
-      href: 'https://ant.design',
-      blankTarget: true,
-    },
-  ]}
-/> */}
   </StyledLayout>
-
-  return (
-    <LayoutStyled>
-      {/* <BarStyled></BarStyled> */}
-      <Header>
-        <HashAnchorPlaceholder id="home" />
-        <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
-          <HeadMenu size="middle">
-            <LogoPlate>
-              <img alt="EasyValueCheck logo" src="/images/header-logo.png" width="auto"
-                height="30"></img>
-            </LogoPlate>
-            <Space>
-              <Button size="large" type="link" href="#pre">Pro Member</Button>
-              <Button size="large" type="link" onClick={() => scrollToElement('#stock-radar')}>Stock Radar</Button>
-              <Button size="large" type="link" onClick={() => scrollToElement('#pricing')}>Pricing</Button>
-              {/* <Link to="/signup"><Button size="large" type="link">Sign Up</Button></Link> */}
-              <Link to="/login"><Button size="large" type="link">Login</Button></Link>
-              <LocaleSelector bordered={false} style={{ color: 'white', width: 100 }} size="large" defaultValue={getDefaultLocale()} onChange={handleLocaleChange} />
-            </Space>
-          </HeadMenu>
-        </div>
-
-      </Header>
-      <ContentStyled>
-        <section>
-          <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
-        </section>
-        <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
-        <section id="pricing">
-          <HomePricingArea />
-        </section>
-        {/* <section><HomeSearchArea /></section> */}
-        <section>
-          <HomeServiceArea bgColor="#135200" />
-        </section>
-        <section id="stock-radar">
-          <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
-        </section>
-        <section id="earnings-calendars">
-          <HomeEarningsCalendarArea onSymbolClick={handleStockListSymbolClick} />
-        </section>
-        {/* <HashAnchorPlaceholder id="team" /> */}
-      </ContentStyled>
-      {/* <Footer style={{padding: 0}}>
-        <HomeFooter />
-      </Footer> */}
-      <StockGuestPreviewDrawer
-        symbol={selectedSymbol}
-        visible={!!selectedSymbol}
-        onClose={() => setSelectedSymbol()}
-      />
-      <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
-        We use cookies to improve your experiences on our website.
-        </CookieConsent>
-    </LayoutStyled>
-  );
 }
 
 HomePage.propTypes = {};

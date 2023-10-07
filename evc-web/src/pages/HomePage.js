@@ -13,7 +13,7 @@ import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
 import Icon from '@ant-design/icons';
-import {IoLanguage} from 'react-icons/io5';
+import { IoLanguage } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 
@@ -24,6 +24,14 @@ const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStock
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
   background-color: white;
+}
+
+.ant-menu-item:hover {
+  .ant-pro-menu-item-title {
+    color: white;
+    // font-weight: 500;
+  }
+  // background-color: inherit;
 }
 
 .ant-layout-content {
@@ -46,17 +54,18 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
+  background-color: rgba(21,190,83,1);
   // background-color: rgba(255,255,255,0.6);
-  background-color: rgba(0, 41, 61, 0.6); 
+  // background-color: rgba(0, 41, 61, 0.6); 
 }
 
 .ant-pro-global-header-collapsed-button {
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.75);
 }
 
 .ant-pro-menu-item-title {
-  color: rgba(255,255,255,0.85);;
-  font-weight: 400;
+  color: rgba(255,255,255,0.75);;
+  font-weight: 500;
 }
 `;
 
@@ -128,18 +137,20 @@ const HomePage = (props) => {
     fixedHeader={true}
     menuItemRender={(item, dom) => <div onClick={() => handleMenuClick(item.path)}>{dom}</div>}
     rightContentRender={props => {
-      const style = props.collapsed ? { display: 'flex', alignItems: 'center', } : {};
-
       const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
         <Menu.Item key="en-US">English</Menu.Item>
         <Menu.Item key="zh-CN">中 文</Menu.Item>
       </Menu>
-      return <Dropdown overlay={menu} trigger={['click']} style={style}>
+
+      const dropdown = <Dropdown overlay={menu} trigger={['click']}>
         {/* <GlobalOutlined /> */}
-        <Icon style={{fontSize: 20, color: 'rgba(255,255,255,0.85)'}} component={() => <IoLanguage/>} />
+        <Icon style={{ fontSize: 20, color: 'rgba(255,255,255,0.75)' }} component={() => <IoLanguage />} />
       </Dropdown>
+      return props.collapsed ? <div style={{ display: 'flex', alignItems: 'center', }}>
+        {dropdown}
+      </div> : dropdown
     }}
-    >
+  >
     <section>
       <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>

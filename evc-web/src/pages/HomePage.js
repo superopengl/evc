@@ -28,7 +28,7 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-menu-item:hover {
   .ant-pro-menu-item-title {
-    color: white;
+    // color: white;
     // font-weight: 500;
   }
   // background-color: inherit;
@@ -54,17 +54,19 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
-  background-color: rgba(21,190,83,1);
+  background-color: rgba(21,190,83,0.60);
   // background-color: rgba(255,255,255,0.6);
   // background-color: rgba(0, 41, 61, 0.6); 
 }
 
 .ant-pro-global-header-collapsed-button {
   color: rgba(255,255,255,0.75);
+  color: rgba(0,0,0,0.75);
 }
 
 .ant-pro-menu-item-title {
   color: rgba(255,255,255,0.75);;
+  color: rgba(0,0,0,0.75);;
   font-weight: 500;
 }
 `;
@@ -129,7 +131,8 @@ const HomePage = (props) => {
 
   return <StyledLayout
     title={null}
-    logo="/favicon-32x32.png"
+    // logo="/favicon-32x32.png"
+    logo="/images/logo-transparent.png"
     layout="top"
     navTheme="dark"
     route={{ routes: ROUTES }}

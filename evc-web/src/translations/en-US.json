@@ -25,5 +25,14 @@
   "placeholder.searchSymbol": "Search symbol",
   "button.signUpWithEmail": "Sign Up with Email",
   "button.continueWithGoogle": "Continue with Google",
+  "text.proMemberFree": "Free",
+  "text.proMemberFreePriceUnit": "Forever",
+  "text.proMemberFreeDescription": "View all historical core data",
+  "text.proMemberMonthly": "Pro Members Monthly",
+  "text.proMemberMonthlyPriceUnit": "USD / Month",
+  "text.proMemberMonthlyDescription": "Subscribe to view all core data, valid for one month, monthly payment",
+  "text.proMemberAnnually": "Pro Members Annually",
+  "text.proMemberAnnuallyPriceUnit": "USD / Year",
+  "text.proMemberAnnuallyDescription": "Subscribe to view all core data, valid for one year, annual payment. Get 12-month Pro Member services with 11-month payment, $29 USD saved",
   "": ""
 }

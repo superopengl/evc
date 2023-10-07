@@ -9,8 +9,9 @@ import MoneyAmount from './MoneyAmount';
 const { Title, Text } = Typography;
 
   const StyledCard = styled(Card)`
+padding: 30px;
 text-align: center;
-height: 400px;
+height: 380px;
 & .ant-card-head {
   color: #333333;
 }
@@ -21,10 +22,7 @@ position: relative;
 border: 2px solid #fa8c16;
 background-color: rgba(250, 140, 22, 0.1);
 transform: scale(1.05);
-
-
 }
-
 
 &.interactive:hover {
 // background-color: #ffe7ba;
@@ -47,12 +45,13 @@ export const SubscriptionCard = props => {
   return <IconContext.Provider value={{ size: '3rem' }}>
     <StyledCard
       className={classNameArray.join(' ')}
-      title={<Space direction="vertical" size="small">
+      title={<>
         {icon}
-        {title.toUpperCase()}
-      </Space>}
+        <div style={{marginTop: 20, textTransform: 'uppercase', fontSize: 18}}>{title}</div>
+      </>}
       hoverable={interactive && !active}
       onClick={onClick}
+      size="large"
     // bodyStyle={{backgroundColor: bgColor}}
     // headerStyle={{backgroundColor: bgColor}}
     >
@@ -72,10 +71,10 @@ export const SubscriptionCard = props => {
 }
 
 SubscriptionCard.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.any.isRequired,
   description: PropTypes.any,
   price: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
+  unit: PropTypes.any.isRequired,
   active: PropTypes.bool,
   interactive: PropTypes.bool,
 };

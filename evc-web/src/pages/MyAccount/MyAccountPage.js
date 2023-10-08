@@ -252,7 +252,7 @@ const MyAccountPage = (props) => {
               </Space>
             }
           >
-            <Paragraph type="secondary">Ongoing applications</Paragraph>
+            <Paragraph type="secondary">Cash back to your PayPal account</Paragraph>
           </Card>
         </Space>
       </Loading>

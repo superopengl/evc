@@ -23,7 +23,7 @@ const StyledTable = styled(Table)`
 
 .ant-table-thead {
   .ant-table-cell {
-    color: rgba(0,0,0,0.5);
+    color: rgba(0,0,0,0.3);
     font-size: 0.8rem;
     text-align: right;
 
@@ -54,7 +54,8 @@ const StyledSymbolTextLink = styled(TextLink)`
 &.ant-typography {
   font-size: 0.9rem;
   font-weight: bold;
-  color: #3273A4;
+  // color: #3273A4;
+  color: rgba(0,0,0,0.85);
 
   &:hover {
     text-decoration: underline;
@@ -96,7 +97,7 @@ const StockMostPanel = (props) => {
     },
   ];
 
-  const { title, onFetch, onSymbolClick } = props;
+  const { title, onFetch,titleStyle, onSymbolClick } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -131,7 +132,7 @@ const StockMostPanel = (props) => {
 
   return (
     <>
-      {title && <Title level={5}>{title}</Title>}
+      {title && <Title level={5} style={{...titleStyle}}>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         loading={loading}
@@ -150,6 +151,7 @@ const StockMostPanel = (props) => {
 
 StockMostPanel.propTypes = {
   title: PropTypes.string,
+  titleStyle: PropTypes.any,
   onFetch: PropTypes.func.isRequired,
   onSymbolClick: PropTypes.func
 };

@@ -21,7 +21,7 @@ const Tag = (props) => {
 
   const TagComponent = clickable ? ClicableTag : AntdTag;
 
-  const colorProp = checked ? {color: '#15be53'} : null;
+  const colorProp = checked ? {color: '#17b649'} : null;
 
   return (
     <TagComponent

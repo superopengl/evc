@@ -132,7 +132,7 @@ export async function enqueueEmailToUserId(userId: string, template: EmailTempla
     if (!user) {
       return;
     }
-    const toWhom = getEmailRecipientName(user);
+    const toWhom = getEmailRecipientName(user.profile);
     const { profile: { email } } = user;
     const request: EmailRequest = {
       to: email,

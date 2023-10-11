@@ -13,8 +13,8 @@ margin-bottom: 0rem;
 width: 100%;
 text-align: center;
 padding: 4rem 1rem;
-// background: #5dd982;
-// background-image: linear-gradient(150deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
+// background: #52d074;
+// background-image: linear-gradient(150deg, #1cabd3, #1cabd3 25%, #5fdef1 25%, #5fdef1 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
 `;
 
 const InnerContainer = styled.div`

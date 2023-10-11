@@ -58,6 +58,17 @@ export async function initializeEmailTemplates() {
   WatchlistCoreDataChangedEmailDef.locale = Locale.Engish;
   WatchlistCoreDataChangedEmailDef.vars = ['website', 'toWhom', 'symbol'];
 
+  const SubscriptionExpiredDef = new EmailTemplate();
+  SubscriptionExpiredDef.key = EmailTemplateType.SubscriptionExpired;
+  SubscriptionExpiredDef.locale = Locale.Engish;
+  SubscriptionExpiredDef.vars = ['website', 'toWhom', 'name', 'subscriptionId', 'subscriptionType', 'start', 'end'];
+
+  const SubscriptionExpiringDef = new EmailTemplate();
+  SubscriptionExpiringDef.key = EmailTemplateType.SubscriptionExpiring;
+  SubscriptionExpiringDef.locale = Locale.Engish;
+  SubscriptionExpiringDef.vars = ['website', 'toWhom', 'name', 'subscriptionId', 'subscriptionType', 'start', 'end'];
+
+
   const entities = [
     signatureDef,
     signUpEmailDef,
@@ -70,6 +81,8 @@ export async function initializeEmailTemplates() {
     commissionWithdrawalCompletedEmailDef,
     commissionWithdrawalRejectedEmailDef,
     WatchlistCoreDataChangedEmailDef,
+    SubscriptionExpiredDef,
+    SubscriptionExpiringDef,
   ];
 
   await getManager()

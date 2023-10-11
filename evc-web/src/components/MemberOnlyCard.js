@@ -33,7 +33,7 @@ export const MemberOnlyCard = (props) => {
     } :
     {
       // backgroundColor: 'rgba(0, 41, 61, 0.1)',
-      // backgroundColor: '#18b0d7',
+      // backgroundColor: '#1cabd3',
       // color: 'rgba(255,255,255,0.75)'
       color: '#00293d'
     };

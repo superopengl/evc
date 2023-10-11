@@ -21,11 +21,11 @@ const { Text} = Typography;
 const Container = styled.div`
 // border-bottom: 1px solid #f0f0f0;
 // background: #092b00;
-// background-image: linear-gradient(160deg, #3273A4, #15be53);
-// background-image: linear-gradient(#135200, #15be53);
-// background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
-// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
-// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #18b0d7 25%, #18b0d7 50%, #15be53 50%, #15be53 75%, #f0f0f0 75%, #f0f0f0 100%);
+// background-image: linear-gradient(160deg, #3273A4, #17b649);
+// background-image: linear-gradient(#135200, #17b649);
+// background-image: linear-gradient(-30deg, #1cabd3, #1cabd3 25%, #5fdef1 25%, #5fdef1 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
+// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #1cabd3 25%, #1cabd3 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
+// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #1cabd3 25%, #1cabd3 50%, #17b649 50%, #17b649 75%, #f0f0f0 75%, #f0f0f0 100%);
 // background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
 margin: 0 auto 0;
 padding: 1rem;

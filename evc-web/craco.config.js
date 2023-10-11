@@ -1,13 +1,14 @@
 const CracoLessPlugin = require('craco-less');
 
 const modifyVars = {
-  '@primary-color': '#15be53', // rgb(21,190,83)
-  '@info-color': '#18b0d7',
-  '@link-color': '#18b0d7',
-  '@success-color': '#15be53',
+  '@primary-color': '#17b649', // rgb(23,182,73)
+  '@info-color': '#1cabd3', // rgb(28,170,211)
+  '@link-color': '#1cabd3',
+  '@success-color': '#17b649',
   '@warning-color': '#fa8c16',
   '@error-color': '#d7183f', // rgb(215,24,63)
   '@layout-header-background': '#00293d',
+  '@font-family': "'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
   // '@heading-color': '#00293d',
   '@typography-title-font-weight': 400,
   '@font-size-base': '14px',

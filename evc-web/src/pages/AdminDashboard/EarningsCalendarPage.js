@@ -90,7 +90,7 @@ const EarningsCalendarPage = props => {
         <SymbolLogo>
           <Card size="small" onClick={() => handleItemClick(item.symbol)} >
             <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-              <Text style={{ color: '#3273A4' }} strong>{item.symbol}</Text>
+              <Text strong>{item.symbol}</Text>
               {showLogo ? <Image src={item.logoUrl} width={64} height="auto" preview={false} style={{ width: 64 }} /> : <Text type="secondary"><small>{item.company}</small></Text>}
             </div>
           </Card>

@@ -12,35 +12,55 @@ import * as moment from 'moment';
 import { calculateNewSubscriptionPaymentDetail } from '../src/utils/calculateNewSubscriptionPaymentDetail';
 import { Role } from '../src/types/Role';
 import { start } from './jobStarter';
+import { enqueueEmail } from '../src/services/emailService';
+import { EmailTemplateType } from '../src/types/EmailTemplateType';
+import { UserOngoingSubscriptionInformation } from '../src/entity/views/UserOngoingSubscriptionInformation';
+import { EmailRequest } from '../src/types/EmailRequest';
+import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
 
 const JOB_NAME = 'daily-subscription';
+
+async function enqueueEmailTasks(template: EmailTemplateType, list: UserOngoingSubscriptionInformation[]) {
+  for (const item of list) {
+    const emailReq: EmailRequest = {
+      to: item.email,
+      template: template,
+      shouldBcc: true,
+      vars: {
+        name: getEmailRecipientName(item),
+        subscriptionId: item.subscriptionId,
+        subscriptionType: item.subscriptionType,
+        start: item.start,
+        end: item.end,
+      }
+    };
+    await enqueueEmail(emailReq);
+  }
+}
 
 async function expireSubscriptions() {
   const tran = getConnection().createQueryRunner();
 
   try {
     await tran.startTransaction();
-    // Set subscriptions to be expired
-    const { tableName, schema } = getRepository(Subscription).metadata;
-    const result = await tran.query(
-      `UPDATE "${schema}"."${tableName}" SET status = $1 WHERE status = $2 AND "end" < now() RETURNING "userId"`,
-      [SubscriptionStatus.Expired, SubscriptionStatus.Alive]
-    );
-    const entities = result[0];
+    const list = await getRepository(UserOngoingSubscriptionInformation)
+      .createQueryBuilder()
+      .where('end < now()')
+      .getMany();
 
-    if (entities?.length) {
-      // Downgrade user's role to Free
-      const userIds = entities.map(x => x.userId);
-      const { tableName, schema } = getRepository(User).metadata;
-      const result = await tran.query(
-        `UPDATE "${schema}"."${tableName}" SET role = $1 WHERE "deletedAt" IS NULL AND role = $2 AND id = ANY($3) RETURNING id`,
-        [Role.Free, Role.Member, userIds]
-      );
+    if (list.length) {
+      // Set subscriptions to be expired
+      const subscriptionIds = list.map(x => x.subscriptionId);
+      await getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
 
-      // TODO: send terminate subscription emails
+      // Set user's role to Free
+      const userIds = list.map(x => x.userId);
+      await getRepository(User).update(userIds, { role: Role.Free })
     }
 
     tran.commitTransaction();
+
+    enqueueEmailTasks(EmailTemplateType.SubscriptionExpired, list);
   } catch {
     tran.rollbackTransaction();
   }
@@ -48,13 +68,13 @@ async function expireSubscriptions() {
 
 
 async function sendAlertForNonRecurringExpiringSubscriptions() {
-  const list: Subscription[] = await getRepository(Subscription)
+  const list = await getRepository(UserOngoingSubscriptionInformation)
     .createQueryBuilder()
-    .where('status = :status', { status: SubscriptionStatus.Alive })
-    .andWhere('recurring = FALSE')
+    .where('recurring = FALSE')
     .andWhere('DATEADD(day, "alertDays", now()) >= "end"')
     .getMany();
-  // TODO: send notificaiton emails to them
+
+  enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);
 }
 
 async function handlePayWithCard(subscription: Subscription) {
@@ -137,13 +157,13 @@ async function handleRecurringPayments() {
 }
 
 start(JOB_NAME, async () => {
-  // console.log('Starting recurring payments');
-  // await handleRecurringPayments();
-  // console.log('Finished recurring payments');
+  console.log('Starting recurring payments');
+  await handleRecurringPayments();
+  console.log('Finished recurring payments');
 
-  // console.log('Starting alerting expiring subscriptions');
-  // await sendAlertForNonRecurringExpiringSubscriptions();
-  // console.log('Finished alerting expiring subscriptions');
+  console.log('Starting alerting expiring subscriptions');
+  await sendAlertForNonRecurringExpiringSubscriptions();
+  console.log('Finished alerting expiring subscriptions');
 
   console.log('Starting expiring subscriptions');
   await expireSubscriptions();

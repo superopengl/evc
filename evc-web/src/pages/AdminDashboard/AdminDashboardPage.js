@@ -24,7 +24,7 @@ margin-bottom: 8px;
 // font-size: 1rem;
 
 &:hover {
-  color: #18b0d7;
+  color: #1cabd3;
   text-decoration: underline !important;
 }
 `;
@@ -77,7 +77,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="plea"
             header={<>Unsupported Stock Requests </>}
-            extra={<CounterBadge count={data.pleas?.length} color="#18b0d7" />}
+            extra={<CounterBadge count={data.pleas?.length} color="#1cabd3" />}
           >
             {data.pleas?.map(x => <Paragraph key={x.symbol}>
               <strong>{x.symbol}</strong> has {x.count} requests. <Link to={`/stock?create=${x.symbol}`}>Click to create</Link>

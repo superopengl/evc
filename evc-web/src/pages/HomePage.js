@@ -55,10 +55,10 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
-  background-color: rgba(21,190,83,0.7);
+  // background-color: rgba(23,182,73,0.6);
   // background-color: rgba(255,255,255,0.6);
   // background-color: rgba(0, 41, 61, 0.6); 
-// background-image: linear-gradient(-30deg, #18b0d7, #18b0d7 25%, #67ddf0 25%, #67ddf0 50%, #5dd982 50%, #5dd982 75%, #15be53 75%, #15be53 100%);
+background-image: linear-gradient(125deg, #17b649, #17b649 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
 }
 
 .ant-pro-global-header-collapsed-button {
@@ -69,7 +69,7 @@ const StyledLayout = styled(ProLayout)`
 .ant-pro-menu-item-title {
   // color: rgba(255,255,255,0.75);
   color: rgba(0,0,0,0.75);
-  font-weight: 500;
+  font-weight: 300;
 }
 `;
 
@@ -138,7 +138,7 @@ const HomePage = (props) => {
 
   return <StyledLayout
     title={null}
-    logo="/favicon-32x32.png"
+    logo="/images/logo-transparent.png"
     // logo="/images/logo-transparent.png"
     layout="top"
     navTheme="dark"

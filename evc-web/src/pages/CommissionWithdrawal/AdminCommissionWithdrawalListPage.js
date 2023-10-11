@@ -33,7 +33,7 @@ margin-bottom: 8px;
 // font-size: 1rem;
 
 &:hover {
-  color: #18b0d7;
+  color: #1cabd3;
   text-decoration: underline !important;
 }
 `;

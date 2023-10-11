@@ -2,7 +2,7 @@
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmail } from '../services/emailService';
+import { enqueueEmail } from '../services/emailService';
 import * as delay from 'delay';
 import { getConfigValue } from '../services/configService';
 import { EmailTemplateType } from '../types/EmailTemplateType';
@@ -17,7 +17,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
   const recipentContact = email || contact;
   assert(recipentName && recipentContact && message, 404, 'Invalid contact information');
 
-  await sendEmail({
+  await enqueueEmail({
     template: EmailTemplateType.Contact,
     to: await getConfigValue('email.contact.recipient'),
     from: email,
@@ -26,7 +26,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
       contact: recipentContact,
       message
     }
-  }, true);
+  });
 
   await delay(1000);
 

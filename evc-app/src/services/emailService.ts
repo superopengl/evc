@@ -16,6 +16,7 @@ import errorToJson from 'error-to-json';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { User } from '../entity/User';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
+import { EmailSentOutTask } from '../entity/EmailSentOutTask';
 
 let emailTransporter = null;
 
@@ -80,7 +81,7 @@ async function compileEmailBody(req: EmailRequest) {
   return { subject, html, text: htmlToText(html) };
 }
 
-export async function sendEmail(req: EmailRequest, throws = false) {
+export async function sendEmail(req: EmailRequest) {
   const { to, template, vars } = req;
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
@@ -106,13 +107,26 @@ export async function sendEmail(req: EmailRequest, throws = false) {
     } else {
       logError(err, req, null, 'Sending email error', to, template, vars);
     }
-    if (throws) {
-      throw err;
-    }
+    throw err;
   }
 }
 
-export async function sendEmailToUserIdWithoutWait(userId: string, template: EmailTemplateType, vars: object) {
+export async function enqueueEmail(req: EmailRequest) {
+  const { to, template } = req;
+  assert(to, 400, 'Email recipient is not specified');
+  assert(template, 400, 'Email template is not specified');
+
+  const task = new EmailSentOutTask();
+  task.from = req.from || await getConfigValue('email.sender.noreply');
+  task.to = req.to;
+  task.template = req.template;
+  task.vars = req.vars;
+  task.attachments = req.attachments;
+  task.shouldBcc = req.shouldBcc;
+  await getRepository(EmailSentOutTask).insert(task);
+}
+
+export async function enqueueEmailToUserId(userId: string, template: EmailTemplateType, vars: object) {
   try {
     const user = await getRepository(User).findOne(userId, { relations: ['profile'] });
     if (!user) {
@@ -128,7 +142,7 @@ export async function sendEmailToUserIdWithoutWait(userId: string, template: Ema
         toWhom
       }
     };
-    await sendEmail(request, false);
+    await enqueueEmail(request);
   } catch (err) {
     console.log('Sent out email error'.red, errorToJson(err));
     logError(err, null, null, 'Sending email error', userId, template, vars);

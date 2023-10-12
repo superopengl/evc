@@ -17,7 +17,7 @@ height: 100%;
   color: #333333;
 }
 position: relative;
-max-width: 300px;
+max-width: 400px;
 
 &.subscription-active {
 // box-shadow: 0 5px 3px rgba(255,197,61,0.8);

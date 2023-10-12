@@ -39,4 +39,7 @@ export class EmailSentOutTask {
 
   @Column({ default: true })
   shouldBcc: boolean;
+
+  @Column('int', {default: 0})
+  failedCount: number;
 }

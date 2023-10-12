@@ -15,6 +15,8 @@ import ReferralLinkInput from 'components/ReferralLinkInput';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
+import { Descriptions } from 'antd';
+import { ArrowRightOutlined } from '@ant-design/icons';
 
 const PaymentModal = loadable(() => import('components/checkout/PaymentModal'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListModal'));
@@ -212,10 +214,17 @@ const MyAccountPage = (props) => {
 
               {currentSubscription && <Col span={24}>
                 {/* <Title level={4}>{getSubscriptionName(currentSubscription.type)}</Title> */}
-                <Space direction="vertical">
-                  <Text>Started <TimeAgo value={currentSubscription.start} direction="horizontal" /></Text>
-                  <Text>Next payment <TimeAgo value={currentSubscription.end} direction="horizontal" /></Text>
+                <Title level={5}>Subscription period</Title>
+                <Space>
+                  <TimeAgo value={currentSubscription.start} direction="horizontal" showAgo={false} accurate={false} />
+                  <ArrowRightOutlined />
+
+                  <TimeAgo value={currentSubscription.end} direction="horizontal" showAgo={false} accurate={false} />
                 </Space>
+                {currentSubscription.recurring && <>
+                  <Title level={5} style={{ marginTop: 20 }}>Next payment</Title>
+                  <TimeAgo value={currentSubscription.end} direction="horizontal" showAgo={false} accurate={false} />
+                </>}
               </Col>}
             </StyledRow>
           </Card>

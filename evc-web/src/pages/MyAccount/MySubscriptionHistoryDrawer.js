@@ -1,4 +1,4 @@
-import { Layout, Space, Typography, Table, Tooltip, Drawer } from 'antd';
+import { Tag, Space, Typography, Table, Tooltip, Drawer } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -35,27 +35,19 @@ const MySubscriptionHistoryDrawer = (props) => {
 
   const columnDef = [
     {
-      render: (value, item) => <>
+      render: (value, item) => <Text strong={item.status === 'alive'}>
         {getSubscriptionName(item.type)}
-        {item.symbols?.length > 0 && <div><Text type="secondary"><small>{item.symbols.join(', ')}</small></Text></div>}
-      </>
-    },
-    {
-      title: 'Status',
-      align: 'center',
-      render: (value, item) => <>
-        {item.recurring && <Tooltip title="Auto renew"><MdAutorenew /></Tooltip>}
-        {item.status === 'alive' && <Tooltip title="Current alive subscription"><Text type="success"><CheckOutlined /></Text></Tooltip>}
-      </>
+      </Text>
     },
     {
       align: 'right',
       render: (value, item) => {
-        return <Space size="large">
-          <TimeAgo value={item.start} />
+        return <Space>
+          {item.recurring && <Tag color="success">Auto renew</Tag>}
+          <TimeAgo value={item.start} showAgo={false} accurate={false} />
           <ArrowRightOutlined />
           {/* <DoubleRightOutlined /> */}
-          {item.status === 'alive' && item.recurring ? null : <TimeAgo value={item.end} />}
+          <TimeAgo value={item.end} showAgo={false}  accurate={false} />
         </Space>
       }
     },

@@ -7,7 +7,7 @@ export const Logo = () =>
     <div style={{
       marginLeft: 'auto',
       marginRight:'auto',
-      backgroundImage: `url('/android-chrome-192x192.png')`,
+      backgroundImage: `url('/images/logo-transparent.png')`,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'contain',
       backgroundPosition: 'center',

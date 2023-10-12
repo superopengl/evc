@@ -31,7 +31,7 @@ import { UserProfile } from '../UserProfile';
       's."alertDays" as "alertDays"',
     ])
 })
-export class UserOngoingSubscriptionInformation {
+export class AliveSubscriptionInformation {
   @ViewColumn()
   @PrimaryColumn()
   subscriptionId: string;

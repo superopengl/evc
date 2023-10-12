@@ -77,7 +77,7 @@ async function createStripePaymentIntent(amount, customerId) {
 
 export async function createStripeClientSecret(payment: Payment): Promise<string> {
   const stripeCustomerId = await getUserStripeCustomerId(payment);
-  const intent =  await getStripe().setupIntents.create({
+  const intent = await getStripe().setupIntents.create({
     customer: stripeCustomerId,
   });
   return intent.client_secret;
@@ -89,21 +89,26 @@ async function previsionStripePayment(payment: Payment): Promise<string> {
   return intent.client_secret;
 }
 
+const DUMMY_STRIPE_RESPONSE = { 
+  status: 'succeeded', 
+  dummyStripeResponse: true 
+};
+
 export async function chargeStripeForPayment(payment: Payment, onSessionPayment: boolean) {
-  const { method, stripeCustomerId, stripePaymentMethodId } = payment;
+  const { amount, method, stripeCustomerId, stripePaymentMethodId } = payment;
 
   assert(method === PaymentMethod.Card, 400, 'Payment method not match');
   assert(stripeCustomerId, 400, 'Stripe customer ID is missing');
   assert(stripePaymentMethodId, 400, 'Stripe payment method ID is missing');
 
-  const paymentIntent = await getStripe().paymentIntents.create({
-    amount: Math.ceil(payment.amount * 100),
+  const paymentIntent = amount ? await getStripe().paymentIntents.create({
+    amount: Math.ceil(amount * 100),
     currency: 'usd',
     customer: stripeCustomerId,
     payment_method: stripePaymentMethodId,
     off_session: !onSessionPayment,
     confirm: true
-  });
+  }) : DUMMY_STRIPE_RESPONSE;
 
   return paymentIntent;
 }

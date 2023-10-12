@@ -16,7 +16,7 @@ const StyledDrawer = styled(Drawer)`
   }
 `
 
-const CreditHistoryListModal = (props) => {
+const CreditHistoryListDrawer = (props) => {
 
   const { visible: propVisible, onFetch, onOk } = props;
   const [visible, setVisible] = React.useState(propVisible);
@@ -39,6 +39,8 @@ const CreditHistoryListModal = (props) => {
     loadList(propVisible);
   }, [propVisible]);
 
+  const total = _.sumBy(data, x => (+x.amount) || 0);
+
   return (
     <StyledDrawer
       title="Credit History"
@@ -51,7 +53,7 @@ const CreditHistoryListModal = (props) => {
       footer={
         <>
           <Text strong>Sub Total</Text>
-          <MoneyAmount style={{ fontSize: '1.5rem', marginLeft: '1rem' }} type="success" strong value={_.sum(data, x => +(x.amount) || 0)} />
+          <MoneyAmount style={{ fontSize: '1.5rem', marginLeft: '1rem' }} type="success" strong value={total} />
         </>
 
       }
@@ -77,14 +79,14 @@ const CreditHistoryListModal = (props) => {
 
 
 
-CreditHistoryListModal.propTypes = {
+CreditHistoryListDrawer.propTypes = {
   visible: PropTypes.bool.isRequired,
   onFetch: PropTypes.func.isRequired,
   onOk: PropTypes.func.isRequired,
 };
 
-CreditHistoryListModal.defaultProps = {
+CreditHistoryListDrawer.defaultProps = {
   visible: false
 };
 
-export default CreditHistoryListModal;
+export default CreditHistoryListDrawer;

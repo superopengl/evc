@@ -12,7 +12,7 @@ import { UserCreditTransaction } from '../UserCreditTransaction';
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(Subscription, 's')
-    .innerJoin(q => q.from(Payment, 'p').where('p.status = \'paid\''), 'p', 'p."subscriptionId" = s.id')
+    .innerJoin(q => q.from(Payment, 'p').where(`p.status = '${PaymentStatus.Paid}'`), 'p', 'p."subscriptionId" = s.id')
     .leftJoin(q => q.from(UserCreditTransaction, 'b'), 'b', 'p."creditTransactionId" = b.id')
     .orderBy('s.start', 'DESC')
     .addOrderBy('p."lastUpdatedAt"', 'DESC')

@@ -104,11 +104,11 @@ async function expireSubscriptions() {
     if (list.length) {
       // Set subscriptions to be expired
       const subscriptionIds = list.map(x => x.subscriptionId);
-      await getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
+      await tran.manager.getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
 
       // Set user's role to Free
       const userIds = list.map(x => x.userId);
-      await getRepository(User).update(userIds, { role: Role.Free })
+      await tran.manager.getRepository(User).update(userIds, { role: Role.Free })
     }
 
     tran.commitTransaction();
@@ -174,21 +174,22 @@ async function renewRecurringSubscription(info: UserOngoingSubscriptionInformati
       creditTransaction.userId = userId;
       creditTransaction.amount = -1 * creditDeductAmount;
       creditTransaction.type = 'recurring';
-      await getManager().save(creditTransaction);
+      await tran.manager.save(creditTransaction);
     }
 
     const payment = new Payment();
     payment.subscription = subscription;
+    payment.userId = userId;
     payment.creditTransaction = creditTransaction;
     payment.amount = additionalPay;
     payment.method = PaymentMethod.Card;
     payment.rawResponse = rawResponse;
     payment.status = status;
     payment.auto = true;
-    await getManager().save(payment);
+    await tran.manager.save(payment);
 
     extendSubscriptionEndDate(subscription);
-    await getManager().save(subscription);
+    await tran.manager.save(subscription);
 
     await tran.commitTransaction();
     await enqueueRecurringSucceededEmail(info, subscription, additionalPay, creditDeductAmount);
@@ -231,4 +232,4 @@ start(JOB_NAME, async () => {
   console.log('Starting expiring subscriptions');
   await expireSubscriptions();
   console.log('Finished expiring subscriptions');
-});
+}, { daemon: false });

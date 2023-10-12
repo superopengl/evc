@@ -44,7 +44,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.preferToUseCredit = preferToUseCredit;
     subscription.alertDays = alertDays;
     subscription.status = SubscriptionStatus.Provisioning;
-    await getManager().save(subscription);
+    await tran.manager.save(subscription);
 
     const detail = await calculateNewSubscriptionPaymentDetail(userId, subscriptionType, preferToUseCredit);
     const { creditDeductAmount, additionalPay } = detail;
@@ -54,7 +54,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
       creditTransaction.userId = userId;
       creditTransaction.amount = -1 * creditDeductAmount;
       creditTransaction.type = 'user-pay';
-      await getManager().save(creditTransaction);
+      await tran.manager.save(creditTransaction);
     }
 
     const paymentId = uuidv4();
@@ -69,7 +69,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.creditTransaction = creditTransaction;
     payment.subscription = subscription;
 
-    await getManager().save(payment);
+    await tran.manager.save(payment);
 
     tran.commitTransaction();
   } catch (err) {

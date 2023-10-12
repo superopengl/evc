@@ -194,8 +194,8 @@ const MyAccountPage = (props) => {
             title="Subscription"
             extra={
               <Space>
-                <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History</Button>
-                {!isCurrentFree && <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate</Button>}
+                <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Billing</Button>
+                {!isCurrentFree && <Button key={1} type="primary" danger onClick={() => terminateCurrentSubscription()}>Terminate Current Plan</Button>}
               </Space>
             }
           >

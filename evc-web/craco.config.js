@@ -11,7 +11,7 @@ const modifyVars = {
   '@font-family': "'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
   // '@heading-color': '#00293d',
   '@typography-title-font-weight': 400,
-  '@font-size-base': '14px',
+  '@font-size-base': '15px',
   '@card-head-font-size': '18px',
   // '@height-base': '40px',
   // '@height-lg': '48px',

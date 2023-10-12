@@ -42,7 +42,7 @@ export class Subscription {
   @Column({default: true})
   preferToUseCredit: boolean;
 
-  @OneToMany(() => Payment, payment => payment.subscription, {cascade: true})
+  @OneToMany(() => Payment, payment => payment.subscription, {onDelete: 'CASCADE'})
   payments: Payment[];
 }
 

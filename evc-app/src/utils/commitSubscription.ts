@@ -12,21 +12,11 @@ import { Role } from '../types/Role';
 
 
 export async function commitSubscription(
-  paymentId: string,
-  rawResponse: any,
+  payment: Payment
 ) {
   await getManager().transaction(async (m) => {
-    const payment = await getRepository(Payment).findOne({
-      where: {
-        id: paymentId,
-        status: PaymentStatus.Pending
-      },
-      relations: ['subscription']
-    });
-    assert(payment, 404, 'Cannot commit subscriptino due to invalid payment status');
-
-    payment.rawResponse = rawResponse;
     payment.status = PaymentStatus.Paid;
+    payment.paidAt = getUtcNow();
 
     const subscription = payment.subscription;
     subscription.status = SubscriptionStatus.Alive;

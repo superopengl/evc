@@ -15,7 +15,7 @@ import { calculateNewSubscriptionPaymentDetail } from '../utils/calculateNewSubs
 import { provisionSubscriptionPurchase } from '../utils/provisionSubscriptionPurchase';
 import { commitSubscription } from '../utils/commitSubscription';
 import * as _ from 'lodash';
-import { createStripeClientSecret, chargeStripe } from '../services/stripeService';
+import { createStripeClientSecret, chargeStripeForPayment } from '../services/stripeService';
 import { Role } from '../types/Role';
 
 async function getUserSubscriptionHistory(userId) {
@@ -131,22 +131,26 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
   const payment = await getRepository(Payment).findOne({
     id: paymentId,
     userId,
-  });
+  }, {relations: ['subscription']});
+
   assert(payment, 404);
   const { method } = payment;
 
   switch (method) {
     case PaymentMethod.Credit:
       // Immidiately commit the subscription purchase if it can be paied fully by credit
-      await commitSubscription(paymentId, null);
+      await commitSubscription(payment);
       break;
     case PaymentMethod.Card:
       const { stripePaymentMethodId } = req.body;
-      const rawResponse = await chargeStripe(payment, stripePaymentMethodId);
-      await commitSubscription(paymentId, rawResponse);
+      payment.stripePaymentMethodId = stripePaymentMethodId;
+      const rawResponse = await chargeStripeForPayment(payment, true);
+      payment.rawResponse = rawResponse;
+      await commitSubscription(payment);
       break;
     case PaymentMethod.PayPal:
-      await commitSubscription(paymentId, req.body);
+      payment.rawResponse = req.body;
+      await commitSubscription(payment);
       break;
     case PaymentMethod.AliPay:
       assert(false, 501, `AliPay is under development`);

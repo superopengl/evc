@@ -13,7 +13,7 @@ const { Text, Title, Link: TextLink } = Typography;
 const StyledTable = styled(Table)`
 
 .ant-typography {
-  // font-size: 0.9rem;
+  font-size: 0.9rem;
 }
 
 .ant-table-cell {

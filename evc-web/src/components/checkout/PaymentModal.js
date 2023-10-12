@@ -16,6 +16,7 @@ import FullCreditPayButton from './FullCreditPayButton';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { SubscriptionCard } from 'components/SubscriptionCard';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -136,7 +137,9 @@ const PaymentModal = (props) => {
             <Title level={3}>{newPlanDef.title}</Title>
             <div><Text strong type="success">$ {newPlanDef.price}</Text> {newPlanDef.unit}</div>
           </Space>
-          <Paragraph>{newPlanDef.description}</Paragraph>
+          <div style={{ display: 'flex' }}>
+            {newPlanDef.description}
+          </div>
           <Divider />
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text>Recurring payment? (Auto renew subscription at the end day)</Text>
@@ -172,7 +175,7 @@ const PaymentModal = (props) => {
             {showCreditCardCombinedRecurringMessage && <Alert
               type="info" description="When each plan renew happens, system will try to use your credit as much before charging your card." showIcon />}
             {shouldShowCard && <StripeCardPaymentWidget onProvision={() => handleProvisionSubscription('card')} onCommit={handleSuccessfulPayment} />}
-            {shouldShowAliPay && <AlipayButton size="large" icon={<AlipayCircleOutlined />} block style={{fontWeight: 800,fontStyle: 'italic'}}>Alipay</AlipayButton>}
+            {shouldShowAliPay && <AlipayButton size="large" icon={<AlipayCircleOutlined />} block style={{ fontWeight: 800, fontStyle: 'italic' }}>Alipay</AlipayButton>}
             {shouldShowPayPal && <PayPalCheckoutButton onProvision={() => handleProvisionSubscription('paypal')} onCommit={handleSuccessfulPayment} />}
           </Space>}
         </Space>

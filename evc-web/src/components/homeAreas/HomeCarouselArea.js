@@ -23,12 +23,12 @@ const {Text, Title, Paragraph } = Typography;
 const Container = styled.div`
 // border-bottom: 1px solid #f0f0f0;
 // background: #092b00;
-// background-image: linear-gradient(160deg, #3273A4, #17b649);
-// background-image: linear-gradient(#135200, #17b649);
-background-image: linear-gradient(-55deg, #1cabd3, #1cabd3 25%, #5fdef1 25%, #5fdef1 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
-// background-image: linear-gradient(-45deg, #1cabd3, #1cabd3 50%, #17b649 50%, #17b649 100%);
-// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #1cabd3 25%, #1cabd3 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
-// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #1cabd3 25%, #1cabd3 50%, #17b649 50%, #17b649 75%, #f0f0f0 75%, #f0f0f0 100%);
+// background-image: linear-gradient(160deg, #3273A4, #57BB60);
+// background-image: linear-gradient(#135200, #57BB60);
+background-image: linear-gradient(-55deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
+// background-image: linear-gradient(-45deg, #55B0D4, #55B0D4 50%, #57BB60 50%, #57BB60 100%);
+// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
+// background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #57BB60 50%, #57BB60 75%, #f0f0f0 75%, #f0f0f0 100%);
 // background: linear-gradient(to bottom, rgba(19,82,0,0.9), rgba(9,43,0, 0.7)), url('/images/poster.jpg') center center repeat;
 margin: 0 auto 0;
 padding: 1rem 1rem 4rem;
@@ -39,9 +39,10 @@ width: 100%;
 }
 
 .ant-select-selector {
-  border-radius: 40px !important;
+  // border-radius: 40px !important;
   padding:0 20px !important;
   // height: 50px !important;
+  background-color: rgba(255,255,255,0.8) !important;
 
   .ant-select-selection-search {
     left: 20px;
@@ -66,7 +67,7 @@ const InnerContainer = styled.div`
 margin-left: auto;
 margin-right: auto;
 width: 100%;
-max-width: 1200px;
+max-width: 1400px;
 
 .top-menu {
   .ant-select, .ant-btn-link {
@@ -157,7 +158,7 @@ const HomeCarouselAreaRaw = props => {
             {/* <Image src="/images/logo-transparent.png" width={120} style={{marginBottom: 20}} preview={false}/> */}
             <Image src="/images/logo-transparent-big.png" style={{width: 240}} preview={false} />
             <Title style={{ fontSize: 'clamp(22px, 3vw, 32px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight:'bolder' }}>EASY VALUE CHECK</Title>
-            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(255,255,255,0.9)', textTransform: 'uppercase' }}>
+            <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(255,255,255,1)', textTransform: 'uppercase' }}>
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
 
@@ -193,8 +194,8 @@ const HomeCarouselAreaRaw = props => {
         renderItem={item => (
           <List.Item>
             <Space size="large">
-            <Text style={{fontSize: 30, color: 'rgba(255,255,255,0.9)'}}>{item.icon}</Text>
-            <Text style={{fontSize: 14, color: 'rgba(255,255,255,0.9)'}}>{item.description}</Text>
+            <Text style={{fontSize: 32, color: 'rgba(255,255,255,0.8)'}}>{item.icon}</Text>
+            <Text style={{fontSize: 16, color: 'rgba(255,255,255,1'}}>{item.description}</Text>
             </Space>
           </List.Item>
         )}

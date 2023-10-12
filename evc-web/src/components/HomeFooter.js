@@ -10,7 +10,7 @@ const gitVersion = process.env.REACT_APP_GIT_HASH;
 const FooterStyled = styled.div`
 width: 100%;
 text-align: center;
-font-size: 0.8rem;
+font-size: 0.9rem;
 color: #aaaaaa;
 background-color: #00293d;
 padding: 2rem 1rem;
@@ -33,21 +33,19 @@ const HomeFooter = () => (
   <FooterStyled>
     <section id="about">
       <Row gutter={[20, 20]}>
-        <Col span={24}>
+        <Col flex="auto">
           <div></div>
           <p>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</p>
           <p style={{ display: 'none' }}>Version {gitVersion}</p>
           <p><a href="/terms_and_conditions" target="_blank">Terms & Conditions</a> | <a href="/privacy_policy" target="_blank">Privacy Policy</a> </p>
         </Col>
-        <Col span={24}>
-
-          Data is provided by IEX Cloud <a href="https://iexcloud.io" target="_blank" rel="noreferrer">https://iexcloud.io</a>
-        </Col>
-        <Col span={24}>
+        <Col  flex="auto">
+        Data provided by IEX Cloud <a href="https://iexcloud.io" target="_blank" rel="noreferrer">https://iexcloud.io</a>
+        <br/>
           <a href="https://www.techseeding.com.au/" target="_blank" rel="noopener noreferrer">
-            Technical solution by TECHSEEDING PTY LTD.
-          <br />https://www.techseeding.com.au
-          <div style={{ marginTop: 5 }}><img src="https://www.techseeding.com.au/logo-bw.png" width="120px" height="auto" alt="Techseeding logo"></img></div>
+            Technical solution by TECHSEEDING https://www.techseeding.com.au 
+            <br/>
+            <img src="https://www.techseeding.com.au/logo-bw.png" width="80px" height="auto" alt="Techseeding logo"></img>
           </a>
         </Col>
       </Row>

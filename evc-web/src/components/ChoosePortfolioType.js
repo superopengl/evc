@@ -15,11 +15,11 @@ const { Title } = Typography;
 
 const StyledSpace = styled(Space)`
 svg, h3 {
-color: #17b649 !important;
+color: #57BB60 !important;
 }
 
 .ant-card {
-  border-color: #17b649;
+  border-color: #57BB60;
 }
 `
 

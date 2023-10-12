@@ -38,7 +38,7 @@ width: 100%;
 text-align: center;
 padding: 4rem 1rem;
 // background: rgb(240, 242, 245);
-// background-image: linear-gradient(-30deg, #1cabd3, #1cabd3 25%, #5fdef1 25%, #5fdef1 50%, #52d074 50%, #52d074 75%, #17b649 75%, #17b649 100%);
+// background-image: linear-gradient(-30deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
 `;
 
 const InnerContainer = styled.div`

@@ -1,10 +1,10 @@
 const CracoLessPlugin = require('craco-less');
 
 const modifyVars = {
-  '@primary-color': '#17b649', // rgb(23,182,73)
-  '@info-color': '#1cabd3', // rgb(28,170,211)
-  '@link-color': '#1cabd3',
-  '@success-color': '#17b649',
+  '@primary-color': '#57BB60', // rgb(87,187,96)
+  '@info-color': '#55B0D4', // rgb(85,176,212)
+  '@link-color': '#55B0D4',
+  '@success-color': '#57BB60',
   '@warning-color': '#fa8c16',
   '@error-color': '#d7183f', // rgb(215,24,63)
   '@layout-header-background': '#00293d',

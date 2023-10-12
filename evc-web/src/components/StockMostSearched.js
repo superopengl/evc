@@ -88,7 +88,7 @@ const StockMostSearched = (props) => {
             colSpan: 4,
           },
           children: <Space style={{width: '100%', justifyContent: 'space-between'}}>
-            <Text type="secondary"><small>{company}</small></Text>
+            <Text type="secondary">{company}</Text>
             <TimeAgo direction="horizontal" value={publishedAt} showAgo={false} prefix={<Text type="secondary"><small>published:</small></Text>} />
           </Space>
         };
@@ -125,7 +125,7 @@ const StockMostSearched = (props) => {
 
   return (
     <Container>
-      {title && <Title level={5} style={{...titleStyle}}>{title}</Title>}
+      {title && <Title level={4} style={{...titleStyle}} strong>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         columns={columnDef}

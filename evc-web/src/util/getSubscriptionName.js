@@ -1,8 +1,9 @@
+import { FormattedMessage } from "react-intl";
 
 export const getSubscriptionName = (type) => {
   return {
-    free: 'subscription.free',
-    unlimited_monthly: 'subscription.unlimited_monthly',
-    unlimited_yearly: 'subscription.unlimited_yearly'
+    free: <FormattedMessage id="text.proMemberFree"/>,
+    unlimited_monthly:  <FormattedMessage id="text.proMemberMonthly"/>,
+    unlimited_yearly:  <FormattedMessage id="text.proMemberAnnually"/>
   }[type];
 };

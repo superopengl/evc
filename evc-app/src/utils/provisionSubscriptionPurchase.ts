@@ -1,16 +1,16 @@
-import { getManager, getRepository } from 'typeorm';
+import { getConnection, getManager } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { getUtcNow } from './getUtcNow';
 import * as moment from 'moment';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { calculateNewSubscriptionPaymentDetail } from './calculateNewSubscriptionPaymentDetail';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { PaymentMethod } from '../types/PaymentMethod';
+import { assert } from './assert';
 
 export type ProvisionSubscriptionRequest = {
   userId: string;
@@ -30,7 +30,9 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
   const end = moment(now).add(months, 'month').toDate();
   let payment: Payment = null;
 
-  await getManager().transaction(async (m) => {
+  const tran = getConnection().createQueryRunner();
+  try {
+    tran.startTransaction();
     const subscriptionId = uuidv4();
     const subscription = new Subscription();
     subscription.id = subscriptionId;
@@ -42,10 +44,9 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.preferToUseCredit = preferToUseCredit;
     subscription.alertDays = alertDays;
     subscription.status = SubscriptionStatus.Provisioning;
+    await getManager().save(subscription);
 
-    await m.save(subscription);
-
-    const detail = await calculateNewSubscriptionPaymentDetail(m, userId, subscriptionType, preferToUseCredit);
+    const detail = await calculateNewSubscriptionPaymentDetail(userId, subscriptionType, preferToUseCredit);
     const { creditDeductAmount, additionalPay } = detail;
     let creditTransaction: UserCreditTransaction = null;
     if (creditDeductAmount > 0) {
@@ -53,7 +54,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
       creditTransaction.userId = userId;
       creditTransaction.amount = -1 * creditDeductAmount;
       creditTransaction.type = 'user-pay';
-      await m.save(creditTransaction);
+      await getManager().save(creditTransaction);
     }
 
     const paymentId = uuidv4();
@@ -68,8 +69,13 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.creditTransaction = creditTransaction;
     payment.subscription = subscription;
 
-    await m.save(payment);
-  });
+    await getManager().save(payment);
+
+    tran.commitTransaction();
+  } catch (err) {
+    tran.rollbackTransaction();
+    assert(false, 500, 'Failed to provisoin subscription purchase');
+  }
 
   return payment;
 }

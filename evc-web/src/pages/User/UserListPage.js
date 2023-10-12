@@ -402,8 +402,8 @@ const UserListPage = () => {
             <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
           </Form.Item>
           <Form.Item label="Role" name="role">
-            <Radio.Group defaultValue="client" disabled={loading} optionType="button" buttonStyle="solid">
-              <Radio.Button value="client">Client</Radio.Button>
+            <Radio.Group defaultValue="free" disabled={loading} optionType="button" buttonStyle="solid">
+              <Radio.Button value="free">Client</Radio.Button>
               <Radio.Button value="admin">Admin</Radio.Button>
             </Radio.Group>
           </Form.Item>

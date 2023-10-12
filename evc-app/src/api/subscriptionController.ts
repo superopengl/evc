@@ -163,7 +163,7 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
   const { type, preferToUseCredit } = req.body;
-  const result = await calculateNewSubscriptionPaymentDetail(null, userId, type, preferToUseCredit);
+  const result = await calculateNewSubscriptionPaymentDetail(userId, type, preferToUseCredit);
   res.json(result);
 });
 

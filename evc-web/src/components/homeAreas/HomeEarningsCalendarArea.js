@@ -11,6 +11,7 @@ import { subscriptionDef } from 'def/subscriptionDef';
 import StockRadarPage from 'pages/Stock/StockRadarPage';
 import { Link, withRouter } from 'react-router-dom';
 import EarningsCalendarPage from 'pages/AdminDashboard/EarningsCalendarPage';
+import { FormattedMessage } from 'react-intl';
 
 const { Text, Title } = Typography;
 
@@ -59,7 +60,7 @@ export const HomeEarningsCalendarArea = props => {
   const { onSymbolClick } = props;
   return (
     <Container>
-      <Title>Earnings Calendar - Preview</Title>
+      <Title><FormattedMessage id="menu.earningsCalendar" /></Title>
       <InnerContainer>
         <EarningsCalendarPage onSymbolClick={onSymbolClick}/>
       </InnerContainer>

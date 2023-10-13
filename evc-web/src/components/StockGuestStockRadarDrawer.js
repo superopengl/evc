@@ -2,6 +2,7 @@ import React from 'react';
 import { Drawer, Button, Typography, Alert, Space } from 'antd';
 import StockRadarPage from 'pages/Stock/StockRadarPage';
 import PropTypes from "prop-types";
+import { FormattedMessage } from 'react-intl';
 
 const { Text } = Typography;
 
@@ -27,12 +28,14 @@ export const StockGuestStockRadarDrawer = (props) => {
       onClose={onClose}
       footer={null}
       title={<Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Text>Stock Radar - Preview</Text>
+        <Text><FormattedMessage id="menu.stockRadar"/> - Preview</Text>
         <Alert
           message={<><big>😉</big>
           <Text style={{ fontStyle: 'italic', marginLeft: 12 }} type="success">More information is available to signed up users</Text></>}
           action={
-            <Button type="primary" style={{ width: 140 }}>Sign Up Now</Button>
+            <Button type="primary" style={{ width: 140 }}>
+              <FormattedMessage id="menu.signUpNow" />
+            </Button>
           }
           type="success" />
       </Space>}

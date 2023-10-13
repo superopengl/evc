@@ -7,6 +7,8 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
 import * as queryString from 'query-string';
+import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 const { Title, Text } = Typography;
 
 
@@ -21,6 +23,7 @@ const SignUpForm = (props) => {
 
   const { onOk } = props;
 
+  const intl = useIntl();
   const [sending, setSending] = React.useState(false);
   const { code: referralCode } = queryString.parse(props.location.search);
 
@@ -51,13 +54,17 @@ const SignUpForm = (props) => {
 
   return (
     <ContainerStyled>
-      <Title level={2}>Sign Up</Title>
+      <Title level={2}>
+        <FormattedMessage id="menu.signUp"/>
+      </Title>
       <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'member' }}>
         <Form.Item>
-          <Link to="/login"><Button size="small" block type="link">Already a user? Click to log in</Button></Link>
+          <Link to="/login"><Button size="small" block type="link">
+            <FormattedMessage id="text.alreadyAUserClickToLogin"/>
+            </Button></Link>
         </Form.Item>
         <Form.Item label="" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
-          <Input placeholder="Your email address" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
+          <Input placeholder={intl.formatMessage({id: 'placeholder.emailAddress'})} type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
         </Form.Item>
         {/* <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
           validator: (_, value) =>
@@ -65,9 +72,20 @@ const SignUpForm = (props) => {
         }]}>
           <Checkbox disabled={sending}>I have read and agree to the <a target="_blank" href="/terms_and_conditions">terms & conditions</a> and <a target="_blank" href="/privacy_policy">privacy policy</a>.</Checkbox>
         </Form.Item> */}
-        By signing up you agree with our <a target="_blank" href="/terms_and_conditions">Terms & Conditions</a> and <a target="_blank" href="/privacy_policy">Privacy Policy</a>.
+       <FormattedMessage id="text.byClickingAgreement" 
+       values={{
+         tc: <a target="_blank" href="/terms_and_conditions">
+           <FormattedMessage id="menu.tc"/>
+         </a>,
+         pp: <a target="_blank" href="/privacy_policy">
+           <FormattedMessage id="menu.pp"/>
+         </a>
+       }} 
+       />
         <Form.Item style={{ marginTop: '1rem' }}>
-          <Button block type="primary" htmlType="submit" disabled={sending}>Sign Up</Button>
+          <Button block type="primary" htmlType="submit" disabled={sending}>
+            <FormattedMessage id="menu.signUp" />
+          </Button>
         </Form.Item>
         {/* <Form.Item>
                   <Button block type="link" onClick={() => goBack()}>Cancel</Button>
@@ -86,7 +104,9 @@ const SignUpForm = (props) => {
               // icon={<GoogleOutlined />}
               onClick={renderProps.onClick}
               disabled={renderProps.disabled}
-            >Continue with Google</Button>
+            >
+              <FormattedMessage id="menu.continueWithGoogle"/>
+            </Button>
           )}
         referralCode={referralCode}
       />

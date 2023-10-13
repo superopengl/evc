@@ -198,10 +198,10 @@ const ReferralGlobalPolicyListPage = () => {
 
   return (
       <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
+        <Space direction="vertical" style={{ width: '100%' }} size="large">
+          {/* <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Global Referral Policy</Title>
-          </StyledTitleRow>
+          </StyledTitleRow> */}
 
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Policy</Button>

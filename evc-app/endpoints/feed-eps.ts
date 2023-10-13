@@ -66,7 +66,7 @@ async function sendEmailByRow(item: CoreDataWatchlistEmailTask) {
       toWhom: name,
       symbol,
     }
-  }, false);
+  });
 }
 
 async function promoteLatestSnapshotToPreviousSnapshot() {

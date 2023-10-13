@@ -83,7 +83,7 @@ const MySubscriptionHistoryDrawer = (props) => {
               dataIndex: 'id',
               width: '33%',
               align: 'right',
-              render: (id, item) => <Button type="link">Invoice</Button>
+              render: (id, item) => <Button type="link">Receipt</Button>
             },
           ]}
           bordered={false}

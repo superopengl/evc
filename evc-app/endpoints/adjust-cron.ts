@@ -43,6 +43,11 @@ const defs = [
         startTimeNY: '16:10',
         // IEX
     },
+    {
+        name: 'daily-subscription',
+        description: 'Daily subscription check',
+        startTimeNY: '23:00',
+    },
 ];
 
 function getDescription(data) {

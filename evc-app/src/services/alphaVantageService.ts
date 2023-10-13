@@ -1,4 +1,3 @@
-import * as alphavantage from 'alphavantage';
 import * as queryString from 'query-string';
 import * as _ from 'lodash';
 import * as fetch from 'node-fetch';
@@ -53,6 +52,15 @@ export async function getEarningsCalendarForAll(): Promise<{symbol: string, repo
   });
 
   return rows;
+}
+
+export async function getCompanyName(symbol: string) {
+  const data = await requestAlphaVantageApi({
+    function: 'OVERVIEW',
+    symbol
+  });
+
+  return data?.Name;
 }
 
 

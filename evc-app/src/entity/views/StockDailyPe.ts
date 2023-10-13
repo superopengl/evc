@@ -43,6 +43,12 @@ export class StockDailyPe {
   date: string;
 
   @ViewColumn()
+  close: number;
+
+  @ViewColumn()
+  ttmEps: number;
+
+  @ViewColumn()
   pe: number;
 }
 

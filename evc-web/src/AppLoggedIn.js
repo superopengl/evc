@@ -24,6 +24,7 @@ import { BiDollar } from 'react-icons/bi';
 import EarnCommissionModal from 'pages/EarnCommissionModal';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
+import {GoDatabase} from 'react-icons/go';
 
 const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
 const StockWatchListPage = loadable(() => import('pages/Stock/StockWatchListPage'));
@@ -116,7 +117,7 @@ const ROUTES = [
   {
     path: '/data',
     name: <FormattedMessage id="menu.dataManagement" />,
-    icon: <UploadOutlined />,
+    icon: <Icon component={() => <GoDatabase/>} />,
     roles: ['admin', 'agent']
   },
   {

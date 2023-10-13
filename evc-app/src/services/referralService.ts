@@ -12,17 +12,16 @@ export async function getCurrentReferralAmountForReferrer(userId) {
     return policy.amount;
   }
 
-  const now = getUtcNow();
   const globalPolicy = await getRepository(ReferralGlobalPolicy)
     .createQueryBuilder()
     .where({ active: true })
-    .andWhere('"start" <= :now AND ("end" IS NULL OR "end" > :now)', { now })
+    .andWhere('"start" <= now() AND ("end" IS NULL OR "end" > now())')
     .getOne();
 
   return globalPolicy?.amount || 0;
 }
 
-export async function handleReferralKickbackWhenPaid(m: EntityManager, userId: string) {
+export async function handleReferralCommissionWhenPaid(m: EntityManager, userId: string) {
   const user = await getRepository(User).findOne(userId);
   if (user.everPaid) {
     return;
@@ -38,6 +37,7 @@ export async function handleReferralKickbackWhenPaid(m: EntityManager, userId: s
       ubt.referredUserId = userId;
       ubt.userId = referrerUserId;
       ubt.amount = amount;
+      ubt.type = 'commission';
       entitiesToSave.push(ubt);
     }
   }

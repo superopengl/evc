@@ -162,7 +162,7 @@ const HomeCarouselAreaRaw = props => {
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
 
-            <div style={{ width: 400, margin: '10px 0 2rem' }}>
+            <div style={{ width: 400, margin: '10px 0 10px' }}>
               <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true}/>
             </div>
             <Space align="center" style={{ width: '100%', justifyContent: 'center' }} >

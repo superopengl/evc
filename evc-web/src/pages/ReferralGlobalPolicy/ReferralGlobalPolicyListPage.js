@@ -47,7 +47,7 @@ const ReferralGlobalPolicyListPage = () => {
 
   const columnDef = [
     {
-      title: 'Amount per Referral',
+      title: 'Amount per referral',
       dataIndex: 'amount',
       render: (value) => <MoneyAmount value={value} />
     },
@@ -59,12 +59,12 @@ const ReferralGlobalPolicyListPage = () => {
     {
       title: 'Start',
       dataIndex: 'start',
-      render: (value) => <TimeAgo value={value} accurate={true} />,
+      render: (value) => <TimeAgo value={value} accurate={false} />,
     },
     {
       title: 'End',
       dataIndex: 'end',
-      render: (value) => <TimeAgo value={value} accurate={true} />
+      render: (value) => <TimeAgo value={value} accurate={false} />
     },
     {
       title: 'Active',
@@ -102,13 +102,7 @@ const ReferralGlobalPolicyListPage = () => {
     try {
       setLoading(true);
       const list = await listReferalGlobalPolicies();
-      setList(list.map((a, i) => ({
-        id: i,
-        title: `$${a.amount.toFixed(2)} ${a.description}`,
-        start: moment(a.start).toDate(),
-        end: moment(a.end).toDate(),
-        allDay: true
-      })));
+      setList(list);
     } finally {
       setLoading(false);
     }
@@ -194,6 +188,14 @@ const ReferralGlobalPolicyListPage = () => {
     })
   }
 
+  const calendarEvents = list.map((a, i) => ({
+    id: i,
+    title: `${a.description} ($${a.amount.toFixed(2)})${a.active ? ' Active' : ''}`,
+    start: moment(a.start).toDate(),
+    end: moment(a.end).toDate(),
+    allDay: true
+  }));
+
   return (
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
@@ -208,7 +210,7 @@ const ReferralGlobalPolicyListPage = () => {
           <div>
             <DnDCalendar
               localizer={localizer}
-              events={list}
+              events={calendarEvents}
               defaultView="month"
               views={['month']}
               defaultDate={moment().toDate()}
@@ -249,7 +251,7 @@ const ReferralGlobalPolicyListPage = () => {
         footer={null}
         >
         <Form layout="vertical" onFinish={handleSave} initialValues={newPolicy}>
-          <Form.Item label="Amount per Referral" name="amount" rules={[{ required: true, type: 'number', min: 0, message: ' ' }]}>
+          <Form.Item label="Amount per referral" name="amount" rules={[{ required: true, type: 'number', min: 0, message: ' ' }]}>
             <InputNumber />
           </Form.Item>
           <Form.Item label="Time Range" name="range" rules={[{ required: true, message: ' ' }]}>

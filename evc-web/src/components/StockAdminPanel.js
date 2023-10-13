@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Form, Modal, InputNumber, Row, Col, Card, Tooltip } from 'antd';
+import { Typography, Button, Form, Modal, InputNumber, Row, Col, Card, Space, Alert } from 'antd';
 import PropTypes from 'prop-types';
 import { notify } from 'util/notify';
 import {
@@ -61,7 +61,7 @@ const ColInnerCard = props => {
     size="small"
     bodyStyle={{
       maxHeight: 400,
-      overflow:'auto',
+      overflow: 'auto',
 
     }}
     {...other}
@@ -72,7 +72,7 @@ const ColInnerCard = props => {
 
 const StockAdminPanel = (props) => {
 
-  const {onDataChange} = props;
+  const { onDataChange } = props;
 
   const [stock] = React.useState(props.stock);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
@@ -105,14 +105,14 @@ const StockAdminPanel = (props) => {
 
   return (<Container>
     <Row gutter={[30, 30]} style={{ marginTop: 20 }} wrap={true}>
-      <Col flex="auto">
+      <Col span={12}>
         <ColInnerCard title="Data Info">
           <StockDataInfoPanel
             symbol={symbol}
           />
         </ColInnerCard>
       </Col>
-      <Col flex="auto">
+      <Col span={12}>
         <ColInnerCard title="EPS">
           <StockEpsAdminEditor
             symbol={symbol}
@@ -122,8 +122,8 @@ const StockAdminPanel = (props) => {
           />
         </ColInnerCard>
       </Col>
-      <Col flex="auto">
-        <ColInnerCard title="Support">
+      <Col span={12}>
+        <ColInnerCard title="Support" >
           <StockRangeTimelineEditor
             onLoadList={() => listStockSupport(symbol)}
             onSaveNew={async ([lo, hi]) => {
@@ -137,8 +137,8 @@ const StockAdminPanel = (props) => {
           />
         </ColInnerCard>
       </Col>
-      <Col flex="auto">
-        <ColInnerCard title="Resistance">
+      <Col span={12}>
+        <ColInnerCard title="Resistance" >
           <StockRangeTimelineEditor
             onLoadList={() => listStockResistance(symbol)}
             onSaveNew={async ([lo, hi]) => {
@@ -153,29 +153,31 @@ const StockAdminPanel = (props) => {
         </ColInnerCard>
       </Col>
       <Col span={24}>
-        <MemberOnlyCard title="Fair Value" extra={<Tooltip
-          placement="leftTop"
-          trigger="click"
-          title={<>
-            It requires at least 4 sequential EPS values and 90 days of close prices (for PE calculation) to compute fair value automatically.<br />
-          If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br />
-          Minus or zero <strong>TtmEps</strong> values are not valid to compute out PE90 nor fair values. In this case, <strong>PE90</strong> will always be <Text type="danger">n/a</Text> and a special fair values need to be input manually.<br />
-          If the <strong>TtmEps</strong> has positive value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.</>}
-        >
-          <QuestionCircleOutlined />
-        </Tooltip>}>
-          <StockFairValueEditor
-            symbol={stock.symbol}
-            onLoadList={() => listStockFairValue(symbol)}
-            onSaveNew={async payload => {
-              await saveStockFairValue(symbol, payload);
-              onDataChange();
-            }}
-            onDelete={async id => {
-              await deleteStockFairValue(id);
-              onDataChange();
-            }}
-          />
+        <MemberOnlyCard title="Fair Value">
+          <Space direction="vertical">
+
+            <Alert
+              type="info"
+              showIcon
+              description={<>
+                If the <strong>TtmEps</strong> shows <Text type="danger">n/a</Text>, it's because we cannot fetch EPS from our data provider.<br />
+          Minus or zero <strong>TtmEps</strong> values are not valid to compute out PE90 nor fair values. In this case, <strong>PE90</strong> will always be <Text type="danger">n/a</Text> and special fair values need to be input manually.<br />
+          If the <strong>TtmEps</strong> has positive value, but the <strong>PE90</strong> shows <Text type="danger">n/a</Text>, it's because there is no enough close price data to compute the PE value.
+          </>}
+            />
+            <StockFairValueEditor
+              symbol={stock.symbol}
+              onLoadList={() => listStockFairValue(symbol)}
+              onSaveNew={async payload => {
+                await saveStockFairValue(symbol, payload);
+                onDataChange();
+              }}
+              onDelete={async id => {
+                await deleteStockFairValue(id);
+                onDataChange();
+              }}
+            />
+          </Space>
         </MemberOnlyCard>
       </Col>
     </Row>
@@ -212,7 +214,7 @@ StockAdminPanel.propTypes = {
 };
 
 StockAdminPanel.defaultProps = {
-  onDataChange: () => {}
+  onDataChange: () => { }
 };
 
 export default withRouter(StockAdminPanel);

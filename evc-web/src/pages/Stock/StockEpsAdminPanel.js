@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Tooltip } from 'antd';
+import { List, Typography, Space, Button, Tooltip, Alert } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
@@ -74,6 +74,13 @@ const StockEpsAdminEditor = (props) => {
 
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
+      <Alert description={<>
+      It's required to have at least 6 EPS values (back to one and half years ago) to calculate fair values.<br/>
+      Manually adding EPS value is a heavy operation as it will cause system to recalculate many values like PE90 and fair values. 
+      </>}
+        type="info"
+        showIcon
+      />
       <Space size="small" style={{ width: '100%', justifyContent: 'space-between' }}>
         <StockEpsInput onSave={handleSave} disabled={loading} />
         <Tooltip title="Fetch last 8 EPS from IEX API">

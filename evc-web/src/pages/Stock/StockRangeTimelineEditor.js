@@ -11,6 +11,7 @@ import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
+import { TimeAgo } from 'components/TimeAgo';
 
 const {Text} = Typography;
 
@@ -85,7 +86,7 @@ export const StockRangeTimelineEditor = (props) => {
           >
             <List.Item.Meta
               description={<Space size="small">
-                <Text type="secondary">{moment(item.createdAt).format('D MMM YYYY')}</Text>
+                <TimeAgo value={item.createdAt} showAgo={false} accurate={false} />
               <NumberRangeDisplay lo={item.lo} hi={item.hi} />
               </Space>}
             />

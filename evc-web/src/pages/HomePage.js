@@ -137,7 +137,7 @@ const HomePage = (props) => {
   }
 
   return <StyledLayout
-    logo="/images/logo-transparent.png"
+    logo="/favicon-32x32.png"
     title={null}
     // logo="/images/logo-transparent.png"
     siderWidth={270}

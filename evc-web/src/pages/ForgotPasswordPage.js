@@ -67,9 +67,9 @@ const ForgotPasswordPage = props => {
         <Form.Item style={{ marginTop: '2rem' }}>
           <Button block type="primary" htmlType="submit" disabled={sending}>Send reset link to email</Button>
         </Form.Item>
-        <Form.Item >
+        {/* <Form.Item >
           <Button block type="link" onClick={() => goBack()}>Cancel</Button>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item>
           <Link to="/"><Button block type="link">Go to home page</Button></Link>
         </Form.Item>

@@ -34,7 +34,7 @@ const HomeFooter = () => (
   <FooterStyled>
     <section id="about">
       <Row gutter={[20, 20]}>
-        <Col flex="auto">
+        <Col span={24}>
           <div></div>
           <p>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</p>
           <p style={{ display: 'none' }}>Version {gitVersion}</p>
@@ -43,15 +43,15 @@ const HomeFooter = () => (
           </a> | <a href="/privacy_policy" target="_blank">
               <FormattedMessage id="menu.pp" />
             </a> </p>
-        </Col>
-        <Col flex="auto">
+        <p>
           Data provided by IEX Cloud <a href="https://iexcloud.io" target="_blank" rel="noreferrer">https://iexcloud.io</a>
-          <br />
+          {/* <br />
           <a href="https://www.techseeding.com.au/" target="_blank" rel="noopener noreferrer">
             Technical solution by TECHSEEDING https://www.techseeding.com.au
             <br />
             <img src="https://www.techseeding.com.au/logo-bw.png" width="80px" height="auto" alt="Techseeding logo"></img>
-          </a>
+          </a> */}
+        </p>
         </Col>
       </Row>
     </section>

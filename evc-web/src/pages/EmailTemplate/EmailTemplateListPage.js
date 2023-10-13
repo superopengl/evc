@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Divider, Input, Form, Tooltip, Tag, Drawer, List, Row } from 'antd';
+import { Typography, Card, Button, Divider, Input, Form, Tooltip, Tag, Drawer, List, Row } from 'antd';
 import {
   EditOutlined
 } from '@ant-design/icons';
@@ -112,10 +112,10 @@ const EmailTemplateListPage = () => {
 
   return (
     <ContainerStyled>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <StyledTitleRow>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        {/* <StyledTitleRow>
           <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
-        </StyledTitleRow>
+        </StyledTitleRow> */}
         {/* <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button type="primary" ghost onClick={() => handleCreateNew()} icon={<PlusOutlined />} />
           </Space> */}
@@ -126,30 +126,22 @@ const EmailTemplateListPage = () => {
             loading={loading}
             pagination={false}
           /> */}
-        <List
-          itemLayout="vertical"
-          size="large"
-          dataSource={list}
-          footer={null}
-          renderItem={item => <List.Item
-            key={item.key}
-            extra={<Tooltip key="edit" placement="bottom" title="Edit">
-              <Button type="link" icon={<EditOutlined />}
-                onClick={() => handleEdit(item)} ></Button>
-            </Tooltip>}
-          >
-            <Space direction="vertical" style={{ width: '100%' }}>
-              <Title level={3}>{item.key} {getLocaleTag(item.locale)}</Title>
-              {item.key !== 'signature' && <Row>
-                <StyledLabel>vars:</StyledLabel>
-                {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
-              </Row>}
-              <Divider dashed style={{ margin: '10px 0' }} />
-              {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
-              <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
-            </Space>
-          </List.Item>}
-        />
+        {list.map((item, i) => <Card
+          key={i}
+          title={item.key}
+          extra={<Tooltip key="edit" placement="bottom" title="Edit">
+          <Button type="link" icon={<EditOutlined />}
+            onClick={() => handleEdit(item)} ></Button>
+        </Tooltip>}
+        >
+          <Space direction="vertical" style={{ width: '100%' }}>
+            {item.key !== 'signature' && <Row>
+              {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
+            </Row>}
+            {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
+            <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
+          </Space>
+        </Card>)}
       </Space>
       <Drawer
         // title=" "

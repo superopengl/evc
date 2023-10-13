@@ -14,7 +14,7 @@ const Container = styled.div`
 
 const StyledTable = styled(Table)`
 .ant-typography {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .ant-table-cell {
@@ -125,7 +125,7 @@ const StockMostSearched = (props) => {
 
   return (
     <Container>
-      {title && <Title level={4} style={{...titleStyle}} strong>{title}</Title>}
+      {title && <Title level={5} style={{...titleStyle}} strong>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         columns={columnDef}

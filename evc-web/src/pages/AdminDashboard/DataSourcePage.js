@@ -39,7 +39,7 @@ const DataSourcePage = () => {
           </Space>
         }>
           <Paragraph>
-            Bulk upload from CSV file. The CSV file must have a header row with three columns <Text code>Symbol</Text>, <Text code>Support</Text>, <Text code>Resistance</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once.
+            Bulk update support/resistance values with CSV file, which will replace the existing support/resistance values. The CSV file must have a header row with three columns <Text code>Symbol</Text>, <Text code>Support</Text>, <Text code>Resistance</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once.
           </Paragraph>
           <Paragraph>
             Missing <Text code>Symbol</Text> column value will carry over the the cloest symbol value from top. The <Text code>Symbol</Text> value in the first data line is required). See below sample. 
@@ -128,7 +128,7 @@ GOOG,09/18/21,0.85`}
           type="button"
           onOk={refreshMaterializedViews}
         />}>
-        Refresh Materialized Views. This operation should only be executed by data admins.
+        A heavy operation (may take several minutes to complete) that updates all client facing information based on the latest data provided. This should only be executed by data admins when data inconsistency is detected.
       </Card>
 
 

@@ -8,9 +8,13 @@ const ProfileModal = props => {
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
 
+  const { visible, onOk } = props;
+
   const handlePostSave = (updatedUser) => {
     setUser(updatedUser);
+    onOk();
   }
+
 
   return (
     <Modal
@@ -19,6 +23,8 @@ const ProfileModal = props => {
       maskClosable={true}
       destroyOnClose={true}
       footer={null}
+      visible={visible}
+      onOk={onOk}
       {...props}>
       <ProfileForm user={user} onOk={updatedUser => handlePostSave(updatedUser)} />
     </Modal>

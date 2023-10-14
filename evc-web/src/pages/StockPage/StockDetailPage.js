@@ -17,7 +17,7 @@ import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
 import StockEditTagModal from 'components/StockEditTagModal';
 import { updateStock } from 'services/stockService';
 import { StockNoticeButton } from 'components/StockNoticeButton';
-import moment from 'moment';
+import { TimeAgo } from 'components/TimeAgo';
 
 const { Text, Paragraph } = Typography;
 
@@ -150,7 +150,7 @@ const StockDetailPage = (props) => {
             isAdminOrAgent ? <Button key="delete" type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null
           ].filter(x => !!x)}
         >
-          {reportDate && <Paragraph>Next report date is {moment(reportDate).format('D MMM YYYY')}</Paragraph>}
+          {reportDate && <Paragraph>Next earnings report date (estimated): <TimeAgo value={reportDate} accurate={false} direction="horizontal" /></Paragraph>}
           {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
 
           {isAdminOrAgent && <StockAdminPanel stock={stock} onDataChange={loadEntity}/>}

@@ -3,7 +3,8 @@ import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
 import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
 import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
 import { assert } from './assert';
-import { getManager } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
+import * as moment from 'moment';
 
 export type UnusalOptionsActivitySearchParams = {
   symbol?: string;
@@ -34,6 +35,15 @@ export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' |
     .from(entity, 's')
     .where('1 = 1');
 
+  const symbolsResult = await getManager()
+    .createQueryBuilder()
+    .from(entity, 's')
+    .select('symbol')
+    .distinct(true)
+    .orderBy('symbol')
+    .execute();
+  const symbols = symbolsResult.map(x => x.symbol);
+
   if (symbol) {
     query = query.andWhere(`symbol = :symbol`, { symbol: symbol.toUpperCase() });
   }
@@ -41,16 +51,16 @@ export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' |
     query = query.andWhere(`type = :type`, { type });
   }
   if (expDateFrom) {
-    query = query.andWhere(`"expDate" >= :date`, { date: expDateFrom });
+    query = query.andWhere(`"expDate" >= :a::date`, { a: expDateFrom });
   }
   if (expDateTo) {
-    query = query.andWhere(`"expDate" <= :date`, { date: expDateTo });
+    query = query.andWhere(`"expDate" <= :b::date`, { b: expDateTo });
   }
   if (timeFrom) {
-    query = query.andWhere(`time >= :date`, { date: timeFrom });
+    query = query.andWhere(`time >= :c::date`, { c: timeFrom });
   }
   if (timeTo) {
-    query = query.andWhere(`time <= :date`, { date: timeTo });
+    query = query.andWhere(`time <= :d::date`, { d: timeTo });
   }
   const count = await query.getCount();
 
@@ -63,7 +73,8 @@ export async function searchUnusalOptionsActivity(entityType: 'stock' | 'etfs' |
   return {
     count,
     page: pageNo,
-    data
+    data,
+    symbols
   };
 }
 

@@ -1,9 +1,7 @@
 
-import { getRepository, getManager, LessThan } from 'typeorm';
+import { getManager, EntityManager, In } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert, assertRole } from '../utils/assert';
-import { User } from '../entity/User';
-import { uploadToS3 } from '../utils/uploadToS3';
 import * as path from 'path';
 import { refreshMaterializedView } from '../db';
 import { redisCache } from '../services/redisCache';
@@ -38,7 +36,9 @@ const formatPutCallRatioUploadRow = row => {
   return row;
 }
 
-function handleCsvUpload(onRows: (rows: []) => Promise<void>, onFinish: () => Promise<void> = async () => { }) {
+function handleCsvUpload(
+  onRows: (m: EntityManager, rows: []) => Promise<void>,
+) {
   return handlerWrapper(async (req, res) => {
     assertRole(req, 'admin', 'agent');
 
@@ -53,18 +53,15 @@ function handleCsvUpload(onRows: (rows: []) => Promise<void>, onFinish: () => Pr
     const key = `operation.status.${operation}`;
     try {
       await redisCache.set(key, 'in-progress');
-      const list = parse(data, {
+      const rows = parse(data, {
         columns: headers => headers.map(convertHeaderToPropName),
         skip_empty_lines: true
       });
 
-      const chunks = _.chunk(list, 1000);
+      await getManager().transaction(async m => {
+        await onRows(m, rows);
+      });
 
-      for (const rows of chunks) {
-        await onRows(rows);
-      }
-
-      await onFinish();
     } finally {
       await redisCache.del(key);
     }
@@ -102,7 +99,7 @@ function parseLoHi(strData) {
   const [loStr, hiStr] = strData.split('-');
   const lo = +(loStr?.trim());
   let hi = +(hiStr?.trim());
-  if(_.isNaN(hi)) {
+  if (_.isNaN(hi)) {
     hi = lo;
   }
   assert(_.isFinite(lo) && _.isFinite(hi), 400, `Invalid lo-hi pair value ${strData}`);
@@ -141,40 +138,52 @@ function formatSupportResistanceRowsToEntites(rows) {
   return { supports, resistances };
 }
 
-export const uploadSupportResistanceCsv = handleCsvUpload(async rows => {
-  const { supports, resistances } = formatSupportResistanceRowsToEntites(rows);
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockSupport)
-    .values(supports)
-    .orIgnore()
-    .execute();
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockResistance)
-    .values(resistances)
-    .orIgnore()
-    .execute();
-})
+async function deleteAndInsertIntoSupportOrResistance(m: EntityManager, entity, items: StockSupport[] | StockResistance) {
+  const symbols = _.chain(items).map(x => x.symbol).uniq().value();
+  await m
+    .getRepository(entity)
+    .delete({ symbol: In(symbols) });
 
-export const uploadPutCallRatioCsv = handleCsvUpload(async rows => {
-  const formattedRows = rows.map(formatPutCallRatioUploadRow);
-  await getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockDailyPutCallRatio)
-    .values(formattedRows as StockDailyPutCallRatio[])
-    .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
-    .execute();
-})
+  const chunks = _.chunk(items, 1000);
+  for (const rows of chunks) {
+    await m
+      .createQueryBuilder()
+      .insert()
+      .into(entity)
+      .values(rows)
+      .orIgnore()
+      .execute();
+  }
+}
 
-async function cleanUpOldUoaData(table) {
+export const uploadSupportResistanceCsv = handleCsvUpload(
+  async (m, allRows) => {
+    const { supports, resistances } = formatSupportResistanceRowsToEntites(allRows);
+    await deleteAndInsertIntoSupportOrResistance(m, StockSupport, supports);
+    await deleteAndInsertIntoSupportOrResistance(m, StockResistance, resistances);
+  },
+)
+
+export const uploadPutCallRatioCsv = handleCsvUpload(
+  async (m, allRows) => {
+    const chunks = _.chunk(allRows, 1000);
+    for (const rows of chunks) {
+      const formattedRows = rows.map(formatPutCallRatioUploadRow);
+      await m
+        .createQueryBuilder()
+        .insert()
+        .into(StockDailyPutCallRatio)
+        .values(formattedRows as StockDailyPutCallRatio[])
+        .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
+        .execute();
+    }
+  })
+
+async function cleanUpOldUoaData(m: EntityManager, table) {
   const now = getUtcNow();
   const threeMonthAgo = moment(now).add(-3, 'month').toDate();
 
-  await getManager()
+  await m
     .createQueryBuilder()
     .delete()
     .from(table)
@@ -183,40 +192,51 @@ async function cleanUpOldUoaData(table) {
 }
 
 export const uploadUoaStockCsv = handleCsvUpload(
-  async rows => {
-    const formattedRows = rows.map(formatUoaUploadRow);
-    await getManager()
-      .createQueryBuilder()
-      .insert()
-      .into(UnusalOptionActivityStock)
-      .values(formattedRows as UnusalOptionActivityStock[])
-      .execute();
-  },
-  () => cleanUpOldUoaData(UnusalOptionActivityStock)
+  async (m, allRows) => {
+    const chunks = _.chunk(allRows, 1000);
+    for (const rows of chunks) {
+      const formattedRows = rows.map(formatUoaUploadRow);
+      await m
+        .createQueryBuilder()
+        .insert()
+        .into(UnusalOptionActivityStock)
+        .values(formattedRows as UnusalOptionActivityStock[])
+        .execute();
+    }
+    await cleanUpOldUoaData(m, UnusalOptionActivityStock);
+  }
 );
 
 export const uploadUoaEtfsCsv = handleCsvUpload(
-  async rows => {
-    await getManager()
-      .createQueryBuilder()
-      .insert()
-      .into(UnusalOptionActivityEtfs)
-      .values(rows as UnusalOptionActivityEtfs[])
-      .execute();
-  },
-  () => cleanUpOldUoaData(UnusalOptionActivityEtfs)
+  async (m, allRows) => {
+    const chunks = _.chunk(allRows, 1000);
+    for (const rows of chunks) {
+      const formattedRows = rows.map(formatUoaUploadRow);
+      await m
+        .createQueryBuilder()
+        .insert()
+        .into(UnusalOptionActivityEtfs)
+        .values(formattedRows as UnusalOptionActivityEtfs[])
+        .execute();
+    }
+    await cleanUpOldUoaData(m, UnusalOptionActivityEtfs);
+  }
 );
 
 export const uploadUoaIndexCsv = handleCsvUpload(
-  async rows => {
-    await getManager()
-      .createQueryBuilder()
-      .insert()
-      .into(UnusalOptionActivityIndex)
-      .values(rows as UnusalOptionActivityIndex[])
-      .execute();
-  },
-  () => cleanUpOldUoaData(UnusalOptionActivityIndex)
+  async (m, allRows) => {
+    const chunks = _.chunk(allRows, 1000);
+    for (const rows of chunks) {
+      const formattedRows = rows.map(formatUoaUploadRow);
+      await m
+        .createQueryBuilder()
+        .insert()
+        .into(UnusalOptionActivityIndex)
+        .values(formattedRows as UnusalOptionActivityIndex[])
+        .execute();
+    }
+    await cleanUpOldUoaData(m, UnusalOptionActivityIndex);
+  }
 );
 
 export const listUoaStocks = handlerWrapper(async (req, res) => {

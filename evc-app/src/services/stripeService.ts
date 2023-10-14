@@ -5,8 +5,6 @@ import { assert } from '../utils/assert';
 import { UserProfile } from '../entity/UserProfile';
 import { User } from '../entity/User';
 import { PaymentMethod } from '../types/PaymentMethod';
-import { getEarnings } from './iexService';
-import { StockEps } from '../entity/StockEps';
 
 
 let stripe: Stripe = null;

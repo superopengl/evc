@@ -10,22 +10,22 @@ import { FormattedMessage } from 'react-intl';
 import { Image } from 'antd';
 
 import Icon from '@ant-design/icons';
-import {GiRadarSweep} from 'react-icons/gi';
-import {AiOutlineNotification} from 'react-icons/ai';
+import { GiRadarSweep } from 'react-icons/gi';
+import { AiOutlineNotification } from 'react-icons/ai';
 import { BsCalendar } from 'react-icons/bs';
-import {RiTeamLine, RiLineChartLine} from 'react-icons/ri';
-import {BsArrowBarDown, BsArrowBarUp} from 'react-icons/bs';
-import {AiOutlineSwap} from 'react-icons/ai';
+import { RiLineChartLine } from 'react-icons/ri';
+import { BsArrowBarDown, BsArrowBarUp } from 'react-icons/bs';
+import { AiOutlineSwap } from 'react-icons/ai';
 
 
-const {Text, Title, Paragraph } = Typography;
+const { Text, Title, Paragraph } = Typography;
 
 const Container = styled.div`
 // border-bottom: 1px solid #f0f0f0;
 // background: #092b00;
 // background-image: linear-gradient(160deg, #3273A4, #57BB60);
 // background-image: linear-gradient(#135200, #57BB60);
-background-image: linear-gradient(-55deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
+background-image: linear-gradient(-50deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
 // background-image: linear-gradient(-45deg, #55B0D4, #55B0D4 50%, #57BB60 50%, #57BB60 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #57BB60 50%, #57BB60 75%, #f0f0f0 75%, #f0f0f0 100%);
@@ -120,15 +120,15 @@ const HomeCarouselAreaRaw = props => {
 
   const data = [
     {
-      icon: <Icon component={() =><RiLineChartLine/>} />,
+      icon: <Icon component={() => <RiLineChartLine />} />,
       description: 'EVC fair values show the rational value range',
     },
     {
-      icon: <Icon component={() =><BsArrowBarDown/>} />,
+      icon: <Icon component={() => <BsArrowBarDown />} />,
       description: 'Using support levels and the scope of buy points to avoid panic selling at bottom prices',
     },
     {
-      icon: <Icon component={() =><BsArrowBarUp/>} />,
+      icon: <Icon component={() => <BsArrowBarUp />} />,
       description: 'With resistance levels, sell points attain profits; buy points indicate a breakthrough trend',
     },
     {
@@ -156,14 +156,14 @@ const HomeCarouselAreaRaw = props => {
         <Row gutter={[30, 30]} style={{ marginTop: 90, marginBottom: 50, alignItems: 'center' }}>
           <Col className="signup-panel" {...span} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* <Image src="/images/logo-transparent.png" width={120} style={{marginBottom: 20}} preview={false}/> */}
-            <Image src="/images/logo-transparent.png" style={{width: 180}} preview={false} />
-            <Title style={{ fontSize: 'clamp(22px, 3vw, 28px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight:'bolder' }}>EASY VALUE CHECK</Title>
+            <Image src="/images/logo-transparent.png" style={{ width: 180 }} preview={false} />
+            <Title style={{ fontSize: 'clamp(22px, 3vw, 28px)', color: 'black', marginTop: 24, marginBottom: 0, fontWeight: 'bolder' }}>EASY VALUE CHECK</Title>
             <Paragraph level={3} style={{ fontSize: 'clamp(14px, 5vw, 18px)', color: 'rgba(255,255,255,1)', textTransform: 'uppercase' }}>
               <FormattedMessage id="home.catchPhrase" />
             </Paragraph>
 
             <div style={{ width: 400, margin: '10px 0 10px' }}>
-              <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true}/>
+              <StockSearchInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>
             <Space align="center" style={{ width: '100%', justifyContent: 'center' }} >
               <SignUpButton type="primary" onClick={() => handleSignOn()}><FormattedMessage id="button.signUpWithEmail" /></SignUpButton>
@@ -175,7 +175,7 @@ const HomeCarouselAreaRaw = props => {
                       block
                       icon={<GoogleLogoSvg size={16} />}
                       // icon={<GoogleOutlined />}
-                      style={{width: 195}}
+                      style={{ width: 195 }}
                       onClick={renderProps.onClick}
                       disabled={renderProps.disabled}
                     >
@@ -186,21 +186,21 @@ const HomeCarouselAreaRaw = props => {
             </Space>
           </Col>
           <Col {...span}>
-        <StyledList 
-        itemLayout="horizontal"
-        dataSource={data}
-        // bordered
-        size="large"
-        renderItem={item => (
-          <List.Item>
-            <Space size="large">
-            <Text style={{fontSize: 32, color: 'rgba(255,255,255,0.8)'}}>{item.icon}</Text>
-            <Text style={{fontSize: 16, color: 'rgba(255,255,255,1'}}>{item.description}</Text>
-            </Space>
-          </List.Item>
-        )}
-        />
-          
+            <StyledList
+              itemLayout="horizontal"
+              dataSource={data}
+              // bordered
+              size="large"
+              renderItem={item => (
+                <List.Item>
+                  <Space size="large">
+                    <Text style={{ fontSize: 32, color: 'rgba(255,255,255,0.8)' }}>{item.icon}</Text>
+                    <Text style={{ fontSize: 16, color: 'rgba(255,255,255,1' }}>{item.description}</Text>
+                  </Space>
+                </List.Item>
+              )}
+            />
+
           </Col>
         </Row>
       </InnerContainer>

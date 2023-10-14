@@ -15,13 +15,4 @@ export class UserLogin {
 
   @Column()
   loginMethod: string;
-
-  @Column()
-  ipAddress: string;
-
-  @Column('json', { nullable: true })
-  location: object;
-
-  @Column('json', { nullable: true })
-  userAgent: object;
 }

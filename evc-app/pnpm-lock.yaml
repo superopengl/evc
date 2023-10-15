@@ -9,7 +9,6 @@ dependencies:
   compression: 1.7.4
   cookie-parser: 1.4.5
   cors: 2.8.5
-  csv: 5.4.0
   csv-parse: 4.15.3
   csv-parser: 3.0.0
   delay: 5.0.0
@@ -24,13 +23,10 @@ dependencies:
   handlebars: 4.7.7
   html-to-text: 7.0.0
   http-assert: 1.4.1
-  iexcloud_api_wrapper: 1.1.5
   jsonwebtoken: 8.5.1
   lodash: 4.17.21
   moment: 2.29.1
   moment-timezone: 0.5.33
-  ms: 2.1.3
-  node-cache: 5.1.2
   node-fetch: 2.6.1
   nodemailer: 6.4.18
   pg: 8.5.1_pg@8.5.1
@@ -39,12 +35,10 @@ dependencies:
   rxjs: 6.6.3
   serialize-error: 8.0.1
   serve-static: 1.14.1
-  sleep-promise: 9.1.0
   stripe: 8.137.0
   swagger-routes-express: 3.3.0
   typeorm: 0.2.31
   typeorm-plus: 0.1.2
-  ua-parser-js: 0.7.24
   uuid: 8.3.2
   ws: 7.4.3
   yamljs: 0.3.0
@@ -688,16 +682,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ePPA/JuI+X0vb+gSWlPKOY0NdNAie/rPUqX2GUPpbZwiKTkSPhjXWuee47E4MtE54QVzGCQMQkAL6JhV2E1+cQ==
-  /@types/dotenv/6.1.0:
-    dependencies:
-      '@types/node': 14.14.31
-    dev: false
-    resolution:
-      integrity: sha512-gmbNb7V1LbJQA4MmH0hVFgqY1cyKsa6RvKC1Xrq0WBnZ0JuuvXKciXx/s8dN0LVXCJd8xO6wIaSFSyUIoGph9g==
-  /@types/eventsource/1.1.0:
-    dev: false
-    resolution:
-      integrity: sha512-Ygc2l1zQRuuQL9WwE7BDn7M++X4JuHgJpSTrSo/CRt/Eao268rv4hpyv4H2TlZqQ1nYt/I4Wkwbpqg8Xjz5shA==
   /@types/express-serve-static-core/4.17.18:
     dependencies:
       '@types/node': 14.14.31
@@ -1193,14 +1177,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
-  /axios/0.19.0:
-    dependencies:
-      follow-redirects: 1.5.10
-      is-buffer: 2.0.5
-    deprecated: 'Critical security vulnerability fixed in v0.21.1. For more information, see https://github.com/axios/axios/pull/3410'
-    dev: false
-    resolution:
-      integrity: sha512-1uvKqKQta3KBxIz14F2v06AEHZ/dIoeKfbTRkK1E5oqjDnuEerLmYTgJB5AiQZHJcljpg1TuRzdjDR06qNk0DQ==
   /babel-jest/26.6.3_@babel+core@7.12.17:
     dependencies:
       '@babel/core': 7.12.17
@@ -1646,12 +1622,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-0dyXOSAxTfZ/vrlCI7TuNQI56Ws=
-  /clone/2.1.2:
-    dev: false
-    engines:
-      node: '>=0.8'
-    resolution:
-      integrity: sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
   /co/4.6.0:
     dev: true
     engines:
@@ -1864,10 +1834,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
-  /csv-generate/3.3.0:
-    dev: false
-    resolution:
-      integrity: sha512-EXSru4QwEWKwM7wwsJbhrZC+mHEJrhQFoXlohHs80CAU8Qhlv9gaw1sjzNiC3Hr3oUx5skDmEiAlz+tnKWV0RA==
   /csv-parse/4.15.3:
     dev: false
     resolution:
@@ -1881,21 +1847,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-s6OYSXAK3IdKqYO33y09jhypG/bSDHPuyCme/IdEHfWpLf/jKcpitVFyOC6UemgGk8v7Q5u2XE0vvwmanxhGlQ==
-  /csv-stringify/5.6.2:
-    dev: false
-    resolution:
-      integrity: sha512-n3rIVbX6ylm1YsX2NEug9IaPV8xRnT+9/NNZbrA/bcHgOSSeqtWla6XnI/xmyu57wIw+ASCAoX1oM6EZtqJV0A==
-  /csv/5.4.0:
-    dependencies:
-      csv-generate: 3.3.0
-      csv-parse: 4.15.3
-      csv-stringify: 5.6.2
-      stream-transform: 2.0.4
-    dev: false
-    engines:
-      node: '>= 0.1.90'
-    resolution:
-      integrity: sha512-wtdhi5Q53Rhjm2qzi2iDBLI1FHXTECXOTQ/jrZD5gzEXS9ukUkHwbhHRrCvv/vYFisy6uSoUeuW11P7KgrrDRg==
   /currently-unhandled/0.4.1:
     dependencies:
       array-find-index: 1.0.2
@@ -1927,12 +1878,6 @@ packages:
       ms: 2.0.0
     resolution:
       integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
-  /debug/3.1.0:
-    dependencies:
-      ms: 2.0.0
-    dev: false
-    resolution:
-      integrity: sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
   /debug/3.2.7:
     dependencies:
       ms: 2.1.3
@@ -2759,14 +2704,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-zAoAQiudy+r5SvnSw3KJy5os/oRJYHzrzja/tBDqrZtNhUw8bt6y8OBzMWcjWr+8liV8Eb6yOhw8WZ7VFZ5ZzA==
-  /follow-redirects/1.5.10:
-    dependencies:
-      debug: 3.1.0
-    dev: false
-    engines:
-      node: '>=4.0'
-    resolution:
-      integrity: sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
   /for-in/1.0.2:
     dev: true
     engines:
@@ -3189,16 +3126,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
-  /iexcloud_api_wrapper/1.1.5:
-    dependencies:
-      '@types/dotenv': 6.1.0
-      '@types/eventsource': 1.1.0
-      axios: 0.19.0
-      dotenv: 6.2.0
-      eventsource: 1.0.7
-    dev: false
-    resolution:
-      integrity: sha512-9RnrspefNSCUlt9t9Po6B2PDzCEYxb7pCVkR0/YLhydXjqp0NLsT7ak4VFy60wDYMmsUr7UgzXGPa1HUBfP72g==
   /ignore-by-default/1.0.1:
     dev: true
     resolution:
@@ -3321,12 +3248,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==
-  /is-buffer/2.0.5:
-    dev: false
-    engines:
-      node: '>=4'
-    resolution:
-      integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==
   /is-ci/2.0.0:
     dependencies:
       ci-info: 2.0.0
@@ -4540,12 +4461,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA==
-  /mixme/0.4.0:
-    dev: false
-    engines:
-      node: '>= 8.0.0'
-    resolution:
-      integrity: sha512-B4Sm1CDC5+ov5AYxSkyeT5HLtiDgNOLKwFlq34wr8E2O3zRdTvQiLzo599Jt9cir6VJrSenOlgvdooVYCQJIYw==
   /mkdirp/1.0.4:
     engines:
       node: '>=10'
@@ -4619,14 +4534,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
-  /node-cache/5.1.2:
-    dependencies:
-      clone: 2.1.2
-    dev: false
-    engines:
-      node: '>= 8.0.0'
-    resolution:
-      integrity: sha512-t1QzWwnk4sjLWaQAS8CHgOJ+RAfmHpxFWmc36IWTiWHQfs0w5JDMBS1b1ZxQteo0vVVuWJvIUKHDkkeK7vIGCg==
   /node-fetch/2.6.1:
     dev: false
     engines:
@@ -5810,10 +5717,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
-  /sleep-promise/9.1.0:
-    dev: false
-    resolution:
-      integrity: sha512-UHYzVpz9Xn8b+jikYSD6bqvf754xL2uBUzDFwiU6NcdZeifPr6UfgU43xpkPu67VMS88+TI2PSI7Eohgqf2fKA==
   /slice-ansi/4.0.0:
     dependencies:
       ansi-styles: 4.3.0
@@ -5986,12 +5889,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
-  /stream-transform/2.0.4:
-    dependencies:
-      mixme: 0.4.0
-    dev: false
-    resolution:
-      integrity: sha512-LQXH1pUksoef5Ijo6+2ihnjLLZtZuoqu1vhut6a7xZ77nrLA/shbbx2FAzVC/nkb6wwrPzOO98700mv4HDQcWg==
   /streamsearch/0.1.2:
     dev: false
     engines:
@@ -6502,10 +6399,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-6OSu9PTIzmn9TCDiovULTnET6BgXtDYL4Gg4szY+cGsc3JP1dQL8qvE8kShTRx1NIw4Q9IBHlwODjkjWEtMUyA==
-  /ua-parser-js/0.7.24:
-    dev: false
-    resolution:
-      integrity: sha512-yo+miGzQx5gakzVK3QFfN0/L9uVhosXBBO7qmnk7c2iw1IhL212wfA3zbnI54B0obGwC/5NWub/iT9sReMx+Fw==
   /uglify-js/3.12.8:
     dev: false
     engines:
@@ -6989,7 +6882,6 @@ specifiers:
   compression: ^1.7.4
   cookie-parser: ^1.4.5
   cors: ^2.8.5
-  csv: ^5.4.0
   csv-parse: ^4.15.3
   csv-parser: ^3.0.0
   delay: ^5.0.0
@@ -7007,14 +6899,11 @@ specifiers:
   handlebars: ^4.7.7
   html-to-text: ^7.0.0
   http-assert: ^1.4.1
-  iexcloud_api_wrapper: ^1.1.5
   jest: ^26.6.3
   jsonwebtoken: ^8.5.1
   lodash: ^4.17.21
   moment: ^2.29.1
   moment-timezone: ^0.5.33
-  ms: ^2.1.3
-  node-cache: ^5.1.2
   node-fetch: ^2.6.1
   nodemailer: ^6.4.18
   nodemon: ^2.0.7
@@ -7024,7 +6913,6 @@ specifiers:
   rxjs: ^6.6.3
   serialize-error: ^8.0.1
   serve-static: ^1.14.1
-  sleep-promise: ^9.1.0
   stripe: ^8.137.0
   swagger-routes-express: ^3.3.0
   ts-clean: ^1.0.3
@@ -7033,7 +6921,6 @@ specifiers:
   typeorm: ^0.2.31
   typeorm-plus: ^0.1.2
   typescript: ^4.1.5
-  ua-parser-js: ^0.7.24
   uuid: ^8.3.2
   ws: ^7.4.3
   yamljs: ^0.3.0

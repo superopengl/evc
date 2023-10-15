@@ -22,6 +22,17 @@ const AlipayButton = styled(Button)`
   }
 `;
 
+function getReturnFullUrl(paymentId) {
+  let path = `${process.env.REACT_APP_EVC_API_ENDPOINT}/subscription/payment/${paymentId}/confirm`;
+  const isAbsoluteUrl = /https?:\/\//.test(path);
+  if(isAbsoluteUrl) {
+    return path;
+  }
+
+  path = `${window.location.origin}${path}`;
+  return path;
+}
+
 const StripeAlipayPaymentForm = (props) => {
 
   const { onProvision, onCommit, onLoading } = props;
@@ -43,7 +54,7 @@ const StripeAlipayPaymentForm = (props) => {
       const paymentInfo = await onProvision();
       const { clientSecret, paymentId } = paymentInfo;
 
-      const succeededReturnUrl = `${process.env.REACT_APP_EVC_API_ENDPOINT}/subscription/payment/${paymentId}/confirm`;
+      const succeededReturnUrl = getReturnFullUrl(paymentId);
 
 
       const rawResponse = await stripe.confirmAlipayPayment(clientSecret, {

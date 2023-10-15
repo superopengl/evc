@@ -18,6 +18,7 @@ import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';
+import StripeAlipayPaymentWidget from './StripeAlipayPaymentWidget';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -163,13 +164,25 @@ const PaymentModal = (props) => {
         </Space>
         {shouldShowFullCreditButton && <>
           <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon />
-          <FullCreditPayButton onProvision={() => handleProvisionSubscription('credit')} onCommit={handleSuccessfulPayment} />
+          <FullCreditPayButton
+            onProvision={() => handleProvisionSubscription('credit')}
+            onCommit={handleSuccessfulPayment}
+          />
         </>}
         {showCreditCardCombinedRecurringMessage && <Alert
           type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />}
-        {shouldShowCard && <StripeCardPaymentWidget onProvision={() => handleProvisionSubscription('card')} onCommit={handleSuccessfulPayment} />}
-        {shouldShowAliPay && <AlipayButton size="large" icon={<AlipayCircleOutlined />} block style={{ fontWeight: 800, fontStyle: 'italic' }}>Alipay</AlipayButton>}
-        {shouldShowPayPal && <PayPalCheckoutButton onProvision={() => handleProvisionSubscription('paypal')} onCommit={handleSuccessfulPayment} />}
+        {shouldShowCard && <StripeCardPaymentWidget
+          onProvision={() => handleProvisionSubscription('card')}
+          onCommit={handleSuccessfulPayment}
+        />}
+        {shouldShowAliPay && <StripeAlipayPaymentWidget
+          onProvision={() => handleProvisionSubscription('alipay')}
+          onCommit={handleSuccessfulPayment}
+        />}
+        {shouldShowPayPal && <PayPalCheckoutButton
+          onProvision={() => handleProvisionSubscription('paypal')}
+          onCommit={handleSuccessfulPayment}
+        />}
       </Space>
     }
   ];

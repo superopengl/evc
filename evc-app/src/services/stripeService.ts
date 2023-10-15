@@ -7,6 +7,7 @@ import { User } from '../entity/User';
 import { PaymentMethod } from '../types/PaymentMethod';
 
 
+const isProd = process.env.NODE_ENV === 'prod';
 let stripe: Stripe = null;
 function getStripe() {
   if (!stripe) {
@@ -61,19 +62,19 @@ async function getUserStripeCustomerId(payment: Payment) {
   return payment.stripeCustomerId;
 }
 
-async function createStripePaymentIntent(amount, customerId) {
-  if (amount <= 0) {
-    throw new Error('The stripe payment amount must be a positive number');
-  }
-  const intent = await getStripe().paymentIntents.create({
-    amount: Math.ceil(amount * 100),
-    currency: 'usd',
-    customer: customerId,
-  });
-  return intent;
-}
+// async function createStripePaymentIntent(amount, customerId) {
+//   if (amount <= 0) {
+//     throw new Error('The stripe payment amount must be a positive number');
+//   }
+//   const intent = await getStripe().paymentIntents.create({
+//     amount: Math.ceil(amount * 100),
+//     currency: 'usd',
+//     customer: customerId,
+//   });
+//   return intent;
+// }
 
-export async function createStripeClientSecret(payment: Payment): Promise<string> {
+export async function createStripeClientSecretForCardPayment(payment: Payment): Promise<string> {
   const stripeCustomerId = await getUserStripeCustomerId(payment);
   const intent = await getStripe().setupIntents.create({
     customer: stripeCustomerId,
@@ -81,18 +82,18 @@ export async function createStripeClientSecret(payment: Payment): Promise<string
   return intent.client_secret;
 }
 
-async function previsionStripePayment(payment: Payment): Promise<string> {
-  const stripeCustomerId = await getUserStripeCustomerId(payment);
-  const intent = await createStripePaymentIntent(payment.amount, stripeCustomerId);
-  return intent.client_secret;
-}
+// async function previsionStripePayment(payment: Payment): Promise<string> {
+//   const stripeCustomerId = await getUserStripeCustomerId(payment);
+//   const intent = await createStripePaymentIntent(payment.amount, stripeCustomerId);
+//   return intent.client_secret;
+// }
 
 const DUMMY_STRIPE_RESPONSE = { 
   status: 'succeeded', 
   dummyStripeResponse: true 
 };
 
-export async function chargeStripeForPayment(payment: Payment, onSessionPayment: boolean) {
+export async function chargeStripeForCardPayment(payment: Payment, onSessionPayment: boolean) {
   const { amount, method, stripeCustomerId, stripePaymentMethodId } = payment;
 
   assert(method === PaymentMethod.Card, 400, 'Payment method not match');
@@ -105,8 +106,24 @@ export async function chargeStripeForPayment(payment: Payment, onSessionPayment:
     customer: stripeCustomerId,
     payment_method: stripePaymentMethodId,
     off_session: !onSessionPayment,
+    payment_method_types: ['card'],
     confirm: true
   }) : DUMMY_STRIPE_RESPONSE;
 
   return paymentIntent;
+}
+
+export async function chargeStripeForAlipay(payment: Payment): Promise<string> {
+  const { amount, method } = payment;
+
+  assert(method === PaymentMethod.AliPay, 400, 'Payment method not match');
+  assert(amount, 400, 'amount must be positive number');
+
+  const paymentIntent = await getStripe().paymentIntents.create({
+    amount: Math.ceil(amount * 100),
+    currency: isProd ? 'usd' : 'aud', // Stripe Alipay only allow local currency.
+    payment_method_types: ['alipay'],
+  }) 
+
+  return paymentIntent.client_secret;
 }

@@ -4,10 +4,8 @@ import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 import { CardElement, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { CreditCardOutlined } from '@ant-design/icons';
-
-const stripePromise = loadStripe(process.env.REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY);
+import { stripePromise } from 'services/stripeService';
 
 const StripeCardPaymentForm = (props) => {
 

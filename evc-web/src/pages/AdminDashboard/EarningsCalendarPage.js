@@ -34,9 +34,79 @@ const StyledTable = styled(Table)`
   vertical-align: top;
 }
 
-.ant-table-row:hover {
-  .ant-table-cell {
-    background-color: white;
+.ant-table-thead {
+  .ant-table-row:hover {
+    .col-mon {
+      background-color: rgba(87,187,96,0.5);
+    }
+    .col-tue {
+      background-color: rgba(87,187,96,0.4);
+    }
+    .col-wed {
+      background-color: rgba(87,187,96,0.3);
+    }
+    .col-thu {
+      background-color: rgba(87,187,96,0.2);
+    }
+    .col-fri {
+      background-color: rgba(87,187,96,0.1);
+    }
+  }
+}
+  
+.ant-table-tbody {
+  .ant-table-row:hover {
+    .col-mon {
+      background-color: rgba(0,41,61,0.08);
+    }
+    .col-tue {
+      background-color: rgba(0,41,61,0.06);
+    }
+    .col-wed {
+      background-color: rgba(0,41,61,0.04);
+    }
+    .col-thu {
+      background-color: rgba(0,41,61,0.02);
+    }
+    .col-fri {
+      background-color: rgba(255,255,255);
+    }
+  }
+}
+
+.ant-table-thead {
+  .col-mon {
+    background-color: rgba(87,187,96,0.5);
+  }
+  .col-tue {
+    background-color: rgba(87,187,96,0.4);
+  }
+  .col-wed {
+    background-color: rgba(87,187,96,0.3);
+  }
+  .col-thu {
+    background-color: rgba(87,187,96,0.2);
+  }
+  .col-fri {
+    background-color: rgba(87,187,96,0.1);
+  }
+}
+
+.ant-table-tbody {
+  .col-mon {
+    background-color: rgba(0,41,61,0.08);
+  }
+  .col-tue {
+    background-color: rgba(0,41,61,0.06);
+  }
+  .col-wed {
+    background-color: rgba(0,41,61,0.04);
+  }
+  .col-thu {
+    background-color: rgba(0,41,61,0.02);
+  }
+  .col-fri {
+    background-color: rgba(255,255,255);
   }
 }
 `;
@@ -103,8 +173,8 @@ const EarningsCalendarPage = props => {
     const date = moment().add(week, 'week').day(dayOfWeek);
     const isToday = date.isSame(moment(), 'day');
     return <>
-      <div><Text type={isToday ? 'success' : null}>{dayOfWeek}</Text></div>
-      <Text type={isToday ? 'success' : 'secondary'}><small>{date.format('D MMM YYYY')}</small></Text>
+      <div><Text style={{fontWeight: isToday? 800: 400}}>{dayOfWeek}</Text></div>
+      <Text type="secondary" style={{fontWeight: isToday? 600: 400}}><small>{date.format('D MMM YYYY')}</small></Text>
     </>
   }
 
@@ -114,6 +184,7 @@ const EarningsCalendarPage = props => {
       title: renderTitleComponent('Mon'),
       align: 'center',
       dataIndex: 'Mon',
+      className: 'col-mon',
       width: '20%',
       render: (value) => renderDataList(value),
     },
@@ -122,6 +193,7 @@ const EarningsCalendarPage = props => {
       align: 'center',
       dataIndex: 'Tue',
       width: '20%',
+      className: 'col-tue',
       render: (value) => renderDataList(value),
     },
     {
@@ -129,6 +201,7 @@ const EarningsCalendarPage = props => {
       align: 'center',
       dataIndex: 'Wed',
       width: '20%',
+      className: 'col-wed',
       render: (value) => renderDataList(value),
     },
     {
@@ -136,6 +209,7 @@ const EarningsCalendarPage = props => {
       align: 'center',
       dataIndex: 'Thu',
       width: '20%',
+      className: 'col-thu',
       render: (value) => renderDataList(value),
     },
     {
@@ -143,6 +217,7 @@ const EarningsCalendarPage = props => {
       align: 'center',
       dataIndex: 'Fri',
       width: '20%',
+      className: 'col-fri',
       render: (value) => renderDataList(value),
     }
   ];
@@ -171,7 +246,7 @@ const EarningsCalendarPage = props => {
         columns={columnDef}
         dataSource={list}
         loading={loading}
-        bordered={true}
+        bordered={false}
         pagination={false}
         rowKey="key"
         scroll={{ x: 500 }}

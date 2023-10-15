@@ -167,6 +167,7 @@ const PaymentModal = (props) => {
           <FullCreditPayButton
             onProvision={() => handleProvisionSubscription('credit')}
             onCommit={handleSuccessfulPayment}
+            onLoading={setLoading}
           />
         </>}
         {showCreditCardCombinedRecurringMessage && <Alert
@@ -174,15 +175,18 @@ const PaymentModal = (props) => {
         {shouldShowCard && <StripeCardPaymentWidget
           onProvision={() => handleProvisionSubscription('card')}
           onCommit={handleSuccessfulPayment}
-        />}
+          onLoading={setLoading}
+          />}
         {shouldShowAliPay && <StripeAlipayPaymentWidget
           onProvision={() => handleProvisionSubscription('alipay')}
           onCommit={handleSuccessfulPayment}
-        />}
+          onLoading={setLoading}
+          />}
         {shouldShowPayPal && <PayPalCheckoutButton
           onProvision={() => handleProvisionSubscription('paypal')}
           onCommit={handleSuccessfulPayment}
-        />}
+          onLoading={setLoading}
+          />}
       </Space>
     }
   ];

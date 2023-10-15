@@ -14,10 +14,13 @@ const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
 export const PayPalCheckoutButton = (props) => {
 
   const CURRENCY_USD = 'USD';
-  const { onProvision, onCommit } = props;
+  const { onProvision, onCommit, onLoading } = props;
   const [loading, setLoading] = React.useState(true);
   const [paymentId, setPaymentId] = React.useState();
 
+  React.useEffect(() => {
+    onLoading(loading);
+  }, [loading]);
 
   const handleTransactionSuccess = async (details, data) => {
     await onCommit(paymentId, details);
@@ -83,6 +86,7 @@ export const PayPalCheckoutButton = (props) => {
 PayPalCheckoutButton.propTypes = {
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
+  onLoading: PropTypes.func.isRequired,
   onSuccess: PropTypes.func,
   onApprove: PropTypes.func,
 };

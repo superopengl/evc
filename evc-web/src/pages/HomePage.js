@@ -39,6 +39,7 @@ const StyledLayout = styled(ProLayout)`
   margin: 0;
   position: absolute;
   top: 0;
+  width: 100%;
 }
 
 .ant-pro-top-menu {

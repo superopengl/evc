@@ -134,7 +134,7 @@ const StockDetailPage = (props) => {
             backgroundColor: 'white',
             margin: -30,
             marginBottom: 0,
-            padding: 30,
+            padding: '30px 30px 14px',
           }}
           ghost={false}
           onBack={() => props.history.goBack()}

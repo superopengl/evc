@@ -13,7 +13,7 @@ import MoneyAmount from 'components/MoneyAmount';
 const { Text, Link } = Typography;
 
 const MySubscriptionHistoryDrawer = (props) => {
-  const { visible: propVisible } = props;
+  const { visible, onClose, style } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -21,18 +21,17 @@ const MySubscriptionHistoryDrawer = (props) => {
     try {
       setLoading(true);
 
-      const account = await listMySubscriptionHistory();
-      setList(account);
+      setList(await listMySubscriptionHistory());
     } finally {
       setLoading(false);
     }
   }
 
   React.useEffect(() => {
-    if (propVisible) {
+    if (visible) {
       loadSubscrptions();
     }
-  }, [propVisible]);
+  }, [visible]);
 
   const columnDef = [
     {
@@ -87,6 +86,7 @@ const MySubscriptionHistoryDrawer = (props) => {
             },
           ]}
           bordered={false}
+          rowKey="id"
           showHeader={false}
           dataSource={payments}
           pagination={false}
@@ -96,14 +96,15 @@ const MySubscriptionHistoryDrawer = (props) => {
     },
   ];
 
-
   return (
     <Drawer
       title="Billing Information"
       width="80vw"
       destroyOnClose={true}
       maskClosable={true}
-      {...props}
+      visible={visible}
+      onClose={onClose}
+      style={style}
     >
       <Table
         // showHeader={false}

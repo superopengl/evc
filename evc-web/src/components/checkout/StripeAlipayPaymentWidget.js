@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import { AlipayCircleOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
 
+
+
 const AlipayButton = styled(Button)`
   border-color: #108fe9;
   background-color: #108fe9;
@@ -37,8 +39,11 @@ const StripeAlipayPaymentForm = (props) => {
       const paymentInfo = await onProvision();
       const { clientSecret, paymentId } = paymentInfo;
 
+      const succeededReturnUrl = `${process.env.REACT_APP_EVC_API_ENDPOINT}/subscription/payment/${paymentId}/confirm`;
+
+
       const rawResponse = await stripe.confirmAlipayPayment(clientSecret, {
-        return_url: window.location.href
+        return_url: succeededReturnUrl
       });
 
       const { error } = rawResponse;

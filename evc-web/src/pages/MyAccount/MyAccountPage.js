@@ -201,7 +201,7 @@ const MyAccountPage = (props) => {
           >
             <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
             <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
-              <StyledRow gutter={[30, 30]} style={{ maxWidth: 800 }}>
+              <StyledRow gutter={[30, 30]} style={{ maxWidth: 900 }}>
                 {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
                   <SubscriptionCard
                     title={s.title}

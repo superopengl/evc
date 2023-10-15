@@ -91,7 +91,7 @@ const StripeCardPaymentForm = (props) => {
       {/* <Text>Please input card information</Text> */}
       {/* <label>Card Number <CardNumberElement /></label> */}
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <div style={{ width: 340 }}>
+        <div style={{ width: 270 }}>
           <CardNumberElement
             onChange={handleCardNumberChange}
             options={options}

@@ -2,8 +2,7 @@ import React from 'react';
 import { Space, Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
-import { CardElement, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
+import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 import { CreditCardOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
 

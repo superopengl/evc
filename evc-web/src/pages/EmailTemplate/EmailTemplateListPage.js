@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Card, Button, Divider, Input, Form, Tooltip, Tag, Drawer, List, Row } from 'antd';
+import { Typography, Card, Button, Input, Form, Tooltip, Tag, Drawer, Row } from 'antd';
 import {
   EditOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import * as _ from 'lodash';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';
 import 'react-quill/dist/quill.snow.css';
@@ -14,22 +13,11 @@ import loadable from '@loadable/component'
 
 const ReactQuill = loadable(() => import('react-quill'));
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const ContainerStyled = styled.div`
   width: 100%;
 `;
-
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
-
-const StyledLabel = props => <Text style={{ width: '3rem' }} type="secondary">
-  <small>{props.children}</small>
-</Text>
 
 const modules = {
   toolbar: [
@@ -56,18 +44,6 @@ const formats = [
   'link', 'image'
 ];
 
-const getLocaleTag = (locale) => {
-  switch (locale) {
-    case 'zh-CN':
-      return <Tag color="#f50">简</Tag>
-    case 'zh-TW':
-      return <Tag color="#3b5999">繁</Tag>
-    case 'en-US':
-      return <Tag color="#2db7f5">EN</Tag>
-    default:
-      return <Tag>{locale}</Tag>
-  }
-}
 
 const EmailTemplateListPage = () => {
 

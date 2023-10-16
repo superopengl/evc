@@ -3,7 +3,6 @@ import React from 'react';
 import { List, Typography, Space, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { EllipsisOutlined } from '@ant-design/icons';
-import * as _ from 'lodash';
 import styled from 'styled-components';
 import { listStockPe } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';

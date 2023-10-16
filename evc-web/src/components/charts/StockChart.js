@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
 import TradingViewWidget from 'react-tradingview-widget';
 
 const StockChart = props => {

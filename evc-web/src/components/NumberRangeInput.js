@@ -1,13 +1,12 @@
 
 import React from 'react';
-import { DatePicker, InputNumber, Space, Button } from 'antd';
-import * as moment from 'moment';
+import { InputNumber, Space, Button } from 'antd';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
+import { isNumber } from 'lodash';
 import { CheckOutlined } from '@ant-design/icons';
 
 export const NumberRangeInput = (props) => {
-  const { onChange, onSave, value, disabled: propsDisabled, readOnly, allowInputNone, showSave} = props;
+  const { onChange, onSave, value, disabled: propsDisabled, readOnly, allowInputNone, showSave } = props;
   const [lo, setLo] = React.useState(value[0]);
   const [hi, setHi] = React.useState(value[1]);
   const [disabled, setDisabled] = React.useState(propsDisabled);
@@ -41,8 +40,8 @@ export const NumberRangeInput = (props) => {
   }
 
   const isValidValue = () => {
-    const isLoNumber = _.isNumber(lo);
-    const isHiNumber = _.isNumber(hi);
+    const isLoNumber = isNumber(lo);
+    const isHiNumber = isNumber(hi);
     if (isLoNumber && isHiNumber) {
       return lo <= hi;
     }
@@ -50,8 +49,8 @@ export const NumberRangeInput = (props) => {
   }
 
   return <Space>
-    <InputNumber placeholder="Low" value={lo} onChange={handleChangeLo} disabled={disabled || readOnly} readOnly={readOnly}/>
-    <InputNumber placeholder="High" value={hi} onChange={handleChangeHi} disabled={disabled || readOnly} readOnly={readOnly}/>
+    <InputNumber placeholder="Low" value={lo} onChange={handleChangeLo} disabled={disabled || readOnly} readOnly={readOnly} />
+    <InputNumber placeholder="High" value={hi} onChange={handleChangeHi} disabled={disabled || readOnly} readOnly={readOnly} />
     {showSave && <Button type="primary" icon={<CheckOutlined />} onClick={handleSave} disabled={disabled || !isValidValue()} />}
   </Space>
 }

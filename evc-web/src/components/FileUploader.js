@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Upload, Typography } from 'antd';
-import * as _ from 'lodash';
+import { get } from 'lodash';
 import styled from 'styled-components';
 import { searchFile } from 'services/fileService';
 import { saveAs } from 'file-saver';
@@ -50,22 +50,22 @@ export const FileUploader = (props) => {
     const { value } = props;
     if (value?.length) {
       try {
-      setLoading(true);
-      const list = await searchFile(value);
-      const fileList = list.map(x => ({
-        uid: x.id,
-        name: x.fileName,
-        status: 'done',
-        url: x.location,
-      }));
-      ReactDOM.unstable_batchedUpdates(() => {
-        setFileList(fileList);
+        setLoading(true);
+        const list = await searchFile(value);
+        const fileList = list.map(x => ({
+          uid: x.id,
+          name: x.fileName,
+          status: 'done',
+          url: x.location,
+        }));
+        ReactDOM.unstable_batchedUpdates(() => {
+          setFileList(fileList);
+          setLoading(false);
+        })
+      } catch {
         setLoading(false);
-      })
-    }catch{
-      setLoading(false);
 
-    }
+      }
     }
   }
 
@@ -83,7 +83,7 @@ export const FileUploader = (props) => {
     const { file, fileList } = info;
     setFileList(fileList);
 
-    onChange(fileList.filter(f => f.status === 'done').map(f => _.get(f, 'response.id', f.uid)));
+    onChange(fileList.filter(f => f.status === 'done').map(f => get(f, 'response.id', f.uid)));
 
     const uploading = file.status === 'uploading';
     setLoading(uploading);
@@ -96,7 +96,7 @@ export const FileUploader = (props) => {
   }
 
   const handleRemove = file => {
-    onChange(fileList.map(f => _.get(f, 'response.id', f.uid)));
+    onChange(fileList.map(f => get(f, 'response.id', f.uid)));
   }
 
   const { size, disabled } = props;
@@ -125,8 +125,8 @@ export const FileUploader = (props) => {
         {disabled ? <Text type="secondary">File upload is disabled</Text>
           : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
             <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-          Click or drag file to this area to upload. 
-          <br/>Must be consistent with the name in the identity. Up to 3 photos.
+          Click or drag file to this area to upload.
+          <br />Must be consistent with the name in the identity. Up to 3 photos.
         </div>}
       </Dragger>
       {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
@@ -150,5 +150,5 @@ FileUploader.defaultProps = {
     showDownloadIcon: false,
     showRemoveIcon: true,
   },
-  onChange: () => {}
+  onChange: () => { }
 };

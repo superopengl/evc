@@ -6,7 +6,6 @@ import {
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import * as _ from 'lodash';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 
 const {Text} = Typography;

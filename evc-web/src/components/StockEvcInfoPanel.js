@@ -4,10 +4,7 @@ import { Typography, Space, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { getStockEvcInfo } from 'services/stockService';
 import ReactDOM from "react-dom";
-import * as _ from 'lodash';
-import styled from 'styled-components';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
-import { Loading } from './Loading';
 import { Skeleton } from 'antd';
 
 const { Text } = Typography;

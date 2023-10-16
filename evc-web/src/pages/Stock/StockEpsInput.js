@@ -1,14 +1,11 @@
 
 import React from 'react';
 import { DatePicker, InputNumber, Space, Button, Form } from 'antd';
-import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import { CheckOutlined } from '@ant-design/icons';
-import * as _ from 'lodash';
-import { Select } from 'antd';
 
 export const StockEpsInput = (props) => {
-  const { onChange, onSave, disabled } = props;
+  const { onSave, disabled } = props;
 
   const handleSave = (values) => {
     onSave(values);
@@ -38,15 +35,12 @@ export const StockEpsInput = (props) => {
 }
 
 StockEpsInput.propTypes = {
-  onChange: PropTypes.func,
   onSave: PropTypes.func,
   value: PropTypes.object,
 };
 
 StockEpsInput.defaultProps = {
   value: {},
-  onChange: () => { },
   onSave: () => { },
-  showSave: true,
   disabled: false
 };

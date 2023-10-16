@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
 
 
 const FullCreditPayButton = (props) => {

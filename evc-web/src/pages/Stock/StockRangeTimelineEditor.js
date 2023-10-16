@@ -1,19 +1,14 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Modal } from 'antd';
-import * as moment from 'moment';
+import { List, Space, Button } from 'antd';
 import PropTypes from 'prop-types';
-import { PushpinFilled, PushpinOutlined, EllipsisOutlined, DeleteOutlined, FlagFilled, FlagOutlined } from '@ant-design/icons';
-import * as _ from 'lodash';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { NumberRangeInput } from 'components/NumberRangeInput';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-import { AiTwotonePushpin } from 'react-icons/ai';
 import styled from 'styled-components';
-import { Divider } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
 
-const {Text} = Typography;
 
 const Container = styled.div`
   .current-published {

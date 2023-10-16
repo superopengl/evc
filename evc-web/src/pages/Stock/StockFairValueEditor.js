@@ -2,7 +2,7 @@
 import React from 'react';
 import { Typography, DatePicker, Table, Form, Button, Space } from 'antd';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
+import {isNil} from 'lodash';
 import styled from 'styled-components';
 import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
@@ -14,7 +14,7 @@ import {
 import ReactDOM from 'react-dom';
 import { CheckOutlined } from '@ant-design/icons';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 const Container = styled.div`
 .ant-table-thead {
@@ -68,7 +68,7 @@ export const StockFairValueEditor = (props) => {
   }
 
   const displayNumber = value => {
-    return _.isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value)?.toLocaleString();
+    return isNil(value) ? <Text type="danger"><small>n/a</small></Text> : (+value)?.toLocaleString();
   }
 
 

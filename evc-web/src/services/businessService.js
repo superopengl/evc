@@ -1,5 +1,5 @@
 import { httpGet, httpPost, httpDelete } from './http';
-import _ from 'lodash';
+import { orderBy } from 'lodash';
 
 export async function getBusiness(id) {
   return httpGet(`business/${id}`);
@@ -22,5 +22,5 @@ export async function listBusiness(group = null) {
     'life': 3,
     'auto': 4
   };
-  return _.orderBy(list, [x => orderDef[x.group]]);
+  return orderBy(list, [x => orderDef[x.group]]);
 }

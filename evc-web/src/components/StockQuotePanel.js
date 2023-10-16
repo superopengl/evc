@@ -8,10 +8,10 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { filter, debounceTime } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
-import * as _ from 'lodash';
+import {isNil} from 'lodash';
 import { Skeleton } from 'antd';
 
-const { Paragraph, Text, Title } = Typography;
+const { Text } = Typography;
 
 
 const StockQuotePanel = (props) => {
@@ -71,7 +71,7 @@ const StockQuotePanel = (props) => {
   }, []);
 
   const getDeltaComponent = (changeValue, changePrecent) => {
-    if (_.isNil(changeValue) || _.isNil(changePrecent)) {
+    if (isNil(changeValue) || isNil(changePrecent)) {
       return null;
     }
     if (changeValue === 0) {

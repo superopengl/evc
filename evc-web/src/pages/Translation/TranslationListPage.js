@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input } from 'antd';
+import { Typography, Button, Table, Input } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import * as _ from 'lodash';
 import { flushTranslation, listAllTranslationsForEdit, saveTranslation, newLocaleResource } from 'services/translationService';
 import { notify } from 'util/notify';
 

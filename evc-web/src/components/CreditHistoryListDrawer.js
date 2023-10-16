@@ -1,14 +1,14 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Space, Typography, List, Drawer } from 'antd';
+import { Typography, List, Drawer } from 'antd';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
 import { TimeAgo } from 'components/TimeAgo';
 import { getSubscriptionName } from 'util/getSubscriptionName';
-import * as _ from 'lodash';
+import { sumBy } from 'lodash';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 const StyledDrawer = styled(Drawer)`
   .ant-list-item {
@@ -39,7 +39,7 @@ const CreditHistoryListDrawer = (props) => {
     loadList(propVisible);
   }, [propVisible]);
 
-  const total = _.sumBy(data, x => (+x.amount) || 0);
+  const total = sumBy(data, x => (+x.amount) || 0);
 
   return (
     <StyledDrawer

@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Space, Card, Table } from 'antd';
+import { Typography, Table } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { getStockDataInfo } from 'services/stockService';
-import { TimeAgo } from 'components/TimeAgo';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
-import * as _ from 'lodash';
+import { isFinite } from 'lodash';
 
-const { Paragraph, Text, Title } = Typography;
-
+const { Text } = Typography;
 
 const StockDataInfoPanel = (props) => {
 
@@ -59,20 +57,20 @@ const StockDataInfoPanel = (props) => {
   const columnDef = [
     {
       dataIndex: 'key',
-      render: (value, item) => <Text type="secondary"><small>{getLabel(value)}</small></Text>
+      render: (value) => <Text type="secondary"><small>{getLabel(value)}</small></Text>
     },
     {
       dataIndex: 'value',
       align: 'right',
-      render: (value, item) => {
+      render: (value) => {
         const time = moment(value);
-        if(_.isFinite(+value)) {
+        if (isFinite(+value)) {
           // Number
           return +value?.toLocaleString();
-        } else if(time.isValid()) {
+        } else if (time.isValid()) {
           // Date
           return time.format('D MMM YYYY');
-        } 
+        }
         return value;
       }
     }

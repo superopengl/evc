@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { TimeAgo } from 'components/TimeAgo';
 import { CheckOutlined } from '@ant-design/icons';
-import { listMySubscriptionHistory } from 'services/subscriptionService';
+import { downloadReceipt, listMySubscriptionHistory } from 'services/subscriptionService';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { MdAutorenew } from 'react-icons/md';
 import MoneyAmount from 'components/MoneyAmount';
@@ -32,6 +32,12 @@ const MySubscriptionHistoryDrawer = (props) => {
       loadSubscrptions();
     }
   }, [visible]);
+
+  const handleReceipt = async (payment) => {
+    const data = await downloadReceipt(payment.id);
+    const fileUrl = URL.createObjectURL(data);
+    window.open(fileUrl);
+  }
 
   const columnDef = [
     {
@@ -82,7 +88,7 @@ const MySubscriptionHistoryDrawer = (props) => {
               dataIndex: 'id',
               width: '33%',
               align: 'right',
-              render: (id, item) => <Button type="link">Receipt</Button>
+              render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)}>Receipt</Button>
             },
           ]}
           bordered={false}

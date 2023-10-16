@@ -1,12 +1,9 @@
 
-import { EntityManager, getManager, getRepository, Like, MoreThan, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
+import { getRepository, In } from 'typeorm';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
-import * as moment from 'moment';
-import { logError } from '../utils/logger';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { Payment } from '../entity/Payment';
@@ -17,6 +14,7 @@ import { commitSubscription } from '../utils/commitSubscription';
 import * as _ from 'lodash';
 import { createStripeClientSecretForCardPayment, chargeStripeForCardPayment, chargeStripeForAlipay } from '../services/stripeService';
 import { Role } from '../types/Role';
+import { generateReceiptPdfStream } from '../services/receiptService';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -70,6 +68,24 @@ export const cancelSubscription = handlerWrapper(async (req, res) => {
   await getRepository(User).update({ id: userId }, { role: Role.Free });
 
   res.json();
+});
+
+export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
+  assertRole(req, 'member', 'free');
+  const { id } = req.params;
+  const { user } = req as any;
+
+  const payment = await getRepository(Payment).findOne({
+    id,
+    userId: user.id
+  }, { relations: ['subscription', 'creditTransaction'] });
+  assert(payment, 404);
+
+  const {pdfStream, fileName} = await generateReceiptPdfStream(payment);
+
+  res.set('Cache-Control', `public, max-age=31536000`);
+  res.attachment(fileName);
+  pdfStream.pipe(res);
 });
 
 export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
@@ -179,7 +195,7 @@ export const confirmSubscriptionAlipayPayment = handlerWrapper(async (req, res) 
   assert(payment, 404);
   assert(payment.method === PaymentMethod.AliPay, 400, 'Not an Alipay payment');
 
-  const { payment_intent, payment_intent_client_secret, redirect_status } = req.query;
+  const { payment_intent, redirect_status } = req.query;
   assert(payment.stripeAlipayPaymentIntentId === payment_intent, 400, 'Invalid payment confirmation');
 
   if (redirect_status === 'succeeded') {

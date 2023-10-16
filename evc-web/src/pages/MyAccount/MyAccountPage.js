@@ -15,10 +15,9 @@ import ReferralLinkInput from 'components/ReferralLinkInput';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
-import { Descriptions } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
-const PaymentModal = loadable(() => import('components/checkout/PaymentModal'));
+const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
 const MySubscriptionHistoryDrawer = loadable(() => import('./MySubscriptionHistoryDrawer'));
 const CommissionWithdrawalForm = loadable(() => import('pages/CommissionWithdrawal/CommissionWithdrawalForm'));
@@ -69,6 +68,7 @@ const MyAccountPage = (props) => {
   const [commissionWithdrawalHistoryVisible, setCommissionWithdrawalHistoryVisible] = React.useState(false);
   const [cashBackVisible, setCashBackVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
+  const [paymentLoading, setPaymentLoading] = React.useState(false);
   const context = React.useContext(GlobalContext);
 
   const load = async (refreshAuthUser = false) => {
@@ -200,7 +200,7 @@ const MyAccountPage = (props) => {
             }
           >
             <Paragraph type="secondary">One subscription at a time. Please notice the new subscription will take place immidiately and the ongoing subscription will be terminated right away without refunding.</Paragraph>
-            <div style={{display: 'flex', justifyContent: 'center', width: '100%'}}>
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
               <StyledRow gutter={[30, 30]} style={{ maxWidth: 900 }}>
                 {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
                   <SubscriptionCard
@@ -268,13 +268,23 @@ const MyAccountPage = (props) => {
           </Card>
         </Space>
       </Loading>
-      <PaymentModal
+      <Modal
         visible={modalVisible}
-        planType={planType}
-        onOk={handlePaymentOk}
+        closable={!paymentLoading}
+        maskClosable={false}
+        title="Subscribe plan"
+        destroyOnClose
+        footer={null}
+        width={520}
+        onOk={handleCancelPayment}
         onCancel={handleCancelPayment}
-      // credit={list.credit}
-      />
+      >
+        <PaymentStepperWidget 
+          planType={planType}
+          onComplete={handlePaymentOk}
+          onLoading={loading => setPaymentLoading(loading)}
+        />
+      </Modal>
       <CreditHistoryListModal
         visible={creditHistoryVisible}
         onOk={() => setCreditHistoryVisible(false)}

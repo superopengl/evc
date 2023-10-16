@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { TimeAgo } from 'components/TimeAgo';
-import { CheckOutlined } from '@ant-design/icons';
+import { CheckOutlined, DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt, listMySubscriptionHistory } from 'services/subscriptionService';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { MdAutorenew } from 'react-icons/md';
@@ -88,7 +88,7 @@ const MySubscriptionHistoryDrawer = (props) => {
               dataIndex: 'id',
               width: '33%',
               align: 'right',
-              render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)}>Receipt</Button>
+              render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined/>}>Receipt</Button>
             },
           ]}
           bordered={false}

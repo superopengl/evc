@@ -190,6 +190,8 @@ async function renewRecurringSubscription(info: AliveSubscriptionInformation) {
   const payment = new Payment();
   payment.subscription = subscription;
   payment.userId = userId;
+  payment.start = subscription.end;
+  payment.end = moment(subscription.end).add(subscription.type === SubscriptionType.UnlimitedYearly ? 12 : 1, 'month').toDate()
   payment.creditTransaction = creditTransaction;
   payment.amount = additionalPay;
   payment.method = additionalPay ? PaymentMethod.Card : PaymentMethod.Credit;
@@ -261,7 +263,7 @@ async function timeoutProvisioningSubscriptions() {
 
   await getManager().transaction(async m => {
     await m.save(creditTransactions);
-    m.update(Subscription, {id: In(subscriptionIds)}, {status: SubscriptionStatus.Timeout});
+    m.update(Subscription, { id: In(subscriptionIds) }, { status: SubscriptionStatus.Timeout });
   });
 }
 

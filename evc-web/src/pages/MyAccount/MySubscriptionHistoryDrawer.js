@@ -54,11 +54,11 @@ const MySubscriptionHistoryDrawer = (props) => {
       align: 'left',
       render: (value, item) => {
         return <Space>
-          {item.recurring && <Tag color="success">Auto renew</Tag>}
           <TimeAgo value={item.start} showAgo={false} accurate={false} />
           <ArrowRightOutlined />
           {/* <DoubleRightOutlined /> */}
           <TimeAgo value={item.end} showAgo={false} accurate={false} />
+          {item.recurring && <Tag color="success">Auto renew</Tag>}
         </Space>
       }
     },

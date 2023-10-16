@@ -47,6 +47,9 @@ const PaymentModal = (props) => {
 
   React.useEffect(() => {
     setModalVisible(visible);
+    if(visible) {
+      fetchPaymentDetail(willUseCredit);
+    }
   }, [visible]);
 
   React.useEffect(() => {
@@ -139,7 +142,9 @@ const PaymentModal = (props) => {
           <Text strong>Total payable amount:</Text>
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
         </Space>
-        <Button type="primary" block style={{ marginTop: 20 }} disabled={!isValidPlan} onClick={() => handleStepChange(1)}>Checkout</Button>
+        <Button type="primary" block 
+        size="large"
+        style={{ marginTop: 20 }} disabled={!isValidPlan} onClick={() => handleStepChange(1)}>Checkout</Button>
       </Space>
     },
     {
@@ -175,7 +180,7 @@ const PaymentModal = (props) => {
             onLoading={setLoading}
           />}
         <Divider/>
-        <Button block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button>
+        <Button size="large" block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button>
       </Space>
     }
   ];
@@ -186,7 +191,7 @@ const PaymentModal = (props) => {
       closable={!loading}
       maskClosable={false}
       title="Subscribe plan"
-      destroyOnClose={true}
+      destroyOnClose
       footer={null}
       width={520}
       onOk={() => onCancel()}

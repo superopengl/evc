@@ -15,6 +15,8 @@ import * as _ from 'lodash';
 import { createStripeClientSecretForCardPayment, chargeStripeForCardPayment, chargeStripeForAlipay } from '../services/stripeService';
 import { Role } from '../types/Role';
 import { generateReceiptPdfStream } from '../services/receiptService';
+import { PaymentStatus } from '../types/PaymentStatus';
+import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -75,13 +77,13 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { user } = req as any;
 
-  const payment = await getRepository(Payment).findOne({
-    id,
-    userId: user.id
-  }, { relations: ['subscription', 'creditTransaction'] });
-  assert(payment, 404);
+  const receipt = await getRepository(ReceiptInformation).findOne({
+    paymentId: id,
+    userId: user.id,
+  });
+  assert(receipt, 404);
 
-  const {pdfStream, fileName} = await generateReceiptPdfStream(payment);
+  const {pdfStream, fileName} = await generateReceiptPdfStream(receipt);
 
   res.set('Cache-Control', `public, max-age=31536000`);
   res.attachment(fileName);
@@ -111,7 +113,6 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
     recurring,
     preferToUseCredit,
     alertDays,
-    ipAddress: req.ip
   });
   const result: any = {
     method,

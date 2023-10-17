@@ -39,15 +39,15 @@ const RevenuePage = () => {
   return (
     <Loading loading={loading}>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
 
-          <Select defaultValue={period} onChange={setPeriod}>
+          <Select defaultValue={period} onChange={setPeriod} style={{width: 100}}>
             <Select.Option value="day">Daily</Select.Option>
             {/* <Select.Option value="week">Weekly</Select.Option> */}
             <Select.Option value="month">Monthly</Select.Option>
             <Select.Option value="year">Yearly</Select.Option>
           </Select>
-          <Button icon={<SyncOutlined />} onClick={handleRefresh}>Refresh</Button>
+          <Button type="primary" icon={<SyncOutlined />} onClick={handleRefresh}>Refresh</Button>
         </Space>
         <Card>
 

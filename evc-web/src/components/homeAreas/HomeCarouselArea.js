@@ -25,7 +25,7 @@ const Container = styled.div`
 // background: #092b00;
 // background-image: linear-gradient(160deg, #3273A4, #57BB60);
 // background-image: linear-gradient(#135200, #57BB60);
-background-image: linear-gradient(-50deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
+background-image: linear-gradient(-45deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
 // background-image: linear-gradient(-45deg, #55B0D4, #55B0D4 50%, #57BB60 50%, #57BB60 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #57BB60 50%, #57BB60 75%, #f0f0f0 75%, #f0f0f0 100%);

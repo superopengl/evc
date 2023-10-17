@@ -24,7 +24,8 @@ import { BiDollar } from 'react-icons/bi';
 import EarnCommissionModal from 'pages/EarnCommissionModal';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
-import {GoDatabase} from 'react-icons/go';
+import { GoDatabase } from 'react-icons/go';
+import { RiCoinsLine } from 'react-icons/ri';
 
 const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
 const StockWatchListPage = loadable(() => import('pages/Stock/StockWatchListPage'));
@@ -41,6 +42,7 @@ const ChangePasswordModal = loadable(() => import('pages/ChangePasswordModal'));
 const UnusualOptionsActivityPage = loadable(() => import('pages/AdminDashboard/UnusualOptionsActivityPage'));
 const DataSourcePage = loadable(() => import('pages/AdminDashboard/DataSourcePage'));
 const EarningsCalendarPage = loadable(() => import('pages/AdminDashboard/EarningsCalendarPage'));
+const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 
 const { Link: LinkText } = Typography;
 
@@ -117,7 +119,13 @@ const ROUTES = [
   {
     path: '/data',
     name: <FormattedMessage id="menu.dataManagement" />,
-    icon: <Icon component={() => <GoDatabase/>} />,
+    icon: <Icon component={() => <GoDatabase />} />,
+    roles: ['admin', 'agent']
+  },
+  {
+    path: '/revenue',
+    name: <FormattedMessage id="menu.revenue" />,
+    icon: <Icon component={() => <RiCoinsLine />} />,
     roles: ['admin', 'agent']
   },
   {
@@ -307,6 +315,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} />
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
+      <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />
       <RoleRoute visible={isAdmin} exact path="/comission" component={AdminCommissionWithdrawalListPage} />
       <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />

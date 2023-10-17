@@ -19,10 +19,6 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column()
-  @Generated('increment')
-  seqId: number;
-
   @CreateDateColumn()
   createdAt?: Date;
 

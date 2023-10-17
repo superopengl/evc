@@ -297,7 +297,7 @@ const UserListPage = () => {
       <Space direction="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Input.Search
-            placeholder="Input search text"
+            placeholder="Search name or email"
             enterButton={<SearchOutlined />}
             onSearch={value => handleSearch(value)}
             onPressEnter={e => handleSearch(e.target.value)}

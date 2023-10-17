@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Generated } from 'typeorm';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
@@ -11,6 +11,10 @@ import { UserCreditTransaction } from './UserCreditTransaction';
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
+
+  @Column()
+  @Generated('increment')
+  seqId: number;
 
   @CreateDateColumn()
   createdAt?: Date;

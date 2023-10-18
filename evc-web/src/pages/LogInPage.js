@@ -22,7 +22,7 @@ const ContainerStyled = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 400px;
+  max-width: 440px;
   min-width: 300px;
   background-color: #ffffff;
   height: 100%;

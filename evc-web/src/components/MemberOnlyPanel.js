@@ -12,24 +12,24 @@ display: flex;
 flex-direction: column;
 // font-size: 20px;
 padding: 16px;
-color: rgba(255,255,255,0.65);
+// color: rgba(255,255,255,0.65);
 width: 100%;
 justify-content: center;
 align-items: center;
 text-align: center;
 
 .ant-typography {
-  color:rgba(255,255,255,0.65);
+  // color:rgba(255,255,255,0.65);
 }
 
-.anticon {
-  font-size: 30px;
-}
+// .anticon {
+//   font-size: 30px;
+// }
 `;
 
 export const MemberOnlyPanel = (props) => <StyledSpace>
   <LockFilled />
-  <Text><i>{props.message}</i></Text>
+  <Text>{props.message}</Text>
   <Link to="/settings/subscription"><Button type="link">Click to upgrade</Button></Link>
 </StyledSpace>
 
@@ -38,5 +38,5 @@ MemberOnlyPanel.propTypes = {
 };
 
 MemberOnlyPanel.defaultProps = {
-  message: 'This information is only accessible to paid user'
+  message: 'Full feature is available after pay'
 };

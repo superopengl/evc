@@ -6,7 +6,6 @@ import { Logo } from 'components/Logo';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { login } from 'services/authService';
-import { countUnreadMessage } from 'services/messageService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { FormattedMessage } from 'react-intl';

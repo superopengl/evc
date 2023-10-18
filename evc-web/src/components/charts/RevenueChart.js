@@ -1,10 +1,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Line, Column } from '@ant-design/charts';
-import { getStockPutCallRatioChart } from "services/stockService";
-import ReactDOM from 'react-dom';
-import { Loading } from "components/Loading";
+import { Line } from '@ant-design/charts';
 
 const RevenueChart = props => {
 

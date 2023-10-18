@@ -74,7 +74,7 @@ const App = () => {
 
   const [contextValue, setContextValue] = React.useState(globalContextValue);
 
-  const Initalize = async () => {
+  const initalize = async () => {
     const user = await getAuthUser();
     ReactDOM.unstable_batchedUpdates(() => {
       setUser(user);
@@ -83,7 +83,7 @@ const App = () => {
   }
 
   React.useEffect(() => {
-    Initalize();
+    initalize();
   }, []);
 
   React.useEffect(() => {

@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "up": "node index.js",
+    "postinstall": "npm link html-pdf",
     "start:prod": "npm run link-web && npm run build && TZ=utc node index.js",
     "start": "TZ=utc ts-node index.ts",
     "daemon": "TZ=utc ts-node endpoints/index-daemon.ts",

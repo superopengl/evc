@@ -5,7 +5,7 @@ import { groupBy } from 'lodash';
 
 export const TagFilter = (props) => {
 
-  const { onChange, tags, group, value } = props;
+  const { onChange, tags, group, value, style } = props;
   const [selected, setSelected] = React.useState(value);
 
   const isSelected = (tag) => {
@@ -31,8 +31,8 @@ export const TagFilter = (props) => {
   const tagGroups = group ? Object.values(groupBy(tags, t => `${t.sortGroup}`.charAt(0))) : [tags];
 
   return (
-    <div style={{ padding: '1rem 0' }}>
-      {tagGroups.map((tags, gIdx) => <div key={gIdx} style={{margin: '10px 0'}}>
+    <div style={style}>
+      {tagGroups.map((tags, gIdx) => <div key={gIdx} style={{margin: '16px 0'}}>
         {tags.map((t, i) => <Tag
           key={i}
           color={t.color}

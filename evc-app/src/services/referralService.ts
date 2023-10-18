@@ -22,7 +22,7 @@ export async function getCurrentReferralAmountForReferrer(userId) {
 }
 
 export async function handleReferralCommissionWhenPaid(m: EntityManager, userId: string) {
-  const user = await getRepository(User).findOne(userId);
+  const user = await m.getRepository(User).findOne(userId);
   if (user.everPaid) {
     return;
   }

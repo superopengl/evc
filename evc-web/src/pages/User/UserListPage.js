@@ -312,7 +312,7 @@ const UserListPage = () => {
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
-        <Space>
+        <Space style={{marginTop: 16}}>
           {subscriptionDef.map((x, i) => <CheckboxButton key={i}
             onChange={checked => handleSubscriptionChange(x.key, checked)}
             value={queryInfo.subscription.includes(x.key)}

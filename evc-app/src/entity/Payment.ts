@@ -38,9 +38,6 @@ export class Payment {
   @Column({ nullable: true })
   stripePaymentMethodId?: string;
 
-  @Column({ nullable: true })
-  stripeAlipayPaymentIntentId?: string;
-
   @Column('json', { nullable: true })
   rawResponse: object;
 

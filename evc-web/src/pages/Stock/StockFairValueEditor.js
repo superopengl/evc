@@ -112,6 +112,20 @@ export const StockFairValueEditor = (props) => {
       },
     },
     {
+      title: 'PE90 Low',
+      dataIndex: 'peLo',
+      render: (value, item) => {
+        return item.id ? null : displayNumber(value)
+      },
+    },
+    {
+      title: 'PE90 High',
+      dataIndex: 'peHi',
+      render: (value, item) => {
+        return item.id ? null : displayNumber(value)
+      },
+    },
+    {
       title: 'Fair Value',
       render: (value, item) => {
         const { id, fairValueLo, fairValueHi } = item;

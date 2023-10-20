@@ -37,6 +37,15 @@ align-items: center;
 }
 `;
 
+const span = {
+  xs: 24,
+  sm: 24,
+  md: 24,
+  lg: 12,
+  xl: 12,
+  xxl: 12
+};
+
 const StockDisplayPanel = (props) => {
   const { stock } = props;
 
@@ -86,7 +95,7 @@ const StockDisplayPanel = (props) => {
               message="The latest fair value is only accessible to paid user"
               paidOnly={true}
               style={{ marginTop: 30 }}
-              bodyStyle={{height: 243}}
+              bodyStyle={{ height: 243 }}
               blockedComponent={
                 <OldFairValueContainer >
                   {stock.fairValues?.map((fv, i) => <Space key={i}>
@@ -99,25 +108,31 @@ const StockDisplayPanel = (props) => {
             </MemberOnlyCard>
           </Col>
           <Col flex="1 0 auto">
-            <StockChart symbol={stock.symbol} period="1d" interval="5m" />
-          </Col>
-          <Col span={18}>
-            <MemberOnlyCard title={<>News</>} bodyStyle={{height: 500}}>
-              <StockNewsPanel symbol={stock.symbol} />
-            </MemberOnlyCard>
-            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true} style={{ marginTop: 30 }} bodyStyle={{height: 500}}>
+            <MemberOnlyCard title={<>Insider Transactions</>} paidOnly={true} bodyStyle={{ height: 500 }}>
               <StockInsiderTransactionPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
-          <Col span={6}>
-            <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true} bodyStyle={{height: 500}}>
+        </Row>
+        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 30 }}>
+          <Col {...span}>
+            <StockChart symbol={stock.symbol} period="1d" interval="5m" />
+          </Col>
+          <Col {...span}>
+            <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true} bodyStyle={{ height: 500 }}>
               <StockPutCallRatioChart symbol={stock.symbol} />
             </MemberOnlyCard>
-            <MemberOnlyCard title={<>Roster</>} style={{ marginTop: 30 }} bodyStyle={{height: 500}}>
+          </Col>
+        </Row>
+        <Row gutter={[30, 30]} wrap={true} style={{ marginTop: 30 }}>
+          <Col {...span}>
+            <MemberOnlyCard title={<>Roster</>} bodyStyle={{ height: 500 }}>
               <StockRosterPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
-          <Col flex="auto">
+          <Col {...span}>
+            <MemberOnlyCard title={<>News</>} bodyStyle={{ height: 500 }}>
+              <StockNewsPanel symbol={stock.symbol} />
+            </MemberOnlyCard>
           </Col>
         </Row>
 

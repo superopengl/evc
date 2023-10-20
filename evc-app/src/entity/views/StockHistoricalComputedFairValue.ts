@@ -23,6 +23,8 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
         'eps."reportDate" as "reportDate"',
         'pe."ttmEps" as "ttmEps"',
         'pe.pe as pe',
+        'pe."pe90Avg" as "pe90Avg"',
+        'pe."pe90StdDev" as "pe90StdDev"',
         'pe.date as "peDate"',
         'pe."peLo" as "peLo"',
         'pe."peHi" as "peHi"',
@@ -49,6 +51,12 @@ export class StockHistoricalComputedFairValue {
 
   @ViewColumn()
   pe: number;
+
+  @ViewColumn()
+  pe90Avg: number;
+
+  @ViewColumn()
+  pe90StdDev: number;
 
   @ViewColumn()
   peDate: string;

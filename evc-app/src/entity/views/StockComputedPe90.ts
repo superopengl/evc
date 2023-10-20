@@ -36,6 +36,8 @@ import { StockDailyPe } from './StockDailyPe';
       'x.date',
       'x."ttmEps"',
       'x.pe',
+      'x.avg as "pe90Avg"',
+      'x.stddev as "pe90StdDev"',
       'x.avg - x.stddev as "peLo"',
       'x.avg + x.stddev as "peHi"',
       'x."ttmEps" * (x.avg - x.stddev) as "fairValueLo"',
@@ -54,6 +56,12 @@ export class StockComputedPe90 {
 
   @ViewColumn()
   pe: number;
+
+  @ViewColumn()
+  pe90Avg: number;
+
+  @ViewColumn()
+  pe90StdDev: number;
 
   @ViewColumn()
   peLo: number;

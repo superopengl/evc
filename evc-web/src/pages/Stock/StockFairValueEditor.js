@@ -112,17 +112,9 @@ export const StockFairValueEditor = (props) => {
       },
     },
     {
-      title: 'PE90 Low',
-      dataIndex: 'peLo',
+      title: 'PE90 Avg±SD',
       render: (value, item) => {
-        return item.id ? null : displayNumber(value)
-      },
-    },
-    {
-      title: 'PE90 High',
-      dataIndex: 'peHi',
-      render: (value, item) => {
-        return item.id ? null : displayNumber(value)
+        return item.id ? null : <>{displayNumber(item.peLo)} ~ {displayNumber(item.peHi)}</>
       },
     },
     {

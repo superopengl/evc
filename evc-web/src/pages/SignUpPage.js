@@ -1,14 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Modal, Form, Input, Checkbox, Layout, Divider } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
-import { signUp } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import SignUpForm from 'components/SignUpForm';
-const { Title, Text } = Typography;
 
 const PageContainer = styled.div`
   width: 100%;
@@ -22,7 +18,7 @@ const ContainerStyled = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 440px;
+  max-width: 400px;
   // background-color: #f3f3f3;
 `;
 

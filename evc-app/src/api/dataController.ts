@@ -112,11 +112,10 @@ function formatSupportResistanceRowsToEntites(rows) {
   let currentSymbol;
   for (const row of rows) {
     const { symbol, support, resistance } = row;
-    currentSymbol = symbol || currentSymbol;
+    currentSymbol = symbol?.trim() || currentSymbol;
     const supportData = support?.trim();
     const resistanceData = resistance?.trim();
     assert(currentSymbol, 400, 'Cannot find symbol');
-    assert(supportData || resistanceData, 400, 'Neither support nor resistance is provided');
     if (supportData) {
       const { lo, hi } = parseLoHi(supportData);
       const entity = new StockSupport();

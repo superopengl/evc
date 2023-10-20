@@ -88,8 +88,8 @@ export const StockSearchInput = (props) => {
       suffixIcon={<SearchOutlined size="large" />}
       filterOption={(input, option) => {
         const match = input.toLowerCase();
-        const { symbol, company } = option.data;
-        return symbol.toLowerCase().includes(match) || company.toLowerCase().includes(match);
+        const { symbol } = option.data;
+        return symbol.toLowerCase() === match;
       }}
       notFoundContent={isAdminOrAgent ? null : <Button type="primary" block onClick={handleStockPlea}>Not Found. Click to request support to stock <strong style={{ marginLeft: 4 }}>{text.toUpperCase()}</strong></Button>}
     >

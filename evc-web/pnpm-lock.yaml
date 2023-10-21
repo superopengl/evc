@@ -15,6 +15,7 @@ dependencies:
   markdown-it: 11.0.1
   moment: 2.29.1
   moment-timezone: 0.5.33
+  payment-icons: 1.2.1
   query-string: 6.14.1
   react: 17.0.2
   react-big-calendar: 0.32.0_react-dom@17.0.2+react@17.0.2
@@ -10146,6 +10147,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
+  /payment-icons/1.2.1:
+    dev: false
+    resolution:
+      integrity: sha512-nfIgiz/QoD63Gtv6VWYxJdUYDAJvh9B+MX3B2qJafVfyb4/Qx7O3K87pTJVeG1K0tOC+5eZPPnACVEaaQG7zxw==
   /pbkdf2/3.1.1:
     dependencies:
       create-hash: 1.2.0
@@ -15242,6 +15247,7 @@ specifiers:
   moment: ^2.29.1
   moment-timezone: ^0.5.33
   nodemon: ^2.0.7
+  payment-icons: ^1.2.1
   prop-types: ^15.7.2
   query-string: ^6.14.0
   react: ^17.0.1

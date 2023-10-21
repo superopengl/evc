@@ -64,7 +64,7 @@ export const PayPalCheckoutButton = (props) => {
       // onApprove={handleApprove}
       style={{
         layout: 'vertical',
-        color: 'gold',
+        color: 'blue',
         shape: 'rect',
         label: 'paypal',
         height: 40

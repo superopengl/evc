@@ -25,6 +25,11 @@ const Container = styled(Space)`
   // color: #3273A4 !important;
 }
 
+.ant-descriptions-item-label {
+  font-size: 0.9rem;
+  color: rgba(0,0,0,0.45);
+}
+
 .ant-descriptions-header {
   margin: 0;
 }
@@ -38,9 +43,9 @@ const span = {
   xs: 1,
   sm: 1,
   md: 1,
-  lg: 2,
-  xl: 2,
-  xxl: 3
+  lg: 1,
+  xl: 1,
+  xxl: 2
 };
 
 const StockInsiderTransactionPanel = (props) => {

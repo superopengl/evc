@@ -16,6 +16,7 @@ import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
 import { ArrowRightOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
@@ -233,12 +234,12 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title="Referral Link"
+            title={<FormattedMessage id="text.referralLinkTitle"/>}
             extra={
-              <Space><Text>have referred</Text><Title type="success">{account.referralCount}</Title></Space>
+              <Space><Text><FormattedMessage id="text.haveReferred"/></Text><Title type="success">{account.referralCount}</Title></Space>
             }
           >
-            <Paragraph type="secondary">Share this link to invite friends to earn credit.</Paragraph>
+            <Paragraph type="secondary">{<FormattedMessage id="text.shareReferralLink" />}</Paragraph>
             <ReferralLinkInput value={account?.referralUrl} />
           </Card>
           <Card
@@ -295,7 +296,7 @@ const MyAccountPage = (props) => {
         onClose={() => setSubscriptionHistoryVisible(false)}
       />
       <Modal
-        title="Commission Withdrawal Application"
+        title={<FormattedMessage id="text.commissionWithdrawalApplication"/>}
         visible={cashBackVisible}
         closable={true}
         maskClosable={false}

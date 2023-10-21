@@ -5,6 +5,7 @@ import { changeCommissionWithdrawalStatus, listMyCommissionWithdrawal } from 'se
 import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import PropTypes from 'prop-types';
 import { CloseOutlined, CheckOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 
 const AdminEditCommissionWithdrawalDrawer = (props) => {
   const { value, onClose } = props;
@@ -63,7 +64,7 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
   return (
     <Drawer
       visible={!!item}
-      title="Commission Withdrawal Application"
+      title={<FormattedMessage id="text.commissionWithdrawalApplication"/>}
       width={600}
       destroyOnClose={true}
       maskClosable={true}

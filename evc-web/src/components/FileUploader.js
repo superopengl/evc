@@ -7,9 +7,10 @@ import { searchFile } from 'services/fileService';
 import { saveAs } from 'file-saver';
 import { AiOutlineUpload } from 'react-icons/ai';
 import ReactDOM from 'react-dom';
+import { FormattedMessage } from 'react-intl';
 
 const { Dragger } = Upload;
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
 & {
@@ -122,11 +123,11 @@ export const FileUploader = (props) => {
         disabled={disabled || fileList.length >= maxSize}
       // showUploadList={true}
       >
-        {disabled ? <Text type="secondary">File upload is disabled</Text>
-          : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+        {disabled ? <Text type="secondary"><FormattedMessage id="text.fileUploadIsDisabled"/></Text>
+          : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center', padding: '0 20px' }}>
             <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-          Click or drag file to this area to upload.
-          <br />Must be consistent with the name in the identity. Up to 3 photos.
+          <Paragraph><FormattedMessage id="text.clickORDragToUpload"/></Paragraph>
+          <Paragraph type="warning"><FormattedMessage id="text.paypalScreenshotUploadWarning"/></Paragraph>
         </div>}
       </Dragger>
       {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}

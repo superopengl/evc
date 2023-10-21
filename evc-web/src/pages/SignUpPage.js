@@ -31,9 +31,6 @@ const LayoutStyled = styled(Layout)`
 
 const SignUpPage = (props) => {
 
-  const [sending, setSending] = React.useState(false);
-
-
   return (
     <GlobalContext.Consumer>{
       () => {

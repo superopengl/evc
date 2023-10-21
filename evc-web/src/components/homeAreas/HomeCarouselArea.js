@@ -25,7 +25,7 @@ const Container = styled.div`
 // background: #092b00;
 // background-image: linear-gradient(160deg, #3273A4, #57BB60);
 // background-image: linear-gradient(#135200, #57BB60);
-background-image: linear-gradient(-45deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
+background-image: linear-gradient(-45deg, #89DFF1, #89DFF1 25%, #55B0D4 25%, #55B0D4 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
 // background-image: linear-gradient(-45deg, #55B0D4, #55B0D4 50%, #57BB60 50%, #57BB60 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
 // background-image: linear-gradient(150deg, #ffffff, #ffffff 25%, #55B0D4 25%, #55B0D4 50%, #57BB60 50%, #57BB60 75%, #f0f0f0 75%, #f0f0f0 100%);
@@ -121,31 +121,31 @@ const HomeCarouselAreaRaw = props => {
   const data = [
     {
       icon: <Icon component={() => <RiLineChartLine />} />,
-      description: 'EVC fair values show the rational value range',
+      description: <FormattedMessage id="text.slogan1"/>,
     },
     {
       icon: <Icon component={() => <BsArrowBarDown />} />,
-      description: 'Using support levels and the scope of buy points to avoid panic selling at bottom prices',
+      description: <FormattedMessage id="text.slogan2"/>,
     },
     {
       icon: <Icon component={() => <BsArrowBarUp />} />,
-      description: 'With resistance levels, sell points attain profits; buy points indicate a breakthrough trend',
+      description: <FormattedMessage id="text.slogan3"/>,
     },
     {
       icon: <Icon component={() => <AiOutlineSwap />} />,
-      description: 'Timely information about Executives shareholding changes',
+      description: <FormattedMessage id="text.slogan4"/>,
     },
     {
       icon: <Icon component={() => <BsCalendar />} />,
-      description: 'Daily option put/call ratio (PCR) traces market sentiment and direction',
+      description: <FormattedMessage id="text.slogan5"/>,
     },
     {
       icon: <Icon component={() => <GiRadarSweep />} />,
-      description: 'Stock Radar helps save time and improve efficiency, select valuable investing targets',
+      description: <FormattedMessage id="text.slogan6"/>,
     },
     {
       icon: <Icon component={() => <AiOutlineNotification />} />,
-      description: 'Email alerts for Watchlists deliver real-time data updates to your inbox, do not miss an opportunity',
+      description: <FormattedMessage id="text.slogan7"/>,
     },
   ];
 

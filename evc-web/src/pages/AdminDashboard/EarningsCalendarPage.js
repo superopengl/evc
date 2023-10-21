@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Radio } from 'antd';
+import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Radio, Switch } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -11,6 +11,7 @@ import {
   RightOutlined,
 } from '@ant-design/icons';
 import { CardNumberElement } from '@stripe/react-stripe-js';
+import { Checkbox } from 'antd';
 
 const { Text } = Typography;
 
@@ -222,8 +223,8 @@ const EarningsCalendarPage = props => {
     }
   ];
 
-  const handleToggleLogo = (e) => {
-    setShowLogo(e.target.value === 'logo');
+  const handleToggleLogo = (checked) => {
+    setShowLogo(checked);
   }
 
   return (
@@ -234,11 +235,9 @@ const EarningsCalendarPage = props => {
           <Button type="primary" shape="circle" icon={<LeftOutlined />} disabled={week === 0 || loading} onClick={() => handleWeekChange(-1)}></Button>
           <Button type="primary" shape="circle" icon={<RightOutlined />} disabled={week >= 52 || loading} onClick={() => handleWeekChange(1)}></Button>
         </Space>
-        <Space size="small">
-          <Radio.Group defaultValue="logo" buttonStyle="solid" onChange={handleToggleLogo}>
-            <Radio.Button value="logo">Show logo</Radio.Button>
-            <Radio.Button value="name">Company name</Radio.Button>
-          </Radio.Group>
+        <Space>
+Logo
+        <Switch defaultChecked={showLogo} onChange={handleToggleLogo} />
         </Space>
       </Space>
       <StyledTable

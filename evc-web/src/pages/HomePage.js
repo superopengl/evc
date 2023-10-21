@@ -1,7 +1,6 @@
 // import 'App.css';
 import { Menu, Dropdown } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
-import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeFooter from 'components/HomeFooter';
 import React from 'react';
 import styled from 'styled-components';
@@ -16,7 +15,6 @@ import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
-import HomeFeatureArea from 'components/homeAreas/HomeFeatureArea';
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
@@ -170,9 +168,6 @@ const HomePage = (props) => {
     <section>
     <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>
-    {/* <section>
-      <HomeFeatureArea />
-    </section> */}
     <section id="stock-radar">
       <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
     </section>

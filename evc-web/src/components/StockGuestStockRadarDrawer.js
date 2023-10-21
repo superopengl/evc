@@ -28,7 +28,7 @@ export const StockGuestStockRadarDrawer = (props) => {
       onClose={onClose}
       footer={null}
       title={<Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Text><FormattedMessage id="menu.stockRadar"/> - Preview</Text>
+        <Text><FormattedMessage id="menu.stockRadar"/></Text>
         <Alert
           message={<><big>😉</big>
           <Text style={{ fontStyle: 'italic', marginLeft: 12 }} type="success">More information is available to signed up users</Text></>}

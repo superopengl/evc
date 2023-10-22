@@ -20,12 +20,6 @@ const UTC_TIMEZONE = 'UTC'
 
 const defs = [
     {
-        name: 'daily-eps',
-        description: 'Daily EPS',
-        startTimeNY: ['0:30', '13:30'],
-        // AlphaVantage
-    },
-    {
         name: 'daily-earnings-calendar',
         description: 'Daily earnings calendar',
         startTimeNY: ['0:30', '13:30'],

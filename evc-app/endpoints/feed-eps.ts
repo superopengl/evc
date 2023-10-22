@@ -124,5 +124,4 @@ start(JOB_NAME, async () => {
   console.log(`Sending watchlist core change emails`)
   await sendCoreDataChangedEmails();
   await promoteLatestSnapshotToPreviousSnapshot();
-
 });

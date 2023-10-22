@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.less';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser } from 'services/authService';
@@ -20,7 +20,7 @@ import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
-const Error404 = loadable(() => import('pages/Error404'));
+// const Error404 = loadable(() => import('pages/Error404'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
 const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
@@ -124,8 +124,8 @@ const App = () => {
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               {isGuest && <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />}
               {isLoggedIn && <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />}
-              {/* <Redirect to="/" /> */}
-              <RoleRoute loading={loading} component={Error404} />
+              <Redirect to="/" />
+              {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>
           </BrowserRouter>
           {isGuest && <ContactWidget />}

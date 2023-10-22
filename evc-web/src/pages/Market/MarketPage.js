@@ -1,12 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';
 import { listHotStock, getMarketGainers, getMarketMostActive, getMarketLosers } from 'services/stockService';
 
-const { Text } = Typography;
 
 const Container = styled.div`
   .ant-table-cell {

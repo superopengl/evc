@@ -46,7 +46,7 @@ const MySubscriptionHistoryDrawer = (props) => {
         <Text strong={item.status === 'alive'}>
           {getSubscriptionName(item.type)}
         </Text>
-        {item.status === 'alive' && <Tag color="warning">Current</Tag>}
+        {item.status === 'alive' && <Tag color="success">Current</Tag>}
       </Space>
     },
     {
@@ -58,7 +58,7 @@ const MySubscriptionHistoryDrawer = (props) => {
           <ArrowRightOutlined />
           {/* <DoubleRightOutlined /> */}
           <TimeAgo value={item.end} showAgo={false} accurate={false} />
-          {item.recurring && <Tag color="success">Auto renew</Tag>}
+          {item.recurring && <Tag>Auto renew</Tag>}
         </Space>
       }
     },

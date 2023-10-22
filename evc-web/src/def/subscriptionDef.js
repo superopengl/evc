@@ -1,7 +1,6 @@
 import { CheckOutlined } from '@ant-design/icons';
 import React from 'react';
-import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'react-icons/gi';
-import { FormattedList } from 'react-intl';
+import { GiCurvyKnife, GiSawedOffShotgun, GiPirateCannon } from 'react-icons/gi';
 import { FormattedMessage } from 'react-intl';
 import { Typography, Space } from 'antd';
 import styled from 'styled-components';

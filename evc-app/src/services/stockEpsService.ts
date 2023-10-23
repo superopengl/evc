@@ -54,6 +54,6 @@ export async function syncManyStockEps(epsInfo: StockIexEpsInfo[]) {
     .insert()
     .into(StockEps)
     .values(entites)
-    .onConflict('(symbol, "reportDate") DO NOTHING')
+    .onConflict('(symbol, "reportDate") DO UPDATE SET value = excluded.value')
     .execute();
 };

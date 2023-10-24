@@ -119,9 +119,6 @@ const MyAccountPage = (props) => {
   }
 
   const handleChangePlan = (subscription) => {
-    if (subscription.key === currentPlanKey) {
-      return;
-    }
     if (subscription.key === 'free') {
       return;
     }
@@ -184,11 +181,11 @@ const MyAccountPage = (props) => {
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.recurring && <Alert type="info" showIcon description={<>
                 Your current subscription will expire on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
-                  You can extend the subscription now by continue purchasing a plan.
-                  The new plan will take effect right after the current plan's expiration from <Text underline strong>{moment(currentSubscription.end).add(1, 'day').format('D MMM YYYY')}</Text>.
+                  You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
+                  The new plan will take effect right after the current plan's expiray from <Text underline strong>{moment(currentSubscription.end).add(1, 'day').format('D MMM YYYY')}</Text>.
               </>} />}
               {currentSubscription?.recurring && <Alert type="info" showIcon description={<>
-                The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
+                Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>. 
               </>} />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>

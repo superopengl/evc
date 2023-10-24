@@ -13,7 +13,6 @@ export * from './accountController';
 export * from './stockTagController';
 export * from './referralPolicyController';
 export * from './stockFairValueController';
-export * from './stockPeController';
 export * from './stockEpsController';
 export * from './stockSupportResistanceController';
 export * from './translationController';

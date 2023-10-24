@@ -119,10 +119,6 @@ export async function deleteStockEps(symbol, reportDate) {
   return httpDelete(`stock/eps/${symbol}/${reportDate}`);
 }
 
-export async function listStockPe(symbol) {
-  return httpGet(`stock/s/${symbol}/pe`);
-}
-
 export async function listStockFairValue(symbol) {
   return httpGet(`stock/s/${symbol}/fairvalue`);
 }

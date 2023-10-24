@@ -15,7 +15,6 @@ import { UserCurrentSubscriptionInformation } from './UserCurrentSubscriptionInf
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(UserCurrentSubscriptionInformation, 's')
-    .where(`s.status = '${SubscriptionStatus.Alive}'`)
     .innerJoin(User, 'u', 's."userId" = u.id')
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .select([

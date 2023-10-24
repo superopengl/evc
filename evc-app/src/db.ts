@@ -34,9 +34,7 @@ const views = [
   ReceiptInformation,
   RevertableCreditTransactionInformation,
   RevenueChartInformation,
-  UserCurrentSubscriptionInformation
-];
-const mviews = [
+  UserCurrentSubscriptionInformation,
   StockDataInformation,
   StockLatestFairValue,
   StockDailyPe,
@@ -44,6 +42,8 @@ const mviews = [
   StockHistoricalTtmEps,
   StockHistoricalComputedFairValue,
   StockPutCallRatio90,
+];
+const mviews = [
 ];
 
 export async function connectDatabase(shouldSyncSchema = false) {
@@ -77,7 +77,7 @@ async function syncDatabaseSchema(connection: Connection) {
   await connection.synchronize(false);
   await connection.runMigrations();
 
-  await createIndexOnMaterilializedView();
+  // await createIndexOnMaterilializedView();
   // await refreshMaterializedView();
 }
 

@@ -4,7 +4,7 @@ import { StockComputedPe90 } from './StockComputedPe90';
 import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistoricalTtmEps';
 
 @ViewEntity({
-  materialized: true,
+  materialized: false,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(q => q

@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, OneToOne, JoinColumn, OneToMany, CreateDateColumn } from 'typeorm';
-import { PaymentMethod } from '../types/PaymentMethod';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { Payment } from './Payment';
@@ -17,6 +16,9 @@ export class Subscription {
 
   @Column('uuid')
   userId: string;
+
+  @Column()
+  type: SubscriptionType;
 
   @Column('date')
   start: Date;

@@ -30,9 +30,6 @@ export class Payment {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
 
-  @Column()
-  type: SubscriptionType;
-
   @Column({ nullable: true })
   method: PaymentMethod;
 

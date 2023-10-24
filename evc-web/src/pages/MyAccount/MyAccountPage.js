@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { changeSubscriptionRecurring, getMyCurrentSubscription } from 'services/subscriptionService';
+import { turnOffSubscriptionRecurring, getMyCurrentSubscription } from 'services/subscriptionService';
 import MoneyAmount from 'components/MoneyAmount';
 import { getMyAccount, listMyCreditHistory } from 'services/accountService';
 import ReactDOM from 'react-dom';
@@ -61,7 +61,7 @@ const MyAccountPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [currentSubscription, changeToNewSubscription] = React.useState();
+  const [currentSubscription, setCurrentSubscription] = React.useState();
   const [planType, setPlanType] = React.useState();
   const [creditHistoryVisible, setCreditHistoryVisible] = React.useState(false);
   const [subscriptionHistoryVisible, setSubscriptionHistoryVisible] = React.useState(false);
@@ -80,7 +80,7 @@ const MyAccountPage = (props) => {
 
       ReactDOM.unstable_batchedUpdates(() => {
         setAccount(account);
-        changeToNewSubscription(subscription);
+        setCurrentSubscription(subscription);
         if (refreshAuthUser) {
           context.setUser(user);
         }
@@ -100,7 +100,7 @@ const MyAccountPage = (props) => {
     return (data || []).filter(x => x.amount);
   }
 
-  const currentPlanKey = currentSubscription?.type || 'free';
+  const currentPlanKey = currentSubscription?.currentType || 'free';
   const isCurrentFree = currentPlanKey === 'free';
 
   const handleTurnOffRecurring = () => {
@@ -111,7 +111,7 @@ const MyAccountPage = (props) => {
       okText: 'Yes, turn off auto-renew',
       maskClosable: true,
       onOk: async () => {
-        await changeSubscriptionRecurring(currentSubscription.id, false);
+        await turnOffSubscriptionRecurring();
         load();
       },
       // cancelText: 'No, keep the current plan',
@@ -123,11 +123,11 @@ const MyAccountPage = (props) => {
       return;
     }
 
-    if (currentSubscription?.recurring) {
+    if (currentSubscription?.lastRecurring) {
       Modal.warning({
         title: 'Auto-renew Payment is On',
         content: <Paragraph>
-          You have turned on auto-renew payment for you current subscription. You need to turn it off before changing a plan.
+          The auto-renew payment is on for your current or last subscription. You need to turn it off before changing a plan.
         </Paragraph>
       });
       return;
@@ -175,16 +175,16 @@ const MyAccountPage = (props) => {
             bordered={false}
             title="Subscription"
             extra={
-              <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Billing</Button>
+              <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History & Billings</Button>
             }
           >
             <Space direction="vertical" style={{ width: '100%' }} size="large">
-              {currentSubscription && !currentSubscription?.recurring && <Alert type="info" showIcon description={<>
-                Your current subscription will expire on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
+              {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
+                Your subscription will expire on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
                   You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
-                  The new plan will take effect right after the current plan's expiray from <Text underline strong>{moment(currentSubscription.end).add(1, 'day').format('D MMM YYYY')}</Text>.
+                  The new plan will take effect right after all your alive subscriptions end. See your <Link onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History</Link>.
               </>} />}
-              {currentSubscription?.recurring && <Alert type="info" showIcon description={<>
+              {currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>. 
               </>} />}
@@ -198,7 +198,8 @@ const MyAccountPage = (props) => {
                       onClick={() => handleChangePlan(s)}
                       price={s.price}
                       active={s.key === currentPlanKey}
-                      recurring={currentSubscription?.recurring}
+                      interactive={s.key !== 'free'}
+                      recurring={currentSubscription?.lastRecurring}
                       unit={s.unit} />
                   </StyledCol>)}
                 </StyledRow>

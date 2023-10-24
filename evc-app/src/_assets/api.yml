@@ -802,9 +802,9 @@ paths:
       responses:
         200:
           description: OK          
-  /subscription/:id/recurring:
+  /subscription/recurring/off:
     post:
-      operationId: changeSubscriptionRecurring
+      operationId: turnOffSubscriptionRecurring
       parameters:
         - name: id
           in: path

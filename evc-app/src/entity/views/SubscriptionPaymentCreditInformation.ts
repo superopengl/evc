@@ -23,7 +23,7 @@ import { UserCreditTransaction } from '../UserCreditTransaction';
       'p."creditTransactionId" as "creditTransactionId"',
       's.start as start',
       's.end as end',
-      'p.type as type',
+      's.type as type',
       's.status as "subscriptionStatus"',
       'p."lastUpdatedAt" as "paymentLastUpdatedAt"',
       'p."amount" as "paidAmount"',

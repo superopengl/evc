@@ -7,7 +7,7 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt, listMySubscriptionHistory } from 'services/subscriptionService';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import MoneyAmount from 'components/MoneyAmount';
-import {orderBy} from 'lodash';
+import { orderBy } from 'lodash';
 import * as moment from 'moment';
 
 const { Text, Link } = Typography;
@@ -50,12 +50,21 @@ const MySubscriptionHistoryDrawer = (props) => {
           {/* <DoubleRightOutlined /> */}
           <TimeAgo value={item.end} showAgo={false} accurate={false} />
           {item.recurring && <>(auto renew)</>}
-          {item.status === 'alive' && <Tag color="success">Current</Tag>}
         </Space>
       }
     },
     {
-      title: 'Billings',
+      title: 'Status',
+      dataIndex: 'status',
+      render: (status, item) => {
+        return <>
+          {moment().isAfter(moment(item.start).startOf('day')) && moment().isBefore(moment(item.end).endOf('day')) && <Tag color="success"><strong>Current</strong></Tag>}
+          {moment().isBefore(moment(item.start).startOf('day')) && <Tag color="blue">Furture</Tag>}
+        </>
+      }
+    },
+    {
+      title: 'Billing',
       dataIndex: 'payments',
       align: 'center',
       render: (payments, item) => {
@@ -80,7 +89,7 @@ const MySubscriptionHistoryDrawer = (props) => {
               dataIndex: 'id',
               width: '33%',
               align: 'right',
-              render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined/>}>Receipt</Button>
+              render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
             },
           ]}
           bordered={false}
@@ -96,18 +105,18 @@ const MySubscriptionHistoryDrawer = (props) => {
 
   return (
     <Drawer
-      title="Billing Information"
+      title="Subscription History & Billings"
       width="80vw"
       destroyOnClose={true}
       maskClosable={true}
       visible={visible}
       onClose={onClose}
       style={style}
-      contentWrapperStyle={{maxWidth: 800}}
+      contentWrapperStyle={{ maxWidth: 800 }}
     >
       <Table
         // showHeader={false}
-        showHeader={false}
+        showHeader={true}
         loading={loading}
         style={{ width: '100%' }}
         dataSource={list}

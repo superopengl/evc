@@ -17,7 +17,7 @@ import { UserCreditTransaction } from '../UserCreditTransaction';
       's.id as "subscriptionId"'
     ])
 })
-export class RevertableCreditTransactionInformation {
+export class RevertableCreditTransaction {
   @ViewColumn()
   @PrimaryColumn()
   creditTransactionId: string;

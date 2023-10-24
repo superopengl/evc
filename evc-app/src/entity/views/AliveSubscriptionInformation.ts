@@ -19,14 +19,12 @@ import { UserProfile } from '../UserProfile';
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .select([
       's.id as "subscriptionId"',
-      's.type as "subscriptionType"',
       'u.id as "userId"',
       'p."givenName" as "givenName"',
       'p.surname as surname',
       'p.email as email',
       's.start as start',
       's.end as end',
-      's.type as type',
       's.recurring as recurring',
       's."alertDays" as "alertDays"',
     ])
@@ -35,9 +33,6 @@ export class AliveSubscriptionInformation {
   @ViewColumn()
   @PrimaryColumn()
   subscriptionId: string;
-
-  @ViewColumn()
-  subscriptionType: SubscriptionType;
 
   @ViewColumn()
   userId: string;
@@ -61,5 +56,5 @@ export class AliveSubscriptionInformation {
   recurring: boolean;
 
   @ViewColumn()
-  alertDays: number;
+  alertDays: number[];
 }

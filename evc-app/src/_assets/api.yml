@@ -790,9 +790,21 @@ paths:
       responses:
         200:
           description: OK
-  /subscription/:id/cancel:
+  /subscription/payment/:id/confirm:
     post:
-      operationId: cancelSubscription
+      operationId: confirmSubscriptionPayment
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
+  /subscription/:id/recurring:
+    post:
+      operationId: changeSubscriptionRecurring
       parameters:
         - name: id
           in: path

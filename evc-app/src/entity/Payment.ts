@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Generated } from 'typeorm';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
+import { SubscriptionType } from '../types/SubscriptionType';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Subscription } from './Subscription';
 import { UserCreditTransaction } from './UserCreditTransaction';
@@ -8,6 +9,7 @@ import { UserCreditTransaction } from './UserCreditTransaction';
 @Entity()
 @Index(['userId', 'createdAt'])
 @Index(['subscriptionId', 'paidAt'])
+@Index(['subscriptionId', 'start'], { unique: true, where: `status = '${PaymentStatus.Paid}'` })
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -23,11 +25,13 @@ export class Payment {
   lastUpdatedAt?: Date;
 
   @Column('uuid')
-  @Index()
   userId: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
+
+  @Column()
+  type: SubscriptionType;
 
   @Column({ nullable: true })
   method: PaymentMethod;
@@ -45,14 +49,14 @@ export class Payment {
   @Index()
   status: PaymentStatus;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   @Index()
   paidAt?: Date;
 
-  @Column()
+  @Column('date')
   start: Date;
 
-  @Column()
+  @Column('date')
   end: Date;
 
   @Column({ default: false })
@@ -61,17 +65,17 @@ export class Payment {
   @Column({ default: 1 })
   attempt: number;
 
-  @ManyToOne(() => Subscription, subscription => subscription.payments, {onDelete: 'CASCADE'})
-  @JoinColumn({name: 'subscriptionId', referencedColumnName: 'id'})
+  @ManyToOne(() => Subscription, subscription => subscription.payments, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'subscriptionId', referencedColumnName: 'id' })
   subscription: Subscription;
 
   @Column()
   subscriptionId: string;
 
   @OneToOne(() => UserCreditTransaction, { nullable: true, cascade: true })
-  @JoinColumn({name: 'creditTransactionId', referencedColumnName: 'id'})
+  @JoinColumn({ name: 'creditTransactionId', referencedColumnName: 'id' })
   creditTransaction: UserCreditTransaction;
 
-  @Column('uuid', {nullable: true})
+  @Column('uuid', { nullable: true })
   creditTransactionId: string;
 }

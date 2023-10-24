@@ -17,6 +17,7 @@ import { Role } from '../types/Role';
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
+import { UserCurrentSubscriptionInformation } from '../entity/views/UserCurrentSubscriptionInformation';
 
 async function getUserSubscriptionHistory(userId) {
   const list = await getRepository(Subscription).find({
@@ -54,20 +55,22 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const cancelSubscription = handlerWrapper(async (req, res) => {
+export const changeSubscriptionRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { id } = req.params;
   const { user: { id: userId } } = req as any;
+  const { recurring } = req.body;
 
   await getRepository(Subscription).update(
-    { id, userId },
     {
-      end: getUtcNow(),
-      status: SubscriptionStatus.Terminated
+      id,
+      userId,
+      recurring: !recurring
+    },
+    {
+      recurring,
     }
   );
-  // Change user's role back to free plan
-  await getRepository(User).update({ id: userId }, { role: Role.Free });
 
   res.json();
 });
@@ -83,7 +86,7 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   });
   assert(receipt, 404);
 
-  const {pdfStream, fileName} = await generateReceiptPdfStream(receipt);
+  const { pdfStream, fileName } = await generateReceiptPdfStream(receipt);
 
   res.set('Cache-Control', `public, max-age=31536000`);
   res.attachment(fileName);
@@ -94,8 +97,10 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
 
-  const subscription = await getRepository(Subscription).findOne(
-    { userId, status: SubscriptionStatus.Alive }
+  const subscription = await getRepository(UserCurrentSubscriptionInformation).findOne(
+    { 
+      userId
+    }
   );
 
   res.json(subscription);
@@ -104,7 +109,7 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
-  const { plan, recurring, preferToUseCredit, alertDays, method } = req.body;
+  const { plan, recurring, preferToUseCredit, method } = req.body;
 
   const payment = await provisionSubscriptionPurchase({
     userId,
@@ -112,7 +117,6 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
     paymentMethod: method,
     recurring,
     preferToUseCredit,
-    alertDays,
   });
   const result: any = {
     method,

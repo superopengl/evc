@@ -18,11 +18,10 @@ export type ProvisionSubscriptionRequest = {
   paymentMethod: PaymentMethod;
   recurring: boolean;
   preferToUseCredit: boolean;
-  alertDays: number;
 };
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest): Promise<Payment> {
-  const { userId, subscriptionType, paymentMethod, recurring, preferToUseCredit, alertDays } = request;
+  const { userId, subscriptionType, paymentMethod, recurring, preferToUseCredit } = request;
   const now = getUtcNow();
 
   const months = subscriptionType === SubscriptionType.UnlimitedYearly ? 12 : 1;
@@ -44,12 +43,10 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     const subscription = new Subscription();
     subscription.id = subscriptionId;
     subscription.userId = userId;
-    subscription.type = subscriptionType;
     subscription.recurring = recurring;
     subscription.start = now;
     subscription.end = end;
     subscription.preferToUseCredit = preferToUseCredit;
-    subscription.alertDays = alertDays;
     subscription.status = SubscriptionStatus.Provisioning;
     await tran.manager.save(subscription);
 
@@ -68,6 +65,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.userId = userId;
     payment.start = now;
     payment.end = end;
+    payment.type = subscriptionType;
     payment.amount = additionalPay;
     payment.method = paymentMethod;
     payment.status = PaymentStatus.Pending;

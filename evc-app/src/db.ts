@@ -35,15 +35,15 @@ const views = [
   RevertableCreditTransactionInformation,
   RevenueChartInformation,
   UserCurrentSubscriptionInformation,
-  StockDataInformation,
-  StockLatestFairValue,
+];
+const mviews = [
+  StockPutCallRatio90,
   StockDailyPe,
   StockComputedPe90,
   StockHistoricalTtmEps,
   StockHistoricalComputedFairValue,
-  StockPutCallRatio90,
-];
-const mviews = [
+  StockLatestFairValue,
+  StockDataInformation,
 ];
 
 export async function connectDatabase(shouldSyncSchema = false) {
@@ -77,7 +77,7 @@ async function syncDatabaseSchema(connection: Connection) {
   await connection.synchronize(false);
   await connection.runMigrations();
 
-  // await createIndexOnMaterilializedView();
+  await createIndexOnMaterilializedView();
   // await refreshMaterializedView();
 }
 
@@ -147,7 +147,7 @@ export async function refreshMaterializedView(mviewEnitity?: any) {
     for (const viewEntity of targetViews) {
       await redisCache.setex(REFRESHING_MV_CACHE_KEY, 5 * 60, true);
       const { schema, tableName } = getManager().getRepository(viewEntity).metadata;
-      await getManager().query(`REFRESH MATERIALIZED VIEW "${schema}"."${tableName}"`);
+      await getManager().query(`REFRESH MATERIALIZED VIEW CONCURRENTLY "${schema}"."${tableName}" `);
     }
   } finally {
     await redisCache.del(REFRESHING_MV_CACHE_KEY);

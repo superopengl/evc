@@ -48,8 +48,8 @@ async function enqueueEmailTasks(template: EmailTemplateType, list: UserCurrentS
       shouldBcc: true,
       vars: {
         toWhom: getEmailRecipientName(activeOne),
-        subscriptionId: activeOne.subscriptionId,
-        subscriptionType: getSubscriptionName(activeOne.type),
+        subscriptionId: activeOne.currentSubscriptionId,
+        subscriptionType: getSubscriptionName(activeOne.currentType),
         start: moment(activeOne.start).format('D MMM YYYY'),
         end: moment(activeOne.end).format('D MMM YYYY'),
       }
@@ -65,8 +65,8 @@ async function enqueueRecurringSucceededEmail(activeOne: UserCurrentSubscription
     shouldBcc: true,
     vars: {
       toWhom: getEmailRecipientName(activeOne),
-      subscriptionId: activeOne.subscriptionId,
-      subscriptionType: getSubscriptionName(activeOne.type),
+      subscriptionId: activeOne.currentSubscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.currentType),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
       paidAmount,
@@ -83,8 +83,8 @@ async function enqueueRecurringFailedEmail(activeOne: UserCurrentSubscriptionWit
     shouldBcc: true,
     vars: {
       toWhom: getEmailRecipientName(activeOne),
-      subscriptionId: activeOne.subscriptionId,
-      subscriptionType: getSubscriptionName(activeOne.type),
+      subscriptionId: activeOne.currentSubscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.currentType),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
       paidAmount,
@@ -106,8 +106,8 @@ async function expireSubscriptions() {
 
     if (list.length) {
       // Set subscriptions to be expired
-      const subscriptionIds = list.map(x => x.subscriptionId);
-      await tran.manager.getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
+      // const subscriptionIds = list.map(x => x.subscriptionId);
+      // await tran.manager.getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
 
       // Set user's role to Free
       const userIds = list.map(x => x.userId);
@@ -133,7 +133,7 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
   enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);
 }
 
-async function getPreviousStripePaymentInfo(subscription: Payment) {
+async function getPreviousStripePaymentInfo(subscription: Subscription) {
   // TODO: Call API to pay by card
   const lastPaidPayment = await getManager().getRepository(Payment).findOne({
     where: {
@@ -149,7 +149,7 @@ async function getPreviousStripePaymentInfo(subscription: Payment) {
 }
 
 async function renewRecurringSubscription(activeSubscription: UserCurrentSubscriptionWithProfile) {
-  const { subscriptionId, userId, type } = activeSubscription;
+  const { currentSubscriptionId: subscriptionId, userId, currentType: type } = activeSubscription;
   const subscription = await getRepository(Subscription).findOne(subscriptionId)
 
   const tran = getConnection().createQueryRunner();

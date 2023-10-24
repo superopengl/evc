@@ -8,12 +8,13 @@ import { Payment } from '../Payment';
 import { UserCreditTransaction } from '../UserCreditTransaction';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
+import { UserCurrentSubscriptionInformation } from './UserCurrentSubscriptionInformation';
 
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(Subscription, 's')
+    .from(UserCurrentSubscriptionInformation, 's')
     .where(`s.status = '${SubscriptionStatus.Alive}'`)
     .innerJoin(User, 'u', 's."userId" = u.id')
     .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
@@ -32,6 +33,9 @@ export class AliveSubscriptionInformation {
   @ViewColumn()
   @PrimaryColumn()
   subscriptionId: string;
+
+  @ViewColumn()
+  type: SubscriptionType;
 
   @ViewColumn()
   userId: string;

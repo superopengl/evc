@@ -103,15 +103,15 @@ const MyAccountPage = (props) => {
   const currentPlanKey = currentSubscription?.type || 'free';
   const isCurrentFree = currentPlanKey === 'free';
 
-  const handleChangeRecurring = (recurring) => {
+  const handleTurnOffRecurring = () => {
     Modal.confirm({
-      title: recurring ? 'Turn on subscription auto-renew' : 'Turn off subscription auto-renew',
+      title: 'Turn off subscription auto-renew',
       icon: <QuestionCircleOutlined />,
       content: 'The change will take effect from your next payment. Continue?',
-      okText: recurring ? 'Yes, turn on auto-renew' : 'Yes, turn off auto-renew',
+      okText: 'Yes, turn off auto-renew',
       maskClosable: true,
       onOk: async () => {
-        await changeSubscriptionRecurring(currentSubscription.id, recurring);
+        await changeSubscriptionRecurring(currentSubscription.id, false);
         load();
       },
       // cancelText: 'No, keep the current plan',
@@ -127,10 +127,10 @@ const MyAccountPage = (props) => {
     }
 
     if (currentSubscription?.recurring) {
-      Modal.info({
+      Modal.warning({
         title: 'Auto-renew Payment is On',
         content: <Paragraph>
-          Please turn auto-renew off before changing a plan. Your new plan will take affect from <Text underline strong>{moment(currentSubscription.end).add(1, 'day').format('D MMM YYYY')}</Text>.
+          You have turned on auto-renew payment for you current subscription. You need to turn it off before changing a plan.
         </Paragraph>
       });
       return;
@@ -189,7 +189,7 @@ const MyAccountPage = (props) => {
               </>} />}
               {currentSubscription?.recurring && <Alert type="info" showIcon description={<>
                 The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
-                You can turn off the auto-renew payment <Link onClick={() => handleChangeRecurring(false)}>here</Link>. 
+                You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>. 
               </>} />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
@@ -201,6 +201,7 @@ const MyAccountPage = (props) => {
                       onClick={() => handleChangePlan(s)}
                       price={s.price}
                       active={s.key === currentPlanKey}
+                      recurring={currentSubscription?.recurring}
                       unit={s.unit} />
                   </StyledCol>)}
                 </StyledRow>

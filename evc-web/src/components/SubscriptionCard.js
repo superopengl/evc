@@ -34,7 +34,7 @@ transform: scale(1.05);
 `;
 
 export const SubscriptionCard = props => {
-  const { onClick, title, description, icon, price, unit, active, interactive } = props;
+  const { onClick, title, description, recurring, price, unit, active, interactive } = props;
 
   const classNameArray = [];
   if(active){
@@ -57,7 +57,7 @@ export const SubscriptionCard = props => {
     // bodyStyle={{backgroundColor: bgColor}}
     // headerStyle={{backgroundColor: bgColor}}
     >
-      {active && <Text strong type="success" style={{ position: 'absolute', right: 8, bottom: 4 }}>Current plan</Text>}
+      {active && <Text strong type="success" style={{ position: 'absolute', right: 8, bottom: 4 }}>Current plan{recurring && ' (auto renew)'}</Text>}
       <Card.Meta
         title={<div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#57BB60' }}><sup><small>$</small></sup> {price}</Text> */}
@@ -79,6 +79,7 @@ SubscriptionCard.propTypes = {
   price: PropTypes.number.isRequired,
   unit: PropTypes.any.isRequired,
   active: PropTypes.bool,
+  recurring: PropTypes.bool,
   interactive: PropTypes.bool,
 };
 

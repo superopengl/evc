@@ -127,7 +127,7 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
   const list = await getRepository(AliveSubscriptionInformation)
     .createQueryBuilder()
     .where('recurring = FALSE')
-    .andWhere(`now() between "end" - "alertDays" * INTERVAL '1 day' and "end"`)
+    .andWhere(`"end" - CURRENT_DATE IN ANY({1, 3, 7})`)
     .getMany();
 
   enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);

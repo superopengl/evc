@@ -13,7 +13,7 @@ import {from } from 'rxjs';
 
 const { Text } = Typography;
 
-export const StockSearchInput = (props) => {
+export const SearchStockInput = (props) => {
   const { onChange, excluding, traceSearch, mode, style, size } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
@@ -110,7 +110,7 @@ export const StockSearchInput = (props) => {
   );
 }
 
-StockSearchInput.propTypes = {
+SearchStockInput.propTypes = {
   onChange: PropTypes.func,
   excluding: PropTypes.array.isRequired,
   traceSearch: PropTypes.bool,
@@ -118,7 +118,7 @@ StockSearchInput.propTypes = {
   mode: PropTypes.string,
 };
 
-StockSearchInput.defaultProps = {
+SearchStockInput.defaultProps = {
   excluding: [],
   onChange: () => { },
   traceSearch: false,

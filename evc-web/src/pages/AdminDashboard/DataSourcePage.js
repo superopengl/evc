@@ -9,13 +9,6 @@ const { Text, Paragraph } = Typography;
 
 const DataSourcePage = () => {
 
-  const loadList = async () => {
-  }
-
-  React.useEffect(() => {
-    loadList();
-  }, []);
-
   const handlePutCallRatioUploadComplete = () => {
     notify.info('Successfully uploaded put call ratio csv file', <>
     You need to execute <Button type="primary" size="small">Refresh Materialized Views</Button> before all users can see the data.

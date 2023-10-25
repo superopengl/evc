@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver';
 import { AiOutlineUpload } from 'react-icons/ai';
 import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
+import { from } from 'rxjs';
 
 const { Dragger } = Upload;
 const { Text, Paragraph } = Typography;
@@ -77,7 +78,10 @@ export const FileUploader = (props) => {
   }, [loading]);
 
   React.useEffect(() => {
-    loadFileList()
+    const load$ = from(loadFileList()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleChange = (info) => {

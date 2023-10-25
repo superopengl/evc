@@ -1,14 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Typography, Input, Button, Form, Layout, Space, Modal } from 'antd';
-import { createStock, existsStock } from 'services/stockService';
+import { Typography, Input, Button, Form, Space, Modal } from 'antd';
+import { createStock } from 'services/stockService';
 import PropTypes from 'prop-types';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 import TagSelect from 'components/TagSelect';
 import { listStockTags, saveStockTag } from 'services/stockTagService';
 import ReactDOM from 'react-dom';
+import { from } from 'rxjs';
 
 const { Link } = Typography;
 
@@ -29,7 +29,10 @@ const CreateStockModal = props => {
   }
 
   React.useEffect(() => {
-    Load();
+    const load$ = from(Load()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   React.useEffect(() => {
@@ -39,18 +42,6 @@ const CreateStockModal = props => {
 
   const validateExsitsSymbol = async (rule, symbol) => {
     return;
-    if (!symbol) {
-      throw new Error(`Please input stock symbol`);
-    }
-    try {
-      setLoading(true);
-      const exists = await existsStock(symbol);
-      if (exists) {
-        throw new Error(`Stock ${symbol} has already exists`);
-      }
-    } finally {
-      setLoading(false);
-    }
   }
 
   const handleSubmit = async values => {

@@ -26,7 +26,7 @@ import TagSelect from 'components/TagSelect';
 import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
-
+import { from } from 'rxjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -147,7 +147,11 @@ const UserListPage = () => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const updateQueryInfo = (queryInfo) => {

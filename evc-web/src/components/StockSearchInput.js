@@ -9,6 +9,7 @@ import { filter } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
+import {from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -36,10 +37,11 @@ export const StockSearchInput = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntities();
-    const subscription = subscribeStockListUpdate();
+    const load$ = from(loadEntities()).subscribe();
+    const event$ = subscribeStockListUpdate();
     return () => {
-      subscription.unsubscribe();
+      load$.unsubscribe();
+      event$.unsubscribe();
     }
   }, []);
 

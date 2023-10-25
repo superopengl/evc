@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Radio, Switch } from 'antd';
+import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Switch } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -10,8 +10,7 @@ import {
   LeftOutlined,
   RightOutlined,
 } from '@ant-design/icons';
-import { CardNumberElement } from '@stripe/react-stripe-js';
-import { Checkbox } from 'antd';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -138,7 +137,10 @@ const EarningsCalendarPage = props => {
   }
 
   React.useEffect(() => {
-    load(week);
+    const load$ = from(load(week)).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleItemClick = (symbol) => {

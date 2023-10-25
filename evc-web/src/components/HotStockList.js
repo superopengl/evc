@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { listHotStock } from 'services/stockService';
 import { StockName } from './StockName';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-
+import { from } from 'rxjs';
 
 
 const HotStockList = () => {
@@ -24,7 +24,11 @@ const HotStockList = () => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleItemClick = () => {

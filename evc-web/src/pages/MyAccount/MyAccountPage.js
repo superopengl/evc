@@ -17,6 +17,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import MySubscriptionHistoryPanel from './MySubscriptionHistoryPanel';
+import { from } from 'rxjs';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
@@ -40,15 +41,6 @@ const ContainerStyled = styled.div`
   //   margin: 20px 0 8px;
   // }
 `;
-
-const span = {
-  xs: 24,
-  sm: 24,
-  md: 8,
-  lg: 8,
-  xl: 8,
-  xxl: 8
-};
 
 
 const StyledRow = styled(Row)`
@@ -100,7 +92,10 @@ const MyAccountPage = (props) => {
   }
 
   React.useEffect(() => {
-    load(false);
+    const load$ = from(load(false)).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleFetchMyCreditHistoryList = async () => {

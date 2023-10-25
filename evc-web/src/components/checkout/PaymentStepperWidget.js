@@ -24,6 +24,7 @@ import AmexIcon from 'payment-icons/min/flat/amex.svg';
 import JcbIcon from 'payment-icons/min/flat/jcb.svg';
 import PayPalIcon from 'payment-icons/min/flat/paypal.svg';
 import { notify } from 'util/notify';
+import { from } from 'rxjs';
 
 const { Title, Text } = Typography;
 
@@ -55,13 +56,15 @@ const PaymentStepperWidget = (props) => {
     onLoading(loading);
   }, [loading]);
 
-  // React.useEffect(() => {
-  //   fetchPaymentDetail(willUseCredit);
-  // }, []);
 
   React.useEffect(() => {
+    let load$;
     if (planType) {
-      fetchPaymentDetail(willUseCredit);
+      load$?.unsubscribe();
+      load$ = from(fetchPaymentDetail(willUseCredit)).subscribe();
+    }
+    return () => {
+      load$?.unsubscribe();
     }
   }, [planType]);
 
@@ -150,7 +153,7 @@ const PaymentStepperWidget = (props) => {
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
         </Space>
         <Divider />
-        <div style={{display: 'flex', width: '100%', justifyContent:'center'}}>
+        <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
           <Space>
             {shouldShowCard && [VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
             {shouldShowPayPal && <CardIcon src={PayPalIcon} />}

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Input } from 'antd';
+import { Button, Drawer, Table, Tooltip, Modal, Input } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import {
   StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
@@ -19,24 +19,16 @@ import moment from 'moment';
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import { from } from 'rxjs';
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
-
-const { Title } = Typography;
 
 const ContainerStyled = styled.div`
   .active-referral {
     background-color: rgba(87,187,96, 0.1);
   }
 `;
-
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
 
 
 const ReferralGlobalPolicyListPage = () => {
@@ -109,7 +101,10 @@ const ReferralGlobalPolicyListPage = () => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const setReferralGolbalPolicyEnabled = async (policyId, toEnable) => {

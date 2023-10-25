@@ -18,6 +18,7 @@ import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
+import { from } from 'rxjs';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 // const Error404 = loadable(() => import('pages/Error404'));
@@ -83,7 +84,10 @@ const App = () => {
   }
 
   React.useEffect(() => {
-    initalize();
+    const load$ = from(initalize()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   React.useEffect(() => {

@@ -1,28 +1,23 @@
-import { Space, Row, Col, Divider } from 'antd';
+import { Space, Row, Col } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { unwatchStock, watchStock } from 'services/stockService';
 import StockNewsPanel from 'components/StockNewsPanel';
 import StockChart from 'components/charts/StockChart';
 import StockQuotePanel from 'components/StockQuotePanel';
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import TagSelect from 'components/TagSelect';
-import { listStockTags } from 'services/stockTagService';
 import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import { TimeAgo } from 'components/TimeAgo';
 import { Typography } from 'antd';
-import { MemberOnlyIcon } from 'components/MemberOnlyIcon';
 import StockRosterPanel from 'components/StockRosterPanel';
 import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
 import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import styled from 'styled-components';
-import * as moment from 'moment';
-import StockAdminPanel from 'components/StockAdminPanel';
 import StockEvcInfoPanel from './StockEvcInfoPanel';
+import { from } from 'rxjs';
+
 const { Text } = Typography;
 
 const OldFairValueContainer = styled.div`
@@ -37,45 +32,19 @@ align-items: center;
 }
 `;
 
-const span = {
-  xs: 24,
-  sm: 24,
-  md: 24,
-  lg: 12,
-  xl: 12,
-  xxl: 12
-};
 
-const spanRow1Col1 = {
-  xs: 24,
-  sm: 24,
-  md: 24,
-  lg: 8,
-  xl: 8,
-  xxl: 8
-}
 
 const StockDisplayPanel = (props) => {
   const { stock } = props;
 
-  const context = React.useContext(GlobalContext);
-  const { role } = context;
-  const [hasPaid, setHasPaid] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [stockTags, setStockTags] = React.useState([]);
 
-  const isAdminOrAgent = ['admin', 'agent'].includes(role);
-  const isMember = role === 'member';
-  const isFree = role === 'free';
-  const isGuest = role === 'guest';
 
   const loadEntity = async () => {
     try {
       setLoading(true);
       // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
-      const tags = await listStockTags();
       ReactDOM.unstable_batchedUpdates(() => {
-        setStockTags(tags);
         setLoading(false);
       });
     } catch {
@@ -84,12 +53,13 @@ const StockDisplayPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity();
+    const load$ = from(loadEntity()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
-  React.useEffect(() => {
-    setHasPaid(['admin', 'agent', 'member'].includes(role));
-  }, [role]);
 
   return (
     <>

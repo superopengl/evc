@@ -1,17 +1,13 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Pagination, Table, Space, Select, Descriptions, DatePicker } from 'antd';
-import { Link, withRouter } from 'react-router-dom';
-import { Loading } from 'components/Loading';
-import { getDashboard } from 'services/dashboardService';
-import { CaretRightOutlined } from '@ant-design/icons';
+import { Typography, Pagination, Table, Select, Descriptions, DatePicker } from 'antd';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusalOptionsActivity } from 'services/dataService';
 import moment from 'moment';
 import { reactLocalStorage } from 'reactjs-localstorage';
-
-const { Text, Paragraph } = Typography;
+import { from } from 'rxjs';
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -135,7 +131,10 @@ const UnusualOptionsActivityPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const updateWithResponse = (loadResponse, queryInfo) => {

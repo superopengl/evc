@@ -6,6 +6,7 @@ import { getStockRoster } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import ReactDOM from 'react-dom';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -37,7 +38,11 @@ const StockRosterPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadData();
+    const load$ = from(loadData()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   return (

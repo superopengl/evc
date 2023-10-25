@@ -6,6 +6,7 @@ import { getStockEvcInfo } from 'services/stockService';
 import ReactDOM from "react-dom";
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { Skeleton } from 'antd';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -33,7 +34,11 @@ const StockEvcInfoPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadData();
+    const load$ = from(loadData()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   return (

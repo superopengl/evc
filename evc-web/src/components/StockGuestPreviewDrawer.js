@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import StockDisplayPanel from './StockDisplayPanel';
 import { Loading } from 'components/Loading';
 import { FormattedMessage } from 'react-intl';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -33,7 +34,10 @@ export const StockGuestPreviewDrawer = (props) => {
   }
 
   React.useEffect(() => {
-    loadEntity();
+    const load$ = from(loadEntity()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, [symbol]);
 
   return (

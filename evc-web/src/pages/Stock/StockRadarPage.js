@@ -7,13 +7,13 @@ import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { CheckSquareOutlined, BorderOutlined, PlusOutlined } from '@ant-design/icons';
-import TagFilter from 'components/TagFilter';
 import CreateStockModal from './CreateStockModal';
 import * as queryString from 'query-string';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { listStockTags } from 'services/stockTagService';
 import PropTypes from 'prop-types';
 import {TagFilterButton} from 'components/TagFilterButton';
+import { from } from 'rxjs';
 
 const OverButton = styled(Button)`
 color: rgba(0, 0, 0, 0.85);
@@ -110,7 +110,10 @@ const StockRadarPage = (props) => {
   }
 
   React.useEffect(() => {
-    load();
+    const load$ = from(load()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, List, Tooltip, Descriptions, Tag } from 'antd';
+import { Typography, Space, List, Tooltip, Descriptions, Tag } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { getStockInsiderTransaction } from 'services/stockService';
 import { Loading } from './Loading';
@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import INSIDER_LEGEND_INFOS from '../def/insiderLegendDef';
 import * as moment from 'moment';
 import ReactDOM from 'react-dom';
+import { from } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -76,7 +77,10 @@ const StockInsiderTransactionPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadData();
+    const load$ = from(loadData()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const formatDate = (dateString) => {

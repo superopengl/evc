@@ -13,6 +13,7 @@ import ReferralLinkInput from './ReferralLinkInput';
 import { saveReferralUserPolicy } from 'services/referralPolicyService';
 import CreditHistoryListDrawer from 'components/CreditHistoryListDrawer';
 import { TimeAgo } from 'components/TimeAgo';
+import { from } from 'rxjs';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -49,7 +50,10 @@ const ReferralCreditForm = (props) => {
   }
 
   React.useEffect(() => {
-    loadData();
+    const load$ = from(loadData()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const currentSubscription = account?.subscription;

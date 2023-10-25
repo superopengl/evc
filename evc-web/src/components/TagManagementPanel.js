@@ -7,6 +7,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
+import { from } from 'rxjs';
 
 const {Text} = Typography;
 
@@ -115,7 +116,10 @@ const TagManagementPanel = (props) => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
 

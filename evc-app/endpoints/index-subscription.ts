@@ -178,7 +178,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
   }
 
   const startDate = moment(targetSubscription.end).add(1, 'day').toDate();
-  const endDate = moment(startDate).add(1, type === SubscriptionType.UnlimitedYearly ? 'year' : 'month').toDate();
+  const endDate = moment(startDate).add(1, type === SubscriptionType.UnlimitedYearly ? 'year' : 'month').add(-1, 'day').toDate();
   const payment = new Payment();
   payment.subscription = subscription;
   payment.creditTransaction = creditTransaction;

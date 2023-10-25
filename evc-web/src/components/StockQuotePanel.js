@@ -90,8 +90,8 @@ const StockQuotePanel = (props) => {
     <Card
       size="middle"
       title={null}
-      // bodyStyle={{height: 178}}
-      style={{height: '100%'}}
+      bodyStyle={{height: 178}}
+      // style={{height: 178}}
       >
       {loading ?
         <Skeleton active />

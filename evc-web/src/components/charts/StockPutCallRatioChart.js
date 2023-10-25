@@ -61,6 +61,7 @@ const StockPutCallRatioChart = props => {
         },
       },
     },
+    color: ['#531dab', '#ffc53d'],
   };
 
   return <Loading loading={loading}>

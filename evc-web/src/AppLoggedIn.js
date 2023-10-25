@@ -26,6 +26,8 @@ import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { GoDatabase } from 'react-icons/go';
 import { RiCoinsLine } from 'react-icons/ri';
+import { IoLanguage } from 'react-icons/io5';
+import { saveProfile } from 'services/userService';
 
 const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
 const StockWatchListPage = loadable(() => import('pages/Stock/StockWatchListPage'));
@@ -67,109 +69,6 @@ const StyledMenu = styled(Menu)`
 }
 `;
 
-const ROUTES = [
-  {
-    path: '/dashboard',
-    name: <FormattedMessage id="menu.dashboard" />,
-    icon: <DashboardOutlined />,
-    roles: ['admin', 'agent']
-  },
-  {
-    path: '/watchlist',
-    name: <FormattedMessage id="menu.watchlist" />,
-    icon: <StarOutlined />,
-    roles: ['member']
-  },
-  {
-    path: '/stock',
-    name: <FormattedMessage id="menu.stockRadar" />,
-    icon: <Icon component={() => <GiRadarSweep />} />,
-    roles: ['admin', 'agent', 'member', 'free']
-  },
-  {
-    path: '/market',
-    name: <FormattedMessage id="menu.market" />,
-    icon: <BarChartOutlined />,
-    roles: ['admin', 'agent', 'member', 'free']
-  },
-  {
-    path: '/earnings_calendar',
-    name: <FormattedMessage id="menu.earningsCalendar" />,
-    icon: <Icon component={() => <BsCalendar />} />,
-    roles: ['admin', 'agent', 'member', 'free']
-  },
-  {
-    path: '/unsual_options_activity',
-    name: <FormattedMessage id="menu.unsualOptionsActivity" />,
-    icon: <AlertOutlined />,
-    roles: ['admin', 'agent', 'member']
-  },
-  {
-    path: '/user',
-    name: <FormattedMessage id="menu.users" />,
-    icon: <TeamOutlined />,
-    roles: ['admin', 'agent']
-  },
-  {
-    path: '/account',
-    name: <FormattedMessage id="menu.account" />,
-    icon: <Icon component={() => <BiDollar />} />,
-    roles: ['member', 'free'],
-  },
-  {
-    path: '/referral',
-    name: <><FormattedMessage id="menu.earnCommission" /> 🔥</>,
-    icon: <Icon component={() => <GiReceiveMoney />} />,
-    roles: ['member', 'free'],
-  },
-  {
-    path: '/data',
-    name: <FormattedMessage id="menu.dataManagement" />,
-    icon: <Icon component={() => <GoDatabase />} />,
-    roles: ['admin', 'agent']
-  },
-  {
-    path: '/revenue',
-    name: <FormattedMessage id="menu.revenue" />,
-    icon: <Icon component={() => <RiCoinsLine />} />,
-    roles: ['admin', 'agent']
-  },
-  {
-    path: '/comission',
-    name: <FormattedMessage id="menu.commissionWithdrawal" />,
-    icon: <Icon component={() => <FaMoneyBillWave />} />,
-    roles: ['admin', 'agent']
-  },
-  {
-    path: '/settings',
-    name: <FormattedMessage id="menu.settings" />,
-    icon: <SettingOutlined />,
-    roles: ['admin', 'agent'],
-    routes: [
-      {
-        path: '/tags',
-        name: <FormattedMessage id="menu.tags" />,
-      },
-      {
-        path: '/config',
-        name: <FormattedMessage id="menu.config" />,
-      },
-      {
-        path: '/email_template',
-        name: <FormattedMessage id="menu.emailTemplate" />,
-      },
-      // {
-      //   path: '/translation',
-      //   name: 'Translations',
-      // },
-      {
-        path: '/referral_policy',
-        name: <FormattedMessage id="menu.globalReferralPolicy" />,
-      },
-    ]
-  },
-];
-
 function getSanitizedPathName(pathname) {
   const match = /\/[^/]+/.exec(pathname);
   return match ? match[0] ?? pathname : pathname;
@@ -197,6 +96,134 @@ const AppLoggedIn = props => {
   const isMember = role === 'member';
   const isAgent = role === 'agent';
 
+  const ROUTES = [
+    {
+      path: '/dashboard',
+      name: <FormattedMessage id="menu.dashboard" />,
+      icon: <DashboardOutlined />,
+      roles: ['admin', 'agent']
+    },
+    {
+      path: '/watchlist',
+      name: <FormattedMessage id="menu.watchlist" />,
+      icon: <StarOutlined />,
+      roles: ['member']
+    },
+    {
+      path: '/stock',
+      name: <FormattedMessage id="menu.stockRadar" />,
+      icon: <Icon component={() => <GiRadarSweep />} />,
+      roles: ['admin', 'agent', 'member', 'free']
+    },
+    {
+      path: '/market',
+      name: <FormattedMessage id="menu.market" />,
+      icon: <BarChartOutlined />,
+      roles: ['admin', 'agent', 'member', 'free']
+    },
+    {
+      path: '/earnings_calendar',
+      name: <FormattedMessage id="menu.earningsCalendar" />,
+      icon: <Icon component={() => <BsCalendar />} />,
+      roles: ['admin', 'agent', 'member', 'free']
+    },
+    {
+      path: '/unsual_options_activity',
+      name: <FormattedMessage id="menu.unsualOptionsActivity" />,
+      icon: <AlertOutlined />,
+      roles: ['admin', 'agent', 'member']
+    },
+    {
+      path: '/user',
+      name: <FormattedMessage id="menu.users" />,
+      icon: <TeamOutlined />,
+      roles: ['admin', 'agent']
+    },
+    {
+      path: '/account',
+      name: <FormattedMessage id="menu.account" />,
+      icon: <Icon component={() => <BiDollar />} />,
+      roles: ['member', 'free'],
+    },
+    {
+      path: '/referral',
+      name: <><FormattedMessage id="menu.earnCommission" /> 🔥</>,
+      icon: <Icon component={() => <GiReceiveMoney />} />,
+      clickHandler: () => setEarnCommissionVisible(true),
+      roles: ['member', 'free'],
+    },
+    {
+      path: '/data',
+      name: <FormattedMessage id="menu.dataManagement" />,
+      icon: <Icon component={() => <GoDatabase />} />,
+      roles: ['admin', 'agent']
+    },
+    {
+      path: '/revenue',
+      name: <FormattedMessage id="menu.revenue" />,
+      icon: <Icon component={() => <RiCoinsLine />} />,
+      roles: ['admin', 'agent']
+    },
+    {
+      path: '/comission',
+      name: <FormattedMessage id="menu.commissionWithdrawal" />,
+      icon: <Icon component={() => <FaMoneyBillWave />} />,
+      roles: ['admin', 'agent']
+    },
+    {
+      path: '/settings',
+      name: <FormattedMessage id="menu.settings" />,
+      icon: <SettingOutlined />,
+      roles: ['admin', 'agent'],
+      routes: [
+        {
+          path: '/tags',
+          name: <FormattedMessage id="menu.tags" />,
+        },
+        {
+          path: '/config',
+          name: <FormattedMessage id="menu.config" />,
+        },
+        {
+          path: '/email_template',
+          name: <FormattedMessage id="menu.emailTemplate" />,
+        },
+        // {
+        //   path: '/translation',
+        //   name: 'Translations',
+        // },
+        {
+          path: '/referral_policy',
+          name: <FormattedMessage id="menu.globalReferralPolicy" />,
+        },
+      ]
+    },
+    // {
+    //   path: '/language',
+    //   name: <FormattedMessage id="menu.language" />,
+    //   icon: <Icon component={() => <IoLanguage />} />,
+    //   clickHandler: () => setEarnCommissionVisible(true),
+    //   roles: ['admin', 'agent', 'member', 'free']
+    // },
+    {
+      path: '/language',
+      name: <FormattedMessage id="menu.language" />,
+      icon: <Icon component={() => <IoLanguage />} />,
+      roles: ['admin', 'agent', 'member', 'free'],
+      routes: [
+        {
+          path: '/language/zh',
+          name: '中 文',
+          clickHandler: () => handleChangeLocale('zh-CN'),
+        },
+        {
+          path: '/language/en',
+          name: 'English',
+          clickHandler: () => handleChangeLocale('en-US'),
+        },
+      ]
+    },
+  ];
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
 
@@ -205,6 +232,11 @@ const AppLoggedIn = props => {
     // reactLocalStorage.clear();
     setUser(null);
     history.push('/');
+  }
+
+  const handleChangeLocale = async (locale) => {
+    await saveProfile(user.id, { locale });
+    window.location.reload(false);
   }
 
   const avatarMenu = <StyledMenu>
@@ -238,8 +270,8 @@ const AppLoggedIn = props => {
     collapsed={collapsed}
     onCollapse={setCollapsed}
     menuItemRender={(item, dom) => {
-      if (item.path === '/referral') {
-        return <div onClick={() => setEarnCommissionVisible(true)}>
+      if (item.clickHandler) {
+        return <div onClick={() => item.clickHandler()}>
           {dom}
         </div>
       } else {

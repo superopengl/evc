@@ -144,7 +144,7 @@ export async function enqueueEmailToUserId(userId: string, template: EmailTempla
     };
     await enqueueEmail(request);
   } catch (err) {
-    console.log('Sent out email error'.red, errorToJson(err));
+    console.log('Sent out email error'.red, err.message);
     logError(err, null, null, 'Sending email error', userId, template, vars);
   }
 }

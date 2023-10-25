@@ -81,6 +81,7 @@ export const StockSearchInput = (props) => {
       placeholder={<FormattedMessage id="placeholder.searchSymbol" />}
       onChange={handleChange}
       onSearch={handleSearch}
+      value={null}
       // open={!!text}
       style={{ textAlign: 'left', width: '100%', minWidth: 100, ...style }}
       loading={loading}

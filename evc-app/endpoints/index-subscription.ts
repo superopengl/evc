@@ -1,4 +1,4 @@
-import { Connection, getManager, getRepository, LessThan, getConnection, In } from 'typeorm';
+import { Connection, getManager, getRepository, LessThan, getConnection, In, Not, IsNull } from 'typeorm';
 import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import { Subscription } from '../src/entity/Subscription';
@@ -14,7 +14,7 @@ import { Role } from '../src/types/Role';
 import { start } from './jobStarter';
 import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
-import { UserCurrentSubscriptionWithProfile } from '../src/entity/views/UserCurrentSubscriptionWithProfile';
+import { UserAllAliveSubscriptionWithProfile } from '../src/entity/views/UserAllAliveSubscriptionWithProfile';
 import { EmailRequest } from '../src/types/EmailRequest';
 import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
 import { PaymentMethod } from '../src/types/PaymentMethod';
@@ -40,33 +40,33 @@ function getSubscriptionName(type: SubscriptionType) {
   }
 };
 
-async function enqueueEmailTasks(template: EmailTemplateType, list: UserCurrentSubscriptionWithProfile[]) {
-  for (const activeOne of list) {
+async function enqueueEmailTasks(template: EmailTemplateType, list: UserAllAliveSubscriptionWithProfile[]) {
+  for (const subscriptionInfo of list) {
     const emailReq: EmailRequest = {
-      to: activeOne.email,
+      to: subscriptionInfo.email,
       template: template,
       shouldBcc: true,
       vars: {
-        toWhom: getEmailRecipientName(activeOne),
-        subscriptionId: activeOne.currentSubscriptionId,
-        subscriptionType: getSubscriptionName(activeOne.currentType),
-        start: moment(activeOne.start).format('D MMM YYYY'),
-        end: moment(activeOne.end).format('D MMM YYYY'),
+        toWhom: getEmailRecipientName(subscriptionInfo),
+        subscriptionId: subscriptionInfo.subscriptionId,
+        subscriptionType: getSubscriptionName(subscriptionInfo.type),
+        start: moment(subscriptionInfo.start).format('D MMM YYYY'),
+        end: moment(subscriptionInfo.end).format('D MMM YYYY'),
       }
     };
     await enqueueEmail(emailReq);
   }
 }
 
-async function enqueueRecurringSucceededEmail(activeOne: UserCurrentSubscriptionWithProfile, payment: Payment, paidAmount: number, creditDeduction: number) {
+async function enqueueRecurringSucceededEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, paidAmount: number, creditDeduction: number) {
   const emailReq: EmailRequest = {
     to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPaySucceeded,
     shouldBcc: true,
     vars: {
       toWhom: getEmailRecipientName(activeOne),
-      subscriptionId: activeOne.currentSubscriptionId,
-      subscriptionType: getSubscriptionName(activeOne.currentType),
+      subscriptionId: activeOne.subscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.type),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
       paidAmount,
@@ -76,15 +76,15 @@ async function enqueueRecurringSucceededEmail(activeOne: UserCurrentSubscription
   await enqueueEmail(emailReq);
 }
 
-async function enqueueRecurringFailedEmail(activeOne: UserCurrentSubscriptionWithProfile, payment: Payment, paidAmount: number, creditDeduction: number) {
+async function enqueueRecurringFailedEmail(activeOne: UserAllAliveSubscriptionWithProfile, payment: Payment, paidAmount: number, creditDeduction: number) {
   const emailReq: EmailRequest = {
     to: activeOne.email,
     template: EmailTemplateType.SubscriptionRecurringAutoPayFailed,
     shouldBcc: true,
     vars: {
       toWhom: getEmailRecipientName(activeOne),
-      subscriptionId: activeOne.currentSubscriptionId,
-      subscriptionType: getSubscriptionName(activeOne.currentType),
+      subscriptionId: activeOne.subscriptionId,
+      subscriptionType: getSubscriptionName(activeOne.type),
       start: moment(payment.start).format('D MMM YYYY'),
       end: moment(payment.end).format('D MMM YYYY'),
       paidAmount,
@@ -99,15 +99,15 @@ async function expireSubscriptions() {
 
   try {
     await tran.startTransaction();
-    const list = await getRepository(UserCurrentSubscriptionWithProfile)
+    const list = await getRepository(UserAllAliveSubscriptionWithProfile)
       .createQueryBuilder()
-      .where('"end" < now()')
+      .where('"end" < CURRENT_DATE')
       .getMany();
 
     if (list.length) {
       // Set subscriptions to be expired
-      // const subscriptionIds = list.map(x => x.subscriptionId);
-      // await tran.manager.getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
+      const subscriptionIds = list.map(x => x.subscriptionId);
+      await tran.manager.getRepository(Subscription).update(subscriptionIds, { status: SubscriptionStatus.Expired });
 
       // Set user's role to Free
       const userIds = list.map(x => x.userId);
@@ -124,10 +124,10 @@ async function expireSubscriptions() {
 
 
 async function sendAlertForNonRecurringExpiringSubscriptions() {
-  const list = await getRepository(UserCurrentSubscriptionWithProfile)
+  const list = await getRepository(UserAllAliveSubscriptionWithProfile)
     .createQueryBuilder()
     .where('recurring = FALSE')
-    .andWhere(`"end" - CURRENT_DATE IN ANY({1, 3, 7})`)
+    .andWhere(`"end" - CURRENT_DATE = ANY(ARRAY[1, 3, 7])`)
     .getMany();
 
   enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);
@@ -135,22 +135,29 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
 
 async function getPreviousStripePaymentInfo(subscription: Subscription) {
   // TODO: Call API to pay by card
-  const lastPaidPayment = await getManager().getRepository(Payment).findOne({
+  const lastPaidPayment = await getManager()
+  .getRepository(Payment)
+  .findOne({
     where: {
       subscriptionId: subscription.id,
       status: PaymentStatus.Paid,
+      stripeCustomerId: Not(IsNull()),
+      stripePaymentMethodId: Not(IsNull()),
     },
     order: {
       paidAt: 'DESC'
     }
   });
-  const { stripeCustomerId, stripePaymentMethodId } = lastPaidPayment;
+  const { stripeCustomerId, stripePaymentMethodId } = lastPaidPayment || {};
   return { stripeCustomerId, stripePaymentMethodId };
 }
 
-async function renewRecurringSubscription(activeSubscription: UserCurrentSubscriptionWithProfile) {
-  const { currentSubscriptionId: subscriptionId, userId, currentType: type } = activeSubscription;
-  const subscription = await getRepository(Subscription).findOne(subscriptionId)
+async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscriptionWithProfile) {
+  const { subscriptionId, userId, type } = targetSubscription;
+  const subscription = await getRepository(Subscription).findOne({
+    id: subscriptionId,
+    recurring: true,
+  });
 
   const tran = getConnection().createQueryRunner();
   const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
@@ -170,12 +177,14 @@ async function renewRecurringSubscription(activeSubscription: UserCurrentSubscri
     creditTransaction.type = 'recurring';
   }
 
+  const startDate = moment(targetSubscription.end).add(1, 'day').toDate();
+  const endDate = moment(startDate).add(1, type === SubscriptionType.UnlimitedYearly ? 'year' : 'month').toDate();
   const payment = new Payment();
   payment.subscription = subscription;
-  payment.userId = userId;
-  payment.start = moment(activeSubscription.end).add(1, 'day').toDate();
-  payment.end = moment(payment.end).add(type === SubscriptionType.UnlimitedYearly ? 12 : 1, 'month').toDate()
   payment.creditTransaction = creditTransaction;
+  payment.userId = userId;
+  payment.start = startDate;
+  payment.end = endDate
   payment.amount = additionalPay;
   payment.method = additionalPay ? PaymentMethod.Card : PaymentMethod.Credit;
   payment.status = PaymentStatus.Pending;
@@ -192,6 +201,7 @@ async function renewRecurringSubscription(activeSubscription: UserCurrentSubscri
   payment.paidAt = getUtcNow();
 
   subscription.status = SubscriptionStatus.Alive;
+  subscription.end = endDate;
 
   try {
     await tran.startTransaction();
@@ -203,19 +213,18 @@ async function renewRecurringSubscription(activeSubscription: UserCurrentSubscri
     await tran.manager.save(subscription);
 
     await tran.commitTransaction();
-    await enqueueRecurringSucceededEmail(activeSubscription, payment, additionalPay, creditDeductAmount);
+    await enqueueRecurringSucceededEmail(targetSubscription, payment, additionalPay, creditDeductAmount);
   } catch (err) {
     await tran.rollbackTransaction();
-    await enqueueRecurringFailedEmail(activeSubscription, payment, additionalPay, creditDeductAmount);
+    await enqueueRecurringFailedEmail(targetSubscription, payment, additionalPay, creditDeductAmount);
   }
 }
 
 async function handleRecurringPayments() {
-  const list = await getRepository(UserCurrentSubscriptionWithProfile)
+  const list = await getRepository(UserAllAliveSubscriptionWithProfile)
     .createQueryBuilder()
     .where('recurring = TRUE')
-    .andWhere('"end" <= now()')
-    // .leftJoinAndSelect('payments', 'payment')
+    .andWhere('"end" <= CURRENT_DATE')
     .getMany();
 
   for (const item of list) {
@@ -233,6 +242,10 @@ async function handleRecurringPayments() {
 
 async function timeoutProvisioningSubscriptions() {
   const list = await getRepository(RevertableCreditTransaction).find({});
+  if (!list.length) {
+    return;
+  }
+
   const creditTransactions = list.map(x => {
     const entity = new UserCreditTransaction();
     entity.userId = x.userId;
@@ -243,7 +256,6 @@ async function timeoutProvisioningSubscriptions() {
   });
 
   const subscriptionIds = list.map(x => x.subscriptionId);
-
   await getManager().transaction(async m => {
     await m.save(creditTransactions);
     m.update(Subscription, { id: In(subscriptionIds) }, { status: SubscriptionStatus.Timeout });
@@ -263,7 +275,7 @@ start(JOB_NAME, async () => {
   await expireSubscriptions();
   console.log('Finished expiring subscriptions');
 
-  console.log('Starting expiring subscriptions');
+  console.log('Starting reverting timed out subscriptions');
   await timeoutProvisioningSubscriptions();
-  console.log('Finished expiring subscriptions');
+  console.log('Finished reverting timed out subscriptions');
 }, { daemon: false });

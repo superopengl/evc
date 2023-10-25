@@ -29,7 +29,6 @@ const MySubscriptionHistoryPanel = (props) => {
     {
       title: 'Subscription period',
       align: 'left',
-      width: 370,
       render: (value, item) => {
         return <Space>
           <TimeAgo value={item.start} showAgo={false} accurate={false} />
@@ -47,6 +46,7 @@ const MySubscriptionHistoryPanel = (props) => {
       title: 'Billing',
       dataIndex: 'payments',
       align: 'center',
+      width: 370,
       render: (payments, item) => {
         return <Table
           columns={[
@@ -78,7 +78,7 @@ const MySubscriptionHistoryPanel = (props) => {
           dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'desc')}
           pagination={false}
           scroll={false}
-          style={{ width: '100%', minWidth: 370 }}
+          // style={{ width: '100%', minWidth: 370 }}
         />
       }
     },

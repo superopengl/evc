@@ -10,11 +10,12 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
 import { from } from 'rxjs';
+import { orderBy } from 'lodash';
 
 const { Text } = Typography;
 
 export const SearchStockInput = (props) => {
-  const { onChange, excluding, traceSearch, mode, style, size } = props;
+  const { onChange, traceSearch, mode, style, size } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
@@ -24,9 +25,7 @@ export const SearchStockInput = (props) => {
 
   const loadEntities = async () => {
     const stocks = await listStock();
-    const sorted = stocks.filter(s => !excluding.includes(s.symbol));
-    // .orderBy(['symbol'], ['asc'])
-    setList(sorted);
+    setList(stocks);
   }
 
   const subscribeStockListUpdate = () => {
@@ -63,64 +62,80 @@ export const SearchStockInput = (props) => {
   }
 
   const handleSearch = async (value) => {
-    const text = value.trim();
+    const text = value?.trim().toUpperCase();
     setText(text);
   }
 
   const handleStockPlea = async () => {
-    const symbol = text?.trim().toUpperCase();
+    const symbol = text;
     setText('');
     await submitStockPlea(symbol);
     notify.success(<>Successfully submitted the request to support stock <Text strong>{symbol}</Text></>)
   }
 
-  return (
-    <Select
-      size={size}
-      mode={mode}
-      showSearch
-      allowClear={true}
-      // autoFocus={true}
-      placeholder={<FormattedMessage id="placeholder.searchSymbol" />}
-      onChange={handleChange}
-      onSearch={handleSearch}
-      value={null}
-      // open={!!text}
-      style={{ textAlign: 'left', width: '100%', minWidth: 100, ...style }}
-      loading={loading}
-      // showArrow={false}
-      suffixIcon={<SearchOutlined size="large" />}
-      filterOption={(input, option) => {
-        const match = input.toLowerCase();
-        const { symbol } = option.data;
-        return symbol.toLowerCase() === match;
-      }}
-      notFoundContent={isAdminOrAgent ? null : <Button type="primary" block onClick={handleStockPlea}>Not Found. Click to request support to stock <strong style={{ marginLeft: 4 }}>{text.toUpperCase()}</strong></Button>}
-    >
-      {list.map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
-        {/* <Highlighter highlightClassName="search-highlighting"
-          searchWords={[text]}
-          autoEscape={true}
-          textToHighlight={item.symbol} /> (<Highlighter highlightClassName="search-highlighting"
-            searchWords={[text]}
-            autoEscape={true}
-            textToHighlight={item.company} />) */}
+
+  const getOptions = () => {
+    let options = [...list];
+    if (text) {
+      options = options.map(item => {
+        item.ordinal = item.symbol === text ? -9999 : item.symbol.indexOf(text);
+        return item;
+      }).filter(x => x.ordinal !== -1)
+      options = orderBy(options, ['ordinal']);
+    }
+
+    return options
+      .map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         <StockName value={item} />
-      </Select.Option>)}
-    </Select>
+      </Select.Option>)
+  }
+
+  return (
+    <>
+      <Select
+        size={size}
+        mode={mode}
+        showSearch
+        allowClear={true}
+        // autoFocus={true}
+        placeholder={<FormattedMessage id="placeholder.searchSymbol" />}
+        onChange={handleChange}
+        onSearch={handleSearch}
+        value={null}
+        // open={!!text}
+        style={{ textAlign: 'left', width: '100%', minWidth: 100, ...style }}
+        loading={loading}
+        // showArrow={false}
+        suffixIcon={<SearchOutlined size="large" />}
+        filterOption={(input, option) => {
+          return true;
+          const match = input.toLowerCase();
+          const { symbol } = option.data;
+          return symbol.toLowerCase() === match;
+        }}
+        notFoundContent={isAdminOrAgent ?
+          null :
+          <Button type="primary" block onClick={handleStockPlea} style={{ height: 'auto', maxWidth: '100%' }}>
+            <Text style={{ whiteSpace: 'pre-wrap', color: 'white' }}>
+              Not Found. Click to request support for stock
+              <strong style={{ marginLeft: 4 }}>{text.toUpperCase()}</strong>
+            </Text>
+          </Button>}
+      >
+        {getOptions()}
+      </Select>
+    </>
   );
 }
 
 SearchStockInput.propTypes = {
   onChange: PropTypes.func,
-  excluding: PropTypes.array.isRequired,
   traceSearch: PropTypes.bool,
   size: PropTypes.string,
   mode: PropTypes.string,
 };
 
 SearchStockInput.defaultProps = {
-  excluding: [],
   onChange: () => { },
   traceSearch: false,
   mode: '',

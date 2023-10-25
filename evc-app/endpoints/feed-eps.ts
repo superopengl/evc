@@ -18,6 +18,7 @@ import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
 import { getUtcNow } from '../src/utils/getUtcNow';
 import * as moment from 'moment';
+import { redisCache } from '../src/services/redisCache';
 
 const JOB_NAME = 'feed-eps';
 
@@ -83,52 +84,64 @@ async function promoteLatestSnapshotToPreviousSnapshot() {
 }
 
 start(JOB_NAME, async () => {
-  const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
-  const stocks = await getRepository(Stock)
-    .find({
-      order: {
-        symbol: 'ASC'
-      },
-      select: [
-        'symbol'
-      ]
-    });
-  const symbols = stocks.map(s => s.symbol);
+  const JOB_IN_PROGRESS = `JOBKEY_${JOB_NAME}`;
+  const running = await redisCache.get(JOB_IN_PROGRESS);
+  if (running) {
+    console.log('Other job is still running, skip this run');
+    return;
+  }
+  await redisCache.set(JOB_IN_PROGRESS, true);
 
-  let count = 0;
-  const failed = [];
-  for await (const symbol of symbols) {
-    try {
-      const startTime = moment();
-      await syncStockEps(symbol);
-      console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
-      const timeSpan = moment().diff(startTime, 'milliseconds');
-      const sleepMs = sleepTime - timeSpan;
-      if(sleepMs > 0) {
-        await delay(sleepMs);
+  try {
+    const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
+    const stocks = await getRepository(Stock)
+      .find({
+        order: {
+          symbol: 'ASC'
+        },
+        select: [
+          'symbol'
+        ]
+      });
+    const symbols = stocks.map(s => s.symbol);
+
+    let count = 0;
+    const failed = [];
+    for await (const symbol of symbols) {
+      try {
+        const startTime = moment();
+        await syncStockEps(symbol);
+        console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);
+        const timeSpan = moment().diff(startTime, 'milliseconds');
+        const sleepMs = sleepTime - timeSpan;
+        if (sleepMs > 0) {
+          await delay(sleepMs);
+        }
+      } catch (e) {
+        const errorJson = errorToJson(e);
+        const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${JSON.stringify(errorJson)}`
+        console.error(msg, e);
+        failed.push(msg);
       }
-    } catch (e) {
-      const errorJson = errorToJson(e);
-      const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${JSON.stringify(errorJson)}`
-      console.error(msg, e);
-      failed.push(msg);
     }
+
+    for (const err of failed) {
+      console.error(err);
+    }
+
+    await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+
+    // Scrub supports and resistance
+    console.log(`Scrubing supports`)
+    await scrubSupports();
+    console.log(`Scrubing resistance`)
+    await scrubResistances();
+
+    // Send watchlist emails if core data change detected.
+    console.log(`Sending watchlist core change emails`)
+    await sendCoreDataChangedEmails();
+    await promoteLatestSnapshotToPreviousSnapshot();
+  } finally {
+    await redisCache.del(JOB_IN_PROGRESS);
   }
-
-  for (const err of failed) {
-    console.error(err);
-  }
-
-  await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
-
-  // Scrub supports and resistance
-  console.log(`Scrubing supports`)
-  await scrubSupports();
-  console.log(`Scrubing resistance`)
-  await scrubResistances();
-
-  // Send watchlist emails if core data change detected.
-  console.log(`Sending watchlist core change emails`)
-  await sendCoreDataChangedEmails();
-  await promoteLatestSnapshotToPreviousSnapshot();
 });

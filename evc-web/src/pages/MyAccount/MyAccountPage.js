@@ -157,7 +157,7 @@ const MyAccountPage = (props) => {
   const priceCardSpan = isCurrentFree ? {
     xs: 24,
     sm: 24,
-    md: 8,
+    md: 24,
     lg: 8,
     xl: 8,
     xxl: 8

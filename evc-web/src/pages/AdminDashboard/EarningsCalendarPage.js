@@ -250,7 +250,7 @@ Logo
         bordered={false}
         pagination={false}
         rowKey="key"
-        scroll={{ x: 500 }}
+        scroll={{ x: 500, y: 800 }}
         style={{ marginBottom: '2rem' }}
       />
     </Space>

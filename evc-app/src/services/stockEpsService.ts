@@ -2,7 +2,7 @@ import moment = require('moment');
 import { getManager } from 'typeorm';
 import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';
-
+import * as _ from 'lodash';
 
 type StockIexEpsInfo = {
   symbol: string;
@@ -16,16 +16,19 @@ export const syncStockEps = async (symbol: string, howManyQuarters = 8) => {
   if (!earnings?.length) {
     return;
   }
-  const infoList = earnings.map(e => {
-    const data: StockIexEpsInfo = {
-      symbol,
-      fiscalPeriod: moment(e.fiscalDateEnding, 'YYYY-MM-DD').format('[Q]Q YYYY'),
-      reportDate: e.reportedDate,
-      value: e.reportedEPS,
-    };
+  const infoList = _.chain(earnings)
+    .map(e => {
+      const data: StockIexEpsInfo = {
+        symbol,
+        fiscalPeriod: moment(e.fiscalDateEnding, 'YYYY-MM-DD').format('[Q]Q YYYY'),
+        reportDate: e.reportedDate,
+        value: e.reportedEPS,
+      };
 
-    return data;
-  });
+      return data;
+    })
+    .uniqBy(e => `${e.symbol}.${e.reportDate}`)
+    .value();
 
   await syncManyStockEps(infoList);
 };

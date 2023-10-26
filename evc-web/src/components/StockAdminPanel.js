@@ -103,16 +103,25 @@ const StockAdminPanel = (props) => {
     return <Loading />
   }
 
+  const span = {
+    xs: 24,
+    sm: 24,
+    md: 12,
+    lg: 12,
+    xl: 12,
+    xxl: 6
+  };
+
   return (<Container>
     <Row gutter={[30, 30]} style={{ marginTop: 20 }} wrap={true}>
-      <Col span={12}>
+      <Col {...span}>
         <ColInnerCard title="Data Info">
           <StockDataInfoPanel
             symbol={symbol}
           />
         </ColInnerCard>
       </Col>
-      <Col span={12}>
+      <Col {...span}>
         <ColInnerCard title="EPS">
           <StockEpsAdminEditor
             symbol={symbol}
@@ -122,7 +131,7 @@ const StockAdminPanel = (props) => {
           />
         </ColInnerCard>
       </Col>
-      <Col span={12}>
+      <Col {...span}>
         <ColInnerCard title="Support" >
           <StockRangeTimelineEditor
             onLoadList={() => listStockSupport(symbol)}
@@ -137,7 +146,7 @@ const StockAdminPanel = (props) => {
           />
         </ColInnerCard>
       </Col>
-      <Col span={12}>
+      <Col {...span}>
         <ColInnerCard title="Resistance" >
           <StockRangeTimelineEditor
             onLoadList={() => listStockResistance(symbol)}

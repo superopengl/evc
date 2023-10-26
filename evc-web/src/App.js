@@ -48,8 +48,7 @@ const App = () => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
-
-  const event$ = new Subject();
+  const [event$] = React.useState(new Subject());
 
   const startEventSource = user => {
     if (user) {

@@ -6,7 +6,6 @@ import * as _ from 'lodash';
 
 type StockIexEpsInfo = {
   symbol: string;
-  fiscalPeriod: string;
   reportDate: string;
   value: number;
 };
@@ -14,13 +13,13 @@ type StockIexEpsInfo = {
 export const syncStockEps = async (symbol: string, howManyQuarters = 8) => {
   const earnings = await getEarnings(symbol, howManyQuarters);
   if (!earnings?.length) {
+    console.log('Nothing returned form API for ', symbol);
     return;
   }
   const infoList = _.chain(earnings)
     .map(e => {
       const data: StockIexEpsInfo = {
         symbol,
-        fiscalPeriod: moment(e.fiscalDateEnding, 'YYYY-MM-DD').format('[Q]Q YYYY'),
         reportDate: e.reportedDate,
         value: e.reportedEPS,
       };
@@ -35,18 +34,10 @@ export const syncStockEps = async (symbol: string, howManyQuarters = 8) => {
 
 export async function syncManyStockEps(epsInfo: StockIexEpsInfo[]) {
   const entites = epsInfo.map(item => {
-    const { symbol, fiscalPeriod, reportDate, value: value } = item;
-    const matches = /Q([1-4]) ([0-9]{4})/.exec(fiscalPeriod);
-    if (!matches) {
-      // Wrong fiscal period format
-      return null;
-    }
-    const [full, quarter, year] = matches;
+    const { symbol, reportDate, value: value } = item;
 
     const entity = new StockEps();
     entity.symbol = symbol;
-    entity.year = +year;
-    entity.quarter = +quarter;
     entity.reportDate = reportDate;
     entity.value = value;
     return entity;

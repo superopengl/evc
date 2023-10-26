@@ -101,18 +101,10 @@ const StockEpsAdminEditor = (props) => {
         renderItem={(item) => (
           <List.Item
             onClick={() => onSelected(item)}
-            // onClick={() => toggleCurrentItem(item)}
-            // style={{position: 'relative'}}
-            // className={index <= 3 ? 'current-selected' : ''}
             extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
           >
-            {/* <div style={{position:'absolute', right: 10, top: 10}}>
-              {item.id === publishedId ? <FlagFilled />
-              : item === currentItem ? <FlagOutlined /> : null}
-            </div> */}
             <List.Item.Meta
               description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                {/* <Text type="secondary">{item.year} Q{item.quarter}</Text> */}
                 <Text type="secondary"><small>{moment(item.reportDate).format('D MMM YYYY')}</small></Text>
                 <MoneyAmount symbol="" value={item.value} digital={4} />
               </Space>}

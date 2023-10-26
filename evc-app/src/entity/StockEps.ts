@@ -16,12 +16,6 @@ export class StockEps {
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
   stock: Stock;
 
-  @Column('smallint')
-  year: number;
-
-  @Column('smallint')
-  quarter: number;
-
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   value: number;
 

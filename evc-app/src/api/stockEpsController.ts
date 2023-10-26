@@ -35,8 +35,6 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
   const entity = new StockEps();
   entity.symbol = symbol;
   entity.reportDate = reportDate.format('YYYY-MM-DD');
-  entity.year = reportDate.year();
-  entity.quarter = reportDate.quarter();
   entity.value = value;
   entity.source = 'manual';
 

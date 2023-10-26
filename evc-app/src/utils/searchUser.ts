@@ -16,7 +16,7 @@ export type StockUserParams = {
 };
 
 export async function searchUser(queryInfo: StockUserParams) {
-  const { text, page, size, orderField, orderDirection, subscription, tags } = queryInfo;
+  const { text, page, size, orderField, orderDirection, tags } = queryInfo;
 
   const pageNo = page || 1;
   const pageSize = size || 50;
@@ -30,7 +30,7 @@ export async function searchUser(queryInfo: StockUserParams) {
   if (text) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
   }
-  query = query.leftJoin(q => q.from(Subscription, 's').where('status = :status', { status: SubscriptionStatus.Alive }), 's', 's."userId" = u.id');
+  // query = query.leftJoin(q => q.from(Subscription, 's').where('status = :status', { status: SubscriptionStatus.Alive }), 's', 's."userId" = u.id');
   // if (subscription?.length) {
   //   query = query.andWhere('(s.type IN (:...subscription))', { subscription });
   // }
@@ -56,7 +56,6 @@ export async function searchUser(queryInfo: StockUserParams) {
     .limit(pageSize)
     .select([
       'p.*',
-      's.*',
       'u.id as id',
       'u."loginType"',
       'u.role as role',

@@ -252,7 +252,7 @@ const ReferralGlobalPolicyListPage = () => {
           <Form.Item label="Time Range" name="range" rules={[{ required: true, message: ' ' }]}>
             <DatePicker.RangePicker />
           </Form.Item>
-          <Form.Item label="Description" name="description" rules={[{ required: false, whitespace: true, max: 1000 }]}>
+          <Form.Item label="Description" name="description" rules={[{ required: true, whitespace: true, max: 1000 }]}>
             <Input.TextArea maxLength={1000} />
           </Form.Item>
           <Form.Item>

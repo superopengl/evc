@@ -1,14 +1,10 @@
 
-import { getRepository, getManager, MoreThan } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { assertRole } from '../utils/assert';
-import { User } from '../entity/User';
+import { assert, assertRole } from '../utils/assert';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
-import { getUtcNow } from '../utils/getUtcNow';
 import { v4 as uuidv4 } from 'uuid';
-
-
 
 export const getReferralUserPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -23,16 +19,24 @@ export const saveReferralUserPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { user: { id } } = req as any;
   const { id: userId } = req.params;
+  const amount = +(req.body.amount);
+  assert(amount, 400, 'amount must be positive number');
+
   const policy = new ReferralUserPolicy();
-  Object.assign(
-    policy,
-    req.body,
-    {
-      userId,
-      by: id
-    }
-  );
+  policy.userId = userId;
+  policy.amount = amount;
+  policy.by = id;
+
   await getRepository(ReferralUserPolicy).save(policy);
+
+  res.json();
+});
+
+export const deleteReferralUserPolicy = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id: userId } = req.params;
+
+  await getRepository(ReferralUserPolicy).delete(userId);
 
   res.json();
 });

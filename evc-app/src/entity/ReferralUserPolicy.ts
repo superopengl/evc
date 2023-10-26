@@ -1,6 +1,5 @@
-import { Entity, Column, PrimaryColumn, Index, DeleteDateColumn, IsNull, Not, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
-
 
 @Entity()
 export class ReferralUserPolicy {
@@ -15,8 +14,4 @@ export class ReferralUserPolicy {
 
   @Column('uuid')
   by: string;
-
-  @DeleteDateColumn()
-  @Index()
-  deletedAt: Date;
 }

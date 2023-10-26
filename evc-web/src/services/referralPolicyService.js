@@ -19,3 +19,7 @@ export async function getReferralUserPolicy(userId) {
 export async function saveReferralUserPolicy(userId, policy) {
   return httpPost(`user/${userId}/referral_policy`, policy);
 }
+
+export async function deleteReferralUserPolicy(userId) {
+  return httpDelete(`user/${userId}/referral_policy`);
+}

@@ -6,19 +6,28 @@ import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
 import { getUtcNow } from '../utils/getUtcNow';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 
-export async function getCurrentReferralAmountForReferrer(userId) {
-  const policy = await getRepository(ReferralUserPolicy).findOne(userId);
-  if (policy) {
-    return policy.amount;
-  }
-
+export async function getCurrentGlobalReferralCommission() {
   const globalPolicy = await getRepository(ReferralGlobalPolicy)
     .createQueryBuilder()
     .where({ active: true })
-    .andWhere('"start" <= now() AND ("end" IS NULL OR "end" > now())')
+    .andWhere('"start" <= CURRENT_DATE')
+    .andWhere('("end" IS NULL OR "end" > CURRENT_DATE)')
     .getOne();
 
-  return globalPolicy?.amount || 0;
+  return +(globalPolicy?.amount) || 0;
+}
+
+export async function getCurrentSpecialReferralCommissionForUser(userId) {
+  const policy = await getRepository(ReferralUserPolicy).findOne(userId);
+  return policy ? +(policy.amount) : null;
+}
+
+export async function getCurrentReferralAmountForReferrer(userId) {
+  const spacial = await getCurrentSpecialReferralCommissionForUser(userId);
+  if (spacial) {
+    return spacial;
+  }
+  return await getCurrentGlobalReferralCommission();
 }
 
 export async function handleReferralCommissionWhenPaid(m: EntityManager, userId: string) {

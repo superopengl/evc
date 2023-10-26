@@ -20,7 +20,7 @@ const InnerContainer = styled.div`
 margin-left: auto;
 margin-right: auto;
 width: 100%;
-// max-width: 1200px;
+max-width: 1600px;
 
 .ant-col {
   margin-top: 1.5rem;

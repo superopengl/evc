@@ -28,7 +28,7 @@ background: rgb(240, 242, 245);
 // filter: contrast(0.6);
 // transform: scale(0.8);
 
-// max-width: 1200px;
+max-width: 1600px;
 `;
 
 

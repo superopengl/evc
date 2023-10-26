@@ -24,6 +24,8 @@ import { assert } from '../src/utils/assert';
 import { chargeStripeForCardPayment } from '../src/services/stripeService';
 import { getUtcNow } from '../src/utils/getUtcNow';
 import { RevertableCreditTransaction } from '../src/entity/views/RevertableCreditTransaction';
+import { notExistsQuery } from '../src/utils/existsQuery';
+import { UserCurrentSubscription } from '../src/entity/views/UserCurrentSubscription';
 
 const JOB_NAME = 'daily-subscription';
 
@@ -136,18 +138,18 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
 async function getPreviousStripePaymentInfo(subscription: Subscription) {
   // TODO: Call API to pay by card
   const lastPaidPayment = await getManager()
-  .getRepository(Payment)
-  .findOne({
-    where: {
-      subscriptionId: subscription.id,
-      status: PaymentStatus.Paid,
-      stripeCustomerId: Not(IsNull()),
-      stripePaymentMethodId: Not(IsNull()),
-    },
-    order: {
-      paidAt: 'DESC'
-    }
-  });
+    .getRepository(Payment)
+    .findOne({
+      where: {
+        subscriptionId: subscription.id,
+        status: PaymentStatus.Paid,
+        stripeCustomerId: Not(IsNull()),
+        stripePaymentMethodId: Not(IsNull()),
+      },
+      order: {
+        paidAt: 'DESC'
+      }
+    });
   const { stripeCustomerId, stripePaymentMethodId } = lastPaidPayment || {};
   return { stripeCustomerId, stripePaymentMethodId };
 }
@@ -263,6 +265,27 @@ async function timeoutProvisioningSubscriptions() {
   });
 }
 
+async function revokeUnpaidUsersRole() {
+  const users = await getRepository(User)
+    .createQueryBuilder('u')
+    .where(`role = '${Role.Member}'`)
+    .andWhere(`"deletedAt" IS NULL`)
+    .andWhere(
+      notExistsQuery(
+        getRepository(UserCurrentSubscription)
+          .createQueryBuilder('s')
+          .where(`u.id = s."userId"`)
+      )
+    )
+    .select('id')
+    .execute();
+
+  if (users.length) {
+    const userIds = users.map(u => u.id);
+    await getRepository(User).update(userIds, { role: Role.Free });
+  }
+}
+
 start(JOB_NAME, async () => {
   console.log('Starting recurring payments');
   await handleRecurringPayments();
@@ -275,6 +298,10 @@ start(JOB_NAME, async () => {
   console.log('Starting expiring subscriptions');
   await expireSubscriptions();
   console.log('Finished expiring subscriptions');
+
+  console.log('Starting revoking unpaid users');
+  await revokeUnpaidUsersRole();
+  console.log('Finished revoking unpaid users');
 
   console.log('Starting reverting timed out subscriptions');
   await timeoutProvisioningSubscriptions();

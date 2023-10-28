@@ -1,4 +1,4 @@
-import { Alert, Button } from 'antd';
+import { Alert, Button, Card } from 'antd';
 import React from 'react';
 import { Typography } from 'antd';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/charts';
 
 import putCallData from './putCallData';
+import { FormattedMessage } from 'react-intl';
 
 const { Text, Paragraph, Title } = Typography;
 
@@ -36,76 +37,86 @@ const WalkthroughTour = withRouter((props) => {
     {
       selector: '#tour-fair-value',
       content: <>
-        <Title level={4}>EVC fair values, capturing valuable buy points</Title>
+        <Title level={4}>
+          <FormattedMessage id="tour.fairValueTitle" />
+        </Title>
         <Paragraph>
-          EVC fair value, different from long-term target price, is trailing valuation. It closely tracks stock financial performances and reflects current rational prices. We do complicated financial analysis for you. Our aim is to make sure that the buy points are within the intervals of fair values; no more sightless chasing high or horrifying sale low.
-</Paragraph>
+          <FormattedMessage id="tour.fairValueDescription" />
+        </Paragraph>
         <Paragraph type="danger">
-          Note: NOT all stocks EVC can provide rational fair value. Some you will find N/A, i.e., fair value is not available.
-  </Paragraph>
+          <FormattedMessage id="tour.fairValueNote" />
+        </Paragraph>
       </>
     },
     {
       selector: '#tour-support',
       content: <>
-        <Title level={4}>Precise support level and buy point, avoiding selling at bottom price</Title>
+        <Title level={4}>
+          <FormattedMessage id="tour.supportTitle" />
+        </Title>
         <Paragraph>
-          To what level, the stock market would stop declining? EVC gives precise support level-based on the comprehensive analysis of structural and technical supports, volume indicators, etc. The decline process usually stops at the support level, that is where investors can look for opportunities for rebound or bottom fishing. Panic selling at the bottom price during a correction can be avoided. If the stock price falls below the support level, it indicates that there is no tenable defense position, the stock price would continue dropping. Then, stop the loss as soon as possible to avoid greater losses.
-</Paragraph>
+          <FormattedMessage id="tour.supportDescription" />
+        </Paragraph>
         <Paragraph type="danger">
-          Note: NOT all stocks EVC can provide support level. Some you will find it show as blank, i.e., support level is not available.
-  </Paragraph>
+          <FormattedMessage id="tour.supportNote" />
+        </Paragraph>
       </>
     },
     {
       selector: '#tour-resistance',
       content: <>
-        <Title level={4}>Accurate resistance level, finding out the sell points for attainable profit and the buy points for a shaped upward trend</Title>
+        <Title level={4}>
+          <FormattedMessage id="tour.resistanceTitle" />
+        </Title>
         <Paragraph>
-          Where would the stock price rise to its peak? Possible drawdown? After roundly analyzing structural pressure, technical pressure, etc., EVC gives an accurate pressure level that can protect your profit. When the predicted pressure level is broken through, a new upward trend has formed, it is the time to buy and help you grasp the buy point.
-</Paragraph>
+          <FormattedMessage id="tour.resistanceDescription" />
+        </Paragraph>
         <Paragraph type="danger">
-          Note: NOT all stocks EVC can provide resistance level. Some you will find it shows as blank, i.e., resistance level is not available.
-  </Paragraph>
+          <FormattedMessage id="tour.resistanceNote" />
+        </Paragraph>
       </>
     },
     {
       selector: '#tour-putcall',
       content: <>
-        <Title level={4}>Daily option put/call ratio (PCR) tracks market sentiment and direction</Title>
+        <Title level={4}>
+          <FormattedMessage id="tour.putCallTitle" />
+        </Title>
         <Paragraph>
-          The option put/call ratio is an important indicator of market sentiment. When the market is running smoothly, it is usually maintained at 0.7-1. If it is greater than 1, it means that the market’s bearish attitude is in control, or there are more people buying underlying stocks. Stock prices are concerned to go down. If it is less than 0.7, it means that bulls are strong, or there are more people speculating on the increasing stock prices, the market has no fear of the risk.
-</Paragraph>
+          <FormattedMessage id="tour.putCallDescription" />
+        </Paragraph>
         <Paragraph type="danger">
-          Note: NOT all stocks EVC can provide PCR. Some you will find no such figure.
-  </Paragraph>
+          <FormattedMessage id="tour.putCallNote" />
+        </Paragraph>
       </>
     },
     {
       selector: '#tour-insider',
       content: <>
-        <Title level={4}>Timely Executives shareholding change information</Title>
+        <Title level={4}>
+          <FormattedMessage id="tour.insiderTitle" />
+        </Title>
         <Paragraph>
-          The buying or selling of stocks by senior Executives, especially the substantial increase in the number of stock holdings, is usually a signal to the rise in stock prices. The prompt awareness of the change allows investors to react fast and make prudent decisions.
-</Paragraph>
+          <FormattedMessage id="tour.insiderDescription" />
+        </Paragraph>
       </>
     },
     {
       selector: '#tour-alert',
       content: <>
-        <Title level={4}>Core data change alerts</Title>
+        <Title level={4}>
+          <FormattedMessage id="tour.alertTitle" />
+        </Title>
         <Paragraph>
-          Get real time email alerts every time the core data figures updated in your watchlist
-          The market is changing rapidly, and only by grasping first-hand information can you react quickly. Add the stocks you are interested to watchlist. All core data updates will be notified by email alerts, so buy/sell opportunities are just not going to be missed out.
-
-</Paragraph>
+          <FormattedMessage id="tour.alertDescription" />
+        </Paragraph>
       </>
     },
     {
       selector: '#tour-signup',
-      content: <div style={{maxWidth: 300}}>
+      content: <div style={{ maxWidth: 300 }}>
         <SignUpForm onOk={() => props.history.push('/')} />
-        </div>
+      </div>
     }
   ];
 
@@ -120,6 +131,8 @@ const WalkthroughTour = withRouter((props) => {
       accentColor="#57BB60"
       className="tour-helper"
       rounded={4}
+      startAt={0}
+      // lastStepNextButton={<Button>Done! Let's start playing</Button>}
     // maskClassName="tour-mask"
     />
   )
@@ -127,8 +140,6 @@ const WalkthroughTour = withRouter((props) => {
 
 const PutCallDummyChart = props => {
   const data = putCallData;
-
-  debugger;
 
   const config = {
     data: data,
@@ -146,7 +157,7 @@ const PutCallDummyChart = props => {
     color: ['#531dab', '#ffc53d'],
   };
 
-   return <Line {...config} />
+  return <Line {...config} />
 }
 
 const ProMemberPage = () => {
@@ -161,15 +172,15 @@ const ProMemberPage = () => {
           <Button type="link" onClick={() => setVisible(true)}>Restart Tour</Button>
           <Link to="/signup"><Button type="primary" onClick={() => setVisible(true)}>Sign Up</Button></Link>
         </Space> */}
-        <Alert 
-        type="success" 
-        icon={<InfoCircleOutlined/>}
-        showIcon 
-        description={'Pro Members unlock the powerful features. How does it work?'} 
-        style={{ marginBottom: 30 }}
-        action={
-          <Button type="link" onClick={() => setVisible(true)}>Restart Tour</Button>
-        }
+        <Alert
+          type="success"
+          icon={<InfoCircleOutlined />}
+          showIcon
+          description={'Pro Members unlock the powerful features. How does it work? (data on this page is fake)'}
+          style={{ marginBottom: 30 }}
+          action={
+            <Button type="link" onClick={() => setVisible(true)}>Restart Tour</Button>
+          }
         />
         <div className="sc-khQdMy cdJLiE">
           <div className="ant-page-header" style={{ backgroundColor: 'white', padding: '30px 30px 14px' }}>
@@ -323,16 +334,18 @@ const ProMemberPage = () => {
           </div>
           <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
             <div className="ant-col ant-col-24">
-              <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
-                <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
-                  <div className="ant-card-head-wrapper">
-                    <div className="ant-card-head-title">Option Put-Call Ratio</div>
-                  </div>
-                </div>
-                <div className="ant-card-body" style={{ height: '450px', overflow: 'auto' }}>
-                  <PutCallDummyChart />
-                </div>
-              </div>
+              <Card
+                size="large"
+                type="inner"
+                title="Option Put-Call Ratio"
+                headStyle={{
+                  color: 'rgb(0, 41, 61)',
+                  fontSize: 14,
+                  padding: '0 24px'
+                }}
+              >
+                <PutCallDummyChart />
+              </Card>
             </div>
           </div>
           <div className="ant-row" id="tour-insider" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>

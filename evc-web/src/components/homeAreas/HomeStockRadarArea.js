@@ -42,12 +42,10 @@ export const HomeStockRadarArea = props => {
         type="success" 
         description={<>
           <Paragraph type="success">
-            Stock Radar, saving time and improving efficiency, selecting valuable investing targets.
-            Scanning assets based on your specified conditions helps you find what you need in stock.
-            Our stock radar screens both fundamental and technical aspects, e.g., whether included as components of stock indexes, in what industries and sectors, whether they are within valuations, etc. This helps save time, improve the searching efficiency, and find high-quality target companies making attractive money.
+            <FormattedMessage id="text.stockRadarDescription"/>
         </Paragraph>
-        <Paragraph type="secondary">
-            This is Stock Radar preview. Full feature is available after sign up
+        <Paragraph type="success" strong>
+            <FormattedMessage id="text.stockRadarPreviewDescription"/>
         </Paragraph>
         <Link to="/signup">
           <Button type="primary" style={{ minWidth: 140 }}>

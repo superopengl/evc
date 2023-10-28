@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown } from 'antd';
+import { Menu, Dropdown, Modal, Alert, Space, Typography, Button } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeFooter from 'components/HomeFooter';
 import React from 'react';
@@ -13,9 +13,14 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
 import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
-import { useIntl } from 'react-intl';
-import { FormattedMessage } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
+import ProMemberPage from './ProMemberPage';
+import {
+  InfoCircleOutlined,
+} from '@ant-design/icons';
+import { window } from 'rxjs/operators';
 
+const { Text } = Typography;
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
 const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStockRadarArea'));
@@ -85,7 +90,6 @@ const HomePage = (props) => {
 
   const [selectedSymbol, setSelectedSymbol] = React.useState();
   const context = React.useContext(GlobalContext);
-  const intl = useIntl();
 
   const handleStockListSymbolClick = (symbol) => {
     setSelectedSymbol(symbol);
@@ -98,7 +102,7 @@ const HomePage = (props) => {
   const ROUTES = [
     {
       key: '0',
-      path: '/#member',
+      path: '/pro-member',
       name: <FormattedMessage id="menu.proMember" />,
     },
     {
@@ -145,7 +149,16 @@ const HomePage = (props) => {
     route={{ routes: ROUTES }}
     location={{ pathname: '/non' }}
     fixedHeader={true}
-    menuItemRender={(item, dom) => <div onClick={() => handleMenuClick(item.path)}>{dom}</div>}
+    menuItemRender={(item, dom) => {
+      if(item.path === '/pro-member') {
+        return <a href={item.path} target="_blank" rel="noreferrer">
+          {dom}
+        </a>
+      }
+      return <div onClick={() => item.handleClick ? item.handleClick() : handleMenuClick(item.path)}>
+        {dom}
+      </div>
+    }}
     rightContentRender={props => {
       const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
         <Menu.Item key="en-US">English</Menu.Item>
@@ -161,12 +174,12 @@ const HomePage = (props) => {
       </div> : dropdown
     }}
   >
-    
+
     <section>
       <HomeCarouselArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>
     <section>
-    <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
+      <HomeMarketArea onSymbolClick={symbol => setSelectedSymbol(symbol)} />
     </section>
     <section id="stock-radar">
       <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />

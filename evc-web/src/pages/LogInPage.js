@@ -31,7 +31,7 @@ const LogoContainer = styled.div`
   margin-bottom: 2rem;
 `;
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const LogInPage = props => {
   const [sending, setLoading] = React.useState(false);
   const context = React.useContext(GlobalContext);
@@ -85,7 +85,7 @@ const LogInPage = props => {
                 </Button>
             )}
         />
-        <Divider>or</Divider>
+        <Divider><Text type="secondary"><small>or</small></Text></Divider>
         <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
           <Form.Item label="" name="name"
             rules={[{ required: true, validator: validateName, whitespace: true, max: 100, message: 'Please input valid email address' }]}

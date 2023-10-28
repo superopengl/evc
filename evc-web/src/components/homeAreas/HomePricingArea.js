@@ -1,12 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Spin, Typography, Col, Row } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Typography, Col, Row } from 'antd';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
-import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'react-icons/gi';
-import { VscRocket } from 'react-icons/vsc';
-import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
 
 const { Title, Paragraph } = Typography;

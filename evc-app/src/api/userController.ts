@@ -18,7 +18,6 @@ import { Payment } from '../entity/Payment';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
-import { existsQuery } from '../utils/existsQuery';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');

@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Button, Tooltip, Modal } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { DeleteOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import StockInfoCard from './StockInfoCard';
-
-const { Paragraph, Text } = Typography;
-
 
 const StockCardClientSearch = (props) => {
 

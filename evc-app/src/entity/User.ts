@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, PrimaryColumn, JoinColumn, OneToOne, IsNull, Not, DeleteDateColumn, CreateDateColumn, JoinTable, ManyToMany, Generated } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, JoinColumn, OneToOne, IsNull, Not, DeleteDateColumn, CreateDateColumn, JoinTable, ManyToMany } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { UserProfile } from './UserProfile';

@@ -40,7 +40,6 @@ const StockDisplayPanel = (props) => {
 
   const [loading, setLoading] = React.useState(true);
 
-
   const loadEntity = async () => {
     try {
       setLoading(true);

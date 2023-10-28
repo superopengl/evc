@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Typography, Space, Tooltip, Row, Col } from 'antd';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
 import { StockName } from './StockName';
@@ -10,8 +10,7 @@ import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 import { LockFilled } from '@ant-design/icons';
 import { StockNoticeButton } from './StockNoticeButton';
-import { Divider } from 'antd';
-import { filter, debounceTime, tap } from 'rxjs/operators';
+import { filter, debounceTime } from 'rxjs/operators';
 
 const { Text } = Typography;
 

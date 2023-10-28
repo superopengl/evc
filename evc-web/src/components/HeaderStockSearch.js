@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { SearchStockInput } from 'components/SearchStockInput';
-import { Space } from 'antd';
 
 const HeaderStockSearch = (props) => {
 

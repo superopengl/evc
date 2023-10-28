@@ -1,6 +1,6 @@
-import { Button, Layout, Form, Space, Typography, Switch, Row, Col } from 'antd';
+import { Button, Form, Space, Typography } from 'antd';
 import React from 'react';
-import { PlusOutlined, ArrowRightOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { PlusOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { subscriptionDef } from 'def/subscriptionDef';

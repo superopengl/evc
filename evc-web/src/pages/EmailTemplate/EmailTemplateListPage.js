@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Card, Button, Input, Form, Tooltip, Tag, Drawer, Row } from 'antd';
+import { Typography, Card, Button, Input, Form, Tooltip, Drawer, Row } from 'antd';
 import {
   EditOutlined
 } from '@ant-design/icons';

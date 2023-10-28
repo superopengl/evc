@@ -3,7 +3,6 @@ import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
-import { compareTrend } from '../utils/compareTrend';
 import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalComputedFairValue';
 import * as _ from 'lodash';
 import moment = require('moment');

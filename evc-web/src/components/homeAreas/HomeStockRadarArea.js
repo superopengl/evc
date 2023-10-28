@@ -6,7 +6,7 @@ import StockRadarPage from 'pages/Stock/StockRadarPage';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 const Container = styled.div`
 justify-content: center;

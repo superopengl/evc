@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image, Skeleton, Table } from 'antd';
+import { List, Typography, Space, Image, Skeleton } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
@@ -8,7 +8,6 @@ import { TimeAgo } from 'components/TimeAgo';
 import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
 import ReactDOM from 'react-dom';
-import Icon from '@ant-design/icons';
 import { from } from 'rxjs';
 
 const { Text, Paragraph } = Typography;

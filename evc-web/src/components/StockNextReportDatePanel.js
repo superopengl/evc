@@ -9,7 +9,7 @@ import { from } from 'rxjs';
 import { getStockNextReportDate } from 'services/stockService';
 import moment from 'moment';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 
 const StockNextReportDatePanel = (props) => {

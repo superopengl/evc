@@ -8,7 +8,7 @@ import { getManager, getRepository, IsNull, LessThan } from 'typeorm';
 import { StockLastPrice } from '../src/entity/StockLastPrice';
 import { Stock } from '../src/entity/Stock';
 import { combineLatest, Subject } from 'rxjs';
-import { debounceTime, startWith, throttleTime } from 'rxjs/operators';
+import { startWith, throttleTime } from 'rxjs/operators';
 import { assert } from '../src/utils/assert';
 import { EmailSentOutTask } from '../src/entity/EmailSentOutTask';
 import { sendEmail } from '../src/services/emailService';

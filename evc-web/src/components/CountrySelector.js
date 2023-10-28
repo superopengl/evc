@@ -1,7 +1,6 @@
 
 import React from 'react';
-import styled from 'styled-components';
-import { Select, Button } from 'antd';
+import { Select } from 'antd';
 import countryList from 'react-select-country-list'
 
 const COUNTRY_LIST = countryList().getData();

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DatePicker, Typography, Space } from 'antd';
+import { Typography, Space } from 'antd';
 import PropTypes from 'prop-types';
 import {isNumber} from 'lodash';
 import { TimeAgo } from './TimeAgo';

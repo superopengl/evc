@@ -1,7 +1,6 @@
 
 import React from 'react';
-import styled from 'styled-components';
-import { Select, Button } from 'antd';
+import { Select } from 'antd';
 
 export const InputYear = (props) => {
   const thisYear = new Date().getFullYear();

@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Spin, Typography, Card, Space, Tag } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Typography, Card } from 'antd';
 import styled from 'styled-components';
 import { IconContext } from "react-icons";
 import MoneyAmount from './MoneyAmount';
 import { Divider } from 'antd';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
   const StyledCard = styled(Card)`
 padding: 10px;

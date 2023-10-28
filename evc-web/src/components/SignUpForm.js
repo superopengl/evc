@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Form, Input, Checkbox, Layout, Divider } from 'antd';
+import { Typography, Button, Form, Input, Divider } from 'antd';
 import { signUp } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
@@ -92,7 +92,7 @@ const SignUpForm = (props) => {
                 </Form.Item> */}
       </Form>
       {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-      <Divider>or</Divider>
+      <Divider><Text type="secondary"><small>or</small></Text></Divider>
       <GoogleSsoButton
         render={
           renderProps => (

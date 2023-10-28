@@ -1,9 +1,9 @@
-import { Tag, Space, Typography, Table, Button } from 'antd';
+import { Tag, Space, Table, Button } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
-import { downloadReceipt, listMySubscriptionHistory } from 'services/subscriptionService';
+import { downloadReceipt } from 'services/subscriptionService';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import MoneyAmount from 'components/MoneyAmount';
 import { orderBy } from 'lodash';

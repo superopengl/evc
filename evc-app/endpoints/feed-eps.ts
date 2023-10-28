@@ -6,7 +6,6 @@ import { syncStockEps } from '../src/services/stockEpsService';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as delay from 'delay';
 import errorToJson from 'error-to-json';
-import { isUSMarketOpen } from '../src/services/iexService';
 import { StockResistance } from '../src/entity/StockResistance';
 import { StockSupport } from '../src/entity/StockSupport';
 import { StockDeprecateResistance } from '../src/entity/views/StockDeprecateResistance';
@@ -16,7 +15,6 @@ import { CoreDataLatestSnapshot } from '../src/entity/views/CoreDataLatestSnapsh
 import { CoreDataWatchlistEmailTask } from '../src/entity/views/CoreDataWatchlistEmailTask';
 import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
-import { getUtcNow } from '../src/utils/getUtcNow';
 import * as moment from 'moment';
 import { redisCache } from '../src/services/redisCache';
 

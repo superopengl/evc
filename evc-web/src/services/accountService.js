@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpDelete } from './http';
+import { httpGet, httpPost } from './http';
 
 
 export async function getMyAccount() {

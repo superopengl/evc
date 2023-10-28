@@ -1,4 +1,3 @@
-import moment = require('moment');
 import { getManager } from 'typeorm';
 import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';

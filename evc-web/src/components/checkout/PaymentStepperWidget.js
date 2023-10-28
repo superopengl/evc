@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Switch, Divider, Steps, Card, Image } from 'antd';
+import { Typography, Button, Switch, Divider, Steps, Card } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';

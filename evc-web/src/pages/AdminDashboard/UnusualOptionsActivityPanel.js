@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Pagination, Table, Select, Descriptions, DatePicker } from 'antd';
+import { Pagination, Table, Select, Descriptions, DatePicker } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusalOptionsActivity } from 'services/dataService';

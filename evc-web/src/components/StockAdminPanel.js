@@ -18,7 +18,6 @@ import { publishEvent } from 'services/eventSourceService';
 import { StockRangeTimelineEditor } from '../pages/Stock/StockRangeTimelineEditor';
 import StockEpsAdminEditor from '../pages/Stock/StockEpsAdminPanel';
 import { StockFairValueEditor } from '../pages/Stock/StockFairValueEditor';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import StockDataInfoPanel from './StockDataInfoPanel';
 const { Text, Paragraph } = Typography;
 

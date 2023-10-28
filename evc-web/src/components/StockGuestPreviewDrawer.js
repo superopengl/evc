@@ -10,6 +10,7 @@ import { from } from 'rxjs';
 import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 const { Text } = Typography;
 
 
@@ -52,16 +53,18 @@ export const StockGuestPreviewDrawer = (props) => {
       destroyOnClose={true}
       onClose={onClose}
       footer={null}
-      title={<Space direction="vertical" size="large" style={{width: '100%'}}>
+      title={<Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Text>{stock ? <StockName value={stock} /> : symbol}</Text>
         <Alert
           showIcon
-          icon={<InfoCircleOutlined/>}
-          description={<Text style={{marginLeft: 12}} type="success">More information is available to signed up users</Text>}
+          icon={<InfoCircleOutlined />}
+          description={<Text style={{ marginLeft: 12 }} type="success">More information is available to signed up users</Text>}
           action={
-            <Button type="primary" style={{width: 140}}>
-              <FormattedMessage id="menu.signUpNow" />
-            </Button>
+            <Link to="/signup">
+              <Button type="primary" style={{ width: 140 }}>
+                <FormattedMessage id="menu.signUpNow" />
+              </Button>
+            </Link>
           }
           type="success" />
       </Space>}

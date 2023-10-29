@@ -16,6 +16,7 @@ import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 import { getUtcNow } from '../utils/getUtcNow';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { Role } from '../types/Role';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
@@ -238,23 +239,32 @@ export const uploadUoaIndexCsv = handleCsvUpload(
   }
 );
 
+function shouldShowFullDataForUoa(req) {
+  const { user } = req as any;
+  const role = user?.role || Role.Guest;
+  return [Role.Admin, Role.Agent, Role.Member].includes(role);
+}
+
 export const listUoaStocks = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member');
-  const list = await searchUnusalOptionsActivity('stock', req.query);
+  // assertRole(req, 'admin', 'agent', 'member');
+  const showFullData = shouldShowFullDataForUoa(req); 
+  const list = await searchUnusalOptionsActivity('stock', req.query, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaEtfs = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member');
-  const list = await searchUnusalOptionsActivity('etfs', req.query);
+  // assertRole(req, 'admin', 'agent', 'member');
+  const showFullData = shouldShowFullDataForUoa(req); 
+  const list = await searchUnusalOptionsActivity('etfs', req.query, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaindex = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member');
-  const list = await searchUnusalOptionsActivity('index', req.query);
+  // assertRole(req, 'admin', 'agent', 'member');
+  const showFullData = shouldShowFullDataForUoa(req); 
+  const list = await searchUnusalOptionsActivity('index', req.query, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });

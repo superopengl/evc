@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Descriptions, DatePicker } from 'antd';
+import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusalOptionsActivity } from 'services/dataService';
 import moment from 'moment';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { LockFilled } from '@ant-design/icons';
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -33,88 +35,9 @@ const DEFAULT_QUERY_INFO = {
   size: 50,
 };
 
-const columnDef = [
-  {
-    title: 'Symbol',
-    dataIndex: 'symbol',
-    fixed: 'left',
-    width: 80,
-    render: (value) => value,
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    render: (value) => value,
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    width: 50,
-    render: (value) => value,
-  },
-  {
-    title: 'Strike',
-    dataIndex: 'strike',
-    render: (value) => value,
-  },
-  {
-    title: 'Expiration Date',
-    dataIndex: 'expDate',
-    width: 100,
-    render: (value) => moment(value).format('D MMM YYYY'),
-  },
-  {
-    title: 'Days To Expiration',
-    dataIndex: 'dte',
-    width: 80,
-    render: (value) => value,
-  },
-  // {
-  //   title: 'Midpoint',
-  //   dataIndex: 'midpoint',
-  //   width: 80,
-  //   render: (value) => value,
-  // },
-  // {
-  //   title: 'Ask',
-  //   dataIndex: 'ask',
-  //   width: 50,
-  //   render: (value) => value,
-  // },
-  {
-    title: 'Last',
-    dataIndex: 'last',
-    render: (value) => value,
-  },
-  {
-    title: 'Volume',
-    dataIndex: 'volume',
-    render: (value) => value,
-  },
-  {
-    title: 'Open Interest',
-    dataIndex: 'openInt',
-    width: 80,
-    render: (value) => value,
-  },
-  {
-    title: 'Volume / Open Interest',
-    dataIndex: 'voloi',
-    width: 80,
-    render: (value) => value,
-  },
-  {
-    title: 'IV',
-    dataIndex: 'iv',
-    render: (value) => `${value} %`,
-  },
-  {
-    title: 'Trade Date',
-    dataIndex: 'time',
-    width: 100,
-    render: (value) => moment(value).format('D MMM YYYY'),
-  }
-];
+const LockIcon = () => <Tooltip title="Full feature is available after pay">
+  <LockFilled />
+</Tooltip>
 
 const UnusualOptionsActivityPanel = (props) => {
 
@@ -125,6 +48,7 @@ const UnusualOptionsActivityPanel = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
+  const context = React.useContext(GlobalContext);
 
   const loadList = async () => {
     searchByQueryInfo(queryInfo);
@@ -196,6 +120,93 @@ const UnusualOptionsActivityPanel = (props) => {
       page: 1
     });
   }
+
+  const shouldHide = context.role === 'free' || context.role === 'guest';
+
+  const columnDef = [
+    {
+      title: 'Symbol',
+      dataIndex: 'symbol',
+      fixed: 'left',
+      width: 80,
+      render: (value) => value,
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      render: (value) => value,
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      width: 50,
+      render: (value) => value,
+    },
+    {
+      title: 'Strike',
+      dataIndex: 'strike',
+      align: shouldHide ? 'center' : 'left',
+      render: (value) => shouldHide ? <LockIcon /> : value,
+    },
+    {
+      title: 'Expiration Date',
+      dataIndex: 'expDate',
+      width: 100,
+      align: shouldHide ? 'center' : 'left',
+      render: (value) => shouldHide ? <LockIcon /> : moment(value).format('D MMM YYYY'),
+    },
+    {
+      title: 'Days To Expiration',
+      dataIndex: 'dte',
+      width: 80,
+      render: (value) => value,
+    },
+    // {
+    //   title: 'Midpoint',
+    //   dataIndex: 'midpoint',
+    //   width: 80,
+    //   render: (value) => value,
+    // },
+    // {
+    //   title: 'Ask',
+    //   dataIndex: 'ask',
+    //   width: 50,
+    //   render: (value) => value,
+    // },
+    {
+      title: 'Last',
+      dataIndex: 'last',
+      render: (value) => value,
+    },
+    {
+      title: 'Volume',
+      dataIndex: 'volume',
+      render: (value) => value,
+    },
+    {
+      title: 'Open Interest',
+      dataIndex: 'openInt',
+      width: 80,
+      render: (value) => value,
+    },
+    {
+      title: 'Volume / Open Interest',
+      dataIndex: 'voloi',
+      width: 80,
+      render: (value) => value,
+    },
+    {
+      title: 'IV',
+      dataIndex: 'iv',
+      render: (value) => `${value} %`,
+    },
+    {
+      title: 'Trade Date',
+      dataIndex: 'time',
+      width: 100,
+      render: (value) => moment(value).format('D MMM YYYY'),
+    }
+  ];
 
   return (
     <ContainerStyled>

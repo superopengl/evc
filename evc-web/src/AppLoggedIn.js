@@ -332,15 +332,24 @@ const AppLoggedIn = props => {
         <Space direction="vertical" style={{ width: 188 }}>
           <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
           <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
-          <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
-          <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
+          <LinkText href="/terms_and_conditions" target="_blank">
+            <FormattedMessage id="menu.tc" />
+          </LinkText>
+          <LinkText href="/privacy_policy" target="_blank">
+            <FormattedMessage id="menu.pp" />
+
+          </LinkText>
+          <LinkText href="/disclaimer" target="_blank">
+            <FormattedMessage id="menu.disclaimer" />
+
+          </LinkText>
         </Space>
     )}
   >
     <Switch>
       <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
       <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
-      <RoleRoute visible={!isFree} exact path="/unusual_options_activity" component={UnusualOptionsActivityPage} />
+      <RoleRoute visible={true} exact path="/unusual_options_activity" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={true} path="/market" exact component={MarketPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockRadarPage} />
       <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />

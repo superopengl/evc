@@ -67,7 +67,7 @@ const StyledLayout = styled(ProLayout)`
 .ant-pro-menu-item-title {
   // color: rgba(255,255,255,0.75);
   color: rgba(0,0,0,0.75);
-  font-weight: 300;
+  font-weight: 500;
 }
 `;
 

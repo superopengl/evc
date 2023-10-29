@@ -190,6 +190,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
   payment.stripeCustomerId = stripeCustomerId;
   payment.stripePaymentMethodId = stripePaymentMethodId;
   payment.auto = true;
+  payment.geo = null; // Auto payment has no geo location as it's by EVC
 
   if (additionalPay) {
     const rawResponse = await chargeStripeForCardPayment(payment, false);

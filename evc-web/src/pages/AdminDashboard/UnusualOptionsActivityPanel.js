@@ -69,18 +69,18 @@ const columnDef = [
     width: 80,
     render: (value) => value,
   },
-  {
-    title: 'Midpoint',
-    dataIndex: 'midpoint',
-    width: 80,
-    render: (value) => value,
-  },
-  {
-    title: 'Ask',
-    dataIndex: 'ask',
-    width: 50,
-    render: (value) => value,
-  },
+  // {
+  //   title: 'Midpoint',
+  //   dataIndex: 'midpoint',
+  //   width: 80,
+  //   render: (value) => value,
+  // },
+  // {
+  //   title: 'Ask',
+  //   dataIndex: 'ask',
+  //   width: 50,
+  //   render: (value) => value,
+  // },
   {
     title: 'Last',
     dataIndex: 'last',

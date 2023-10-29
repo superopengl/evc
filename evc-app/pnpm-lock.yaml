@@ -33,6 +33,7 @@ dependencies:
   pg: 8.5.1_pg@8.5.1
   query-string: 6.14.0
   redis: 3.0.2
+  request-ip: 2.1.3
   rxjs: 6.6.3
   serialize-error: 8.0.1
   serve-static: 1.14.1
@@ -3493,6 +3494,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-VjSeb/lHmkoyd8ryPVIKvOCn4D1koMqY+vqyjjUfc3xyKtP4dYOxM44sZrnqQSzSds3xyOrUTLTC9LVCVgLngw==
+  /is_js/0.9.0:
+    dev: false
+    resolution:
+      integrity: sha1-CrlFQFArp6+iTIVqqYVWFmnpxS0=
   /isarray/1.0.0:
     resolution:
       integrity: sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=
@@ -5512,6 +5517,12 @@ packages:
       node: '>=0.10'
     resolution:
       integrity: sha1-jcrkcOHIirwtYA//Sndihtp15jc=
+  /request-ip/2.1.3:
+    dependencies:
+      is_js: 0.9.0
+    dev: false
+    resolution:
+      integrity: sha512-J3qdE/IhVM3BXkwMIVO4yFrvhJlU3H7JH16+6yHucadT4fePnR8dyh+vEs6FIx0S2x5TCt2ptiPfHcn0sqhbYQ==
   /request-progress/2.0.1:
     dependencies:
       throttleit: 1.0.0
@@ -7069,6 +7080,7 @@ specifiers:
   pg: ^8.5.1
   query-string: ^6.14.0
   redis: ^3.0.2
+  request-ip: ^2.1.3
   rxjs: ^6.6.3
   serialize-error: ^8.0.1
   serve-static: ^1.14.1

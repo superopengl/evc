@@ -38,7 +38,7 @@ export const HomeEarningsCalendarArea = props => {
     <Container>
       <Title><FormattedMessage id="menu.earningsCalendar" /></Title>
       <InnerContainer>
-        <EarningsCalendarPage onSymbolClick={onSymbolClick}/>
+        <EarningsCalendarPage onSymbolClick={onSymbolClick} height={700}/>
       </InnerContainer>
     </Container>
   )

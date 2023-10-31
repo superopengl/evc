@@ -132,7 +132,7 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
   enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);
 }
 
-async function getPreviousStripePaymentInfo(subscription: Subscription) {
+async function getPreviousPaymentInfo(subscription: Subscription) {
   // TODO: Call API to pay by card
   const lastPaidPayment = await getManager()
     .getRepository(Payment)
@@ -147,8 +147,13 @@ async function getPreviousStripePaymentInfo(subscription: Subscription) {
         paidAt: 'DESC'
       }
     });
-  const { stripeCustomerId, stripePaymentMethodId } = lastPaidPayment || {};
-  return { stripeCustomerId, stripePaymentMethodId };
+  const { stripeCustomerId, stripePaymentMethodId, geo } = lastPaidPayment || {};
+
+  assert(stripeCustomerId, 500, `Cannot get previous stripeCustomerId for subscription ${subscription.id}`)
+  assert(stripePaymentMethodId, 500, `Cannot get previous stripePaymentMethodId for subscription ${subscription.id}`)
+  assert(geo, 500, `Cannot get previous geo for subscription ${subscription.id}`)
+
+  return { stripeCustomerId, stripePaymentMethodId, geo };
 }
 
 async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscriptionWithProfile) {
@@ -164,9 +169,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
     type,
     true
   );
-  const { stripeCustomerId, stripePaymentMethodId } = await getPreviousStripePaymentInfo(subscription);
-  assert(stripeCustomerId, 500, `Cannot get previous stripeCustomerId for subscription ${subscription.id}`)
-  assert(stripePaymentMethodId, 500, `Cannot get previous stripePaymentMethodId for subscription ${subscription.id}`)
+  const { stripeCustomerId, stripePaymentMethodId, geo } = await getPreviousPaymentInfo(subscription);
 
   let creditTransaction: UserCreditTransaction = null;
   if (creditDeductAmount) {
@@ -190,7 +193,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
   payment.stripeCustomerId = stripeCustomerId;
   payment.stripePaymentMethodId = stripePaymentMethodId;
   payment.auto = true;
-  payment.geo = null; // Auto payment has no geo location as it's by EVC
+  payment.geo = geo;
 
   if (additionalPay) {
     const rawResponse = await chargeStripeForCardPayment(payment, false);

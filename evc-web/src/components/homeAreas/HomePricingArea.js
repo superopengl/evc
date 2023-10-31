@@ -3,6 +3,7 @@ import { Typography, Col, Row } from 'antd';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
 import { subscriptionDef } from 'def/subscriptionDef';
+import { withRouter } from 'react-router-dom';
 
 const { Title, Paragraph } = Typography;
 
@@ -42,7 +43,7 @@ max-width: 1000px;
 
 
 
-export const HomePricingArea = props => {
+const HomePricingArea = props => {
   return (
     <Container>
       <InnerContainer>
@@ -57,8 +58,10 @@ export const HomePricingArea = props => {
               icon={s.icon}
               description={s.description}
               price={s.price}
-              interactive={false}
-              unit={s.unit} />
+              interactive={true}
+              unit={s.unit} 
+              onClick={() => props.history.push('/signup')}
+              />
           </StyledCol>)}
         </StyledRow>
       </InnerContainer>
@@ -71,3 +74,5 @@ HomePricingArea.propTypes = {
 
 HomePricingArea.defaultProps = {
 };
+
+export default withRouter(HomePricingArea);

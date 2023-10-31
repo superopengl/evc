@@ -128,10 +128,6 @@ const HomeCarouselAreaRaw = props => {
       description: <FormattedMessage id="text.slogan2" />,
     },
     {
-      icon: <Icon component={() => <BsArrowBarDown />} />,
-      description: <FormattedMessage id="text.slogan3" />,
-    },
-    {
       icon: <Icon component={() => <AiOutlineSwap />} />,
       description: <FormattedMessage id="text.slogan4" />,
     },
@@ -165,31 +161,31 @@ const HomeCarouselAreaRaw = props => {
             <div style={{ maxWidth: 400, width: '100%', margin: '10px 0 30px' }}>
               <SearchStockInput size="large" onChange={handleSearchChange} traceSearch={true} />
             </div>
-              <Row gutter={[10, 10]}>
-                <Col flex="auto">
-                  <SignUpButton type="primary" onClick={() => handleSignOn()}>
-                    <FormattedMessage id="button.signUpWithEmail" />
-                  </SignUpButton>
-                </Col>
-                <Col flex="auto">
-                  <GoogleSsoButton
-                    render={
-                      renderProps => (
-                        <StyledGoogleButton
-                          type="secondary"
-                          block
-                          icon={<GoogleLogoSvg size={16} />}
-                          // icon={<GoogleOutlined />}
-                          style={{ width: 195 }}
-                          onClick={renderProps.onClick}
-                          disabled={renderProps.disabled}
-                        >
-                          <FormattedMessage id="button.continueWithGoogle" />
-                        </StyledGoogleButton>
-                      )}
-                  />
-                </Col>
-              </Row>
+            <Row gutter={[10, 10]}>
+              <Col flex="auto">
+                <SignUpButton type="primary" onClick={() => handleSignOn()}>
+                  <FormattedMessage id="button.signUpWithEmail" />
+                </SignUpButton>
+              </Col>
+              <Col flex="auto">
+                <GoogleSsoButton
+                  render={
+                    renderProps => (
+                      <StyledGoogleButton
+                        type="secondary"
+                        block
+                        icon={<GoogleLogoSvg size={16} />}
+                        // icon={<GoogleOutlined />}
+                        style={{ width: 195 }}
+                        onClick={renderProps.onClick}
+                        disabled={renderProps.disabled}
+                      >
+                        <FormattedMessage id="button.continueWithGoogle" />
+                      </StyledGoogleButton>
+                    )}
+                />
+              </Col>
+            </Row>
           </Col>
           <Col {...span}>
             <StyledList

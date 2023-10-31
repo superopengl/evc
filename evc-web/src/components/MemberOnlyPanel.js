@@ -4,6 +4,7 @@ import { LockFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Text } = Typography;
 
@@ -27,11 +28,24 @@ text-align: center;
 // }
 `;
 
-export const MemberOnlyPanel = (props) => <StyledSpace>
+export const MemberOnlyPanel = (props) => {
+  const context = React.useContext(GlobalContext)
+  const isGuest = context.role === 'guest';
+
+return <StyledSpace>
   <LockFilled />
   <Text>{props.message}</Text>
-  <Link to="/settings/subscription"><Button type="link">Click to upgrade</Button></Link>
-</StyledSpace>
+  {isGuest && <Link to="/signup">
+    <Button type="link">
+      Click to Sign Up
+      </Button>
+  </Link>}
+  {!isGuest && <Link to="/settings/subscription">
+    <Button type="link">
+      Click to upgrade
+      </Button>
+  </Link>}
+</StyledSpace>}
 
 MemberOnlyPanel.propTypes = {
   message: PropTypes.string,

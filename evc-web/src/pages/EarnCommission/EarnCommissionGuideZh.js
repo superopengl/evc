@@ -13,19 +13,19 @@ const EarnCommissionGuideZh = props => {
       邀请链接说明
     </Title>
     </Divider>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
     谁有资格发起邀请？
     </Title>
     <Paragraph type="secondary">
     任何注册EVC账户的用户（未付费注册用户也可发起邀请）。
     </Paragraph>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
     谁有资格被邀请？
     </Title>
     <Paragraph type="secondary">
     从未注册过EVC的新用户，均可接受邀请。
     </Paragraph>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
     受邀者使用你的邀请链接，首次注册，首次购买，可享受10%折扣
     </Title>
     <Paragraph type="secondary">
@@ -35,7 +35,7 @@ const EarnCommissionGuideZh = props => {
         * 如果受邀者先支付29 USD/月，又升级为319 USD/年，只能获得首次支付折扣2.9 USD。<strong><u>建议首次支付选择年费会员，享受更多折扣</u></strong>。
     </Text>
     </Paragraph>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
     你将获得对方首次购买会员费10%的佣金
     </Title>
     <Paragraph type="secondary">
@@ -45,7 +45,7 @@ const EarnCommissionGuideZh = props => {
         * 如果对方先支付29 USD/月，又升级为319 USD/年，你只能获得首次支付的2.9 USD佣金。<strong><u>建议向你的朋友推荐首次支付年会员服务，赚取更多佣金</u></strong>。
     </Text>
     </Paragraph>
-    <Title level={5}>
+    <Title level={5} style={{marginTop: '3rem'}}>
     佣金/余额如何使用？
     </Title>
     <Paragraph type="secondary">

@@ -23,13 +23,13 @@ max-width: 400px;
 // box-shadow: 0 5px 3px rgba(255,197,61,0.8);
 border: 2px solid #57BB60;
 background-color: rgba(87,187,96, 0.1);
-// transform: scale(1.05);
+// transform: scale(1.02);
 }
 
 &.interactive:hover {
 // background-color: #ffe7ba;
 border: 2px solid #57BB60;
-transform: scale(1.05);
+transform: scale(1.01);
 }
 `;
 

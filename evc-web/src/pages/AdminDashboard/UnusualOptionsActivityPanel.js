@@ -44,7 +44,10 @@ const UnusualOptionsActivityPanel = (props) => {
   const LOCAL_STORAGE_KEY = `uoa_${props.type}_query`;
 
   const [loading, setLoading] = React.useState(false);
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true));
+  const [queryInfo, setQueryInfo] = React.useState({
+    ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
+    size: props.size === 'small' ? 20 : 50,
+  });
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);

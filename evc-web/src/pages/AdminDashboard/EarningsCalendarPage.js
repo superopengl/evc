@@ -167,7 +167,7 @@ const EarningsCalendarPage = props => {
           <Card size="small" onClick={() => handleItemClick(item.symbol)} >
             <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
               <Text strong>{item.symbol}</Text>
-              {showLogo ? <Image src={item.logoUrl} width={32} height="auto" preview={false} style={{ width: 32 }} /> : <Text type="secondary"><small>{item.company}</small></Text>}
+              {showLogo ? <Image src={item.logoUrl} width={32} height="auto" preview={false} style={{ width: 32, marginLeft: 4 }} /> : <Text type="secondary"><small>{item.company}</small></Text>}
             </div>
           </Card>
         </SymbolLogo>

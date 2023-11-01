@@ -167,7 +167,7 @@ const HomePage = (props) => {
         <Menu.Item key="zh-CN">中 文</Menu.Item>
       </Menu>
 
-      const dropdown = <Dropdown overlay={menu} trigger={['click']}>
+      const dropdown = <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
         {/* <GlobalOutlined /> */}
         <Icon style={{ fontSize: 20, color: 'rgba(0,0,0,0.75)' }} component={() => <IoLanguage />} />
       </Dropdown>

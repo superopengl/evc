@@ -12,7 +12,7 @@ import * as queryString from 'query-string';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { listStockTags } from 'services/stockTagService';
 import PropTypes from 'prop-types';
-import {TagFilterButton} from 'components/TagFilterButton';
+import { TagFilterButton } from 'components/TagFilterButton';
 import { from } from 'rxjs';
 
 const OverButton = styled(Button)`
@@ -163,13 +163,12 @@ const StockRadarPage = (props) => {
               {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
             <Divider type="vertical" />
-           {tags && <TagFilterButton value={queryInfo.tags} group={true} onChange={handleTagFilterChange} tags={tags}/>}
+            {tags && <TagFilterButton value={queryInfo.tags} group={true} onChange={handleTagFilterChange} tags={tags} />}
           </Space>
           {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
         </Space>
       </Space>
-
-        <Divider />
+      <Divider />
       <StockList data={list} loading={loading} onItemClick={handleItemClick} />
       <Pagination
         current={queryInfo.page}

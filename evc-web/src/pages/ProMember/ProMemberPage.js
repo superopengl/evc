@@ -9,15 +9,15 @@ import { withRouter } from 'react-router-dom';
 import SignUpForm from 'components/SignUpForm';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/charts';
-
 import putCallData from './putCallData';
 import { FormattedMessage } from 'react-intl';
+import { useMediaQuery } from 'react-responsive'
 
 const { Paragraph, Text } = Typography;
 
 const Container = styled.div`
 margin: 0;
-padding: 30px 1rem;
+padding: 30px 0;
 background-color: #f0f2f5;
 
 img {
@@ -33,87 +33,94 @@ const WalkthroughTour = withRouter((props) => {
     setVisible(props.visible);
   }, [props.visible])
 
+  const isNarrow = useMediaQuery({ query: '(max-width: 576px)' });
+  const isPortrait = isNarrow && useMediaQuery({ query: '(orientation: portrait)' });
+  const isLandscape = isNarrow && useMediaQuery({ query: '(orientation: landscape)' });
+
   const tourConfig = [
     {
       selector: '#tour-fair-value',
-      position: [20, 20],
+      position: isPortrait ? [20, 20] : isLandscape ? 'top' : 'bottom',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.fairValueTitle" />
         </Paragraph>
-        <Paragraph style={{fontSize: 12}}>
+        <Paragraph style={{ fontSize: 14 }}>
           <FormattedMessage id="tour.fairValueDescription" />
         </Paragraph>
-        <Paragraph type="danger" style={{fontSize: 12}}>
+        <Paragraph type="danger" style={{ fontSize: 14 }}>
           <FormattedMessage id="tour.fairValueNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-support',
-      position: [20, 20],
+      position: isPortrait ? [20, 20] : isLandscape ? 'top' : 'bottom',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.supportTitle" />
         </Paragraph>
-        <Paragraph style={{fontSize: 12}}>
+        <Paragraph style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.supportDescription" />
         </Paragraph>
-        <Paragraph type="danger" style={{fontSize: 12}}>
+        <Paragraph type="danger" style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.supportNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-resistance',
-      position: [20, 20],
+      // position: [20, 20],
+      position: 'top',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.resistanceTitle" />
         </Paragraph>
-        <Paragraph style={{fontSize: 12}}>
+        <Paragraph style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.resistanceDescription" />
         </Paragraph>
-        <Paragraph type="danger" style={{fontSize: 12}}>
+        <Paragraph type="danger" style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.resistanceNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-putcall',
+      position: 'top',
       // position: [20, 20],
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.putCallTitle" />
         </Paragraph>
-        <Paragraph style={{fontSize: 12}}>
+        <Paragraph style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.putCallDescription" />
         </Paragraph>
-        <Paragraph type="danger" style={{fontSize: 12}}>
+        <Paragraph type="danger" style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.putCallNote" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-insider',
-      // position: [20, 20],
+      position: 'top',
+      // position: isPortrait ? 'top' : [20, 20],
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.insiderTitle" />
         </Paragraph>
-        <Paragraph style={{fontSize: 12}}>
+        <Paragraph style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.insiderDescription" />
         </Paragraph>
       </>
     },
     {
       selector: '#tour-alert',
-      position: 'bottom',
+      position: isLandscape ? 'left' : 'bottom',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.alertTitle" />
         </Paragraph>
-        <Paragraph style={{fontSize: 12}}>
+        <Paragraph style={{ fontSize: 12 }}>
           <FormattedMessage id="tour.alertDescription" />
         </Paragraph>
       </>
@@ -136,11 +143,11 @@ const WalkthroughTour = withRouter((props) => {
       onBeforeClose={target => enableBodyScroll(target)}
       accentColor="#57BB60"
       // inViewThreshold={1000}
-      // scrollOffset={500}
+      scrollOffset={isPortrait ? -400 : isLandscape ? -300 : -50}
       className="tour-helper"
       rounded={4}
       startAt={0}
-      // lastStepNextButton={<Button>Done! Let's start playing</Button>}
+    // lastStepNextButton={<Button>Done! Let's start playing</Button>}
     // maskClassName="tour-mask"
     />
   )
@@ -170,6 +177,8 @@ const PutCallDummyChart = () => {
 
 const ProMemberPage = () => {
   const [visible, setVisible] = React.useState(true);
+
+  const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
 
   return (
     <Container>
@@ -263,7 +272,7 @@ const ProMemberPage = () => {
                     </div>
                     <div className="ant-card-body" style={{ height: '274px' }} >
                       <div className="ant-space ant-space-vertical" style={{ width: '100%' }} >
-                        <div className="ant-space-item" style={{ marginBottom: '8px' }}  id="tour-fair-value">
+                        <div className="ant-space-item" style={{ marginBottom: '8px' }} id="tour-fair-value">
                           <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between' }}>
                             <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Fair Value</span></div>
                             <div className="ant-space-item">
@@ -329,7 +338,7 @@ const ProMemberPage = () => {
                 </div>
               </div>
             </div>
-            <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-14 ant-col-xxl-16">
+            {showInlineStockChart && <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-14 ant-col-xxl-16">
               <div style={{ height: '672px', minWidth: '400px' }}>
                 <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
                   <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
@@ -337,7 +346,7 @@ const ProMemberPage = () => {
                   </div>
                 </article>
               </div>
-            </div>
+            </div>}
           </div>
           <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
             <div className="ant-col ant-col-24">
@@ -1195,7 +1204,7 @@ const ProMemberPage = () => {
         </div>
       </main>
       <WalkthroughTour visible={visible} onClose={() => setVisible(false)} />
-    
+
     </Container>
   );
 }

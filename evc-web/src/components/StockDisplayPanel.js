@@ -1,4 +1,4 @@
-import { Space, Row, Col } from 'antd';
+import { Button, Space, Row, Col, Modal } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -18,6 +18,11 @@ import styled from 'styled-components';
 import StockEvcInfoPanel from './StockEvcInfoPanel';
 import { from } from 'rxjs';
 import StockNextReportDatePanel from './StockNextReportDatePanel';
+import { useMediaQuery } from 'react-responsive'
+import {
+  BarChartOutlined,
+  LineChartOutlined,
+} from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -39,6 +44,8 @@ const StockDisplayPanel = (props) => {
   const { stock } = props;
 
   const [loading, setLoading] = React.useState(true);
+  const [stockChartVisible, setStockChartVisible] = React.useState(false);
+  const [putCallChartVisible, setPutCallChartVisible] = React.useState(false);
 
   const loadEntity = async () => {
     try {
@@ -60,6 +67,21 @@ const StockDisplayPanel = (props) => {
     }
   }, []);
 
+  const handleShowStockChart = () => {
+    ReactDOM.unstable_batchedUpdates(() => {
+      setStockChartVisible(true);
+      setPutCallChartVisible(false);
+    });
+  }
+
+  const handleShowPutCallRatioChart = () => {
+    ReactDOM.unstable_batchedUpdates(() => {
+      setStockChartVisible(false);
+      setPutCallChartVisible(true);
+    });
+  }
+
+  const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
 
   return (
     <>
@@ -93,17 +115,30 @@ const StockDisplayPanel = (props) => {
               </Col>
             </Row>
           </Col>
-          <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
+          {showInlineStockChart && <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
             <StockChart symbol={stock.symbol} period="1d" interval="5m" />
-          </Col>
+          </Col>}
+
         </Row>
-        <Row style={{ marginTop: 30 }}>
+        {showInlineStockChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
             <MemberOnlyCard title={<>Option Put-Call Ratio</>} paidOnly={true} bodyStyle={{ height: 450 }}>
               <StockPutCallRatioChart symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
-        </Row>
+        </Row>}
+        {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col span={12}>
+            <Button block icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
+              Stock Chart
+              </Button>
+          </Col>
+          <Col span={12}>
+            <Button block icon={<LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()}>
+              Put-Call Ratio Chart
+            </Button>
+          </Col>
+        </Row>}
         <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
           <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
             <MemberOnlyCard title={<>Roster</>} bodyStyle={{ height: 500 }}>
@@ -117,7 +152,6 @@ const StockDisplayPanel = (props) => {
           </Col>
         </Row>
         <Row style={{ marginTop: 30 }}>
-
           <Col span={24}>
             <MemberOnlyCard title={<>News</>} bodyStyle={{ height: 700 }}>
               <StockNewsPanel symbol={stock.symbol} />
@@ -125,8 +159,36 @@ const StockDisplayPanel = (props) => {
           </Col>
         </Row>
 
-
+        <Modal
+          visible={stockChartVisible}
+          title={stock.symbol}
+          onOk={() => setStockChartVisible(false)}
+          onCancel={() => setStockChartVisible(false)}
+          closable={true}
+          destroyOnClose={true}
+          maskClosable={true}
+          footer={null}
+          width="100vw"
+          centered
+        >
+          <StockChart symbol={stock.symbol} period="1d" interval="5m" />
+        </Modal>
+        <Modal
+          visible={putCallChartVisible}
+          title={stock.symbol}
+          onOk={() => setPutCallChartVisible(false)}
+          onCancel={() => setPutCallChartVisible(false)}
+          closable={true}
+          maskClosable={true}
+          destroyOnClose={true}
+          footer={null}
+          width="100vw"
+          centered
+        >
+          <StockPutCallRatioChart symbol={stock.symbol} />
+        </Modal>
       </>}
+
     </>
   );
 };

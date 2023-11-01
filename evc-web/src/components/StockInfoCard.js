@@ -142,7 +142,7 @@ const StockInfoCard = (props) => {
       .pipe(
         filter(e => e.type === 'price'),
         filter(e => e.data?.symbol === stock.symbol),
-        debounceTime(1000),
+        // debounceTime(1000),
       ).subscribe(e => {
         setPriceEvent(e.data);
       });

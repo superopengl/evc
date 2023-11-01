@@ -54,7 +54,7 @@ from pg_catalog.pg_matviews
 where schemaname = 'evc'
   `);
 
-  for(const item of list) {
+  for (const item of list) {
     await getManager().query(item.sql);
   }
 }
@@ -121,11 +121,20 @@ where schemaname = 'evc'
       `);
 
     const list = mviewEnitity ? [getManager().getRepository(mviewEnitity).metadata] : matviews;
-    for (const item of list) {
-      await redisCache.setex(REFRESHING_MV_CACHE_KEY, 5 * 60, true);
-      const { schema, tableName } = item;
-      await getManager().query(`REFRESH MATERIALIZED VIEW CONCURRENTLY "${schema}"."${tableName}" `);
-    }
+
+    await redisCache.setex(REFRESHING_MV_CACHE_KEY, 10 * 60, true);
+
+    await getManager().transaction(async m => {
+      for (const item of list) {
+        const { schema, tableName } = item;
+        await m.query(`REFRESH MATERIALIZED VIEW CONCURRENTLY "${schema}"."${tableName}" `);
+      }
+    });
+
+    // for (const item of list) {
+    //   const { schema, tableName } = item;
+    //   await getManager().query(`REFRESH MATERIALIZED VIEW CONCURRENTLY "${schema}"."${tableName}" `);
+    // }
   } finally {
     await redisCache.del(REFRESHING_MV_CACHE_KEY);
   }

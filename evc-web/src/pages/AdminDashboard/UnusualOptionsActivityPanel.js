@@ -162,7 +162,8 @@ const UnusualOptionsActivityPanel = (props) => {
       title: 'Days To Expiration',
       dataIndex: 'dte',
       width: 80,
-      render: (value) => value,
+      align: shouldHide ? 'center' : 'left',
+      render: (value) => shouldHide ? <LockIcon /> : value,
     },
     // {
     //   title: 'Midpoint',

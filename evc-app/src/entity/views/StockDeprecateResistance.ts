@@ -1,9 +1,5 @@
-import { ViewEntity, Connection, PrimaryColumn, ViewColumn } from 'typeorm';
-import { StockLatestPaidInformation } from './StockLatestPaidInformation';
-import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
-import { StockSupport } from '../StockSupport';
+import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockLatestFairValue } from './StockLatestFairValue';
-import { StockWatchList } from '../StockWatchList';
 import { Stock } from '../Stock';
 import { StockResistance } from '../StockResistance';
 

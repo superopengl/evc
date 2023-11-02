@@ -139,32 +139,34 @@ const UnusualOptionsActivityPanel = (props) => {
     {
       title: 'Price',
       dataIndex: 'price',
+      align: 'right',
       render: (value) => value,
     },
     {
       title: 'Type',
       dataIndex: 'type',
       width: 50,
+      align: 'center',
       render: (value) => value,
     },
     {
       title: 'Strike',
       dataIndex: 'strike',
-      align: shouldHide ? 'center' : 'left',
+      align: shouldHide ? 'center' : 'right',
       render: (value) => shouldHide ? <LockIcon /> : value,
     },
     {
       title: 'Expiration Date',
       dataIndex: 'expDate',
       width: 100,
-      align: shouldHide ? 'center' : 'left',
+      align: shouldHide ? 'center' : 'right',
       render: (value) => shouldHide ? <LockIcon /> : moment(value).format('D MMM YYYY'),
     },
     {
       title: 'Days To Expiration',
       dataIndex: 'dte',
       width: 80,
-      align: shouldHide ? 'center' : 'left',
+      align: shouldHide ? 'center' : 'right',
       render: (value) => shouldHide ? <LockIcon /> : value,
     },
     // {
@@ -182,34 +184,40 @@ const UnusualOptionsActivityPanel = (props) => {
     {
       title: 'Last',
       dataIndex: 'last',
+      align: 'right',
       render: (value) => value,
     },
     {
       title: 'Volume',
       dataIndex: 'volume',
+      align: 'right',
       render: (value) => value,
     },
     {
       title: 'Open Interest',
       dataIndex: 'openInt',
+      align: 'right',
       width: 80,
       render: (value) => value,
     },
     {
       title: 'Volume / Open Interest',
       dataIndex: 'voloi',
+      align: 'right',
       width: 80,
       render: (value) => value,
     },
     {
       title: 'IV',
       dataIndex: 'iv',
+      align: 'right',
       render: (value) => `${value} %`,
     },
     {
       title: 'Trade Date',
       dataIndex: 'time',
       width: 100,
+      align: 'right',
       render: (value) => moment(value).format('D MMM YYYY'),
     }
   ];

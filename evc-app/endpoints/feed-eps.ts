@@ -23,29 +23,82 @@ const JOB_NAME = 'feed-eps';
 const MAX_CALL_TIMES_PER_MINUTE = 300; // 300 calls/min
 
 async function scrubSupports() {
-  const list = await getRepository(StockDeprecateSupport).find();
 
-  // Delete supports
-  const ids = list.map(x => x.supportId);
-  const result = await getManager()
-    .createQueryBuilder()
-    .delete()
-    .from(StockSupport)
-    .whereInIds(ids)
-    .execute();
+  await getManager().transaction(async m => {
+    const list = await m.getRepository(StockDeprecateSupport).find();
+
+    console.log('Scrub support', JSON.stringify(list));
+
+    if (!list.length) {
+      return;
+    }
+
+    // Move deprecate supports to resistance
+    const ids = list.map(x => x.supportId);
+    const deleteResult = await m
+      .createQueryBuilder()
+      .delete()
+      .from(StockSupport)
+      .whereInIds(ids)
+      .execute();
+
+    console.log('Delete support', JSON.stringify(deleteResult));
+
+    const insertEntities = list.map(x => {
+      const entity = new StockResistance();
+      entity.symbol = x.symbol;
+      entity.lo = x.supportLo;
+      entity.hi = x.supportHi;
+      return entity;
+    })
+
+    const insertResult = await m.createQueryBuilder()
+      .insert()
+      .into(StockResistance)
+      .values(insertEntities)
+      .execute();
+
+    console.log('Moved from support to resistance', JSON.stringify(insertResult));
+  });
+
 }
 
 async function scrubResistances() {
-  const list = await getRepository(StockDeprecateResistance).find();
+  await getManager().transaction(async m => {
+    const list = await m.getRepository(StockDeprecateResistance).find();
 
-  // Delete resistance
-  const ids = list.map(x => x.resistanceId);
-  const result = await getManager()
-    .createQueryBuilder()
-    .delete()
-    .from(StockResistance)
-    .whereInIds(ids)
-    .execute();
+    console.log('Scrub resistance', JSON.stringify(list));
+
+    if (!list.length) {
+      return;
+    }
+    // Delete resistance
+    const ids = list.map(x => x.resistanceId);
+    const deleteResult = await m
+      .createQueryBuilder()
+      .delete()
+      .from(StockResistance)
+      .whereInIds(ids)
+      .execute();
+
+    console.log('Delete resistance', JSON.stringify(deleteResult));
+
+    const insertEntities = list.map(x => {
+      const entity = new StockSupport();
+      entity.symbol = x.symbol;
+      entity.lo = x.resistanceLo;
+      entity.hi = x.resistanceHi;
+      return entity;
+    });
+
+    const insertResult = await m.createQueryBuilder()
+      .insert()
+      .into(StockSupport)
+      .values(insertEntities)
+      .execute();
+
+    console.log('Moved from resistance to support', JSON.stringify(insertResult));
+  });
 }
 
 async function sendCoreDataChangedEmails() {
@@ -99,7 +152,7 @@ start(JOB_NAME, async () => {
         },
         select: [
           'symbol'
-        ]
+        ],
       });
     const symbols = stocks.map(s => s.symbol);
 

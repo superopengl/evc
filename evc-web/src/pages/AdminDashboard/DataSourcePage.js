@@ -28,6 +28,9 @@ const DataSourcePage = () => {
               buttonText="Support / Resistance"
               type="upload"
               uploadAction="/admin/data/sr"
+              onComplete={() => {
+                notify.success('Successfully upload support/resistance');
+              }}
             />
           </Space>
         }>
@@ -57,18 +60,27 @@ GOOG,1000-1100,2000
               buttonText="Stock"
               type="upload"
               uploadAction="/admin/data/uoa/stock"
+              onComplete={() => {
+                notify.success('Successfully upload unusual options activity stock')
+              }}
             />
             <LongRunningActionButton
               operationKey="upload-resistance-etfs"
               buttonText="ETFS"
               type="upload"
               uploadAction="/admin/data/uoa/etfs"
+              onComplete={() => {
+                notify.success('Successfully upload unusual options activity ETFS')
+              }}
             />
             <LongRunningActionButton
               operationKey="upload-resistance-index"
               buttonText="Index"
               type="upload"
               uploadAction="/admin/data/uoa/index"
+              onComplete={() => {
+                notify.success('Successfully upload unusual options activity index')
+              }}
             />
           </Space>
         }

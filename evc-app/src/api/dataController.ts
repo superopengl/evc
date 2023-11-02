@@ -8,10 +8,10 @@ import { redisCache } from '../services/redisCache';
 import * as parse from 'csv-parse/lib/sync';
 import { StockSupport } from '../entity/StockSupport';
 import { StockResistance } from '../entity/StockResistance';
-import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
-import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
-import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
-import { searchUnusalOptionsActivity } from '../utils/searchUnusalOptionsActivity';
+import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock';
+import { UnusualOptionActivityEtfs } from '../entity/UnusualOptionActivityEtfs';
+import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex';
+import { searchUnusualOptionsActivity } from '../utils/searchUnusualOptionsActivity';
 import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 import { getUtcNow } from '../utils/getUtcNow';
 import * as moment from 'moment';
@@ -39,7 +39,7 @@ const formatPutCallRatioUploadRow = row => {
 
 function parseUoaDate(value) {
   let m = moment(value, 'MM/DD/YY');
-  if(!m.isValid()) {
+  if (!m.isValid()) {
     m = moment(value, 'YYYY/MM/DD')
   }
   return m.toDate();
@@ -195,7 +195,7 @@ async function cleanUpOldUoaData(m: EntityManager, table) {
     .createQueryBuilder()
     .delete()
     .from(table)
-    .where('time < :date', { date: threeMonthAgo })
+    .where('"expDate" < :date', { date: threeMonthAgo })
     .execute();
 }
 
@@ -207,11 +207,12 @@ export const uploadUoaStockCsv = handleCsvUpload(
       await m
         .createQueryBuilder()
         .insert()
-        .into(UnusalOptionActivityStock)
-        .values(formattedRows as UnusalOptionActivityStock[])
+        .into(UnusualOptionActivityStock)
+        .values(formattedRows as UnusualOptionActivityStock[])
+        .orIgnore()
         .execute();
     }
-    await cleanUpOldUoaData(m, UnusalOptionActivityStock);
+    await cleanUpOldUoaData(m, UnusualOptionActivityStock);
   }
 );
 
@@ -223,11 +224,12 @@ export const uploadUoaEtfsCsv = handleCsvUpload(
       await m
         .createQueryBuilder()
         .insert()
-        .into(UnusalOptionActivityEtfs)
-        .values(formattedRows as UnusalOptionActivityEtfs[])
+        .into(UnusualOptionActivityEtfs)
+        .values(formattedRows as UnusualOptionActivityEtfs[])
+        .orIgnore()
         .execute();
     }
-    await cleanUpOldUoaData(m, UnusalOptionActivityEtfs);
+    await cleanUpOldUoaData(m, UnusualOptionActivityEtfs);
   }
 );
 
@@ -239,11 +241,12 @@ export const uploadUoaIndexCsv = handleCsvUpload(
       await m
         .createQueryBuilder()
         .insert()
-        .into(UnusalOptionActivityIndex)
-        .values(formattedRows as UnusalOptionActivityIndex[])
+        .into(UnusualOptionActivityIndex)
+        .values(formattedRows as UnusualOptionActivityIndex[])
+        .orIgnore()
         .execute();
     }
-    await cleanUpOldUoaData(m, UnusalOptionActivityIndex);
+    await cleanUpOldUoaData(m, UnusualOptionActivityIndex);
   }
 );
 
@@ -254,26 +257,44 @@ function shouldShowFullDataForUoa(req) {
 }
 
 export const listUoaStocks = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'member');
-  const showFullData = shouldShowFullDataForUoa(req); 
-  const list = await searchUnusalOptionsActivity('stock', req.query, showFullData);
+  const showFullData = shouldShowFullDataForUoa(req);
+  const list = await searchUnusualOptionsActivity('stock', req.query, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaEtfs = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'member');
-  const showFullData = shouldShowFullDataForUoa(req); 
-  const list = await searchUnusalOptionsActivity('etfs', req.query, showFullData);
+  const showFullData = shouldShowFullDataForUoa(req);
+  const list = await searchUnusualOptionsActivity('etfs', req.query, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaindex = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'member');
-  const showFullData = shouldShowFullDataForUoa(req); 
-  const list = await searchUnusalOptionsActivity('index', req.query, showFullData);
+  const showFullData = shouldShowFullDataForUoa(req);
+  const list = await searchUnusualOptionsActivity('index', req.query, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
+  res.json(list);
+});
+
+export const listAdminUoaStocks = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const showFullData = shouldShowFullDataForUoa(req);
+  const list = await searchUnusualOptionsActivity('stock', req.query, showFullData);
+  res.json(list);
+});
+
+export const listAdminUoaEtfs = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const showFullData = shouldShowFullDataForUoa(req);
+  const list = await searchUnusualOptionsActivity('etfs', req.query, showFullData);
+  res.json(list);
+});
+
+export const listAdminUoaindex = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const showFullData = shouldShowFullDataForUoa(req);
+  const list = await searchUnusualOptionsActivity('index', req.query, showFullData);
   res.json(list);
 });
 

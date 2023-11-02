@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { listUnusalOptionsActivity } from 'services/dataService';
+import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
 import moment from 'moment';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
@@ -45,13 +45,15 @@ const UnusualOptionsActivityPanel = (props) => {
 
   const [loading, setLoading] = React.useState(false);
   const [queryInfo, setQueryInfo] = React.useState({
-    ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
+    // ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
     size: props.size === 'small' ? 20 : 50,
   });
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
   const context = React.useContext(GlobalContext);
+
+  const shouldNoCache = ['admin', 'agent'].includes(context.role);
 
   const loadList = async () => {
     searchByQueryInfo(queryInfo);
@@ -66,7 +68,7 @@ const UnusualOptionsActivityPanel = (props) => {
 
   const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
-      reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
+      // reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
       const { count, page, data, symbols } = loadResponse;
       ReactDOM.unstable_batchedUpdates(() => {
         setTotal(count);
@@ -82,7 +84,7 @@ const UnusualOptionsActivityPanel = (props) => {
     try {
       if (!dryRun) {
         setLoading(true);
-        const resp = await listUnusalOptionsActivity(props.type, queryInfo);
+        const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryInfo) : await listUnusualOptionsActivity(props.type, queryInfo);
         updateWithResponse(resp, queryInfo);
       } else {
         setQueryInfo(queryInfo);

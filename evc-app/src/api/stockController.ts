@@ -32,9 +32,9 @@ import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 import { StockResistance } from '../entity/StockResistance';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { StockSupport } from '../entity/StockSupport';
-import { UnusalOptionActivityEtfs } from '../entity/UnusalOptionActivityEtfs';
-import { UnusalOptionActivityIndex } from '../entity/UnusalOptionActivityIndex';
-import { UnusalOptionActivityStock } from '../entity/UnusalOptionActivityStock';
+import { UnusualOptionActivityEtfs } from '../entity/UnusualOptionActivityEtfs';
+import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex';
+import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock';
 import { syncStockEps } from '../services/stockEpsService';
 import { syncStockHistoricalClose } from '../services/stockCloseService';
 import { refreshMaterializedView } from '../db';
@@ -385,9 +385,9 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
 
   const tables = [
-    UnusalOptionActivityEtfs,
-    UnusalOptionActivityIndex,
-    UnusalOptionActivityStock,
+    UnusualOptionActivityEtfs,
+    UnusualOptionActivityIndex,
+    UnusualOptionActivityStock,
     StockPlea,
     StockHotSearch,
     StockWatchList,

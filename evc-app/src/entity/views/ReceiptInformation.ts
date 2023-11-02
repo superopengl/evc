@@ -23,6 +23,7 @@ import { UserProfile } from '../UserProfile';
     .select([
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
+      `p.geo ->> 'country' as country`,
       's.id as "subscriptionId"',
       's.type as "subscriptionType"',
       's.status as "subscriptionStatus"',
@@ -45,6 +46,9 @@ export class ReceiptInformation {
 
   @ViewColumn()
   paymentSeq: string;
+
+  @ViewColumn()
+  country: string;
 
   @ViewColumn()
   subscriptionId: string;

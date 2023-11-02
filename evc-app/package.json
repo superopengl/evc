@@ -87,6 +87,7 @@
     "html-pdf": "^2.2.0",
     "html-to-text": "^7.0.0",
     "http-assert": "^1.4.1",
+    "json-2-csv": "^3.10.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",

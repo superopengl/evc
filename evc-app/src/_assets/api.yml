@@ -325,6 +325,12 @@ paths:
       responses:
         200:
           description: OK
+  /revenue/payment/csv:
+    get:
+      operationId: downloadAllPaymentCsv
+      responses:
+        200:
+          description: OK          
   /stock/search:
     post:
       operationId: searchStockList

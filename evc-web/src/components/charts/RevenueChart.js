@@ -10,7 +10,7 @@ const RevenueChart = props => {
 
   React.useEffect(()=> {
     const list = [];
-    for(const item of value) {
+    for(const item of (value || [])) {
       list.push(
         {
           time: item.time,

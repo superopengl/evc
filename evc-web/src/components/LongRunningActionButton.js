@@ -27,8 +27,6 @@ export const LongRunningActionButton = props => {
         const result = await getOperationStatus(operationKey);
         if (!result) {
           ping$?.unsubscribe();
-          setLoading(false);
-          onComplete();
         }
       });
     setPing$(ping);
@@ -95,6 +93,7 @@ export const LongRunningActionButton = props => {
         case 'removed':
         case 'done':
         default: {
+          onComplete();
           ping$?.unsubscribe();
           setLoading(false);
           break;

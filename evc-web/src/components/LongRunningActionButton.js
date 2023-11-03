@@ -15,21 +15,23 @@ export const LongRunningActionButton = props => {
   const { operationKey, confirmMessage, onOk, buttonText, onComplete, type, uploadAction } = props;
 
   const [loading, setLoading] = React.useState(false);
-  let ping$;
+  const [ping$, setPing$] = React.useState();
 
   const startPingStatus = () => {
-    ping$ = interval(5 * 1000)
-      .pipe(
-        startWith(0),
-      )
+    ping$?.unsubscribe();
+    const ping = interval(5 * 1000)
+      // .pipe(
+      //   startWith(0),
+      // )
       .subscribe(async () => {
         const result = await getOperationStatus(operationKey);
         if (!result) {
-          ping$.unsubscribe();
+          ping$?.unsubscribe();
           setLoading(false);
           onComplete();
         }
       });
+    setPing$(ping);
   }
 
   const load = async () => {

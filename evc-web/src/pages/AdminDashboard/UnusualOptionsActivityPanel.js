@@ -224,7 +224,14 @@ const UnusualOptionsActivityPanel = (props) => {
 
   return (
     <ContainerStyled>
-      <Descriptions bordered={false} column={2} size="small" style={{ marginBottom: 8 }}>
+      <Descriptions bordered={false} column={{
+        xxl: 2,
+        xl: 2,
+        lg: 2,
+        md: 2,
+        sm: 1,
+        xs: 1
+      }} size="small" style={{ marginBottom: 8 }}>
         <Descriptions.Item label="Symbol">
           <Select allowClear style={{ width: 100 }} placeholder="Symbol" onChange={handleSymbolChange}>
             {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}

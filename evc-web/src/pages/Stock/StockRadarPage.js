@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Divider, Space, Pagination, Button } from 'antd';
+import { Divider, Space, Pagination, Button, Row, Col } from 'antd';
 import StockList from '../../components/StockList';
 import { searchStock } from 'services/stockService';
 import { withRouter } from 'react-router-dom';
@@ -152,19 +152,29 @@ const StockRadarPage = (props) => {
     <>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Space>
-            <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
-              {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
+          <Row gutter={[10, 10]}>
+            <Col flex="auto">
+              <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
+                {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} Over valued
             </OverButton>
-            <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
-              {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
+            </Col>
+            <Col flex="auto">
+              <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
+                {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} Under valued
             </UnderButton>
-            <Button type="default" onClick={handleToggleInValued}>
-              {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
+            </Col>
+            <Col flex="auto">
+              <Button type="default" onClick={handleToggleInValued}>
+                {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} In valued
             </Button>
-            <Divider type="vertical" />
-            {tags && <TagFilterButton value={queryInfo.tags} group={true} onChange={handleTagFilterChange} tags={tags} />}
-          </Space>
+            </Col>
+            {tags && <Col flex="auto">
+              <Divider type="vertical" style={{height: '100%'}} />
+            </Col>}
+            {tags && <Col flex="auto">
+              <TagFilterButton value={queryInfo.tags} group={true} onChange={handleTagFilterChange} tags={tags} />
+            </Col>}
+          </Row>
           {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
         </Space>
       </Space>

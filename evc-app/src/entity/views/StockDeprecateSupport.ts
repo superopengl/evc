@@ -2,21 +2,26 @@ import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockSupport } from '../StockSupport';
 import { StockLatestFairValue } from './StockLatestFairValue';
 import { Stock } from '../Stock';
+import { StockDailyClose } from '../StockDailyClose';
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(StockSupport, 'sp')
     .innerJoin(Stock, 's', 'sp.symbol = s.symbol')
-    .innerJoin(StockLatestFairValue, 'fv', 'fv.symbol = sp.symbol AND fv."fairValueHi" < sp.lo')
+    .innerJoin(q => q
+      .from(StockDailyClose, 'c')
+      .distinctOn(['symbol'])
+      .orderBy('symbol')
+      .addOrderBy('date', 'DESC'),
+      'c', 'c.symbol = sp.symbol AND c.close < sp.lo')
     .select([
       `sp.id as "supportId"`,
       `sp.symbol as symbol`,
-      `s.company as company`,
       `sp.lo as "supportLo"`,
       `sp.hi as "supportHi"`,
-      `fv."fairValueLo" as "fairValueLo"`,
-      `fv."fairValueHi" as "fairValueHi"`,
+      `c.close as close`,
+      `c.date as date`,
     ])
 })
 export class StockDeprecateSupport {
@@ -27,17 +32,14 @@ export class StockDeprecateSupport {
   symbol: string;
 
   @ViewColumn()
-  company: string;
-
-  @ViewColumn()
   supportLo: number;
 
   @ViewColumn()
   supportHi: number;
 
   @ViewColumn()
-  fairValueLo: number;
+  close: number;
 
   @ViewColumn()
-  fairValueHi: number;
+  date: string;
 }

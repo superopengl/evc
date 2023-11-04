@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as pdf from 'html-pdf';
 import * as handlebars from 'handlebars';
-import { Readable } from 'node:stream';
+import { Stream } from 'stream';
 import * as moment from 'moment';
 import { PaymentMethod } from '../types/PaymentMethod';
 import * as _ from 'lodash';
@@ -52,7 +52,7 @@ function getVars(receipt: ReceiptInformation) {
   };
 }
 
-export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream: Readable, fileName: string }> {
+export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream: Stream, fileName: string }> {
   const vars = getVars(receipt);
   const html = compiledTemplate(vars);
   const options = { format: 'A4' };

@@ -21,6 +21,8 @@
     "feed:eps:prod": "TZ=utc node ./endpoints/feed-eps",
     "feed:close": "TZ=utc ts-node ./endpoints/feed-close-pe.ts",
     "feed:close:prod": "TZ=utc node ./endpoints/feed-close-pe",
+    "daily:opc": "TZ=utc ts-node ./endpoints/index-daily-option-put-call.ts",
+    "daily:opc:prod": "TZ=utc node ./endpoints/index-daily-option-put-call",
     "daily:uoa": "TZ=utc ts-node ./endpoints/index-daily-uoa.ts",
     "daily:uoa:prod": "TZ=utc node ./endpoints/index-daily-uoa",
     "daily:putcall": "TZ=utc ts-node ./endpoints/index-daily-putcall.ts",

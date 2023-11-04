@@ -11,11 +11,67 @@ function getRequestCookies(resp) {
   const cookies = cookieParser.parse(splitCookieHeaders, { decodeValues: true, map: true });
   return {
     xsrfToken: cookies['XSRF-TOKEN']?.value,
-    laravelToken: cookies['laravel_token']?.value
+    laravelToken: cookies['laravel_token']?.value,
+    laravelSession: cookies['laravel_session']?.value,
   }
 }
 
-async function getBarchartAccess() {
+async function getBarChartAccessByLogin(email, password) {
+  const guestTokens = await getBarChartGuestAccess();
+  const { xsrfToken, laravelSession, laravelToken } = guestTokens;
+
+  const url = `https://www.barchart.com/login`;
+  const resp = await fetch(url, {
+    headers: {
+      "accept": "application/json",
+      "content-type": "application/json",
+      "Referer": "https://www.barchart.com/login",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-origin",
+      "x-xsrf-token": xsrfToken,
+      cookie: `laravel_token=${encodeURIComponent(laravelToken)};laravel_session=${encodeURIComponent(laravelSession)}`,
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+      password,
+      remember: true,
+      refcode: null,
+    })
+  });
+
+  console.debug('barchart poke request'.bgMagenta.white, resp.status, url.magenta);
+  if (/^4/.test(resp.status)) {
+    // 429 Too Many Requests
+    // 404 Sandbox doesn't return data
+    return null;
+  }
+
+  if (!/^2/.test(resp.status)) {
+    // 429 Too Many Requests
+    // 404 Sandbox doesn't return data
+    throw new Error(`Failed to poke BarChart (${resp.stastus}: ${resp.text()})`);
+  }
+
+  const tokens = getRequestCookies(resp);
+
+  if (!tokens.laravelToken) {
+    throw new Error('Failed to get laravel_token from BarChart response cookie');
+  }
+
+  if (!tokens.xsrfToken) {
+    throw new Error('Failed to get XSRF-TOKEN from BarChart response cookie');
+  }
+
+  console.debug(`x-xsrf-token`, tokens.xsrfToken);
+  console.debug(`cookie`, `laravel_token=${encodeURIComponent(tokens.laravelToken)}`);
+
+  return tokens;
+}
+
+async function getBarChartGuestAccess() {
   const url = `https://www.barchart.com/options/unusual-activity/stocks`;
   const resp = await fetch(url);
   console.debug('barchart poke request'.bgMagenta.white, resp.status, url.magenta);
@@ -33,11 +89,11 @@ async function getBarchartAccess() {
 
   const tokens = getRequestCookies(resp);
 
-  if(!tokens.laravelToken) {
+  if (!tokens.laravelToken) {
     throw new Error('Failed to get laravel_token from BarChart response cookie');
   }
 
-  if(!tokens.xsrfToken) {
+  if (!tokens.xsrfToken) {
     throw new Error('Failed to get XSRF-TOKEN from BarChart response cookie');
   }
 
@@ -107,7 +163,7 @@ async function getDataByType(tokens, type: 'stock' | 'etf' | 'index') {
 }
 
 export async function getAllUnusualOptionActivity(type) {
-  const tokens = await getBarchartAccess();
+  const tokens = await getBarChartGuestAccess();
 
   const data = await getDataByType(tokens, type);
   return data;
@@ -121,4 +177,10 @@ export async function getAllUnusualOptionActivity(type) {
   //   etfs,
   //   indices,
   // }
+}
+
+export async function getOptionPutCallHistory(type) {
+  const tokens = await getBarChartAccessByLogin('dayaozi666@gmail.com', '198361124');
+
+  throw new Error('Not implemented');
 }

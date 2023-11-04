@@ -26,10 +26,14 @@ const convertHeaderToPropName = header => {
 }
 
 const formatUoaUploadRow = row => {
-  row.expDate = parseUoaDate(row.expDate);
-  row.time = parseUoaDate(row.time);
-  row.iv = row.iv.replace(/%/g, '');
-  return row;
+  try {
+    row.expDate = parseUoaDate(row.expDate);
+    row.time = parseUoaDate(row.time);
+    row.iv = row.iv.replace(/%/g, '');
+    return row;
+  } catch (e) {
+    throw new Error(`${e.message} from row: ${Object.values(row).join(',')}`)
+  }
 }
 
 const formatPutCallRatioUploadRow = row => {
@@ -42,7 +46,7 @@ function parseUoaDate(value) {
   if (!m.isValid()) {
     m = moment(value, 'YYYY/MM/DD')
   }
-  if(!m.isValid()) {
+  if (!m.isValid()) {
     throw new Error(`'${value}' is not a valid date.`)
   }
   return m.toDate();

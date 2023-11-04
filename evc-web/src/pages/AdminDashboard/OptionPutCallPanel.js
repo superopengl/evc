@@ -36,7 +36,7 @@ const LockIcon = () => <Tooltip title={<FormattedMessage id="text.fullFeatureAft
 
 const TableTitle = props => props.seq > 0 ? <>{props.children} <Text type="success" strong><sup>{props.seq}</sup></Text></> : props.children
 
-const UnusualOptionsActivityPanel = (props) => {
+const OptionPutCallPanel = (props) => {
 
   const [loading, setLoading] = React.useState(false);
   const [queryInfo, setQueryInfo] = React.useState({
@@ -344,10 +344,10 @@ const UnusualOptionsActivityPanel = (props) => {
   );
 };
 
-UnusualOptionsActivityPanel.propTypes = {
+OptionPutCallPanel.propTypes = {
   type: PropTypes.oneOf(['stock', 'etfs', 'index']).isRequired
 };
 
-UnusualOptionsActivityPanel.defaultProps = {};
+OptionPutCallPanel.defaultProps = {};
 
-export default withRouter(UnusualOptionsActivityPanel);
+export default withRouter(OptionPutCallPanel);

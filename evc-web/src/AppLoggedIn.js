@@ -6,7 +6,7 @@ import StockPage from 'pages/StockPage/StockPage';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   BarChartOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, QuestionOutlined, AlertOutlined
+  DashboardOutlined, QuestionOutlined, AlertOutlined, WarningOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
@@ -27,6 +27,7 @@ import { FormattedMessage } from 'react-intl';
 import { GoDatabase } from 'react-icons/go';
 import { RiCoinsLine } from 'react-icons/ri';
 import { IoLanguage } from 'react-icons/io5';
+import { RiArrowUpDownLine } from 'react-icons/ri';
 import { saveProfile } from 'services/userService';
 
 const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
@@ -42,6 +43,7 @@ const MarketPage = loadable(() => import('pages/Market/MarketPage'));
 const UserListPage = loadable(() => import('pages/User/UserListPage'));
 const MyAccountPage = loadable(() => import('pages/MyAccount/MyAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
+const OptionPutCallPage = loadable(() => import('pages/AdminDashboard/OptionPutCallPage'));
 const UnusualOptionsActivityPage = loadable(() => import('pages/AdminDashboard/UnusualOptionsActivityPage'));
 const DataSourcePage = loadable(() => import('pages/AdminDashboard/DataSourcePage'));
 const EarningsCalendarPage = loadable(() => import('pages/AdminDashboard/EarningsCalendarPage'));
@@ -142,6 +144,12 @@ const AppLoggedIn = props => {
       path: '/earnings_calendar',
       name: <FormattedMessage id="menu.earningsCalendar" />,
       icon: <Icon component={() => <BsCalendar />} />,
+      roles: ['admin', 'agent', 'member', 'free']
+    },
+    {
+      path: '/option_put_call',
+      name: <FormattedMessage id="menu.optionPutCall" />,
+      icon: <Icon component={() => <RiArrowUpDownLine />} />,
       roles: ['admin', 'agent', 'member', 'free']
     },
     {
@@ -370,6 +378,7 @@ const AppLoggedIn = props => {
     <Switch>
       <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
       <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
+      <RoleRoute visible={true} exact path="/option_put_call" component={OptionPutCallPage} />
       <RoleRoute visible={true} exact path="/unusual_options_activity" component={UnusualOptionsActivityPage} />
       <RoleRoute visible={true} path="/market" exact component={MarketPage} />
       <RoleRoute visible={true} path="/stock" exact component={StockRadarPage} />

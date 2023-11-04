@@ -41,7 +41,7 @@ export const HomeStockRadarArea = props => {
         <Alert 
         type="success" 
         description={<>
-          <Paragraph type="success">
+          <Paragraph>
             <FormattedMessage id="text.stockRadarDescription"/>
         </Paragraph>
         <Paragraph type="success" strong>

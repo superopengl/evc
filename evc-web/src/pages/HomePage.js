@@ -14,6 +14,9 @@ import ProLayout from '@ant-design/pro-layout';
 import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
 import { FormattedMessage } from 'react-intl';
+import smoothscroll from 'smoothscroll-polyfill';
+
+smoothscroll.polyfill();
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeUnusualOptionActivityArea = loadable(() => import('components/homeAreas/HomeUnusualOptionActivityArea'));
@@ -84,6 +87,7 @@ const scrollToElement = (selector) => {
 const HomePage = (props) => {
 
   const [selectedSymbol, setSelectedSymbol] = React.useState();
+  const [collapsed, setCollapsed] = React.useState(false);
   const context = React.useContext(GlobalContext);
 
   const handleStockListSymbolClick = (symbol) => {
@@ -135,7 +139,8 @@ const HomePage = (props) => {
   const handleMenuClick = (path) => {
     const isAnchor = path.includes('#');
     if (isAnchor) {
-      scrollToElement(path.replace(/\//, ''))
+      scrollToElement(path.replace(/\//, ''));
+      setCollapsed(true);
     } else {
       props.history.push(path);
     }
@@ -145,6 +150,8 @@ const HomePage = (props) => {
     logo="/favicon-32x32.png"
     title={null}
     // logo="/images/logo-transparent.png"
+    collapsed={collapsed}
+    onCollapse={setCollapsed}
     siderWidth={270}
     layout="top"
     navTheme="dark"

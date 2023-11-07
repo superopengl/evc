@@ -6,7 +6,7 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { Payment } from '../entity/Payment';
 import { PaymentMethod } from '../types/PaymentMethod';
-import { calculateNewSubscriptionPaymentDetail } from '../utils/calculateNewSubscriptionPaymentDetail';
+import { getNewSubscriptionPaymentInfo } from '../utils/getNewSubscriptionPaymentInfo';
 import { provisionSubscriptionPurchase } from '../utils/provisionSubscriptionPurchase';
 import { commitSubscription } from '../utils/commitSubscription';
 import * as _ from 'lodash';
@@ -102,14 +102,13 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
-  const { plan, recurring, preferToUseCredit, method } = req.body;
+  const { plan, recurring, method } = req.body;
 
   const payment = await provisionSubscriptionPurchase({
     userId,
     subscriptionType: plan,
     paymentMethod: method,
     recurring,
-    preferToUseCredit,
   }, req);
   const result: any = {
     method,
@@ -175,8 +174,8 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
-  const { type, preferToUseCredit } = req.body;
-  const result = await calculateNewSubscriptionPaymentDetail(userId, type, preferToUseCredit);
+  const { type } = req.body;
+  const result = await getNewSubscriptionPaymentInfo(userId, type);
   res.json(result);
 });
 

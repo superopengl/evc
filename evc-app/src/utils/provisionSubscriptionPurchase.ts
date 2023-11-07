@@ -6,7 +6,7 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
-import { calculateNewSubscriptionPaymentDetail } from './calculateNewSubscriptionPaymentDetail';
+import { getNewSubscriptionPaymentInfo } from './getNewSubscriptionPaymentInfo';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { PaymentMethod } from '../types/PaymentMethod';
@@ -19,7 +19,6 @@ export type ProvisionSubscriptionRequest = {
   subscriptionType: SubscriptionType;
   paymentMethod: PaymentMethod;
   recurring: boolean;
-  preferToUseCredit: boolean;
 };
 
 async function getSubscriptionPeriod(q: QueryRunner, userId: string, newSubscriptionType: SubscriptionType): Promise<{ start: Date, end: Date }> {
@@ -30,12 +29,12 @@ async function getSubscriptionPeriod(q: QueryRunner, userId: string, newSubscrip
 
   const start = aliveSubscription ? moment(aliveSubscription.end).add(1, 'day').toDate() : getUtcNow();
   const unit = newSubscriptionType === SubscriptionType.UnlimitedYearly ? 'year' : 'month';
-  const end = moment(start).add(1, unit).toDate();
+  const end = moment(start).add(1, unit).add(-1, 'day').toDate();
   return { start, end };
 }
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest, expressReq: any): Promise<Payment> {
-  const { userId, subscriptionType, paymentMethod, recurring, preferToUseCredit } = request;
+  const { userId, subscriptionType, paymentMethod, recurring } = request;
   let payment: Payment = null;
 
   const tran = getConnection().createQueryRunner();
@@ -44,12 +43,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
 
     const { start, end } = await getSubscriptionPeriod(tran, userId, subscriptionType);
 
-    const detail = await calculateNewSubscriptionPaymentDetail(userId, subscriptionType, preferToUseCredit);
-    const { totalCreditAmount, creditDeductAmount, additionalPay } = detail;
-
-    if (paymentMethod === PaymentMethod.Credit) {
-      assert(totalCreditAmount > 0 && totalCreditAmount >= creditDeductAmount && additionalPay === 0, 400, 'No enough credit');
-    }
+    const { totalCreditAmount, price } = await getNewSubscriptionPaymentInfo(userId, subscriptionType);
 
     const subscription = new Subscription();
     subscription.id = uuidv4();
@@ -57,16 +51,16 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.type = subscriptionType;
     subscription.start = start;
     subscription.end = end;
-    subscription.recurring = recurring;
-    subscription.preferToUseCredit = preferToUseCredit;
+    subscription.recurring = paymentMethod !== PaymentMethod.Credit;
+    subscription.useCredit = paymentMethod === PaymentMethod.Credit;
     subscription.status = SubscriptionStatus.Provisioning;
     await tran.manager.save(subscription);
 
     let creditTransaction: UserCreditTransaction = null;
-    if (creditDeductAmount > 0) {
+    if (paymentMethod === PaymentMethod.Credit) {
       creditTransaction = new UserCreditTransaction();
       creditTransaction.userId = userId;
-      creditTransaction.amount = -1 * creditDeductAmount;
+      creditTransaction.amount = -1 * price;
       creditTransaction.type = 'user-pay';
       await tran.manager.save(creditTransaction);
     }
@@ -78,7 +72,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.start = start;
     payment.end = end;
     payment.paidAt = null;
-    payment.amount = additionalPay;
+    payment.amount = paymentMethod === PaymentMethod.Credit ? 0 : price;
     payment.method = paymentMethod;
     payment.status = PaymentStatus.Pending;
     payment.auto = false;

@@ -7,7 +7,7 @@ import { Payment } from '../src/entity/Payment';
 import { User } from '../src/entity/User';
 import { PaymentStatus } from '../src/types/PaymentStatus';
 import * as moment from 'moment';
-import { calculateNewSubscriptionPaymentDetail } from '../src/utils/calculateNewSubscriptionPaymentDetail';
+import { getNewSubscriptionPaymentInfo } from '../src/utils/getNewSubscriptionPaymentInfo';
 import { Role } from '../src/types/Role';
 import { start } from './jobStarter';
 import { enqueueEmail } from '../src/services/emailService';
@@ -164,7 +164,7 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
   });
 
   const tran = getConnection().createQueryRunner();
-  const { creditDeductAmount, additionalPay } = await calculateNewSubscriptionPaymentDetail(
+  const { creditDeductAmount, additionalPay } = await getNewSubscriptionPaymentInfo(
     userId,
     type,
     true

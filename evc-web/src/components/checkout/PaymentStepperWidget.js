@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Switch, Divider, Steps, Card } from 'antd';
+import { Typography, Button, Switch, Divider, Steps, Card, Row, Col } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
@@ -26,23 +26,21 @@ import PayPalIcon from 'payment-icons/min/flat/paypal.svg';
 import { notify } from 'util/notify';
 import { from } from 'rxjs';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const PaymentStepperWidget = (props) => {
 
   const { planType, onComplete, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
-  const [recurring, setRecurring] = React.useState(true);
   const [paymentDetail, setPaymentDetail] = React.useState();
-  const [willUseCredit, setWillUseCredit] = React.useState(false);
   const [currentStep, setCurrentStep] = React.useState(0);
   const context = React.useContext(GlobalContext);
 
 
-  const fetchPaymentDetail = async (useCredit) => {
+  const fetchPaymentDetail = async () => {
     try {
       setLoading(true)
-      const detail = await calculatePaymentDetail(planType, useCredit);
+      const detail = await calculatePaymentDetail(planType);
       ReactDOM.unstable_batchedUpdates(() => {
         setPaymentDetail(detail);
         setLoading(false)
@@ -61,7 +59,7 @@ const PaymentStepperWidget = (props) => {
     let load$;
     if (planType) {
       load$?.unsubscribe();
-      load$ = from(fetchPaymentDetail(willUseCredit)).subscribe();
+      load$ = from(fetchPaymentDetail()).subscribe();
     }
     return () => {
       load$?.unsubscribe();
@@ -72,22 +70,9 @@ const PaymentStepperWidget = (props) => {
 
   const newPlanDef = subscriptionDef.find(s => s.key === planType);
 
-  const handleUseCreditChange = checked => {
-    fetchPaymentDetail(checked);
-    setWillUseCredit(checked);
-  }
-
-  const handleRecurringChange = checked => {
-    setRecurring(checked);
-  }
-
-  const isValidPlan = !!paymentDetail;
-
   const handleProvisionSubscription = async (method) => {
     const provisionData = await provisionSubscription({
       plan: planType,
-      recurring: recurring,
-      preferToUseCredit: willUseCredit,
       method
     });
     return provisionData;
@@ -119,15 +104,10 @@ const PaymentStepperWidget = (props) => {
     setCurrentStep(current);
   }
 
-  const shouldShowFullCreditButton = isValidPlan && !recurring && willUseCredit && paymentDetail.additionalPay === 0;
-  const shouldShowCard = isValidPlan && (paymentDetail.additionalPay > 0 || recurring);
-  const shouldShowPayPal = isValidPlan && !recurring && paymentDetail.additionalPay > 0;
-  const showCreditCardCombinedRecurringMessage = recurring && willUseCredit;
-
   const stepDef = [
     {
       component: <Space direction="vertical" style={{ width: '100%' }}>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Auto renew (payments happen on expiray automatically)?</Text>
           <Switch defaultChecked={recurring} onChange={handleRecurringChange} />
         </Space>
@@ -158,28 +138,45 @@ const PaymentStepperWidget = (props) => {
             {shouldShowCard && [VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
             {shouldShowPayPal && <CardIcon src={PayPalIcon} />}
           </Space>
-        </div>
-        {shouldShowFullCreditButton ? <>
-          <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon style={{ marginBottom: 20 }} />
-          <FullCreditPayButton
-            onProvision={() => handleProvisionSubscription('credit')}
-            onCommit={handleSuccessfulPayment}
-            onLoading={setLoading}
-          />
-        </> :
-          <Button type="primary" block
-            size="large"
-            style={{ marginTop: 20 }} disabled={!isValidPlan} onClick={() => handleStepChange(1)}>Checkout</Button>
-        }
+        </div> */}
+        <Row gutter={20}>
+          <Col span={12}>
+            <Button type="primary"
+              block
+              size="large"
+              style={{ height: 100 }}
+              onClick={() => handleStepChange(1)}>
+              <div>Checkout</div>
+              <small>Auto renew applied</small>
+            </Button>
+          </Col>
+          <Col span={12}>
+            <Button type="primary"
+              block
+              ghost
+              size="large"
+              style={{ height: 100 }}
+              onClick={() => handleStepChange(2)}>
+              <div>Pay with credits</div>
+              <small>One off trial</small>
+            </Button>
+          </Col>
+        </Row>
+
       </Space>
     },
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Alert
+          type="info"
+          showIcon
+          description="Auto renew payment is applied. You can cancel it later."
+        />
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text strong>Total payable amount:</Text>
-          {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.additionalPay} /> : '-'}
+          <MoneyAmount strong value={paymentDetail?.price} />
         </Space>
-        <Divider><Text type="secondary"><small>Payment method</small></Text></Divider>
+        <Divider></Divider>
         {/* {shouldShowFullCreditButton && <>
           <Alert type="info" description="Congratulations! You have enough credit balance to purchase this plan without any additional pay." showIcon />
           <FullCreditPayButton
@@ -188,25 +185,60 @@ const PaymentStepperWidget = (props) => {
             onLoading={setLoading}
           />
         </>} */}
-        {showCreditCardCombinedRecurringMessage && <Alert
-          type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />}
-        {shouldShowCard && <StripeCardPaymentWidget
+        <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+          <Space>
+            {[VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
+          </Space>
+        </div>
+        <StripeCardPaymentWidget
           onProvision={() => handleProvisionSubscription('card')}
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
-        />}
+        />
         {/* {shouldShowAliPay && <StripeAlipayPaymentWidget
           onProvision={() => handleProvisionSubscription('alipay')}
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
         />} */}
-        {shouldShowPayPal && <PayPalCheckoutButton
+        <Divider><Text type="secondary"><small>or</small></Text></Divider>
+        <PayPalCheckoutButton
           onProvision={() => handleProvisionSubscription('paypal')}
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
-        />}
-        <Divider />
-        <Button size="large" block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button>
+        />
+        {/* <Divider />
+        <Button size="large" block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button> */}
+      </Space>
+    },
+    {
+      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Alert
+          type="info"
+          showIcon
+          description="Congratulations! You have enough credit balance to purchase this plan without any additional pay."
+        />
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text>Current credit balance:</Text>
+          <MoneyAmount value={paymentDetail?.totalCreditAmount} />
+        </Space>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text>Total amount:</Text>
+          <MoneyAmount value={paymentDetail?.price} />
+        </Space>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text strong>Credit deduction:</Text>
+          <MoneyAmount strong value={paymentDetail?.price * -1} />
+        </Space>
+        {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text strong>Total payable amount:</Text>
+          <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={0} />
+        </Space> */}
+        <Divider></Divider>
+        <FullCreditPayButton
+          onProvision={() => handleProvisionSubscription('credit')}
+          onCommit={handleSuccessfulPayment}
+          onLoading={setLoading}
+        />
       </Space>
     }
   ];
@@ -217,18 +249,22 @@ const PaymentStepperWidget = (props) => {
         <Card>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
-            <div><Text strong type="success"><big>$ {newPlanDef.price}</big></Text> {newPlanDef.unit}</div>
+            <div>
+              <Text strong type="success" style={{fontSize: 24}}>
+                <big>$ {newPlanDef.price}</big>
+              </Text> {newPlanDef.unit}
+            </div>
           </Space>
           <div style={{ display: 'flex' }}>
             {newPlanDef.description}
           </div>
 
         </Card>
-        <Steps current={currentStep} onChange={handleStepChange} style={{ margin: '40px 0 0' }}>
+        {/* <Steps current={currentStep} onChange={handleStepChange} style={{ margin: '40px 0 0' }}>
           <Steps.Step title="Options" icon={<Icon component={() => <BsCardChecklist />} />} />
           <Steps.Step title="Checkout" icon={<Icon component={() => <FaCashRegister />} />} />
-        </Steps>
-        <div style={{ width: '100%' }}>
+        </Steps> */}
+        <div style={{ width: '100%', marginTop: 16 }}>
           {stepDef[currentStep].component}
         </div>
       </Space>

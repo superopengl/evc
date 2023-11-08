@@ -68,7 +68,7 @@ const CommissionWithdrawalForm = (props) => {
       }]}>
         <InputNumber
           autoFocus
-          min={1}
+          min={100}
           max={1000}
           step={10}
         // formatter={value => `USD$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}

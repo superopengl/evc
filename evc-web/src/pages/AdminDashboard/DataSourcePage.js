@@ -57,11 +57,11 @@ GOOG,1000-1100,2000
           <Space>
             <LongRunningActionButton
               operationKey="upload-uoa-stock"
-              buttonText="Stock"
+              buttonText="Stocks"
               type="upload"
               uploadAction="/admin/data/uoa/stock"
               onComplete={() => {
-                notify.success('Successfully upload unusual options activity stock')
+                notify.success('Successfully upload unusual options activity stocks')
               }}
             />
             <LongRunningActionButton
@@ -75,11 +75,11 @@ GOOG,1000-1100,2000
             />
             <LongRunningActionButton
               operationKey="upload-resistance-index"
-              buttonText="Index"
+              buttonText="INDICES"
               type="upload"
               uploadAction="/admin/data/uoa/index"
               onComplete={() => {
-                notify.success('Successfully upload unusual options activity index')
+                notify.success('Successfully upload unusual options activity INDICES')
               }}
             />
           </Space>

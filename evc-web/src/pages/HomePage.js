@@ -20,7 +20,7 @@ smoothscroll.polyfill();
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 const HomeUnusualOptionActivityArea = loadable(() => import('components/homeAreas/HomeUnusualOptionActivityArea'));
-const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
+// const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
 const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStockRadarArea'));
 
 const StyledLayout = styled(ProLayout)`
@@ -114,11 +114,11 @@ const HomePage = (props) => {
       path: '/#uoa',
       name: <FormattedMessage id="menu.unusualOptionsActivity" />,
     },
-    {
-      key: '3',
-      path: '/#earnings-calendars',
-      name: <FormattedMessage id="menu.earningsCalendar" />,
-    },
+    // {
+    //   key: '3',
+    //   path: '/#earnings-calendars',
+    //   name: <FormattedMessage id="menu.earningsCalendar" />,
+    // },
     {
       key: '4',
       path: '/#pricing',
@@ -196,9 +196,9 @@ const HomePage = (props) => {
     <section id="uoa">
       <HomeUnusualOptionActivityArea />
     </section>
-    <section id="earnings-calendars">
+    {/* <section id="earnings-calendars">
       <HomeEarningsCalendarArea onSymbolClick={handleStockListSymbolClick} />
-    </section>
+    </section> */}
     <section id="pricing">
       <HomePricingArea />
     </section>

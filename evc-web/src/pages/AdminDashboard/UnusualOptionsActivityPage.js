@@ -9,13 +9,13 @@ const UnusualOptionsActivityPage = (props) => {
   return (
     <Card style={{backgroundColor: 'white'}} bordered={true}>
       <Tabs defaultActiveKey="stock" type="card">
-        <Tabs.TabPane tab="Stock" key="stocks">
+        <Tabs.TabPane tab="Stocks" key="stocks">
           <UnusualOptionsActivityPanel type="stock" size={size}/>
         </Tabs.TabPane>
         <Tabs.TabPane tab="ETFS" key="etfs">
           <UnusualOptionsActivityPanel type="etfs" size={size}/>
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Index" key="index">
+        <Tabs.TabPane tab="INDICES" key="index">
           <UnusualOptionsActivityPanel type="index" size={size}/>
         </Tabs.TabPane>
       </Tabs>

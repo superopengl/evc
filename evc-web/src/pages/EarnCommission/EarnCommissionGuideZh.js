@@ -52,6 +52,10 @@ const EarnCommissionGuideZh = props => {
     佣金可<strong><u>申请提现</u></strong>（提现最低100 USD起），佣金也可以作为账户余额，当你订阅Pro会员时，可抵扣会员费用。
     <br />
       <Text type="danger">
+        * 余额抵扣需满足最低使用门槛，即月费29 USD或年费319 USD时，才可使用。
+    </Text>
+    <br />
+      <Text type="danger">
         * 佣金提现，必须填写提现申请表，提供个人真实身份和PayPal账号信息，审核通过后发放。
     </Text>
     </Paragraph>

@@ -167,7 +167,6 @@ async function renewRecurringSubscription(targetSubscription: UserAllAliveSubscr
   const { creditDeductAmount, additionalPay } = await getNewSubscriptionPaymentInfo(
     userId,
     type,
-    true
   );
   const { stripeCustomerId, stripePaymentMethodId, geo } = await getPreviousPaymentInfo(subscription);
 

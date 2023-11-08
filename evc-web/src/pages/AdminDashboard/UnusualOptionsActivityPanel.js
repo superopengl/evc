@@ -10,6 +10,7 @@ import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { LockFilled } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
+import { FormattedMessage } from 'react-intl';
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -35,7 +36,7 @@ const DEFAULT_QUERY_INFO = {
   size: 50,
 };
 
-const LockIcon = () => <Tooltip title="Full feature is available after pay">
+const LockIcon = () => <Tooltip title={<FormattedMessage id="text.fullFeatureAfterPay" />}>
   <LockFilled />
 </Tooltip>
 
@@ -96,10 +97,6 @@ const UnusualOptionsActivityPanel = (props) => {
 
   const handlePaginationChange = (page, pageSize) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
-  }
-
-  const handleSymbolChange = (symbol) => {
-    searchByQueryInfo({ ...queryInfo, symbol, page: 1 });
   }
 
   const handleTypeChange = (type) => {
@@ -222,6 +219,10 @@ const UnusualOptionsActivityPanel = (props) => {
     }
   ];
 
+  const handleSymbolChange = (symbol) => {
+    searchByQueryInfo({ ...queryInfo, symbol, page: 1 });
+  }
+
   return (
     <ContainerStyled>
       <Descriptions bordered={false} column={{
@@ -233,7 +234,16 @@ const UnusualOptionsActivityPanel = (props) => {
         xs: 1
       }} size="small" style={{ marginBottom: 8 }}>
         <Descriptions.Item label="Symbol">
-          <Select allowClear style={{ width: 100 }} placeholder="Symbol" onChange={handleSymbolChange}>
+          <Select allowClear style={{ width: 100 }} placeholder="Symbol" 
+          // onSearch={handleSymbolChange}
+          onChange={handleSymbolChange}
+          showSearch
+          filterOption={(input, option) => {
+            const match = input.toLowerCase();
+            const symbol = option.key;
+            return symbol.toLowerCase().includes(match);
+          }}
+          >
             {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
           </Select>
         </Descriptions.Item>

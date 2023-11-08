@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 import { GlobalContext } from 'contexts/GlobalContext';
+import { FormattedMessage } from 'react-intl';
 
 const { Text } = Typography;
 
@@ -48,9 +49,9 @@ return <StyledSpace>
 </StyledSpace>}
 
 MemberOnlyPanel.propTypes = {
-  message: PropTypes.string,
+  message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 
 MemberOnlyPanel.defaultProps = {
-  message: 'Full feature is available after pay'
+  message: <FormattedMessage id="text.fullFeatureAfterPay" />
 };

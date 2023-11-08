@@ -7,7 +7,7 @@ import { Stock } from '../entity/Stock';
 
 export async function searchStockForGuest(queryInfo: StockSearchParams) {
   const pageNo = 1;
-  const pageSize = 24;
+  const pageSize = 12;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
   let query = getManager()

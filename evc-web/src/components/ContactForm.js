@@ -65,8 +65,8 @@ const ContactForm = props => {
         {isGuest && <Form.Item name="name" rules={[{ required: true, message: 'Name is required', whitespace: true, max: 100 }]}>
           <Input autoFocus={true} placeholder="Your name" allowClear={true} maxLength={100} disabled={loading} />
         </Form.Item>}
-        {isGuest && <Form.Item name="contact" rules={[{ required: true, message: 'Email or phone is required', whitespace: true, max: 100 }]}>
-          <Input placeholder="Email or phone" allowClear={true} maxLength={100} disabled={loading} />
+        {isGuest && <Form.Item name="contact" rules={[{ required: true, type: 'email', message: 'A valid email address is required', whitespace: true, max: 100 }]}>
+          <Input placeholder="your.email@sample.com" allowClear={true} maxLength={100} disabled={loading} />
         </Form.Item>}
         <Form.Item name="message" rules={[{ required: true, message: 'Message content is required', whitespace: true, max: 1000 }]}>
           <Input.TextArea autoSize={{ minRows: 3 }} allowClear={true} maxLength={1000} disabled={loading} placeholder="Enquiry, question or bug report." />

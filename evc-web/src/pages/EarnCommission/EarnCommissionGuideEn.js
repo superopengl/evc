@@ -54,10 +54,14 @@ const EarnCommissionGuideEn = props => {
       How do I use commission rewards?
     </Title>
     <Paragraph type="secondary">
-      You can apply for withdrawal (the minimum required withdrawal amount is 100USD). Or you can spend the commission rewards by purchasing a new Pro Member subscription, extending an existing one or upgrading your current subscription to another tier.
+    You can apply for withdrawal (the minimum required withdraw amount is 100USD). Or you can spend the commission rewards by purchasing a new Pro Member subscription, extending an existing one or upgrading your current subscription to another tier.
     <br />
       <Text type="danger">
-        * When you apply for commission withdrawal, you must fill out a commission withdrawal application form and provide the real personal identity and PayPal account. We will make the transaction after the application is approved.
+        * When the credit is in the full amount of monthly (29USD) or annual (319USD) subscription, you can use it to pay for your Pro Member correspondingly. 
+    </Text>
+    <br />
+      <Text type="danger">
+        * When you apply for commission withdrawal, you must fill out a commission withdrawal application form and provide the real personal identity and PayPal account. We will make the transaction after the application is approved. 
     </Text>
     </Paragraph>
   </>

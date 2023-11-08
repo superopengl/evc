@@ -57,7 +57,7 @@ export const HomeStockRadarArea = props => {
 
       </Space>
       <InnerContainer>
-        <StockRadarPage onItemClick={onSymbolClick} />
+        <StockRadarPage onItemClick={onSymbolClick} size={12}/>
       </InnerContainer>
     </Container>
   )

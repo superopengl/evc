@@ -192,11 +192,11 @@ const ProMemberPage = () => {
           type="success"
           icon={<InfoCircleOutlined />}
           showIcon
-          description={<FormattedMessage id="text.startTourAlert"/>}
+          description={<FormattedMessage id="text.startTourAlert" />}
           style={{ marginBottom: 30 }}
           action={
             <Button type="primary" onClick={() => setVisible(true)}>
-              <FormattedMessage id="text.startTour"/>
+              <FormattedMessage id="text.startTour" />
             </Button>
           }
         />
@@ -246,7 +246,9 @@ const ProMemberPage = () => {
                   <div style={{ marginTop: '30px' }} className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
                     <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                       <div className="ant-card-head-wrapper">
-                        <div className="ant-card-head-title">Next Report Date</div>
+                        <div className="ant-card-head-title">
+                          <FormattedMessage id="text.nextReportDate" />
+                        </div>
                       </div>
                     </div>
                     <div className="ant-card-body" style={{ height: '65px', overflow: 'auto' }}>
@@ -276,7 +278,10 @@ const ProMemberPage = () => {
                       <div className="ant-space ant-space-vertical" style={{ width: '100%' }} >
                         <div className="ant-space-item" style={{ marginBottom: '8px' }} id="tour-fair-value">
                           <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between' }}>
-                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Fair Value</span></div>
+                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
+                              <FormattedMessage id="text.fairValue" />
+
+                            </span></div>
                             <div className="ant-space-item">
                               <div className="ant-space ant-space-horizontal ant-space-align-center number">
                                 <div className="ant-space-item">
@@ -288,7 +293,9 @@ const ProMemberPage = () => {
                         </div>
                         <div className="ant-space-item" style={{ marginBottom: '8px' }}>
                           <div className="ant-space ant-space-horizontal ant-space-align-center" id="tour-support" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Support</span></div>
+                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
+                              <FormattedMessage id="text.support" />
+                            </span></div>
                             <div className="ant-space-item">
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                 <div className="ant-space ant-space-horizontal ant-space-align-center number">
@@ -312,7 +319,9 @@ const ProMemberPage = () => {
                         </div>
                         <div className="ant-space-item">
                           <div className="ant-space ant-space-horizontal ant-space-align-center" id="tour-resistance" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">Resistance</span></div>
+                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
+                              <FormattedMessage id="text.resistance" />
+                            </span></div>
                             <div className="ant-space-item">
                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                 <div className="ant-space ant-space-horizontal ant-space-align-center number">
@@ -355,7 +364,7 @@ const ProMemberPage = () => {
               <Card
                 size="large"
                 type="inner"
-                title="Option Put-Call Ratio"
+                title={<FormattedMessage id="text.optionPutCallRatio" />}
                 headStyle={{
                   color: 'rgb(0, 41, 61)',
                   fontSize: 14,
@@ -371,7 +380,9 @@ const ProMemberPage = () => {
               <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
-                    <div className="ant-card-head-title">Roster</div>
+                    <div className="ant-card-head-title">
+                      <FormattedMessage id="text.roster" />
+                    </div>
                   </div>
                 </div>
                 <div className="ant-card-body" style={{ height: '500px', overflow: 'auto' }}>
@@ -494,7 +505,9 @@ const ProMemberPage = () => {
               <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
-                    <div className="ant-card-head-title">Insider Transactions</div>
+                    <div className="ant-card-head-title">
+                      <FormattedMessage id="text.insiderTransactions" />
+                    </div>
                   </div>
                 </div>
                 <div className="ant-card-body" style={{ height: '500px', overflow: 'auto' }}>
@@ -504,19 +517,29 @@ const ProMemberPage = () => {
                         <div className="ant-space-item" style={{ marginBottom: '8px' }}>
                           <div className="ant-space ant-space-vertical" style={{ marginBottom: '24px' }}>
                             <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span>Grant, award, or other acquisition of securities from the company (such as an option)</div>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(51, 51, 51)' }}>A</span>
+                                <FormattedMessage id="text.insiderLegendA" />
+                              </div>
                             </div>
                             <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(59, 89, 153)' }}>P</span>Purchase of securities on an exchange or from another person</div>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(59, 89, 153)' }}>P</span>
+                                <FormattedMessage id="text.insiderLegendP" />
+                              </div>
                             </div>
                             <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(16, 142, 233)' }}>S</span>Sale of securities on an exchange or to another person</div>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(16, 142, 233)' }}>S</span>
+                                <FormattedMessage id="text.insiderLegendS" />
+                              </div>
                             </div>
                             <div className="ant-space-item" style={{ marginBottom: '8px' }}>
-                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(240, 80, 0)' }}>M</span>Exercise or conversion of derivative security received from the company (such as an option)</div>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(240, 80, 0)' }}>M</span>
+                                <FormattedMessage id="text.insiderLegendM" />
+                              </div>
                             </div>
                             <div className="ant-space-item">
-                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(135, 208, 104)' }}>G</span>Gift of securities by or to the insider</div>
+                              <div><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(135, 208, 104)' }}>G</span>
+                                <FormattedMessage id="text.insiderLegendG" />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -906,7 +929,9 @@ const ProMemberPage = () => {
               <div className="ant-card ant-card-middle ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
-                    <div className="ant-card-head-title">News</div>
+                    <div className="ant-card-head-title">
+                      <FormattedMessage id="text.news" />
+                    </div>
                   </div>
                 </div>
                 <div className="ant-card-body" style={{ height: '700px', overflow: 'auto' }}>

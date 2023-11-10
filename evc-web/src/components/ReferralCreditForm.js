@@ -103,7 +103,7 @@ const ReferralCreditForm = (props) => {
     <Container>
       <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch' }}>
         <div>
-          <Title level={4}>{subscriptionDef.find(s => s.key === (currentSubscription?.type || 'free'))?.title}</Title>
+          <Title level={4}>{subscriptionDef.find(s => s.key === (currentSubscription?.currentType || 'free'))?.title}</Title>
         </div>
         {currentSubscription && <Space>
           <TimeAgo value={currentSubscription.start} />

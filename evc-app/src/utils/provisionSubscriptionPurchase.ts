@@ -43,7 +43,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
 
     const { start, end } = await getSubscriptionPeriod(tran, userId, subscriptionType);
 
-    const { totalCreditAmount, price } = await getNewSubscriptionPaymentInfo(userId, subscriptionType);
+    const { creditBalance, price } = await getNewSubscriptionPaymentInfo(userId, subscriptionType);
 
     const subscription = new Subscription();
     subscription.id = uuidv4();
@@ -58,6 +58,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
 
     let creditTransaction: UserCreditTransaction = null;
     if (paymentMethod === PaymentMethod.Credit) {
+      assert(price <= creditBalance, 400, 'No enough credit balance');
       creditTransaction = new UserCreditTransaction();
       creditTransaction.userId = userId;
       creditTransaction.amount = -1 * price;

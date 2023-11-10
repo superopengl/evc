@@ -141,8 +141,8 @@ const PaymentStepperWidget = (props) => {
           </Space>
         </div> */}
         <Space style={{alignItems: 'flex-start'}} size="middle">
-          <Text type="warning" style={{ fontSize: 28 }}><ExclamationCircleOutlined /></Text>
-          <Paragraph type="warning">
+          <Text type="danger" style={{ fontSize: 28, color: '#55B0D4' }}><ExclamationCircleOutlined /></Text>
+          <Paragraph type="secondary">
             <FormattedMessage id="text.noRefundAlert" />
           </Paragraph>
         </Space>

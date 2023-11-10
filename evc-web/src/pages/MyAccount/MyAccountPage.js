@@ -232,7 +232,11 @@ const MyAccountPage = (props) => {
             }
           >
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Paragraph type="secondary">You can earn <MoneyAmount value={account.referralCommission} /> for each referral after the referred user has purchased a plan. The credit can be used for future payment.</Paragraph>
+              <Paragraph type="secondary">
+              <FormattedMessage id="text.commissionBalanceDescription1" /><br/>
+              <FormattedMessage id="text.commissionBalanceDescription2" values={{amount: <MoneyAmount value={account.referralCommission * 29} />}}/><br/>
+                <FormattedMessage id="text.commissionBalanceDescription3" values={{amount: <MoneyAmount value={account.referralCommission * 319} />}}/>
+                </Paragraph>
 
               <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
               <FormattedMessage id="text.creditHistory" />

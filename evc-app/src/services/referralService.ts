@@ -4,6 +4,8 @@ import { User } from '../entity/User';
 import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
 import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
+import { SubscriptionType } from '../types/SubscriptionType';
+import { getSubscriptionPrice } from '../utils/getSubscriptionPrice';
 
 export async function getCurrentGlobalReferralCommission() {
   const globalPolicy = await getRepository(ReferralGlobalPolicy)
@@ -29,7 +31,7 @@ export async function getCurrentReferralAmountForReferrer(userId) {
   return await getCurrentGlobalReferralCommission();
 }
 
-export async function handleReferralCommissionWhenPaid(m: EntityManager, userId: string) {
+export async function handleReferralCommissionWhenPaid(m: EntityManager, userId: string, subscriptionType: SubscriptionType) {
   const user = await m.getRepository(User).findOne(userId);
   if (user.everPaid) {
     return;
@@ -39,12 +41,13 @@ export async function handleReferralCommissionWhenPaid(m: EntityManager, userId:
   const entitiesToSave: any[] = [user];
   const { referredBy: referrerUserId } = user;
   if (referrerUserId) {
-    const amount = await getCurrentReferralAmountForReferrer(referrerUserId);
-    if (amount > 0) {
+    const percentage = await getCurrentReferralAmountForReferrer(referrerUserId);
+    const subscriptionPrice = getSubscriptionPrice(subscriptionType);
+    if (percentage > 0) {
       const ubt = new UserCreditTransaction();
       ubt.referredUserId = userId;
       ubt.userId = referrerUserId;
-      ubt.amount = amount;
+      ubt.amount = percentage * subscriptionPrice;
       ubt.type = 'commission';
       entitiesToSave.push(ubt);
     }

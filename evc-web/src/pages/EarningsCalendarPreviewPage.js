@@ -4,6 +4,9 @@ import { Typography } from 'antd';
 import styled from 'styled-components';
 import EarningsCalendarPage from 'pages/AdminDashboard/EarningsCalendarPage';
 import { FormattedMessage } from 'react-intl';
+import loadable from '@loadable/component'
+
+const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 
 const { Title } = Typography;
 
@@ -32,24 +35,34 @@ max-width: 1600px;
 `;
 
 
-export const HomeEarningsCalendarArea = props => {
-  const { onSymbolClick } = props;
+export const EarningsCalendarPreviewPage = props => {
+  const [selectedSymbol, setSelectedSymbol] = React.useState();
+
+  const handleStockListSymbolClick = (symbol) => {
+    setSelectedSymbol(symbol);
+  }
+
   return (
     <Container>
       <Title><FormattedMessage id="menu.earningsCalendar" /></Title>
       <InnerContainer>
-        <EarningsCalendarPage onSymbolClick={onSymbolClick} height={700}/>
+        <EarningsCalendarPage onSymbolClick={handleStockListSymbolClick} height="100%"/>
       </InnerContainer>
+      <StockGuestPreviewDrawer
+      symbol={selectedSymbol}
+      visible={!!selectedSymbol}
+      onClose={() => setSelectedSymbol()}
+    />
     </Container>
   )
 }
 
-HomeEarningsCalendarArea.propTypes = {
+EarningsCalendarPreviewPage.propTypes = {
   onSymbolClick: PropTypes.func,
 };
 
-HomeEarningsCalendarArea.defaultProps = {
+EarningsCalendarPreviewPage.defaultProps = {
   onSymbolClick: () => { }
 };
 
-export default HomeEarningsCalendarArea;
+export default EarningsCalendarPreviewPage;

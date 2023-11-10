@@ -34,8 +34,8 @@ export const MemberOnlyPanel = (props) => {
   const isGuest = context.role === 'guest';
 
 return <StyledSpace>
-  <LockFilled />
-  <Text>{props.message}</Text>
+  
+  <Text><LockFilled /> {props.message}</Text>
   {isGuest && <Link to="/signup">
     <Button type="link">
       Click to Sign Up

@@ -27,13 +27,14 @@ import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import { from } from 'rxjs';
+import countryList from 'react-select-country-list'
 
 const { Text, Paragraph } = Typography;
+const countries = countryList();
 
 const ContainerStyled = styled.div`
 `;
 
-const subscriptionDefMap = keyBy(subscriptionDef, 'key');
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -78,9 +79,9 @@ const UserListPage = () => {
       render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />,
     },
     {
-      title: 'Subscription',
-      dataIndex: 'subscriptionType',
-      render: (value) => subscriptionDefMap[value]?.title
+      title: 'Country',
+      dataIndex: 'country',
+      render: (value) => value ? countries.getLabel(value) : null
     },
     {
       title: 'Role',
@@ -316,7 +317,7 @@ const UserListPage = () => {
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
-        <Space style={{marginTop: 16}}>
+        <Space style={{ marginTop: 16 }}>
           {subscriptionDef.map((x, i) => <CheckboxButton key={i}
             onChange={checked => handleSubscriptionChange(x.key, checked)}
             value={queryInfo.subscription.includes(x.key)}
@@ -334,7 +335,21 @@ const UserListPage = () => {
           // scroll={{x: 1000}}
           rowKey="id"
           loading={loading}
-          pagination={queryInfo}
+          pagination={{
+            current: queryInfo.current,
+            pageSize: queryInfo.size,
+            total: total,
+            showTotal: total => `Total ${total}`,
+            pageSizeOptions: [10, 30, 60],
+            showSizeChanger: true,
+            showQuickJumper: true,
+            disabled: loading,
+            onChange: handlePaginationChange,
+            onShowSizeChange: (page, size) => {
+              searchByQueryInfo({ ...queryInfo, page, size });
+            }
+
+          }}
         // pagination={queryInfo}
         // onChange={handleTableChange}
         // onRow={(record, index) => ({
@@ -343,22 +358,6 @@ const UserListPage = () => {
         //     setFormVisible(true);
         //   }
         // })}
-        />
-        <Pagination
-          current={queryInfo.page}
-          pageSize={queryInfo.size}
-          total={total}
-          defaultCurrent={queryInfo.page}
-          defaultPageSize={queryInfo.size}
-          pageSizeOptions={[10, 30, 60]}
-          showSizeChanger
-          showQuickJumper
-          showTotal={total => `Total ${total}`}
-          disabled={loading}
-          onChange={handlePaginationChange}
-          onShowSizeChange={(current, size) => {
-            searchByQueryInfo({ ...queryInfo, page: current, size });
-          }}
         />
       </Space>
       <Modal

@@ -333,7 +333,6 @@ export const createStock = handlerWrapper(async (req, res) => {
   assert(reqSymbol, 400, 'symbol is not specified');
 
   const companyName = reqCompany?.trim() || await getCompanyName(reqSymbol);
-  assert(companyName, 400, 'Missing company name.');
 
   const symbol = reqSymbol.toUpperCase();
   const logoTask = getStockLogoUrl(symbol);

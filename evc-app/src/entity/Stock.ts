@@ -6,7 +6,7 @@ export class Stock {
   @PrimaryColumn()
   symbol: string;
 
-  @Column()
+  @Column({ nullable: true })
   company: string;
 
   @Column({ nullable: true })

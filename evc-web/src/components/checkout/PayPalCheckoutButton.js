@@ -51,7 +51,7 @@ export const PayPalCheckoutButton = (props) => {
     notify.error('Error in PayPay checkout', err.message);
   }
 
-  return (<Loading loading={loading} message="Loading PayPay" style={{ minWidth: 240, width: '100%', marginLeft: 'auto', marginRight: 'auto' }}>
+  return (<Loading loading={loading} style={{ minWidth: 240, height: 80,  width: '100%', marginLeft: 'auto', marginRight: 'auto' }}>
     <PayPalButton
       // amount={amount}
       // currency={CURRENCY_USD}

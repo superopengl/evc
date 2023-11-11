@@ -39,7 +39,7 @@ export const subscriptionDef = [
       </DescriptionContainer>,
   },
   {
-    key: 'unlimited_monthly',
+    key: 'pro_member_monthly',
     title: <FormattedMessage id="text.proMemberMonthly" />,
     unit: <FormattedMessage id="text.proMemberMonthlyPriceUnit" />,
     price: 29,
@@ -61,7 +61,7 @@ export const subscriptionDef = [
     </DescriptionContainer>,
   },
   {
-    key: 'unlimited_yearly',
+    key: 'pro_member_yearly',
     title: <FormattedMessage id="text.proMemberAnnually" />,
     unit: <FormattedMessage id="text.proMemberAnnuallyPriceUnit" />,
     price: 319,

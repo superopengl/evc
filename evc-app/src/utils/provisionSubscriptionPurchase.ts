@@ -51,7 +51,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.type = subscriptionType;
     subscription.start = start;
     subscription.end = end;
-    subscription.recurring = paymentMethod !== PaymentMethod.Credit;
+    subscription.recurring = paymentMethod === PaymentMethod.Card;
     subscription.useCredit = paymentMethod === PaymentMethod.Credit;
     subscription.status = SubscriptionStatus.Provisioning;
     await tran.manager.save(subscription);

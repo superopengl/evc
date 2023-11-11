@@ -121,7 +121,7 @@
   "text.startTourAlert": "Pro会员，所有强大功能全部解锁，如何使用这些核心数据？（本页面所有数据均为模拟数据，仅供教程使用。）",
   "text.mostEmpty": "本数据在盘中交易开始前2小时关闭，请在盘中交易开启后查看更新。",
   "text.noRefundAlert": "EVC网站提供的信息数据为虚拟产品，会员订阅，不能申请退款，请谨慎下单！",
-  "text.payNow": "立即支付",
+  "text.payByCard": "信用卡支付",
   "text.payByCredit": "余额支付",
   "text.freeToPaidSuggestion": "请订阅付费会员，解锁所有核心数据查看权限",
   "text.creditBalance": "佣金余额",

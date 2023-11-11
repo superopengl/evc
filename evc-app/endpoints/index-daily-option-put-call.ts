@@ -5,6 +5,7 @@ import { start } from './jobStarter';
 import * as _ from 'lodash';
 import { getOptionPutCallHistory } from '../src/services/barchartService';
 import { UnusualOptionActivityEtfs } from '../src/entity/UnusualOptionActivityEtfs';
+import { OPTION_PUT_CALL_DEF } from './option-put-call-def';
 import moment = require('moment');
 
 async function upsertDatabase(tableEntity, rawData) {
@@ -75,17 +76,21 @@ function convertToEntity(data) {
 }
 
 
-const JOB_NAME = 'daily-uoa';
+const JOB_NAME = 'daily-opc';
 
 start(JOB_NAME, async () => {
   const list = [
     {
       type: 'index',
-      table: UnusualOptionActivityStock
+      table: UnusualOptionActivityStock,
+      symbols: ['$SPX', '$IUXX', '$DJX', '$VIX'],
+      path: '/stocks/quotes/$/options-history'
     },
     {
       type: 'etfs',
-      table: UnusualOptionActivityEtfs
+      table: UnusualOptionActivityEtfs,
+      symbols: [],
+      path: '/etfs-funds/quotes/$/options-history'
     },
     {
       type: 'nasdaq',

@@ -104,14 +104,14 @@ const PaymentStepperWidget = (props) => {
   // }
 
   const handleStepChange = current => {
-    if(paymentDetail?.price <= paymentDetail?.creditBalance) {
+    if (paymentDetail?.price <= paymentDetail?.creditBalance) {
       setCurrentStep(current);
       return;
     }
 
     Modal.error({
       title: '',
-      content: intl.formatMessage({id: 'text.noEnoughCredit'}),
+      content: intl.formatMessage({ id: 'text.noEnoughCredit' }),
       centered: true,
     })
   }
@@ -119,35 +119,35 @@ const PaymentStepperWidget = (props) => {
   const stepDef = [
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Space style={{alignItems: 'flex-start'}} size="middle">
+        <Space style={{ alignItems: 'flex-start' }} size="middle">
           <Text type="danger" style={{ fontSize: 28, color: '#55B0D4' }}><ExclamationCircleOutlined /></Text>
           <Paragraph type="secondary">
             <FormattedMessage id="text.noRefundAlert" />
           </Paragraph>
         </Space>
-        <Row gutter={20}>
-          <Col span={12}>
-            <Button type="primary"
-              block
-              size="large"
-              style={{ height: 100 }}
-              onClick={() => handleStepChange(1)}>
-              <FormattedMessage id="text.payNow" />
-            </Button>
-          </Col>
-          <Col span={12}>
-            <Button type="primary"
-              block
-              ghost
-              size="large"
-              style={{ height: 100 }}
-              disabled={paymentDetail?.creditBalance < paymentDetail?.price}
-              onClick={() => handleStepChange(2)}>
-              <FormattedMessage id="text.payByCredit" />
-              {paymentDetail?.creditBalance < paymentDetail?.price && <><br/><Text type="warning"><small>(<FormattedMessage id="text.noEnoughCredit" />)</small></Text></>}
-            </Button>
-          </Col>
-        </Row>
+        <Button type="primary"
+          block
+          size="large"
+          onClick={() => handleStepChange(1)}>
+          <div style={{ fontWeight: 800, fontStyle: 'italic' }}>
+            <FormattedMessage id="text.payByCard" />
+            </div>
+        </Button>
+        <PayPalCheckoutButton
+          onProvision={() => handleProvisionSubscription('paypal')}
+          onCommit={handleSuccessfulPayment}
+          onLoading={setLoading}
+        />
+        <Button type="primary"
+          block
+          size="large"
+          disabled={paymentDetail?.creditBalance < paymentDetail?.price}
+          style={{position: 'relative', top: -4}}
+          onClick={() => handleStepChange(2)}>
+          <div style={{ fontWeight: 800, fontStyle: 'italic', color: 'black' }}>
+            <FormattedMessage id={paymentDetail?.creditBalance < paymentDetail?.price ? 'text.noEnoughCredit' : 'text.payByCredit'} />
+          </div>
+        </Button>
       </Space>
     },
     {
@@ -185,12 +185,7 @@ const PaymentStepperWidget = (props) => {
           onCommit={handleSuccessfulPayment}
           onLoading={setLoading}
         />} */}
-        <Divider><Text type="secondary"><small>or</small></Text></Divider>
-        <PayPalCheckoutButton
-          onProvision={() => handleProvisionSubscription('paypal')}
-          onCommit={handleSuccessfulPayment}
-          onLoading={setLoading}
-        />
+        {/* <Divider><Text type="secondary"><small>or</small></Text></Divider> */}
         {/* <Divider />
         <Button size="large" block icon={<LeftOutlined />} onClick={() => handleStepChange(0)}>Back to Options</Button> */}
       </Space>

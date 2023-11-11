@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 import { CreditCardOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
+import { FormattedMessage } from 'react-intl';
 
 const StripeCardPaymentForm = (props) => {
 
@@ -110,17 +111,21 @@ const StripeCardPaymentForm = (props) => {
         </div>
       </Space>
       <Button type="primary" size="large" htmlType="submit"
-        icon={<CreditCardOutlined />}
-        block 
-        disabled={loading || !isInfoComplete} loading={loading} style={{ fontWeight: 800, fontStyle: 'italic' }}>
-        Pay by Card
-        </Button>
+        style={{ marginTop: 10 }}
+        // icon={<CreditCardOutlined />}
+        block
+        disabled={loading || !isInfoComplete} loading={loading} >
+        <div style={{ fontWeight: 800, fontStyle: 'italic' }}>
+          <FormattedMessage id="text.payByCard" />
+        </div>
+      </Button>
+
     </form>
   )
 }
 
 const StripeCardPaymentWidget = props => (<Elements stripe={stripePromise}>
-  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} onLoading={props.onLoading}/>
+  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} onLoading={props.onLoading} />
 </Elements>)
 
 

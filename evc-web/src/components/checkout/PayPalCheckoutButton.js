@@ -64,15 +64,17 @@ export const PayPalCheckoutButton = (props) => {
       // onApprove={handleApprove}
       style={{
         layout: 'vertical',
-        color: 'blue',
+        color: 'gold',
         shape: 'rect',
         label: 'paypal',
         height: 40
       }}
+      
       options={{
         vault: true,
         clientId: PAYPAL_CLIENT_ID,
         disableFunding: 'card',
+        locale: 'en_US',
         // currency: CURRENCY,
         // intent: 'subscription'
       }}

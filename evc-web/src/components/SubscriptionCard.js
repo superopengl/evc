@@ -62,7 +62,7 @@ export const SubscriptionCard = props => {
         title={<div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#57BB60' }}><sup><small>$</small></sup> {price}</Text> */}
           <div>
-            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }}  value={price} />
+            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px', fontWeight: 500 }}  value={price} />
             </div>
           <Text style={{fontSize: 14}} type="secondary">{unit}</Text>
           <Divider />

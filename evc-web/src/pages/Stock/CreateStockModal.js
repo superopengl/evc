@@ -14,7 +14,7 @@ const { Link } = Typography;
 
 const CreateStockModal = props => {
   const { visible, onOk, onCancel } = props;
-  const [sending, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
   const [stockTags, setStockTags] = React.useState([]);
   const context = React.useContext(GlobalContext);
@@ -37,6 +37,9 @@ const CreateStockModal = props => {
 
   React.useEffect(() => {
     setModalVisible(visible);
+    if (visible) {
+      setLoading(false);
+    }
   }, [visible])
 
 
@@ -45,13 +48,13 @@ const CreateStockModal = props => {
   }
 
   const handleSubmit = async values => {
-    if (sending) {
+    if (loading) {
       return;
     }
 
     try {
       setLoading(true);
-      const { symbol } = values;
+      const symbol = values.symbol.toUpperCase();
       await createStock(values);
       onOk();
 
@@ -80,12 +83,14 @@ const CreateStockModal = props => {
         <Form.Item label="Symbol" name="symbol"
           rules={[{ required: true, validator: validateExsitsSymbol, whitespace: true, max: 10 }]}
         >
-          <Input placeholder="Stock symbol" allowClear={true} maxLength="10" disabled={sending} autoFocus={true} />
+          <Input placeholder="Stock symbol"
+            allowClear={true}
+            maxLength="10" disabled={loading} autoFocus={true} />
         </Form.Item>
         <Form.Item label="Company Name" name="company" rules={[{ required: false, max: 100 }]}
           extra="If empty, it will use AlphaVantage API to find the company name."
         >
-          <Input placeholder="Company name" maxLength="100" disabled={sending} />
+          <Input placeholder="Company name" maxLength="100" disabled={loading} />
         </Form.Item>
         <Form.Item label="Tags" name="tags">
           <TagSelect tags={stockTags} onSave={saveStockTag} readonly={false} />
@@ -93,7 +98,7 @@ const CreateStockModal = props => {
         <Form.Item>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button block onClick={onCancel}>Cancel</Button>
-            <Button block type="primary" htmlType="submit" disabled={sending}>Add Stock</Button>
+            <Button block type="primary" htmlType="submit" disabled={loading}>Add Stock</Button>
           </Space>
         </Form.Item>
       </Form>

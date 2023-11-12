@@ -2,6 +2,7 @@ import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { Stock } from '../Stock';
 import { StockComputedPe90 } from './StockComputedPe90';
 import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistoricalTtmEps';
+import { StockComputedPe365 } from './StockComputedPe365';
 
 @ViewEntity({
   materialized: true,
@@ -17,7 +18,7 @@ import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistorica
           'UNNEST(ARRAY["reportDate", "reportDate" + 30, "reportDate" + 60]) as "reportDate"'
         ]),
         'eps', 's.symbol = eps.symbol')
-      .leftJoin(StockComputedPe90, 'pe', 's.symbol = pe.symbol AND pe.date <= eps."reportDate"')
+      .leftJoin(StockComputedPe365, 'pe', 's.symbol = pe.symbol AND pe.date <= eps."reportDate"')
       .where('eps."reportDate" <= CURRENT_DATE')
       .select([
         's.symbol as symbol',

@@ -8,6 +8,7 @@ import { initializeConfig } from './utils/initializeConfig';
 import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
+import { StockComputedPe365 } from './entity/views/StockComputedPe365';
 
 export async function connectDatabase(shouldSyncSchema = false) {
   const connection = await createConnection();
@@ -77,6 +78,11 @@ async function createIndexOnMaterilializedView() {
     },
     {
       tableEntity: StockComputedPe90,
+      fields: ['symbol', 'date'],
+      unique: true,
+    },
+    {
+      tableEntity: StockComputedPe365,
       fields: ['symbol', 'date'],
       unique: true,
     },

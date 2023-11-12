@@ -1,6 +1,4 @@
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
-import { Role } from '../../types/Role';
-import { StockDailyPutCallRatio } from '../StockDailyPutCallRatio';
 import { User } from '../User';
 import { CommissionGlobalPolicy } from '../CommissionGlobalPolicy';
 import { CommissionUserPolicy } from '../CommissionUserPolicy';

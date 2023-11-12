@@ -94,19 +94,28 @@ const StripeCardPaymentForm = (props) => {
         <div style={{ width: 270 }}>
           <CardNumberElement
             onChange={handleCardNumberChange}
-            options={options}
+            options={{
+              ...options,
+              placeholder: '1234 1234 1234 1234'
+            }}
           />
         </div>
         <div style={{ width: 90 }}>
           <CardExpiryElement
             onChange={handleCardExpiryChange}
-            options={options}
+            options={{
+              ...options,
+              placeholder: 'MM / YY'
+            }}
           />
         </div>
         <div style={{ width: 90 }}>
           <CardCvcElement
             onChange={handleCardCvcChange}
-            options={options}
+            options={{
+              ...options,
+              placeholder: 'CVC'
+            }}
           />
         </div>
       </Space>

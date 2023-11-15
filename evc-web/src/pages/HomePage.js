@@ -16,6 +16,7 @@ import { IoLanguage } from 'react-icons/io5';
 import { FormattedMessage } from 'react-intl';
 import smoothscroll from 'smoothscroll-polyfill';
 import { ContactWidget } from 'components/ContactWidget';
+import { scrollToElement } from '../util/scrollToElement';
 
 smoothscroll.polyfill();
 
@@ -75,15 +76,6 @@ const StyledLayout = styled(ProLayout)`
   font-weight: 500;
 }
 `;
-
-const scrollToElement = (selector) => {
-  document.querySelector(selector)?.scrollIntoView({
-    behavior: 'smooth',
-    block: "start",
-    inline: "nearest"
-  });
-}
-
 
 const HomePage = (props) => {
 

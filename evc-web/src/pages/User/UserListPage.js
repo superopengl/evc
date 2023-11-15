@@ -28,6 +28,7 @@ import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import { from } from 'rxjs';
 import countryList from 'react-select-country-list'
+import { getSubscriptionName } from 'util/getSubscriptionName';
 
 const { Text, Paragraph } = Typography;
 const countries = countryList();
@@ -89,10 +90,15 @@ const UserListPage = () => {
       render: (text) => text
     },
     {
-      title: 'Login Type',
-      dataIndex: 'loginType',
-      render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+      title: 'Subscription',
+      dataIndex: 'subscription',
+      render: (value, item) => item.role === 'admin' ? null : getSubscriptionName(value)
     },
+    // {
+    //   title: 'Login Type',
+    //   dataIndex: 'loginType',
+    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+    // },
     {
       title: 'Tags',
       dataIndex: 'tags',
@@ -393,7 +399,7 @@ const UserListPage = () => {
         width={500}
       >
         <Paragraph>System will send an invitation to the email address if the email address hasn't signed up before.</Paragraph>
-        <Form layout="vertical" onFinish={handleInviteUser}>
+        <Form layout="vertical" onFinish={handleInviteUser} initialValues={{ role: 'free' }}>
           <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
             <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
           </Form.Item>

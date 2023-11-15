@@ -120,16 +120,7 @@ const PaymentStepperWidget = (props) => {
   // }
 
   const handleStepChange = current => {
-    if (paymentDetail?.price <= paymentDetail?.creditBalance) {
-      setCurrentStep(current);
-      return;
-    }
-
-    Modal.error({
-      title: '',
-      content: intl.formatMessage({ id: 'text.noEnoughCredit' }),
-      centered: true,
-    })
+    setCurrentStep(current);
   }
 
   const stepDef = [
@@ -147,7 +138,7 @@ const PaymentStepperWidget = (props) => {
           onClick={() => handleStepChange(1)}>
           <div style={{ fontWeight: 700, fontStyle: 'italic' }}>
             <FormattedMessage id="text.payByCard" />
-            </div>
+          </div>
         </CardButton>
         <PayPalCheckoutButton
           onProvision={() => handleProvisionSubscription('paypal')}
@@ -158,7 +149,7 @@ const PaymentStepperWidget = (props) => {
           block
           size="large"
           disabled={paymentDetail?.creditBalance < paymentDetail?.price}
-          style={{position: 'relative', top: -4}}
+          style={{ position: 'relative', top: -4 }}
           onClick={() => handleStepChange(2)}>
           <div style={{ fontWeight: 700, fontStyle: 'italic', color: 'black' }}>
             <FormattedMessage id={paymentDetail?.creditBalance < paymentDetail?.price ? 'text.noEnoughCredit' : 'text.payByCredit'} />

@@ -61,7 +61,7 @@ async function initialize() {
       try {
         updateLastPriceInDatabase(list);
       } catch (err) {
-        console.error('Task sse saveLastPrice', errorToJson(err));
+        console.error('Task sse saveLastPrice', err);
       }
     });
 }
@@ -107,7 +107,7 @@ function handleEventMessage(eventMessage: string) {
       publishPriceEventsToClient(priceList);
     }
   } catch (err) {
-    console.error('Task', 'sse', 'message error', errorToJson(err));
+    console.error('Task', 'sse', 'message error', err);
   }
 }
 
@@ -194,7 +194,7 @@ export async function startEmailDaemon() {
           okCounter++;
           await sleep(sleepTimeMs);
         } catch (err) {
-          console.log(`Failed to send out email ${task.id}`, errorToJson(err));
+          console.log(`Failed to send out email ${task.id}`, err);
           await getRepository(EmailSentOutTask).increment({id: task.id}, 'failedCount', 1);
         }
       }
@@ -212,7 +212,7 @@ start(JOB_NAME, async () => {
 
     await Promise.all([priceTask, emailTask]);
   } catch (e) {
-    console.error('Fatal error', errorToJson(e));
+    console.error('Fatal error', e);
     process.exit(1);
   }
 }, { daemon: true });

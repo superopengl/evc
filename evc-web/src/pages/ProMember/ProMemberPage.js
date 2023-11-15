@@ -20,6 +20,7 @@ const Container = styled.div`
 margin: 0;
 padding: 30px 0;
 background-color: #f0f2f5;
+position:relative;
 
 img {
   width: 200px;
@@ -31,6 +32,13 @@ img {
   .ant-card-head-title {
     color: rgba(255,255,255,0.9);
   }
+}
+
+.current-element {
+  filter: brightness(1);
+  width: 100%;
+  outline: 4px solid red;
+  border-radius: 4px;
 }
 `;
 
@@ -191,7 +199,7 @@ const ProMemberPage = (props) => {
   React.useEffect(() => {
     const stepConfig = tourConfig[current];
     const selector = stepConfig?.selector;
-    if(selector) {
+    if (selector) {
       scrollToElement(selector, {
         block: 'end',
         inline: 'center'
@@ -269,6 +277,7 @@ const ProMemberPage = (props) => {
     },
     {
       selector: '#tour-alert',
+      placement: 'bottomRight',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.alertTitle" />
@@ -292,26 +301,32 @@ const ProMemberPage = (props) => {
     return <Popover
       visible={step === current}
       arrowPointAtCenter={true}
-      overlayStyle={{ maxWidth: 600 }}
-      content={<Space direction="vertical" onClick={() => setCurrent(current + 1)}>
-        {tourConfig[step].content}
+      overlayStyle={{ maxWidth: 600, width: 'calc(100vw - 20px)', marginLeft: 10, marginRight: 10 }}
+      placement={tourConfig[step].placement}
+      content={<Space direction="vertical">
+        <div onClick={() => setCurrent(current + 1)}>
+          {tourConfig[step].content}
+        </div>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Button type="link" onClick={() => setCurrent(current - 1)} disabled={current <= 0} icon={<LeftOutlined />}></Button>
           <Button type="link" onClick={() => setCurrent(current + 1)} disabled={current >= tourConfig.length - 1} icon={<RightOutlined />}></Button>
         </Space>
       </Space>}
     >
-      {children}
+      {step === current ? <div className="current-element">
+        {children}
+      </div> : children}
     </Popover>
   }
 
 
   const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
+  const showingTour = 0 <= current && current < tourConfig.length - 1;
 
   return (
     <Container>
       <Modal
-        style={{maxWidth: 400}}
+        style={{ maxWidth: 400 }}
         visible={current === tourConfig.length - 1}
         maskClosable={true}
         destroyOnClose={true}
@@ -354,17 +369,19 @@ const ProMemberPage = (props) => {
                   </div>
                 </span>
               </div>
-              <PopoverStep step={5}>
-                <span className="ant-page-header-heading-extra" id="tour-alert">
-                  <StockNoticeButton value={true} />
+              <span className="ant-page-header-heading-extra">
+                <PopoverStep step={5}>
+                  <Space id="tour-alert">
+                    <StockNoticeButton value={true} />
 
-                  <span role="img" aria-label="star" style={{ fontSize: '20px', color: 'rgb(250, 219, 20)' }} tabIndex={-1} className="anticon anticon-star">
-                    <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                      <path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" />
-                    </svg>
-                  </span>
-                </span>
-              </PopoverStep>
+                    <span role="img" aria-label="star" style={{ fontSize: '20px', color: 'rgb(250, 219, 20)' }} tabIndex={-1} className="anticon anticon-star">
+                      <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                        <path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" />
+                      </svg>
+                    </span>
+                  </Space>
+                </PopoverStep>
+              </span>
             </div>
             <div className="ant-page-header-content"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Dow Jones 30</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq Composite</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 1000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 3000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500 Information Technology</span></div>
           </div>

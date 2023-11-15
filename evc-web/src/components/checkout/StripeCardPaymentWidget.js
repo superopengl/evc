@@ -3,9 +3,24 @@ import { Space, Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
-import { CreditCardOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
 import { FormattedMessage } from 'react-intl';
+import styled from 'styled-components';
+
+const CardButton = styled(Button)`
+    border-color: #55B0D4;
+    background-color: #55B0D4;
+
+  &:hover {
+    border-color: #55B0D4;
+    background-color: rgba(85,176,212,0.7);
+  }
+
+  &:focus {
+    border-color: #55B0D4;
+    background-color: rgba(85,176,212,0.7);
+  }
+`;
 
 const StripeCardPaymentForm = (props) => {
 
@@ -75,7 +90,7 @@ const StripeCardPaymentForm = (props) => {
     style: {
       base: {
         fontSize: '16px',
-        color: '#3e9448',
+        // color: '#55B0D4',
         textAlign: 'center',
         '::placeholder': {
           color: 'rgba(0,0,0,0.2)',
@@ -119,7 +134,7 @@ const StripeCardPaymentForm = (props) => {
           />
         </div>
       </Space>
-      <Button type="primary" size="large" htmlType="submit"
+      <CardButton type="primary" size="large" htmlType="submit"
         style={{ marginTop: 10 }}
         // icon={<CreditCardOutlined />}
         block
@@ -127,7 +142,7 @@ const StripeCardPaymentForm = (props) => {
         <div style={{ fontWeight: 800, fontStyle: 'italic' }}>
           <FormattedMessage id="text.payByCard" />
         </div>
-      </Button>
+      </CardButton>
 
     </form>
   )

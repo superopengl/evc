@@ -27,8 +27,24 @@ import { notify } from 'util/notify';
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
+import styled from 'styled-components';
 
 const { Title, Text, Paragraph } = Typography;
+
+const CardButton = styled(Button)`
+    border-color: #55B0D4;
+    background-color: #55B0D4;
+
+  &:hover {
+    border-color: #55B0D4;
+    background-color: rgba(85,176,212,0.7);
+  }
+
+  &:focus {
+    border-color: #55B0D4;
+    background-color: rgba(85,176,212,0.7);
+  }
+`;
 
 const PaymentStepperWidget = (props) => {
 
@@ -125,14 +141,14 @@ const PaymentStepperWidget = (props) => {
             <FormattedMessage id="text.noRefundAlert" />
           </Paragraph>
         </Space>
-        <Button type="primary"
+        <CardButton type="primary"
           block
           size="large"
           onClick={() => handleStepChange(1)}>
-          <div style={{ fontWeight: 800, fontStyle: 'italic' }}>
+          <div style={{ fontWeight: 700, fontStyle: 'italic' }}>
             <FormattedMessage id="text.payByCard" />
             </div>
-        </Button>
+        </CardButton>
         <PayPalCheckoutButton
           onProvision={() => handleProvisionSubscription('paypal')}
           onCommit={handleSuccessfulPayment}
@@ -144,7 +160,7 @@ const PaymentStepperWidget = (props) => {
           disabled={paymentDetail?.creditBalance < paymentDetail?.price}
           style={{position: 'relative', top: -4}}
           onClick={() => handleStepChange(2)}>
-          <div style={{ fontWeight: 800, fontStyle: 'italic', color: 'black' }}>
+          <div style={{ fontWeight: 700, fontStyle: 'italic', color: 'black' }}>
             <FormattedMessage id={paymentDetail?.creditBalance < paymentDetail?.price ? 'text.noEnoughCredit' : 'text.payByCredit'} />
           </div>
         </Button>

@@ -478,7 +478,6 @@ export const getStockInsiderTransaction = handlerWrapper(async (req, res) => {
       'transactionShares',
       'transactionValue',
     ]))
-    .reverse()
     .value();
 
   res.set('Cache-Control', `public, max-age=3600`);

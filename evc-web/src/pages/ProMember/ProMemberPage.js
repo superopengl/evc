@@ -201,7 +201,7 @@ const ProMemberPage = (props) => {
     const selector = stepConfig?.selector;
     if (selector) {
       scrollToElement(selector, {
-        block: 'end',
+        block: stepConfig.scroll,
         inline: 'center'
       });
     }
@@ -210,6 +210,7 @@ const ProMemberPage = (props) => {
   const tourConfig = [
     {
       selector: '#tour-fair-value',
+      scroll: 'center',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.fairValueTitle" />
@@ -224,6 +225,7 @@ const ProMemberPage = (props) => {
     },
     {
       selector: '#tour-support',
+      scroll: 'center',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.supportTitle" />
@@ -238,6 +240,7 @@ const ProMemberPage = (props) => {
     },
     {
       selector: '#tour-resistance',
+      scroll: 'center',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.resistanceTitle" />
@@ -252,6 +255,7 @@ const ProMemberPage = (props) => {
     },
     {
       selector: '#tour-putcall',
+      scroll: 'center',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.putCallTitle" />
@@ -266,6 +270,7 @@ const ProMemberPage = (props) => {
     },
     {
       selector: '#tour-insider',
+      scroll: 'start',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.insiderTitle" />
@@ -278,6 +283,7 @@ const ProMemberPage = (props) => {
     {
       selector: '#tour-alert',
       placement: 'bottomRight',
+      scroll: 'center',
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.alertTitle" />
@@ -326,7 +332,7 @@ const ProMemberPage = (props) => {
   return (
     <Container>
       <Modal
-        style={{ maxWidth: 400 }}
+        style={{ maxWidth: 'calc(100vw - 20px)', width: 400 }}
         visible={current === tourConfig.length - 1}
         maskClosable={true}
         destroyOnClose={true}

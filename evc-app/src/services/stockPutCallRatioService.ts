@@ -1,5 +1,5 @@
 import { getManager } from 'typeorm';
-import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
+import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 
 
 export type StockAdvancedStatsInfo = {
@@ -12,14 +12,14 @@ export type StockAdvancedStatsInfo = {
   rawResponse: any;
 }
 
-export async function syncManyStockPutCallRatio(info: StockAdvancedStatsInfo[]) {
+export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) {
   const entites = info.map(item => {
     const { symbol, putCallRatio, beta, peRatio, pegRatio, date } = item;
     if (!putCallRatio || !date) {
       return null;
     }
 
-    const entity = new StockDailyPutCallRatio();
+    const entity = new StockDailyAdvancedStat();
     entity.symbol = symbol;
     entity.putCallRatio = putCallRatio;
     entity.beta = beta;
@@ -32,7 +32,7 @@ export async function syncManyStockPutCallRatio(info: StockAdvancedStatsInfo[]) 
   await getManager()
     .createQueryBuilder()
     .insert()
-    .into(StockDailyPutCallRatio)
+    .into(StockDailyAdvancedStat)
     .values(entites)
     .orIgnore()
     .execute();

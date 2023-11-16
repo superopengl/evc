@@ -199,7 +199,10 @@ const WalkthroughTour = withRouter((props) => {
 });
 
 const PutCallDummyChart = () => {
-  const data = putCallData;
+  const data = putCallData.map(x => ({
+    ...x,
+    value: +(x.value.toFixed(2))
+  }));
 
   const config = {
     data: data,

@@ -186,7 +186,7 @@ const ReferralGlobalPolicyListPage = () => {
 
   const calendarEvents = list.map((a, i) => ({
     id: i,
-    title: `${a.description} ($${a.amount.toFixed(2)})${a.active ? ' Active' : ''}`,
+    title: `${a.description}${a.active ? ' Active' : ''}`,
     start: moment(a.start).toDate(),
     end: moment(a.end).toDate(),
     allDay: true

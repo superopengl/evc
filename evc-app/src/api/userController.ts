@@ -191,7 +191,7 @@ export const listMyCreditHistory = handlerWrapper(async (req, res) => {
   const list = await getRepository(UserCreditTransaction)
     .createQueryBuilder('uc')
     .where('uc."userId" = :id', { id })
-    .andWhere('uc.amount != 0')
+    // .andWhere('uc.amount != 0')
     .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('uc."createdAt"', 'DESC')

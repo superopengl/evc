@@ -43,14 +43,12 @@ export async function handleReferralCommissionWhenPaid(m: EntityManager, userId:
   if (referrerUserId) {
     const percentage = await getCurrentReferralAmountForReferrer(referrerUserId);
     const subscriptionPrice = getSubscriptionPrice(subscriptionType);
-    if (percentage > 0) {
-      const ubt = new UserCreditTransaction();
-      ubt.referredUserId = userId;
-      ubt.userId = referrerUserId;
-      ubt.amount = percentage * subscriptionPrice;
-      ubt.type = 'commission';
-      entitiesToSave.push(ubt);
-    }
+    const ubt = new UserCreditTransaction();
+    ubt.referredUserId = userId;
+    ubt.userId = referrerUserId;
+    ubt.amount = percentage * subscriptionPrice;
+    ubt.type = 'commission';
+    entitiesToSave.push(ubt);
   }
 
   await m.save(entitiesToSave);

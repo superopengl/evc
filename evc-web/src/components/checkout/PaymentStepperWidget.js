@@ -151,8 +151,10 @@ const PaymentStepperWidget = (props) => {
           disabled={paymentDetail?.creditBalance < paymentDetail?.price}
           style={{ position: 'relative', top: -4 }}
           onClick={() => handleStepChange(2)}>
-          <div style={{ fontWeight: 700, fontStyle: 'italic', color: 'black' }}>
-            <FormattedMessage id={paymentDetail?.creditBalance < paymentDetail?.price ? 'text.noEnoughCredit' : 'text.payByCredit'} />
+          <div style={{ fontWeight: 700, fontStyle: 'italic' }}>
+            <Text type={paymentDetail?.creditBalance < paymentDetail?.price ? 'secondary' : null}>
+              <FormattedMessage id={paymentDetail?.creditBalance < paymentDetail?.price ? 'text.noEnoughCredit' : 'text.payByCredit'} />
+            </Text>
           </div>
         </Button>
       </Space>

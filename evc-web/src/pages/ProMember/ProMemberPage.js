@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Space, Modal } from 'antd';
+import { Alert, Button, Card, Space, Modal, Image, Row, Col } from 'antd';
 import React from 'react';
 import { Typography } from 'antd';
 import styled from 'styled-components';
@@ -11,6 +11,12 @@ import putCallData from './putCallData';
 import { FormattedMessage } from 'react-intl';
 import { useMediaQuery } from 'react-responsive'
 import Joyride from 'react-joyride';
+import {
+  BarChartOutlined,
+  LineChartOutlined,
+} from '@ant-design/icons';
+import ReactDOM from "react-dom";
+
 
 const { Paragraph, Text } = Typography;
 
@@ -42,7 +48,7 @@ img {
 
 const WalkthroughTour = withRouter((props) => {
 
-  const {visible : visibleProp, onClose, onComplete} = props;
+  const { visible: visibleProp, onClose, onComplete } = props;
 
   const [visible, setVisible] = React.useState(visibleProp);
 
@@ -143,7 +149,7 @@ const WalkthroughTour = withRouter((props) => {
   ];
 
   const handleTourStepChange = data => {
-    const {action, index} = data;
+    const { action, index } = data;
     switch (action) {
       case 'reset': {
         onComplete();
@@ -156,7 +162,7 @@ const WalkthroughTour = withRouter((props) => {
         onClose();
         break;
       }
-      default: 
+      default:
         break;
     }
   }
@@ -182,7 +188,7 @@ const WalkthroughTour = withRouter((props) => {
         // width: 900,
         zIndex: 1000,
       },
-      tooltipContainer : {
+      tooltipContainer: {
         textAlign: 'left'
       },
       tooltip: {
@@ -217,12 +223,74 @@ const PutCallDummyChart = () => {
 const ProMemberPage = (props) => {
   const [visible, setVisible] = React.useState(false);
   const [signUpVisible, setSignUpVisible] = React.useState(false);
+  const [stockChartVisible, setStockChartVisible] = React.useState(false);
+  const [putCallChartVisible, setPutCallChartVisible] = React.useState(false);
 
   const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
+  const showImage = showInlineStockChart;
+  const showBigImage = useMediaQuery({ query: '(min-width: 876px)' });
+  const superNarrow = useMediaQuery({ query: '(max-width: 465px)' });
+
+  const NewsImage = styled(Image)`
+  display: ${showImage ? 'inline-block' : 'none'};
+  width: ${showBigImage ? 200 : 100}px !important;
+  cursor: pointer;
+  `;
+
+  const handleShowStockChart = () => {
+    ReactDOM.unstable_batchedUpdates(() => {
+      setStockChartVisible(true);
+      setPutCallChartVisible(false);
+    });
+  }
+
+  const handleShowPutCallRatioChart = () => {
+    ReactDOM.unstable_batchedUpdates(() => {
+      setStockChartVisible(false);
+      setPutCallChartVisible(true);
+    });
+  }
 
   return (
     <Container>
       <WalkthroughTour visible={visible} onClose={() => setVisible(false)} onComplete={() => setSignUpVisible(true)} />
+      <Modal
+        visible={stockChartVisible}
+        title="EVCT"
+        onOk={() => setStockChartVisible(false)}
+        onCancel={() => setStockChartVisible(false)}
+        closable={true}
+        destroyOnClose={true}
+        maskClosable={true}
+        footer={null}
+        width="100vw"
+        centered
+        bodyStyle={{ padding: 0 }}
+      >
+        <div style={{ height: '649px', minWidth: '400px' }}>
+          <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
+            <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
+              <div style={{ width: '100%', height: '100%', background: 'transparent', padding: '0 !important' }}>
+                <iframe id="tradingview_ad891" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_ad891&symbol=AAPL&interval=D&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=F1F3F6&studies=%5B%5D&hideideas=1&theme=Light&style=1&timezone=America%2FNew_York&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=easyvaluecheck.com&utm_medium=widget&utm_campaign=chart&utm_term=AAPL" style={{ width: '100%', height: '100%', margin: '0 !important', padding: '0 !important' }} allowTransparency="true" scrolling="no" allowFullScreen frameBorder={0} />
+              </div>
+            </div>
+          </article>
+        </div>
+      </Modal>
+      <Modal
+        visible={putCallChartVisible}
+        title="EVCT"
+        onOk={() => setPutCallChartVisible(false)}
+        onCancel={() => setPutCallChartVisible(false)}
+        closable={true}
+        maskClosable={true}
+        destroyOnClose={true}
+        footer={null}
+        width="100vw"
+        centered
+      >
+        <PutCallDummyChart />
+      </Modal>
       <Modal
         style={{ maxWidth: 'calc(100vw - 20px)', width: 300 }}
         width={340}
@@ -419,7 +487,7 @@ const ProMemberPage = (props) => {
               </div>
             </div>}
           </div>
-          <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
+          {showInlineStockChart && <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
             <div className="ant-col ant-col-24">
               <Card
                 size="small"
@@ -429,7 +497,19 @@ const ProMemberPage = (props) => {
                 <PutCallDummyChart />
               </Card>
             </div>
-          </div>
+          </div>}
+          {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+            <Col span={superNarrow ? 24 : 12}>
+              <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
+                {' '}<FormattedMessage id="text.stockChart" />
+              </Button>
+            </Col>
+            <Col span={superNarrow ? 24 : 12}>
+              <Button block type="primary" icon={<LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()}>
+                {' '}<FormattedMessage id="text.optionPutCallRatio" />
+              </Button>
+            </Col>
+          </Row>}
           <div className="ant-row" id="tour-insider" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
             <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-8 ant-col-xxl-6">
               <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
@@ -998,7 +1078,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/959dbf57-9526-4547-9e77-85f3ad3aa306?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/959dbf57-9526-4547-9e77-85f3ad3aa306?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1029,7 +1109,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/a35053cb-1528-4845-bdda-45da701b1cd0?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/a35053cb-1528-4845-bdda-45da701b1cd0?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1060,7 +1140,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/8276cea6-46c7-4c50-9c2e-71956abae66b?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/8276cea6-46c7-4c50-9c2e-71956abae66b?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1091,7 +1171,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/c63971e8-c05f-4457-9562-0a5386120352?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/c63971e8-c05f-4457-9562-0a5386120352?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1122,7 +1202,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/4798254e-e532-4641-a496-fa45c2c13df9?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/4798254e-e532-4641-a496-fa45c2c13df9?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1153,7 +1233,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/9468ae5b-9595-4a8d-8f8a-5382d0f3469e?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/9468ae5b-9595-4a8d-8f8a-5382d0f3469e?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1184,7 +1264,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/9b99cb90-d6ab-4cfc-9726-5f9a16af7a0c?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/9b99cb90-d6ab-4cfc-9726-5f9a16af7a0c?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1215,7 +1295,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/86fbaf1f-3279-4ec0-b7c8-44e4c9476c58?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/86fbaf1f-3279-4ec0-b7c8-44e4c9476c58?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">
@@ -1246,7 +1326,7 @@ const ProMemberPage = (props) => {
                             <li className="ant-list-item sc-jcFkyM ihvgJG">
                               <div className="ant-list-item-meta">
                                 <div className="ant-list-item-meta-avatar">
-                                  <div className="ant-image"><img className="ant-image-img sc-cidCJl gHtjd" src="https://cloud.iexapis.com/v1/news/image/8c1139d0-0268-4b1f-a314-8e59205c265f?token=pk_b20aab07428e4450ab62e7361336b8f4" /></div>
+                                  <NewsImage preview={false} src="https://cloud.iexapis.com/v1/news/image/8c1139d0-0268-4b1f-a314-8e59205c265f?token=pk_b20aab07428e4450ab62e7361336b8f4" />
                                 </div>
                                 <div className="ant-list-item-meta-content">
                                   <h4 className="ant-list-item-meta-title">

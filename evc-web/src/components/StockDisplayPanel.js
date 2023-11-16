@@ -1,4 +1,4 @@
-import { Button, Space, Row, Col, Modal } from 'antd';
+import { Button, Row, Col, Modal } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -7,14 +7,10 @@ import StockChart from 'components/charts/StockChart';
 import StockQuotePanel from 'components/StockQuotePanel';
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
-import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
-import { TimeAgo } from 'components/TimeAgo';
-import { Typography } from 'antd';
 import StockRosterPanel from 'components/StockRosterPanel';
 import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
 import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import { MemberOnlyCard } from 'components/MemberOnlyCard';
-import styled from 'styled-components';
 import StockEvcInfoPanel from './StockEvcInfoPanel';
 import { from } from 'rxjs';
 import StockNextReportDatePanel from './StockNextReportDatePanel';
@@ -28,7 +24,6 @@ import { FormattedMessage } from 'react-intl';
 import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
 
-const { Text } = Typography;
 
 const StockDisplayPanel = (props) => {
   const { stock } = props;
@@ -37,6 +32,8 @@ const StockDisplayPanel = (props) => {
   const [stockChartVisible, setStockChartVisible] = React.useState(false);
   const [putCallChartVisible, setPutCallChartVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
+
+  const superNarrow = useMediaQuery({ query: '(max-width: 465px)' });
 
   const loadEntity = async () => {
     try {
@@ -116,12 +113,12 @@ const StockDisplayPanel = (props) => {
           </Col>
         </Row>}
         {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
-          <Col span={12}>
+          <Col span={superNarrow ? 24 : 12}>
             <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
                {' '}<FormattedMessage id="text.stockChart" />
               </Button>
           </Col>
-          <Col span={12}>
+          <Col span={superNarrow ? 24 : 12}>
             <Button block type="primary" icon={shouldHidePutCall ? <LockFilled/> : <LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()} disabled={shouldHidePutCall}>
                {' '}<FormattedMessage id="text.optionPutCallRatio" />
             </Button>

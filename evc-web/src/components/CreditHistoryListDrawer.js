@@ -8,6 +8,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { sumBy } from 'lodash';
 import { from } from 'rxjs';
+import { FormattedMessage } from 'react-intl';
 
 const { Text } = Typography;
 
@@ -47,7 +48,7 @@ const CreditHistoryListDrawer = (props) => {
 
   return (
     <StyledDrawer
-      title="Credit History"
+      title={<FormattedMessage id="text.creditHistory" />}
       visible={visible}
       closable={true}
       maskClosable={true}

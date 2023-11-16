@@ -28,6 +28,14 @@ max-width: 1600px;
 }
 `;
 
+const span = {
+  xs: 24,
+  sm: 12,
+  md: 12,
+  lg: 12,
+  xl: 6,
+  xxl: 6
+};
 
 const HomeMarketArea = props => {
 
@@ -37,16 +45,16 @@ const HomeMarketArea = props => {
     <Container>
       <InnerContainer>
         <Row gutter={[40, 40]}>
-          <Col flex="auto">
+          <Col {...span}>
             <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{color: '#57BB60', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
-          <Col flex="auto">
+          <Col {...span}>
             <StockMostPanel onFetch={getMarketMostActive} title="Most actives" titleStyle={{color: '#7DD487', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
-          <Col flex="auto">
+          <Col {...span}>
             <StockMostPanel onFetch={getMarketGainers} title="Gainers" titleStyle={{color: '#55B0D4', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
-          <Col flex="auto">
+          <Col {...span}>
             <StockMostPanel onFetch={getMarketLosers} title="Losers" titleStyle={{color: '#89DFF1', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
         </Row>

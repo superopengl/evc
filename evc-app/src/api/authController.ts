@@ -112,6 +112,9 @@ async function createNewLocalUser(payload): Promise<{ user: User; profile: UserP
 export const signup = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
+  const existingUser = await getActiveUserByEmail(payload.email);
+  assert(!existingUser, 400, 'The email address has be used and the user already exists.');
+
   const { user, profile } = await createNewLocalUser({
     password: uuidv4(), // Temp password to fool the functions beneath
     ...payload,
@@ -256,7 +259,7 @@ export const inviteUser = handlerWrapper(async (req, res) => {
   const { email, role } = req.body;
 
   const existingUser = await getActiveUserByEmail(email);
-  assert(!existingUser, 400, 'The email address has be used and the user already exists');
+  assert(!existingUser, 400, 'The email address has be used and the user already exists.');
 
   const { user, profile } = createUserAndProfileEntity({
     email,

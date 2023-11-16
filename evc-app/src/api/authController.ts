@@ -256,7 +256,7 @@ export const inviteUser = handlerWrapper(async (req, res) => {
   const { email, role } = req.body;
 
   const existingUser = await getActiveUserByEmail(email);
-  assert(!existingUser, 400, 'User exists');
+  assert(!existingUser, 400, 'The email address has be used and the user already exists');
 
   const { user, profile } = createUserAndProfileEntity({
     email,

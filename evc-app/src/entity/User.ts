@@ -58,11 +58,11 @@ export class User {
   @Index()
   deletedAt: Date;
 
-  @OneToOne(() => UserProfile)
+  @OneToOne(() => UserProfile, {onDelete: 'SET NULL'})
   @JoinColumn({ name: 'profileId', referencedColumnName: 'id' })
   profile: UserProfile;
 
-  @Column()
+  @Column({nullable: true})
   profileId: string;
 
   @ManyToMany(type => UserTag, { onDelete: 'CASCADE' })

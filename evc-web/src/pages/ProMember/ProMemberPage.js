@@ -120,6 +120,22 @@ const WalkthroughTour = withRouter((props) => {
         </Paragraph>
       </>
     },
+    // {
+    //   target: '#tour-putcall-button',
+    //   placement: 'auto',
+    //   disableBeacon: true,
+    //   content: <>
+    //     <Paragraph strong>
+    //       <FormattedMessage id="tour.putCallTitle" />
+    //     </Paragraph>
+    //     <Paragraph style={{ fontSize: 12 }}>
+    //       <FormattedMessage id="tour.putCallDescription" />
+    //     </Paragraph>
+    //     <Paragraph type="danger" style={{ fontSize: 12 }}>
+    //       <FormattedMessage id="tour.putCallNote" />
+    //     </Paragraph>
+    //   </>
+    // },
     {
       target: '#tour-insider',
       placement: 'auto',
@@ -185,7 +201,7 @@ const WalkthroughTour = withRouter((props) => {
         primaryColor: '#57BB60',
         textAlign: 'left',
         // textColor: '#004a14',
-        // width: 900,
+        width: 600,
         zIndex: 1000,
       },
       tooltipContainer: {
@@ -224,7 +240,7 @@ const PutCallDummyChart = () => {
 }
 
 const ProMemberPage = (props) => {
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(true);
   const [signUpVisible, setSignUpVisible] = React.useState(false);
   const [stockChartVisible, setStockChartVisible] = React.useState(false);
   const [putCallChartVisible, setPutCallChartVisible] = React.useState(false);
@@ -353,10 +369,10 @@ const ProMemberPage = (props) => {
             </div>
             <div className="ant-page-header-content"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Dow Jones 30</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq Composite</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 1000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 3000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500 Information Technology</span></div>
           </div>
-          <div className="ant-row" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
-            <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-10 ant-col-xxl-8">
-              <div className="ant-row" style={{ marginLeft: '-15px', marginRight: '-15px', rowGap: '30px' }}>
-                <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 ant-col-lg-12 ant-col-xl-24 ant-col-xxl-24">
+          <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+            <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 10, xxl: 8 }}>
+              <Row gutter={[30, 30]}>
+                <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                   <div className="ant-card ant-card-bordered ant-card-small">
                     <div className="ant-card-body" style={{ height: '178px' }}>
                       <div className="ant-space ant-space-vertical">
@@ -392,8 +408,8 @@ const ProMemberPage = (props) => {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-12 ant-col-lg-12 ant-col-xl-24 ant-col-xxl-24">
+                </Col>
+                <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                   <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                     <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                       <div className="ant-card-head-wrapper">
@@ -475,10 +491,10 @@ const ProMemberPage = (props) => {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            {showInlineStockChart && <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-24 ant-col-xl-14 ant-col-xxl-16">
+                </Col>
+              </Row>
+            </Col>
+            {showInlineStockChart && <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
               <div style={{ height: '649px', minWidth: '400px' }}>
                 <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
                   <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
@@ -488,10 +504,10 @@ const ProMemberPage = (props) => {
                   </div>
                 </article>
               </div>
-            </div>}
-          </div>
-          {showInlineStockChart && <div className="ant-row" id="tour-putcall" style={{ marginTop: '30px', rowGap: '0px' }}>
-            <div className="ant-col ant-col-24">
+            </Col>}
+          </Row>
+          {showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+            <Col span={24} id="tour-putcall">
               <Card
                 size="small"
                 type="inner"
@@ -499,8 +515,8 @@ const ProMemberPage = (props) => {
               >
                 <PutCallDummyChart />
               </Card>
-            </div>
-          </div>}
+            </Col>
+          </Row>}
           {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
             <Col span={superNarrow ? 24 : 12}>
               <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
@@ -508,13 +524,13 @@ const ProMemberPage = (props) => {
               </Button>
             </Col>
             <Col span={superNarrow ? 24 : 12}>
-              <Button block type="primary" icon={<LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()}>
+              <Button block type="primary" id="tour-putcall" icon={<LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()}>
                 {' '}<FormattedMessage id="text.optionPutCallRatio" />
               </Button>
             </Col>
           </Row>}
-          <div className="ant-row" id="tour-insider" style={{ marginLeft: '-15px', marginRight: '-15px', marginTop: '30px', rowGap: '30px' }}>
-            <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-8 ant-col-xxl-6">
+          <Row gutter={[30, 30]} style={{ marginTop: 30 }} id="tour-insider">
+            <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
               <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
@@ -638,8 +654,8 @@ const ProMemberPage = (props) => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div style={{ paddingLeft: '15px', paddingRight: '15px' }} className="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-24 ant-col-lg-12 ant-col-xl-16 ant-col-xxl-18">
+            </Col>
+            <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 16, xxl: 18 }}>
               <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
@@ -1060,10 +1076,10 @@ const ProMemberPage = (props) => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="ant-row" style={{ marginTop: '30px', rowGap: '0px' }}>
-            <div className="ant-col ant-col-24">
+            </Col>
+          </Row>
+          <Row style={{ marginTop: 30 }}>
+            <Col span={24}>
               <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                 <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
                   <div className="ant-card-head-wrapper">
@@ -1364,8 +1380,8 @@ const ProMemberPage = (props) => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </Col>
+          </Row>
         </div>
       </main>
       {/* <WalkthroughTour visible={visible} onClose={() => setVisible(false)} /> */}

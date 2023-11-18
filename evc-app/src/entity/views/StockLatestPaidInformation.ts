@@ -30,8 +30,10 @@ import { StockResistance } from '../StockResistance';
     .addSelect('CASE WHEN sfv."ttmEps" <= 0 THEN TRUE ELSE FALSE END as "isLoss"')
     .addSelect('sfv."forwardNextFyFairValueLo"')
     .addSelect('sfv."forwardNextFyFairValueHi"')
+    .addSelect('CASE WHEN sfv."forwardNextFyFairValueLo" < 0 THEN TRUE ELSE FALSE END as "isForwardNextFyFairValueLoss"')
     .addSelect('sfv."forwardNextFyMaxValueLo"')
     .addSelect('sfv."forwardNextFyMaxValueHi"')
+    .addSelect('CASE WHEN sfv."forwardNextFyMaxValueLo" < 0 THEN TRUE ELSE FALSE END as "isForwardNextFyMaxValueLoss"')
     .addSelect('sfv."beta"')
     .addSelect('sfv."peRatio"')
     .addSelect('sfv."pegRatio"')
@@ -129,10 +131,16 @@ export class StockLatestPaidInformation {
   forwardNextFyFairValueHi: number;
 
   @ViewColumn()
+  isForwardNextFyFairValueLoss: boolean;
+
+  @ViewColumn()
   forwardNextFyMaxValueLo: number;
 
   @ViewColumn()
   forwardNextFyMaxValueHi: number;
+
+  @ViewColumn()
+  isForwardNextFyMaxValueLoss: boolean;
 
   @ViewColumn()
   beta: number;

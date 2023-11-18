@@ -17,6 +17,8 @@ import StockCustomTagSelect from './StockCustomTagSelect';
 
 const { Text } = Typography;
 
+const SHOW_SUPPORT_RESISTANCE = false;
+
 const StyledTable = styled.table`
 border: none;
 width: 100%;
@@ -189,9 +191,9 @@ const StockInfoCard = (props) => {
   }
 
   const handleCardClick = () => {
-    if(editingTag) {
+    if (editingTag) {
       setEditingTag(false);
-    } else  {
+    } else {
       props.onClick();
     }
   }
@@ -230,45 +232,110 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} 
-                empty={stock.isLoss ? <Text type="danger"><small><FormattedMessage id="text.loss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
+                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi}
+                  empty={stock.isLoss ? <Text type="danger"><small><FormattedMessage id="text.fairValueMinus" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
               </td>
             </tr>
+
             <tr>
-              <td style={{ verticalAlign: 'top' }}>
-                <TooltipLabel message="How to use support">
-                  <FormattedMessage id="text.support" />
+              <td>
+                <TooltipLabel message="">
+                  <FormattedMessage id="text.forwardNextFyFairValue" />
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
+                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.forwardNextFyFairValueLo} hi={stock.forwardNextFyFairValueHi}
+                  empty={stock.isForwardNextFyFairValueLoss ? <Text type="danger"><small><FormattedMessage id="text.forwardNextFyFairValueLoss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
               </td>
             </tr>
+
             <tr>
-              <td style={{ verticalAlign: 'top' }}>
-                <TooltipLabel message="How to use resistance">
-                  <FormattedMessage id="text.resistance" />
+              <td>
+                <TooltipLabel message="">
+                  <FormattedMessage id="text.forwardNextFyMaxValue" />
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
+                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.forwardNextFyMaxValueLo} hi={stock.forwardNextFyMaxValueHi}
+                  empty={stock.isForwardNextFyMaxValueLoss ? <Text type="danger"><small><FormattedMessage id="text.forwardNextFyMaxValueLoss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
               </td>
             </tr>
+
+            <tr>
+              <td>
+                <TooltipLabel message="">
+                  <FormattedMessage id="text.beta" />
+                </TooltipLabel>
+              </td>
+              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                {shouldHideData ? <HiddenNumber /> : stock.bata ? <Text>{stock.beta}</Text> :
+                  <Text type="warning"><small>NONE</small></Text>}
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <TooltipLabel message="">
+                  <FormattedMessage id="text.peRatio" />
+                </TooltipLabel>
+              </td>
+              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                {shouldHideData ? <HiddenNumber /> : stock.peRatio ? <Text>{(+stock.peRatio).toFixed(2)}</Text> :
+                  <Text type="warning"><small>NONE</small></Text>}
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <TooltipLabel message="">
+                  <FormattedMessage id="text.pegRatio" />
+                </TooltipLabel>
+              </td>
+              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                {shouldHideData ? <HiddenNumber /> : stock.pegRatio ? <Text>{(+stock.pegRatio).toFixed(2)}</Text> :
+                  <Text type="warning"><small>NONE</small></Text>}
+              </td>
+            </tr>
+
+
+            {SHOW_SUPPORT_RESISTANCE && <>
+              <tr>
+                <td style={{ verticalAlign: 'top' }}>
+                  <TooltipLabel message="How to use support">
+                    <FormattedMessage id="text.support" />
+                  </TooltipLabel>
+                </td>
+                <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ verticalAlign: 'top' }}>
+                  <TooltipLabel message="How to use resistance">
+                    <FormattedMessage id="text.resistance" />
+                  </TooltipLabel>
+                </td>
+                <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
+                </td>
+              </tr>
+            </>}
+
           </tbody>
         </StyledTable>
       </Col>
     </Row>
-    {showTags && <div style={{width: '100%', marginTop: 10}} onClick={(e) => {
+    {showTags && <div style={{ width: '100%', marginTop: 10 }} onClick={(e) => {
       e.stopPropagation();
       setEditingTag(true);
-      }}>
-      <StockCustomTagSelect 
-      value={customTags} 
-      onChange={handleStockCustomTagsChange} 
-      readonly={!editingTag} 
-      onBlur={() => toggleEditCustomTags(false)}
+    }}>
+      <StockCustomTagSelect
+        value={customTags}
+        onChange={handleStockCustomTagsChange}
+        readonly={!editingTag}
+        onBlur={() => toggleEditCustomTags(false)}
       />
-      </div>}
+    </div>}
     {shouldHideData && <StyledGuestCover>
       <LockFilled />
       <Text>

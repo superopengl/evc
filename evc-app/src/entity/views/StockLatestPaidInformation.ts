@@ -28,6 +28,13 @@ import { StockResistance } from '../StockResistance';
     .addSelect('sfv."fairValueHi"')
     .addSelect('sfv."reportDate" as "fairValueDate"')
     .addSelect('CASE WHEN sfv."ttmEps" <= 0 THEN TRUE ELSE FALSE END as "isLoss"')
+    .addSelect('sfv."forwardNextFyFairValueLo"')
+    .addSelect('sfv."forwardNextFyFairValueHi"')
+    .addSelect('sfv."forwardNextFyMaxValueLo"')
+    .addSelect('sfv."forwardNextFyMaxValueHi"')
+    .addSelect('sfv."beta"')
+    .addSelect('sfv."peRatio"')
+    .addSelect('sfv."pegRatio"')
     .leftJoin(q => q.from(StockLastPrice, 'slp'),
       'slp', 'slp.symbol = s.symbol'
     )
@@ -92,24 +99,6 @@ export class StockLatestPaidInformation {
   fairValueDate: string;
 
   @ViewColumn()
-  forwardNextFYFairValue: number;
-
-  @ViewColumn()
-  forwardNextFYFairValueRangeLo: number;
-
-  @ViewColumn()
-  forwardNextFYFairValueRangeHi: number;
-
-  @ViewColumn()
-  beta: number;
-
-  @ViewColumn()
-  peTtm: number;
-
-  @ViewColumn()
-  peg: number;
-
-  @ViewColumn()
   lastPrice: number;
 
   @ViewColumn()
@@ -132,5 +121,26 @@ export class StockLatestPaidInformation {
 
   @ViewColumn()
   resistances: { lo: number; hi: number }[];
+
+  @ViewColumn()
+  forwardNextFyFairValueLo: number;
+
+  @ViewColumn()
+  forwardNextFyFairValueHi: number;
+
+  @ViewColumn()
+  forwardNextFyMaxValueLo: number;
+
+  @ViewColumn()
+  forwardNextFyMaxValueHi: number;
+
+  @ViewColumn()
+  beta: number;
+
+  @ViewColumn()
+  peRatio: number;
+
+  @ViewColumn()
+  pegRatio: number;
 }
 

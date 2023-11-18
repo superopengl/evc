@@ -2,6 +2,7 @@ import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { Stock } from '../Stock';
 import { StockSpecialFairValue } from '../StockSpecialFairValue';
 import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
+import { StockComputedPe365 } from './StockComputedPe365';
 
 
 @ViewEntity({
@@ -9,17 +10,24 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(Stock, 's')
+    .leftJoin(q => q.from(StockComputedPe365, 'pe')
+      .distinctOn([
+        'symbol'
+      ])
+      .orderBy('symbol')
+      .addOrderBy('"date"', 'DESC'),
+      'pe', 's.symbol = pe.symbol')
     .leftJoin(q => q.from(StockHistoricalComputedFairValue, 'sc')
       .distinctOn(['symbol'])
       .orderBy('symbol')
       .addOrderBy('"reportDate"', 'DESC'),
-    'sc', 's.symbol = sc.symbol')
+      'sc', 's.symbol = sc.symbol')
     .leftJoin(q => q
       .from(StockSpecialFairValue, 'sp')
       .distinctOn(['symbol'])
       .orderBy('symbol')
       .addOrderBy('"reportDate"', 'DESC'),
-    'sp', 'sp.symbol = s.symbol AND (sc."reportDate" IS NULL OR sc."reportDate" <= sp."reportDate")')
+      'sp', 'sp.symbol = s.symbol AND (sc."reportDate" IS NULL OR sc."reportDate" <= sp."reportDate")')
     .select([
       's.symbol as symbol',
       'COALESCE(sp."reportDate", sc."reportDate") as "reportDate"',
@@ -29,6 +37,13 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
       'sc."fairValueHi" as "computedFairValueHi"',
       'COALESCE(sp."fairValueLo", sc."fairValueLo") as "fairValueLo"',
       'COALESCE(sp."fairValueHi", sc."fairValueHi") as "fairValueHi"',
+      'pe."pe90Avg" -  pe."pe90StdDev" * pe."forwardEps" as "forwardNextFyFairValueLo"',
+      'pe."pe90Avg" +  pe."pe90StdDev" * pe."forwardEps" as "forwardNextFyFairValueHi"',
+      'pe."peYrLo" * pe."forwardEps" as "forwardNextFyMaxValueLo"',
+      'pe."peYrHi" * pe."forwardEps" as "forwardNextFyMaxValueHi"',
+      'pe.beta as beta',
+      'pe."peRatio" as "peRatio"',
+      'pe."pegRatio" as "pegRatio"',
     ])
 })
 export class StockLatestFairValue {
@@ -55,4 +70,25 @@ export class StockLatestFairValue {
 
   @ViewColumn()
   fairValueHi: number;
+
+  @ViewColumn()
+  forwardNextFyFairValueLo: number;
+
+  @ViewColumn()
+  forwardNextFyFairValueHi: number;
+
+  @ViewColumn()
+  forwardNextFyMaxValueLo: number;
+
+  @ViewColumn()
+  forwardNextFyMaxValueHi: number;
+
+  @ViewColumn()
+  beta: number;
+
+  @ViewColumn()
+  peRatio: number;
+
+  @ViewColumn()
+  pegRatio: number;
 }

@@ -124,11 +124,11 @@ const HomeCarouselAreaRaw = props => {
       description: <FormattedMessage id="text.slogan1" />,
     },
     {
-      icon: <Icon component={() => <BsArrowBarDown />} />,
+      icon: <Icon component={() => <BsArrowBarUp />} />,
       description: <FormattedMessage id="text.slogan2" />,
     },
     {
-      icon: <Icon component={() => <BsArrowBarUp />} />,
+      icon: <Icon component={() => <BsArrowBarDown />} />,
       description: <FormattedMessage id="text.slogan3" />,
     },
     {

@@ -62,7 +62,7 @@
   "text.clickORDragToUpload": "点击或拖拽上传最多三个文件",
   "text.paypalScreenshotUploadWarning": "截图必须清晰显示你的姓名，与你在上方填入的姓名一致。截图必须清晰显示你的Paypal账户邮件地址，与你在上方填入的邮件地址一致。",
   "text.paypalScreenshotUploadHowToTitle": "如何找到个人信息页面？",
-  "text.paypalScreenshotUploadHowToDescription": "Paypal首页 > 设置 > 您的主页 > 个人信息",
+  "text.paypalScreenshotUploadHowToDescription": "Paypal首页 > 设置 > 您的主页 > 个人信息。点击下方图片放大。",
   "text.commissionWithdrawalDeclarance": "我声明，以上信息由我本人提供且真实有效。我同意，如提供任何虚假信息或账户与个人身份不一致的信息，EVC有权取消或拒绝提现申请。",
   "text.paypalProfileInfoScreenshot": "Paypal账户个人信息截图",
   "text.paypalAccountEmailAddress": "Paypal账号（请输入邮箱格式的账号）",

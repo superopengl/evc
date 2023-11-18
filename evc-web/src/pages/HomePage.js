@@ -75,6 +75,11 @@ const StyledLayout = styled(ProLayout)`
   color: rgba(0,0,0,0.75);
   font-weight: 500;
 }
+
+.ant-menu-submenu-title {
+  color: rgba(0,0,0,0.75) !important;
+  font-weight: 900 !important;
+}
 `;
 
 const HomePage = (props) => {
@@ -150,9 +155,10 @@ const HomePage = (props) => {
     onCollapse={setCollapsed}
     siderWidth={270}
     layout="top"
+    breakpoint="lg"
     navTheme="dark"
     route={{ routes: ROUTES }}
-    location={{ pathname: '/non' }}
+    location={{ pathname: '/' }}
     fixedHeader={true}
     menuItemRender={(item, dom) => {
       if (['/pro-member', '/earnings_calendar_preview'].includes(item.path)) {

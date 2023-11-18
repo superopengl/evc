@@ -35,6 +35,7 @@ const StockRadarPage = loadable(() => import('pages/Stock/StockRadarPage'));
 const AdminCommissionWithdrawalListPage = loadable(() => import('pages/CommissionWithdrawal/AdminCommissionWithdrawalListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ReferralGlobalPolicyListPage = loadable(() => import('pages/ReferralGlobalPolicy/ReferralGlobalPolicyListPage'));
+const ReferreeDiscountPolicyListPage = loadable(() => import('pages/ReferreeDiscountPolicy/ReferreeDiscountGlobalPolicyListPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const MarketPage = loadable(() => import('pages/Market/MarketPage'));
@@ -195,6 +196,10 @@ const AppLoggedIn = props => {
         {
           path: '/referral_policy',
           name: <FormattedMessage id="menu.globalReferralPolicy" />,
+        },
+        {
+          path: '/referree_discount',
+          name: <FormattedMessage id="menu.referreeDiscount" />,
         },
       ]
     },
@@ -362,6 +367,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       {/* <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} /> */}
       <RoleRoute visible={isAdmin} exact path="/referral_policy" component={ReferralGlobalPolicyListPage} />
+      <RoleRoute visible={isAdmin} exact path="/referree_discount" component={ReferreeDiscountPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
       <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />
       <RoleRoute visible={isAdmin} exact path="/comission" component={AdminCommissionWithdrawalListPage} />

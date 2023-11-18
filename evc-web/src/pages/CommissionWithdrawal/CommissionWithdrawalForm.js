@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button, Form, Input, Radio, Typography, Checkbox } from 'antd';
+import { Button, Form, Input, Radio, Typography, Checkbox, Modal, Space } from 'antd';
 import { notify } from 'util/notify';
 import { CountrySelector } from 'components/CountrySelector';
 import { FileUploader } from 'components/FileUploader';
@@ -11,27 +11,49 @@ import { InputNumber } from 'antd';
 import { createCommissionWithdrawal } from 'services/commissionService';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
+import { FaLessThanEqual } from 'react-icons/fa';
 
 const { Text } = Typography;
 
-const PayPalHelpIconButton = () =>
-  <Tooltip
-    trigger="click"
-    overlayClassName="paypal-help-tooltip"
-    placement="topRight"
-    title={
-      <>
-        <div><strong>
-          <FormattedMessage id="text.paypalScreenshotUploadHowToTitle" />
-        </strong></div>
+const PayPalHelpIconButton = (props) => {
+  const [visible, setVisible] = React.useState(false);
+
+  return <>
+    <Tooltip
+      trigger="click"
+      overlayClassName="paypal-help-tooltip"
+      placement="topRight"
+      destroyTooltipOnHide={true}
+      title={
+        <>
+          <div><strong>
+            <FormattedMessage id="text.paypalScreenshotUploadHowToTitle" />
+          </strong></div>
+          <FormattedMessage id="text.paypalScreenshotUploadHowToDescription" />
+          <Image src="/images/paypal-personal-info.jpg" />
+        </>
+      }
+    >
+    </Tooltip>
+
+    <Modal
+      title={<FormattedMessage id="text.paypalScreenshotUploadHowToTitle" />}
+      closable={false}
+      maskClosable={true}
+      destroyOnClose={true}
+      visible={visible}
+      onOk={() => setVisible(false)}
+      onCancel={() => setVisible(false)}
+      footer={null}
+    >
+      <Space direction="vertical">
         <FormattedMessage id="text.paypalScreenshotUploadHowToDescription" />
         <Image src="/images/paypal-personal-info.jpg" />
-      </>
-    }
-  >
-    <Button type="link" style={{ color: 'black' }} icon={<QuestionCircleFilled />} />
-  </Tooltip>
-
+      </Space>
+    </Modal>
+    <Button type="link" style={{ color: 'black' }} icon={<QuestionCircleFilled />} onClick={() => setVisible(true)} />
+  </>
+}
 
 const CommissionWithdrawalForm = (props) => {
   const { onOk } = props;
@@ -84,7 +106,7 @@ const CommissionWithdrawalForm = (props) => {
       <Form.Item label={<FormattedMessage id="text.citizenship" />} name="citizenship" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
         <CountrySelector />
       </Form.Item>
-      <Form.Item label={<FormattedMessage id="text.residenceCountry" />}  name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
+      <Form.Item label={<FormattedMessage id="text.residenceCountry" />} name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
         <CountrySelector />
       </Form.Item>
       <Form.Item label={<FormattedMessage id="text.address" />} name="address" rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}>

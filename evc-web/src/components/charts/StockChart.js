@@ -5,16 +5,16 @@ import TradingViewWidget from 'react-tradingview-widget';
 const StockChart = props => {
   const { symbol } = props;
 
-  return <div style={{height: 649, minWidth: 400}}>
-    <TradingViewWidget 
-    symbol={`${symbol}`} 
-    timezone="America/New_York"
-    allow_symbol_change={false}
-    save_image={false}
-    autosize
-    hide_legend={true}
+  return <div style={{ height: 695, minWidth: 400 }}>
+    <TradingViewWidget
+      symbol={`${symbol}`}
+      timezone="America/New_York"
+      allow_symbol_change={false}
+      save_image={false}
+      autosize
+      hide_legend={true}
     />
-    </div>
+  </div>
 }
 
 StockChart.propTypes = {

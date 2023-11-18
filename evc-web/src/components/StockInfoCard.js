@@ -123,9 +123,14 @@ const TooltipLabel = props => <Tooltip title={props.message}>
   <Text type="secondary">{props.children}</Text>
 </Tooltip>
 
-const HiddenNumber = props => {
+const HiddenNumberPair = props => {
   const list = new Array(props.count || 1).fill(null);
   return list.map((x, i) => <Text className={`hidden-info`} key={i}><span style={{ filter: 'blur(4px)' }}>123.40 ~ 567.89</span></Text>)
+}
+
+const HiddenNumberSingle = props => {
+  const list = new Array(props.count || 1).fill(null);
+  return list.map((x, i) => <Text className={`hidden-info`} key={i}><span style={{ filter: 'blur(4px)' }}>123.40</span></Text>)
 }
 
 const StockInfoCard = (props) => {
@@ -218,7 +223,7 @@ const StockInfoCard = (props) => {
     hoverable={hoverable}
     actions={actions}
   >
-    <Row style={editingTag ? { filter: 'opacity(0.2)' } : null}>
+    <Row style={editingTag ? { filter: 'opacity(0.2)' } : null} wrap={false}>
       <Col flex="none">
         <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : 'N/A'}</Text>
       </Col>
@@ -232,7 +237,7 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi}
+                {shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi}
                   empty={stock.isLoss ? <Text type="danger"><small><FormattedMessage id="text.fairValueMinus" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
               </td>
             </tr>
@@ -244,7 +249,7 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.forwardNextFyFairValueLo} hi={stock.forwardNextFyFairValueHi}
+                {shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={stock.forwardNextFyFairValueLo} hi={stock.forwardNextFyFairValueHi}
                   empty={stock.isForwardNextFyFairValueLoss ? <Text type="danger"><small><FormattedMessage id="text.forwardNextFyFairValueLoss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
               </td>
             </tr>
@@ -256,7 +261,7 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.forwardNextFyMaxValueLo} hi={stock.forwardNextFyMaxValueHi}
+                {shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={stock.forwardNextFyMaxValueLo} hi={stock.forwardNextFyMaxValueHi}
                   empty={stock.isForwardNextFyMaxValueLoss ? <Text type="danger"><small><FormattedMessage id="text.forwardNextFyMaxValueLoss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
               </td>
             </tr>
@@ -268,7 +273,7 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : stock.bata ? <Text>{stock.beta}</Text> :
+                {shouldHideData ? <HiddenNumberSingle /> : stock.bata ? <Text>{stock.beta}</Text> :
                   <Text type="warning"><small>NONE</small></Text>}
               </td>
             </tr>
@@ -280,7 +285,7 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : stock.peRatio ? <Text>{(+stock.peRatio).toFixed(2)}</Text> :
+                {shouldHideData ? <HiddenNumberSingle /> : stock.peRatio ? <Text>{(+stock.peRatio).toFixed(2)}</Text> :
                   <Text type="warning"><small>NONE</small></Text>}
               </td>
             </tr>
@@ -292,7 +297,7 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : stock.pegRatio ? <Text>{(+stock.pegRatio).toFixed(2)}</Text> :
+                {shouldHideData ? <HiddenNumberSingle /> : stock.pegRatio ? <Text>{(+stock.pegRatio).toFixed(2)}</Text> :
                   <Text type="warning"><small>NONE</small></Text>}
               </td>
             </tr>
@@ -306,7 +311,7 @@ const StockInfoCard = (props) => {
                   </TooltipLabel>
                 </td>
                 <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  {shouldHideData ? <HiddenNumber count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
+                  {shouldHideData ? <HiddenNumberPair count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
                 </td>
               </tr>
               <tr>
@@ -316,7 +321,7 @@ const StockInfoCard = (props) => {
                   </TooltipLabel>
                 </td>
                 <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  {shouldHideData ? <HiddenNumber count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
+                  {shouldHideData ? <HiddenNumberPair count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
                 </td>
               </tr>
             </>}

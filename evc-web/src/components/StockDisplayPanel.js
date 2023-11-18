@@ -91,9 +91,9 @@ const StockDisplayPanel = (props) => {
                 <MemberOnlyCard
                   title={<FormattedMessage id="text.evcCoreInfo" />}
                   paidOnly={true}
-                  bodyStyle={{ height: 274 }}
+                  bodyStyle={{ height: 320 }}
                   blockedComponent={
-                      <StockUnpaidEvcInfoPanel fairValues={stock.fairValues || []} />
+                    <StockUnpaidEvcInfoPanel fairValues={stock.fairValues || []} />
                   }>
                   <StockEvcInfoPanel symbol={stock.symbol} />
                 </MemberOnlyCard>
@@ -115,12 +115,12 @@ const StockDisplayPanel = (props) => {
         {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
           <Col span={superNarrow ? 24 : 12}>
             <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
-               {' '}<FormattedMessage id="text.stockChart" />
-              </Button>
+              {' '}<FormattedMessage id="text.stockChart" />
+            </Button>
           </Col>
           <Col span={superNarrow ? 24 : 12}>
-            <Button block type="primary" icon={shouldHidePutCall ? <LockFilled/> : <LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()} disabled={shouldHidePutCall}>
-               {' '}<FormattedMessage id="text.optionPutCallRatio" />
+            <Button block type="primary" icon={shouldHidePutCall ? <LockFilled /> : <LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()} disabled={shouldHidePutCall}>
+              {' '}<FormattedMessage id="text.optionPutCallRatio" />
             </Button>
           </Col>
         </Row>}
@@ -155,7 +155,7 @@ const StockDisplayPanel = (props) => {
           footer={null}
           width="100vw"
           centered
-          bodyStyle={{padding: 0}}
+          bodyStyle={{ padding: 0 }}
         >
           <StockChart symbol={stock.symbol} period="1d" interval="5m" />
         </Modal>

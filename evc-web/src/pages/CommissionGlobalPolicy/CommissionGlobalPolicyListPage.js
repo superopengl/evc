@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Drawer, Table, Tooltip, Modal, Input } from 'antd';
+import { Button, Drawer, Table, Tooltip, Modal, Input, Typography } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import {
   StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
@@ -9,8 +9,7 @@ import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
-import MoneyAmount from 'components/MoneyAmount';
-import { enableReferralGlobalPolicy, listReferalGlobalPolicies, saveReferralGlobalPolicy } from 'services/referralPolicyService';
+import { enableCommissionGlobalPolicy, listCommissionGlobalPolicies, saveCommissionGlobalPolicy } from 'services/commissionPolicyService';
 import { Form } from 'antd';
 import { InputNumber } from 'antd';
 import { DatePicker } from 'antd';
@@ -20,6 +19,9 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { from } from 'rxjs';
+import { FormattedMessage } from 'react-intl';
+
+const { Title } = Typography;
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -28,10 +30,23 @@ const ContainerStyled = styled.div`
   .active-referral {
     background-color: rgba(87,187,96, 0.1);
   }
+
+  .rbc-event {
+    background: repeating-linear-gradient(
+      165deg,
+      #55B0D4,
+      #55B0D4 10px,
+      #3d8aad 10px,
+      #3d8aad 20px
+    );
+
+    font-weight: 600;
+
+  }
 `;
 
 
-const ReferreeDiscountGlobalPolicyListPage = () => {
+const ReferralGlobalPolicyListPage = () => {
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -40,7 +55,7 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   const columnDef = [
     {
       title: '% per referral',
-      dataIndex: 'amount',
+      dataIndex: 'percentage',
       align: 'left',
       render: (value) => <>{+value * 100} %</>
     },
@@ -94,7 +109,7 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   const loadList = async () => {
     try {
       setLoading(true);
-      const list = await listReferalGlobalPolicies();
+      const list = await listCommissionGlobalPolicies();
       setList(list);
     } finally {
       setLoading(false);
@@ -111,7 +126,7 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   const setReferralGolbalPolicyEnabled = async (policyId, toEnable) => {
     try {
       setLoading(true);
-      await enableReferralGlobalPolicy(policyId, toEnable);
+      await enableCommissionGlobalPolicy(policyId, toEnable);
       await loadList();
     } finally {
       setLoading(false);
@@ -136,9 +151,9 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   }
 
   const handleClonePolicy = (copyPolicy) => {
-    const { amount, start, end, description } = copyPolicy;
+    const { percentage, start, end, description } = copyPolicy;
     setNewPolicy({
-      amount,
+      percentage,
       range: [moment(start), moment(end)],
       description,
       active: false,
@@ -146,16 +161,16 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   }
 
   const handleSave = async (values) => {
-    const { amount, range, description } = values;
+    const { percentage, range, description } = values;
     const policy = {
-      amount,
+      percentage,
       start: range[0],
       end: range[1],
       description
     }
     try {
       setLoading(true);
-      await saveReferralGlobalPolicy(policy);
+      await saveCommissionGlobalPolicy(policy);
       setNewPolicy();
       await loadList();
     } finally {
@@ -175,9 +190,9 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   };
 
   const handleSelectEvent = (event) => {
-    const { amount, start, end, description, active } = event;
+    const { percentage, start, end, description, active } = event;
     setNewPolicy({
-      amount,
+      percentage,
       range: [moment(start), moment(end)],
       description,
       active,
@@ -195,12 +210,11 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   return (
     <ContainerStyled>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-        {/* <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>Global Referral Policy</Title>
-          </StyledTitleRow> */}
-
-        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Policy</Button>
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={3}>
+            <FormattedMessage id="menu.globalCommissionPolicy" />
+          </Title>
+          <Button icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Commission Policy</Button>
         </Space>
 
         <div>
@@ -237,7 +251,7 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
       </Space>
 
       <Drawer
-        title="New Global Referral Policy"
+        title="New Global Commission Policy"
         visible={newPolicy}
         destroyOnClose={true}
         closable={true}
@@ -247,10 +261,10 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
         footer={null}
       >
         <Form layout="vertical" onFinish={handleSave} initialValues={newPolicy}>
-          <Form.Item label="Commission % per referral" name="amount" rules={[{ required: true, type: 'number', min: 0, max: 1, message: ' ' }]}>
+          <Form.Item label="Commission % per referral" name="percentage" rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, message: ' ' }]}>
             <InputNumber
-              min={0}
-              max={100}
+              min={0.01}
+              max={0.99}
               step={0.05}
               formatter={value => `${value * 100} %`}
               parser={value => +(value.replace(' %', '')) / 100}
@@ -275,8 +289,8 @@ const ReferreeDiscountGlobalPolicyListPage = () => {
   );
 };
 
-ReferreeDiscountGlobalPolicyListPage.propTypes = {};
+ReferralGlobalPolicyListPage.propTypes = {};
 
-ReferreeDiscountGlobalPolicyListPage.defaultProps = {};
+ReferralGlobalPolicyListPage.defaultProps = {};
 
-export default withRouter(ReferreeDiscountGlobalPolicyListPage);
+export default withRouter(ReferralGlobalPolicyListPage);

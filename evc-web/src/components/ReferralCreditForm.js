@@ -10,7 +10,8 @@ import { InputNumber } from 'antd';
 import MoneyAmount from './MoneyAmount';
 import { notify } from 'util/notify';
 import ReferralLinkInput from './ReferralLinkInput';
-import { saveReferralUserPolicy, deleteReferralUserPolicy } from 'services/referralPolicyService';
+import { saveCommissionUserPolicy, deleteCommissionUserPolicy } from 'services/commissionPolicyService';
+import { saveDiscountUserPolicy, deleteDiscountUserPolicy } from 'services/discountPolicyService';
 import CreditHistoryListDrawer from 'components/CreditHistoryListDrawer';
 import { TimeAgo } from 'components/TimeAgo';
 import { from } from 'rxjs';
@@ -32,7 +33,9 @@ const ReferralCreditForm = (props) => {
   const [creditHistoryVisible, setCreditHistoryVisible] = React.useState(false);
   const [account, setAccount] = React.useState();
   const [creditAfterAdjust, setCreditAfterAdjust] = React.useState();
-  const formRef = React.useRef();
+  const commissionFormRef = React.useRef();
+  const discountFormRef = React.useRef();
+  const creditFormRef = React.useRef();
 
   const loadData = async () => {
     try {
@@ -60,7 +63,7 @@ const ReferralCreditForm = (props) => {
       const { credit } = values;
       await adjustCredit(user.id, credit);
       notify.success(<>Successfully added <Text strong>${credit.toFixed(2)}</Text> to user <Text code>{user.email}</Text></>);
-      formRef.current.resetFields();
+      creditFormRef.current.resetFields();
       await loadData();
     } finally {
       setLoading(false);
@@ -73,11 +76,22 @@ const ReferralCreditForm = (props) => {
     setCreditAfterAdjust((account?.credit || 0) + +credit);
   }
 
-  const handleSaveReferralUserPolicy = async values => {
+  const handleSaveCommissionUserPolicy = async values => {
     try {
       setLoading(true);
-      await saveReferralUserPolicy(user.id, values);
+      await saveCommissionUserPolicy(user.id, values);
       notify.success(<>Successfully set special referral policy to the user</>);
+      await loadData();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleSaveDiscountUserPolicy = async values => {
+    try {
+      setLoading(true);
+      await saveDiscountUserPolicy(user.id, values);
+      notify.success(<>Successfully set special discount policy to the user</>);
       await loadData();
     } finally {
       setLoading(false);
@@ -87,10 +101,23 @@ const ReferralCreditForm = (props) => {
   const handleDeleteSpecialCommission = async () => {
     try {
       setLoading(true);
-      await deleteReferralUserPolicy(user.id);
-      notify.success(<>Successfully deleted special referral policy to the user. Now the global policy applies to the user.</>);
+      await deleteCommissionUserPolicy(user.id);
+      notify.success(<>Successfully deleted special referral policy from the user. Now the global policy applies to the user.</>);
       await loadData();
     } finally {
+      commissionFormRef.current.resetFields();
+      setLoading(false);
+    }
+  }
+
+  const handleDeleteSpecialDiscount = async () => {
+    try {
+      setLoading(true);
+      await deleteDiscountUserPolicy(user.id);
+      notify.success(<>Successfully deleted special discount policy from the user. Now the global policy applies to the user.</>);
+      await loadData();
+    } finally {
+      discountFormRef.current.resetFields();
       setLoading(false);
     }
   }
@@ -103,7 +130,7 @@ const ReferralCreditForm = (props) => {
     <Container>
       <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch' }}>
         <div>
-          <Title level={4}>{subscriptionDef.find(s => s.key === (currentSubscription?.currentType || 'free'))?.title}</Title>
+          <Title level={4} style={{textAlign: 'center'}}>{subscriptionDef.find(s => s.key === (currentSubscription?.currentType || 'free'))?.title}</Title>
         </div>
         {currentSubscription && <Space>
           <TimeAgo value={currentSubscription.start} />
@@ -111,21 +138,24 @@ const ReferralCreditForm = (props) => {
           <TimeAgo value={currentSubscription.end} />
         </Space>}
         <Divider></Divider>
+
+        {/* User referral commission */}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Title level={4}>User Referral Commission</Title>
           <Title type="success">{(account?.specialReferralCommission || account?.globalReferralCommission) * 100}%</Title>
         </Space>
-        <Paragraph type="secondary">Setting this policy will override the global referral policy. Current global policy is <Text strong>{account?.globalReferralCommission * 100}%</Text>.</Paragraph>
+        <Paragraph type="secondary">Setting this policy will override the global referral policy. The current global policy is <Text strong>{account?.globalReferralCommission * 100}%</Text>.</Paragraph>
         {account && <Form
-          onFinish={handleSaveReferralUserPolicy}
-          initialValues={{ amount: account.specialReferralCommission }}>
-          <Form.Item label="Commission per referral" name="amount"
-            rules={[{ required: true, type: 'number', min: 0, max: 1, message: ' ', whitespace: true }]}
+          ref={commissionFormRef}
+          onFinish={handleSaveCommissionUserPolicy}
+          initialValues={{ percentage: account.specialReferralCommission }}>
+          <Form.Item label="Commission per referral" name="percentage"
+            rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, message: 'Must be 0.01 ~ 0.99', whitespace: true }]}
           >
-            <InputNumber 
+            <InputNumber
               disabled={loading}
-              min={0}
-              max={100}
+              min={0.01}
+              max={0.99}
               step={0.05}
               formatter={value => `${value * 100} %`}
               parser={value => +(value.replace(' %', '')) / 100}
@@ -145,12 +175,53 @@ const ReferralCreditForm = (props) => {
           </Form.Item>
         </Form>}
         <Divider></Divider>
+
+        {/* Referree discount */}
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Title level={4}>Referree 1st Buy Discount</Title>
+          <Title type="success">{(account?.specialReferreeDiscount || account?.globalReferreeDiscount) * 100}%</Title>
+        </Space>
+        <Paragraph type="secondary">Setting this policy will override the global referree discount policy. The current global policy is <Text strong>{account?.globalReferreeDiscount * 100}%</Text>.</Paragraph>
+        {account && <Form
+          ref={discountFormRef}
+          onFinish={handleSaveDiscountUserPolicy}
+          initialValues={{ percentage: account.specialReferreeDiscount }}>
+          <Form.Item label={<>Discount for the 1st buy</>} name="percentage"
+            rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, message: 'Must be 0.01 ~ 0.99', whitespace: true }]}
+          >
+            <InputNumber
+              disabled={loading}
+              min={0.01}
+              max={0.99}
+              step={0.05}
+              formatter={value => `${value * 100} %`}
+              parser={value => +(value.replace(' %', '')) / 100}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button block type="primary" htmlType="submit" loading={loading}>Set Special Discount</Button>
+          </Form.Item>
+          <Form.Item>
+            <Button
+              block
+              loading={loading}
+              onClick={() => handleDeleteSpecialDiscount()}
+            >
+              Use Global Discount ({account?.globalReferreeDiscount * 100}%)
+               </Button>
+          </Form.Item>
+        </Form>}
+        <Divider></Divider>
+
+        {/* Referral link */}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Title level={4}>Referral</Title>
           <Space><Text>have referred</Text><Title type="success">{account?.referralCount}</Title></Space>
         </Space>
         <ReferralLinkInput value={account?.referralUrl} />
         <Divider></Divider>
+
+        {/* Credits */}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Title level={4}>Credit</Title>
           <Title><MoneyAmount type="success" value={account?.credit} /></Title>
@@ -162,7 +233,7 @@ const ReferralCreditForm = (props) => {
           Adjust the user's credit by adding up some amount. Either + or - number is avaiable.
         </Paragraph>
         <Form
-          ref={formRef}
+          ref={creditFormRef}
           onFinish={handleAdjustCredit}
           onValuesChange={handleCreditValueChange}
         >

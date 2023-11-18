@@ -3,7 +3,7 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-export class ReferralGlobalPolicy {
+export class CommissionGlobalPolicy {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
@@ -25,8 +25,10 @@ export class ReferralGlobalPolicy {
   active: boolean;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  amount: number;
+  percentage: number;
 
   @Column('uuid')
   by: string;
 }
+
+

@@ -1,26 +1,44 @@
 import * as _ from 'lodash';
 import { EntityManager, getRepository } from 'typeorm';
 import { User } from '../entity/User';
-import { ReferralUserPolicy } from '../entity/ReferralUserPolicy';
-import { ReferralGlobalPolicy } from '../entity/ReferralGlobalPolicy';
+import { CommissionUserPolicy } from '../entity/CommissionUserPolicy';
+import { CommissionGlobalPolicy } from '../entity/CommissionGlobalPolicy';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { getSubscriptionPrice } from '../utils/getSubscriptionPrice';
+import { DiscountGlobalPolicy } from '../entity/DiscountGlobalPolicy';
+import { DiscountUserPolicy } from '../entity/DiscountUserPolicy';
 
 export async function getCurrentGlobalReferralCommission() {
-  const globalPolicy = await getRepository(ReferralGlobalPolicy)
+  const globalPolicy = await getRepository(CommissionGlobalPolicy)
     .createQueryBuilder()
     .where({ active: true })
     .andWhere('"start" <= CURRENT_DATE')
     .andWhere('("end" IS NULL OR "end" > CURRENT_DATE)')
     .getOne();
 
-  return +(globalPolicy?.amount) || 0;
+  return +(globalPolicy?.percentage) || 0;
+}
+
+export async function getCurrentGlobalReferreeDiscount() {
+  const globalPolicy = await getRepository(DiscountGlobalPolicy)
+    .createQueryBuilder()
+    .where({ active: true })
+    .andWhere('"start" <= CURRENT_DATE')
+    .andWhere('("end" IS NULL OR "end" > CURRENT_DATE)')
+    .getOne();
+
+  return +(globalPolicy?.percentage) || 0;
 }
 
 export async function getCurrentSpecialReferralCommissionForUser(userId) {
-  const policy = await getRepository(ReferralUserPolicy).findOne(userId);
-  return policy ? +(policy.amount) : null;
+  const policy = await getRepository(CommissionUserPolicy).findOne(userId);
+  return policy ? +(policy.percentage) : null;
+}
+
+export async function getCurrentUserSpecialReferreeDiscount(userId) {
+  const policy = await getRepository(DiscountUserPolicy).findOne(userId);
+  return policy ? +(policy.percentage) : null;
 }
 
 export async function getCurrentReferralAmountForReferrer(userId) {

@@ -1,8 +1,9 @@
 import { Entity, Column, PrimaryColumn, CreateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
+
 @Entity()
-export class ReferralUserPolicy {
+export class DiscountUserPolicy {
   @PrimaryColumn('uuid')
   userId: string;
 
@@ -10,7 +11,7 @@ export class ReferralUserPolicy {
   createdAt?: Date;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  amount: number;
+  percentage: number;
 
   @Column('uuid')
   by: string;

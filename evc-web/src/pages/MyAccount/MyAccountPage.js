@@ -221,8 +221,17 @@ const MyAccountPage = (props) => {
               <Space><Text><FormattedMessage id="text.haveReferred" /></Text><Title type="success">{account.referralCount}</Title></Space>
             }
           >
-            <Paragraph type="secondary">{<FormattedMessage id="text.shareReferralLink" />}</Paragraph>
             <ReferralLinkInput value={account?.referralUrl} />
+            <Paragraph type="secondary" style={{marginTop: 20}}>{<FormattedMessage id="text.shareReferralLink" />}</Paragraph>
+            <Paragraph type="secondary">
+              <FormattedMessage id="text.currentReferralCommissionPercentage" values={{ percentage: <Text>{account.referralCommission * 100}%</Text> }} />
+              <br />
+              <FormattedMessage id="text.commissionBalanceDescription2" values={{ amount: <MoneyAmount value={account.referralCommission * 29} /> }} /><br />
+              <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommission * 319} /> }} />
+            </Paragraph>
+            <Paragraph type="secondary">
+              <FormattedMessage id="text.currentReferreeDiscountPercentage" values={{ percentage: <Text>{account.referralDiscount * 100}%</Text> }} />
+            </Paragraph>
           </Card>
           <Card
             bordered={false}
@@ -234,14 +243,20 @@ const MyAccountPage = (props) => {
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">
                 <FormattedMessage id="text.commissionBalanceDescription1" /><br />
-                <FormattedMessage id="text.commissionBalanceDescription2" values={{ amount: <MoneyAmount value={account.referralCommission * 29} /> }} /><br />
-                <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommission * 319} /> }} />
               </Paragraph>
 
               <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
                 <FormattedMessage id="text.creditHistory" />
               </Button>
             </Space>
+          </Card>
+          <Card
+            bordered={false}
+            title={<FormattedMessage id="text.referralDiscountPolicy" />}
+            extra={
+              <Space><Text><FormattedMessage id="text.haveReferred" /></Text><Title type="success">{account.referralCount}</Title></Space>
+            }
+          >
           </Card>
           <Card
             bordered={false}

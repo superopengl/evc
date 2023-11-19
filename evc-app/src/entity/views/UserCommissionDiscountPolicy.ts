@@ -41,12 +41,12 @@ import { DiscountUserPolicy } from '../DiscountUserPolicy';
     .leftJoin(DiscountUserPolicy, 'ud', 'u.id = ud."userId"')
     .select([
       'u.id as "userId"',
-      'ru."referralCount" as "referralCount"',
-      'gc.percentage as "globalReferralCommissionPerc"',
-      'uc.percentage as "specialReferralCommissionPerc"',
+      'coalesce(ru."referralCount", 0) as "referralCount"',
+      'coalesce(gc.percentage, 0) as "globalReferralCommissionPerc"',
+      'coalesce(uc.percentage, 0) as "specialReferralCommissionPerc"',
       'coalesce(uc.percentage, gc.percentage) as "referralCommissionPerc"',
-      'gd.percentage as "globalReferreeDiscountPerc"',
-      'ud.percentage as "specialReferreeDiscountPerc"',
+      'coalesce(gd.percentage, 0) as "globalReferreeDiscountPerc"',
+      'coalesce(ud.percentage, 0) as "specialReferreeDiscountPerc"',
       'coalesce(ud.percentage, gd.percentage) as "referreeDiscountPerc"',
     ])
 })

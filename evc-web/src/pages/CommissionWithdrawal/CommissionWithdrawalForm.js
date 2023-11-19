@@ -19,7 +19,7 @@ const PayPalHelpIconButton = (props) => {
   const [visible, setVisible] = React.useState(false);
 
   return <>
-    <Tooltip
+    {/* <Tooltip
       trigger="click"
       overlayClassName="paypal-help-tooltip"
       placement="topRight"
@@ -34,16 +34,18 @@ const PayPalHelpIconButton = (props) => {
         </>
       }
     >
-    </Tooltip>
+    </Tooltip> */}
 
     <Modal
       title={<FormattedMessage id="text.paypalScreenshotUploadHowToTitle" />}
-      closable={false}
+      closable={true}
       maskClosable={true}
       destroyOnClose={true}
       visible={visible}
       onOk={() => setVisible(false)}
       onCancel={() => setVisible(false)}
+      width={580}
+      centered
       footer={null}
     >
       <Space direction="vertical">

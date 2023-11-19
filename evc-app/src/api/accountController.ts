@@ -6,13 +6,8 @@ import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
-import {
-  getCurrentGlobalReferralCommission,
-  getCurrentSpecialReferralCommissionForUser,
-  getCurrentGlobalReferreeDiscount,
-  getCurrentUserSpecialReferreeDiscount
-} from '../services/referralService';
 import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
+import { UserCommissionDiscountInformation } from '../entity/views/UserCommissionDiscountInformation';
 
 export const createReferral = async (userId) => {
   const entity = new ReferralCode();
@@ -26,10 +21,10 @@ const getAccountForUser = async (userId) => {
   // const user = await getRepository(User).findOne({ id: userId });
   const referralUrl = `${process.env.EVC_WEB_DOMAIN_NAME}/signup?code=${userId}`;
 
-  const referralCount = await getRepository(User)
-    .createQueryBuilder()
-    .where({ referredBy: userId, everPaid: true })
-    .getCount();
+  // const referralCount = await getRepository(User)
+  //   .createQueryBuilder()
+  //   .where({ referredBy: userId, everPaid: true })
+  //   .getCount();
 
   const subscription = await getRepository(UserCurrentSubscription).findOne({ userId })
 
@@ -39,25 +34,29 @@ const getAccountForUser = async (userId) => {
     .select('SUM(amount) AS amount')
     .getRawOne();
 
-  const globalReferralCommission = await getCurrentGlobalReferralCommission();
-  const specialReferralCommission = await getCurrentSpecialReferralCommissionForUser(userId);
-  const globalReferreeDiscount = await getCurrentGlobalReferreeDiscount();
-  const specialReferreeDiscount = await getCurrentUserSpecialReferreeDiscount(userId);
-  
-  const referralCommission = specialReferralCommission || globalReferralCommission;
-  const referralDiscount = specialReferreeDiscount || globalReferreeDiscount;
+  const {
+    referralCount, 
+    globalReferralCommissionPerc, 
+    specialReferralCommissionPerc,
+    referralCommissionPerc,
+    globalReferreeDiscountPerc,
+    specialReferreeDiscountPerc,
+    referreeDiscountPerc,
+    my1stBuyDiscountPerc
+  } = await getRepository(UserCommissionDiscountInformation).findOne(userId);
 
   const result = {
     subscription,
-    globalReferralCommission,
-    specialReferralCommission,
-    globalReferreeDiscount,
-    specialReferreeDiscount,
-    referralCommission,
-    referralDiscount,
+    globalReferralCommissionPerc: +globalReferralCommissionPerc,
+    specialReferralCommissionPerc: +specialReferralCommissionPerc,
+    globalReferreeDiscountPerc: +globalReferreeDiscountPerc,
+    specialReferreeDiscountPerc: +specialReferreeDiscountPerc,
+    referralCommissionPerc: +referralCommissionPerc,
+    referreeDiscountPerc: +referreeDiscountPerc,
     referralUrl,
-    referralCount,
-    credit: +credit?.amount || 0
+    referralCount: +referralCount,
+    credit: +credit?.amount || 0,
+    my1stBuyDiscountPerc: +my1stBuyDiscountPerc,
   };
 
   return result;

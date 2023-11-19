@@ -192,9 +192,10 @@ const MyAccountPage = (props) => {
                 Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>.
               </>} />}
-              {!currentSubscription && <Alert type="info" showIcon description={
+              {!currentSubscription && <Alert type="info" showIcon description={<>
                 <FormattedMessage id="text.freeToPaidSuggestion" />
-              } />}
+                {account.my1stBuyDiscountPerc > 0 && <strong> <FormattedMessage id="text.initialBuyDiscountMessage" values={{percentage: account.my1stBuyDiscountPerc * 100}} /></strong>}
+              </>} />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
                   {subscriptionDef.filter(x => x.key !== 'free' || isCurrentFree).map(s => <StyledCol key={s.key} {...priceCardSpan}>
@@ -204,6 +205,7 @@ const MyAccountPage = (props) => {
                       description={s.description}
                       onClick={() => handleChangePlan(s)}
                       price={s.price}
+                      discount={account.my1stBuyDiscountPerc}
                       active={s.key === currentPlanKey}
                       interactive={s.key !== 'free'}
                       recurring={currentSubscription?.lastRecurring}
@@ -222,15 +224,15 @@ const MyAccountPage = (props) => {
             }
           >
             <ReferralLinkInput value={account?.referralUrl} />
-            <Paragraph type="secondary" style={{marginTop: 20}}>{<FormattedMessage id="text.shareReferralLink" />}</Paragraph>
+            <Paragraph type="secondary" style={{ marginTop: 20 }}>{<FormattedMessage id="text.shareReferralLink" />}</Paragraph>
             <Paragraph type="secondary">
-              <FormattedMessage id="text.currentReferralCommissionPercentage" values={{ percentage: <Text>{account.referralCommission * 100}%</Text> }} />
+              <FormattedMessage id="text.currentReferralCommissionPercentage" values={{ percentage: <Text>{account.referralCommissionPerc * 100}%</Text> }} />
               <br />
-              <FormattedMessage id="text.commissionBalanceDescription2" values={{ amount: <MoneyAmount value={account.referralCommission * 29} /> }} /><br />
-              <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommission * 319} /> }} />
+              <FormattedMessage id="text.commissionBalanceDescription2" values={{ amount: <MoneyAmount value={account.referralCommissionPerc * 29} /> }} /><br />
+              <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommissionPerc * 319} /> }} />
             </Paragraph>
             <Paragraph type="secondary">
-              <FormattedMessage id="text.currentReferreeDiscountPercentage" values={{ percentage: <Text>{account.referralDiscount * 100}%</Text> }} />
+              <FormattedMessage id="text.currentReferreeDiscountPercentage" values={{ percentage: <Text>{account.referreeDiscountPerc * 100}%</Text> }} />
             </Paragraph>
           </Card>
           <Card

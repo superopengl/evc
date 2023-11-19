@@ -252,14 +252,6 @@ const MyAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title={<FormattedMessage id="text.referralDiscountPolicy" />}
-            extra={
-              <Space><Text><FormattedMessage id="text.haveReferred" /></Text><Title type="success">{account.referralCount}</Title></Space>
-            }
-          >
-          </Card>
-          <Card
-            bordered={false}
             title={<Row gutter={[10, 10]} justify="space-between">
               <Col>
                 <FormattedMessage id="text.commissionWithdrawal" />

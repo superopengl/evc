@@ -14,6 +14,8 @@ import { StockNoticeButton } from './StockNoticeButton';
 import { filter } from 'rxjs/operators';
 import { FormattedMessage } from 'react-intl';
 import StockCustomTagSelect from './StockCustomTagSelect';
+import { List } from 'antd';
+import isObject from 'lodash/isObject';
 
 const { Text } = Typography;
 
@@ -120,7 +122,7 @@ flex-direction: column;
 `;
 
 const TooltipLabel = props => <Tooltip title={props.message}>
-  <Text type="secondary">{props.children}</Text>
+  <Text type="secondary" style={{ fontSize: '0.8rem' }}>{props.children}</Text>
 </Tooltip>
 
 const HiddenNumberPair = props => {
@@ -208,6 +210,60 @@ const StockInfoCard = (props) => {
 
   const lastPrice = +(priceEvent?.price) || +(stock.lastPrice);
 
+  const cardDataSource = React.useMemo(() => [
+    {
+      tooltip: null,
+      textKey: 'text.fairValue',
+      value: {
+        lo: stock.fairValueLo,
+        hi: stock.fairValueHi,
+      },
+      isLoss: stock.isLoss,
+      textKeyOnLoss: 'text.fairValueLoss',
+      nullText: 'N/A'
+    },
+    {
+      tooltip: null,
+      textKey: 'text.forwardNextFyFairValue',
+      value: {
+        lo: stock.forwardNextFyFairValueLo,
+        hi: stock.forwardNextFyFairValueHi,
+      },
+      isLoss: stock.isForwardNextFyFairValueLoss,
+      textKeyOnLoss: 'text.forwardNextFyFairValueLoss',
+      nullText: 'N/A'
+    },
+    {
+      tooltip: null,
+      textKey: 'text.forwardNextFyMaxValue',
+      value: {
+        lo: stock.forwardNextFyMaxValueLo,
+        hi: stock.forwardNextFyMaxValueHi,
+      },
+      isLoss: stock.isForwardNextFyMaxValueLoss,
+      textKeyOnLoss: 'text.forwardNextFyMaxValueLoss',
+      nullText: 'N/A'
+    },
+    {
+      tooltip: null,
+      textKey: 'text.beta',
+      value: stock.beta,
+      nullText: 'NONE'
+    },
+    {
+      tooltip: null,
+      textKey: 'text.peRatio',
+      value: stock.peRatio,
+      nullText: 'NONE'
+    },
+    {
+      tooltip: null,
+      textKey: 'text.pegRatio',
+      value: stock.pegRatio,
+      nullText: 'NONE'
+    },
+  ], [stock]);
+
   return <StyledCard
     size="small"
     className={className}
@@ -228,81 +284,28 @@ const StockInfoCard = (props) => {
         <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : 'N/A'}</Text>
       </Col>
       <Col flex="auto">
+        <List
+          dataSource={cardDataSource}
+          style={{ width: '100%' }}
+          renderItem={item => <List.Item>
+            <Row gutter={4} justify='space-between' style={{ width: '100%' }}>
+              <Col>
+                <TooltipLabel message="">
+                  <FormattedMessage id={item.textKey} />
+                </TooltipLabel>
+              </Col>
+              <Col flex="auto" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                {
+                  isObject(item.value) ?
+                    (shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={item.value.lo} hi={item.value.hi} empty={item.isLoss ? <Text type="danger"><small><FormattedMessage id={item.textKeyOnLoss} /></small></Text> : <Text type="warning"><small>{item.nullText}</small></Text>} />)
+                    : (shouldHideData ? <HiddenNumberSingle /> : stock.value ? <Text>{(+stock.value).toFixed(2)}</Text> : <Text type="warning"><small>{item.nullText}</small></Text>)
+                }
+              </Col>
+            </Row>
+          </List.Item>}
+        />
         <StyledTable>
           <tbody>
-            <tr>
-              <td>
-                <TooltipLabel message="How to use fair value">
-                  <FormattedMessage id="text.fairValue" />
-                </TooltipLabel>
-              </td>
-              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi}
-                  empty={stock.isLoss ? <Text type="danger"><small><FormattedMessage id="text.fairValueMinus" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <TooltipLabel message="">
-                  <FormattedMessage id="text.forwardNextFyFairValue" />
-                </TooltipLabel>
-              </td>
-              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={stock.forwardNextFyFairValueLo} hi={stock.forwardNextFyFairValueHi}
-                  empty={stock.isForwardNextFyFairValueLoss ? <Text type="danger"><small><FormattedMessage id="text.forwardNextFyFairValueLoss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <TooltipLabel message="">
-                  <FormattedMessage id="text.forwardNextFyMaxValue" />
-                </TooltipLabel>
-              </td>
-              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={stock.forwardNextFyMaxValueLo} hi={stock.forwardNextFyMaxValueHi}
-                  empty={stock.isForwardNextFyMaxValueLoss ? <Text type="danger"><small><FormattedMessage id="text.forwardNextFyMaxValueLoss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <TooltipLabel message="">
-                  <FormattedMessage id="text.beta" />
-                </TooltipLabel>
-              </td>
-              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumberSingle /> : stock.bata ? <Text>{stock.beta}</Text> :
-                  <Text type="warning"><small>NONE</small></Text>}
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <TooltipLabel message="">
-                  <FormattedMessage id="text.peRatio" />
-                </TooltipLabel>
-              </td>
-              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumberSingle /> : stock.peRatio ? <Text>{(+stock.peRatio).toFixed(2)}</Text> :
-                  <Text type="warning"><small>NONE</small></Text>}
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <TooltipLabel message="">
-                  <FormattedMessage id="text.pegRatio" />
-                </TooltipLabel>
-              </td>
-              <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumberSingle /> : stock.pegRatio ? <Text>{(+stock.pegRatio).toFixed(2)}</Text> :
-                  <Text type="warning"><small>NONE</small></Text>}
-              </td>
-            </tr>
-
-
             {SHOW_SUPPORT_RESISTANCE && <>
               <tr>
                 <td style={{ verticalAlign: 'top' }}>

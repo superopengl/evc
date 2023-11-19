@@ -15,7 +15,7 @@ import { UserCommissionDiscountPolicy } from './UserCommissionDiscountPolicy';
       'up.*',
       'u."everPaid" as "everPaid"',
       'u."referredBy" as "referredBy"',
-      'coalesce(cd."referreeDiscountPerc", NULL) as "my1stBuyDiscountPerc"',
+      'CASE WHEN u."everPaid" THEN 0 ELSE coalesce(cd."referreeDiscountPerc", NULL) END as "my1stBuyDiscountPerc"',
     ])
 })
 export class UserCommissionDiscountInformation {

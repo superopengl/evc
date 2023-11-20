@@ -1,7 +1,8 @@
 import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { singleBatchRequest } from '../src/services/iexService';
+// import { singleBatchRequest } from '../src/services/iexService';
+import { sendIexRequest } from '../src/services/iexCoreService';
 import * as _ from 'lodash';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
 import { handleWatchlistInsiderTransactionNotification } from './handleWatchlistInsiderTransactionNotification';
@@ -42,7 +43,7 @@ async function udpateDatabase(iexBatchResponse) {
   const entities: StockInsiderTransaction[] = [];
   for (const [symbol, value] of Object.entries(iexBatchResponse)) {
     // advanced-stats
-    const insiderTransactionData = value['insider-transactions'];
+    const insiderTransactionData = value as [any];
     const list = insiderTransactionData
       .filter(x => includesTransactionCode(x.transactionCode))
       .map(x => _.pick(x, [
@@ -72,9 +73,9 @@ async function udpateDatabase(iexBatchResponse) {
 
 
 async function syncIexForSymbols(symbols: string[]) {
-  const types = ['insider-transactions'];
-  const resp = await singleBatchRequest(symbols, types);
-  await udpateDatabase(resp);
+  const resp = await sendIexRequest(symbols, 'insider_transactions', { last: 30 });
+  const map = _.groupBy(resp, x => x.symbol);
+  await udpateDatabase(map);
 }
 
 const JOB_NAME = 'feed-insiderTransactions';

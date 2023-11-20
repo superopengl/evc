@@ -21,59 +21,17 @@ const { Text } = Typography;
 
 const SHOW_SUPPORT_RESISTANCE = false;
 
-const StyledTable = styled.table`
-border: none;
-width: 100%;
-font-size: 0.8rem;
 
-.hidden-info{
-  // color: rgba(0,0,0,0.35);
-  // background-color: rgba(0,0,0,0.05);
-  // border-radius: 4px;
-  // padding: 0 8px;
-}
-
-.text-color-level-0 {
-  color: rgba(0,0,0,1);
-
-  .ant-typography {
-    color: rgba(0,0,0,1);
-  }
-}
-
-.text-color-level-1 {
-  color: rgba(0,0,0,0.55);
-  font-size: 0.7rem;
-
-  .ant-typography {
-    color: rgba(0,0,0,0.55);
-  }
-}
-
-.text-color-level-2 {
-  color: rgba(0,0,0,0.35);
-  font-size: 0.6rem;
-
-  .ant-typography {
-    color: rgba(0,0,0,0.35);
-  }
-}
-
-tr {
-  border-top: 1px solid rgba(0,0,0,0.05);
-
-  &:first-child {
-    border-top: none;
-  }
-
-  td:first-child {
-    font-weight: 300;
-    font-size: 0.8rem;
-  }
+const StyledList = styled(List)`
+.ant-list-item {
+  padding: 0;
+  margin: 0;
 }
 `;
 
 const StyledCard = styled(Card)`
+height: 100%;
+
 .ant-card-head-title {
   text-align: left;
 }
@@ -146,9 +104,8 @@ const StockInfoCard = (props) => {
   const context = React.useContext(GlobalContext);
   const [priceEvent, setPriceEvent] = React.useState();
 
-  const { role, event$ } = context;
+  const { role } = context;
   const isMember = role === 'member';
-  const isGuest = role === 'guest';
   const shouldHideData = ['guest', 'free'].includes(role);
 
   React.useEffect(() => {
@@ -220,7 +177,6 @@ const StockInfoCard = (props) => {
       },
       isLoss: stock.isLoss,
       textKeyOnLoss: 'text.fairValueLoss',
-      nullText: 'N/A'
     },
     {
       tooltip: null,
@@ -231,7 +187,6 @@ const StockInfoCard = (props) => {
       },
       isLoss: stock.isForwardNextFyFairValueLoss,
       textKeyOnLoss: 'text.forwardNextFyFairValueLoss',
-      nullText: 'N/A'
     },
     {
       tooltip: null,
@@ -242,25 +197,21 @@ const StockInfoCard = (props) => {
       },
       isLoss: stock.isForwardNextFyMaxValueLoss,
       textKeyOnLoss: 'text.forwardNextFyMaxValueLoss',
-      nullText: 'N/A'
     },
     {
       tooltip: null,
       textKey: 'text.beta',
       value: stock.beta,
-      nullText: 'NONE'
     },
     {
       tooltip: null,
       textKey: 'text.peRatio',
       value: stock.peRatio,
-      nullText: 'NONE'
     },
     {
       tooltip: null,
       textKey: 'text.pegRatio',
       value: stock.pegRatio,
-      nullText: 'NONE'
     },
   ], [stock]);
 
@@ -284,7 +235,7 @@ const StockInfoCard = (props) => {
         <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : 'N/A'}</Text>
       </Col>
       <Col flex="auto">
-        <List
+        <StyledList
           dataSource={cardDataSource}
           style={{ width: '100%' }}
           renderItem={item => <List.Item>
@@ -297,14 +248,14 @@ const StockInfoCard = (props) => {
               <Col flex="auto" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {
                   isObject(item.value) ?
-                    (shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={item.value.lo} hi={item.value.hi} empty={item.isLoss ? <Text type="danger"><small><FormattedMessage id={item.textKeyOnLoss} /></small></Text> : <Text type="warning"><small>{item.nullText}</small></Text>} />)
-                    : (shouldHideData ? <HiddenNumberSingle /> : stock.value ? <Text>{(+stock.value).toFixed(2)}</Text> : <Text type="warning"><small>{item.nullText}</small></Text>)
+                    (shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={item.value.lo} hi={item.value.hi} empty={item.isLoss ? <Text type="danger"><small><FormattedMessage id={item.textKeyOnLoss} /></small></Text> : <Text type="warning"><small>NONE</small></Text>} />)
+                    : (shouldHideData ? <HiddenNumberSingle /> : item.value ? <Text>{(+item.value).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>)
                 }
               </Col>
             </Row>
           </List.Item>}
         />
-        <StyledTable>
+        <table>
           <tbody>
             {SHOW_SUPPORT_RESISTANCE && <>
               <tr>
@@ -330,7 +281,7 @@ const StockInfoCard = (props) => {
             </>}
 
           </tbody>
-        </StyledTable>
+        </table>
       </Col>
     </Row>
     {showTags && <div style={{ width: '100%', marginTop: 10 }} onClick={(e) => {

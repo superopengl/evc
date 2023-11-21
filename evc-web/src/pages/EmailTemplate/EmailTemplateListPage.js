@@ -8,42 +8,16 @@ import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';
-import 'react-quill/dist/quill.snow.css';
-import loadable from '@loadable/component'
 import { from } from 'rxjs';
+import RickTextInput from 'components/RickTextInput';
+import RawHtmlDisplay from 'components/RawHtmlDisplay';
 
-const ReactQuill = loadable(() => import('react-quill'));
 
 const { Text } = Typography;
 
 const ContainerStyled = styled.div`
   width: 100%;
 `;
-
-const modules = {
-  toolbar: [
-    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-    [{ size: [] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' },
-    { 'indent': '-1' }, { 'indent': '+1' }],
-    [{ 'align': [] }, { 'color': [] }, { 'background': [] }],
-    ['link', 'image'],
-    ['clean']
-  ],
-  clipboard: {
-    // toggle to add extra line breaks when pasting HTML:
-    matchVisual: false,
-  }
-};
-
-const formats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'color', 'background',
-  'link', 'image'
-];
 
 
 const EmailTemplateListPage = () => {
@@ -57,8 +31,6 @@ const EmailTemplateListPage = () => {
     setCurrentItem(item);
     setDrawerVisible(true);
   }
-
-
 
   const loadList = async () => {
     try {
@@ -89,7 +61,6 @@ const EmailTemplateListPage = () => {
     }
   }
 
-
   return (
     <ContainerStyled>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -110,16 +81,21 @@ const EmailTemplateListPage = () => {
           key={i}
           title={item.key}
           extra={<Tooltip key="edit" placement="bottom" title="Edit">
-          <Button type="link" icon={<EditOutlined />}
-            onClick={() => handleEdit(item)} ></Button>
-        </Tooltip>}
+            <Button type="link" icon={<EditOutlined />}
+              onClick={() => handleEdit(item)} ></Button>
+          </Tooltip>}
         >
           <Space direction="vertical" style={{ width: '100%' }}>
             {item.key !== 'signature' && <Row>
               {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
             </Row>}
-            {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
-            <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
+            <Card
+              size="small"
+              title={item.key === 'signature' ? null : <RawHtmlDisplay value={item.subject || 'Subject'} />}
+            // type="inner"
+            >
+              <RawHtmlDisplay value={item.body} />
+            </Card>
           </Space>
         </Card>)}
       </Space>
@@ -148,12 +124,7 @@ const EmailTemplateListPage = () => {
             <Input allowClear disabled={loading} />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: false, whitespace: true, message: ' ' }]}>
-            <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}
-              style={{
-                padding: 0,
-                fontSize: 14,
-              }}
-              disabled={loading} />
+            <RickTextInput disabled={loading} />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>

@@ -2,13 +2,15 @@
 import React from 'react';
 import { Select } from 'antd';
 import countryList from 'react-select-country-list'
-import {sortBy} from 'lodash';
 
-const countries = countryList().native();
-const COUNTRY_LIST = sortBy(countries.getData().map(x => ({
-  ...x,
-  label: countries.getLabel(x.value)
-})), 'label');
+const COUNTRY_LIST = countryList().getData().map(x => {
+  if(x.value === 'CN') {
+    x.label = 'China Mainland'
+  } else if (x.value === 'TW') {
+    x.label = 'Taiwan'
+  }
+  return x;
+});
 const OPTIONS = COUNTRY_LIST.map((x, i) => <Select.Option key={i} value={x.value}>{x.label}</Select.Option>);
 
 export const CountrySelector = props => {

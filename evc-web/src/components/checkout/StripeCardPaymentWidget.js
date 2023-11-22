@@ -6,6 +6,7 @@ import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useEle
 import { stripePromise } from 'services/stripeService';
 import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
+import { CreditCardFilled } from '@ant-design/icons';
 
 const CardButton = styled(Button)`
     border-color: #55B0D4;
@@ -140,7 +141,7 @@ const StripeCardPaymentForm = (props) => {
         block
         disabled={loading || !isInfoComplete} loading={loading} >
         <div style={{ fontWeight: 800, fontStyle: 'italic' }}>
-          <FormattedMessage id="text.payByCard" />
+        <CreditCardFilled style={{marginRight: 6}}/> <FormattedMessage id="text.payByCard" />
         </div>
       </CardButton>
 

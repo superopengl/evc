@@ -53,10 +53,7 @@ export async function searchUser(queryInfo: StockUserParams) {
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
     .select([
-      'p.email as email',
-      'p."givenName" as "givenName"',
-      'p.surname as surname',
-      'p.country as country',
+      'p.*',
       `p.geo ->> 'country' as "ipCountry"`,
       'u.id as id',
       'u."loginType"',

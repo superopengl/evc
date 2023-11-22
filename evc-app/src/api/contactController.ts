@@ -12,7 +12,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
   const {email, givenName, surname} = (req as any).user?.profile || {};
   const { name, contact, message } = req.body;
 
-  const userName = `${givenName || ''} ${surname || ''}`.trim();
+  const userName = `${givenName || ''} ${surname || ''}`.trim() || `Client ${email}`;
   const recipentName = userName || name;
   const recipentContact = email || contact;
   assert(recipentName && recipentContact && message, 404, 'Invalid contact information');

@@ -8,6 +8,7 @@ const modifyVars = {
   '@warning-color': '#fa8c16',
   '@error-color': '#d7183f', // rgb(215,24,63)
   '@layout-header-background': '#00293d',
+  '@table-font-size': '12px',
   // '@font-family': "'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
   // '@heading-color': '#00293d',
   // '@typography-title-font-weight': 400,

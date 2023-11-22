@@ -261,6 +261,7 @@ const UnusualOptionsActivityPanel = (props) => {
         </Descriptions.Item>
       </Descriptions>
       <Table
+        bordered
         size="small"
         columns={columnDef}
         dataSource={list}

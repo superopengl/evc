@@ -51,6 +51,14 @@ export const PayPalCheckoutButton = (props) => {
     notify.error('Error in PayPay checkout', err.message);
   }
 
+  const handleShippingChange = async (data,actions) => {
+    /**
+     * Workaround for PERMISSION_DENIED error
+     * See https://github.com/paypal/paypal-checkout-components/issues/1521
+     */
+    return actions.resolve();
+  }
+
   return (<Loading loading={loading} style={{ minWidth: 240, height: 80,  width: '100%', marginLeft: 'auto', marginRight: 'auto' }}>
     <PayPalButton
       // amount={amount}
@@ -60,6 +68,7 @@ export const PayPalCheckoutButton = (props) => {
       onError={handleCheckoutError}
       onSuccess={handleTransactionSuccess}
       onButtonReady={() => setLoading(false)}
+      onShippingChange={handleShippingChange}
       // createSubscription={handleCreateSubscription}
       // onApprove={handleApprove}
       style={{

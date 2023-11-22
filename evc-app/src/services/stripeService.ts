@@ -29,17 +29,6 @@ export async function createStripeCheckoutSession() {
   return session;
 }
 
-export async function parseStripeWebhookEvent(req) {
-  const sig = req.headers['stripe-signature'];
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SIGN_SECRET;
-  const { body } = req;
-  try {
-    const event = endpointSecret ? await getStripe().webhooks.constructEvent(body, sig, endpointSecret) : JSON.parse(body);
-    return event;
-  } catch (err) {
-    assert(false, 400, `Webhook Error: ${err.message}`);
-  }
-}
 
 async function createStripeCustomer(userId: string, userProfile: UserProfile) {
   return await getStripe().customers.create({

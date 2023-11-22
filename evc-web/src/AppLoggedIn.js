@@ -398,7 +398,6 @@ const AppLoggedIn = props => {
     />
     <ProfileModal
       visible={profileVisible}
-      closable={isProfileComplete()}
       onOk={() => setProfileVisible(false)}
       onCancel={() => setProfileVisible(false)}
     />

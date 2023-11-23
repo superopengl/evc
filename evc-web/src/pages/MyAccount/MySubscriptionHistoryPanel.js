@@ -55,7 +55,7 @@ const MySubscriptionHistoryPanel = (props) => {
               dataIndex: 'amount',
               align: 'right',
               width: '33%',
-              render: (amount, item) => <MoneyAmount value={amount} />
+              render: (amount, item) => <MoneyAmount value={item.amountCny ?? amount} symbol={item.amountCny ? '¥' : '$'}/>
             },
             {
               title: 'link',

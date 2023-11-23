@@ -177,7 +177,7 @@
 				<tr class="heading">
 					<td>Item</td>
 
-					<td>Amount (USD)</td>
+					<td>Amount ({{currency}})</td>
 				</tr>
 
 				<tr class="item">
@@ -188,13 +188,13 @@
 				<tr class="item last">
 					<td>Payable amount ({{paymentMethod}})</td>
 
-					<td>$ {{payableAmount}}</td>
+					<td>{{symbol}} {{payableAmount}}</td>
 				</tr>
 
 				<tr class="total">
 					<td></td>
 
-					<td>Total: $ {{subscriptionPrice}}</td>
+					<td>Total: {{symbol}} {{total}}</td>
 				</tr>
 			</tbody></table>
 		</div>

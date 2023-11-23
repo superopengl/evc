@@ -103,14 +103,14 @@ export async function chargeStripeForCardPayment(payment: Payment, onSessionPaym
 }
 
 export async function chargeStripeForAlipay(payment: Payment): Promise<string> {
-  const { amount, method } = payment;
+  const { amountCny, method } = payment;
 
   assert(method === PaymentMethod.AliPay, 400, 'Payment method not match');
-  assert(amount, 400, 'amount must be positive number');
+  assert(amountCny, 400, 'amountCny must be positive number');
 
   const paymentIntent = await getStripe().paymentIntents.create({
-    amount: Math.ceil(amount * 100),
-    currency: isProd ? 'usd' : 'aud', // Stripe Alipay only allow local currency.
+    amount: Math.ceil(amountCny * 100),
+    currency: 'cny',
     payment_method_types: ['alipay'],
   });
 

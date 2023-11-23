@@ -36,7 +36,7 @@ import { UserProfile } from '../UserProfile';
       'p.end as end',
       'coalesce(p.amount, 0) - coalesce(c.amount, 0) as price',
       'coalesce(p.amount, 0) as payable',
-      'coalesce(p."amountCny", 0) as "payableCny"',
+      'p."amountCny" as "payableCny"',
       'coalesce(-c.amount, 0) as deduction'
     ])
 })

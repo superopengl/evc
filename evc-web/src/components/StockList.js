@@ -19,7 +19,7 @@ const StockList = (props) => {
   const { data, onItemClick, showBell, showTags } = props;
 
   return (<>
-    <Row gutter={[10, 10]} align="stretch" style={{ marginBottom: 16 }}>
+    <Row gutter={[16, 16]} align="stretch" style={{ marginBottom: 16 }}>
       {data.map(stock => <Col {...span}>
         <StockInfoCard
           value={stock}

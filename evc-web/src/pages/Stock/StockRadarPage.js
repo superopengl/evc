@@ -152,26 +152,26 @@ const StockRadarPage = (props) => {
 
   return (
     <>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 24 }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Row gutter={[10, 10]}>
             <Col flex="auto">
               <OverButton type="secondary" onClick={handleToggleOverValued} className={queryInfo.overValued ? 'selected' : ''}>
                 {queryInfo.overValued ? <CheckSquareOutlined /> : <BorderOutlined />} <FormattedMessage id="text.overValued" />
-            </OverButton>
+              </OverButton>
             </Col>
             <Col flex="auto">
               <UnderButton type="secondary" onClick={handleToggleUnderValued} className={queryInfo.underValued ? 'selected' : ''}>
                 {queryInfo.underValued ? <CheckSquareOutlined /> : <BorderOutlined />} <FormattedMessage id="text.underValued" />
-            </UnderButton>
+              </UnderButton>
             </Col>
             <Col flex="auto">
               <Button type="default" onClick={handleToggleInValued}>
                 {queryInfo.inValued ? <CheckSquareOutlined /> : <BorderOutlined />} <FormattedMessage id="text.inValued" />
-            </Button>
+              </Button>
             </Col>
             {tags && <Col flex="auto">
-              <Divider type="vertical" style={{height: '100%'}} />
+              <Divider type="vertical" style={{ height: '100%' }} />
             </Col>}
             {tags && <Col flex="auto">
               <TagFilterButton value={queryInfo.tags} group={true} onChange={handleTagFilterChange} tags={tags} />
@@ -180,7 +180,6 @@ const StockRadarPage = (props) => {
           {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>Add Stock</Button>}
         </Space>
       </Space>
-      <Divider />
       <StockList data={list} loading={loading} onItemClick={handleItemClick} />
       <Pagination
         current={queryInfo.page}

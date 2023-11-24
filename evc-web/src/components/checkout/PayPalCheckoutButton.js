@@ -44,11 +44,11 @@ export const PayPalCheckoutButton = (props) => {
   }
 
   const handleCheckoutError = err => {
-    notify.error('Error in PayPay checkout', err.message);
+    notify.error('Error in PayPal checkout', err.message);
   }
 
   const handleCatchError = err => {
-    notify.error('Error in PayPay checkout', err.message);
+    notify.error('Error in PayPal checkout', err.message);
   }
 
   const handleShippingChange = async (data,actions) => {

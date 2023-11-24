@@ -4,7 +4,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalComputedFairValue';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import moment = require('moment');
 import { refreshMaterializedView } from "../refreshMaterializedView";
 import { StockComputedPe90 } from '../entity/views/StockComputedPe90';

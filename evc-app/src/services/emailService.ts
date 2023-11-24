@@ -1,14 +1,14 @@
-import * as aws from 'aws-sdk';
+import aws from 'aws-sdk';
 import { awsConfig } from '../utils/awsConfig';
 import { assert } from '../utils/assert';
-import * as _ from 'lodash';
-import * as nodemailer from 'nodemailer';
+import _ from 'lodash';
+import nodemailer from 'nodemailer';
 import { logError } from '../utils/logger';
 import { EmailRequest } from '../types/EmailRequest';
 import { Locale } from '../types/Locale';
 import { getRepository, EntityManager, getManager } from 'typeorm';
 import { EmailTemplate } from '../entity/EmailTemplate';
-import * as handlebars from 'handlebars';
+import handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
 import { getConfigValue } from './configService';
 import { EmailLog } from '../entity/EmailLog';

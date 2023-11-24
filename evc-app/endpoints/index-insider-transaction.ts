@@ -3,10 +3,10 @@ import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 // import { singleBatchRequest } from '../src/services/iexService';
 import { sendIexRequest } from '../src/services/iexCoreService';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
 import { handleWatchlistInsiderTransactionNotification } from './handleWatchlistInsiderTransactionNotification';
-import * as objHash from 'object-hash';
+import objHash from 'object-hash';
 import { promoteLatestSnapshotToPreviousSnapshot } from './promoteLatestSnapshotToPreviousSnapshot';
 
 async function syncManyStockInsiderTransactions(list: StockInsiderTransaction[]) {

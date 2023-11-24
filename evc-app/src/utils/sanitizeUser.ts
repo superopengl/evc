@@ -1,5 +1,5 @@
 import { User } from '../entity/User';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 
 export function sanitizeUser(user: User) {

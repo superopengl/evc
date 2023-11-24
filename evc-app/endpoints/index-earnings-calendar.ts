@@ -2,7 +2,7 @@ import { getRepository, getManager } from 'typeorm';
 import { start } from './jobStarter';
 import { getEarningsCalendarForAll } from '../src/services/alphaVantageService';
 import { StockEarningsCalendar } from '../src/entity/StockEarningsCalendar';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const JOB_NAME = 'daily-earnings-calendar';
 

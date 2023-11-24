@@ -1,5 +1,5 @@
-import * as expressAsyncHanlder from 'express-async-handler';
-import * as _ from 'lodash';
+import expressAsyncHanlder from 'express-async-handler';
+import _ from 'lodash';
 
 export const handlerWrapper = expressAsyncHanlder;
 

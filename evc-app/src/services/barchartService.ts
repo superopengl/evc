@@ -1,30 +1,32 @@
-import * as fetch from 'node-fetch';
-import * as queryString from 'query-string';
+import fetch from 'node-fetch';
+import queryString from 'query-string';
 import 'colors';
 import { assert } from '../utils/assert';
-import * as cookieParser from 'set-cookie-parser';
-import * as moment from 'moment';
+import cookieParser from 'set-cookie-parser';
+import moment from 'moment';
+import axios from 'axios';
 
 function getRequestCookies(resp) {
   const combinedCookieHeader = resp.headers.get('Set-Cookie');
   const splitCookieHeaders = cookieParser.splitCookiesString(combinedCookieHeader)
-  const cookies = cookieParser.parse(splitCookieHeaders, { decodeValues: true, map: true });
+  const cookie = cookieParser.parse(splitCookieHeaders, { decodeValues: true, map: true });
   return {
-    xsrfToken: cookies['XSRF-TOKEN']?.value,
-    laravelToken: cookies['laravel_token']?.value,
-    laravelSession: cookies['laravel_session']?.value,
-    cookies: cookies,
+    xsrfToken: cookie['XSRF-TOKEN']?.value,
+    laravelToken: cookie['laravel_token']?.value,
+    laravelSession: cookie['laravel_session']?.value,
+    rawCookie: combinedCookieHeader,
   }
 }
 
-async function getOptionHistory(symbol, limit, tokens) {
+async function grabOptionHistory(tokens, symbol, limit) {
   const url = `https://www.barchart.com/proxies/core-api/v1/options-historical/get?symbol=${encodeURIComponent(symbol)}&fields=date%2CputCallVolumeRatio%2CtotalVolume%2CputCallOpenInterestRatio%2CtotalOpenInterest&orderBy=date&orderDir=desc&limit=${limit}&&raw=0`;
-  const { xsrfToken, cookie } = tokens;
+  const { xsrfToken, rawCookie } = tokens;
   const options = {
     method: 'GET',
     headers: {
       'x-xsrf-token': xsrfToken,
-      cookie,
+      "mode": "cors",
+      cookie: rawCookie,
     }
   }
 
@@ -128,7 +130,7 @@ async function getBarChartGuestAccess() {
   return tokens;
 }
 
-async function getData(tokens, type: 'stock' | 'etf' | 'index', page = 1) {
+async function grabOptionsData(tokens, type: 'stock' | 'etf' | 'index', page) {
   const todayString = moment().format('YYYY-MM-DD');
   const query = {
     fields: 'baseSymbol,baseLastPrice,symbolType,strikePrice,expirationDate,daysToExpiration,bidPrice,midpoint,askPrice,lastPrice,volume,openInterest,volumeOpenInterestRatio,volatility,tradeTime,symbolCode',
@@ -169,13 +171,13 @@ async function getData(tokens, type: 'stock' | 'etf' | 'index', page = 1) {
   return { count, total, page, data };
 }
 
-async function getDataByType(tokens, type: 'stock' | 'etf' | 'index') {
+async function grabDataByType(tokens, type: 'stock' | 'etf' | 'index') {
   const allData = [];
 
   let page = 1;
   let totalReceived = 0;
   while (true) {
-    const { count, total, data } = await getData(tokens, type, page);
+    const { count, total, data } = await grabOptionsData(tokens, type, page);
     totalReceived += count;
     allData.push(...data);
     page++;
@@ -187,25 +189,12 @@ async function getDataByType(tokens, type: 'stock' | 'etf' | 'index') {
   return allData;
 }
 
-export async function getAllUnusualOptionActivity(type) {
+export async function grabAllUnusualOptionActivity(type) {
   const tokens = await getBarChartGuestAccess();
-
-  const data = await getDataByType(tokens, type);
-  return data;
-
-  // const stocks = await getDataByType(tokens, 'stock');
-  // const etfs = await getDataByType(tokens, 'etf');
-  // const indices = await getDataByType(tokens, 'index');
-
-  // return {
-  //   stocks,
-  //   etfs,
-  //   indices,
-  // }
+  return await grabDataByType(tokens, type);
 }
 
-export async function getOptionPutCallHistory(type) {
+export async function getOptionPutCallHistory(symbol, days) {
   const tokens = await getBarChartAccessByLogin('dayaozi666@gmail.com', '198361124');
-
-  throw new Error('Not implemented');
+  return await grabOptionHistory(tokens, symbol, days);
 }

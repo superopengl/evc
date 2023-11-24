@@ -1,7 +1,7 @@
-import * as AWS from 'aws-sdk';
-import * as moment from 'moment-timezone';
+import AWS from 'aws-sdk';
+import moment from 'moment-timezone';
 import { start } from './jobStarter';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 AWS.config.update({ region: 'us-east-1' });
 const cloudwatchevents = new AWS.CloudWatchEvents();

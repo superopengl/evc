@@ -1,18 +1,18 @@
-import * as express from 'express';
-import * as compression from 'compression';
-import * as bodyParser from 'body-parser';
-import * as listEndpoints from 'express-list-endpoints';
-import * as cors from 'cors';
-import * as path from 'path';
-import * as fileUpload from 'express-fileupload';
-import * as YAML from 'yamljs';
+import express from 'express';
+import compression from 'compression';
+import bodyParser from 'body-parser';
+import listEndpoints from 'express-list-endpoints';
+import cors from 'cors';
+import path from 'path';
+import fileUpload from 'express-fileupload';
+import YAML from 'yamljs';
 import { connector } from 'swagger-routes-express';
 import * as api from './api';
 import { authMiddleware } from './middlewares/authMiddleware';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
 import { sseMiddleware } from 'express-sse-middleware';
-import * as serveStatic from 'serve-static';
+import serveStatic from 'serve-static';
 
 function errorHandler(err, req, res, next) {
   if (err && !/^4/.test(res.status)) {

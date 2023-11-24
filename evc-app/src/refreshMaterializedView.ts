@@ -1,6 +1,6 @@
 import { getManager, getRepository } from 'typeorm';
 import { redisCache } from './services/redisCache';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { StockComputedPe90 } from './entity/views/StockComputedPe90';
 import { StockDailyPe } from './entity/views/StockDailyPe';
 import { StockDataInformation } from './entity/views/StockDataInformation';

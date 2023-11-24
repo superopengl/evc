@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 export function compareTrend(currentValue, preValue): -1 | 0 | 1 {
   if (_.isNumber(currentValue) && _.isNumber(preValue)) {

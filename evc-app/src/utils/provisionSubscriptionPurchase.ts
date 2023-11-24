@@ -1,7 +1,7 @@
 import { getConnection, QueryRunner } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { getUtcNow } from './getUtcNow';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';

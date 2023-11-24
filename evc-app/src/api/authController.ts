@@ -11,7 +11,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { sendEmail, enqueueEmail } from '../services/emailService';
 import { getUtcNow } from '../utils/getUtcNow';
 import { Role } from '../types/Role';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
@@ -55,7 +55,7 @@ export const login = handlerWrapper(async (req, res) => {
     entitiesToSave.push(user.profile);
   }
 
-  getManager().save(entitiesToSave).catch(() => {});
+  getManager().save(entitiesToSave).catch(() => { });
 
   attachJwtCookie(user, res);
 

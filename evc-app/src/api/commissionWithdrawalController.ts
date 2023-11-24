@@ -5,7 +5,7 @@ import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { v4 as uuidv4 } from 'uuid';
 import { CommissionWithdrawal } from '../entity/CommissionWithdrawal';
-import * as moment from 'moment';
+import moment from 'moment';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
 import { getUtcNow } from '../utils/getUtcNow';
@@ -184,9 +184,9 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
         enqueueEmailToUserId(
           withdrawal.userId,
           EmailTemplateType.CommissionWithdrawalRejected,
-          { 
-            referenceId: withdrawal.id, 
-            comment: withdrawal.comment 
+          {
+            referenceId: withdrawal.id,
+            comment: withdrawal.comment
           }
         );
       } else if (status === 'done') {
@@ -195,9 +195,9 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
         enqueueEmailToUserId(
           withdrawal.userId,
           EmailTemplateType.CommissionWithdrawalCompleted,
-          { 
-            referenceId: withdrawal.id, 
-            comment: withdrawal.comment 
+          {
+            referenceId: withdrawal.id,
+            comment: withdrawal.comment
           }
         );
       } else {

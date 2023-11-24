@@ -1,5 +1,5 @@
 import { assert } from './assert';
-import * as aws from 'aws-sdk';
+import aws from 'aws-sdk';
 import { awsConfig } from './awsConfig';
 
 function getS3Service() {

@@ -1,6 +1,6 @@
 import { SubscriptionType } from '../types/SubscriptionType';
 import { Subscription } from '../entity/Subscription';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { getUnitPricing } from './getUnitPricing';
 import { assert } from './assert';
 

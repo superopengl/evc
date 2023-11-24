@@ -1,4 +1,4 @@
-import * as requestIp from 'request-ip';
+import requestIp from 'request-ip';
 
 export function getRequestGeoInfo(req) {
   const ip = requestIp.getClientIp(req);

@@ -1,7 +1,7 @@
-import * as queryString from 'query-string';
-import * as _ from 'lodash';
-import * as fetch from 'node-fetch';
-import * as parse from 'csv-parse/lib/sync';
+import queryString from 'query-string';
+import _ from 'lodash';
+import fetch from 'node-fetch';
+import parse from 'csv-parse/lib/sync';
 
 // const alphaApi = alphavantage({key: process.env.ALPHAVANTAGE_API_KEY});
 

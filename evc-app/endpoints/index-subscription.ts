@@ -7,7 +7,7 @@ import { SubscriptionType } from '../src/types/SubscriptionType';
 import { Payment } from '../src/entity/Payment';
 import { User } from '../src/entity/User';
 import { PaymentStatus } from '../src/types/PaymentStatus';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Role } from '../src/types/Role';
 import { start } from './jobStarter';
 import { enqueueEmail, enqueueEmailInBulk } from '../src/services/emailService';

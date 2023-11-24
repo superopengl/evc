@@ -9,7 +9,7 @@ import { PaymentMethod } from '../types/PaymentMethod';
 import { getNewSubscriptionPaymentInfo } from '../utils/getNewSubscriptionPaymentInfo';
 import { provisionSubscriptionPurchase } from '../utils/provisionSubscriptionPurchase';
 import { commitSubscription } from '../utils/commitSubscription';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { createStripeClientSecretForCardPayment, chargeStripeForCardPayment, chargeStripeForAlipay } from '../services/stripeService';
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';

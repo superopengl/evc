@@ -1,6 +1,6 @@
 
-import * as jwt from 'jsonwebtoken';
-import * as moment from 'moment';
+import jwt from 'jsonwebtoken';
+import moment from 'moment';
 import { assert } from './assert';
 import { sanitizeUser } from './sanitizeUser';
 

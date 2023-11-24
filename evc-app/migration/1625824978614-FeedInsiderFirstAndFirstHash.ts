@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, getRepository } from "typeorm";
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
 import { StockInsiderTransactionPreviousSnapshot } from '../src/entity/StockInsiderTransactionPreviousSnapshot';
-import * as objHash from 'object-hash';
+import objHash from 'object-hash';
 
 export class FeedInsiderFirstAndFirstHash1625824978614 implements MigrationInterface {
 

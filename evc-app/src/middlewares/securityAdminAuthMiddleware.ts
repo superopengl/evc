@@ -1,6 +1,6 @@
 
 import { assert } from '../utils/assert';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 // function createRoleBasedAuthCheckFunction(...roles) {
 //   return (req, res, next) => {

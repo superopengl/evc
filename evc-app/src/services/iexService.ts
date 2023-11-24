@@ -1,5 +1,5 @@
-import * as fetch from 'node-fetch';
-import * as queryString from 'query-string';
+import fetch from 'node-fetch';
+import queryString from 'query-string';
 import 'colors';
 import { assert } from '../utils/assert';
 

@@ -1,10 +1,10 @@
-import * as fs from 'fs';
-import * as pdf from 'html-pdf';
-import * as handlebars from 'handlebars';
+import fs from 'fs';
+import pdf from 'html-pdf';
+import handlebars from 'handlebars';
 import { Stream } from 'stream';
-import * as moment from 'moment';
+import moment from 'moment';
 import { PaymentMethod } from '../types/PaymentMethod';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { assert } from '../utils/assert';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';

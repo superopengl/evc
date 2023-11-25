@@ -3,26 +3,13 @@ import { Button } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import { useStripe, Elements } from '@stripe/react-stripe-js';
-import styled from 'styled-components';
-import { AlipayCircleOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
-
-export const AlipayButton = styled(Button)`
-  border-color: #108fe9;
-  background-color: #108fe9;
-  color: white;
-
-  &:active, &:focus, &:hover {
-    color:  #108fe9;
-    background: white;
-    border-color:  #108fe9;
-  }
-`;
+import { AlipayButton } from 'components/AlipayButton';
 
 function getReturnFullUrl(paymentId) {
   let path = `${process.env.REACT_APP_EVC_API_ENDPOINT}/subscription/payment/${paymentId}/confirm`;
   const isAbsoluteUrl = /https?:\/\//.test(path);
-  if(isAbsoluteUrl) {
+  if (isAbsoluteUrl) {
     return path;
   }
 
@@ -75,11 +62,7 @@ const StripeAlipayPaymentForm = (props) => {
 
   return (
     <AlipayButton
-      size="large"
-      icon={<AlipayCircleOutlined />}
-      block
       disabled={loading || !isInfoComplete}
-      style={{ fontWeight: 700, fontStyle: 'italic' }}
       onClick={handleSubmit}
     >
       Alipay

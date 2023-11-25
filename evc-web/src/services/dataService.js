@@ -15,6 +15,13 @@ export async function getOperationStatus(operation) {
   return httpGet(`admin/operation/${operation}/status`);
 }
 
+export async function listOptionPutCallHistory(type, query) {
+  if (!type) {
+    throw new Error(`operation is not specified.`);
+  }
+  return httpPost(`/admin/data/opc/${type}/search`, query);
+}
+
 export async function listUnusualOptionsActivity(type, query) {
   if (!type) {
     throw new Error(`operation is not specified.`);

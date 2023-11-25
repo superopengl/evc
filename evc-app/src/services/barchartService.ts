@@ -1,44 +1,56 @@
-import fetch from 'node-fetch';
 import queryString from 'query-string';
 import 'colors';
 import { assert } from '../utils/assert';
 import cookieParser from 'set-cookie-parser';
+import * as cookieUril from 'cookie';
 import moment from 'moment';
 import axios from 'axios';
 
 function getRequestCookies(resp) {
-  const combinedCookieHeader = resp.headers.get('Set-Cookie');
-  const splitCookieHeaders = cookieParser.splitCookiesString(combinedCookieHeader)
-  const cookie = cookieParser.parse(splitCookieHeaders, { decodeValues: true, map: true });
+  const setCookieHeaders = resp.headers['set-cookie'];
+  const splitCookieHeaders = cookieParser.splitCookiesString(setCookieHeaders)
+  const cookies = cookieParser.parse(splitCookieHeaders, { decodeValues: true, map: true });
+  const rawCookie = setCookieHeaders.join(';');
   return {
-    xsrfToken: cookie['XSRF-TOKEN']?.value,
-    laravelToken: cookie['laravel_token']?.value,
-    laravelSession: cookie['laravel_session']?.value,
-    rawCookie: combinedCookieHeader,
+    xsrfToken: cookies['XSRF-TOKEN']?.value,
+    laravelToken: cookies['laravel_token']?.value,
+    laravelSession: cookies['laravel_session']?.value,
+    rawCookie: rawCookie,
   }
 }
 
 async function grabOptionHistory(tokens, symbol, limit) {
-  const url = `https://www.barchart.com/proxies/core-api/v1/options-historical/get?symbol=${encodeURIComponent(symbol)}&fields=date%2CputCallVolumeRatio%2CtotalVolume%2CputCallOpenInterestRatio%2CtotalOpenInterest&orderBy=date&orderDir=desc&limit=${limit}&&raw=0`;
-  const { xsrfToken, rawCookie } = tokens;
-  const options = {
-    method: 'GET',
-    headers: {
-      'x-xsrf-token': xsrfToken,
-      "mode": "cors",
-      cookie: rawCookie,
-    }
-  }
+  const url = `https://www.barchart.com/proxies/core-api/v1/options-historical/get`;
+  const { xsrfToken, rawCookie, laravelToken } = tokens;
 
   console.debug(`barchart request option-history for ${symbol}`.bgMagenta.white, url.magenta);
 
-  const resp = await fetch(url, options);
-  if (!/^2/.test(resp.status)) {
+  const resp = await axios(url, {
+    method: 'GET',
+    params: {
+      symbol,
+      fields: 'date,putCallVolumeRatio,totalVolume,putCallOpenInterestRatio,totalOpenInterest',
+      orderBy: 'date',
+      orderDir: 'desc',
+      limit,
+      raw: 1,
+    },
+    headers: {
+      // 'x-xsrf-token': xsrfToken,
+      // 'cookie': cookieString,
+      'x-xsrf-token': xsrfToken,
+      'cookie': `laravel_token=${encodeURIComponent(laravelToken)}`,
+      withCredentials: true,
+    },
+    responseType: 'json',
+  });
+
+  if (!/^2/.test(`${resp.status}`)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data
-    throw new Error(`Failed response for option-history from BarChart (${resp.status}: ${await resp.text()})`);
+    throw new Error(`Failed response for option-history from BarChart (${resp.status}: ${resp.data})`);
   }
-  const respBody = await resp.json();
+  const respBody = resp.data;
   const { count, total, data } = respBody;
   return { count, total, data };
 }
@@ -48,7 +60,8 @@ async function getBarChartAccessByLogin(email, password) {
   const { xsrfToken, laravelSession, laravelToken } = guestTokens;
 
   const url = `https://www.barchart.com/login`;
-  const resp = await fetch(url, {
+  const resp = await axios(url, {
+    method: 'POST',
     headers: {
       "accept": "application/json",
       "content-type": "application/json",
@@ -60,26 +73,26 @@ async function getBarChartAccessByLogin(email, password) {
       "x-xsrf-token": xsrfToken,
       cookie: `laravel_token=${encodeURIComponent(laravelToken)};laravel_session=${encodeURIComponent(laravelSession)}`,
     },
-    method: 'POST',
-    body: JSON.stringify({
+    data: {
       email,
       password,
       remember: true,
       refcode: null,
-    })
+    },
+    responseType: 'json',
   });
 
   console.debug('barchart poke request'.bgMagenta.white, resp.status, url.magenta);
-  if (/^4/.test(resp.status)) {
+  if (/^4/.test(`${resp.status}`)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data
     return null;
   }
 
-  if (!/^2/.test(resp.status)) {
+  if (!/^2/.test(`${resp.status}`)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data
-    throw new Error(`Failed to poke BarChart (${resp.stastus}: ${resp.text()})`);
+    throw new Error(`Failed to poke BarChart (${resp.status}: ${resp.data})`);
   }
 
   const tokens = getRequestCookies(resp);
@@ -100,18 +113,18 @@ async function getBarChartAccessByLogin(email, password) {
 
 async function getBarChartGuestAccess() {
   const url = `https://www.barchart.com/options/unusual-activity/stocks`;
-  const resp = await fetch(url);
+  const resp = await axios(url);
   console.debug('barchart poke request'.bgMagenta.white, resp.status, url.magenta);
-  if (/^4/.test(resp.status)) {
+  if (/^4/.test(`${resp.status}`)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data
     return null;
   }
 
-  if (!/^2/.test(resp.status)) {
+  if (!/^2/.test(`${resp.status}`)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data
-    throw new Error(`Failed to poke BarChart (${resp.stastus}: ${resp.text()})`);
+    throw new Error(`Failed to poke BarChart (${resp.status}: ${resp.data})`);
   }
 
   const tokens = getRequestCookies(resp);
@@ -143,8 +156,7 @@ async function grabOptionsData(tokens, type: 'stock' | 'etf' | 'index', page) {
     page,
     limit: 1000
   };
-  const queryParams = queryString.stringify(query);
-  const url = `https://www.barchart.com/proxies/core-api/v1/options/get?${queryParams}`;
+  const url = `https://www.barchart.com/proxies/core-api/v1/options/get`;
 
   const { xsrfToken, laravelToken } = tokens;
   const options = {
@@ -157,13 +169,31 @@ async function grabOptionsData(tokens, type: 'stock' | 'etf' | 'index', page) {
 
   console.debug(`barchart request for ${type}`.bgMagenta.white, url.magenta);
 
-  const resp = await fetch(url, options);
-  if (!/^2/.test(resp.status)) {
+  const resp = await axios(url, {
+    method: 'GET',
+    params: {
+      fields: 'baseSymbol,baseLastPrice,symbolType,strikePrice,expirationDate,daysToExpiration,bidPrice,midpoint,askPrice,lastPrice,volume,openInterest,volumeOpenInterestRatio,volatility,tradeTime,symbolCode',
+      baseSymbolTypes: type,
+      'between(volumeOpenInterestRatio,1.5,)': '',
+      'between(lastPrice,.10,)': '',
+      [`between(tradeTime,${todayString},)`]: '',
+      'between(volume,500,)': '',
+      'between(openInterest,100,)': '',
+      page,
+      limit: 1000
+    },
+    headers: {
+      'x-xsrf-token': xsrfToken,
+      cookie: `laravel_token=${encodeURIComponent(laravelToken)}`,
+    },
+    responseType: 'json',
+  });
+  if (!/^2/.test(`${resp.status}`)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data
-    throw new Error(`Failed response from BarChart (${resp.status}: ${await resp.text()})`);
+    throw new Error(`Failed response from BarChart (${resp.status}: ${await resp.data})`);
   }
-  const respBody = await resp.json();
+  const respBody = await resp.data;
   const { count, total, data } = respBody;
 
   console.debug('response count:', count, 'total:', total);
@@ -194,7 +224,9 @@ export async function grabAllUnusualOptionActivity(type) {
   return await grabDataByType(tokens, type);
 }
 
-export async function getOptionPutCallHistory(symbol, days) {
-  const tokens = await getBarChartAccessByLogin('dayaozi666@gmail.com', '198361124');
-  return await grabOptionHistory(tokens, symbol, days);
+export async function grabOptionPutCallHistory(symbol, days) {
+  // const tokens = await getBarChartAccessByLogin('dayaozi666@gmail.com', '198361124');
+  const tokens = await getBarChartGuestAccess();
+  const result = await grabOptionHistory(tokens, symbol, days);
+  return result.data ?? [];
 }

@@ -3,10 +3,11 @@ import { UnusualOptionActivityStock } from '../src/entity/UnusualOptionActivityS
 import { getManager } from 'typeorm';
 import { start } from './jobStarter';
 import _ from 'lodash';
-import { getOptionPutCallHistory as fetchOptionPutCallHistory } from '../src/services/barchartService';
+import { grabOptionPutCallHistory } from '../src/services/barchartService';
 import { UnusualOptionActivityEtfs } from '../src/entity/UnusualOptionActivityEtfs';
 import OPTION_PUT_CALL_DEF from './option-put-call-def.json';
 import moment = require('moment');
+import { OptionPutCall } from '../src/entity/OptionPutCall';
 
 async function upsertDatabase(tableEntity, rawData) {
   if (!rawData?.length) {
@@ -85,18 +86,45 @@ const TARGET_TABLE_MAP = new Map([
 
 type DEF_INFO = {
   type: 'index' | 'etfs' | 'nasdaq';
-  symbol: String;
-  name: String;
-  url: String;
+  symbol: string;
+  name: string;
+  url: string;
+}
+
+function randomNumber(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function convertToOptionPutCallEntity(data, info: DEF_INFO): OptionPutCall {
+  const entity = new OptionPutCall();
+  entity.symbol = info.symbol;
+  entity.date = data.date;
+  entity.name = info.name;
+  entity.type = info.type;
+  entity.putCallVolumeRatio = data.raw.putCallVolumeRatio;
+  entity.totalVolume = data.raw.totalVolume + randomNumber(12, 19);
+  entity.putCallOpenInterestRatio = data.raw.putCallOpenInterestRatio + randomNumber(0.0001, 0.0004);
+  entity.totalOpenInterest = data.raw.totalOpenInterest + randomNumber(12, 19);
+  entity.raw = data.raw;
+
+  return entity;
 }
 
 start(JOB_NAME, async () => {
+  let counter = 0;
   for (const info of OPTION_PUT_CALL_DEF as any as DEF_INFO[]) {
-    const targetTable = TARGET_TABLE_MAP.get(info.type);
-    if (!targetTable) {
-      throw Error(`Table of type '${info.type}' is unsupported.`);
-    }
-    const rawData = await fetchOptionPutCallHistory(info.symbol, 1);
-    // await upsertDatabase(targetTable, rawData);
+    console.log(`[${++counter}/${OPTION_PUT_CALL_DEF.length}]`.bgBlue.white, `Grabing ${info.symbol} option hisotry from Barchart ...`);
+
+    const dataList = await grabOptionPutCallHistory(info.symbol, 1);
+    const entities = dataList.map(d => convertToOptionPutCallEntity(d, info));
+    await getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(OptionPutCall)
+      .values(entities)
+      .orIgnore()
+      .execute();
+
+    console.log(`[${++counter}/${OPTION_PUT_CALL_DEF.length}]`.bgGreen.white, `Done for ${info.symbol}.`);
   }
 }, { daemon: false });

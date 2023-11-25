@@ -153,7 +153,7 @@ const OptionPutCallPanel = (props) => {
       dataIndex: 'symbol',
       fixed: 'left',
       width: 85,
-      // sorter: { multiple: 1 },
+      sorter: { multiple: 1 },
       sortOrder: getSortOrder('symbol'),
       render: (value) => value,
     },
@@ -165,8 +165,8 @@ const OptionPutCallPanel = (props) => {
     {
       title: <TableTitle seq={findOrderSeq('tradeDate')}>Date</TableTitle>,
       dataIndex: 'date',
-      sorter: { multiple: 1 },
-      sortOrder: getSortOrder('tradeDate'),
+      sorter: { multiple: 2 },
+      sortOrder: getSortOrder('date'),
       width: 155,
       align: 'left',
       render: (value) => {
@@ -176,53 +176,34 @@ const OptionPutCallPanel = (props) => {
     },
     {
       title: 'Today Option Volume',
-      dataIndex: 'totalVolume',
+      dataIndex: 'todayTotalVol',
       align: 'right',
-      render: (value) => (+value).toLocaleString(),
+      render: (value) => (Math.round(+value)).toLocaleString(),
     },
     {
       title: 'Today %Put Vol',
-      dataIndex: 'todayPercentPutVolume',
+      dataIndex: 'todayPercentPutVol',
       align: 'right',
       render: (value) => (+value * 100).toFixed(0) + '%',
     },
     {
       title: 'Today %Call Vol',
-      dataIndex: 'todayPercentCallVolume',
+      dataIndex: 'todayPercentCallVol',
       align: 'right',
       render: (value) => (+value * 100).toFixed(0) + '%',
     },
     {
       title: 'Total P/C OI Ratio',
-      dataIndex: 'putCallVolumeRatio',
+      dataIndex: 'putCallVol',
       align: 'right',
-      render: (value) => (+value).toFixed(3),
+      render: (value) => (+value).toFixed(2),
     },
     {
       title: 'Total Open Interest',
       dataIndex: 'totalOpenInterest',
       align: 'right',
-      render: (value) => (+value).toLocaleString(),
+      render: (value) => (Math.round(+value)).toLocaleString(),
     },
-    {
-      title: 'Today %Put Vol',
-      dataIndex: 'putPercentage',
-      align: 'right',
-      render: (value) => value,
-    },
-    {
-      title: 'Today %Call Vol',
-      dataIndex: 'callPercentage',
-      align: 'right',
-      render: (value) => value,
-    },
-    {
-      title: 'P/C Vol',
-      dataIndex: 'putCallVol',
-      align: 'right',
-      render: (value) => value,
-    },
-
   ];
 
   const handleSymbolChange = (symbol) => {

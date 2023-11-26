@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip, Typography, Switch } from 'antd';
+import { Pagination, Table, Select, Descriptions, Space, DatePicker, Tooltip, Typography, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity, listOptionPutCallHistory } from 'services/dataService';
 import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { LockFilled } from '@ant-design/icons';
+import { CaretRightOutlined, LockFilled, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
 import { FormattedMessage } from 'react-intl';
+import { Modal } from 'antd';
+import { Loading } from 'components/Loading';
 
 const { Text } = Typography;
 
@@ -37,7 +39,7 @@ const LockIcon = () => <Tooltip title={<FormattedMessage id="text.fullFeatureAft
 const TableTitle = props => props.seq > 0 ? <>{props.children} <Text type="success" strong><sup>{props.seq}</sup></Text></> : props.children
 
 const OptionPutCallPanel = (props) => {
-
+  const { type, symbol, lastDayOnly } = props;
   const [loading, setLoading] = React.useState(false);
   const [queryInfo, setQueryInfo] = React.useState({
     // ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
@@ -56,11 +58,20 @@ const OptionPutCallPanel = (props) => {
   }
 
   React.useEffect(() => {
-    const load$ = from(loadList()).subscribe();
-    return () => {
-      load$.unsubscribe();
-    }
-  }, []);
+    searchByQueryInfo({
+      ...queryInfo,
+      type,
+      symbol,
+      lastDayOnly,
+    })
+  }, [type, symbol, lastDayOnly]);
+
+  // React.useEffect(() => {
+  //   const load$ = from(loadList()).subscribe();
+  //   return () => {
+  //     load$.unsubscribe();
+  //   }
+  // }, []);
 
   const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
@@ -92,7 +103,7 @@ const OptionPutCallPanel = (props) => {
         setLoading(true);
         const queryCondition = getQueryConditions(queryInfo);
         // const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryCondition) : await listOptionPutCallHistory(props.type, queryCondition);
-        const resp = await listOptionPutCallHistory(props.type, queryCondition);
+        const resp = await listOptionPutCallHistory(queryCondition);
         updateWithResponse(resp, queryInfo);
       } else {
         setQueryInfo(queryInfo);
@@ -147,12 +158,49 @@ const OptionPutCallPanel = (props) => {
 
   const shouldHide = context.role === 'free' || context.role === 'guest';
 
+  const handleShowDetail = async (symbol) => {
+    const modalInstance = Modal.info({
+      icon: null,
+      title: <><Text strong>{symbol}</Text> Option History</>,
+      closable: true,
+      maskClosable: true,
+      style: { top: 40, height: 500 },
+      // width: 'calc(100vw - 80px)',
+      width: 900,
+      content: <Loading />
+    })
+    const { data: allHistoryData } = await listOptionPutCallHistory({ symbol });
+    modalInstance.update({
+      content: <Table
+        bordered={false}
+        size="small"
+        columns={columnDef.filter((x, i) => i > 2)}
+        dataSource={allHistoryData.map((x, index) => ({ ...x, index }))}
+        loading={loading}
+        rowKey="index"
+        pagination={false}
+        style={{
+          marginBottom: '1rem',
+          // height: 'calc(100vh - 320px)' 
+        }}
+        scroll={{
+          x: 'max-content',
+          y: 'calc(100vh - 300px)'
+
+        }}
+      />
+    })
+  }
+
   const columnDef = [
+    {
+      render: (value, record) => <Button size="small" icon={<PlusOutlined />} type="default" onClick={() => handleShowDetail(record.symbol)} />
+    },
     {
       title: <TableTitle seq={findOrderSeq('symbol')}>Symbol</TableTitle>,
       dataIndex: 'symbol',
       fixed: 'left',
-      width: 85,
+      // width: 85,
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('symbol'),
       render: (value) => value,
@@ -167,7 +215,7 @@ const OptionPutCallPanel = (props) => {
       dataIndex: 'date',
       sorter: { multiple: 2 },
       sortOrder: getSortOrder('date'),
-      width: 155,
+      // width: 155,
       align: 'left',
       render: (value) => {
         const dateString = moment.tz(`${value}`, 'utc').format('DD MMM YYYY');
@@ -227,42 +275,23 @@ const OptionPutCallPanel = (props) => {
 
   return (
     <ContainerStyled>
-      <Descriptions bordered={false} column={{
-        xxl: 2,
-        xl: 2,
-        lg: 2,
-        md: 2,
-        sm: 1,
-        xs: 1
-      }} size="small" style={{ marginBottom: 8 }}>
-        <Descriptions.Item label="Symbol">
-          <Select allowClear style={{ width: 100 }} placeholder="Symbol"
-            // onSearch={handleSymbolChange}
-            onChange={handleSymbolChange}
-            showSearch
-            filterOption={(input, option) => {
-              const match = input.toLowerCase();
-              const symbol = option.key;
-              return symbol.toLowerCase().includes(match);
-            }}
-          >
-            {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
-          </Select>
-        </Descriptions.Item>
-        <Descriptions.Item label="Trade Date">
-          <DatePicker.RangePicker allowClear picker="date" disabled={queryInfo.lastDayOnly} placeholder={['From', 'To']} onChange={handleTimeChange} />
-        </Descriptions.Item>
-        <Descriptions.Item label="Last day only">
-          <Tooltip title={queryInfo.lastDayOnly ? "Switch off to view all historical data" : "Switch on to only view the last day's data"}>
-            <Switch checked={queryInfo.lastDayOnly} onChange={handleLastDayOnlyChange} />
-          </Tooltip>
-        </Descriptions.Item>
-        <Descriptions.Item>
-          {/* <DatePicker.RangePicker allowClear picker="date" placeholder={['From', 'To']} onChange={handleExpDateChange} /> */}
-        </Descriptions.Item>
-      </Descriptions>
+      <Space style={{ marginBottom: 20 }}>
+        <Text>Symbol:</Text>
+        <Select allowClear style={{ width: 100 }} placeholder="Symbol"
+          // onSearch={handleSymbolChange}
+          onChange={handleSymbolChange}
+          showSearch
+          filterOption={(input, option) => {
+            const match = input.toLowerCase();
+            const symbol = option.key;
+            return symbol.toLowerCase().includes(match);
+          }}
+        >
+          {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
+        </Select>
+      </Space>
       <Table
-        bordered
+        bordered={false}
         size="small"
         columns={columnDef}
         dataSource={list.map((x, index) => ({ ...x, index }))}
@@ -276,7 +305,7 @@ const OptionPutCallPanel = (props) => {
         }}
         scroll={{
           x: 'max-content',
-          // y: 'calc(100vh - 400px)' 
+          y: 'calc(100vh - 370px)'
         }}
       ></Table>
       <Pagination
@@ -300,9 +329,13 @@ const OptionPutCallPanel = (props) => {
 };
 
 OptionPutCallPanel.propTypes = {
-  type: PropTypes.oneOf(['index', 'etfs', 'nasdaq']).isRequired
+  type: PropTypes.oneOf(['index', 'etfs', 'nasdaq']),
+  symbol: PropTypes.string,
+  lastDayOnly: PropTypes.bool,
 };
 
-OptionPutCallPanel.defaultProps = {};
+OptionPutCallPanel.defaultProps = {
+  lastDayOnly: true,
+};
 
 export default withRouter(OptionPutCallPanel);

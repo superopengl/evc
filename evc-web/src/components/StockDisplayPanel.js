@@ -23,6 +23,7 @@ import {
 import { FormattedMessage } from 'react-intl';
 import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
+import OptionPutCallHistoryChart from 'components/charts/OptionPutCallHistoryChart';
 
 
 const StockDisplayPanel = (props) => {
@@ -105,6 +106,13 @@ const StockDisplayPanel = (props) => {
           </Col>}
 
         </Row>
+        {showInlineStockChart && <Row style={{ marginTop: 30 }}>
+          <Col span={24}>
+            <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true} bodyStyle={{ height: 450 }}>
+              <OptionPutCallHistoryChart symbol={stock.symbol} />
+            </MemberOnlyCard>
+          </Col>
+        </Row>}
         {showInlineStockChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
             <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true} bodyStyle={{ height: 450 }}>

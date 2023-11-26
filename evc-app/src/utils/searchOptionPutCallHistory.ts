@@ -9,6 +9,7 @@ import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHi
 
 export type UnusualOptionsActivitySearchParams = {
   symbol?: string;
+  type?: string;
   timeFrom?: string;
   timeTo: string;
   page?: number;
@@ -18,8 +19,10 @@ export type UnusualOptionsActivitySearchParams = {
 };
 
 
-export async function searchOptionPutCallHistory(type, q: any, showFullData: boolean) {
-  const { symbol, timeFrom, timeTo, page, size, order, lastDayOnly } = q as UnusualOptionsActivitySearchParams;
+export async function searchOptionPutCallHistory(q: any, showFullData: boolean) {
+  const { symbol, type, timeFrom, timeTo, page, size, order, lastDayOnly } = q as UnusualOptionsActivitySearchParams;
+
+  assert(symbol || type, 400, 'Either symbol or type must be specified');
 
   const pageNo = +page || 1;
   const pageSize = +size || 60;
@@ -27,20 +30,25 @@ export async function searchOptionPutCallHistory(type, q: any, showFullData: boo
 
   let query = getRepository(OptionPutCallHistoryInformation)
     .createQueryBuilder()
-    .where(`type = :type`, { type });
+    .where('1=1');
 
-  const symbolsResult = await getRepository(OptionPutCallHistoryInformation)
-    .createQueryBuilder()
-    .where('type = :type', { type })
-    .select('symbol')
-    .distinct(true)
-    .orderBy('symbol')
-    .execute();
-
-  const symbols = symbolsResult.map(x => x.symbol);
+  let symbols = [];
 
   if (symbol) {
     query = query.andWhere(`symbol = :symbol`, { symbol: symbol.toUpperCase() });
+  }
+  if (type) {
+    query = query.andWhere(`type = :type`, { type });
+
+    const symbolsResult = await getRepository(OptionPutCallHistoryInformation)
+      .createQueryBuilder()
+      .where('type = :type', { type })
+      .select('symbol')
+      .distinct(true)
+      .orderBy('symbol')
+      .execute();
+
+    symbols = symbolsResult.map(x => x.symbol);
   }
 
   if (lastDayOnly) {

@@ -80,12 +80,6 @@ function convertToEntity(data) {
 
 const JOB_NAME = 'daily-opc';
 
-const TARGET_TABLE_MAP = new Map([
-  ['index', UnusualOptionActivityStock],
-  ['etfs', UnusualOptionActivityStock],
-  ['nasdaq', UnusualOptionActivityStock],
-]);
-
 type DEF_INFO = {
   type: 'index' | 'etfs' | 'nasdaq';
   symbol: string;
@@ -104,9 +98,12 @@ function convertToOptionPutCallEntity(data, info: DEF_INFO): OptionPutCallHistor
   entity.name = info.name;
   entity.type = info.type;
   entity.putCallVol = data.raw.putCallVolumeRatio;
-  entity.todayTotalVol = data.raw.totalVolume + randomNumber(12, 19);
-  entity.putCallOIRatio = data.raw.putCallOpenInterestRatio + randomNumber(0.0001, 0.0004);
-  entity.totalOpenInterest = data.raw.totalOpenInterest + randomNumber(12, 19);
+  entity.todayOptionVol = data.raw.totalVolume;
+  entity.todayOptionVolDelta = randomNumber(12, 19);
+  entity.putCallOIRatio = data.raw.putCallOpenInterestRatio;
+  entity.putCallOIRatioDelta = randomNumber(0.0001, 0.0004);
+  entity.totalOpenInterest = data.raw.totalOpenInterest;
+  entity.totalOpenInterestDelta = randomNumber(12, 19);
   entity.raw = data.raw;
 
   return entity;
@@ -114,7 +111,7 @@ function convertToOptionPutCallEntity(data, info: DEF_INFO): OptionPutCallHistor
 
 async function getDataLimit(symbol) {
   const result = await getRepository(OptionPutCallHistory).findOne({ symbol });
-  return result ? 1 : 70;
+  return result ? 1 : 90;
 }
 
 start(JOB_NAME, async () => {

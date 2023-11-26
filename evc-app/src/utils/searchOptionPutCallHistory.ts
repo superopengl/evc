@@ -79,7 +79,7 @@ export async function searchOptionPutCallHistory(type, q: any, showFullData: boo
       '"date"',
       'name',
       // '"putCallVol"',
-      '"todayTotalVol"',
+      '"todayOptionVol"',
       '"putCallOIRatio"',
       '"totalOpenInterest"',
       '"todayPercentPutVol"',

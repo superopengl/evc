@@ -28,7 +28,7 @@ const StockDetailPage = (props) => {
   const { role } = context;
   const [stock, setStock] = React.useState();
   const [watched, setWatched] = React.useState();
-  const [belled, setBelled] = React.useState(stock?.belled);
+  const [belled, setBelled] = React.useState();
   const [loading, setLoading] = React.useState(true);
   const [stockTags, setStockTags] = React.useState([]);
   const [editTagVisible, setEditTagVisible] = React.useState(false);
@@ -49,6 +49,7 @@ const StockDetailPage = (props) => {
         setStock(stock);
         setStockTags(tags);
         setWatched(stock.watched);
+        setBelled(stock.belled);
         setLoading(false);
       });
     } catch {

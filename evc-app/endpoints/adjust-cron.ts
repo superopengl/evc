@@ -58,7 +58,7 @@ function getDescription(data) {
 function getCronInUtcTime(newYorkTimeHHmmArray) {
     const array = _.isArray(newYorkTimeHHmmArray) ? newYorkTimeHHmmArray : [newYorkTimeHHmmArray];
     const times = array.map(x => moment.tz(x, 'H:mm', NY_TIMEZONE).tz(UTC_TIMEZONE));
-    const minute = times[0].format('mm');
+    const minute = times[0].format('m');
     const hours = times.map(t => t.format('H')).join(',');
 
     return `cron(${minute} ${hours} ? * MON-FRI *)`;

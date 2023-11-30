@@ -1,13 +1,12 @@
 
 import { getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '../entity/User';
 import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
-import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
 import { UserCommissionDiscountInformation } from '../entity/views/UserCommissionDiscountInformation';
+import { getUserCurrentSubscriptionInfo } from '../utils/getUserCurrentSubscriptionInfo';
 
 export const createReferral = async (userId) => {
   const entity = new ReferralCode();
@@ -26,7 +25,7 @@ const getAccountForUser = async (userId) => {
   //   .where({ referredBy: userId, everPaid: true })
   //   .getCount();
 
-  const subscription = await getRepository(UserCurrentSubscription).findOne({ userId })
+  const subscription = await getUserCurrentSubscriptionInfo(userId);
 
   const credit = await getRepository(UserCreditTransaction)
     .createQueryBuilder()
@@ -35,8 +34,8 @@ const getAccountForUser = async (userId) => {
     .getRawOne();
 
   const {
-    referralCount, 
-    globalReferralCommissionPerc, 
+    referralCount,
+    globalReferralCommissionPerc,
     specialReferralCommissionPerc,
     referralCommissionPerc,
     globalReferreeDiscountPerc,

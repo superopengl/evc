@@ -11,8 +11,8 @@ import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { assert } from './assert';
-import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
 import { getRequestGeoInfo } from './getIpGeoLocation';
+import { getUserCurrentSubscriptionInfo } from './getUserCurrentSubscriptionInfo';
 
 export type ProvisionSubscriptionRequest = {
   userId: string;
@@ -22,10 +22,7 @@ export type ProvisionSubscriptionRequest = {
 };
 
 async function getSubscriptionPeriod(q: QueryRunner, userId: string, newSubscriptionType: SubscriptionType): Promise<{ start: Date, end: Date }> {
-  const aliveSubscription = await q.manager.getRepository(UserCurrentSubscription)
-    .findOne({
-      userId
-    });
+  const aliveSubscription = await getUserCurrentSubscriptionInfo(userId, q);
 
   const start = aliveSubscription ? moment(aliveSubscription.end).add(1, 'day').toDate() : getUtcNow();
   const unit = newSubscriptionType === SubscriptionType.UnlimitedYearly ? 'year' : 'month';

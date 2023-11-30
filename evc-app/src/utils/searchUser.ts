@@ -2,7 +2,7 @@ import { getRepository } from 'typeorm';
 import { assert } from './assert';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
-import { UserCurrentSubscription } from '../entity/views/UserCurrentSubscription';
+import { UserAliveSubscriptionSummary } from '../entity/views/UserAliveSubscriptionSummary';
 
 export type StockUserParams = {
   text?: string;
@@ -29,7 +29,7 @@ export async function searchUser(queryInfo: StockUserParams) {
   if (text) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
   }
-  query = query.leftJoin(q => q.from(UserCurrentSubscription, 's'), 's', 's."userId" = u.id');
+  query = query.leftJoin(q => q.from(UserAliveSubscriptionSummary, 's'), 's', 's."userId" = u.id');
   if (subscription?.length) {
     query = query.andWhere(`(COALESCE(s."currentType", 'free') IN (:...subscription))`, { subscription });
   }
@@ -48,8 +48,8 @@ export async function searchUser(queryInfo: StockUserParams) {
 
   const count = await query.getCount();
 
-  query = query.orderBy(orderField, orderDirection)
-    .addOrderBy('p.email', 'ASC')
+  query = query.orderBy(`"${orderField}"`, orderDirection)
+    // .addOrderBy('p.email', 'ASC')
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
     .select([

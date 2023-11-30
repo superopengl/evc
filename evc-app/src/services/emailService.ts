@@ -12,7 +12,6 @@ import * as handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
 import { getConfigValue } from './configService';
 import { EmailLog } from '../entity/EmailLog';
-import errorToJson from 'error-to-json';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { User } from '../entity/User';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';

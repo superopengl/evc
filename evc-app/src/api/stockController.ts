@@ -44,6 +44,7 @@ import * as moment from 'moment-timezone';
 import * as _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
 import { getCompanyName } from '../services/alphaVantageService';
+import { StockInsiderTransaction } from '../entity/StockInsiderTransaction';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -461,41 +462,14 @@ export const getEarningsCalendar = handlerWrapper(async (req, res) => {
   res.json(result);
 });
 
-function includesTransactionCode(transactionCode: string) {
-  switch (transactionCode) {
-    case 'A':
-    case 'P':
-    case 'S':
-    case 'M':
-    case 'G':
-      return true;
-    default:
-      return false;
-  }
-}
 
 export const getStockInsiderTransaction = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
   const { symbol } = req.params;
-  const result = await getInsiderTransactions(symbol)
-  const list = _.chain(result)
-    .filter(x => includesTransactionCode(x.transactionCode))
-    .map(x => _.pick(x, [
-      'fullName',
-      'reportedTitle',
-      'conversionOrExercisePrice',
-      'filingDate',
-      'postShares',
-      'transactionCode',
-      'transactionDate',
-      'transactionPrice',
-      'transactionShares',
-      'transactionValue',
-    ]))
-    .value();
+  const result = await getRepository(StockInsiderTransaction).findOne(symbol);
 
   res.set('Cache-Control', `public, max-age=3600`);
-  res.json(list);
+  res.json(result?.value);
 });
 
 export const getStockRoster = handlerWrapper(async (req, res) => {

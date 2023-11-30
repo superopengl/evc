@@ -38,7 +38,7 @@ async function promoteLatestSnapshotToPreviousSnapshot() {
   });
 }
 
-export async function handleWatchlistNotification() {
+export async function handleCoreDataWatchlistNotification() {
   // Send watchlist emails if core data change detected.
   console.log(`Sending watchlist core change emails`);
   await sendCoreDataChangedEmails();

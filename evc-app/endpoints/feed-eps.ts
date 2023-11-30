@@ -6,7 +6,7 @@ import * as delay from 'delay';
 import errorToJson from 'error-to-json';
 import * as moment from 'moment';
 import { redisCache } from '../src/services/redisCache';
-import { handleWatchlistNotification } from './handleWatchlistNotification';
+import { handleCoreDataWatchlistNotification } from './handleCoreDataWatchlistNotification';
 import { refreshMaterializedView } from '../src/db';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 
@@ -63,7 +63,7 @@ start(JOB_NAME, async () => {
 
     await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
 
-    await handleWatchlistNotification();
+    await handleCoreDataWatchlistNotification();
   } finally {
     await redisCache.del(JOB_IN_PROGRESS);
   }

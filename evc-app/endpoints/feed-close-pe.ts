@@ -12,7 +12,7 @@ import { StockResistance } from '../src/entity/StockResistance';
 import { StockSupport } from '../src/entity/StockSupport';
 import { StockDeprecateResistance } from '../src/entity/views/StockDeprecateResistance';
 import { StockDeprecateSupport } from '../src/entity/views/StockDeprecateSupport';
-import { handleWatchlistNotification } from './handleWatchlistNotification';
+import { handleCoreDataWatchlistNotification } from './handleCoreDataWatchlistNotification';
 
 const JOB_NAME = 'feed-historical-close';
 const MAX_CALL_TIMES_PER_MINUTE = 50;
@@ -140,7 +140,7 @@ start(JOB_NAME, async () => {
 
   await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
 
-  await handleWatchlistNotification();
+  await handleCoreDataWatchlistNotification();
 
   for (const err of failed) {
     console.error(err);

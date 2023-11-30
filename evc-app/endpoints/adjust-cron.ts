@@ -42,6 +42,11 @@ const defs = [
         description: 'Daily subscription check',
         startTimeNY: '23:00',
     },
+    {
+        name: 'daily-insider-transaction',
+        description: 'Daily insider transaction',
+        startTimeNY: '3:00',
+    },
 ];
 
 function getDescription(data) {

@@ -43,7 +43,7 @@ const defs = [
         startTimeNY: '23:00',
     },
     {
-        name: 'daily-insider-transaction',
+        name: 'daily-insider',
         description: 'Daily insider transaction',
         startTimeNY: '3:00',
     },

@@ -1,12 +1,11 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Line, Mix } from '@ant-design/charts';
-import { getStockPutCallRatioChart } from "services/stockService";
+import { Line } from '@ant-design/charts';
 import ReactDOM from 'react-dom';
 import { Loading } from "components/Loading";
 import { from } from 'rxjs';
-import { getOptionPutCallHistoryChartData, listOptionPutCallHistory } from "services/dataService";
+import { getOptionPutCallHistoryChartData } from "services/dataService";
 
 const OptionPutCallHistoryChart = props => {
   const { symbol } = props;
@@ -19,15 +18,15 @@ const OptionPutCallHistoryChart = props => {
       const { date, todayPercentPutVol, todayPercentCallVol, putCallOIRatio } = d;
       chartData.push({
         date,
-        value: todayPercentPutVol,
+        value: todayPercentPutVol + 100,
         type: 'Today %Put Vol'
       }, {
         date,
-        value: todayPercentCallVol,
+        value: todayPercentCallVol + 100,
         type: 'Today %Call Vol'
       }, {
         date,
-        value: putCallOIRatio,
+        value: putCallOIRatio * 100,
         type: 'Total P/C OI Ratio'
       });
     }
@@ -62,19 +61,20 @@ const OptionPutCallHistoryChart = props => {
     smooth: false,
     xAxis: { type: 'time' },
     yAxis: {
-      type: 'log',
+      // type: 'log',
       // type: 'quantize',
       // base: 10,
-      nice: true,
+      // nice: true,
       min: 0,
-      max: 100,
-      // ticks: [0, 0.5, 1, 10, 20, 50, 100],
-      // tickCount: 10,
+      max: 200,
+      // ticks: [0, 10, 20, 40, 60, 80, 100],
+      tickCount: 10,
       visible: true,
       label: {
         formatter: (label) => {
           const value = +label;
-          return value <= 1 ? label : label + '%';
+
+          return value === 100 ? '0% / 1.0' : value < 100 ? (value / 100).toFixed(1) : (value - 100) + '%';
         },
         // rotate: true
       },
@@ -92,6 +92,38 @@ const OptionPutCallHistoryChart = props => {
         }
       }
     },
+    // annotations: {
+    //   pv: [
+    //     {
+    //       type: 'text',
+    //       position: ['median', 'max'],
+    //       content: '左轴',
+    //     },
+    //   ],
+    //   uv: [
+    //     {
+    //       type: 'text',
+    //       position: ['min', 'max'],
+    //       content: '右轴',
+    //     },
+    //   ],
+    // },
+    annotations: [
+      {
+        type: 'line',
+        /** 起始位置 */
+        start: ['min', 100],
+        /** 结束位置 */
+        end: ['max', 100],
+        style: {
+          lineWidth: 1,
+          stroke: '#AAAAAA',
+          // strokeOpacity: 1,
+          // fillOpacity: 1,
+          // opacity: 1,
+        },
+      },
+    ],
     tooltip: {
       formatter: (item, x, y) => {
         const { value: rawValue, type } = item;
@@ -99,135 +131,23 @@ const OptionPutCallHistoryChart = props => {
         switch (type) {
           case 'Today %Put Vol':
           case 'Today %Call Vol':
-            value = `${rawValue} %`;
+            value = `${(rawValue - 100).toFixed(2)} %`;
             break;
           default:
+            value = (value / 100).toFixed(3);
             break;
         }
         return { name: item.type, value };
       }
     },
-    color: ['#55B0D4', '#ffc53d', '#000000'],
+    color: ['#55B0D4', '#ffc53d', '#d7183f'],
     lineStyle: {
       lineWidth: 1.5,
     },
   };
 
-  const mixConfig = {
-    appendPadding: 8,
-    tooltip: {
-      shared: true,
-    },
-    syncViewPadding: true,
-    plots: [
-      {
-        type: 'line',
-        options: {
-          data: data,
-          xField: 'date',
-          yField: 'todayPercentPutVol',
-          yAxis: {
-            type: 'log',
-            max: 100,
-            visible: false,
-            // tickCount: 10,
-          },
-          meta: {
-            date: {
-              sync: true,
-            },
-            todayPercentPutVol: {
-              alias: 'Today %Put Vol',
-              formatter: (v) => `${v} %`,
-            },
-          },
-          // label: {
-          //   position: 'middle',
-          // },
-        },
-      },
-      {
-        type: 'line',
-        options: {
-          data: data,
-          xField: 'date',
-          yField: 'todayPercentCallVol',
-          xAxis: false,
-          yAxis: {
-            type: 'log',
-            max: 100,
-            visible: false,
-          },
-          label: {
-            // offsetY: -8,
-          },
-          meta: {
-            todayPercentCallVol: {
-              alias: 'Today %Call Vol',
-              formatter: (v) => `${v} %`,
-            },
-          },
-          color: '#FF6B3B',
-          // annotations: averageData.map((d) => {
-          //   return {
-          //     type: 'dataMarker',
-          //     position: d,
-          //     point: {
-          //       style: {
-          //         stroke: '#FF6B3B',
-          //         lineWidth: 1.5,
-          //       },
-          //     },
-          //   };
-          // }),
-        },
-      },
-      {
-        type: 'line',
-        options: {
-          data: data,
-          xField: 'date',
-          yField: 'putCallOIRatio',
-          xAxis: false,
-          yAxis: {
-            line: null,
-            grid: null,
-            position: 'right',
-            max: 3,
-            visible: false,
-            // tickCount: 10,
-          },
-          meta: {
-            date: {
-              sync: 'date',
-            },
-            putCallOIRatio: {
-              alias: 'Total P/C OI Ratio',
-              // formatter: (v) => `${(v * 100).toFixed(1)}%`,
-            },
-          },
-          smooth: true,
-          label: {
-            callback: (value) => {
-              return {
-                offsetY: value === 0.148 ? 36 : value === 0.055 ? 0 : 20,
-                style: {
-                  fill: '#1AAF8B',
-                  fontWeight: 700,
-                  stroke: '#fff',
-                  lineWidth: 1,
-                },
-              };
-            },
-          },
-          color: '#1AAF8B',
-        },
-      },
-    ],
-  };
 
   return <Loading loading={loading}>
-    {/* <Mix {...mixConfig} /> */}
     <Line {...config} />
   </Loading>
 }

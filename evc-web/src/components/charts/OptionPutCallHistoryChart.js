@@ -72,14 +72,28 @@ const OptionPutCallHistoryChart = props => {
       // tickCount: 10,
       visible: true,
       label: {
-        formatter: function formatter(v) {
-          const num = +v;
-          return num?.toFixed(0);
+        formatter: (label) => {
+          const value = +label;
+          return value <= 1 ? label : label + '%';
         },
+        // rotate: true
       },
+      grid: {
+        line: {
+          style: {
+            lineWidth: 0.5,
+            lineDash: [3, 2],
+            // strokeOpacity: 0.7,
+            // shadowColor: 'black',
+            // shadowBlur: 10,
+            // shadowOffsetX: 5,
+            // shadowOffsetY: 5,
+          }
+        }
+      }
     },
     tooltip: {
-      formatter: (item) => {
+      formatter: (item, x, y) => {
         const { value: rawValue, type } = item;
         let value = rawValue;
         switch (type) {
@@ -90,10 +104,13 @@ const OptionPutCallHistoryChart = props => {
           default:
             break;
         }
-        return { ...item, value };
+        return { name: item.type, value };
       }
     },
-    color: ["#ff5556", "#a4e057", '#531dab', '#ffc53d'],
+    color: ['#55B0D4', '#ffc53d', '#000000'],
+    lineStyle: {
+      lineWidth: 1.5,
+    },
   };
 
   const mixConfig = {

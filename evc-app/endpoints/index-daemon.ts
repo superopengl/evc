@@ -16,8 +16,8 @@ import * as _ from 'lodash';
 
 const JOB_NAME = 'price-sse';
 const SYMBOL_BATCH_SIZE = 50;
-const CLIENT_EVENT_FREQUENCY = 5 * 1000; // 5 seconds
-const DB_UPDATE_FREQUENCY = 5 * 1000;  // 5 seconds.
+const CLIENT_EVENT_FREQUENCY = 15 * 1000; // 15 seconds
+const DB_UPDATE_FREQUENCY = 15 * 1000;  // 15 seconds.
 const redisPricePublisher = new RedisRealtimePricePubService();
 let symbolSourceMap: Map<string, Subject<StockLastPriceInfo>>;
 

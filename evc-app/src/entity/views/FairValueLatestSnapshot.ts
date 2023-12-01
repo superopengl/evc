@@ -9,14 +9,12 @@ import { StockLatestPaidInformation } from './StockLatestPaidInformation';
       'symbol',
       '"fairValueLo"',
       '"fairValueHi"',
-      'supports',
-      'resistances',
-      'md5(row("fairValueLo", "fairValueHi", supports, resistances)::text) as hash',
+      'md5(row("fairValueLo", "fairValueHi")::text) as hash',
       'CURRENT_DATE as date'
     ])
     .where(`"fairValueLo" IS NOT NULL`)
 })
-export class CoreDataLatestSnapshot {
+export class FairValueLatestSnapshot {
   @ViewColumn()
   symbol: string;
 
@@ -25,12 +23,6 @@ export class CoreDataLatestSnapshot {
 
   @ViewColumn()
   fairValueHi: number;
-
-  @ViewColumn()
-  supports: { lo: number, hi: number }[];
-
-  @ViewColumn()
-  resistances: { lo: number, hi: number }[];
 
   @ViewColumn()
   hash: string;

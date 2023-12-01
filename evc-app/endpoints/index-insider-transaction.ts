@@ -4,7 +4,7 @@ import { Stock } from '../src/entity/Stock';
 import { singleBatchRequest } from '../src/services/iexService';
 import * as _ from 'lodash';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
-import { handleInsiderTransactionWatchlistNotification } from './handleInsiderTransactionWatchlistNotification';
+import { handleWatchlistInsiderTransactionNotification } from './handleWatchlistInsiderTransactionNotification';
 
 
 async function syncManyStockInsiderTransactions(list: StockInsiderTransaction[]) {
@@ -85,7 +85,7 @@ start(JOB_NAME, async () => {
     await syncIexForSymbols(batchSymbols);
   }
 
-  await handleInsiderTransactionWatchlistNotification();
+  await handleWatchlistInsiderTransactionNotification();
 
   // await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView(StockPutCallRatio90));
 });

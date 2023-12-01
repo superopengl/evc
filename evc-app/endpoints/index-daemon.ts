@@ -58,7 +58,7 @@ async function initialize() {
     )
     .subscribe(async (list: StockLastPriceInfo[]) => {
       try {
-        updateLastPriceInDatabase(list);
+        await updateLastPriceInDatabase(list);
       } catch (err) {
         console.error('Task sse saveLastPrice', err);
       }
@@ -75,18 +75,21 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
         price,
         change,
         changePercent,
-        updatedAt: new Date(time)
       };
     });
 
   if (values.length) {
-    await getManager()
-      .createQueryBuilder()
-      .insert()
-      .into(StockLastPrice)
-      .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent", "updatedAt" = excluded."updatedAt"')
-      .values(values)
-      .execute();
+    const chunks = _.chunk(values, 1000);
+    for (const chunk of chunks) {
+      await getManager()
+        .createQueryBuilder()
+        .insert()
+        .into(StockLastPrice)
+        .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent"')
+        .values(chunk)
+        .execute();
+      console.log(`Update ${chunk.length} stock prices`);
+    }
   }
 }
 
@@ -194,7 +197,7 @@ export async function startEmailDaemon() {
           await sleep(sleepTimeMs);
         } catch (err) {
           console.log(`Failed to send out email ${task.id}`, err);
-          await getRepository(EmailSentOutTask).increment({id: task.id}, 'failedCount', 1);
+          await getRepository(EmailSentOutTask).increment({ id: task.id }, 'failedCount', 1);
         }
       }
       console.log(`Email daemon ${emailTasks.length} emails to send out, ${okCounter} succedded.`);

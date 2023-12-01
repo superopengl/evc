@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
@@ -16,6 +16,6 @@ export class StockLastPrice {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   changePercent: number;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt?: Date;
 }

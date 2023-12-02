@@ -89,11 +89,13 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   });
   assert(receipt, 404);
 
-  const { pdfStream, fileName } = await generateReceiptPdfStream(receipt);
+  const { pdfBuffer, fileName } = await generateReceiptPdfStream(receipt);
 
   res.set('Cache-Control', `public, max-age=31536000, immutable`);
+  res.set('Content-Type', 'application/pdf');
   res.attachment(fileName);
-  pdfStream.pipe(res);
+
+  res.send(pdfBuffer);
 });
 
 export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {

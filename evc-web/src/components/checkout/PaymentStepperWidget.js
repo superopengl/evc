@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Divider, Card } from 'antd';
+import { Typography, Button, Divider, Card, Row, Col } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { PayPalCheckoutButton } from 'components/checkout/PayPalCheckoutButton';
@@ -180,9 +180,9 @@ const PaymentStepperWidget = (props) => {
         </Space>
         <Divider></Divider>
         <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-          <Space>
-            {[VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <CardIcon key={i} src={s} />)}
-          </Space>
+          <Row gutter={[10, 10]} justify="center">
+            {[VisaIcon, MasterIcon, MaestroIcon, AmexIcon, JcbIcon].map((s, i) => <Col key={i}><CardIcon src={s} /></Col>)}
+          </Row>
         </div>
         <StripeCardPaymentWidget
           onProvision={() => handleProvisionSubscription('card')}

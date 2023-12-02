@@ -1,5 +1,5 @@
 import React from 'react';
-import { Space, Button } from 'antd';
+import { Space, Button, Row, Col } from 'antd';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
@@ -106,8 +106,8 @@ const StripeCardPaymentForm = (props) => {
     <form onSubmit={handleSubmit}>
       {/* <Text>Please input card information</Text> */}
       {/* <label>Card Number <CardNumberElement /></label> */}
-      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <div style={{ width: 270 }}>
+      <Row gutter={[10, 10]}>
+        <Col {...{ xs: 24, sm: 16, md: 15, lg: 15, xl: 15, xxl: 15 }}>
           <CardNumberElement
             onChange={handleCardNumberChange}
             options={{
@@ -115,8 +115,8 @@ const StripeCardPaymentForm = (props) => {
               placeholder: '1234 1234 1234 1234'
             }}
           />
-        </div>
-        <div style={{ width: 90 }}>
+        </Col>
+        <Col {...{ xs: 12, sm: 4, md: 5, lg: 5, xl: 5, xxl: 5 }}>
           <CardExpiryElement
             onChange={handleCardExpiryChange}
             options={{
@@ -124,8 +124,8 @@ const StripeCardPaymentForm = (props) => {
               placeholder: 'MM / YY'
             }}
           />
-        </div>
-        <div style={{ width: 90 }}>
+        </Col>
+        <Col {...{ xs: 12, sm: 4, md: 4, lg: 4, xl: 4, xxl: 4 }}>
           <CardCvcElement
             onChange={handleCardCvcChange}
             options={{
@@ -133,8 +133,8 @@ const StripeCardPaymentForm = (props) => {
               placeholder: 'CVC'
             }}
           />
-        </div>
-      </Space>
+        </Col>
+      </Row>
       <CardButton type="primary" size="large" htmlType="submit"
         style={{ marginTop: 10 }}
         // icon={<CreditCardOutlined />}

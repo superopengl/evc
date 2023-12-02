@@ -4,81 +4,88 @@ import { StockLastPrice } from '../StockLastPrice';
 import { StockLatestFairValue } from './StockLatestFairValue';
 import { StockSupport } from '../StockSupport';
 import { StockResistance } from '../StockResistance';
+import { OptionPutCallHistoryInformation } from './OptionPutCallHistoryInformation';
+import { existsQuery } from '../../utils/existsQuery';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(Stock, 's')
-    .select([
-      's.symbol as symbol',
-      'company'
-    ])
-    .leftJoin(q => q.from('stock_tags_stock_tag', 'tg')
-      .groupBy('tg."stockSymbol"')
+  expression: (connection: Connection) => {
+    const { schema, tableName } = connection.getRepository(OptionPutCallHistoryInformation).metadata;
+
+    return connection.createQueryBuilder()
+      .from(Stock, 's')
       .select([
-        'tg."stockSymbol" as symbol',
-        'array_agg(tg."stockTagId") as tags'
-      ]),
-      'tg', 'tg.symbol = s.symbol'
-    )
-    .addSelect('tg.tags')
-    .leftJoin(q => q.from(StockLatestFairValue, 'sfv'),
-      'sfv', 'sfv.symbol = s.symbol'
-    )
-    .addSelect('sfv."fairValueLo"')
-    .addSelect('sfv."fairValueHi"')
-    .addSelect('sfv."reportDate" as "fairValueDate"')
-    .addSelect('CASE WHEN sfv."ttmEps" <= 0 THEN TRUE ELSE FALSE END as "isLoss"')
-    .addSelect('sfv."forwardNextFyFairValueLo"')
-    .addSelect('sfv."forwardNextFyFairValueHi"')
-    .addSelect('CASE WHEN sfv."forwardNextFyFairValueLo" < 0 THEN TRUE ELSE FALSE END as "isForwardNextFyFairValueLoss"')
-    .addSelect('sfv."forwardNextFyMaxValueLo"')
-    .addSelect('sfv."forwardNextFyMaxValueHi"')
-    .addSelect('CASE WHEN sfv."forwardNextFyMaxValueLo" < 0 THEN TRUE ELSE FALSE END as "isForwardNextFyMaxValueLoss"')
-    .addSelect('sfv."beta"')
-    .addSelect('sfv."peRatio"')
-    .addSelect('sfv."pegRatio"')
-    .leftJoin(q => q.from(StockLastPrice, 'slp'),
-      'slp', 'slp.symbol = s.symbol'
-    )
-    .addSelect('slp.price as "lastPrice"')
-    .addSelect('slp.change as "lastChange"')
-    .addSelect('slp."changePercent" as "lastChangePercent"')
-    .addSelect('CASE WHEN slp.price < sfv."fairValueLo" THEN TRUE ELSE FALSE END as "isUnder"')
-    .addSelect('CASE WHEN slp.price > sfv."fairValueHi" THEN TRUE ELSE FALSE END as "isOver"')
-    .leftJoin(q =>
-      q.from(q =>
-        q.from(StockSupport, 'x')
-          .select([
-            'symbol',
-            'lo',
-            'hi',
-            `RANK() OVER (PARTITION BY symbol ORDER BY lo DESC, hi DESC) AS rank`
-          ]),
-        'sup')
-        .where(`rank <= 3`)
-        .groupBy('symbol')
-        .select('symbol')
-        .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
-      'support', 'support.symbol = s.symbol'
-    )
-    .addSelect('support.values as supports')
-    .leftJoin(q =>
-      q.from(q =>
-        q.from(StockResistance, 'x')
-          .select([
-            'symbol',
-            'lo',
-            'hi',
-            `RANK() OVER (PARTITION BY symbol ORDER BY lo ASC, hi ASC) AS rank`
-          ]),
-        'sup')
-        .where(`rank <= 3`)
-        .groupBy('symbol')
-        .select('symbol')
-        .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
-      'resistance', 'resistance.symbol = s.symbol'
-    )
-    .addSelect('resistance.values as resistances')
+        's.symbol as symbol',
+        'company'
+      ])
+      .leftJoin(q => q.from('stock_tags_stock_tag', 'tg')
+        .groupBy('tg."stockSymbol"')
+        .select([
+          'tg."stockSymbol" as symbol',
+          'array_agg(tg."stockTagId") as tags'
+        ]),
+        'tg', 'tg.symbol = s.symbol'
+      )
+      .addSelect('tg.tags')
+      .leftJoin(q => q.from(StockLatestFairValue, 'sfv'),
+        'sfv', 'sfv.symbol = s.symbol'
+      )
+      .addSelect('sfv."fairValueLo"')
+      .addSelect('sfv."fairValueHi"')
+      .addSelect('sfv."reportDate" as "fairValueDate"')
+      .addSelect('CASE WHEN sfv."ttmEps" <= 0 THEN TRUE ELSE FALSE END as "isLoss"')
+      .addSelect('sfv."forwardNextFyFairValueLo"')
+      .addSelect('sfv."forwardNextFyFairValueHi"')
+      .addSelect('CASE WHEN sfv."forwardNextFyFairValueLo" < 0 THEN TRUE ELSE FALSE END as "isForwardNextFyFairValueLoss"')
+      .addSelect('sfv."forwardNextFyMaxValueLo"')
+      .addSelect('sfv."forwardNextFyMaxValueHi"')
+      .addSelect('CASE WHEN sfv."forwardNextFyMaxValueLo" < 0 THEN TRUE ELSE FALSE END as "isForwardNextFyMaxValueLoss"')
+      .addSelect('sfv."beta"')
+      .addSelect('sfv."peRatio"')
+      .addSelect('sfv."pegRatio"')
+      .leftJoin(q => q.from(StockLastPrice, 'slp'),
+        'slp', 'slp.symbol = s.symbol'
+      )
+      .addSelect('slp.price as "lastPrice"')
+      .addSelect('slp.change as "lastChange"')
+      .addSelect('slp."changePercent" as "lastChangePercent"')
+      .addSelect('CASE WHEN slp.price < sfv."fairValueLo" THEN TRUE ELSE FALSE END as "isUnder"')
+      .addSelect('CASE WHEN slp.price > sfv."fairValueHi" THEN TRUE ELSE FALSE END as "isOver"')
+      .leftJoin(q =>
+        q.from(q =>
+          q.from(StockSupport, 'x')
+            .select([
+              'symbol',
+              'lo',
+              'hi',
+              `RANK() OVER (PARTITION BY symbol ORDER BY lo DESC, hi DESC) AS rank`
+            ]),
+          'sup')
+          .where(`rank <= 3`)
+          .groupBy('symbol')
+          .select('symbol')
+          .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
+        'support', 'support.symbol = s.symbol'
+      )
+      .addSelect('support.values as supports')
+      .leftJoin(q =>
+        q.from(q =>
+          q.from(StockResistance, 'x')
+            .select([
+              'symbol',
+              'lo',
+              'hi',
+              `RANK() OVER (PARTITION BY symbol ORDER BY lo ASC, hi ASC) AS rank`
+            ]),
+          'sup')
+          .where(`rank <= 3`)
+          .groupBy('symbol')
+          .select('symbol')
+          .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
+        'resistance', 'resistance.symbol = s.symbol'
+      )
+      .addSelect('resistance.values as resistances')
+      .addSelect(`EXISTS(select 1 from "${schema}"."${tableName}" opc where opc.symbol=s.symbol) as "hasNewChart"`)
+  }
 })
 export class StockLatestPaidInformation {
   @ViewColumn()
@@ -150,5 +157,8 @@ export class StockLatestPaidInformation {
 
   @ViewColumn()
   pegRatio: number;
+
+  @ViewColumn()
+  hasNewChart: boolean;
 }
 

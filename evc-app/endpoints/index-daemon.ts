@@ -88,7 +88,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
         .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent"')
         .values(chunk)
         .execute();
-      console.log(`Update ${chunk.length} stock prices`);
+      // console.log(`Update ${chunk.length} stock prices`);
     }
   }
 }

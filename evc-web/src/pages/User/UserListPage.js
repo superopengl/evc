@@ -99,11 +99,11 @@ const UserListPage = () => {
       dataIndex: 'subscription',
       render: (value, item) => item.role === 'admin' ? null : getSubscriptionName(value)
     },
-    // {
-    //   title: 'Login Type',
-    //   dataIndex: 'loginType',
-    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    // },
+    {
+      title: 'Login Type',
+      dataIndex: 'loginType',
+      render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+    },
     {
       title: 'Signed Up',
       dataIndex: 'createdAt',
@@ -135,8 +135,8 @@ const UserListPage = () => {
             <Tooltip placement="bottom" title="Update profile">
               <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
             </Tooltip>
-            <Tooltip placement="bottom" title="Set password">
-              <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
+            <Tooltip placement="bottom" title={user.loginType === 'local' ? 'Set password' : 'Cannot set password for Google SSO'}>
+              <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} disabled={user.loginType !== 'local'} />
             </Tooltip>
             <Tooltip placement="bottom" title="Impersonate">
               <Button shape="circle" onClick={e => handleImpersonante(e, user)} disabled={context.user.profile.email === user.email}>

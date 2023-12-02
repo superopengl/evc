@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Space, Typography, Button } from 'antd';
+import { Pagination, Table, Select, Space, Typography, Button, Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listOptionPutCallHistory } from 'services/dataService';
@@ -156,7 +156,7 @@ const OptionPutCallPanel = (props) => {
 
   const columnDef = [
     {
-      render: (value, record) => <Button size="small" icon={<PlusOutlined />} type="default" onClick={() => handleShowDetail(record.symbol)} />
+      render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="default" onClick={() => handleShowDetail(record.symbol)} />
     },
     {
       title: <TableTitle seq={findOrderSeq('symbol')}>Symbol</TableTitle>,
@@ -230,8 +230,8 @@ const OptionPutCallPanel = (props) => {
 
   return (
     <ContainerStyled>
-      {isMultiSymbolMode && <Space style={{ marginBottom: 20 }}>
-        <Text>Symbol:</Text>
+      {isMultiSymbolMode && <Row style={{ marginBottom: 20 }} align='middle'>
+        <Text style={{ marginRight: '1rem' }}>Symbol: </Text>
         <Select allowClear style={{ width: 100 }} placeholder="Symbol"
           // onSearch={handleSymbolChange}
           onChange={handleSymbolChange}
@@ -244,7 +244,7 @@ const OptionPutCallPanel = (props) => {
         >
           {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
         </Select>
-      </Space>}
+      </Row>}
       <Table
         bordered={false}
         size="small"
@@ -254,6 +254,13 @@ const OptionPutCallPanel = (props) => {
         rowKey="index"
         pagination={false}
         onChange={handleTableSortChange}
+        onRow={(record, index) => {
+          return {
+            onDoubleClick: () => {
+              handleShowDetail(record.symbol)
+            }
+          }
+        }}
         style={{
           // marginBottom: '1rem',
           // height: 'calc(100vh - 320px)' 
@@ -263,23 +270,25 @@ const OptionPutCallPanel = (props) => {
           y: 'calc(100vh - 370px)'
         }}
       ></Table>
-      {isMultiSymbolMode && <Pagination
-        current={queryInfo.page}
-        pageSize={queryInfo.size}
-        total={total}
-        defaultCurrent={queryInfo.page}
-        defaultPageSize={queryInfo.size}
-        pageSizeOptions={[20, 50, 100]}
-        showSizeChanger
-        showQuickJumper
-        showTotal={total => `Total ${total}`}
-        style={{ marginTop: '1rem' }}
-        disabled={loading}
-        onChange={handlePaginationChange}
-        onShowSizeChange={(current, size) => {
-          searchByQueryInfo({ ...queryInfo, page: current, size });
-        }}
-      />}
+      {isMultiSymbolMode && <Row justify='end'>
+        {total > queryInfo.size && <Pagination
+          current={queryInfo.page}
+          pageSize={queryInfo.size}
+          total={total}
+          defaultCurrent={queryInfo.page}
+          defaultPageSize={queryInfo.size}
+          pageSizeOptions={[20, 50, 100]}
+          showSizeChanger
+          showQuickJumper
+          showTotal={total => `Total ${total}`}
+          style={{ marginTop: '1rem' }}
+          disabled={loading}
+          onChange={handlePaginationChange}
+          onShowSizeChange={(current, size) => {
+            searchByQueryInfo({ ...queryInfo, page: current, size });
+          }}
+        />}
+      </Row>}
     </ContainerStyled>
   );
 };

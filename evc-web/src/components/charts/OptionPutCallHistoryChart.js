@@ -65,6 +65,7 @@ export const OptionPutCallHistoryChart = props => {
       // type: 'quantize',
       // base: 10,
       // nice: true,
+      position: 'right',
       min: 0,
       max: 200,
       // ticks: [0, 10, 20, 40, 60, 80, 100],
@@ -74,7 +75,7 @@ export const OptionPutCallHistoryChart = props => {
         formatter: (label) => {
           const value = +label;
 
-          return value === 100 ? '0% / 1.0' : value < 100 ? (value / 100).toFixed(1) : (value - 100) + '%';
+          return value === 100 ? '0%\n1.0' : value < 100 ? (value / 100).toFixed(1) : (value - 100) + '%';
         },
         // rotate: true
       },

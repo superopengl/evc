@@ -156,7 +156,7 @@ const OptionPutCallPanel = (props) => {
 
   const columnDef = [
     {
-      render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="default" onClick={() => handleShowDetail(record.symbol)} />
+      render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="text" onClick={() => handleShowDetail(record.symbol)} />
     },
     {
       title: <TableTitle seq={findOrderSeq('symbol')}>Symbol</TableTitle>,

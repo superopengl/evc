@@ -59,12 +59,15 @@ export const OptionPutCallHistoryChart = props => {
     yField: 'value',
     seriesField: 'type',
     smooth: false,
-    xAxis: { type: 'time' },
+    xAxis: {
+      type: 'time',
+      nice: true,
+    },
     yAxis: {
       // type: 'log',
       // type: 'quantize',
       // base: 10,
-      // nice: true,
+      nice: true,
       position: 'right',
       min: 0,
       max: 200,

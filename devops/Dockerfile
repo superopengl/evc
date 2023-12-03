@@ -1,16 +1,20 @@
-FROM node:14-slim
+FROM node:18-slim
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
 # installs, work.
 RUN apt-get update \
-    && apt-get install -y wget gnupg \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y bzip2 google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 build-essential chrpath libssl-dev libxft-dev\
-      --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+  && apt-get install -y wget gnupg \
+  && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+  && apt-get update \
+  && apt-get install -y bzip2 google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 build-essential chrpath libssl-dev libxft-dev\
+  --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get install libfreetype6 libfreetype6-dev
 RUN apt-get install libfontconfig1 libfontconfig1-dev
@@ -38,7 +42,7 @@ RUN apt-get install libfontconfig1 libfontconfig1-dev
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-RUN npm install -g pnpm
+# RUN npm install -g pnpm
 #RUN apk update && apk add curl
 
 # RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
@@ -49,16 +53,22 @@ RUN npm install -g pnpm
 EXPOSE 80
 # Install dependencies
 WORKDIR /usr/portal
-COPY ./evc-web/package.json /usr/portal/web/
-COPY ./evc-app/package.json /usr/portal/app/
+COPY ./evc-web/pnpm-lock.yaml /usr/portal/web/
+COPY ./evc-app/pnpm-lock.yaml /usr/portal/app/
 
 WORKDIR /usr/portal/web
-RUN pnpm install
+RUN pnpm fetch
 
 WORKDIR /usr/portal/app
-RUN pnpm install
-RUN npm install phantomjs-prebuilt@2.1.16 --update-binary
-RUN npm link phantomjs-prebuilt
+RUN pnpm fetch
+
+WORKDIR /usr/portal/web
+COPY ./evc-web /usr/portal/web
+RUN pnpm install --offline
+
+WORKDIR /usr/portal/app
+COPY ./evc-app /usr/portal/app
+RUN pnpm install --offline
 
 # Env vars in build time
 ARG NODE_ENV

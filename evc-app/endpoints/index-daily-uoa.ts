@@ -10,6 +10,7 @@ import { randomNumber } from './randomNumber';
 import { OptionPutCallHistory } from '../src/entity/OptionPutCallHistory';
 import OPTION_PUT_CALL_DEF from './option-put-call-def.json';
 import { grabOptionPutCallHistory } from '../src/services/barchartService';
+import { sleep } from '../src/utils/sleep';
 
 const defList = OPTION_PUT_CALL_DEF as any as DEF_INFO[];
 
@@ -144,6 +145,7 @@ start(JOB_NAME, async () => {
 
     console.log(`[${counter}/${defList.length}]`.bgBlue.white, `Grabing ${info.symbol} option hisotry from Barchart (${limit} days) ...`);
 
+    await sleep(randomNumber(100, 1000));
     const dataList = await grabOptionPutCallHistory(info.symbol, limit);
     const entities = dataList.map(d => convertToOptionPutCallEntity(d, info));
     await getManager()

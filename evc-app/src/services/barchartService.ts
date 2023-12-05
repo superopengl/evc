@@ -5,6 +5,9 @@ import cookieParser from 'set-cookie-parser';
 import * as cookieUril from 'cookie';
 import moment from 'moment';
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
+
+axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay });
 
 function getRequestCookies(resp) {
   const setCookieHeaders = resp.headers['set-cookie'];

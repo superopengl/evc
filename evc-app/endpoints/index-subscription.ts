@@ -129,7 +129,7 @@ async function sendAlertForNonRecurringExpiringSubscriptions() {
     .createQueryBuilder()
     .where('"lastRecurring" = FALSE')
     .andWhere('"currentSubscriptionId" = "lastSubscriptionId"')
-    .andWhere(`"end" - CURRENT_DATE = ANY(ARRAY[1, 3, 7])`)
+    .andWhere(`"end" - CURRENT_DATE = ANY(ARRAY[7])`) // notice before 7 days
     .getMany();
 
   enqueueEmailTasks(EmailTemplateType.SubscriptionExpiring, list);

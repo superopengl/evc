@@ -144,7 +144,7 @@ start(JOB_NAME, async () => {
     const limit = await getDataLimit(info.symbol);
 
     console.log(`[${counter}/${defList.length}]`.bgBlue.white, `Grabing ${info.symbol} option hisotry from Barchart (${limit} days) ...`);
-    const sleepTime = randomNumber(100, 1000);
+    const sleepTime = randomNumber(1000, 5000);
     console.log(`Sleeping for ${sleepTime} ms...`);
     await sleep(sleepTime);
 

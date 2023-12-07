@@ -276,6 +276,12 @@ export const searchOptionPutCall = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {
+  const showFullData = shouldShowFullDataForUoa(req);
+  const list = await searchOptionPutCallHistory(req.body, showFullData);
+  res.json(list);
+});
+
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
   const list = await searchUnusualOptionsActivity('stock', req.body, showFullData);

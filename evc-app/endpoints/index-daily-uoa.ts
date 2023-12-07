@@ -8,18 +8,39 @@ import { UnusualOptionActivityEtfs } from '../src/entity/UnusualOptionActivityEt
 import moment = require('moment');
 import { randomNumber } from './randomNumber';
 import { OptionPutCallHistory } from '../src/entity/OptionPutCallHistory';
-import OPTION_PUT_CALL_DEF from './option-put-call-def.json';
 import { grabOptionPutCallHistory } from '../src/services/barchartService';
 import { sleep } from '../src/utils/sleep';
+import { OptionPutCallHistoryInformation } from '../src/entity/views/OptionPutCallHistoryInformation';
+import { OptionPutCallStockDefInformation } from '../src/entity/views/OptionPutCallStockDefInformation';
+import { OptionPutCallAllDefInformation } from '../src/entity/views/OptionPutCallAllDefInformation';
 
-const defList = OPTION_PUT_CALL_DEF as any as DEF_INFO[];
 
-type DEF_INFO = {
-  type: 'index' | 'etfs' | 'nasdaq';
-  symbol: string;
-  name: string;
-  url: string;
-}
+const INDEX_DEF = [
+  {
+    symbol: '$SPX',
+    alias: 'SPX',
+    company: 'S&P 500 Index',
+    name: 'INDEX',
+  },
+  {
+    symbol: '$IUXX',
+    alias: 'NDX（IUXX）',
+    company: 'Nasdaq 100 Index',
+    name: 'INDEX',
+  },
+  {
+    symbol: '$DJX',
+    alias: 'DJI（DJX）',
+    company: 'Dow Jones Industrials Average Index',
+    name: 'INDEX',
+  },
+  {
+    symbol: '$VIX',
+    alias: 'VIX',
+    company: 'CBOE Volatility Index',
+    name: 'INDEX',
+  }
+]
 
 async function upsertDatabase(tableEntity, rawData) {
   if (!rawData?.length) {
@@ -88,12 +109,10 @@ function convertToEntity(data) {
   }
 }
 
-function convertToOptionPutCallEntity(data, info: DEF_INFO): OptionPutCallHistory {
+function convertToOptionPutCallEntity(data, symbol): OptionPutCallHistory {
   const entity = new OptionPutCallHistory();
-  entity.symbol = info.symbol;
+  entity.symbol = symbol;
   entity.date = data.date;
-  entity.name = info.name;
-  entity.type = info.type;
   entity.putCallVol = data.raw.putCallVolumeRatio;
   entity.todayOptionVol = data.raw.totalVolume;
   entity.todayOptionVolDelta = randomNumber(12, 19);
@@ -124,8 +143,15 @@ const list = [
 
 
 async function getDataLimit(symbol) {
-  const result = await getRepository(OptionPutCallHistory).findOne({ symbol });
-  return result ? 1 : 90;
+  const result = await getRepository(OptionPutCallHistory)
+    .createQueryBuilder()
+    .where(`symbol = '${symbol}'`)
+    .select([
+      'EXTRACT(DAY FROM NOW() - MAX("date")) AS value'
+    ])
+    .execute();
+
+  return result?.[0]?.value ?? 90;
 }
 
 start(JOB_NAME, async () => {
@@ -139,17 +165,26 @@ start(JOB_NAME, async () => {
   // Grab option history
   console.log('Grabing option history');
   let counter = 0;
-  for (const info of defList) {
-    counter++;
-    const limit = await getDataLimit(info.symbol);
 
-    console.log(`[${counter}/${defList.length}]`.bgBlue.white, `Grabing ${info.symbol} option hisotry from Barchart (${limit} days) ...`);
+  const optionPutCallDef = await getRepository(OptionPutCallAllDefInformation)
+    .createQueryBuilder()
+    .select(['symbol', '"apiSymbol"'])
+    .distinct()
+    .execute();
+
+  for (const entity of optionPutCallDef) {
+    counter++;
+
+    const { symbol, apiSymbol } = entity;
+    const limit = await getDataLimit(symbol);
+
+    console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Grabing ${entity.symbol} option hisotry from Barchart (${limit} days) ...`);
     const sleepTime = randomNumber(1000, 5000);
     console.log(`Sleeping for ${sleepTime} ms...`);
     await sleep(sleepTime);
 
-    const dataList = await grabOptionPutCallHistory(info.symbol, limit);
-    const entities = dataList.map(d => convertToOptionPutCallEntity(d, info));
+    const dataList = await grabOptionPutCallHistory(apiSymbol, limit);
+    const entities = dataList.map(d => convertToOptionPutCallEntity(d, symbol));
     await getManager()
       .createQueryBuilder()
       .insert()
@@ -158,9 +193,7 @@ start(JOB_NAME, async () => {
       .orIgnore()
       .execute();
 
-    console.log(`[${counter}/${defList.length}]`.bgGreen.white, `Done for ${info.symbol}.`);
+    console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${entity.symbol}.`);
   }
-
-
 
 }, { daemon: false });

@@ -1242,6 +1242,12 @@ paths:
       responses:
         200:
           description: OK
+  /admin/data/opc:
+    get:
+      operationId: listLatestOptionPutCall
+      responses:
+        200:
+          description: OK                    
   /admin/data/opc/search:
     post:
       operationId: searchOptionPutCall

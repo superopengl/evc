@@ -22,7 +22,7 @@ async function udpateDatabase(symbolValueMap) {
       putCallRatio: value.putCallRatio,
       beta: value.beta,
       peRatio: value.peRatio,
-      pegRatio: value.pegRatio,
+      forwardPeRatio: value.forwardPERatio,
       date: moment().format('YYYY-MM-DD'),
       rawResponse: value
     });
@@ -88,5 +88,5 @@ start(JOB_NAME, async () => {
 
   await backfillDataFromOldStockDailyPutCallRatioTable();
 
-  await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView());
+  // await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView());
 });

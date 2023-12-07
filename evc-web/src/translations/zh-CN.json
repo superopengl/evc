@@ -148,7 +148,7 @@
   "text.forwardNextFyMaxValueLoss": "EPS(FFYMR)亏损",
   "text.beta": "BETA",
   "text.peRatio": "PE (TTM)",
-  "text.pegRatio": "PEG",
+  "text.forwardRatio": "Forward PE",
   "text.news": "新 闻",
   "text.evcCoreInfo": "EVC核心数据",
   "text.loss": "EPS(TTM) 亏损",

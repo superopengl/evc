@@ -7,14 +7,14 @@ export type StockAdvancedStatsInfo = {
   putCallRatio: number;
   beta: number;
   peRatio: number;
-  pegRatio: number;
+  forwardPeRatio: number;
   date: string;
   rawResponse: any;
 }
 
 export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) {
   const entites = info.map(item => {
-    const { symbol, putCallRatio, beta, peRatio, pegRatio, date } = item;
+    const { symbol, putCallRatio, beta, peRatio, forwardPeRatio, date } = item;
     if (!putCallRatio || !date) {
       return null;
     }
@@ -24,7 +24,7 @@ export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) 
     entity.putCallRatio = putCallRatio;
     entity.beta = beta;
     entity.peRatio = peRatio;
-    entity.pegRatio = pegRatio;
+    entity.forwardPeRatio = forwardPeRatio;
     entity.date = date;
     return entity;
   }).filter(x => !!x);

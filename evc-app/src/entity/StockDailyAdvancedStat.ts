@@ -25,5 +25,5 @@ export class StockDailyAdvancedStat {
   peRatio: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
-  pegRatio: number;
+  forwardPeRatio: number;
 }

@@ -49,7 +49,7 @@ const StockNewsPanel = (props) => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
-  const showImage = useMediaQuery({ query: '(min-width: 576px)' });
+  const showImage = false; //useMediaQuery({ query: '(min-width: 576px)' });
   const showBigImage = useMediaQuery({ query: '(min-width: 876px)' });
 
   const loadData = async () => {
@@ -90,8 +90,6 @@ const StockNewsPanel = (props) => {
       )}
     />
   }
-
-
 
   return (
     <Container direction="vertical">

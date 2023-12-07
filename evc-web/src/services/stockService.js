@@ -170,3 +170,7 @@ export async function getStockPutCallRatioChart(symbol) {
 export async function submitStockPlea(symbol) {
   return httpPost(`stock/plea/${symbol}`);
 }
+
+export async function deleteStockPlea(symbol) {
+  return httpDelete(`stock/plea/${symbol}`);
+}

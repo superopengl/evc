@@ -1,9 +1,10 @@
 
-import { getManager } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
 import { getTableName } from '../utils/getTableName';
+import { assertRole } from '../utils/assert';
 
 
 export const submitStockPlea = handlerWrapper((req, res) => {
@@ -14,9 +15,18 @@ export const submitStockPlea = handlerWrapper((req, res) => {
     .insert()
     .into(StockPlea)
     .values({ symbol, count: 1 })
-    .onConflict(`(symbol) DO UPDATE SET count = ${getTableName(StockPlea)}.count + 1`)
+    .onConflict(`(symbol) DO UPDATE SET count = ${getTableName(StockPlea)}.count + 1, "deletedAt" = NULL`)
     .execute()
     .catch(() => { });
+
+  res.json();
+});
+
+export const deleteStockPlea = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const symbol = req.params.symbol.toUpperCase();
+
+  await getRepository(StockPlea).softDelete(symbol);
 
   res.json();
 });

@@ -480,6 +480,16 @@ paths:
       responses:
         200:
           description: OK
+    delete:
+      operationId: deleteStockPlea
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/insider:
     get:
       operationId: getStockInsiderTransaction

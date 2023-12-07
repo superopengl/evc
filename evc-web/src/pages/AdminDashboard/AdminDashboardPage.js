@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Collapse, Tag, Badge } from 'antd';
+import { Typography, Collapse, Tag, Badge, List, Button } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
-import { CaretRightOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, DeleteOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
+import { deleteStockPlea } from 'services/stockService';
+import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 
 const { Text, Paragraph } = Typography;
 
@@ -27,6 +29,14 @@ margin-bottom: 8px;
 &:hover {
   color: #55B0D4;
   text-decoration: underline !important;
+}
+`;
+
+const StyledStockPleaList = styled(List)`
+.ant-list-item {
+  border: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 `;
 
@@ -68,6 +78,11 @@ const AdminDashboardPage = () => {
     }
   }, []);
 
+  const handleDeleteStockPlea = async (symbol) => {
+    await deleteStockPlea(symbol);
+    loadList();
+  }
+
   return (
     <ContainerStyled>
       <Loading loading={loading}>
@@ -83,9 +98,23 @@ const AdminDashboardPage = () => {
             header={<>Unsupported Stock Requests </>}
             extra={<CounterBadge count={data.pleas?.length} color="#55B0D4" />}
           >
-            {data.pleas?.map(x => <Paragraph key={x.symbol}>
-              <strong>{x.symbol}</strong> has {x.count} requests. <Link to={`/stock?create=${x.symbol}`}>Click to create</Link>
-            </Paragraph>)}
+            <StyledStockPleaList
+              loading={loading}
+              size="small"
+              bordered={false}
+              dataSource={data.pleas}
+              renderItem={item => <List.Item 
+              actions={[
+                <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`} 
+                message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
+                icon={<DeleteOutlined />} 
+                onOk={() => handleDeleteStockPlea(item.symbol)}
+                />
+              ]}
+              >
+                <strong>{item.symbol}</strong> has {item.count} requests. <Link to={`/stock?create=${item.symbol}`}>Click to create</Link>
+              </List.Item>}
+            />
           </Collapse.Panel>
           <Collapse.Panel
             key="invalidEps"

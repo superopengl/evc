@@ -16,11 +16,11 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>, option
     dotenv.config();
     connection = await connectDatabase(shouldSyncSchema);
     console.log('Task', jobName, 'started');
-    await logDataEvent({ eventId, eventType: jobName, status: 'started', by: 'task' })
+    await logDataEvent({ eventId, eventType: jobName, status: 'started', by: 'task' });
     await jobFunc();
     if (oneTimeRun) {
       console.log('Task', jobName, 'done');
-      await logDataEvent({ eventId, eventType: jobName, status: 'done', by: 'task' })
+      await logDataEvent({ eventId, eventType: jobName, status: 'done', by: 'task' });
       process.exit(0);
     }
   } catch (e) {

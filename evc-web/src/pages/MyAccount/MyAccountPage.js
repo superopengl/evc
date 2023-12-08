@@ -185,8 +185,7 @@ const MyAccountPage = (props) => {
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Your subscription will expire on <Text underline strong>{moment.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
-                  You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
-                  The new plan will take effect right after all your alive subscriptions end.
+                You can extend the subscription by continue purchasing a new plan.
               </>} />}
               {currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.

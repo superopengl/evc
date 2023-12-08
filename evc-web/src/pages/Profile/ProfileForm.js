@@ -26,19 +26,21 @@ const ProfileForm = (props) => {
     try {
       setLoading(true);
 
-      await saveProfile(user.id, values);
+      const result = await saveProfile(user.id, values);
 
-      if (refreshAfterLocaleChange) {
-        const hasLocaleChanged = profile.locale !== values.locale;
+      if (result) {
+        if (refreshAfterLocaleChange) {
+          const hasLocaleChanged = profile.locale !== values.locale;
 
-        notify.success(
-          'Successfully saved profile!',
-          hasLocaleChanged ? <>You have changed locale. Please <Link onClick={handleRefreshPage}>Refresh</Link> the page to catch up the locale change</> : null
-        );
+          notify.success(
+            'Successfully saved profile!',
+            hasLocaleChanged ? <>You have changed locale. Please <Link onClick={handleRefreshPage}>Refresh</Link> the page to catch up the locale change</> : null
+          );
 
-        Object.assign(profile, values);
+          Object.assign(profile, values);
+        }
+        onOk(user);
       }
-      onOk(user);
     } finally {
       setLoading(false);
     }

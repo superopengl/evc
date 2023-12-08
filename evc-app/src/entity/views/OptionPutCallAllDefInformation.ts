@@ -5,11 +5,6 @@ import { unionAll } from '../../utils/unionAll';
 
 
 @ViewEntity({
-  //   expression: `
-  //   SELECT * from "evc"."index"
-  //   UNION ALL
-  //   SELECT * from "evc"."option_put_call_stock_def_information"
-  // `
   expression: connection => connection.createQueryBuilder()
     .from(q => {
       const query1 = connection.createQueryBuilder().from(Index, 'i');
@@ -31,4 +26,7 @@ export class OptionPutCallAllDefInformation {
 
   @ViewColumn()
   tag: string;
+
+  @ViewColumn()
+  sortGroup: number;
 }

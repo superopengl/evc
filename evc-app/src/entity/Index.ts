@@ -24,4 +24,7 @@ export class Index {
 
   @Column()
   type: string;
+
+  @Column({ default: 10 })
+  sortGroup?: number;
 }

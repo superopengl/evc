@@ -21,7 +21,7 @@ export const authMiddleware = async (req, res, next) => {
         }
         user = existingUser;
       }
-      // repo.update({id}, { lastNudgedAt: getUtcNow() }).catch(() => { });
+      getRepository(User).update({ id: user.id }, { lastNudgedAt: getUtcNow() }).catch(() => { });
       req.user = Object.freeze(user);
       attachJwtCookie(user, res);
     } else {

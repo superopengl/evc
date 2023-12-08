@@ -110,8 +110,8 @@ const UserListPage = () => {
       render: (text) => <TimeAgo value={text} />,
     },
     {
-      title: 'Last Logged In',
-      dataIndex: 'lastLoggedInAt',
+      title: 'Last Activity',
+      dataIndex: 'lastNudgedAt',
       render: (text) => <TimeAgo value={text} />,
     },
     {

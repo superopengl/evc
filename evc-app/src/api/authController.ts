@@ -293,6 +293,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   const extra = {
     loginType: 'google',
     lastLoggedInAt: now,
+    lastNudgedAt: now,
     referredBy: referralCode,
   };
 

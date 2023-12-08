@@ -60,7 +60,7 @@ export async function searchUser(queryInfo: StockUserParams) {
       'u.role as role',
       `COALESCE(s."currentType", 'free') as subscription`,
       'tg.tags as tags',
-      'u."lastLoggedInAt"',
+      'COALESCE(u."lastNudgedAt", u."lastLoggedInAt") as "lastNudgedAt"',
       'u."createdAt" as "createdAt"',
     ]);
 

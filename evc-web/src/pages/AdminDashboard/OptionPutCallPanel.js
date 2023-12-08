@@ -274,7 +274,7 @@ const OptionPutCallPanel = (props) => {
           y: 'calc(100vh - 370px)'
         }}
       ></Table>
-      <Row justify='end'>
+      {/* <Row justify='end'>
         {total > queryInfo.size && <Pagination
           current={queryInfo.page}
           pageSize={queryInfo.size}
@@ -292,7 +292,7 @@ const OptionPutCallPanel = (props) => {
             searchByQueryInfo({ ...queryInfo, page: current, size });
           }}
         />}
-      </Row>
+      </Row> */}
     </ContainerStyled>
   );
 };

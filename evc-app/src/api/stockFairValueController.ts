@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm';
-import { assertRole } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';

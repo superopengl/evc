@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import { File } from '../entity/File';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { assertRole } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { getUtcNow } from '../utils/getUtcNow';
 import { getS3ObjectStream, uploadToS3 } from '../utils/uploadToS3';
 import { v4 as uuidv4 } from 'uuid';

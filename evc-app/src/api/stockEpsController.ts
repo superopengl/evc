@@ -1,5 +1,6 @@
 import { getRepository } from 'typeorm';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockEps } from '../entity/StockEps';
 import * as stockEpsService from '../services/stockEpsService';

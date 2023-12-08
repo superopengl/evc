@@ -1,7 +1,8 @@
 
 import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { CommissionUserPolicy } from '../entity/CommissionUserPolicy';
 import { CommissionGlobalPolicy } from '../entity/CommissionGlobalPolicy';
 import { v4 as uuidv4 } from 'uuid';

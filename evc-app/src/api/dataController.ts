@@ -1,7 +1,8 @@
 
 import { getManager, EntityManager, In } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import * as path from 'path';
 import { refreshMaterializedView } from '../db';
 import { redisCache } from '../services/redisCache';

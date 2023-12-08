@@ -1,7 +1,7 @@
 
 import { getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { assertRole } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { ReferralCode } from '../entity/ReferralCode';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';

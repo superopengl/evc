@@ -4,7 +4,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
 import { getTableName } from '../utils/getTableName';
-import { assertRole } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 
 
 export const submitStockPlea = handlerWrapper((req, res) => {

@@ -1253,7 +1253,18 @@ paths:
       operationId: searchOptionPutCall
       responses:
         200:
-          description: OK          
+          description: OK         
+  /admin/data/opc/:symbol:
+    get:
+      operationId: getStockLatestOptionPutCall
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true      
+      responses:
+        200:
+          description: OK               
   /admin/data/uoa/stock:
     post:
       operationId: uploadUoaStockCsv

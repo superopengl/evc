@@ -25,6 +25,7 @@ import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { OptionPutCallHistoryChart } from 'components/charts/OptionPutCallHistoryChart';
 import OptionPutCallPanel from 'pages/AdminDashboard/OptionPutCallPanel';
+import StockOptionPutCallPanel from 'pages/AdminDashboard/StockOptionPutCallPanel';
 
 
 const StockDisplayPanel = (props) => {
@@ -119,7 +120,7 @@ const StockDisplayPanel = (props) => {
         {stock.hasNewChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
             <MemberOnlyCard title={<FormattedMessage id="menu.optionPutCall" />} paidOnly={true} bodyStyle={{ padding: 0 }}>
-              <OptionPutCallPanel symbol={stock.symbol} lastDayOnly={true} />
+              <StockOptionPutCallPanel symbol={stock.symbol} lastDayOnly={true} />
             </MemberOnlyCard>
           </Col>
         </Row>}

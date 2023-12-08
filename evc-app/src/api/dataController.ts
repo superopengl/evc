@@ -295,6 +295,25 @@ export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+export const getStockLatestOptionPutCall = handlerWrapper(async (req, res) => {
+  const showFullData = shouldShowFullDataForUoa(req);
+  const { symbol } = req.params;
+  const data = await getManager()
+    .getRepository(OptionPutCallHistoryInformation)
+    .createQueryBuilder()
+    .distinctOn([
+      'symbol',
+      'type'
+    ])
+    .orderBy('symbol')
+    .addOrderBy('type')
+    .addOrderBy('date', 'DESC')
+    .where(`symbol = '${symbol}'`)
+    .getOne();
+
+  res.json(data);
+});
+
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
   const list = await searchUnusualOptionsActivity('stock', req.body, showFullData);

@@ -11,7 +11,10 @@ import { getTableName } from '../utils/getTableName';
 
 function trackGuestUser(req) {
   const deviceId = req.header('x-evc-device-id');
-  if (!deviceId || req.user) {
+
+  console.log('guest traking', deviceId, req.url);
+
+  if (!deviceId) {
     return;
   }
 
@@ -24,7 +27,9 @@ function trackGuestUser(req) {
     })
     .onConflict(`("deviceId") DO UPDATE SET count = ${getTableName(GuestUserStats)}.count + 1, "lastNudgedAt" = NOW()`)
     .execute()
-    .catch(() => { });
+    .catch((err) => {
+      console.log('guest traking err', err);
+    });
 }
 
 export const authMiddleware = async (req, res, next) => {

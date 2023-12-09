@@ -1,6 +1,5 @@
 
 import { getRepository, Not, getManager, In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
@@ -21,6 +20,8 @@ import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
 import { GuestUserStats } from '../entity/GuestUserStats';
 import { Role } from '../types/Role';
+import { getTableName } from '../utils/getTableName';
+import { v4 as uuidv4, validate as validateUuid } from 'uuid';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -284,4 +285,22 @@ export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
   }
 
   res.json(result);
+});
+
+export const guestUserPing = handlerWrapper((req, res) => {
+  const { deviceId } = req.body;
+  if (validateUuid(deviceId)) {
+    getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(GuestUserStats)
+      .values({
+        deviceId
+      })
+      .onConflict(`("deviceId") DO UPDATE SET count = ${getTableName(GuestUserStats)}.count + 1, "lastNudgedAt" = NOW()`)
+      .execute()
+      .catch(() => {});
+  }
+
+  res.json();
 });

@@ -31,3 +31,9 @@ export async function setUserTags(userId, tags) {
 export async function getUserGuestSignUpChart(params) {
   return httpGet(`user/metrics/guest_signup`, params);
 }
+
+export async function guestUserPing(deviceId) {
+  if (deviceId) {
+    return httpPost(`user/guest/ping`, { deviceId });
+  }
+}

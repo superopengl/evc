@@ -153,6 +153,14 @@ paths:
       responses:
         200:
           description: OK
+  /user/guest/ping:
+    post:
+      operationId: guestUserPing
+      # security:
+      #   - authAdminOrAgent: []
+      responses:
+        200:
+          description: OK          
   /user:
     get:
       operationId: listAllUsers

@@ -7,3 +7,4 @@ export function scrollToElement(selector, config) {
     ...config,
   });
 }
+

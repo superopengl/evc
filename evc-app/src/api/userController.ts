@@ -19,6 +19,8 @@ import { Payment } from '../entity/Payment';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
+import { GuestUserStats } from '../entity/GuestUserStats';
+import { Role } from '../types/Role';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -230,4 +232,56 @@ export const listUserCreditHistory = handlerWrapper(async (req, res) => {
     ])
     .execute();
   res.json(list);
+});
+
+export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { start, end, interval } = req.query;
+  const format = {
+    'minute': 'YYYY/MM/DD HH24:MI',
+    'hour': 'YYYY/MM/DD HH24',
+    'day': 'YYYY/MM/DD',
+    'month': 'YYYY/MM'
+  }[interval as string];
+  assert(format, 400, `Unsupported interval parameter '${interval}'`);
+
+  const guests = await getManager()
+    .createQueryBuilder()
+    .from(q => q
+      .from(GuestUserStats, 'u')
+      .andWhere(start ? `:start <= "createdAt"` : `1=1`, { start })
+      .andWhere(end ? `"lastNudgedAt" <= :end` : `1=1`, { end })
+      .select(`TO_CHAR("lastNudgedAt", '${format}') as time`)
+      , 'x')
+    .groupBy('time')
+    .select([
+      'time',
+      'COUNT(1) as count',
+    ])
+    .orderBy('time')
+    .execute();
+
+  const newSignUps = await getManager()
+    .createQueryBuilder()
+    .from(q => q
+      .from(User, 'u')
+      .where(`role != '${Role.Admin}'`)
+      .andWhere(start ? `:start <= "createdAt"` : `1=1`, { start })
+      .andWhere(end ? `"createdAt" <= :end` : `1=1`, { end })
+      .select(`TO_CHAR("createdAt", '${format}') as time`)
+      , 'x')
+    .groupBy('time')
+    .select([
+      'time',
+      'COUNT(1) as count',
+    ])
+    .orderBy('time')
+    .execute();
+
+  const result = {
+    guests,
+    signUps: newSignUps,
+  }
+
+  res.json(result);
 });

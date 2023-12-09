@@ -78,5 +78,3 @@ export class User {
   @Column({ default: false })
   everPaid: boolean;
 }
-
-

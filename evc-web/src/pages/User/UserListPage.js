@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  SearchOutlined,
+  SearchOutlined,BarChartOutlined,
   UserOutlined,
   ClearOutlined
 } from '@ant-design/icons';
@@ -29,6 +29,7 @@ import TagFilter from 'components/TagFilter';
 import { from } from 'rxjs';
 import countryList from 'react-select-country-list'
 import { getSubscriptionName } from 'util/getSubscriptionName';
+import GuestSignUpPanel from './GuestSignUpPanel';
 
 const { Text, Paragraph } = Typography;
 const countries = countryList();
@@ -56,6 +57,7 @@ const UserListPage = () => {
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
+  const [chartVisible, setChartVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
@@ -329,6 +331,7 @@ const UserListPage = () => {
           />
           <Space>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
+            <Button type="primary" ghost onClick={() => setChartVisible(true)} icon={<BarChartOutlined />}></Button>
             <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}></Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
@@ -427,6 +430,21 @@ const UserListPage = () => {
             <Button block type="primary" htmlType="submit" disabled={loading}>Invite</Button>
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        visible={chartVisible}
+        placement="bottom"
+        width={700}
+        // height="calc(100% - 100px)"
+        destroyOnClose={true}
+        maskClosable={true}
+        closable
+        title="Guest / New Sign Up"
+        onOk={() => setChartVisible(false)}
+        onCancel={() => setChartVisible(false)}
+        footer={null}
+      >
+        <GuestSignUpPanel />
       </Modal>
       <Drawer
         visible={profileModalVisible}

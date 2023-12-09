@@ -161,6 +161,14 @@ paths:
       responses:
         200:
           description: OK
+  /user/metrics/guest_signup:
+    get:
+      operationId: getUserGuestSignUpChart
+      # security:
+      #   - authAdminOrAgent: []
+      responses:
+        200:
+          description: OK          
   /user/search:
     post:
       operationId: searchUserList

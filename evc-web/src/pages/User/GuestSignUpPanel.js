@@ -94,6 +94,7 @@ const GuestSignUpPanel = () => {
         });
       }
     }
+    list.sort((a, b) => a.time.localeCompare(b.time))
     return list;
   }
 

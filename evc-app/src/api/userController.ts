@@ -259,7 +259,6 @@ export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
       'time',
       'COUNT(1) as count',
     ])
-    .orderBy('time')
     .execute();
 
   const newSignUps = await getManager()
@@ -276,7 +275,6 @@ export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
       'time',
       'COUNT(1) as count',
     ])
-    .orderBy('time')
     .execute();
 
   const result = {

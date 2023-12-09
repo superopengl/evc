@@ -6,7 +6,7 @@ import {Column, Line } from '@ant-design/charts';
 const GuestSignUpChart = props => {
 
   const { value } = props;
-  const [data, setData] = React.useState(value);
+  const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
     setData(value || []);

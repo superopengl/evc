@@ -39,8 +39,7 @@ async function promoteFairValueLatestSnapshotToPreviousSnapshot() {
 }
 
 export async function handleWatchlistFairValueChangedNotification() {
-  // Send watchlist emails if core data change detected.
-  console.log(`Sending watchlist core change emails`);
+  console.log(`Sending watchlist fair value changed notification emails`);
   await sendFairValueChangedEmails();
   await promoteFairValueLatestSnapshotToPreviousSnapshot();
 }

@@ -2,12 +2,8 @@
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import * as moment from 'moment';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
-import { getRepository, getManager } from 'typeorm';
-import { User } from '../entity/User';
-import { getUtcNow } from '../utils/getUtcNow';
 import 'colors';
-import { GuestUserStats } from '../entity/GuestUserStats';
-import { getTableName } from '../utils/getTableName';
+import { nudgeUser } from '../utils/nudgeUser';
 
 export const authMiddleware = async (req, res, next) => {
   // console.log('Authing'.green, req.method, req.url);
@@ -31,7 +27,7 @@ export const authMiddleware = async (req, res, next) => {
 
         user = existingUser;
       }
-      getRepository(User).update({ id: user.id }, { lastNudgedAt: getUtcNow() }).catch(() => { });
+      nudgeUser(user.id);
       req.user = Object.freeze(user);
       attachJwtCookie(user, res);
     } else {

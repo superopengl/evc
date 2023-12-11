@@ -470,7 +470,6 @@ export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {
     order: {
       date: 'DESC'
     },
-    take: 180,
   })
 
   const result = list.map(d => ({

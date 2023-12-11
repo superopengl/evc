@@ -5,7 +5,7 @@ import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(OptionPutCallAllDefInformation, 's')
-    .leftJoin(OptionPutCallHistory, 'i', 's.symbol = i.symbol')
+    .leftJoin(q => q.from(OptionPutCallHistory, 'i').where(`CURRENT_DATE - "date" < 180`), 'i', 's.symbol = i.symbol')
     .select([
       's.symbol as symbol',
       's.company as name',

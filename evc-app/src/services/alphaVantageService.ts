@@ -26,7 +26,7 @@ export async function getHistoricalClose(symbol: string, days = 1) {
     outputsize: days <= 100 ? 'compact' : 'full'
   });
   const data = resp['Time Series (Daily)'];
-  if(!data) {
+  if (!data) {
     return [];
   }
 
@@ -73,7 +73,7 @@ async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 
     apikey: process.env.ALPHAVANTAGE_API_KEY
   });
   const url = `${process.env.ALPHAVANTAGE_API_ENDPOINT}/query?${queryParams}`;
-  const resp = await fetch(url, query);
+  const resp = await fetch(url, { timeout: 10000 });
   console.debug('alphavantage request'.bgMagenta.white, resp.status, url.magenta);
   if (/^4/.test(`${resp.status}`)) {
     // 429 Too Many Requests

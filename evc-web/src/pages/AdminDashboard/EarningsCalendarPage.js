@@ -254,7 +254,7 @@ const EarningsCalendarPage = props => {
           bordered={false}
           pagination={false}
           rowKey="key"
-          scroll={height ? { x: 500, y: height } : { x: 500, y: 'calc(100vh - 240px)' }}
+          scroll={height ? { x: 500, y: height } : { x: 500 }}
         // style={{ marginBottom: '2rem' }}
         />
         {!showMore && <Button type="link" onClick={() => setShowMore(true)} style={{ marginTop: '1rem' }}>more</Button>}

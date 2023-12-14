@@ -15,6 +15,7 @@ import { StockTag } from '../StockTag';
       's.symbol AS "apiSymbol"',
       's.company AS company',
       'st."name" AS "type"',
+      'st."id" AS "tagId"',
       'st."sortGroup" AS "sortGroup"',
     ]),
 })
@@ -31,6 +32,9 @@ export class OptionPutCallStockDefInformation {
 
   @ViewColumn()
   type: string;
+
+  @ViewColumn()
+  tagId: string;
 
   @ViewColumn()
   sortGroup: number;

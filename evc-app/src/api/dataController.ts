@@ -18,9 +18,8 @@ import moment from 'moment';
 import _ from 'lodash';
 import { Role } from '../types/Role';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
-import { searchOptionPutCallHistory } from '../utils/searchOptionPutCallHistory';
-import { getRepository } from 'typeorm-plus';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
+import { OptionPutCallStockOrdinal } from '../entity/OptionPutCallStockOrdinal';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
@@ -272,10 +271,54 @@ function shouldShowFullDataForUoa(req) {
   return [Role.Admin, Role.Agent, Role.Member].includes(role);
 }
 
-export const searchOptionPutCall = handlerWrapper(async (req, res) => {
+export const getStockAllOptionPutCall = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchOptionPutCallHistory(req.body, showFullData);
-  res.json(list);
+  const { symbol } = req.params;
+  const data = await getManager()
+    .getRepository(OptionPutCallHistoryInformation)
+    .createQueryBuilder()
+    .distinctOn([
+      'symbol',
+      'date'
+    ])
+    .orderBy('symbol')
+    .addOrderBy('date', 'DESC')
+    .where(`symbol = '${symbol}'`)
+    .getMany();
+
+  res.json(data);
+});
+
+export const saveStockOptionPutCallHistoryOrdinal = handlerWrapper(async (req, res) => {
+  const showFullData = shouldShowFullDataForUoa(req);
+  const { symbol } = req.params;
+  const { tag, ordinal } = req.body;
+
+  const ordinalEntity = new OptionPutCallStockOrdinal();
+  ordinalEntity.symbol = symbol;
+  ordinalEntity.tag = tag;
+  ordinalEntity.ordinal = ordinal || null;
+  let data = [];
+
+  await getManager().transaction(async m => {
+    await m.save(ordinalEntity);
+
+    data = await m
+      .getRepository(OptionPutCallHistoryInformation)
+      .createQueryBuilder()
+      .distinctOn([
+        'symbol',
+        'date'
+      ])
+      .orderBy('symbol')
+      .addOrderBy('date', 'DESC')
+      .where(`symbol = '${symbol}'`)
+      .getMany();
+
+  })
+
+
+  res.json(data);
 });
 
 export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {

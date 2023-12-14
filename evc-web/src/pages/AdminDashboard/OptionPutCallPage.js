@@ -13,6 +13,7 @@ const OptionPutCallPage = (props) => {
   const [loading, setLoading] = React.useState(true);
 
   const load = async () => {
+    setLoading(true);
     const resp = await listLatestOptionPutCall();
     ReactDOM.unstable_batchedUpdates(() => {
       const entries = Object.entries(_.groupBy(resp, x => x.type));
@@ -26,13 +27,17 @@ const OptionPutCallPage = (props) => {
     load();
   }, []);
 
+  const handleOrdinalChange = () => {
+    load();
+  }
+
   return (
     <Card style={{ backgroundColor: 'white' }} bordered={true}>
       <Loading loading={loading}>
         <Tabs defaultActiveKey="stock" type="card" >
           {
             typedMap.map(([t, data]) => <Tabs.TabPane tab={t} key={t}>
-              <OptionPutCallPanel data={data} />
+              <OptionPutCallPanel data={data} tagId={t} onOrdinalChange={handleOrdinalChange} />
             </Tabs.TabPane>)
           }
         </Tabs>

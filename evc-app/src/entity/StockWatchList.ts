@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, CreateDateColumn, ManyToOne } from 'typeorm';
+import { StockUserCustomTag } from "./StockUserCustomTag";
 
 
 @Entity()
@@ -18,4 +19,7 @@ export class StockWatchList {
 
   @Column({default: true})
   belled: boolean;
+
+  @ManyToOne(() => StockUserCustomTag)
+  tags: StockUserCustomTag[];
 }

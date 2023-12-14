@@ -172,55 +172,6 @@ export const existsStock = handlerWrapper(async (req, res) => {
   res.json(exists);
 });
 
-
-export const getWatchList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'member');
-  const { user: { id: userId } } = req as any;
-
-  const list = await searchStock({
-    orderField: 'symbol',
-    orderDirection: 'ASC',
-    page: 1,
-    size: 9999999,
-    watchOnly: true,
-    noCount: true,
-  }, userId);
-
-  res.json(list);
-});
-
-export const watchStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'member');
-  const symbol = req.params.symbol.toUpperCase();
-  const { user: { id: userId } } = req as any;
-  await getRepository(StockWatchList).insert({ userId, symbol });
-  res.json();
-});
-
-export const unwatchStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'member');
-  const symbol = req.params.symbol.toUpperCase();
-  const { user: { id: userId } } = req as any;
-  await getRepository(StockWatchList).delete({ userId, symbol });
-  res.json();
-});
-
-export const bellStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'member');
-  const symbol = req.params.symbol.toUpperCase();
-  const { user: { id: userId } } = req as any;
-  await getRepository(StockWatchList).update({ userId, symbol }, { belled: true });
-  res.json();
-});
-
-export const unbellStock = handlerWrapper(async (req, res) => {
-  assertRole(req, 'member');
-  const symbol = req.params.symbol.toUpperCase();
-  const { user: { id: userId } } = req as any;
-  await getRepository(StockWatchList).update({ userId, symbol }, { belled: false });
-  res.json();
-});
-
 export const listStock = handlerWrapper(async (req, res) => {
   const list = await getRepository(Stock).find({
     select: ['symbol', 'company'],

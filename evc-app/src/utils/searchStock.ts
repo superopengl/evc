@@ -6,7 +6,7 @@ import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInfor
 import { Stock } from '../entity/Stock';
 import * as _ from 'lodash';
 
-const symbols = [
+const demoSymbols = [
   'AAPL',
   'AMZN',
   'TSLA',
@@ -20,7 +20,7 @@ const symbols = [
   'BA',
   'AAL'
 ];
-const orderMap = new Map(symbols.map((s, i) => [s, i]));
+const orderMap = new Map(demoSymbols.map((s, i) => [s, i]));
 
 export async function searchStockForGuest(queryInfo: StockSearchParams) {
   const pageNo = 1;
@@ -34,7 +34,7 @@ export async function searchStockForGuest(queryInfo: StockSearchParams) {
   const result = await query
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
-    .where(`symbol IN (:...symbols)`, { symbols })
+    .where(`symbol IN (:...symbols)`, { symbols: demoSymbols })
     .select([
       `s.symbol as symbol`,
       `s.company as company`,

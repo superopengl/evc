@@ -23,3 +23,4 @@ export * from './userTagController';
 export * from './dataController';
 export * from './commissionWithdrawalController';
 export * from './discountPolicyController';
+export * from './stockWatchListController';

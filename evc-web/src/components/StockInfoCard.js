@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Space, Tooltip, Row, Col } from 'antd';
+import { Card, Typography, Space, Tooltip, Row, Col, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
 import { StockName } from './StockName';
-import { unwatchStock, watchStock, bellStock, unbellStock } from 'services/stockService';
+import { unwatchStock, watchStock, bellStock, unbellStock } from 'services/watchListService';
 import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 import { LockFilled } from '@ant-design/icons';
 import { StockNoticeButton } from './StockNoticeButton';
 import { filter, debounceTime } from 'rxjs/operators';
 import { FormattedMessage } from 'react-intl';
+import StockCustomTagSelect from './StockCustomTagSelect';
+import { TagsOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -126,10 +128,12 @@ const HiddenNumber = props => {
 
 const StockInfoCard = (props) => {
 
-  const { value: stock, title, hoverable, actions, showWatch, showBell } = props;
+  const { value: stock, title, hoverable, actions, showWatch, showBell, showTags } = props;
 
   const [watched, setWatched] = React.useState(stock?.watched);
   const [belled, setBelled] = React.useState(stock?.belled);
+  const [customTags, setCustomTags] = React.useState(stock?.customTags);
+  const [editingTag, setEditingTag] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [priceEvent, setPriceEvent] = React.useState();
 
@@ -170,6 +174,11 @@ const StockInfoCard = (props) => {
     setBelled(belling);
   }
 
+  const toggleCustomTagEdit = async (e) => {
+    e.stopPropagation();
+    setEditingTag(!editingTag);
+  }
+
   const { isOver, isUnder } = stock;
   const className = isOver ? 'over-valued' : isUnder ? 'under-valued' : null;
 
@@ -181,15 +190,19 @@ const StockInfoCard = (props) => {
     bordered={false}
     type="inner"
     title={title ?? <StockName value={stock} />}
-    extra={<Space>
-      {isMember && showBell && <StockNoticeButton value={belled} onChange={handleToggleBell} />}
-      {isMember && showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
+    extra={isMember && <Space>
+      {showTags && <Button icon={<TagsOutlined />} type="link" onClick={toggleCustomTagEdit} />}
+      {showBell && <StockNoticeButton value={belled} onChange={handleToggleBell} />}
+      {showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
     </Space>}
     onClick={props.onClick}
     hoverable={hoverable}
     actions={actions}
   >
-    <Row>
+    {editingTag && <Row style={{ marginBottom: 8 }}>
+      <StockCustomTagSelect value={customTags?.map(x => x.id)} onChange={toggleCustomTagEdit} />
+    </Row>}
+    <Row style={editingTag ? { filter: 'opacity(0.2)' } : null}>
       <Col flex="none">
         <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : 'N/A'}</Text>
       </Col>
@@ -250,12 +263,14 @@ StockInfoCard.propTypes = {
   title: PropTypes.object,
   showWatch: PropTypes.bool,
   showBell: PropTypes.bool,
+  showTags: PropTypes.bool,
 };
 
 StockInfoCard.defaultProps = {
   title: null,
   showWatch: true,
-  showBell: false
+  showBell: false,
+  showTags: false,
 };
 
 export default withRouter(StockInfoCard);

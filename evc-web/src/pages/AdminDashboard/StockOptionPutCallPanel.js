@@ -28,7 +28,7 @@ const StockOptionPutCallPanel = (props) => {
 
   return (
     <Loading loading={loading}>
-      <OptionPutCallPanel data={data} showPagination={false} />
+      <OptionPutCallPanel data={data} singleMode={true} />
     </Loading>
   );
 };

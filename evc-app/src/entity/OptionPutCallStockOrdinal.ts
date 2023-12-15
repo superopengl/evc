@@ -9,6 +9,6 @@ export class OptionPutCallStockOrdinal {
   @PrimaryColumn('uuid')
   tag: string;
 
-  @Column('smallint', { default: 0 })
+  @Column('smallint', { nullable: true })
   ordinal: number;
 }

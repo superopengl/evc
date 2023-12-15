@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import { Loading } from "components/Loading";
 import { from } from 'rxjs';
 import { getOptionPutCallHistoryChartData } from "services/dataService";
+import * as _ from 'lodash';
 
 export const OptionPutCallHistoryChart = props => {
   const { symbol } = props;
@@ -37,7 +38,12 @@ export const OptionPutCallHistoryChart = props => {
     try {
       const data = await getOptionPutCallHistoryChartData(symbol);
       ReactDOM.unstable_batchedUpdates(() => {
-        setData(data);
+        setData(data.map(d => ({
+          ...d,
+          putCallOIRatio: _.round(+d.putCallOIRatio, 3),
+          todayPercentPutVol: _.round(+d.todayPercentPutVol, 2),
+          todayPercentCallVol: _.round(+d.todayPercentCallVol, 2),
+        })));
         setLoading(false);
       })
     } catch {

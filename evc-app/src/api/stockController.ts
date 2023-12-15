@@ -457,29 +457,31 @@ export const getPutCallRatioChart = handlerWrapper(async (req, res) => {
 
 export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
-  const list = await getRepository(OptionPutCallHistoryInformation).find({
-    where: {
-      symbol
-    },
-    select: [
+  const list = await getRepository(OptionPutCallHistoryInformation)
+    .createQueryBuilder()
+    .where(`symbol = :symbol`, { symbol })
+    .select([
+      '"date"',
+      '"putCallOIRatio"',
+      '"todayPercentPutVol"',
+      '"todayPercentCallVol"',
+    ])
+    .distinctOn([
+      'symbol',
       'date',
-      'putCallOIRatio',
-      'todayPercentPutVol',
-      'todayPercentCallVol',
-    ],
-    order: {
-      date: 'DESC'
-    },
-  })
+    ])
+    .orderBy('symbol')
+    .addOrderBy('date', 'DESC')
+    .execute();
 
-  const result = list.map(d => ({
-    date: moment(d.date).format('YYYY-MM-DD'),
-    putCallOIRatio: _.round(+d.putCallOIRatio, 3),
-    todayPercentPutVol: _.round(+d.todayPercentPutVol, 2),
-    todayPercentCallVol: _.round(+d.todayPercentCallVol, 2),
-  }));
+  // const result = list.map(d => ({
+  //   date: moment(d.date).format('YYYY-MM-DD'),
+  //   putCallOIRatio: _.round(+d.putCallOIRatio, 3),
+  //   todayPercentPutVol: _.round(+d.todayPercentPutVol, 2),
+  //   todayPercentCallVol: _.round(+d.todayPercentCallVol, 2),
+  // }));
   res.set('Cache-Control', `public, max-age=1800`);
-  res.json(result);
+  res.json(list);
 });
 
 async function updateStockLastPrice(info: StockLastPriceInfo) {

@@ -9,6 +9,7 @@ import { Skeleton } from 'antd';
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
+import { SectionTitleDivider } from './SectionTitleDivider';
 
 const { Text } = Typography;
 
@@ -45,12 +46,13 @@ const StockEvcInfoPanel = (props) => {
 
   return (
     <Space direction="vertical" style={{ width: '100%' }}>
-      <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      {/* <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel>
           <FormattedMessage id="text.reportDate" />
         </TooltipLabel>
         {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text>{moment(data.fairValueDate).format('D MMM YYYY')}</Text>}
-      </Space>
+      </Space> */}
+      <SectionTitleDivider title={loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text><FormattedMessage id="text.reportDate" />: {moment(data.fairValueDate).format('D MMM YYYY')}</Text>} />
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <TooltipLabel message="How to use fair value">
           <FormattedMessage id="text.fairValue" />
@@ -77,7 +79,7 @@ const StockEvcInfoPanel = (props) => {
           />
         </div>}
       </Space>
-      <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
         <TooltipLabel message="">
           <FormattedMessage id="text.forwardNextFyMaxValue" />
         </TooltipLabel>
@@ -91,6 +93,7 @@ const StockEvcInfoPanel = (props) => {
           />
         </div>}
       </Space>
+      <SectionTitleDivider title={<FormattedMessage id="text.dailyUpdate" />} ></SectionTitleDivider>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="">
           <FormattedMessage id="text.beta" />

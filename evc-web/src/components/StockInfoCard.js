@@ -16,6 +16,8 @@ import { FormattedMessage } from 'react-intl';
 import StockCustomTagSelect from './StockCustomTagSelect';
 import { List } from 'antd';
 import isObject from 'lodash/isObject';
+import { SectionTitleDivider } from './SectionTitleDivider';
+import moment from 'moment';
 
 const { Text } = Typography;
 
@@ -24,13 +26,24 @@ const SHOW_SUPPORT_RESISTANCE = false;
 
 const StyledList = styled(List)`
 .ant-list-item {
-  padding: 0;
+  padding: 0 0 0 0;
   margin: 0;
+  border: 0;
 }
 `;
 
 const StyledCard = styled(Card)`
 height: 100%;
+display: flex;
+flex-direction: column;
+
+.ant-card-head {
+  flex: 0 0 auto;
+}
+
+.ant-card-body {
+  flex: 1 1 auto;
+}
 
 .ant-card-head-title {
   text-align: left;
@@ -198,6 +211,9 @@ const StockInfoCard = (props) => {
       isLoss: stock.isForwardNextFyMaxValueLoss,
       textKeyOnLoss: 'text.forwardNextFyMaxValueLoss',
     },
+  ], [stock]);
+
+  const cardDailyUpdateDataSource = React.useMemo(() => [
     {
       tooltip: null,
       textKey: 'text.beta',
@@ -235,8 +251,30 @@ const StockInfoCard = (props) => {
         <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : <Text type="secondary">N/A</Text>}</Text>
       </Col>
       <Col flex="auto">
+        <SectionTitleDivider title={<small><Text><FormattedMessage id="text.reportDate" />: {stock.fairValueDate ? moment(stock.fairValueDate).format('D MMM YYYY') : 'NONE'}</Text></small>} />
         <StyledList
           dataSource={cardDataSource}
+          style={{ width: '100%', marginBottom: '1rem' }}
+          renderItem={item => <List.Item>
+            <Row gutter={4} justify='space-between' style={{ width: '100%' }}>
+              <Col>
+                <TooltipLabel message="">
+                  <FormattedMessage id={item.textKey} />
+                </TooltipLabel>
+              </Col>
+              <Col flex="auto" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                {
+                  isObject(item.value) ?
+                    (shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={item.value.lo} hi={item.value.hi} empty={item.isLoss ? <Text type="danger"><small><FormattedMessage id={item.textKeyOnLoss} /></small></Text> : <Text type="warning"><small>NONE</small></Text>} />)
+                    : (shouldHideData ? <HiddenNumberSingle /> : item.value ? <Text>{(+item.value).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>)
+                }
+              </Col>
+            </Row>
+          </List.Item>}
+        />
+        <SectionTitleDivider title={<small><Text style={{ fontSize: '0.8rem' }} ><FormattedMessage id="text.dailyUpdate" /></Text></small>} />
+        <StyledList
+          dataSource={cardDailyUpdateDataSource}
           style={{ width: '100%' }}
           renderItem={item => <List.Item>
             <Row gutter={4} justify='space-between' style={{ width: '100%' }}>

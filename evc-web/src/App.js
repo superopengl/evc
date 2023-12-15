@@ -20,6 +20,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
 import * as moment from 'moment-timezone';
 import { Loading } from 'components/Loading';
+import { getWatchList, listCustomTags } from 'services/watchListService';
 
 // moment.tz.setDefault('America/New_York');
 
@@ -71,13 +72,18 @@ const App = () => {
     }
   }
 
+  const reloadCustomTags = async () => {
+    const tags = await listCustomTags();
+    setCustomTags(tags);
+  }
+
   const globalContextValue = {
     event$,
     user: null,
     setUser,
     role: 'guest',
     customTags,
-    setCustomTags,
+    reloadCustomTags,
     setLoading,
     setLocale: locale => {
       reactLocalStorage.set('locale', locale);
@@ -122,6 +128,8 @@ const App = () => {
       customTags
     })
   }, [customTags]);
+
+
 
 
   const role = contextValue.role;

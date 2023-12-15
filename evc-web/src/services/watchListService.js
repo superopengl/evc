@@ -27,3 +27,7 @@ export async function listCustomTags() {
 export async function createCustomTags(name) {
   return httpPost(`custom_tags`, { name });
 }
+
+export async function saveStockCustomTags(symbol, tags) {
+  return httpPost(`/stock/s/${symbol}/custom_tags`, { tags });
+}

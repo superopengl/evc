@@ -6,52 +6,58 @@ import { v4 as uuidv4 } from 'uuid';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { CheckOutlined, TagsOutlined } from '@ant-design/icons';
 import { createCustomTags } from 'services/watchListService';
+import styled from 'styled-components';
 
+const Container = styled.div`
+width: 100%;
 
-function convertTagsToOptions(customTags) {
-  return (customTags || []).map(t => <Select.Option key={t.id} value={t.id}>
-    {t.name}
-  </Select.Option>);
+.ant-select-selection-item-content {
+  font-size: 12px;
 }
+`;
 
 const StockCustomTagSelect = (props) => {
 
-  const { value, onSave } = props;
+  const { value, readonly, onChange } = props;
   const context = React.useContext(GlobalContext);
   const [selected, setSelected] = React.useState(value);
-
-  const allOptions = convertTagsToOptions(context.customTags);
 
   // const initSelectedOptions = allOptions.filter(x => selectedTagIds?.some(tagId => tagId === x.value));
   // const [selectedOptions, setSelectedOptions] = React.useState(initSelectedOptions);
 
-
   const handleChange = async (valueList, optionList) => {
-    const [name] = valueList;
-    const [item] = optionList;
-    if (!item.key) {
+    const lastOption = optionList.length ? optionList[optionList.length - 1] : null;
+    if (lastOption && !lastOption.value) {
+      const name = valueList[valueList.length - 1];
       await createCustomTags(name);
+      await context.reloadCustomTags();
+    } else {
+      setSelected(valueList);
+      onChange(valueList);
     }
   }
 
-  const handleSave = async () => {
-    onSave();
+  if (readonly) {
+    return <>
+      {(context.customTags || [])
+        .filter(t => (value || []).includes(t.id))
+        .map((t, i) => <Tag color="#55B0D4" key={i}>{t.name}</Tag>)}
+    </>
   }
 
-  return <div style={{ width: '100%', display: 'flex' }}>
+  return <Container>
     <Select
-      placeholder="Select tags or type new tag"
+      placeholder="Select tags"
       onClick={e => e.stopPropagation()}
-      mode="tags"
+      mode="multiple"
+      allowClear={false}
       style={{ width: '100%', marginRight: 8, flex: '1' }}
       onChange={handleChange}
       value={selected}
-    // value={selectedOptions}
-    >
-      {allOptions}
-    </Select>
-    <Button type="primary" icon={<CheckOutlined/>} onClick={handleSave}/>
-  </div>
+      // value={selectedOptions}
+      options={(context.customTags || []).map((t, i) => ({ label: t.name, value: t.id }))}
+    />
+  </Container>
 
 
   // return (
@@ -74,12 +80,14 @@ const StockCustomTagSelect = (props) => {
 StockCustomTagSelect.propTypes = {
   // value: PropTypes.string.isRequired,
   value: PropTypes.arrayOf(PropTypes.string),
-  onSave: PropTypes.func,
+  readonly: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 StockCustomTagSelect.defaultProps = {
   value: [],
-  onSave: () => { },
+  readonly: true,
+  onChange: () => { },
 };
 
 export default StockCustomTagSelect;

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
 import { StockName } from './StockName';
-import { unwatchStock, watchStock, bellStock, unbellStock } from 'services/watchListService';
+import { unwatchStock, watchStock, bellStock, unbellStock, saveStockCustomTags } from 'services/watchListService';
 import { GlobalContext } from '../contexts/GlobalContext';
 import styled from 'styled-components';
 import { LockFilled } from '@ant-design/icons';
@@ -132,7 +132,7 @@ const StockInfoCard = (props) => {
 
   const [watched, setWatched] = React.useState(stock?.watched);
   const [belled, setBelled] = React.useState(stock?.belled);
-  const [customTags, setCustomTags] = React.useState(stock?.customTags);
+  const [customTags, setCustomTags] = React.useState(stock?.tags?.filter(x => !!x));
   const [editingTag, setEditingTag] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [priceEvent, setPriceEvent] = React.useState();
@@ -174,7 +174,11 @@ const StockInfoCard = (props) => {
     setBelled(belling);
   }
 
-  const toggleCustomTagEdit = async (e) => {
+  const handleStockCustomTagsChange = async (tagIds) => {
+    await saveStockCustomTags(stock.symbol, tagIds);
+  }
+
+  const toggleEditCustomTags = async (e) => {
     e.stopPropagation();
     setEditingTag(!editingTag);
   }
@@ -191,7 +195,6 @@ const StockInfoCard = (props) => {
     type="inner"
     title={title ?? <StockName value={stock} />}
     extra={isMember && <Space>
-      {showTags && <Button icon={<TagsOutlined />} type="link" onClick={toggleCustomTagEdit} />}
       {showBell && <StockNoticeButton value={belled} onChange={handleToggleBell} />}
       {showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
     </Space>}
@@ -199,9 +202,6 @@ const StockInfoCard = (props) => {
     hoverable={hoverable}
     actions={actions}
   >
-    {editingTag && <Row style={{ marginBottom: 8 }}>
-      <StockCustomTagSelect value={customTags?.map(x => x.id)} onChange={toggleCustomTagEdit} />
-    </Row>}
     <Row style={editingTag ? { filter: 'opacity(0.2)' } : null}>
       <Col flex="none">
         <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : 'N/A'}</Text>
@@ -243,7 +243,10 @@ const StockInfoCard = (props) => {
         </StyledTable>
       </Col>
     </Row>
-
+    {showTags && <Row style={{ marginTop: 16 }}>
+      <Col flex="1"><StockCustomTagSelect value={customTags} onChange={handleStockCustomTagsChange} readonly={!editingTag} /></Col>
+      <Col><Button icon={<TagsOutlined />} type="link" onClick={toggleEditCustomTags} /></Col>
+    </Row>}
     {shouldHideData && <StyledGuestCover>
       <LockFilled />
       <Text>

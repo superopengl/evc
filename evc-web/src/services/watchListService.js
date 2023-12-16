@@ -1,7 +1,7 @@
 import { httpGet, httpPost, httpDelete, httpPut } from './http';
 
-export async function getWatchList() {
-  return httpGet(`stock/watchlist`);
+export async function getWatchList(tags) {
+  return httpPost(`stock/watchlist`, {tags});
 }
 
 export async function watchStock(symbol) {
@@ -26,6 +26,10 @@ export async function listCustomTags() {
 
 export async function createCustomTags(name) {
   return httpPost(`custom_tags`, { name });
+}
+
+export async function deleteCustomTag(id) {
+  return httpDelete(`custom_tags/${id}`);
 }
 
 export async function saveStockCustomTags(symbol, tags) {

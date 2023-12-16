@@ -251,7 +251,7 @@ const StockInfoCard = (props) => {
         <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : <Text type="secondary">N/A</Text>}</Text>
       </Col>
       <Col flex="auto">
-        <SectionTitleDivider title={<small><Text><FormattedMessage id="text.reportDate" />: {stock.fairValueDate ? moment(stock.fairValueDate).format('D MMM YYYY') : 'NONE'}</Text></small>} />
+        <SectionTitleDivider title={<Text style={{ fontSize: '0.8rem' }}><FormattedMessage id="text.reportDate" />: {stock.fairValueDate ? moment(stock.fairValueDate).format('D MMM YYYY') : 'NONE'}</Text>} />
         <StyledList
           dataSource={cardDataSource}
           style={{ width: '100%', marginBottom: '1rem' }}

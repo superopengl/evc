@@ -4,6 +4,7 @@ import { Card, Typography, Space, Tooltip, Row, Col, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
+import { StockCustomTagButton } from 'components/StockCustomTagButton';
 import { StockName } from './StockName';
 import { unwatchStock, watchStock, bellStock, unbellStock, saveStockCustomTags } from 'services/watchListService';
 import { GlobalContext } from '../contexts/GlobalContext';
@@ -13,7 +14,7 @@ import { StockNoticeButton } from './StockNoticeButton';
 import { filter, debounceTime } from 'rxjs/operators';
 import { FormattedMessage } from 'react-intl';
 import StockCustomTagSelect from './StockCustomTagSelect';
-import { TagsOutlined } from '@ant-design/icons';
+import { TagOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -178,9 +179,8 @@ const StockInfoCard = (props) => {
     await saveStockCustomTags(stock.symbol, tagIds);
   }
 
-  const toggleEditCustomTags = async (e) => {
-    e.stopPropagation();
-    setEditingTag(!editingTag);
+  const toggleEditCustomTags = async (editing) => {
+    setEditingTag(editing);
   }
 
   const { isOver, isUnder } = stock;
@@ -243,9 +243,9 @@ const StockInfoCard = (props) => {
         </StyledTable>
       </Col>
     </Row>
-    {showTags && <Row style={{ marginTop: 16 }}>
+    {showTags && <Row style={{ marginTop: 16 }} gutter={[10, 10]}>
       <Col flex="1"><StockCustomTagSelect value={customTags} onChange={handleStockCustomTagsChange} readonly={!editingTag} /></Col>
-      <Col><Button icon={<TagsOutlined />} type="link" onClick={toggleEditCustomTags} /></Col>
+      <Col><div style={{position: 'relative', top: 8}}><StockCustomTagButton value={editingTag} onChange={toggleEditCustomTags} /></div></Col>
     </Row>}
     {shouldHideData && <StyledGuestCover>
       <LockFilled />

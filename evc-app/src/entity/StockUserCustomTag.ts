@@ -18,7 +18,7 @@ export class StockUserCustomTag {
   @Column()
   name: string;
 
-  @ManyToMany(() => StockWatchList, wl => wl.tags, { cascade: true })
+  @ManyToMany(() => StockWatchList, wl => wl.tags, { onDelete: 'CASCADE' })
   @JoinTable()
   stockInWatchList: StockWatchList[];
 }

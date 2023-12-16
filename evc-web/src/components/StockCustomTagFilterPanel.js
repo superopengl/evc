@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CheckOutlined, CloseOutlined, MinusOutlined, TagFilled, TagOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Button, Tag, Row, Col, Modal, Input } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import styled from 'styled-components';

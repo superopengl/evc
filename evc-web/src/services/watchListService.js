@@ -24,7 +24,7 @@ export async function listCustomTags() {
   return httpGet(`custom_tags`);
 }
 
-export async function createCustomTags(name) {
+export async function createCustomTag(name) {
   return httpPost(`custom_tags`, { name });
 }
 

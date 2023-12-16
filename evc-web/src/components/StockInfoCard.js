@@ -195,6 +195,7 @@ const StockInfoCard = (props) => {
     type="inner"
     title={title ?? <StockName value={stock} />}
     extra={isMember && <Space>
+      {showTags && <StockCustomTagButton value={editingTag} onChange={toggleEditCustomTags} />}
       {showBell && <StockNoticeButton value={belled} onChange={handleToggleBell} />}
       {showWatch && <StockWatchButton value={watched} onChange={handleToggleWatch} />}
     </Space>}
@@ -243,10 +244,17 @@ const StockInfoCard = (props) => {
         </StyledTable>
       </Col>
     </Row>
-    {showTags && <Row style={{ marginTop: 16 }} gutter={[10, 10]}>
-      <Col flex="1"><StockCustomTagSelect value={customTags} onChange={handleStockCustomTagsChange} readonly={!editingTag} /></Col>
-      <Col><div style={{position: 'relative', top: 8}}><StockCustomTagButton value={editingTag} onChange={toggleEditCustomTags} /></div></Col>
-    </Row>}
+    {showTags && <div style={{width: '100%', marginTop: 10}} onClick={(e) => {
+      e.stopPropagation();
+      setEditingTag(true);
+      }}>
+      <StockCustomTagSelect 
+      value={customTags} 
+      onChange={handleStockCustomTagsChange} 
+      readonly={!editingTag} 
+      onBlur={() => toggleEditCustomTags(false)}
+      />
+      </div>}
     {shouldHideData && <StyledGuestCover>
       <LockFilled />
       <Text>

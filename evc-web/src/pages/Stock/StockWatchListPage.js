@@ -70,7 +70,9 @@ const StockWatchListPage = (props) => {
 
   return (
     <ContainerStyled>
-      <Paragraph type="secondary">This page lists all the stocks you have chosen to watch. You can always go to <Link to="/stock"><FormattedMessage id="menu.stockRadar" /></Link> to find all the stocks our platform supports.</Paragraph>
+      <Paragraph type="secondary">
+        <FormattedMessage id="text.watchListMessage" values={{link: <Link to="/stock"><FormattedMessage id="menu.stockRadar" /></Link>}} />
+      </Paragraph>
       <StockCustomTagFilterPanel
         onChange={setSelectedTagIds}
         onDeleteTag={handleDeleteTag}

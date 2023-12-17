@@ -153,7 +153,16 @@
   "text.noEnoughCredit": "您没有足够的余额",
   "text.currentReferralCommissionPercentage": "您当前的推荐佣金比例为{percentage}。",
   "text.currentReferreeDiscountPercentage": "被您推荐的用户首次购买时享受的折扣优惠为{percentage}。",
-  "text.initialBuyDiscountMessage": "You can get {percentage}% off discount now!",
+  "text.initialBuyDiscountMessage": "您现在可享受{percentage}%折扣！",
   "text.reportDate": "更新日期",
+  "text.watchListMessage": "这是您的自选关注列表，您可以到{link}页面，挑选更多股票加入该页面。",
+  "text.emptyCustomTagMessage": "您可以分组筛选、管理关注列表里的股票。点击{icon}图标将股票加入您的自定义分组。",
+  "text.savedCustomTag": "成功保存自定义分组 {tag}!",
+  "text.createTag": "创建自定义分组",
+  "text.selectTags": "选择自定义分组",
+  "text.notFound": "未找到分组，请先创建自定义分组",
+  "text.delete": "删除",
+  "text.deleteCustomTagTitle": "删除分组 {tag}？",
+  "text.deleteCustomTagMessage": "该分组内所有的股票，会被移出分组，但仍会保留在您的关注列表页面。",
   "": ""
 }

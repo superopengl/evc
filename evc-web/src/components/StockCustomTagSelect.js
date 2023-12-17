@@ -5,6 +5,7 @@ import Tag from './Tag';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { createCustomTag } from 'services/watchListService';
 import styled from 'styled-components';
+import { useIntl } from 'react-intl';
 
 const Container = styled.div`
 width: 100%;
@@ -17,6 +18,7 @@ width: 100%;
 const StockCustomTagSelect = (props) => {
 
   const { value, readonly, onChange, onBlur } = props;
+  const intl = useIntl();
   const context = React.useContext(GlobalContext);
   const [selected, setSelected] = React.useState(value);
 
@@ -48,7 +50,7 @@ const StockCustomTagSelect = (props) => {
       </>
       :
       <Select
-        placeholder="Select tags"
+        placeholder={intl.formatMessage({id: 'text.selectTags'})}
         onClick={e => e.stopPropagation()}
         mode="multiple"
         allowClear={false}
@@ -56,7 +58,7 @@ const StockCustomTagSelect = (props) => {
         onChange={handleChange}
         onBlur={onBlur}
         value={selected}
-        notFoundContent={<>Not found. Please create tag first.</>}
+        notFoundContent={intl.formatMessage({id: 'text.notFound'})}
         // value={selectedOptions}
         options={(context.customTags || []).map((t, i) => ({ label: t.name, value: t.id }))}
       />}

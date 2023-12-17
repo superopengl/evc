@@ -56,7 +56,7 @@ const StockCustomTagSelect = (props) => {
         onChange={handleChange}
         onBlur={onBlur}
         value={selected}
-        notFoundContent={<>Not found</>}
+        notFoundContent={<>Not found. Please create tag first.</>}
         // value={selectedOptions}
         options={(context.customTags || []).map((t, i) => ({ label: t.name, value: t.id }))}
       />}

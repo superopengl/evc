@@ -1,26 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Tag, Row, Col, Modal, Input } from 'antd';
+import { CheckOutlined, CloseOutlined, TagFilled } from '@ant-design/icons';
+import { Button, Tag, Row, Col, Modal, Input, Alert, Typography } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import styled from 'styled-components';
 import { createCustomTag, deleteCustomTag } from 'services/watchListService';
 import { notify } from 'util/notify';
 
+const { Paragraph } = Typography;
 const StyledTag = styled(Tag)`
 &:hover {
   cursor: pointer;
 }
+
+font-size: 14px;
+padding: 5px 12px;
+margin: 0;
+
 `;
 
 const StyledCloseButton = styled.span`
-font-size: 12px;
+// font-size: 12px;
 color: rgba(0,0,0,0.35);
 `;
 
 const StyledNewTagInput = styled(Input.Search)`
 input {
-  font-size: 12px;
+  // font-size: 12px;
 }
 `;
 
@@ -72,32 +78,39 @@ export const StockCustomTagFilterPanel = (props) => {
     }
   }
 
-  return (<Row gutter={[5, 5]}>
-    {(customTags || [])
-      .map((t, i) => <Col key={i}>
-        <StyledTag
-          color={isSelected(t.id) ? "#55B0D4" : null}
-          onClick={() => toggleTag(t.id)}
-        >
-          {t.name} <StyledCloseButton onClick={e => handleDeleteTag(e, t)}>
-            <CloseOutlined style={{ marginLeft: 4 }} />
-          </StyledCloseButton>
-        </StyledTag>
-      </Col>)}
-    <Col>
-      <div style={{ display: 'flex' }}>
-        <StyledNewTagInput placeholder="Create tag"
-          size="small"
-          maxLength={16}
-          allowClear
-          value={tagName}
-          onChange={e => setTagName(e.target.value)}
-          enterButton={<Button type="primary" icon={<CheckOutlined />}></Button>}
-          onSearch={handleCreateTag}
-        />
-      </div>
-    </Col>
-  </Row>
+
+
+  return (<>
+    {!customTags?.length && <Paragraph type="secondary">
+      You can filter ang group stocks by custom tags. Click the <TagFilled style={{ color: '#fadb14' }} /> icon on the stock cards to specify tags for stocks.
+    </Paragraph>}
+    <Row gutter={[8, 8]}>
+      {(customTags || [])
+        .map((t, i) => <Col key={i}>
+          <StyledTag
+            color={isSelected(t.id) ? "#55B0D4" : null}
+            onClick={() => toggleTag(t.id)}
+          >
+            {t.name} <StyledCloseButton onClick={e => handleDeleteTag(e, t)}>
+              <CloseOutlined style={{ marginLeft: 8 }} />
+            </StyledCloseButton>
+          </StyledTag>
+        </Col>)}
+      <Col>
+        <div style={{ display: 'flex' }}>
+          <StyledNewTagInput placeholder="Create tag"
+            // size="small"
+            maxLength={16}
+            allowClear
+            value={tagName}
+            onChange={e => setTagName(e.target.value)}
+            enterButton={<Button type="primary" icon={<CheckOutlined />}></Button>}
+            onSearch={handleCreateTag}
+          />
+        </div>
+      </Col>
+    </Row>
+  </>
   );
 };
 

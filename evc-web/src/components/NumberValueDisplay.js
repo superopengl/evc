@@ -17,7 +17,7 @@ export const NumberValueDisplay = (props) => {
   const [lo, hi] = isSingleValue ? [] : value;
 
   if ((isSingleValue && !value) || (!isSingleValue && (!lo || !hi))) {
-    return <small>{props.empty}</small>;
+    return props.empty;
   }
 
   const formatNumber = num => {
@@ -38,7 +38,7 @@ export const NumberValueDisplay = (props) => {
     {
       loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> :
         <NumberPanel>
-          {isMinus && props.minus ? <small>{props.minus}</small> :
+          {isMinus && props.minus ? props.minus :
             isSingleValue ? getComponent(displayValue) :
               <>{getComponent(displayLo)} ~ {getComponent(displayHi)}</>
           }
@@ -52,7 +52,7 @@ NumberValueDisplay.propTypes = {
   value: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.arrayOf(PropTypes.number),
-  ]).isRequired,
+  ]),
   fixedDecimal: PropTypes.number,
   empty: PropTypes.any,
   minus: PropTypes.any,

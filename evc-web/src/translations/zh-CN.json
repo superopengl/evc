@@ -147,6 +147,8 @@
   "text.forwardNextFyFairValueLoss": "EPS(FFY)亏损",
   "text.forwardNextFyMaxValue": "前瞻下个财年最大估值范围",
   "text.forwardNextFyMaxValueLoss": "EPS(FFYMR)亏损",
+  "text.epsTtmLoss": "EPS(TTM) Loss",
+  "text.forwardEpsLoss": "Forward EPS Loss",
   "text.beta": "BETA",
   "text.peRatio": "PE (TTM)",
   "text.forwardRatio": "Forward PE",

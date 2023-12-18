@@ -1,15 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Space, Tooltip } from 'antd';
+import { Typography, Space } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { getStockEvcInfo } from 'services/stockService';
-import ReactDOM from "react-dom";
-import { NumberRangeDisplay } from './NumberRangeDisplay';
-import { Skeleton } from 'antd';
-import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import { TimeAgo } from './TimeAgo';
 import styled from 'styled-components';
+import { NumberValueDisplay } from './NumberValueDisplay';
 
 const { Text } = Typography;
 const SHOW_SUPPORT_RESISTANCE = false;
@@ -40,7 +36,7 @@ const StockUnpaidEvcInfoPanel = (props) => {
         <OldFairValueContainer>
           {fairValues?.length ? fairValues.map((fv, i) => i > 2 ? null : <Space key={i} style={{ width: 200, justifyContent: 'space-between' }} >
             <TimeAgo value={fv.date} showAgo={false} accurate={false} direction="horizontal" />
-            {fv.lo ? <NumberRangeDisplay lo={fv.lo} hi={fv.hi} /> : <BlurPair />}
+            {fv.lo ? <NumberValueDisplay value={[fv.lo, fv.hi]} /> : <BlurPair />}
           </Space>) : <BlurPair />}
         </OldFairValueContainer>
       </Space>

@@ -147,6 +147,8 @@
   "text.forwardNextFyFairValueLoss": "EPS (FFY) LOSS",
   "text.forwardNextFyMaxValue": "Forward Next FY Max Value Range",
   "text.forwardNextFyMaxValueLoss": "EPS (FFYMR) LOSS",
+  "text.epsTtmLoss": "EPS(TTM) Loss",
+  "text.forwardEpsLoss": "Forward EPS Loss",
   "text.beta": "BETA",
   "text.peRatio": "PE (TTM)",
   "text.forwardRatio": "Forward PE",

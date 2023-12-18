@@ -120,38 +120,84 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      target: '#tour-support',
+      target: '#tour-forward-next-fy-fair-value',
       disableBeacon: true,
-      placement: 'top',
       content: <>
         <Paragraph strong>
-          <FormattedMessage id="tour.supportTitle" />
+          <FormattedMessage id="tour.fairValueTitle" />
         </Paragraph>
-        <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.supportDescription" />
+        <Paragraph style={{ fontSize: 14 }}>
+          <FormattedMessage id="tour.fairValueDescription" />
         </Paragraph>
-        <Paragraph type="danger" style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.supportNote" />
+        <Paragraph type="danger" style={{ fontSize: 14 }}>
+          <FormattedMessage id="tour.fairValueNote" />
         </Paragraph>
       </>
     },
     {
-      target: '#tour-resistance',
+      target: '#tour-forward-next-fy-fair-value-range',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
-          <FormattedMessage id="tour.resistanceTitle" />
+          <FormattedMessage id="tour.fairValueTitle" />
         </Paragraph>
-        <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.resistanceDescription" />
+        <Paragraph style={{ fontSize: 14 }}>
+          <FormattedMessage id="tour.fairValueDescription" />
         </Paragraph>
-        <Paragraph type="danger" style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.resistanceNote" />
+        <Paragraph type="danger" style={{ fontSize: 14 }}>
+          <FormattedMessage id="tour.fairValueNote" />
         </Paragraph>
       </>
     },
+    // {
+    //   target: '#tour-support',
+    //   disableBeacon: true,
+    //   placement: 'top',
+    //   content: <>
+    //     <Paragraph strong>
+    //       <FormattedMessage id="tour.supportTitle" />
+    //     </Paragraph>
+    //     <Paragraph style={{ fontSize: 12 }}>
+    //       <FormattedMessage id="tour.supportDescription" />
+    //     </Paragraph>
+    //     <Paragraph type="danger" style={{ fontSize: 12 }}>
+    //       <FormattedMessage id="tour.supportNote" />
+    //     </Paragraph>
+    //   </>
+    // },
+    // {
+    //   target: '#tour-resistance',
+    //   disableBeacon: true,
+    //   content: <>
+    //     <Paragraph strong>
+    //       <FormattedMessage id="tour.resistanceTitle" />
+    //     </Paragraph>
+    //     <Paragraph style={{ fontSize: 12 }}>
+    //       <FormattedMessage id="tour.resistanceDescription" />
+    //     </Paragraph>
+    //     <Paragraph type="danger" style={{ fontSize: 12 }}>
+    //       <FormattedMessage id="tour.resistanceNote" />
+    //     </Paragraph>
+    //   </>
+    // },
     {
       target: '#tour-putcall',
+      placement: 'auto',
+      disableBeacon: true,
+      content: <>
+        <Paragraph strong>
+          <FormattedMessage id="tour.putCallTitle" />
+        </Paragraph>
+        <Paragraph style={{ fontSize: 12 }}>
+          <FormattedMessage id="tour.putCallDescription" />
+        </Paragraph>
+        <Paragraph type="danger" style={{ fontSize: 12 }}>
+          <FormattedMessage id="tour.putCallNote" />
+        </Paragraph>
+      </>
+    },
+    {
+      target: '#tour-putcall-table',
       placement: 'auto',
       disableBeacon: true,
       content: <>
@@ -340,7 +386,7 @@ const PutCallDummyChart = () => {
 
 const EVC_CORE_INFO = `
 <div class="ant-space ant-space-vertical" style="width: 100%; gap: 8px;">
-   <div class="ant-space-item" id="tour-fair-value">
+   <div class="ant-space-item">
       <div class="ant-row ant-row-no-wrap ant-row-center" style="margin-left: -2px; margin-right: -2px; row-gap: 0px;">
          <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 0 0 auto;"><span class="ant-typography">Report Date: 2 Dec 2023</span></div>
          <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 1 1 auto; min-width: 0px; display: flex; align-items: center;">
@@ -348,7 +394,7 @@ const EVC_CORE_INFO = `
          </div>
       </div>
    </div>
-   <div class="ant-space-item" style="">
+   <div class="ant-space-item" id="tour-fair-value">
       <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; gap: 8px;">
          <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Recent FY Fair Value</span></div>
          <div class="ant-space-item">
@@ -360,7 +406,7 @@ const EVC_CORE_INFO = `
          </div>
       </div>
    </div>
-   <div class="ant-space-item" style="">
+   <div class="ant-space-item" id="tour-forward-next-fy-fair-value">
       <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
          <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward Next FY Fair Value</span></div>
          <div class="ant-space-item">
@@ -372,8 +418,8 @@ const EVC_CORE_INFO = `
          </div>
       </div>
    </div>
-   <div class="ant-space-item" style="">
-      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 8px;">
+   <div class="ant-space-item" id="tour-forward-next-fy-fair-value-range">
+      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start;  gap: 8px;">
          <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward Next FY Max Value Range</span></div>
          <div class="ant-space-item">
             <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
@@ -384,7 +430,7 @@ const EVC_CORE_INFO = `
          </div>
       </div>
    </div>
-   <div class="ant-space-item" style="">
+   <div class="ant-space-item" style="margin-top: 1rem;">
       <div class="ant-row ant-row-no-wrap ant-row-center" style="margin-left: -2px; margin-right: -2px; row-gap: 0px;">
          <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 0 0 auto;">Daily update</div>
          <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 1 1 auto; min-width: 0px; display: flex; align-items: center;">

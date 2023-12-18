@@ -471,15 +471,9 @@ export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {
       'date',
     ])
     .orderBy('symbol')
-    .addOrderBy('date', 'DESC')
+    .addOrderBy('date', 'ASC')
     .execute();
 
-  // const result = list.map(d => ({
-  //   date: moment(d.date).format('YYYY-MM-DD'),
-  //   putCallOIRatio: _.round(+d.putCallOIRatio, 3),
-  //   todayPercentPutVol: _.round(+d.todayPercentPutVol, 2),
-  //   todayPercentCallVol: _.round(+d.todayPercentCallVol, 2),
-  // }));
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });

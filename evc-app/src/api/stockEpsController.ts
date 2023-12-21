@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -63,6 +63,22 @@ export const syncStockEps = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { symbol } = req.params;
   await stockEpsService.syncStockEps(symbol);
+  res.json();
+});
+
+export const factorStockEps = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { symbol } = req.params;
+  const { factor } = req.body;
+  assert(factor > 0 && factor !== 1, 400, `Invalid factor value ${factor}`);
+
+  const { schema, tableName } = getRepository(StockEps).metadata;
+  await getManager()
+    .query(
+      `UPDATE "${schema}"."${tableName}" SET value = value * $2 WHERE symbol = $1`,
+      [symbol.toUpperCase(), factor]
+    );
+
   res.json();
 });
 

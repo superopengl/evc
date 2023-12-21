@@ -723,6 +723,17 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/eps/factor:
+    post:
+      operationId: factorStockEps
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/fairvalue:
     get:
       operationId: getStockFairValue

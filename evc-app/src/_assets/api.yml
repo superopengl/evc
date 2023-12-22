@@ -723,9 +723,9 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/eps/factor:
+  /stock/s/{symbol}/factor:
     post:
-      operationId: factorStockEps
+      operationId: factorStockValue
       parameters:
         - name: symbol
           in: path

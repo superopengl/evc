@@ -1,4 +1,4 @@
-import { Space, PageHeader, Tag, Button, Modal, Typography } from 'antd';
+import { Space, PageHeader, Tag, Button, Modal, Typography, Form, Input, Tooltip, DatePicker } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -14,13 +14,13 @@ import StockDisplayPanel from 'components/StockDisplayPanel';
 import { notify } from 'util/notify';
 import StockAdminPanel from 'components/StockAdminPanel';
 import TagSelect from 'components/TagSelect';
-import { DeleteOutlined, TagsOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, TagsOutlined } from '@ant-design/icons';
 import StockEditTagModal from 'components/StockEditTagModal';
-import { updateStock } from 'services/stockService';
+import { updateStock, factorStockValue } from 'services/stockService';
 import { StockNoticeButton } from 'components/StockNoticeButton';
 import { from } from 'rxjs';
 
-const { Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 const StockDetailPage = (props) => {
   const { symbol } = props;
@@ -33,6 +33,7 @@ const StockDetailPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [stockTags, setStockTags] = React.useState([]);
   const [editTagVisible, setEditTagVisible] = React.useState(false);
+  const [bulkEditVisible, setBulkEditVisible] = React.useState(false);
 
   const loadEntity = async () => {
     if (!symbol) {
@@ -90,7 +91,7 @@ const StockDetailPage = (props) => {
       content: <>
         <Paragraph>
           This operation is not revertable. All the associabled data (supports, resistances, fair values) with this stock will be deleted. System may take several minutes to update all views.
-          </Paragraph>
+        </Paragraph>
         <Paragraph>
           If you want to add this stock back, you can choose add new stock and manually fetch EPS, close data again.
         </Paragraph>
@@ -128,6 +129,18 @@ const StockDetailPage = (props) => {
     setBelled(belling);
   }
 
+  const handleSubmitBulkEdit = async (values) => {
+    const { date, factor } = values;
+    try {
+      setLoading(true);
+      await factorStockValue(props.symbol, date.toDate(), factor);
+      loadEntity();
+    } finally {
+      setBulkEditVisible(false);
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       {(loading || !stock) ? <Loading /> : <>
@@ -148,13 +161,16 @@ const StockDetailPage = (props) => {
           extra={[
             isMember ? <StockNoticeButton key="bell" size={20} value={belled} onChange={handleToggleBell} /> : null,
             isMemberOrFree ? <StockWatchButton key="watch" size={20} value={watched} onChange={handleToggleWatch} /> : null,
+            isAdminOrAgent ? <Tooltip key="bulkEdit" title="Bulk update" placement="topRight">
+              <Button type="primary" ghost icon={<EditOutlined />} onClick={() => setBulkEditVisible(true)}>Bulk Edit Values</Button>
+            </Tooltip> : null,
             isAdminOrAgent ? <Button key="tag" type="primary" ghost icon={<TagsOutlined />} onClick={() => setEditTagVisible(true)}>Edit Tag</Button> : null,
             isAdminOrAgent ? <Button key="delete" type="primary" danger icon={<DeleteOutlined />} onClick={handleDeleteStock}>Delete Stock</Button> : null
           ].filter(x => !!x)}
         >
           {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={true} />}
 
-          {isAdminOrAgent && <StockAdminPanel stock={stock} onDataChange={loadEntity}/>}
+          {isAdminOrAgent && <StockAdminPanel stock={stock} onDataChange={loadEntity} />}
 
         </PageHeader>
         <StockEditTagModal
@@ -164,7 +180,63 @@ const StockDetailPage = (props) => {
           onOk={handleTagChange}
           onCancel={() => setEditTagVisible(false)}
         />
+        <Modal
+          visible={bulkEditVisible}
+          title="Bulk edit values"
+          closable={true}
+          maskClosable
+          destroyOnClose
+          width={300}
+          footer={null}
+          onOk={() => setBulkEditVisible(false)}
+          onCancel={() => setBulkEditVisible(false)}
+        >
+          <Form onFinish={handleSubmitBulkEdit}
+            labelCol={{ span: 12 }}
+            labelAlign="left"
+            wrapperCol={{ span: 12 }}
+          >
+            <Form.Item
+              label="Date (exclusive)"
+              name="date"
+              rules={[{ required: true, type: 'date', message: ' ' }]}
+            >
+              <DatePicker placeholder="Date" />
+            </Form.Item>
+            <Form.Item
+              label="Factor"
+              name="factor"
+              rules={[{
+                required: true,
+                validator: (rule, value) => {
+                  const num = +value;
+                  if (num === 1) {
+                    return Promise.reject('Cannot be 1');
+                  }
+                  if (num < 0) {
+                    return Promise.reject('Must be a positive number');
+                  }
+                  if (num > 0) {
+                    return Promise.resolve(num);
+                  }
+                  return Promise.reject('Not a valid number');
+                },
+              }]}>
+              <Input style={{ textAlign: 'left'}} placeholder="> 0 but not 1" />
+            </Form.Item>
+            <Paragraph type="secondary">
+              closePrice &times; factor = newPrice
+              <br/>
+              EPS &times; factor = newEPS
+            </Paragraph>
 
+            <Form.Item
+              wrapperCol={{ span: 24 }}
+            >
+              <Button type="primary" block htmlType="submit">Submit</Button>
+            </Form.Item>
+          </Form>
+        </Modal>
         {stock && <StockDisplayPanel stock={stock} />}
       </>}
     </>

@@ -79,7 +79,7 @@ const StockEpsAdminEditor = (props) => {
   return <Container>
     <Space size="small" direction="vertical" style={{ width: '100%' }}>
       <Alert description={<>
-        It's required to have at least 6 EPS values (back to one and half years ago) to calculate fair values.<br />
+        It's required to have at least 16 EPS values (back to one and half years ago) to calculate fair values.<br />
         Manually adding EPS value is a heavy operation as it will cause system to recalculate many values like PE90 and fair values.
       </>}
         type="info"

@@ -38,7 +38,6 @@ export const saveStockEps = handlerWrapper(async (req, res) => {
   entity.symbol = symbol;
   entity.reportDate = reportDate.format('YYYY-MM-DD');
   entity.value = value;
-  entity.source = 'manual';
 
   await getRepository(StockEps).insert(entity);
 

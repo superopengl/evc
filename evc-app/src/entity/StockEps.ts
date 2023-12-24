@@ -14,12 +14,9 @@ export class StockEps {
 
   @ManyToOne(() => Stock)
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
-  stock: Stock;
+  stock?: Stock;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   value: number;
-
-  @Column({ default: 'auto' })
-  source: 'auto' | 'manual'
 }
 

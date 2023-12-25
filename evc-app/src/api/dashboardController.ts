@@ -8,12 +8,34 @@ import { StockResistance } from '../entity/StockResistance';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 import { Stock } from '../entity/Stock';
 import { notExistsQuery } from '../utils/existsQuery';
+import { StockDailyClose } from '../entity/StockDailyClose';
 
 
 export const getAdminDashboard = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
 
-  const pleas = await getManager()
+  const m = getManager();
+
+  const closeAlerts = await m
+    .createQueryBuilder()
+    .from(q => q
+      .from(StockDailyClose, 'c')
+      .distinctOn(['symbol'])
+      .orderBy('symbol', 'DESC')
+      .addOrderBy('date', 'DESC')
+      .select([
+        'symbol',
+        'date',
+        'close',
+        '"createdAt"'
+      ])
+      , 'c')
+    .where(`date < "createdAt"::date - 1`)
+    .orderBy('date', 'DESC')
+    .addOrderBy('symbol', 'ASC')
+    .getRawMany();
+
+  const pleas = await m
     .getRepository(StockPlea)
     .createQueryBuilder('p')
     .where(
@@ -31,7 +53,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .orderBy('count', 'DESC')
     .getRawMany();
 
-  const noFairValuesByInvalidTtmEps = await getManager()
+  const noFairValuesByInvalidTtmEps = await m
     .createQueryBuilder()
     .from(q => q
       .from(StockLatestFairValue, 'v')
@@ -43,7 +65,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .select('array_agg(symbol) as value')
     .getRawOne();
 
-  const noFairValuesByMissingEpsData = await getManager()
+  const noFairValuesByMissingEpsData = await m
     .createQueryBuilder()
     .from(q => q
       .from(StockLatestFairValue, 'v')
@@ -55,7 +77,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .select('array_agg(symbol) as value')
     .getRawOne();
 
-  const oneSupports = await getManager()
+  const oneSupports = await m
     .createQueryBuilder()
     .from(q => q
       .from(StockSupport, 'x')
@@ -68,7 +90,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .select('array_agg(symbol) as value')
     .getRawOne();
 
-  const oneResistances = await getManager()
+  const oneResistances = await m
     .createQueryBuilder()
     .from(q => q
       .from(StockResistance, 'x')
@@ -81,7 +103,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .select('array_agg(symbol) as value')
     .getRawOne();
 
-  const noSupports = await getManager()
+  const noSupports = await m
     .createQueryBuilder()
     .from(q => q
       .from(StockLatestPaidInformation, 'v')
@@ -92,7 +114,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .select('array_agg(symbol) as value')
     .getRawOne();
 
-  const noResistances = await getManager()
+  const noResistances = await m
     .createQueryBuilder()
     .from(q => q
       .from(StockLatestPaidInformation, 'v')
@@ -104,6 +126,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .getRawOne();
 
   const data = {
+    closeAlerts,
     pleas,
     noFairValuesByInvalidTtmEps: noFairValuesByInvalidTtmEps.value,
     noFairValuesByMissingEpsData: noFairValuesByMissingEpsData.value,

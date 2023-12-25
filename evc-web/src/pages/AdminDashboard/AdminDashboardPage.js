@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Typography, Collapse, Tag, Badge, List, Button } from 'antd';
+import { Typography, Collapse, Tag, Badge, List, Table } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { getDashboard } from 'services/dashboardService';
@@ -9,6 +9,7 @@ import { CaretRightOutlined, DeleteOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
 import { deleteStockPlea } from 'services/stockService';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
+import { TimeAgo } from 'components/TimeAgo';
 
 const { Text, Paragraph } = Typography;
 
@@ -48,7 +49,7 @@ const CounterBadge = (props) => {
 
 const LinkTag = props => {
   return <Link to={props.to}>
-    <StyledTag>{props.children}</StyledTag>
+    <StyledTag style={props.style}>{props.children}</StyledTag>
   </Link>
 }
 
@@ -89,10 +90,58 @@ const AdminDashboardPage = () => {
         <Collapse
           // ghost
           bordered={false}
-          defaultActiveKey={['plea']}
+          defaultActiveKey={['closeAlert']}
           accordion
           expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
         >
+          <Collapse.Panel
+            key="closeAlert"
+            header={<>Not updated close price</>}
+            extra={<CounterBadge count={data.closeAlerts?.length} color="#55B0D4" />}
+          >
+            <Table
+              loading={loading}
+              size="small"
+              bordered={false}
+              dataSource={data.closeAlerts}
+              rowKey="symbol"
+              pagination={false}
+              columns={[
+                {
+                  title: 'Symbol',
+                  dataIndex: 'symbol',
+                  render: value => <LinkTag to={`/stock/${value}`} style={{margin: 0}}>{value}</LinkTag>
+                },
+                {
+                  title: 'Close price',
+                  // align: 'right',
+                  dataIndex: 'close',
+                  render: value => +value
+                },
+                {
+                  title: 'Price date',
+                  dataIndex: 'date',
+                  render: value => <TimeAgo value={value} showAgo={false} accurate={false}/>
+                },
+                {
+                  title: 'Data input time',
+                  dataIndex: 'createdAt',
+                  render: value => <TimeAgo value={value} showAgo={false} accurate={true} extra={<Text type="secondary">EST</Text>} />
+                },
+              ]}
+              renderItem={item => <List.Item
+                actions={[
+                  <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`}
+                    message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
+                    icon={<DeleteOutlined />}
+                    onOk={() => handleDeleteStockPlea(item.symbol)}
+                  />
+                ]}
+              >
+                <strong>{item.symbol}</strong> has {item.count} requests. <Link to={`/stock?create=${item.symbol}`}>Click to create</Link>
+              </List.Item>}
+            />
+          </Collapse.Panel>
           <Collapse.Panel
             key="plea"
             header={<>Unsupported Stock Requests </>}
@@ -103,14 +152,14 @@ const AdminDashboardPage = () => {
               size="small"
               bordered={false}
               dataSource={data.pleas}
-              renderItem={item => <List.Item 
-              actions={[
-                <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`} 
-                message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
-                icon={<DeleteOutlined />} 
-                onOk={() => handleDeleteStockPlea(item.symbol)}
-                />
-              ]}
+              renderItem={item => <List.Item
+                actions={[
+                  <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`}
+                    message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
+                    icon={<DeleteOutlined />}
+                    onOk={() => handleDeleteStockPlea(item.symbol)}
+                  />
+                ]}
               >
                 <strong>{item.symbol}</strong> has {item.count} requests. <Link to={`/stock?create=${item.symbol}`}>Click to create</Link>
               </List.Item>}

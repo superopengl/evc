@@ -21,11 +21,11 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
       date: 'DESC'
     }
   });
-  const latestPeItem = {
+  const latestPeItem = latestPe ? {
     reportDate: latestPe.date,
     ttmEps: latestPe.ttmEps,
     pe: latestPe.pe,
-  }
+  } : null;
   const computedList = await getRepository(StockHistoricalComputedFairValue).find({
     where: {
       symbol
@@ -36,9 +36,10 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
       symbol
     },
   });
-  const list = _.orderBy([latestPeItem, ...computedList, ...specialList], [(item) => moment(item.reportDate).toDate()], ['desc']);
+  const list = _.orderBy([...computedList, ...specialList], [(item) => moment(item.reportDate).toDate()], ['desc']);
 
-  res.json(list);
+  const result = latestPeItem ? [latestPeItem, ...list] : list; 
+  res.json(result);
 });
 
 export const saveStockFairValue = handlerWrapper(async (req, res) => {

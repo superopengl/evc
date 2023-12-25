@@ -23,29 +23,34 @@ const defs = [
         name: 'daily-earnings-calendar',
         description: 'Daily earnings calendar',
         startTimeNY: ['0:30', '13:30'],
+        daysOfWeek: 'MON-FRI',
         // AlphaVantage
     },
     {
         name: 'daily-close',
         description: 'Daily close',
-        startTimeNY: '16:30',
+        startTimeNY: ['16:30', '20:30', '0:30', '4:30'],
+        daysOfWeek: 'MON-SAT',
         // AlphaVantage
     },
     {
         name: 'daily-putcall',
         description: 'Daily putCallRatio',
         startTimeNY: '16:10',
+        daysOfWeek: 'MON-FRI',
         // IEX
     },
     {
         name: 'daily-subscription',
         description: 'Daily subscription check',
         startTimeNY: '23:00',
+        daysOfWeek: 'MON-FRI',
     },
     {
         name: 'daily-insider',
         description: 'Daily insider transaction',
         startTimeNY: '3:00',
+        daysOfWeek: 'MON-FRI',
     },
 ];
 
@@ -55,20 +60,20 @@ function getDescription(data) {
     return `${description} at New York time ${times.join(' and ')}`;
 }
 
-function getCronInUtcTime(newYorkTimeHHmmArray) {
+function getCronInUtcTime(newYorkTimeHHmmArray, daysOfWeek) {
     const array = _.isArray(newYorkTimeHHmmArray) ? newYorkTimeHHmmArray : [newYorkTimeHHmmArray];
     const times = array.map(x => moment.tz(x, 'H:mm', NY_TIMEZONE).tz(UTC_TIMEZONE));
     const minute = times[0].format('m');
     const hours = times.map(t => t.format('H')).join(',');
 
-    return `cron(${minute} ${hours} ? * MON-FRI *)`;
+    return `cron(${minute} ${hours} ? * ${daysOfWeek} *)`;
 }
 
 function getRuleParams(data) {
     return {
         Name: data.name,
         Description: getDescription(data),
-        ScheduleExpression: getCronInUtcTime(data.startTimeNY),
+        ScheduleExpression: getCronInUtcTime(data.startTimeNY, data.daysOfWeek),
         State: 'ENABLED',
         RoleArn: 'arn:aws:iam::115607939215:role/ecsEventsRole',
     };

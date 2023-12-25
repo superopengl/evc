@@ -22,6 +22,7 @@ export const ConfirmDeleteButton = (props) => {
   return <Popover
     title={<>{props.message || 'Confirm'}</>}
     trigger="click"
+    placement="topRight"
     visible={visible}
     onVisibleChange={handleVisibleChange}
     content={<>

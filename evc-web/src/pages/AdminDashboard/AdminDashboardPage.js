@@ -96,8 +96,8 @@ const AdminDashboardPage = () => {
         >
           <Collapse.Panel
             key="closeAlert"
-            header={<>Not updated close price</>}
-            extra={<CounterBadge count={data.closeAlerts?.length} color="#55B0D4" />}
+            header={<>Not up-to-date close price</>}
+            extra={<CounterBadge count={data.closeAlerts?.length} />}
           >
             <Table
               loading={loading}

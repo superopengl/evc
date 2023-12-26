@@ -9,6 +9,7 @@ import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInfor
 import { Stock } from '../entity/Stock';
 import { notExistsQuery } from '../utils/existsQuery';
 import { StockDailyClose } from '../entity/StockDailyClose';
+import { StockUnusualEpsAlert } from '../entity/views/StockUnusualEpsAlert';
 
 
 export const getAdminDashboard = handlerWrapper(async (req, res) => {
@@ -34,6 +35,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
     .orderBy('date', 'DESC')
     .addOrderBy('symbol', 'ASC')
     .getRawMany();
+
+  const unusualEps = await m.find(StockUnusualEpsAlert);
 
   const pleas = await m
     .getRepository(StockPlea)
@@ -127,6 +130,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
 
   const data = {
     closeAlerts,
+    unusualEps,
     pleas,
     noFairValuesByInvalidTtmEps: noFairValuesByInvalidTtmEps.value,
     noFairValuesByMissingEpsData: noFairValuesByMissingEpsData.value,

@@ -95,7 +95,7 @@ const AdminDashboardPage = () => {
         <Collapse
           // ghost
           bordered={false}
-          defaultActiveKey={['closeAlert']}
+          defaultActiveKey={[]}
           accordion
           expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
         >
@@ -146,7 +146,7 @@ const AdminDashboardPage = () => {
             extra={<CounterBadge count={data.unusualEps?.length} />}
           >
             <Paragraph type="secondary">
-            Successive identical EPS values within 80 days.
+            Successive identical EPS values within 80 days. Spans ≤ 30 days within 3 months are tagged as <Tag color="warning">recent</Tag>
             </Paragraph>
             <Table
               loading={loading}
@@ -177,8 +177,14 @@ const AdminDashboardPage = () => {
                     <TimeAgo value={item.reportDateFormer} showAgo={false} accurate={false} />
                     /
                     <TimeAgo value={item.reportDateLatter} showAgo={false} accurate={false} />
-                    <Text>({item.span} days)</Text>
                   </Space>
+                },
+                {
+                  title: 'Span (days)',
+                  // align: 'right',
+                  dataIndex: 'span',
+                  sorter: (a, b) => stringNumberComparer(a.span, b.span),
+                  render: value => value
                 },
                 {
                   title: 'Recent?',
@@ -209,6 +215,7 @@ const AdminDashboardPage = () => {
                 {
                   title: 'Symbol',
                   dataIndex: 'symbol',
+                  sorter: (a, b) => a.symbol.localeCompare(b.symbol),
                   render: (value) => <Space>
                     <Tag>{value}</Tag>
                     <Link to={`/stock?create=${value}`}>Click to create</Link>
@@ -218,6 +225,7 @@ const AdminDashboardPage = () => {
                   title: 'Request count',
                   // align: 'right',
                   dataIndex: 'count',
+                  sorter: (a, b) => stringNumberComparer(a.count, b.count),
                   render: value => +value
                 },
                 {

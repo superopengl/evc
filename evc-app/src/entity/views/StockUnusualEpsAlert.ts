@@ -29,6 +29,7 @@ import { StockEps } from '../StockEps';
       `latter."reportDate" as "reportDateLatter"`,
       `latter."value" as "value"`,
       `latter."reportDate" - former."reportDate" as "span"`,
+      `CASE WHEN former."reportDate" > CURRENT_DATE - INTERVAL '3 months' AND latter."reportDate" - former."reportDate" <= 30 THEN TRUE ELSE FALSE END AS recent`,
     ])
 })
 export class StockUnusualEpsAlert {
@@ -46,4 +47,7 @@ export class StockUnusualEpsAlert {
 
   @ViewColumn()
   span: number;
+
+  @ViewColumn()
+  recent: boolean;
 }

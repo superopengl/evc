@@ -733,7 +733,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /stock/s/{symbol}/fairvalue:
     get:
       operationId: getStockFairValue
@@ -1287,7 +1287,7 @@ paths:
       operationId: listStockCustomTag
       responses:
         200:
-          description: OK    
+          description: OK
     post:
       operationId: createStockCustomTag
       responses:

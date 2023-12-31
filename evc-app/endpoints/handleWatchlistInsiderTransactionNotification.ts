@@ -33,7 +33,7 @@ async function promoteLatestSnapshotToPreviousSnapshot() {
   const { tableName: toTableName, schema: toSchema } = getRepository(StockInsiderTransactionPreviousSnapshot).metadata;
 
   await getManager().transaction(async m => {
-    await m.delete(SupportResistancePreviousSnapshot, {});
+    await m.delete(StockInsiderTransactionPreviousSnapshot, {});
     const sql = `INSERT INTO "${toSchema}"."${toTableName}" SELECT * FROM "${fromSchema}"."${fromTableName}"`;
     await m.query(sql);
   });

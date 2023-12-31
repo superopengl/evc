@@ -8,12 +8,13 @@ import * as _ from 'lodash';
 import moment = require('moment');
 import { refreshMaterializedView } from '../db';
 import { StockDailyPe } from '../entity/views/StockDailyPe';
+import { StockComputedPe90 } from '../entity/views/StockComputedPe90';
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
 
-  const latestPe = await getRepository(StockDailyPe).findOne({
+  const latestPe90: any = await getRepository(StockComputedPe90).findOne({
     where: {
       symbol
     },
@@ -21,11 +22,12 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
       date: 'DESC'
     }
   });
-  const latestPeItem = latestPe ? {
-    reportDate: latestPe.date,
-    ttmEps: latestPe.ttmEps,
-    pe: latestPe.pe,
-  } : null;
+
+  if(latestPe90) {
+    latestPe90.reportDate = latestPe90.date;
+    latestPe90.isLatest = true;
+  }
+
   const computedList = await getRepository(StockHistoricalComputedFairValue).find({
     where: {
       symbol
@@ -38,7 +40,7 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
   });
   const list = _.orderBy([...computedList, ...specialList], [(item) => moment(item.reportDate).toDate()], ['desc']);
 
-  const result = latestPeItem ? [latestPeItem, ...list] : list; 
+  const result = latestPe90 ? [latestPe90, ...list] : list; 
   res.json(result);
 });
 

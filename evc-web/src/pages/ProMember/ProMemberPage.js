@@ -571,6 +571,8 @@ const ProMemberPage = (props) => {
   cursor: pointer;
   `;
 
+  const shouldShowRoster = false;
+
   const handleShowStockChart = () => {
     ReactDOM.unstable_batchedUpdates(() => {
       setStockChartVisible(true);
@@ -806,7 +808,7 @@ const ProMemberPage = (props) => {
                 </Card>
               </Col>
             </Row>
-            <Row gutter={[30, 30]} style={{ marginTop: 30 }} id="tour-insider">
+            {shouldShowRoster && <Row gutter={[30, 30]} style={{ marginTop: 30 }} id="tour-insider">
               <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
                 <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
                   <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
@@ -973,7 +975,7 @@ const ProMemberPage = (props) => {
                   </RosterContainer>
                 </Card>
               </Col>
-            </Row>
+            </Row>}
             <Row style={{ marginTop: 30 }}>
               <Col span={24}>
                 <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">

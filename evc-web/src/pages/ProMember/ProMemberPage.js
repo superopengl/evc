@@ -120,32 +120,32 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      target: '#tour-forward-next-fy-fair-value-off',
+      target: '#tour-forward-next-fy-fair-value',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
-          <FormattedMessage id="tour.fairValueTitle" />
+          <FormattedMessage id="tour.forwardNextFyFairValueTitle" />
         </Paragraph>
         <Paragraph style={{ fontSize: 14 }}>
-          <FormattedMessage id="tour.fairValueDescription" />
+          <FormattedMessage id="tour.forwardNextFyFairValueDescription" />
         </Paragraph>
         <Paragraph type="danger" style={{ fontSize: 14 }}>
-          <FormattedMessage id="tour.fairValueNote" />
+          <FormattedMessage id="tour.forwardNextFyFairValueNote" />
         </Paragraph>
       </>
     },
     {
-      target: '#tour-forward-next-fy-fair-value-range-off',
+      target: '#tour-forward-next-fy-fair-value-range',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
-          <FormattedMessage id="tour.fairValueTitle" />
+          <FormattedMessage id="tour.forwardNextFyFairValueRangeTitle" />
         </Paragraph>
         <Paragraph style={{ fontSize: 14 }}>
-          <FormattedMessage id="tour.fairValueDescription" />
+          <FormattedMessage id="tour.forwardNextFyFairValueRangeDescription" />
         </Paragraph>
         <Paragraph type="danger" style={{ fontSize: 14 }}>
-          <FormattedMessage id="tour.fairValueNote" />
+          <FormattedMessage id="tour.forwardNextFyFairValueRangeNote" />
         </Paragraph>
       </>
     },
@@ -197,18 +197,18 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      target: '#tour-putcall-table-off',
+      target: '#tour-putcall-table',
       placement: 'auto',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
-          <FormattedMessage id="tour.putCallTitle" />
+          <FormattedMessage id="tour.putCallTableTitle" />
         </Paragraph>
         <Paragraph style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.putCallDescription" />
+          <FormattedMessage id="tour.putCallTableDescription" />
         </Paragraph>
         <Paragraph type="danger" style={{ fontSize: 12 }}>
-          <FormattedMessage id="tour.putCallNote" />
+          <FormattedMessage id="tour.putCallTableNote" />
         </Paragraph>
       </>
     },
@@ -539,7 +539,7 @@ const PUTCALL_TABLE = `
                         </span>
                      </button>
                   </td>
-                  <td class="ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last" style="position: sticky; left: 40px;">AAPL</td>
+                  <td class="ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last" style="position: sticky; left: 40px;">EVCT</td>
                   <td class="ant-table-cell" style="text-align: left;">07 Dec 2023</td>
                   <td class="ant-table-cell" style="text-align: right;">884,200</td>
                   <td class="ant-table-cell" style="text-align: right;">46.59%</td>
@@ -800,7 +800,7 @@ const ProMemberPage = (props) => {
                   size="small"
                   type="inner"
                   bodyStyle={{ padding: 0 }}
-                  title={<FormattedMessage id="text.optionPutCallRatio" />}
+                  title={<FormattedMessage id="text.historicalDailyPutCallRatio" />}
                 >
                   <div dangerouslySetInnerHTML={{ __html: PUTCALL_TABLE }} />
                 </Card>

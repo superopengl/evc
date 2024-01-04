@@ -230,7 +230,8 @@ const StockInfoCard = (props) => {
                 </TooltipLabel>
               </td>
               <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} empty={<Text type="warning"><small>N/A</small></Text>} />}
+                {shouldHideData ? <HiddenNumber /> : <NumberRangeDisplay lo={stock.fairValueLo} hi={stock.fairValueHi} 
+                empty={stock.isLoss ? <Text type="danger"><small><FormattedMessage id="text.loss" /></small></Text> : <Text type="warning"><small>N/A</small></Text>} />}
               </td>
             </tr>
             <tr>

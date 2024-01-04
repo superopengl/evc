@@ -59,7 +59,7 @@ const StockEvcInfoPanel = (props) => {
           <NumberRangeDisplay className="number"
             lo={data.fairValueLo}
             hi={data.fairValueHi}
-            empty={data.isLoss ? <FormattedMessage id="text.loss" /> : <Text type="warning"><small>N/A</small></Text>} />
+            empty={data.isLoss ? <Text type="danger"><FormattedMessage id="text.loss" /></Text> : <Text type="warning"><small>N/A</small></Text>} />
         }
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>

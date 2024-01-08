@@ -13,7 +13,7 @@ export class StockInsiderTransactionPreviousSnapshot {
   @Column({ nullable: true })
   discardedAt: Date;
 
-  @Column()
+  @CreateDateColumn({ nullable: true, default: () => 'now()' })
   createdAt: Date;
 
   @Column('json', { nullable: true })

@@ -6,7 +6,7 @@ export class StockInsiderTransaction {
   @PrimaryColumn()
   symbol: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: true, default: () => 'now()' })
   createdAt: Date;
 
   @Column('json', { nullable: true })

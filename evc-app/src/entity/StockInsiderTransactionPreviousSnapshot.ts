@@ -1,12 +1,19 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Unique, CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 
 @Entity()
+@Unique('idx_unique_insider_pre_symbol_discardAt', ['symbol', 'discardedAt'])
 export class StockInsiderTransactionPreviousSnapshot {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
   symbol: string;
 
-  @CreateDateColumn()
+  @Column({ nullable: true })
+  discardedAt: Date;
+
+  @Column()
   createdAt: Date;
 
   @Column('json', { nullable: true })

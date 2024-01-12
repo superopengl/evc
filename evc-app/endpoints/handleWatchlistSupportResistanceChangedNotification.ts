@@ -39,6 +39,8 @@ async function promoteSupportResistanceLatestSnapshotToPreviousSnapshot() {
 }
 
 export async function handleWatchlistSupportResistanceChangedNotification() {
+  console.log('Skip sending watchlist support/resistance changed notification emails, as the feature is off.')
+  return;
   console.log(`Sending watchlist support/resistance changed notification emails`);
   await sendSupportResistanceChangedEmails();
   await promoteSupportResistanceLatestSnapshotToPreviousSnapshot();

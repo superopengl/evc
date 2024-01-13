@@ -33,7 +33,7 @@ async function promoteFairValueLatestSnapshotToPreviousSnapshot() {
 
   await getManager().transaction(async m => {
     await m.delete(FairValuePreviousSnapshot, {});
-    const sql = `INSERT INTO "${toSchema}"."${toTableName}" SELECT * FROM "${fromSchema}"."${fromTableName}"`;
+    const sql = `INSERT INTO "${toSchema}"."${toTableName}" (symbol, "fairValueLo", "fairValueHi", hash, "date") SELECT symbol, "fairValueLo", "fairValueHi", hash, "date" FROM "${fromSchema}"."${fromTableName}"`;
     await m.query(sql);
   });
 }

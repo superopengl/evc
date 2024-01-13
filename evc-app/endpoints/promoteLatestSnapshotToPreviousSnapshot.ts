@@ -10,7 +10,7 @@ export async function promoteLatestSnapshotToPreviousSnapshot() {
   await getManager().transaction(async (m) => {
     await m.query(`DELETE FROM "${preSchema}"."${preTableName}" WHERE "discardedAt" + interval '7' day > now() AND "discardedAt" IS NOT NULL`);
     await m.query(`UPDATE "${preSchema}"."${preTableName}" SET "discardedAt" = now() WHERE "discardedAt" IS NULL`);
-    const sqlPromote = `INSERT INTO "${preSchema}"."${preTableName}" SELECT * FROM "${curSchema}"."${curTableName}"`;
+    const sqlPromote = `INSERT INTO "${preSchema}"."${preTableName}" (symbol, value, "createdAt", first, "firstHash") SELECT symbol, value, "createdAt", first, "firstHash" FROM "${curSchema}"."${curTableName}"`;
     await m.query(sqlPromote);
   });
 }

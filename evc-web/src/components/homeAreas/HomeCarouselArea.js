@@ -128,10 +128,6 @@ const HomeCarouselAreaRaw = props => {
       description: <FormattedMessage id="text.slogan2" />,
     },
     {
-      icon: <Icon component={() => <AiOutlineSwap />} />,
-      description: <FormattedMessage id="text.slogan4" />,
-    },
-    {
       icon: <Icon component={() => <BsCalendar />} />,
       description: <FormattedMessage id="text.slogan5" />,
     },

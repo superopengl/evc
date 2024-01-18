@@ -1,4 +1,4 @@
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager, LessThan } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -95,17 +95,30 @@ export const factorStockValue = handlerWrapper(async (req, res) => {
   const dbDateString = moment(date).format('YYYY-MM-DD');
 
   await getManager().transaction(async m => {
-    const { schema: epsSchema, tableName: epsTableName } = getRepository(StockEps).metadata;
-    await m.query(
-      `UPDATE "${epsSchema}"."${epsTableName}" SET value = value * $1 WHERE symbol = $2 AND "reportDate" < $3`,
-      [factor, symbol, dbDateString]
-    );
+    // Update EPS
+    await m.createQueryBuilder()
+      .update(StockEps)
+      .set({
+        value: () => `value * ${factor}`,
+      })
+      .where({
+        symbol,
+        reportDate: LessThan(dbDateString)
+      })
+      .execute();
 
-    const { schema: closeSchema, tableName: closeTableName } = getRepository(StockDailyClose).metadata;
-    await m.query(
-      `UPDATE "${closeSchema}"."${closeTableName}" SET close = close * $1 WHERE symbol = $2 AND date < $3`,
-      [factor, symbol, dbDateString]
-    );
+    // Update close
+    await m.createQueryBuilder()
+      .update(StockDailyClose)
+      .set({
+        close: () => `close * ${factor}`,
+      })
+      .where({
+        symbol,
+        date: LessThan(dbDateString)
+      })
+      .execute();
+
   })
   res.json();
 });

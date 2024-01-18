@@ -20,6 +20,6 @@ export class StockEps {
   value: number;
 
   @Column({ default: 'alpha-vantage' })
-  source: 'alpha-vantage' | 'evc'
+  source: 'alpha-vantage' | 'evc' | 'evc-factored'
 }
 

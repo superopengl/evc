@@ -100,6 +100,7 @@ export const factorStockValue = handlerWrapper(async (req, res) => {
       .update(StockEps)
       .set({
         value: () => `value * ${factor}`,
+        source: 'evc-factored'
       })
       .where({
         symbol,

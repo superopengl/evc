@@ -1,12 +1,37 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { StockComputedPe90 } from './StockComputedPe90';
 import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
+import { StockDailyPe } from './StockDailyPe';
 
 @ViewEntity({
   materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(StockComputedPe90, 'pe')
+    .from(q => q.from(StockComputedPe90, 'pe')
+      .leftJoin(StockDailyPe, 'yr', 'pe.symbol = yr.symbol AND yr.date BETWEEN pe.date - 365 AND pe.date')
+      .groupBy('pe.symbol')
+      .addGroupBy('pe.date')
+      .addGroupBy('pe.close')
+      .addGroupBy('pe."ttmEps"')
+      .addGroupBy('pe."pe"')
+      .addGroupBy('pe."pe90Avg"')
+      .addGroupBy('pe."pe90StdDev"')
+      .addGroupBy('pe."fairValueLo"')
+      .addGroupBy('pe."fairValueHi"')
+      .select([
+        'pe.symbol as symbol',
+        'pe.date as date',
+        'pe.close as close',
+        'pe."ttmEps" as "ttmEps"',
+        'pe.pe as pe',
+        'pe."pe90Avg" as "pe90Avg"',
+        'pe."pe90StdDev" as "pe90StdDev"',
+        'pe."fairValueLo" as "fairValueLo"',
+        'pe."fairValueHi" as "fairValueHi"',
+        'MIN(yr.pe) as "peYrLo"',
+        'MAX(yr.pe) as "peYrHi"',
+      ])
+      , 'pe')
     .leftJoin(q => q.from(StockDailyAdvancedStat, 'a')
       .innerJoin(StockDailyAdvancedStat, 'back', 'back.symbol = a.symbol')
       .where('back."date" between a."date" - 365 AND a."date"')
@@ -35,11 +60,11 @@ import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
       'pe."pe90StdDev" as "pe90StdDev"',
       'pe."fairValueLo" as "fairValueLo"',
       'pe."fairValueHi" as "fairValueHi"',
+      'pe."peYrLo" as "peYrLo"',
+      'pe."peYrHi" as "peYrHi"',
       'x.beta as beta',
       'x."peRatio" as "peRatio"',
       'x."forwardPeRatio" as "forwardPeRatio"',
-      'x."peYrLo" as "peYrLo"',
-      'x."peYrHi" as "peYrHi"',
       'pe."close" / x."forwardPeRatio" as "forwardEps"',
     ])
 })
@@ -72,6 +97,12 @@ export class StockComputedPe365 {
   fairValueHi: number;
 
   @ViewColumn()
+  peYrLo: number;
+
+  @ViewColumn()
+  peYrHi: number;
+
+  @ViewColumn()
   beta: number;
 
   @ViewColumn()
@@ -79,12 +110,6 @@ export class StockComputedPe365 {
 
   @ViewColumn()
   forwardPeRatio: number;
-
-  @ViewColumn()
-  peYrLo: number;
-
-  @ViewColumn()
-  peYrHi: number;
 
   @ViewColumn()
   forwardEps: number;

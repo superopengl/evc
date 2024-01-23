@@ -5,8 +5,6 @@ import { isUSMarketOpen } from '../src/services/iexService';
 import { sendIexRequest } from '../src/services/iexCoreService';
 import { StockAdvancedStatsInfo, syncManyStockAdcancedStat } from '../src/services/syncManyStockAdcancedStat';
 import moment from 'moment';
-import { refreshMaterializedView } from "../src/refreshMaterializedView";
-import { executeWithDataEvents } from '../src/services/dataLogService';
 import _ from 'lodash';
 import { StockDailyAdvancedStat } from '../src/entity/StockDailyAdvancedStat';
 import { StockDailyPutCallRatio } from '../src/entity/StockDailyPutCallRatio';

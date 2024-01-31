@@ -15,6 +15,9 @@ import { saveDiscountUserPolicy, deleteDiscountUserPolicy } from 'services/disco
 import CreditHistoryListDrawer from 'components/CreditHistoryListDrawer';
 import { TimeAgo } from 'components/TimeAgo';
 import { from } from 'rxjs';
+import { Modal } from 'antd';
+import { async } from 'rxjs';
+import { terminateSubscription } from 'services/subscriptionService';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -126,17 +129,34 @@ const ReferralCreditForm = (props) => {
     return await listUserCreditHistory(user.id);
   }
 
+  const handleTerminateSubscription = () => {
+    Modal.confirm({
+      title: <>Terminate subscription</>,
+      content: <>Terminate the subscription of user <Text code>{user.email}</Text> right away? This operation is not revertable.</>,
+      closable: true,
+      maskClosable: true,
+      okText: 'Yes, terminate now',
+      okButtonProps: {
+        danger: true
+      },
+      onOk: async () => {
+        await terminateSubscription(user.id);
+        loadData();
+        props.onOk();
+      }
+    });
+  }
+
   return (
     <Container>
       <Space direction="vertical" style={{ width: '100%', alignItems: 'stretch' }}>
-        <div>
           <Title level={4} style={{textAlign: 'center'}}>{subscriptionDef.find(s => s.key === (currentSubscription?.currentType || 'free'))?.title}</Title>
-        </div>
         {currentSubscription && <Space>
           <TimeAgo value={currentSubscription.start} />
           <ArrowRightOutlined />
           <TimeAgo value={currentSubscription.end} />
         </Space>}
+        {currentSubscription && <Button danger block style={{marginTop: 24}} onClick={handleTerminateSubscription}>Terminate Subscription</Button>}
         <Divider></Divider>
 
         {/* User referral commission */}

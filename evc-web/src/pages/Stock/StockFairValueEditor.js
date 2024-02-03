@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Typography, DatePicker, Table, Form, Button, Space } from 'antd';
+import { Typography, DatePicker, Table, Form, Button, Row, Space, Badge } from 'antd';
 import PropTypes from 'prop-types';
 import { isNil } from 'lodash';
 import styled from 'styled-components';
@@ -14,8 +14,9 @@ import {
 import ReactDOM from 'react-dom';
 import { CheckOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
+import { FairValueSpecialLabel } from 'components/FairValueSpecialLabel';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
 .ant-table-thead {
@@ -140,12 +141,22 @@ export const StockFairValueEditor = (props) => {
     {
       title: 'Fair Value',
       render: (value, item, index) => {
-        const { id, fairValueLo, fairValueHi } = item;
-        return fairValueLo ? <Space>
-          {displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}
-          {!!id && <Tag>Special</Tag>}
+        const { id, fairValueLo, fairValueHi, isAdjustedFairValue } = item;
+        return fairValueLo ? <Row style={{ width: '100%' }} justify="space-between">
+          <Space size="small">
+            <Text >{displayNumber(fairValueLo)} ~ {displayNumber(fairValueHi)}</Text>
+            <FairValueSpecialLabel
+              show={isAdjustedFairValue}
+              message="-5% ~ 120% of close due to low computed fair value"
+              color="#d7183f" />
+            <FairValueSpecialLabel
+              show={id}
+              message="Manually input special fair value"
+              color="#55B0D4"
+            />
+          </Space>
           {!!id && <ConfirmDeleteButton onOk={() => handleDeleteSpecialFairValue(id)} />}
-        </Space> : displayNumber()
+        </Row> : displayNumber()
       },
     },
   ];
@@ -169,6 +180,7 @@ export const StockFairValueEditor = (props) => {
         <Button icon={<CloseOutlined />} />
       </Form.Item> */}
     </Form>
+
     <Table
       columns={columns}
       dataSource={list}
@@ -176,8 +188,8 @@ export const StockFairValueEditor = (props) => {
       rowKey={item => item.id ?? item.reportDate}
       loading={loading}
       pagination={false}
-      style={{ width: '100%' }}
-      scroll={{ y: 300 }}
+      // style={{ width: '100%' }}
+      scroll={{ y: 260 }}
       rowClassName={handleRowClassName}
     />
   </Container>
@@ -185,7 +197,9 @@ export const StockFairValueEditor = (props) => {
 
 StockFairValueEditor.propTypes = {
   onChange: PropTypes.func,
+  onSaveNew: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onLoadList: PropTypes.func.isRequired,
   showTime: PropTypes.bool,
   symbol: PropTypes.string.isRequired,
 };
@@ -194,4 +208,6 @@ StockFairValueEditor.defaultProps = {
   showTime: true,
   onChange: () => { },
   onDelete: () => { },
+  onSaveNew: () => { },
+  onLoadList: () => { },
 };

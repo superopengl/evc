@@ -1,0 +1,1 @@
+Google Extension to capture data on Tradingview chart

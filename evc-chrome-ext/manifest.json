@@ -1,6 +1,6 @@
 {
   "name": "EVC TradingView Capturer",
-  "description": "Capture data from TradingView",
+  "description": "Capture data from TradingView chart",
   "version": "1.0",
   "manifest_version": 3,
   "permissions": ["activeTab", "scripting"],
@@ -8,18 +8,25 @@
   "action": {
     "default_popup": "index.html",
     "default_icon": {
-      "16": "/images/favicon-16x16.png",
-      "32": "/images/favicon-32x32.png"
+      "16": "/images/android-chrome-512x512-16_x_16.png",
+      "32": "/images/android-chrome-512x512-32_x_32.png",
+      "48": "/images/android-chrome-512x512-48_x_48.png",
+      "64": "/images/android-chrome-512x512-64_x_64.png",
+      "128": "/images/android-chrome-512x512-128_x_128.png"
     }
   },
   "icons": {
-    "16": "/images/favicon-16x16.png",
-    "32": "/images/favicon-32x32.png"
+    "16": "/images/android-chrome-512x512-16_x_16.png",
+    "32": "/images/android-chrome-512x512-32_x_32.png",
+    "48": "/images/android-chrome-512x512-48_x_48.png",
+    "64": "/images/android-chrome-512x512-64_x_64.png",
+    "128": "/images/android-chrome-512x512-128_x_128.png"
   },
   "content_scripts": [
     {
       "matches": ["*://*.tradingview.com/*"],
-      "js": ["injected.js"]
+      "js": ["injected.js"],
+      "css": ["injected.css"]
     }
   ]
 }

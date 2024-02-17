@@ -15,6 +15,7 @@ function handleCapture() {
 
 function createMenuItem(sourceNode, label, onClick) {
   const menuItem = sourceNode.cloneNode(true);
+  menuItem.classList.add('evc-menu-item');
   menuItem.querySelector('td:nth-of-type(1) span').innerHTML = '<small><strong>EVC</strong></small>';
   menuItem.querySelector('td:nth-of-type(2) span').innerText = label;
   menuItem.addEventListener('click', () => onClick());
@@ -25,11 +26,11 @@ function updateContextMenu(number) {
   const menuBodyNode = document.querySelector('#overlap-manager-root tbody');
   if (menuBodyNode) {
     const sourceNode = menuBodyNode.querySelector('tr');
-    const supportItem = createMenuItem(sourceNode, `Capture support (${number})`, () => restoreData(number, 'support'));
-    const resistanceItem = createMenuItem(sourceNode, `Capture resistance (${number})`, () => restoreData(number, 'resistance'));
+    const supportItem = createMenuItem(sourceNode, `Save as support (${number})`, () => restoreData(number, 'support'));
+    const resistanceItem = createMenuItem(sourceNode, `Save as resistance (${number})`, () => restoreData(number, 'resistance'));
 
     if (data.length) {
-      const saveItem = createMenuItem(sourceNode, `Download ${data.length} records`, () => download());
+      const saveItem = createMenuItem(sourceNode, `Download csv (${data.length} rows)`, () => download());
       menuBodyNode.prepend(saveItem);
     }
 

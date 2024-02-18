@@ -112,7 +112,7 @@ function trySaveResistance(symbol) {
   if (resistanceLoDatapoint && resistanceHiDatapoint) {
     data.push({
       symbol,
-      support: `${resistanceLoDatapoint}-${resistanceHiDatapoint}`
+      resistance: `${resistanceLoDatapoint}-${resistanceHiDatapoint}`
     });
     resistanceLoDatapoint = '';
     resistanceHiDatapoint = '';

@@ -15,7 +15,7 @@ export class StockDailyAdvancedStat {
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
   stock: Stock;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   putCallRatio: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })

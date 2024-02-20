@@ -12,6 +12,7 @@ import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
           .innerJoin(q => q
             .from(StockDailyAdvancedStat, 'x'), 'x', 'x.symbol = p.symbol')
           .where('x.date <= p.date')
+          .andWhere('x."putCallRatio" IS NOT NULL')
           .select([
             'p.symbol as symbol',
             'p.date as date',

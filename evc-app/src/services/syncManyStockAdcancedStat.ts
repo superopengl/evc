@@ -15,9 +15,6 @@ export type StockAdvancedStatsInfo = {
 export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) {
   const entites = info.map(item => {
     const { symbol, putCallRatio, beta, peRatio, forwardPeRatio, date } = item;
-    if (!putCallRatio || !date) {
-      return null;
-    }
 
     const entity = new StockDailyAdvancedStat();
     entity.symbol = symbol;

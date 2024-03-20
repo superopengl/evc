@@ -13,6 +13,7 @@ import { EmailSentOutTask } from '../src/entity/EmailSentOutTask';
 import { sendEmail } from '../src/services/emailService';
 import { getUtcNow } from '../src/utils/getUtcNow';
 import * as _ from 'lodash';
+import { syncStockLastPrice } from '../src/utils/syncStockLastPrice';
 
 const JOB_NAME = 'price-sse';
 const SYMBOL_BATCH_SIZE = 50;
@@ -81,14 +82,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
   if (values.length) {
     const chunks = _.chunk(values, 1000);
     for (const chunk of chunks) {
-      await getManager()
-        .createQueryBuilder()
-        .insert()
-        .into(StockLastPrice)
-        .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent"')
-        .values(chunk)
-        .execute();
-      // console.log(`Update ${chunk.length} stock prices`);
+      await syncStockLastPrice(getManager(), chunk)
     }
   }
 }

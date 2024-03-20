@@ -173,17 +173,12 @@ const UserListPage = () => {
     }
   }, []);
 
-  const updateQueryInfo = (queryInfo) => {
-    reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    setQueryInfo(queryInfo);
-  }
-
   const handleSearchTextChange = text => {
     const newQueryInfo = {
       ...queryInfo,
       text
     }
-    updateQueryInfo(newQueryInfo);
+    searchByQueryInfo(newQueryInfo);
     // await loadTaskWithQuery(newQueryInfo);
   }
 

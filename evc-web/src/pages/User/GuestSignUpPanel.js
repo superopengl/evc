@@ -18,11 +18,11 @@ const GuestSignUpPanel = () => {
 
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
-  const [interval, setInterval] = React.useState('day');
+  const [interval, setInterval] = React.useState('month');
   const [period, setPeriod] = React.useState([null, moment()]);
   const [showTime, setShowTime] = React.useState(false);
   const [format, setFormat] = React.useState('YYYY-MM-DD');
-  const [picker, setPicker] = React.useState('day');
+  const [picker, setPicker] = React.useState('month');
 
   const loadData = async () => {
     try {
@@ -57,19 +57,20 @@ const GuestSignUpPanel = () => {
       setFormat('YYYY-MM')
       setShowTime(false);
       setPicker('month');
-    } else if (interval === 'hour') {
-      setFormat('YYYY-MM-DD HH')
-      setShowTime({
-        format: 'HH'
-      })
-      setPicker('day');
-    } else if (interval === 'minute') {
-      setFormat('YYYY-MM-DD HH:mm')
-      setShowTime({
-        format: 'HH:mm'
-      })
-      setPicker('day');
     }
+    //  else if (interval === 'hour') {
+    //   setFormat('YYYY-MM-DD HH')
+    //   setShowTime({
+    //     format: 'HH'
+    //   })
+    //   setPicker('day');
+    // } else if (interval === 'minute') {
+    //   setFormat('YYYY-MM-DD HH:mm')
+    //   setShowTime({
+    //     format: 'HH:mm'
+    //   })
+    //   setPicker('day');
+    // }
   }, [interval]);
 
   const handleRefresh = () => {
@@ -107,8 +108,8 @@ const GuestSignUpPanel = () => {
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 20 }}>
           <Select defaultValue={interval} onChange={setInterval} style={{ width: 100 }}>
-            <Select.Option value="minute">Minute</Select.Option>
-            <Select.Option value="hour">Hour</Select.Option>
+            {/* <Select.Option value="minute">Minute</Select.Option> */}
+            {/* <Select.Option value="hour">Hour</Select.Option> */}
             <Select.Option value="day">Day</Select.Option>
             {/* <Select.Option value="week">Weekly</Select.Option> */}
             <Select.Option value="month">Month</Select.Option>

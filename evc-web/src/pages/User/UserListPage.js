@@ -181,7 +181,8 @@ const UserListPage = () => {
 
     const newQueryInfo = {
       ...queryInfo,
-      text
+      text,
+      page: 1,
     }
 
     await searchByQueryInfo(newQueryInfo);

@@ -75,7 +75,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.method = paymentMethod;
     payment.status = PaymentStatus.Pending;
     payment.auto = false;
-    payment.geo = await getRequestGeoInfo(expressReq);
+    payment.geo = getRequestGeoInfo(expressReq);
     payment.creditTransaction = creditTransaction;
     payment.subscription = subscription;
 

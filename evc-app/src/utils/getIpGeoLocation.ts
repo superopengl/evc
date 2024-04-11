@@ -1,66 +1,41 @@
 import * as requestIp from 'request-ip';
-import * as fetch from 'node-fetch';
 
-
-export async function getRequestGeoInfo(req) {
-  const ipstackKey = process.env.IPSTACK_ACCESS_KEY;
-  if (!ipstackKey) {
-    throw new Error(`IPSTACK_ACCESS_KEY is not specified`);
-  }
-
+export function getRequestGeoInfo(req) {
   const ip = requestIp.getClientIp(req);
-  // IpStack free plan only supports HTTP
-  const url = `http://api.ipstack.com/${ip}?access_key=${ipstackKey}&output=json&fields=country_code,region_code,latitude,longitude`; 
+  const country = req.headers['cloudfront-viewer-country'];
+  const region = req.headers['cloudfront-viewer-country-region'];
+  const latitude = req.headers['cloudfront-viewer-latitude'];
+  const longitude = req.headers['cloudfront-viewer-longitude'];
 
-  const resp = await fetch(url, { timeout: 5000 });
-  const obj = await resp.json();
-
-  const country = req.headers['CloudFront-Viewer-Country'];
-  const region = req.headers['CloudFront-Viewer-Country-Region'];
-  const latitude = req.headers['CloudFront-Viewer-Latitude'];
-  const longitude = req.headers['CloudFront-Viewer-Longitude'];
-
-  console.log(`Cloudfront country: ${country} region: ${region} latitude: ${latitude} longitude: ${longitude}. ${JSON.stringify(req.headers)}`);
+  // console.log(`Cloudfront country: ${country} region: ${region} latitude: ${latitude} longitude: ${longitude}. ${JSON.stringify(req.headers)}`);
 
   return {
     ip,
-    country: obj?.country_code,
-    region: obj?.region_code,
-    latitude: obj?.latitude,
-    longitude: obj?.longitude,
+    country,
+    region,
+    latitude,
+    longitude,
   }
 }
 
 /**
- *
+ * res.headers is like 
 {
-  "ip": "134.201.250.155",
-  "type": "ipv4",
-  "continent_code": "NA",
-  "continent_name": "North America",
-  "country_code": "US",
-  "country_name": "United States",
-  "region_code": "CA",
-  "region_name": "California",
-  "city": "Los Angeles",
-  "zip": "90012",
-  "latitude": 34.0655517578125,
-  "longitude": -118.24053955078125,
-  "location": {
-    "geoname_id": 5368361,
-    "capital": "Washington D.C.",
-    "languages": [
-      {
-        "code": "en",
-        "name": "English",
-        "native": "English"
-      }
-    ],
-    "country_flag": "http:\/\/assets.ipstack.com\/flags\/us.svg",
-    "country_flag_emoji": "\ud83c\uddfa\ud83c\uddf8",
-    "country_flag_emoji_unicode": "U+1F1FA U+1F1F8",
-    "calling_code": "1",
-    "is_eu": false
-  }
+    "x-forwarded-for": "159.196.113.221, 64.252.174.152",
+    "x-forwarded-proto": "http",
+    "x-forwarded-port": "80",
+    "host": "evc-alb-362261756.us-east-1.elb.amazonaws.com",
+    "x-amzn-trace-id": "Root=1-6164edb0-10e9c5b4108c18542287d75c",
+    "content-length": "57",
+    "user-agent": "Amazon CloudFront",
+    "x-amz-cf-id": "VibmNJs8GTCW6pzuCNA6ommL8nJKZpXiWdArPmazUPMhzA9AkZ6AXg==",
+    "via": "2.0 5ffea377a15bf1a86dfde6a87b4a0a36.cloudfront.net (CloudFront)",
+    "accept-encoding": "gzip, deflate, br",
+    "content-type": "application/json; charset=UTF-8",
+    "origin": "https://easyvaluecheck.com",
+    "cloudfront-viewer-country": "AU",
+    "cloudfront-viewer-country-region": "NSW",
+    "cloudfront-viewer-latitude": "-33.75480",
+    "cloudfront-viewer-longitude": "-33.75480"
 }
  */

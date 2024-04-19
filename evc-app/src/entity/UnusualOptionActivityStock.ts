@@ -9,7 +9,7 @@ export class UnusualOptionActivityStock {
 
   @PrimaryColumn('date')
   @Index()
-  time: string;
+  tradeDate: string;
 
   @PrimaryColumn('decimal', { transformer: new ColumnNumericTransformer() })
   price: number;

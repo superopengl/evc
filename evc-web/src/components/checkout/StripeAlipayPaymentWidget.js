@@ -46,7 +46,6 @@ const StripeAlipayPaymentForm = (props) => {
 
       const { error } = rawResponse;
 
-      debugger;
       if (error) {
         notify.error('Failed to complete the payment', error.message);
       } else {

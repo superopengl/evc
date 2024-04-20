@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip, Badge, Space } from 'antd';
+import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip, Badge, Typography } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
@@ -12,11 +12,17 @@ import { LockFilled } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
 import { FormattedMessage } from 'react-intl';
 
+const {Text} = Typography;
+
 const ContainerStyled = styled.div`
 width: 100%;
 
 .ant-table {
   font-size: 0.8rem;
+
+  td.ant-table-column-sort {
+    background-color: #57BB6022;
+  }
 }
 
 .ant-descriptions-item-label {
@@ -40,7 +46,7 @@ const LockIcon = () => <Tooltip title={<FormattedMessage id="text.fullFeatureAft
   <LockFilled />
 </Tooltip>
 
-const TableTitle = props => props.seq > 0 ? <>{props.children} <sup><strong>{props.seq}</strong></sup></> : props.children
+const TableTitle = props => props.seq > 0 ? <>{props.children} <Text type="success" strong><sup>{props.seq}</sup></Text></> : props.children
 
 const UnusualOptionsActivityPanel = (props) => {
 
@@ -246,8 +252,10 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value) => moment.tz(value, 'utc').format('D MMM YYYY'),
     },
     {
-      title: 'Trade Time',
+      title: <TableTitle seq={findOrderSeq('tradeTime')}>Trade Time</TableTitle>,
       dataIndex: 'tradeTime',
+      sorter: { multiple: 1 },
+      sortOrder: getSortOrder('tradeTime'),
       width: 80,
       align: 'center',
       render: (value) => value ? moment.tz(value, 'utc').format('HH:mm:ss') : null,
@@ -259,7 +267,6 @@ const UnusualOptionsActivityPanel = (props) => {
   }
 
   const handleTableChange = (pagination, filters, sorter) => {
-    debugger;
     searchByQueryInfo({
       ...queryInfo,
       order: (Array.isArray(sorter) ? sorter : [sorter]).filter(x => x.order).map(x => ({ field: x.field, order: x.order })),

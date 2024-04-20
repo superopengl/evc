@@ -19,12 +19,12 @@ export async function listUnusualOptionsActivity(type, query) {
   if(!type) {
     throw new Error(`operation is not specified.`);
   }
-  return httpGet(`/admin/data/uoa/${type}`, query);
+  return httpPost(`/admin/data/uoa/${type}/search`, query);
 }
 
 export async function listAdminUnusualOptionsActivity(type, query) {
   if(!type) {
     throw new Error(`operation is not specified.`);
   }
-  return httpGet(`/admin/data/uoa/${type}/admin`, query);
+  return httpPost(`/admin/data/uoa/${type}/admin/search`, query);
 }

@@ -269,21 +269,21 @@ function shouldShowFullDataForUoa(req) {
 
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchUnusualOptionsActivity('stock', req.query, showFullData);
+  const list = await searchUnusualOptionsActivity('stock', req.body, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaEtfs = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchUnusualOptionsActivity('etfs', req.query, showFullData);
+  const list = await searchUnusualOptionsActivity('etfs', req.body, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
 
 export const listUoaindex = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchUnusualOptionsActivity('index', req.query, showFullData);
+  const list = await searchUnusualOptionsActivity('index', req.body, showFullData);
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
 });
@@ -291,21 +291,21 @@ export const listUoaindex = handlerWrapper(async (req, res) => {
 export const listAdminUoaStocks = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchUnusualOptionsActivity('stock', req.query, showFullData);
+  const list = await searchUnusualOptionsActivity('stock', req.body, showFullData);
   res.json(list);
 });
 
 export const listAdminUoaEtfs = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchUnusualOptionsActivity('etfs', req.query, showFullData);
+  const list = await searchUnusualOptionsActivity('etfs', req.body, showFullData);
   res.json(list);
 });
 
-export const listAdminUoaindex = handlerWrapper(async (req, res) => {
+export const listAdminUoaIndex = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchUnusualOptionsActivity('index', req.query, showFullData);
+  const list = await searchUnusualOptionsActivity('index', req.body, showFullData);
   res.json(list);
 });
 

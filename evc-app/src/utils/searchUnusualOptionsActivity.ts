@@ -15,11 +15,12 @@ export type UnusualOptionsActivitySearchParams = {
   timeTo: string;
   page?: number;
   size?: number;
+  order?: { field: string, order: 'ASC' | 'DESC' }[];
 };
 
 
 export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' | 'index', q: any, showFullData: boolean) {
-  const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size } = q as UnusualOptionsActivitySearchParams;
+  const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size, order } = q as UnusualOptionsActivitySearchParams;
 
   const entity = entityType === 'stock' ? UnusualOptionActivityStock :
     entityType === 'etfs' ? UnusualOptionActivityEtfs :
@@ -64,12 +65,20 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
   }
   const count = await query.getCount();
 
-  query = query.orderBy('"tradeDate"', 'DESC')
-    .addOrderBy('symbol')
-    .offset((pageNo - 1) * pageSize)
+  const orderConditions: { field: string, order: 'ASC' | 'DESC' }[] = order?.length ? order : [
+    { field: '"tradeDate"', order: 'DESC' },
+    { field: '"tradeTime"', order: 'DESC' },
+    { field: '"symbol"', order: 'ASC' },
+  ]
+
+  for (const orderCond of orderConditions) {
+    query = query.addOrderBy(orderCond.field, orderCond.order);
+  }
+
+  query = query.offset((pageNo - 1) * pageSize)
     .limit(pageSize);
 
-  if(showFullData) {
+  if (showFullData) {
     query = query.select('*')
   } else {
     query = query.select([

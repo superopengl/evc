@@ -29,7 +29,8 @@ const convertHeaderToPropName = header => {
 const formatUoaUploadRow = row => {
   try {
     row.expDate = parseUoaDate(row.expDate);
-    row.time = parseUoaDate(row.time);
+    row.tradeDate = parseUoaDate(row.tradeDate);
+    row.tradeTime = parseUoaTime(row.tradeTime);
     row.iv = row.iv.replace(/%/g, '');
     return row;
   } catch (e) {
@@ -51,6 +52,16 @@ function parseUoaDate(value) {
     throw new Error(`'${value}' is not a valid date.`)
   }
   return m.toDate();
+}
+
+function parseUoaTime(value) {
+  if (!value) return null;
+  const m = moment(value, 'H:mm [ET]');
+  if (!m.isValid()) {
+    throw new Error(`'${value}' is not a valid time.`)
+  }
+
+  return m.format('H:mm');
 }
 
 function handleCsvUpload(

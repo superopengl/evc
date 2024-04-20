@@ -41,14 +41,18 @@ export class UnusualOptionActivityStock {
   last: number;
 
   @PrimaryColumn('int')
+  @Index()
   volume: number;
 
   @PrimaryColumn('int')
+  @Index()
   openInt: number;
 
   @PrimaryColumn('decimal', { transformer: new ColumnNumericTransformer() })
+  @Index()
   voloi: number;
 
   @PrimaryColumn('decimal', { transformer: new ColumnNumericTransformer() })
+  @Index()
   iv: number;
 }

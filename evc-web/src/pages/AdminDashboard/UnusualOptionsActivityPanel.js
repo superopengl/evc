@@ -179,7 +179,7 @@ const UnusualOptionsActivityPanel = (props) => {
       title: 'Expiration Date',
       dataIndex: 'expDate',
       width: 110,
-      sorter: { multiple: 1 },
+      sorter: shouldHide ? false : { multiple: 1 },
       sortOrder: getSortOrder('expDate'),
       align: shouldHide ? 'center' : 'right',
       render: (value) => shouldHide ? <LockIcon /> : moment.tz(value, 'utc').format('D MMM YYYY'),

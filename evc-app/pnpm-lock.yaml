@@ -52,6 +52,7 @@ specifiers:
   sax: ^1.2.4
   serialize-error: ^8.0.1
   serve-static: ^1.14.1
+  set-cookie-parser: ^2.4.8
   stripe: ^8.137.0
   swagger-routes-express: ^3.3.0
   ts-clean: ^1.0.3
@@ -107,6 +108,7 @@ dependencies:
   sax: 1.2.4
   serialize-error: 8.0.1
   serve-static: 1.14.1
+  set-cookie-parser: 2.4.8
   stripe: 8.137.0
   swagger-routes-express: 3.3.0
   typeorm: 0.2.34
@@ -5557,6 +5559,10 @@ packages:
 
   /set-blocking/2.0.0:
     resolution: {integrity: sha1-BF+XgtARrppoA93TgrJDkrPYkPc=}
+
+  /set-cookie-parser/2.4.8:
+    resolution: {integrity: sha512-edRH8mBKEWNVIVMKejNnuJxleqYE/ZSdcT8/Nem9/mmosx12pctd80s2Oy00KNZzrogMZS5mauK2/ymL1bvlvg==}
+    dev: false
 
   /set-value/2.0.1:
     resolution: {integrity: sha512-JxHc1weCN68wRY0fhCoXpyK55m/XPHafOmK4UWD7m2CI14GMcFypt4w/0+NV5f/ZMby2F6S2wwA7fgynh9gWSw==}

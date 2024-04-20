@@ -5,5 +5,9 @@
   },
   "search.exclude": {
     "**/build": true
-  }
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "editor.formatOnSave": true
 }

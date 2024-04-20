@@ -22,58 +22,75 @@ const defs = [
     {
         name: 'daily-earnings-calendar',
         description: 'Daily earnings calendar',
-        startTimeNY: ['0:30', '13:30'],
+        minute: '30',
+        hourNY: '0,13',
         daysOfWeek: 'MON-FRI',
         // AlphaVantage
     },
     {
         name: 'daily-close',
         description: 'Daily close',
-        startTimeNY: ['16:30', '20:30', '0:30', '4:30'],
+        minute: '30',
+        hourNY: '0,4,16,20',
         daysOfWeek: 'MON-SAT',
         // AlphaVantage
     },
     {
         name: 'daily-putcall',
         description: 'Daily putCallRatio',
-        startTimeNY: '16:10',
+        minute: '10',
+        hourNY: '16',
         daysOfWeek: 'MON-FRI',
         // IEX
     },
     {
         name: 'daily-subscription',
         description: 'Daily subscription check',
-        startTimeNY: '23:00',
+        minute: '0',
+        hourNY: '23',
         daysOfWeek: '*',
     },
     {
         name: 'daily-insider',
         description: 'Daily insider transaction',
-        startTimeNY: '3:00',
+        minute: '0',
+        hourNY: '3',
+        daysOfWeek: 'MON-FRI',
+    },
+    {
+        name: 'daily-uoa',
+        description: 'Daily uoa fetch',
+        minute: '*/5',
+        hourNY: '9-16',
         daysOfWeek: 'MON-FRI',
     },
 ];
 
-function getDescription(data) {
-    const { description, startTimeNY } = data;
-    const times = Array.isArray(startTimeNY) ? startTimeNY : [startTimeNY];
-    return `${description} at New York time ${times.join(' and ')}`;
+function convertNyHourToUtcHour(hourNY) {
+    return hourNY.split(/([-,])/).map(t => {
+        if (/^[0-9]+$/.test(t)) {
+            return moment.tz(t, 'H', NY_TIMEZONE).tz(UTC_TIMEZONE).format('H');
+        } else {
+            return t;
+        }
+    }).join('');
 }
 
-function getCronInUtcTime(newYorkTimeHHmmArray, daysOfWeek) {
-    const array = _.isArray(newYorkTimeHHmmArray) ? newYorkTimeHHmmArray : [newYorkTimeHHmmArray];
-    const times = array.map(x => moment.tz(x, 'H:mm', NY_TIMEZONE).tz(UTC_TIMEZONE));
-    const minute = times[0].format('m');
-    const hours = times.map(t => t.format('H')).join(',');
+function getDescription(data) {
+    const { description, hourNY } = data;
+    return `${description} at New York time ${hourNY}`;
+}
 
-    return `cron(${minute} ${hours} ? * ${daysOfWeek} *)`;
+function getCronInUtcTime(minute, hourNY, daysOfWeek) {
+    const hourUtc = convertNyHourToUtcHour(hourNY);
+    return `cron(${minute} ${hourUtc} ? * ${daysOfWeek} *)`;
 }
 
 function getRuleParams(data) {
     return {
         Name: data.name,
         Description: getDescription(data),
-        ScheduleExpression: getCronInUtcTime(data.startTimeNY, data.daysOfWeek),
+        ScheduleExpression: getCronInUtcTime(data.minute, data.hourNY, data.daysOfWeek),
         State: 'ENABLED',
         RoleArn: 'arn:aws:iam::115607939215:role/ecsEventsRole',
     };

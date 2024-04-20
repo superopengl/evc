@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip } from 'antd';
+import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip, Badge, Space } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
@@ -39,6 +39,8 @@ const DEFAULT_QUERY_INFO = {
 const LockIcon = () => <Tooltip title={<FormattedMessage id="text.fullFeatureAfterPay" />}>
   <LockFilled />
 </Tooltip>
+
+const TableTitle = props => props.seq > 0 ? <>{props.children} <sup><strong>{props.seq}</strong></sup></> : props.children
 
 const UnusualOptionsActivityPanel = (props) => {
 
@@ -144,14 +146,19 @@ const UnusualOptionsActivityPanel = (props) => {
     return false;
   }
 
+  const findOrderSeq = (key) => {
+    const index = (queryInfo.order ?? []).findIndex(x => x.field === key);
+    return index + 1;
+  }
+
   const shouldHide = context.role === 'free' || context.role === 'guest';
 
   const columnDef = [
     {
-      title: 'Symbol',
+      title: <TableTitle seq={findOrderSeq('symbol')}>Symbol</TableTitle>,
       dataIndex: 'symbol',
       fixed: 'left',
-      width: 80,
+      width: 85,
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('symbol'),
       render: (value) => value,
@@ -176,7 +183,7 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value) => shouldHide ? <LockIcon /> : value,
     },
     {
-      title: 'Expiration Date',
+      title: <TableTitle seq={findOrderSeq('expDate')}>Expiration Date</TableTitle>,
       dataIndex: 'expDate',
       width: 110,
       sorter: shouldHide ? false : { multiple: 1 },
@@ -191,18 +198,6 @@ const UnusualOptionsActivityPanel = (props) => {
       align: shouldHide ? 'center' : 'right',
       render: (value) => shouldHide ? <LockIcon /> : value,
     },
-    // {
-    //   title: 'Midpoint',
-    //   dataIndex: 'midpoint',
-    //   width: 80,
-    //   render: (value) => value,
-    // },
-    // {
-    //   title: 'Ask',
-    //   dataIndex: 'ask',
-    //   width: 50,
-    //   render: (value) => value,
-    // },
     {
       title: 'Last',
       dataIndex: 'last',
@@ -210,7 +205,7 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value) => value,
     },
     {
-      title: 'Volume',
+      title: <TableTitle seq={findOrderSeq('volume')}>Volume</TableTitle>,
       dataIndex: 'volume',
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('volume'),
@@ -218,21 +213,21 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value) => value,
     },
     {
-      title: 'Open Interest',
+      title: <TableTitle seq={findOrderSeq('openInt')}>Open Interest</TableTitle>,
       dataIndex: 'openInt',
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('openInt'),
       align: 'right',
-      width: 80,
+      width: 90,
       render: (value) => value,
     },
     {
-      title: 'Volume / Open Interest',
+      title: <TableTitle seq={findOrderSeq('voloi')}>Volume / Open Interest</TableTitle>,
       dataIndex: 'voloi',
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('voloi'),
       align: 'right',
-      width: 80,
+      width: 90,
       render: (value) => value,
     },
     {
@@ -242,11 +237,11 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value) => `${value} %`,
     },
     {
-      title: 'Trade Date',
+      title: <TableTitle seq={findOrderSeq('tradeDate')}>Trade Date</TableTitle>,
       dataIndex: 'tradeDate',
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('tradeDate'),
-      width: 100,
+      width: 105,
       align: 'center',
       render: (value) => moment.tz(value, 'utc').format('D MMM YYYY'),
     },
@@ -264,9 +259,10 @@ const UnusualOptionsActivityPanel = (props) => {
   }
 
   const handleTableChange = (pagination, filters, sorter) => {
+    debugger;
     searchByQueryInfo({
       ...queryInfo,
-      order: (Array.isArray(sorter) ? sorter : [sorter]).map(x => ({ field: x.field, order: x.order })),
+      order: (Array.isArray(sorter) ? sorter : [sorter]).filter(x => x.order).map(x => ({ field: x.field, order: x.order })),
     });
   }
 

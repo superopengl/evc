@@ -1,18 +1,17 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip, Badge, Typography } from 'antd';
+import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip, Typography, Switch } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
-import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { LockFilled } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
 import { FormattedMessage } from 'react-intl';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -34,6 +33,7 @@ width: 100%;
 const DEFAULT_QUERY_INFO = {
   symbol: null,
   type: null,
+  lastDayOnly: true,
   expDateFrom: null,
   expDateEnd: null,
   timeFrom: null,
@@ -56,6 +56,7 @@ const UnusualOptionsActivityPanel = (props) => {
   const [queryInfo, setQueryInfo] = React.useState({
     // ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
     size: props.size === 'small' ? 20 : 50,
+    lastDayOnly: true,
   });
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
@@ -93,7 +94,7 @@ const UnusualOptionsActivityPanel = (props) => {
     return {
       ...queryInfo,
       order: queryInfo.order?.map(x => ({
-        field: `"${x.field}"`,
+        field: x.field,
         order: x.order === 'descend' ? 'DESC' : 'ASC'
       }))
     }
@@ -165,7 +166,7 @@ const UnusualOptionsActivityPanel = (props) => {
       dataIndex: 'symbol',
       fixed: 'left',
       width: 85,
-      sorter: { multiple: 1 },
+      // sorter: { multiple: 1 },
       sortOrder: getSortOrder('symbol'),
       render: (value) => value,
     },
@@ -243,34 +244,42 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value) => `${value} %`,
     },
     {
-      title: <TableTitle seq={findOrderSeq('tradeDate')}>Trade Date</TableTitle>,
+      title: <TableTitle seq={findOrderSeq('tradeDate')}>Trade Date / Time</TableTitle>,
       dataIndex: 'tradeDate',
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('tradeDate'),
-      width: 105,
-      align: 'center',
-      render: (value) => moment.tz(value, 'utc').format('D MMM YYYY'),
+      width: 155,
+      align: 'left',
+      render: (value, item) => {
+        const dateString = moment.tz(`${item.tradeDate}`, 'utc').format('DD MMM YYYY');
+
+        if(item.tradeTime) {
+          return <>{dateString} {moment(item.tradeTime, 'HH:mm:ss').format('HH:mm')} <sub>ET</sub></>;
+        } else {
+          return dateString;
+        }
+        
+      }
     },
-    {
-      title: <TableTitle seq={findOrderSeq('tradeTime')}>Trade Time</TableTitle>,
-      dataIndex: 'tradeTime',
-      sorter: { multiple: 1 },
-      sortOrder: getSortOrder('tradeTime'),
-      width: 80,
-      align: 'center',
-      render: (value) => value ? moment.tz(value, 'utc').format('HH:mm:ss') : null,
-    }
   ];
 
   const handleSymbolChange = (symbol) => {
     searchByQueryInfo({ ...queryInfo, symbol, page: 1 });
   }
 
-  const handleTableChange = (pagination, filters, sorter) => {
+  const handleTableSortChange = (pagination, filters, sorter) => {
     searchByQueryInfo({
       ...queryInfo,
       order: (Array.isArray(sorter) ? sorter : [sorter]).filter(x => x.order).map(x => ({ field: x.field, order: x.order })),
     });
+  }
+
+  const handleLastDayOnlyChange = (checked) => {
+    searchByQueryInfo({
+      ...queryInfo,
+      lastDayOnly: checked,
+      page: 1,
+    })
   }
 
   return (
@@ -306,8 +315,15 @@ const UnusualOptionsActivityPanel = (props) => {
             <Select.Option value="Call">Call</Select.Option>
           </Select>
         </Descriptions.Item>
+        <Descriptions.Item label="">
+        </Descriptions.Item>
+        <Descriptions.Item label="Last day only">
+        <Tooltip title={queryInfo.lastDayOnly ? "Switch off to view all historical data" : "Switch on to only view the last day's data"}>
+          <Switch checked={queryInfo.lastDayOnly} onChange={handleLastDayOnlyChange} />
+          </Tooltip>
+        </Descriptions.Item>
         <Descriptions.Item label="Trade Date">
-          <DatePicker.RangePicker allowClear picker="date" placeholder={['From', 'To']} onChange={handleTimeChange} />
+          <DatePicker.RangePicker allowClear picker="date" disabled={queryInfo.lastDayOnly} placeholder={['From', 'To']} onChange={handleTimeChange} />
         </Descriptions.Item>
       </Descriptions>
       <Table
@@ -318,7 +334,7 @@ const UnusualOptionsActivityPanel = (props) => {
         loading={loading}
         rowKey="index"
         pagination={false}
-        onChange={handleTableChange}
+        onChange={handleTableSortChange}
         style={{
           marginBottom: '1rem',
           // height: 'calc(100vh - 320px)' 

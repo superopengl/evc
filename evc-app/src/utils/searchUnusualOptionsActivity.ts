@@ -16,11 +16,12 @@ export type UnusualOptionsActivitySearchParams = {
   page?: number;
   size?: number;
   order?: { field: string, order: 'ASC' | 'DESC' }[];
+  lastDayOnly: boolean;
 };
 
 
 export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' | 'index', q: any, showFullData: boolean) {
-  const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size, order } = q as UnusualOptionsActivitySearchParams;
+  const { symbol, type, expDateFrom, expDateTo, timeFrom, timeTo, page, size, order, lastDayOnly } = q as UnusualOptionsActivitySearchParams;
 
   const entity = entityType === 'stock' ? UnusualOptionActivityStock :
     entityType === 'etfs' ? UnusualOptionActivityEtfs :
@@ -57,22 +58,32 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
   if (expDateTo) {
     query = query.andWhere(`"expDate" <= :b::date`, { b: expDateTo });
   }
-  if (timeFrom) {
-    query = query.andWhere(`"tradeDate" >= :c::date`, { c: timeFrom });
+
+  if(lastDayOnly) {
+    const { tableName, schema } = getRepository(entity).metadata;
+    query = query.andWhere(`"tradeDate" = (select max("tradeDate") from "${schema}"."${tableName}")`);
+  } else {
+    if (timeFrom) {
+      query = query.andWhere(`"tradeDate" >= :c::date`, { c: timeFrom });
+    }
+    if (timeTo) {
+      query = query.andWhere(`"tradeDate" <= :d::date`, { d: timeTo });
+    }
   }
-  if (timeTo) {
-    query = query.andWhere(`"tradeDate" <= :d::date`, { d: timeTo });
-  }
+
   const count = await query.getCount();
 
   const orderConditions: { field: string, order: 'ASC' | 'DESC' }[] = order?.length ? order : [
-    { field: '"tradeDate"', order: 'DESC' },
-    { field: '"tradeTime"', order: 'DESC' },
-    { field: '"symbol"', order: 'ASC' },
+    { field: 'tradeDate', order: 'DESC' },
+    { field: 'symbol', order: 'ASC' },
   ]
 
   for (const orderCond of orderConditions) {
-    query = query.addOrderBy(orderCond.field, orderCond.order);
+    const {field, order} = orderCond;
+    query = query.addOrderBy(`"${field}"`, order);
+    if(field === 'tradeDate') {
+      query = query.addOrderBy('"tradeTime"', order, order === 'DESC' ? 'NULLS FIRST' : 'NULLS LAST');
+    }
   }
 
   query = query.offset((pageNo - 1) * pageSize)

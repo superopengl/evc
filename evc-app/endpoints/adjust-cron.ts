@@ -61,7 +61,7 @@ const defs = [
         name: 'daily-uoa',
         description: 'Daily uoa fetch',
         minute: '*/5',
-        hourNY: '9-16',
+        hourNY: '9-17',
         daysOfWeek: 'MON-FRI',
     },
 ];

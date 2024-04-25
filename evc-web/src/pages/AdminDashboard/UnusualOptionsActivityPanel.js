@@ -244,7 +244,7 @@ const UnusualOptionsActivityPanel = (props) => {
       render: (value) => `${value} %`,
     },
     {
-      title: <TableTitle seq={findOrderSeq('tradeDate')}>Trade Date / Time</TableTitle>,
+      title: <TableTitle seq={findOrderSeq('tradeDate')}>Trade Date</TableTitle>,
       dataIndex: 'tradeDate',
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('tradeDate'),

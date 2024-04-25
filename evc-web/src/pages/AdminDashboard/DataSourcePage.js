@@ -92,11 +92,11 @@ GOOG,1000-1100,2000
           The csv uploads for Unusual Options Activity do not handle duplicate records. Duplicated upload will cause the same data appear multiple time.
         </Paragraph>
         <Text><pre><small>
-          {`Symbol,Price,Type,Strike,"Exp Date",DTE,Bid,Midpoint,Ask,Last,Volume,"Open Int",Vol/OI,IV,Trade Date,Trade Time
-CCJ,16.5,Call,35,09/17/21,172,0.36,0.37,0.38,0.38,15103,256,59,74.80%,03/29/21,13:59 ET
-GSX,31.78,Call,40,04/16/21,18,1.8,1.99,2.18,1.85,6521,133,49.03,155.62%,03/29/21,9:00 ET
-KTOS,27.43,Call,30,04/16/21,18,1.1,1.18,1.25,1.15,25473,575,44.3,86.68%,03/29/21,12:01 ET
-DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/21,14:33 ET`}
+          {`Symbol,Price,Type,Strike,"Exp Date",DTE,Bid,Midpoint,Ask,Last,Volume,"Open Int",Vol/OI,IV,Trade Date,Time
+CCJ,16.5,Call,35,09/17/21,172,0.36,0.37,0.38,0.38,15103,256,59,74.80%,03/29/21
+GSX,31.78,Call,40,04/16/21,18,1.8,1.99,2.18,1.85,6521,133,49.03,155.62%,03/29/21
+KTOS,27.43,Call,30,04/16/21,18,1.1,1.18,1.25,1.15,25473,575,44.3,86.68%,03/29/21
+DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/21`}
         </small> </pre></Text>
       </Card>
 

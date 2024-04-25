@@ -3,7 +3,6 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-@Index(['tradeDate', 'tradeTime'])
 export class UnusualOptionActivityStock {
   @PrimaryColumn()
   symbol: string;
@@ -11,9 +10,6 @@ export class UnusualOptionActivityStock {
   @PrimaryColumn('date')
   @Index()
   tradeDate: string;
-
-  @Column('time', { nullable: true})
-  tradeTime: string;
 
   @PrimaryColumn('decimal', { transformer: new ColumnNumericTransformer() })
   price: number;

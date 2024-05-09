@@ -125,7 +125,7 @@ export function createAppInstance() {
   app.use('/', serveStatic(staticWwwDir, {
     cacheControl: true,
     setHeaders: (res, path) => {
-      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+      res.setHeader('Cache-Control', `public, max-age=36536000, immutable`); // 1 year
     }
   }));
 

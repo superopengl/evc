@@ -178,22 +178,26 @@ start(JOB_NAME, async () => {
     const { symbol, apiSymbol } = entity;
     const limit = await getDataLimit(symbol);
 
-    console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Grabing ${entity.symbol} option hisotry from Barchart (${limit} days) ...`);
-    const sleepTime = randomNumber(1000, 5000);
-    console.log(`Sleeping for ${sleepTime} ms...`);
-    await sleep(sleepTime);
+    if (limit > 0) {
+      console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Grabing ${entity.symbol} option hisotry from Barchart (${limit} days) ...`);
+      const sleepTime = randomNumber(1000, 5000);
+      console.log(`Sleeping for ${sleepTime} ms...`);
+      await sleep(sleepTime);
 
-    const dataList = await grabOptionPutCallHistory(apiSymbol, limit);
-    const entities = dataList.map(d => convertToOptionPutCallEntity(d, symbol));
-    await getManager()
-      .createQueryBuilder()
-      .insert()
-      .into(OptionPutCallHistory)
-      .values(entities)
-      .orIgnore()
-      .execute();
+      const dataList = await grabOptionPutCallHistory(apiSymbol, limit);
+      const entities = dataList.map(d => convertToOptionPutCallEntity(d, symbol));
+      await getManager()
+        .createQueryBuilder()
+        .insert()
+        .into(OptionPutCallHistory)
+        .values(entities)
+        .orIgnore()
+        .execute();
 
-    console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${entity.symbol}.`);
+      console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${entity.symbol}.`);
+    } else {
+      console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Skip for ${entity.symbol} option hisotry because it has been done`);
+    }
   }
 
 }, { daemon: false });

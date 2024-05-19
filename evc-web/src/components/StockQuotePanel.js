@@ -8,7 +8,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { filter, debounceTime } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
-import { isNil } from 'lodash';
+import isNil from 'lodash/isNil';
 import { Skeleton } from 'antd';
 import { from } from 'rxjs';
 import { useMediaQuery } from 'react-responsive'
@@ -108,7 +108,7 @@ const StockQuotePanel = (props) => {
           {!isIntra && quote.extendedPrice && <div>
             <Text style={{ fontSize: 20 }} strong>{quote.extendedPrice} {getDeltaComponent(quote.extendedChange, quote.extendedChangePercent)}</Text>
             <div>
-              <Space size="small" style={{width: '100%', alignItems: 'flex-start'}}>
+              <Space size="small" style={{ width: '100%', alignItems: 'flex-start' }}>
                 <Text type="secondary"><small>extended hours</small></Text>
                 <TimeAgo direction={superNarrow ? 'vertical' : 'horizontal'} value={quote.extendedPriceTime} />
               </Space>

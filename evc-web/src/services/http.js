@@ -1,5 +1,5 @@
 import * as axios from 'axios';
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { notify } from 'util/notify';
 import * as FormData from 'form-data';
 import { Modal } from 'antd';

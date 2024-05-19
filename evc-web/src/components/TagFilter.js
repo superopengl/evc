@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tag from './Tag';
-import { groupBy } from 'lodash';
+import groupBy from 'lodash/groupBy';
 
 export const TagFilter = (props) => {
 
@@ -23,7 +23,7 @@ export const TagFilter = (props) => {
     onChange(newSelected);
   }
 
-  if(!tags?.length) {
+  if (!tags?.length) {
     return null;
   }
 
@@ -32,7 +32,7 @@ export const TagFilter = (props) => {
 
   return (
     <div style={style}>
-      {tagGroups.map((tags, gIdx) => <div key={gIdx} style={{margin: '16px 0'}}>
+      {tagGroups.map((tags, gIdx) => <div key={gIdx} style={{ margin: '16px 0' }}>
         {tags.map((t, i) => <Tag
           key={i}
           color={t.color}

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
 import { TimeAgo } from 'components/TimeAgo';
 import { getSubscriptionName } from 'util/getSubscriptionName';
-import { sumBy } from 'lodash';
+import sumBy from 'lodash/sumBy';
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 

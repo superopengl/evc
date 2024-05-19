@@ -10,7 +10,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
 import { from } from 'rxjs';
-import { orderBy } from 'lodash';
+import orderBy from 'lodash/orderBy';
 
 const { Text } = Typography;
 

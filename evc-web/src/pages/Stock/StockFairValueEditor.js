@@ -2,9 +2,8 @@
 import React from 'react';
 import { Typography, DatePicker, Table, Form, Button, Row, Space, Badge } from 'antd';
 import PropTypes from 'prop-types';
-import { isNil } from 'lodash';
+import isNil from 'lodash/isNil';
 import styled from 'styled-components';
-import { Tag } from 'antd';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import moment from 'moment';
 import { NumberRangeInput } from 'components/NumberRangeInput';

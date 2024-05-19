@@ -11,7 +11,7 @@ import {
   RightOutlined,
 } from '@ant-design/icons';
 import { from } from 'rxjs';
-import { take } from 'lodash';
+import take from 'lodash/take';
 
 const { Text } = Typography;
 
@@ -242,7 +242,7 @@ const EarningsCalendarPage = props => {
         </Space>
         <Space>
           Logo
-        <Switch defaultChecked={showLogo} onChange={handleToggleLogo} />
+          <Switch defaultChecked={showLogo} onChange={handleToggleLogo} />
         </Space>
       </Space>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

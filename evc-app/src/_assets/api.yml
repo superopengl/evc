@@ -241,7 +241,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /user/:id/credit:
     post:
       operationId: adjustCredit
@@ -1242,7 +1242,7 @@ paths:
       operationId: listUoaStocks
       responses:
         200:
-          description: OK          
+          description: OK
   /admin/data/uoa/stock/admin/search:
     post:
       operationId: listAdminUoaStocks
@@ -1260,7 +1260,7 @@ paths:
       operationId: listUoaEtfs
       responses:
         200:
-          description: OK          
+          description: OK
   /admin/data/uoa/etfs/admin/search:
     post:
       operationId: listAdminUoaEtfs
@@ -1278,7 +1278,7 @@ paths:
       operationId: listUoaindex
       responses:
         200:
-          description: OK          
+          description: OK
   /admin/data/uoa/index/admin/search:
     post:
       operationId: listAdminUoaIndex

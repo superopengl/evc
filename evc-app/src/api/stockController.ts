@@ -38,7 +38,7 @@ import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex
 import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock';
 import { syncStockEps } from '../services/stockEpsService';
 import { syncStockHistoricalClose } from '../services/stockCloseService';
-import { refreshMaterializedView } from '../db';
+import { refreshMaterializedView } from "../refreshMaterializedView";
 import { StockDataInformation } from '../entity/views/StockDataInformation';
 import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import * as moment from 'moment-timezone';

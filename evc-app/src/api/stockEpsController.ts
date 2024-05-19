@@ -5,7 +5,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { StockEps } from '../entity/StockEps';
 import * as stockEpsService from '../services/stockEpsService';
 import * as moment from 'moment';
-import { refreshMaterializedView } from '../db';
+import { refreshMaterializedView } from "../refreshMaterializedView";
 import { executeWithDataEvents } from '../services/dataLogService';
 import { StockDailyClose } from '../entity/StockDailyClose';
 import { StockScrappedEps } from '../entity/StockScrappedEps';

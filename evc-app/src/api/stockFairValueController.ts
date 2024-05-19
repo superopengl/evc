@@ -6,8 +6,7 @@ import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalComputedFairValue';
 import * as _ from 'lodash';
 import moment = require('moment');
-import { refreshMaterializedView } from '../db';
-import { StockDailyPe } from '../entity/views/StockDailyPe';
+import { refreshMaterializedView } from "../refreshMaterializedView";
 import { StockComputedPe90 } from '../entity/views/StockComputedPe90';
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {
@@ -23,7 +22,7 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
     }
   });
 
-  if(latestPe90) {
+  if (latestPe90) {
     latestPe90.reportDate = latestPe90.date;
     latestPe90.isLatest = true;
   }
@@ -40,7 +39,7 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
   });
   const list = _.orderBy([...computedList, ...specialList], [(item) => moment(item.reportDate).toDate()], ['desc']);
 
-  const result = latestPe90 ? [latestPe90, ...list] : list; 
+  const result = latestPe90 ? [latestPe90, ...list] : list;
   res.json(result);
 });
 

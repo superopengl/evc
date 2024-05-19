@@ -15,29 +15,14 @@ export const LongRunningActionButton = props => {
   const { operationKey, confirmMessage, onOk, buttonText, onComplete, type, uploadAction } = props;
 
   const [loading, setLoading] = React.useState(false);
-  const [ping$, setPing$] = React.useState();
-
-  const startPingStatus = () => {
-    ping$?.unsubscribe();
-    const ping = interval(5 * 1000)
-      // .pipe(
-      //   startWith(0),
-      // )
-      .subscribe(async () => {
-        const result = await getOperationStatus(operationKey);
-        if (!result) {
-          ping$?.unsubscribe();
-        }
-      });
-    setPing$(ping);
-  }
+  // const [ping$, setPing$] = React.useState();
+  const pingSubRef = React.useRef();
 
   const load = async () => {
     const result = await getOperationStatus(operationKey);
 
     if (result) {
       setLoading(true);
-      startPingStatus();
     }
   }
 
@@ -46,9 +31,27 @@ export const LongRunningActionButton = props => {
 
     return () => {
       load$.unsubscribe();
-      ping$?.unsubscribe();
+      pingSubRef.current?.unsubscribe();
     }
   }, []);
+
+  React.useEffect(() => {
+    if (loading) {
+      pingSubRef.current?.unsubscribe();
+      pingSubRef.current = interval(5 * 1000)
+        // .pipe(
+        //   startWith(0),
+        // )
+        .subscribe(async () => {
+          const result = await getOperationStatus(operationKey);
+          if (!result) {
+            setLoading(false);
+          }
+        });
+    } else {
+      pingSubRef.current?.unsubscribe();
+    }
+  }, [loading]);
 
   const handleConfirm = () => {
     Modal.confirm({
@@ -59,7 +62,6 @@ export const LongRunningActionButton = props => {
       onOk: async () => {
         setLoading(true);
         await onOk();
-        startPingStatus();
       }
     });
   }
@@ -81,12 +83,10 @@ export const LongRunningActionButton = props => {
       switch (status) {
         case 'uploading': {
           setLoading(true);
-          startPingStatus();
           break;
         }
         case 'error': {
           notify.error('Failed to upload file', info.file.response);
-          ping$?.unsubscribe();
           setLoading(false);
           break;
         }
@@ -94,7 +94,6 @@ export const LongRunningActionButton = props => {
         case 'done':
         default: {
           onComplete();
-          ping$?.unsubscribe();
           setLoading(false);
           break;
         }
@@ -126,5 +125,5 @@ LongRunningActionButton.defaultProps = {
   type: 'button',
   confirmMessage: 'This operation may take several minutes to complete. In the mean time, there is no functional impact when in progress.',
   onOk: () => { },
-  onComplete: () => {}
+  onComplete: () => { }
 };

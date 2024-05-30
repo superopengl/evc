@@ -76,7 +76,7 @@ DELETE FROM "${epsTable.schema}"."${epsTable.tableName}" AS e
 WHERE EXISTS(
   SELECT 1 FROM "${scrappedTable.schema}"."${scrappedTable.tableName}" AS x
   WHERE e.symbol = x.symbol AND e."reportDate" = x."reportDate"
-)
+) AND source = 'alpha-vantage'
     `);
   })
 };

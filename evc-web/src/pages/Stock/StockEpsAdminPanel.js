@@ -85,7 +85,7 @@ const StockEpsAdminEditor = (props) => {
         type="info"
         showIcon
       />
-      <Space size="small" style={{ width: '100%', justifyContent: 'space-between' }}>
+      <Space size="small" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <StockEpsInput onSave={handleSave} disabled={loading} />
         <Tooltip title="Fetch last 16 EPS from AlphaVantage" placement="topRight">
           <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading} icon={<SyncOutlined />}></Button>

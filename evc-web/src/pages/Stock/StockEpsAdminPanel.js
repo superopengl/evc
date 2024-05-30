@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Tooltip, Alert } from 'antd';
+import { List, Typography, Space, Button, Tooltip, Alert, Tag, Badge } from 'antd';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
@@ -105,7 +105,9 @@ const StockEpsAdminEditor = (props) => {
           >
             <List.Item.Meta
               description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                <Text type="secondary"><small>{moment(item.reportDate).format('D MMM YYYY')}</small></Text>
+                <Text type="secondary"><small>{moment(item.reportDate).format('D MMM YYYY')}</small>
+                  {item.source === 'evc' && <Tooltip title="Manually input EPS"><Badge status="success" style={{ marginLeft: 4 }} /></Tooltip>}
+                </Text>
                 <MoneyAmount symbol="" value={item.value} digital={4} />
               </Space>}
             />

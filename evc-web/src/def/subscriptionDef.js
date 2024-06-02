@@ -52,7 +52,7 @@ export const subscriptionDef = [
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription3" /></Space>
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription6" /></Space>
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription7" /></Space>
-          <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription8" /></Space>
+          {/* <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription8" /></Space> */}
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription9" /></Space>
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneMonth" /></Space>
         </FeatureList>
@@ -72,7 +72,7 @@ export const subscriptionDef = [
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription3" /></Space>
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription6" /></Space>
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription7" /></Space>
-          <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription8" /></Space>
+          {/* <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription8" /></Space> */}
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescription9" /></Space>
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneYear" /></Space>
           <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneYearSave" /></Space>

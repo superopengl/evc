@@ -64,6 +64,13 @@ const defs = [
         hourNY: '9-17',
         daysOfWeek: 'MON-FRI',
     },
+    {
+        name: 'daily-opc-history',
+        description: 'Daily option putcall history fetch',
+        minute: '20',
+        hourNY: '16',
+        daysOfWeek: 'MON-FRI',
+    },
 ];
 
 function convertNyHourToUtcHour(hourNY) {

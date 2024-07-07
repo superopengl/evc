@@ -12,7 +12,11 @@ export async function logDataEvent(dataEvent: DataEvent) {
   log.by = dataEvent.by;
   log.data = dataEvent.data;
 
-  await getRepository(DataLog).insert(log);
+  try {
+    await getRepository(DataLog).insert(log);
+  } catch (e) {
+    console.error('Failed to add data log', errorToJson(e));
+  }
 }
 
 export async function executeWithDataEvents(eventType: string, by: string, fn: () => Promise<void>) {

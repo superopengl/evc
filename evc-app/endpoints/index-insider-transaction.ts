@@ -99,6 +99,4 @@ start(JOB_NAME, async () => {
   }
 
   await handleWatchlistInsiderTransactionNotification();
-
-  // await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView(StockPutCallRatio90));
 });

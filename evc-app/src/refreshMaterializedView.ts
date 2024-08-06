@@ -7,14 +7,12 @@ import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalComputedFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
-import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockComputedPe365 } from './entity/views/StockComputedPe365';
 
 const REFRESHING_MV_CACHE_KEY = 'operation.status.refresh-mv'
 
 const MV_REFRESH_ORDER = [
   StockHistoricalTtmEps,
-  StockPutCallRatio90,
   StockDailyPe,
   StockComputedPe90,
   StockComputedPe365,

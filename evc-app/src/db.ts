@@ -5,7 +5,6 @@ import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
 import { initializeConfig } from './utils/initializeConfig';
-import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
 import { StockComputedPe365 } from './entity/views/StockComputedPe365';
@@ -96,11 +95,6 @@ async function createIndexOnMaterilializedView() {
     {
       tableEntity: StockHistoricalTtmEps,
       fields: ['symbol', '"reportDate"'],
-      unique: true,
-    },
-    {
-      tableEntity: StockPutCallRatio90,
-      fields: ['symbol', 'date'],
       unique: true,
     },
   ];

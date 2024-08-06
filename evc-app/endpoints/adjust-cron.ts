@@ -37,7 +37,7 @@ const defs = [
     },
     {
         name: 'daily-putcall',
-        description: 'Daily putCallRatio',
+        description: 'Daily adcanced stats info',
         minute: '10',
         hourNY: '16',
         daysOfWeek: 'MON-FRI',

@@ -19,17 +19,6 @@ async function requestIexApi(relativeApiPath: string, query?: object) {
   return resp.json();
 }
 
-
-export async function getEarnings(symbol: string, last = 1) {
-  const resp = await requestIexApi(`/stock/${symbol}/earnings/${last}`);
-  const { earnings } = resp ?? {};
-  return earnings;
-}
-
-export async function getLastThreeMonthDailyPrice(symbol: string) {
-  return await requestIexApi(`/stock/${symbol}/chart/3m`);
-}
-
 export async function getQuote(symbol: string) {
   return await requestIexApi(`/stock/${symbol}/quote`);
 }

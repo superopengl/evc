@@ -73,6 +73,15 @@ export async function getTopGainersLosers() {
   return data;
 }
 
+export async function getNews(symbol: string) {
+  const data = await requestAlphaVantageApi({
+    function: 'NEWS_SENTIMENT',
+    tickers: symbol,
+  });
+
+  return data?.feed ?? [];
+}
+
 
 async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 'json') {
   const queryParams = queryString.stringify({

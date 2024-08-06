@@ -36,17 +36,6 @@ export async function getInsiderTransactions(symbol: string) {
   return await requestIexApi(`/stock/${symbol}/insider-transactions`);
 }
 
-export async function getNews(symbol: string) {
-  const list = await requestIexApi(`/stock/${symbol}/news/last/50`);
-  return (list ?? [])
-    .filter(x => x.lang === 'en')
-    .map(x => ({
-      ...x,
-      image: `${x.image}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`,
-      url: `${x.url}?token=${process.env.IEXCLOUD_PUBLIC_KEY}`
-    }));
-}
-
 export async function getEarnings(symbol: string, last = 1) {
   const resp = await requestIexApi(`/stock/${symbol}/earnings/${last}`);
   const { earnings } = resp ?? {};

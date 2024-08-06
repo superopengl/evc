@@ -7,7 +7,6 @@ import { notify } from 'util/notify';
 import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 
-
 const { Text, Paragraph } = Typography;
 
 const DataSourcePage = () => {
@@ -76,12 +75,6 @@ const DataSourcePage = () => {
       }
     },
   ]
-
-  const handlePutCallRatioUploadComplete = () => {
-    notify.info('Successfully uploaded put call ratio csv file', <>
-      You need to execute <Button type="primary" size="small">Refresh Materialized Views</Button> before all users can see the data.
-    </>);
-  }
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -165,30 +158,6 @@ CCJ,16.5,Call,35,09/17/21,172,0.36,0.37,0.38,0.38,15103,256,59,74.80%,03/29/21
 GSX,31.78,Call,40,04/16/21,18,1.8,1.99,2.18,1.85,6521,133,49.03,155.62%,03/29/21
 KTOS,27.43,Call,30,04/16/21,18,1.1,1.18,1.25,1.15,25473,575,44.3,86.68%,03/29/21
 DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/21`}
-        </small> </pre></Text>
-      </Card>
-
-      <Card
-        bordered={false}
-        title="Put Call Ratio"
-        extra={
-          <Space>
-            <LongRunningActionButton
-              operationKey="upload-putCallRatio-csv"
-              buttonText="Put Call Ratio"
-              type="upload"
-              uploadAction="/admin/data/put_call_ratio"
-              onComplete={handlePutCallRatioUploadComplete}
-            />
-          </Space>
-        }>
-        Bulk upload Put Call Ratio data from CSV file. The CSV file must have a header row as below (double quote <Text code>"</Text> is required). <Text code>Symbol</Text> and <Text code>Date</Text> are used as the primary key. Duplicate records will be ignored during the upload.
-        <Text><pre><small>
-          {`Symbol,Date,"Put Call Ratio"
-AAPL,09/17/21,0.3
-AAPL,09/18/21,0.5
-GOOG,09/17/21,0.75
-GOOG,09/18/21,0.85`}
         </small> </pre></Text>
       </Card>
 

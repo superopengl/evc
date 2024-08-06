@@ -17,7 +17,6 @@ import { getUtcNow } from '../utils/getUtcNow';
 import moment from 'moment';
 import _ from 'lodash';
 import { Role } from '../types/Role';
-import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 import { OptionPutCallStockOrdinal } from '../entity/OptionPutCallStockOrdinal';
 import { OptionPutCallHistory } from '../entity/OptionPutCallHistory';
@@ -40,14 +39,6 @@ const formatUoaUploadRow = row => {
   }
 }
 
-const formatPutCallRatioUploadRow = (row): OptionPutCallHistory => {
-  const entity = new OptionPutCallHistory();
-  entity.symbol = row.symbol;
-  entity.date = moment(row.date, 'MM/DD/YY').format('YYYY-MM-DD');
-  entity.
-  return row;
-}
-
 function parseUoaDate(value) {
   let m = moment(value, 'MM/DD/YY');
   if (!m.isValid()) {
@@ -57,16 +48,6 @@ function parseUoaDate(value) {
     throw new Error(`'${value}' is not a valid date.`)
   }
   return m.toDate();
-}
-
-function parseUoaTime(value) {
-  if (!value) return null;
-  const m = moment(value, 'H:mm [ET]');
-  if (!m.isValid()) {
-    throw new Error(`'${value}' is not a valid time.`)
-  }
-
-  return m.format('H:mm');
 }
 
 function handleCsvUpload(
@@ -80,7 +61,7 @@ function handleCsvUpload(
 
     const { file } = (req as any).files;
     assert(file, 404, 'No file to upload');
-    const { name, data, mimetype, md5 } = file;
+    const { name, data } = file;
     assert(path.extname(name).toLowerCase() === '.csv', 400, 'Not a csv file');
 
     const key = `operation.status.${operation}`;
@@ -191,21 +172,6 @@ export const uploadSupportResistanceCsv = handleCsvUpload(
   },
 )
 
-export const uploadPutCallRatioCsv = handleCsvUpload(
-  async (m, allRows) => {
-    const chunks = _.chunk(allRows, 1000);
-    for (const rows of chunks) {
-      const formattedRows = rows.map(formatPutCallRatioUploadRow);
-      await m
-        .createQueryBuilder()
-        .insert()
-        .into(OptionPutCallHistory)
-        .values(formattedRows as StockDailyAdvancedStat[])
-        .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
-        .execute();
-    }
-  })
-
 async function cleanUpOldUoaData(m: EntityManager, table) {
   const now = getUtcNow();
   const oneYearAgo = moment(now).add(-1, 'year').startOf('day').toDate();
@@ -276,7 +242,6 @@ function shouldShowFullDataForUoa(req) {
 }
 
 export const getStockAllOptionPutCall = handlerWrapper(async (req, res) => {
-  const showFullData = shouldShowFullDataForUoa(req);
   const { symbol } = req.params;
   const data = await getManager()
     .getRepository(OptionPutCallHistoryInformation)
@@ -294,7 +259,6 @@ export const getStockAllOptionPutCall = handlerWrapper(async (req, res) => {
 });
 
 export const saveStockOptionPutCallHistoryOrdinal = handlerWrapper(async (req, res) => {
-  const showFullData = shouldShowFullDataForUoa(req);
   const { symbol } = req.params;
   const { tag, ordinal } = req.body;
 
@@ -324,7 +288,6 @@ export const saveStockOptionPutCallHistoryOrdinal = handlerWrapper(async (req, r
 });
 
 export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {
-  const showFullData = shouldShowFullDataForUoa(req);
   const list = await getManager()
     .getRepository(OptionPutCallHistoryInformation)
     .createQueryBuilder()
@@ -341,7 +304,6 @@ export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {
 });
 
 export const getStockLatestOptionPutCall = handlerWrapper(async (req, res) => {
-  const showFullData = shouldShowFullDataForUoa(req);
   const { symbol } = req.params;
   const data = await getManager()
     .getRepository(OptionPutCallHistoryInformation)

@@ -12,7 +12,6 @@ import { Role } from '../types/Role';
 import { redisCache } from '../services/redisCache';
 import { StockEps } from '../entity/StockEps';
 import {
-  getNews,
   getInsiderRoster,
   getQuote,
   getStockLogoUrl,
@@ -39,7 +38,7 @@ import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import moment from 'moment-timezone';
 import _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
-import { getCompanyName, getTopGainersLosers } from '../services/alphaVantageService';
+import { getCompanyName, getNews, getTopGainersLosers } from '../services/alphaVantageService';
 import { StockInsiderTransaction } from '../entity/StockInsiderTransaction';
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
@@ -495,8 +494,16 @@ export const getStockRoster = handlerWrapper(async (req, res) => {
 
 export const getStockNews = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
+  const data = await getNews(symbol);
+  const formatted = data.map(x => ({
+    datetime: moment(x.time_published, 'YYYYMMDDTHHmmss').toDate(),
+    headline: x.title,
+    summary: x.summary,
+    url: x.url,
+    image: x.banner_image,
+  }));
   res.set('Cache-Control', `public, max-age=600`);
-  res.json(await getNews(symbol));
+  res.json(formatted);
 });
 
 export const getPutCallRatioChart = handlerWrapper(async (req, res) => {

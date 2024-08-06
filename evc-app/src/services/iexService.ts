@@ -19,17 +19,6 @@ async function requestIexApi(relativeApiPath: string, query?: object) {
   return resp.json();
 }
 
-export async function getInsiderRoster(symbol: string) {
-  return await requestIexApi(`/stock/${symbol}/insider-roster`);
-}
-
-export async function getInsiderSummary(symbol: string) {
-  return await requestIexApi(`/stock/${symbol}/insider-summary`);
-}
-
-export async function getInsiderTransactions(symbol: string) {
-  return await requestIexApi(`/stock/${symbol}/insider-transactions`);
-}
 
 export async function getEarnings(symbol: string, last = 1) {
   const resp = await requestIexApi(`/stock/${symbol}/earnings/${last}`);

@@ -21,7 +21,6 @@ import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 import { StockLatestFreeInformation } from '../entity/views/StockLatestFreeInformation';
 import { StockPlea } from '../entity/StockPlea';
-import { StockPutCallRatio90 } from '../entity/views/StockPutCallRatio90';
 import { StockDailyClose } from '../entity/StockDailyClose';
 import { StockResistance } from '../entity/StockResistance';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
@@ -508,20 +507,6 @@ export const getStockNews = handlerWrapper(async (req, res) => {
   }));
   res.set('Cache-Control', `public, max-age=600`);
   res.json(formatted);
-});
-
-export const getPutCallRatioChart = handlerWrapper(async (req, res) => {
-  const { symbol } = req.params;
-  const list = await getRepository(StockPutCallRatio90).find({
-    where: {
-      symbol
-    },
-    order: {
-      date: 'DESC'
-    }
-  })
-  res.set('Cache-Control', `public, max-age=1800`);
-  res.json(list);
 });
 
 export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {

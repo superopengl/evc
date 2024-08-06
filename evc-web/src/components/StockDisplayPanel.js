@@ -9,7 +9,6 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import StockRosterPanel from 'components/StockRosterPanel';
 import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
-import StockPutCallRatioChart from 'components/charts/StockPutCallRatioChart';
 import { MemberOnlyCard } from 'components/MemberOnlyCard';
 import StockEvcInfoPanel from './StockEvcInfoPanel';
 import { from } from 'rxjs';
@@ -115,17 +114,17 @@ const StockDisplayPanel = (props) => {
             <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true}
             //  bodyStyle={{ height: 450 }}
             >
-              {stock.hasNewChart ? <OptionPutCallHistoryChart symbol={stock.symbol} /> : <StockPutCallRatioChart symbol={stock.symbol} />}
+              <OptionPutCallHistoryChart symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
         </Row>}
-        {stock.hasNewChart && <Row style={{ marginTop: 30 }}>
+        <Row style={{ marginTop: 30 }}>
           <Col span={24}>
             <MemberOnlyCard title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} paidOnly={true} bodyStyle={{ padding: 0 }}>
               <StockOptionPutCallPanel symbol={stock.symbol} lastDayOnly={true} />
             </MemberOnlyCard>
           </Col>
-        </Row>}
+        </Row>
         {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
           <Col span={superNarrow ? 24 : 12}>
             <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
@@ -185,7 +184,7 @@ const StockDisplayPanel = (props) => {
           width="100vw"
           centered
         >
-          {stock.hasNewChart ? <OptionPutCallHistoryChart symbol={stock.symbol} /> : <StockPutCallRatioChart symbol={stock.symbol} />}
+          <OptionPutCallHistoryChart symbol={stock.symbol} />
         </Modal>}
       </>}
 

@@ -1,7 +1,7 @@
 import { getRepository, IsNull } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { getStockLogoUrl } from '../src/services/iexService';
+import { getStockLogoUrl } from '../src/utils/getStockLogoUrl';
 import errorToJson from 'error-to-json';
 
 const JOB_NAME = 'feed-logo';

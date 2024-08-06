@@ -15,8 +15,6 @@
     "dev": "npm run clean && nodemon -w src --ext ts,yml --exec npm start",
     "feed:symbols": "TZ=utc ts-node ./endpoints/feed-symbols.ts",
     "feed:symbols:prod": "TZ=utc node ./endpoints/feed-symbols",
-    "feed:logo": "TZ=utc ts-node ./endpoints/feed-logo.ts",
-    "feed:logo:prod": "TZ=utc node ./endpoints/feed-logo",
     "feed:eps": "TZ=utc ts-node ./endpoints/feed-eps.ts",
     "feed:eps:prod": "TZ=utc node ./endpoints/feed-eps",
     "feed:close": "TZ=utc ts-node ./endpoints/feed-close-pe.ts",

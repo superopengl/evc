@@ -41,9 +41,8 @@ export async function getInsiderSummary(symbol: string) {
   return await requestIexApi(`/stock/${symbol}/insider-summary`);
 }
 
-export async function getStockLogoUrl(symbol: string) {
-  const result = await requestIexApi(`/stock/${symbol}/logo`);
-  return result?.url;
+export function getStockLogoUrl(symbol: string) {
+  return `https://assets.parqet.com/logos/symbol/${symbol}?format=jpg`;
 }
 
 export async function getInsiderTransactions(symbol: string) {

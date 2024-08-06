@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { timer } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 
-const { Text, Title ,  Link: TextLink } = Typography;
+const { Text, Title, Link: TextLink } = Typography;
 
 const Container = styled.div`
 `;
@@ -87,7 +87,7 @@ const StockMostSearched = (props) => {
           props: {
             colSpan: 4,
           },
-          children: <Space style={{width: '100%', justifyContent: 'space-between'}}>
+          children: <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Text type="secondary">{company}</Text>
             <TimeAgo direction="horizontal" value={publishedAt} showAgo={false} prefix={<Text type="secondary"><small>published:</small></Text>} />
           </Space>
@@ -125,7 +125,7 @@ const StockMostSearched = (props) => {
 
   return (
     <Container>
-      {title && <Title level={5} style={{...titleStyle}} strong>{title}</Title>}
+      {title && <Title level={5} style={{ ...titleStyle }} strong>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         columns={columnDef}

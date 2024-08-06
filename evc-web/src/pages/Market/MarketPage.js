@@ -31,21 +31,21 @@ const MarketPage = props => {
 
   return (
     <Container>
-      
-    <Row gutter={[30, 50]}>
-      <Col {...span}>
-        <StockMostSearched onFetch={listHotStock} title="Most searched" onSymbolClick={handleSymbolClick} />
-      </Col>
-      <Col  {...span}>
-        <StockMostPanel onFetch={getMarketMostActive} title="Most actives" onSymbolClick={handleSymbolClick} />
-      </Col>
-      <Col  {...span}>
-        <StockMostPanel onFetch={getMarketGainers} title="Gainers" onSymbolClick={handleSymbolClick} />
-      </Col>
-      <Col  {...span}>
-        <StockMostPanel onFetch={getMarketLosers} title="Losers" onSymbolClick={handleSymbolClick} />
-      </Col>
-    </Row>
+
+      <Row gutter={[30, 50]}>
+        <Col {...span}>
+          <StockMostSearched onFetch={listHotStock} title="Most searched" onSymbolClick={handleSymbolClick} />
+        </Col>
+        <Col  {...span}>
+          <StockMostPanel onFetch={getMarketMostActive} title="Most actives" onSymbolClick={handleSymbolClick} />
+        </Col>
+        <Col  {...span}>
+          <StockMostPanel onFetch={getMarketGainers} title="Gainers" onSymbolClick={handleSymbolClick} />
+        </Col>
+        <Col  {...span}>
+          <StockMostPanel onFetch={getMarketLosers} title="Losers" onSymbolClick={handleSymbolClick} />
+        </Col>
+      </Row>
 
     </Container>
   );

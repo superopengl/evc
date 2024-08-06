@@ -20,19 +20,6 @@ async function requestIexApi(relativeApiPath: string, query?: object) {
   return resp.json();
 }
 
-export async function getMarketMostActive() {
-  return await requestIexApi('/stock/market/list/mostactive');
-}
-
-export async function getMarketGainers() {
-  // Cannot add listLimit=5 query param because iex API has a bug that adding listLimit will return nothing.
-  return await requestIexApi('/stock/market/list/gainers');
-}
-
-export async function getMarketLosers() {
-  return await requestIexApi('/stock/market/list/losers');
-}
-
 export async function getInsiderRoster(symbol: string) {
   return await requestIexApi(`/stock/${symbol}/insider-roster`);
 }

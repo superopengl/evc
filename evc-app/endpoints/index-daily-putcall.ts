@@ -2,7 +2,6 @@ import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { isUSMarketOpen } from '../src/services/iexService';
-import { sendIexRequest } from '../src/services/iexCoreService';
 import { StockAdvancedStatsInfo, syncManyStockAdcancedStat } from '../src/services/syncManyStockAdcancedStat';
 import moment from 'moment';
 import _ from 'lodash';
@@ -25,37 +24,6 @@ async function udpateDatabase(symbolValueMap) {
   }
 
   await syncManyStockAdcancedStat(advancedStatsInfo);
-}
-
-// async function backfillDataFromOldStockDailyPutCallRatioTable() {
-//   const { schema: newTableSchema, tableName: newTableName } = getRepository(StockDailyAdvancedStat).metadata;
-//   const { schema: oldTableSchema, tableName: oldTableName } = getRepository(StockDailyPutCallRatio).metadata;
-
-//   console.log(`Start backfilling data from the old "${oldTableSchema}"."${oldTableName}" table`);
-//   await getManager()
-//     .query(`
-// INSERT INTO "${newTableSchema}"."${newTableName}"
-// (symbol, "date", "putCallRatio")
-// SELECT symbol, "date", "putCallRatio"
-//   FROM "${oldTableSchema}"."${oldTableName}" AS d
-//   WHERE d."date" < (
-//     SELECT MIN("date") from "${newTableSchema}"."${newTableName}" n
-//     WHERE n.symbol = d.symbol 
-//     GROUP BY n.symbol
-//   )
-// ON CONFLICT (symbol, "date") DO NOTHING
-//     `);
-
-//   console.log(`Finished backfilling data from the old "${oldTableSchema}"."${oldTableName}" table.`);
-// }
-
-async function syncIexForSymbols(symbols: string[]) {
-  const resp = await sendIexRequest(symbols, 'advanced_stats');
-  assert(symbols.length === resp.length, 500, `IEX response length is not equal to symbols (${symbols.join(',')})`);
-
-  const map = new Map(symbols.map((s, i) => [s, resp[i]]));
-
-  await udpateDatabase(map);
 }
 
 const JOB_NAME = 'daily-advancedStat';

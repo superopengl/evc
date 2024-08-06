@@ -1,7 +1,6 @@
 import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { sendIexRequest } from '../src/services/iexCoreService';
 import _ from 'lodash';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
 import { handleWatchlistInsiderTransactionNotification } from './handleWatchlistInsiderTransactionNotification';
@@ -37,7 +36,6 @@ function includesTransactionCode(transactionCode: string) {
   }
 }
 
-
 async function udpateDatabase(iexBatchResponse) {
   const entities: StockInsiderTransaction[] = [];
   for (const [symbol, value] of Object.entries(iexBatchResponse)) {
@@ -72,9 +70,10 @@ async function udpateDatabase(iexBatchResponse) {
 
 
 async function syncIexForSymbols(symbols: string[]) {
-  const resp = await sendIexRequest(symbols, 'insider_transactions', { last: 30 });
-  const map = _.groupBy(resp, x => x.symbol);
-  await udpateDatabase(map);
+  throw Error('Not implemented. Need to find a data provider for insider transations')
+  // const resp = await sendIexRequest(symbols, 'insider_transactions', { last: 30 });
+  // const map = _.groupBy(resp, x => x.symbol);
+  // await udpateDatabase(map);
 }
 
 const JOB_NAME = 'feed-insiderTransactions';

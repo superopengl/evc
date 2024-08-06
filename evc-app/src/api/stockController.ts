@@ -14,8 +14,8 @@ import { StockEps } from '../entity/StockEps';
 import {
   getInsiderRoster,
   getQuote,
-  getStockLogoUrl,
 } from '../services/iexService';
+import { getStockLogoUrl } from '../utils/getStockLogoUrl';
 import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';

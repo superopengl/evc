@@ -19,7 +19,7 @@ start(JOB_NAME, async () => {
   let count = 0;
   for (const stock of stocks) {
     try {
-      const logoUrl = await getStockLogoUrl(stock.symbol);
+      const logoUrl = getStockLogoUrl(stock.symbol);
       if (logoUrl) {
         stock.logoUrl = logoUrl;
         await getRepository(Stock).save(stock);

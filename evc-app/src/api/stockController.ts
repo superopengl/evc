@@ -289,10 +289,10 @@ export const createStock = handlerWrapper(async (req, res) => {
   const companyName = reqCompany?.trim() || await getCompanyName(reqSymbol);
 
   const symbol = reqSymbol.toUpperCase();
-  const logoTask = getStockLogoUrl(symbol);
 
   stock.symbol = symbol;
   stock.company = companyName
+  stock.logoUrl = getStockLogoUrl(symbol);
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({
       where: {
@@ -300,7 +300,6 @@ export const createStock = handlerWrapper(async (req, res) => {
       }
     });
   }
-  stock.logoUrl = await logoTask;
 
   await getRepository(Stock).save(stock);
 

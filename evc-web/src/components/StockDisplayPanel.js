@@ -23,7 +23,6 @@ import { FormattedMessage } from 'react-intl';
 import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { OptionPutCallHistoryChart } from 'components/charts/OptionPutCallHistoryChart';
-import OptionPutCallPanel from 'pages/AdminDashboard/OptionPutCallPanel';
 import StockOptionPutCallPanel from 'pages/AdminDashboard/StockOptionPutCallPanel';
 
 

@@ -57,12 +57,17 @@ export async function getEarningsCalendarForAll(): Promise<{ symbol: string, rep
   return rows;
 }
 
-export async function getCompanyName(symbol: string) {
+async function getCompanyOverview(symbol: string) {
   const data = await requestAlphaVantageApi({
     function: 'OVERVIEW',
     symbol
   });
 
+  return data;
+}
+
+export async function getCompanyName(symbol: string) {
+  const data = await getCompanyOverview(symbol);
   return data?.Name;
 }
 
@@ -82,6 +87,11 @@ export async function getNews(symbol: string) {
   return data?.feed ?? [];
 }
 
+export async function getAdvancedStat(symbol: string) {
+  const data = await getCompanyOverview(symbol);
+
+  return data;
+}
 
 async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 'json') {
   const queryParams = queryString.stringify({

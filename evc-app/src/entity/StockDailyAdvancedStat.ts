@@ -16,9 +16,6 @@ export class StockDailyAdvancedStat {
   stock: Stock;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
-  putCallRatio: number;
-
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   beta: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })

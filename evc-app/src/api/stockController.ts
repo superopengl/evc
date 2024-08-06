@@ -14,9 +14,6 @@ import { StockEps } from '../entity/StockEps';
 import {
   getNews,
   getInsiderRoster,
-  getMarketGainers,
-  getMarketLosers,
-  getMarketMostActive,
   getQuote,
   getStockLogoUrl,
 } from '../services/iexService';
@@ -42,7 +39,7 @@ import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import moment from 'moment-timezone';
 import _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
-import { getCompanyName } from '../services/alphaVantageService';
+import { getCompanyName, getTopGainersLosers } from '../services/alphaVantageService';
 import { StockInsiderTransaction } from '../entity/StockInsiderTransaction';
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
@@ -232,49 +229,69 @@ const initilizedNewStockData = async (symbol) => {
   await refreshMaterializedView();
 }
 
-async function addAndInitializeStock(symbol, companyName, stockTags) {
-  const stock = new Stock();
-  stock.symbol = symbol.toUpperCase();
-  stock.company = companyName;
-  stock.tags = stockTags;
+async function createAndInitializeStocks(stocks: Stock[]) {
+  await getManager().save(stocks);
 
-  console.log(`Try auto-adding stock ${symbol}`);
-  try {
-    await getRepository(Stock).save(stock);
-    await syncStockEps(symbol);
-    await syncStockHistoricalClose(symbol, 200);
-    await getAndFeedStockQuote(symbol);
-
-    console.log(`Auto-added stock ${symbol} together with its EPS and its historical close prices`);
-  } catch {
-    // Does nothing
-  }
+  await syncDetailsForNewSymbols(stocks.map(s => s.symbol));
 }
 
-async function addAndInitlizedStockList(list: { symbol: string, companyName: string }[]) {
-  const symbols = list.map(x => x.symbol);
-  const existingOnes = await getRepository(Stock)
+async function syncDetailsForNewSymbols(symbols: string[]) {
+  for (const symbol of symbols) {
+    try {
+      console.log(`Try auto-adding stock ${symbol}`);
+      await syncStockEps(symbol);
+      await syncStockHistoricalClose(symbol, 200);
+      await getAndFeedStockQuote(symbol);
+      console.log(`Auto-added stock ${symbol} together with its EPS and its historical close prices`);
+    } catch (e) {
+      console.log(`Error happened when syncing details for new symbol ${symbol}`);
+    }
+  }
+
+  // await refreshMaterializedView();
+}
+
+async function initlizeStocksAndGetSymbolCompanyMap(symbols: string[]): Promise<Map<string, string>> {
+  const stocks = await getRepository(Stock)
     .find({
       where: {
         symbol: In(symbols)
       },
       select: [
-        'symbol'
+        'symbol',
+        'company'
       ]
     });
 
-  const newOnes = _.differenceBy(list, existingOnes, 'symbol');
-  if (!newOnes.length) {
+  const symbolCompanyMap = stocks.reduce((map, curr) => {
+    map.set(curr.symbol, curr.company);
+    return map;
+  }, new Map());
+
+  const newSymbols = _.difference(symbols, symbolCompanyMap.keys);
+  if (!newSymbols.length) {
     return;
   }
 
   const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
   const tags = stockTag ? [stockTag] : [];
 
-  for (const item of newOnes) {
-    await addAndInitializeStock(item.symbol, item.companyName, tags);
+  const newStocks = [];
+  for (const symbol of newSymbols) {
+    const companyName = await getCompanyName(symbol);
+
+    const stock = new Stock();
+    stock.symbol = symbol;
+    stock.company = companyName;
+    stock.tags = tags;
+    newStocks.push(stock);
+
+    symbolCompanyMap.set(symbol, companyName);
   }
-  await refreshMaterializedView();
+
+  createAndInitializeStocks(newStocks);
+
+  return symbolCompanyMap;
 }
 
 
@@ -363,23 +380,66 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+type TopsResponse = { mostActives: [], gainers: [], losers: [] };
+
+
+function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): TopsResponse {
+  const singleItemFormatter = (rawItem) => {
+    return {
+      symbol: rawItem.ticker,
+      company: symbolCompanyMap.get(rawItem.ticker),
+      latestPrice: +rawItem.price,
+      change: +rawItem.change_amount,
+      changePercent: +(rawItem.change_percentage.replace('%', '')) / 100,
+    }
+  }
+
+  const response = {
+    mostActives: rawResponse.most_actively_traded.map(singleItemFormatter),
+    gainers: rawResponse.top_gainers.map(singleItemFormatter),
+    losers: rawResponse.top_losers.map(singleItemFormatter)
+  };
+
+  return response;
+}
+
+const getTopsData = async (): Promise<TopsResponse> => {
+  const CACHE_KEY = 'STOCK_MARKET_MOST_ACTIVITIES_TOP_GAINERS_LOSERS';
+  let data = await redisCache.get(CACHE_KEY) as TopsResponse;
+
+  if (!data) {
+    const responseData = await getTopGainersLosers();
+    const allSymbols = []
+      .concat(responseData.top_gainers.map(x => x.ticker))
+      .concat(responseData.top_losers.map(x => x.ticker))
+      .concat(responseData.most_actively_traded.map(x => x.ticker));
+
+    const symbols = Array.from(new Set(allSymbols));
+
+    const symbolCompanyMap = await initlizeStocksAndGetSymbolCompanyMap(symbols);
+
+    data = formatTopResponse(responseData, symbolCompanyMap);
+
+    await redisCache.setex(CACHE_KEY, data, 300);
+  }
+
+  return data;
+};
+
 export const getMostActive = handlerWrapper(async (req, res) => {
-  const data = await getMarketMostActive();
-  addAndInitlizedStockList(data).catch(() => { });
+  const data = (await getTopsData()).mostActives;
   res.set('Cache-Control', `public, max-age=300`);
   res.json(data);
 });
 
 export const getGainers = handlerWrapper(async (req, res) => {
-  const data = await getMarketGainers();
-  addAndInitlizedStockList(data).catch(() => { });
+  const data = (await getTopsData()).gainers;
   res.set('Cache-Control', `public, max-age=300`);
   res.json(data);
 });
 
 export const getLosers = handlerWrapper(async (req, res) => {
-  const data = await getMarketLosers();
-  addAndInitlizedStockList(data).catch(() => { });
+  const data = (await getTopsData()).losers;
   res.set('Cache-Control', `public, max-age=300`);
   res.json(data);
 });

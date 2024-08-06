@@ -66,6 +66,13 @@ export async function getCompanyName(symbol: string) {
   return data?.Name;
 }
 
+export async function getTopGainersLosers() {
+  const data = await requestAlphaVantageApi({
+    function: 'TOP_GAINERS_LOSERS',
+  });
+  return data;
+}
+
 
 async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 'json') {
   const queryParams = queryString.stringify({

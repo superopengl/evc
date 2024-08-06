@@ -19,7 +19,7 @@ const StyledTable = styled(Table)`
 
 .ant-table-cell {
   background-color: white !important;
-  padding: 2px !important;
+  padding: 2px 4px !important;
 }
 
 .ant-table-thead {
@@ -46,7 +46,6 @@ const StyledTable = styled(Table)`
 .odd-row {
   .ant-table-cell {
     padding-top: 0 !important;
-
   }
 }
 `;
@@ -69,12 +68,12 @@ const StockMostPanel = (props) => {
     {
       title: 'symbol',
       render: (text, item, index) => {
-        const { symbol, companyName } = item;
+        const { symbol, company } = item;
         if (index % 2 === 0) {
           return <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
         }
         return {
-          children: <Text type="secondary">{companyName}</Text>,
+          children: <Text type="secondary">{company || symbol}</Text>,
           props: {
             colSpan: 4,
           },
@@ -98,7 +97,7 @@ const StockMostPanel = (props) => {
     },
   ];
 
-  const { title, onFetch,titleStyle, onSymbolClick } = props;
+  const { title, onFetch, titleStyle, onSymbolClick } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -133,7 +132,7 @@ const StockMostPanel = (props) => {
 
   return (
     <>
-      {title && <Title level={5} style={{...titleStyle}} strong>{title}</Title>}
+      {title && <Title level={5} style={{ ...titleStyle }} strong>{title}</Title>}
       <StyledTable
         dataSource={getFormattedList()}
         loading={loading}
@@ -145,7 +144,7 @@ const StockMostPanel = (props) => {
         }}
         size="small"
         locale={{
-          emptyText: <div style={{maxWidth: 220, textAlign: 'center', margin: '20px auto', fontStyle: 'italic'}}>
+          emptyText: <div style={{ maxWidth: 220, textAlign: 'center', margin: '20px auto', fontStyle: 'italic' }}>
             <FormattedMessage id="text.mostEmpty" />
           </div>
         }}

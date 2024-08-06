@@ -1225,12 +1225,6 @@ paths:
       responses:
         200:
           description: OK
-  /admin/data/put_call_ratio:
-    post:
-      operationId: uploadPutCallRatioCsv
-      responses:
-        200:
-          description: OK
   /admin/data/opc:
     get:
       operationId: listLatestOptionPutCall

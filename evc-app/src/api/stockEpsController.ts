@@ -95,19 +95,6 @@ export const factorStockValue = handlerWrapper(async (req, res) => {
   const dbDateString = moment(date).format('YYYY-MM-DD');
 
   await getManager().transaction(async m => {
-    // Update EPS
-    await m.createQueryBuilder()
-      .update(StockEps)
-      .set({
-        value: () => `value * ${factor}`,
-        source: 'evc-factored'
-      })
-      .where({
-        symbol,
-        reportDate: LessThan(dbDateString)
-      })
-      .execute();
-
     // Update close
     await m.createQueryBuilder()
       .update(StockDailyClose)

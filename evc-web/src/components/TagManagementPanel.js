@@ -8,8 +8,10 @@ import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 import { from } from 'rxjs';
+import { Tooltip } from 'antd';
+import { QuestionCircleFilled } from '@ant-design/icons';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const NEW_TAG_ITEM = Object.freeze({
   isNew: true,
@@ -45,7 +47,7 @@ const TagManagementPanel = (props) => {
       },
       render: (value, item) => <InputNumber
         value={value}
-        placeholder="To control tags' display order and group"
+        min={0}
         onChange={num => handleSortGroupChange(item, num)}
         onBlur={e => handleSortGroupBlur(item, e.target.value)}
       />
@@ -59,11 +61,25 @@ const TagManagementPanel = (props) => {
       />
     } : null,
     showIncludesOptionPutCall ? {
-      title: 'Option put/call',
+      title: 'Put/call fetch',
       dataIndex: 'includesOptionPutCall',
       render: (value, item) => <Switch
         defaultChecked={value}
+        // checkedChildren="daily fetch"
+        // unCheckedChildren="not fetch"
         onChange={(checked) => handleIncludeOptionPutCallChange(item, checked)}
+      />
+    } : null,
+    showIncludesOptionPutCall ? {
+      title: <>Put/call fetch ordinal
+        <Paragraph type="secondary" style={{ margin: 0 }}>Smaller numbers will be fetched first.</Paragraph>
+      </>,
+      dataIndex: 'optionPutCallFetchTagOrdinal',
+      render: (value, item) => item.includesOptionPutCall && <InputNumber
+        value={value}
+        min={0}
+        onChange={num => handleFetchOrdinalChange(item, num)}
+        onBlur={e => handleFetchOrdinalBlur(item, e.target.value)}
       />
     } : null,
     {
@@ -101,6 +117,20 @@ const TagManagementPanel = (props) => {
     }
   }
 
+  const handleFetchOrdinalChange = (item, value) => {
+    const numValue = +value;
+    item.optionPutCallFetchTagOrdinal = Number.isInteger(numValue) ? numValue : null;
+    setList([...list]);
+  }
+
+  const handleFetchOrdinalBlur = async (item, value) => {
+    const numValue = +value;
+    item.optionPutCallFetchTagOrdinal = Number.isInteger(numValue) ? numValue : null;
+    if (!item.isNew) {
+      await onSave(item);
+    }
+  }
+
   const handleDelete = async (item) => {
     await onDelete(item.id);
     await loadList();
@@ -114,6 +144,10 @@ const TagManagementPanel = (props) => {
 
   const handleIncludeOptionPutCallChange = async (item, checked) => {
     item.includesOptionPutCall = checked;
+    if (!item.includesOptionPutCall) {
+      item.optionPutCallFetchTagOrdinal = null;
+    }
+    setList([...list]);
     if (item.isNew) return;
     await onSave(item);
   }

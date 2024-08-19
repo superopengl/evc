@@ -12,7 +12,7 @@ import { from } from 'rxjs';
 
 
 export const LongRunningActionButton = props => {
-  const { operationKey, confirmMessage, onOk, buttonText, onComplete, type, uploadAction } = props;
+  const { operationKey, confirmMessage, onOk, buttonText, onComplete, type, uploadAction, ...otherButtonProps } = props;
 
   const [loading, setLoading] = React.useState(false);
   // const [ping$, setPing$] = React.useState();
@@ -104,9 +104,9 @@ export const LongRunningActionButton = props => {
   return <>
     {type === 'upload' ?
       <Upload {...uploadProps}>
-        <Button loading={loading} icon={<UploadOutlined />} type="primary">{buttonText}</Button>
+        <Button {...otherButtonProps} loading={loading} icon={<UploadOutlined />} type="primary">{buttonText}</Button>
       </Upload> :
-      <Button loading={loading} type="primary" onClick={() => handleConfirm()}>{buttonText}</Button>}
+      <Button {...otherButtonProps} loading={loading} type="primary" onClick={() => handleConfirm()}>{buttonText}</Button>}
   </>
 }
 

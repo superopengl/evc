@@ -318,3 +318,28 @@ export const getOperationStatus = handlerWrapper(async (req, res) => {
   const value = await redisCache.get(key);
   res.json(value);
 });
+
+export const getCacheKeys = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const value = await redisCache.keys();
+  res.json(value);
+});
+
+export const deleteCacheKey = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { key } = req.params;
+  assert(key, 400, 'key is not specified');
+  const value = await redisCache.del(key);
+  res.json(value);
+});
+
+export const getCacheValue = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { key } = req.params;
+  assert(key, 400, 'key is not specified');
+  const value = await redisCache.get(key);
+  res.json(value);
+});
+
+
+

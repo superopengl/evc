@@ -28,3 +28,24 @@ export async function listAdminUnusualOptionsActivity(type, query) {
   }
   return httpPost(`/admin/data/uoa/${type}/admin/search`, query);
 }
+
+export async function getCacheKeys() {
+  return httpGet(`/admin/cache_keys`);
+}
+
+export async function deleteCacheKey(key) {
+  if (!key) {
+    throw new Error(`key is not specified.`);
+  }
+  return httpDelete(`/admin/cache_keys/${key}`);
+}
+
+export async function getCacheKeyedValue(key) {
+  if (!key) {
+    throw new Error(`key is not specified.`);
+  }
+  return httpGet(`/admin/cache_keys/${key}`);
+}
+
+
+

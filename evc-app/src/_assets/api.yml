@@ -1296,6 +1296,33 @@ paths:
       responses:
         200:
           description: OK
+  /admin/cache_keys:
+    get:
+      operationId: getCacheKeys
+      responses:
+        200:
+          description: OK
+  /admin/cache_keys/:key:
+    get:
+      operationId: getCacheValue
+      parameters:
+        - name: key
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteCacheKey
+      parameters:
+        - name: key
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
   /custom_tags:
     get:
       operationId: listStockCustomTag

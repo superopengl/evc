@@ -1,13 +1,80 @@
 import React from 'react';
-import { Typography, Space, Card, Button } from 'antd';
+import { Typography, Space, Card, Button, List, Table } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { refreshMaterializedViews, flushCache } from 'services/dataService';
+import { refreshMaterializedViews, flushCache, getCacheKeys, deleteCacheKey, getCacheKeyedValue } from 'services/dataService';
 import { LongRunningActionButton } from 'components/LongRunningActionButton';
 import { notify } from 'util/notify';
+import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
+import { TimeAgo } from 'components/TimeAgo';
+
 
 const { Text, Paragraph } = Typography;
 
 const DataSourcePage = () => {
+
+  const [cachedItems, setCachedItems] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const load = async () => {
+    const keys = await getCacheKeys();
+    const value = keys.map(k => ({ key: k }));
+    setCachedItems(value);
+    setLoading(false);
+  }
+
+  React.useEffect(() => {
+    load();
+  }, [])
+
+  const handleGetValue = async (item) => {
+    setLoading(true);
+    try {
+      const value = await getCacheKeyedValue(item.key);
+      item.value = value;
+      setCachedItems([...cachedItems]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+  const handleDeleteKey = async (key) => {
+    setLoading(true);
+    try {
+      await deleteCacheKey(key);
+      await load();
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const columns = [
+    {
+      title: 'Key name',
+      dataIndex: 'key',
+      key: 'key',
+    },
+    {
+      title: 'Time',
+      dataIndex: 'value',
+      key: 'value',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'value',
+      render: value => <TimeAgo value={value} direction="horizontal" showTime={false} />
+    },
+    {
+      fixed: 'right',
+      width: 80,
+      render: item => {
+        return <Space>
+          <Button disabled={loading} shape='circle' onClick={() => handleGetValue(item)} icon={<SyncOutlined />}></Button>
+          <Button shape='circle' danger disabled={loading} onClick={() => handleDeleteKey(item.key)} icon={<CloseOutlined />}></Button>
+        </Space>
+      }
+    },
+  ]
 
   const handlePutCallRatioUploadComplete = () => {
     notify.info('Successfully uploaded put call ratio csv file', <>
@@ -141,12 +208,19 @@ GOOG,09/18/21,0.85`}
         bordered={false}
         title="Flush Cache"
         extra={<LongRunningActionButton
+          danger
           operationKey="flush-cache"
-          buttonText="Flush Cache"
+          buttonText="Flush Cache All"
           type="button"
           onOk={flushCache}
         />}>
-        Flush all from the Redis cache.
+        <Paragraph>Manage cached locks. Be albe to flush all of them from the Redis cache.</Paragraph>
+        {cachedItems?.length > 0 && <Table
+          loading={loading}
+          size="small"
+          columns={columns}
+          dataSource={cachedItems}
+        />}
       </Card>
     </Space>
   );

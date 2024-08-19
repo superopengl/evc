@@ -20,10 +20,11 @@ start(JOB_NAME, async () => {
   const JOB_IN_PROGRESS = `JOBKEY_${JOB_NAME}`;
   const running = await redisCache.get(JOB_IN_PROGRESS);
   if (running) {
-    console.log('Other job is still running, skip this run');
+    console.log('Other process is still running, skip this run');
     return;
   }
-  await redisCache.setex(JOB_IN_PROGRESS, 60 * 60 * 2, true); // Lock for 120 minutes
+  // await redisCache.setex(JOB_IN_PROGRESS, 60 * 60 * 2, true); // Lock for 120 minutes
+  await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
 
   try {
     const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
@@ -41,6 +42,8 @@ start(JOB_NAME, async () => {
     let count = 0;
     const failed = [];
     for await (const symbol of symbols) {
+      await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
+
       try {
         const startTime = moment();
         await syncStockEps(symbol);

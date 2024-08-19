@@ -56,6 +56,14 @@ class RedisCache {
     });
   }
 
+  async keys(pattern: string = '*') {
+    return new Promise((res, rej) => {
+      this.redisCache.keys(pattern, (err, result) => {
+        return err ? rej(err) : res(result);
+      });
+    });
+  }
+
   async flush() {
     return new Promise((res, rej) => {
       this.redisCache.flushall((err, reply) => {

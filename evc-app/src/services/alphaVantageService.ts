@@ -2,6 +2,7 @@ import queryString from 'query-string';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import parse from 'csv-parse/lib/sync';
+import moment from 'moment';
 
 // const alphaApi = alphavantage({key: process.env.ALPHAVANTAGE_API_KEY});
 
@@ -16,6 +17,55 @@ export async function getEarnings(symbol: string, howManyQuarters = 4) {
     .take(howManyQuarters)
     .value();
   return { earnings, rawResponse };
+}
+
+export async function getGlobalQuotePrice(symbol: string) {
+  const rawResponse = await requestAlphaVantageApi({
+    function: 'GLOBAL_QUOTE',
+    symbol,
+  });
+  const quote = rawResponse?.['Global Quote'] || {};
+
+  return {
+    open: +quote['02. open'],
+    latestPrice: +quote['05. price'],
+    change: +quote['09. change'],
+    changePercent: +(quote['10. change percent'].replace('%', '')) / 100,
+    latestUpdate: moment(quote['07. latest trading day'], 'YYYY-MM-DD').toDate(),
+  };
+}
+
+export async function getPostMarketPrice(symbol: string, inMarketInfo: { open: number, latestPrice: number }) {
+  const rawResponse = await requestAlphaVantageApi({
+    function: 'TIME_SERIES_INTRADAY',
+    symbol,
+    outputsize: 'compact',
+    extended_hours: true,
+    adjusted: true,
+    interval: '1min'
+  });
+  const timeSeries = rawResponse?.['Time Series (1min)'] || [];
+  const keys = Object.keys(timeSeries);
+  const latestTimeKey = keys[0];
+  // const firstTimeKey = keys[keys.length - 1];
+
+  const parseItem = (timeItem) => {
+    return {
+      open: +timeItem['1. open'],
+      high: +timeItem['2. high'],
+      low: +timeItem['3. low'],
+      close: +timeItem['4. close'],
+    }
+  }
+
+  const last = parseItem(timeSeries[latestTimeKey])
+
+  return {
+    extendedPrice: last.close,
+    extendedChange: last.close - inMarketInfo.latestPrice,
+    extendedChangePercent: (last.close - inMarketInfo.latestPrice) / inMarketInfo.latestPrice,
+    extendedPriceTime: moment(latestTimeKey, 'YYYY-MM-DD HH:mm:ss').toDate(),
+  };
 }
 
 export async function getHistoricalClose(symbol: string, days = 1) {

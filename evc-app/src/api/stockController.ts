@@ -35,7 +35,7 @@ import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import moment from 'moment-timezone';
 import _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
-import { getCompanyName, getNews, getTopGainersLosers } from '../services/alphaVantageService';
+import { getCompanyName, getGlobalQuotePrice, getPostMarketPrice, getNews, getTopGainersLosers } from '../services/alphaVantageService';
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
@@ -561,7 +561,9 @@ async function updateStockLastPrice(info: StockLastPriceInfo) {
 }
 
 const getAndFeedStockQuote = async (symbol) => {
-  const quote = await getQuote(symbol);
+  // const quote = await getQuote(symbol);
+  const quote = await getGlobalQuotePrice(symbol);
+  const extendedQuote = await getPostMarketPrice(symbol, quote);
   if (quote) {
     await updateStockLastPrice({
       symbol,
@@ -571,7 +573,7 @@ const getAndFeedStockQuote = async (symbol) => {
       time: quote.latestUpdate
     });
   }
-  return quote;
+  return { ...quote, ...extendedQuote };
 };
 
 

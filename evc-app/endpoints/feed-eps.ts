@@ -10,10 +10,12 @@ import { handleWatchlistSupportResistanceChangedNotification } from './handleWat
 import { refreshMaterializedView } from "../src/refreshMaterializedView";
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
+import { v4 as uuidv4 } from 'uuid';
 
 const JOB_NAME = 'feed-eps';
 
 const MAX_CALL_TIMES_PER_MINUTE = 300; // 300 calls/min
+const eventId = uuidv4();
 
 
 start(JOB_NAME, async () => {
@@ -65,11 +67,11 @@ start(JOB_NAME, async () => {
       console.error(err);
     }
 
-    await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+    await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView, { eventId });
 
     await handleWatchlistSupportResistanceChangedNotification();
     await handleWatchlistFairValueChangedNotification();
   } finally {
     await redisCache.del(JOB_IN_PROGRESS);
   }
-});
+}, { eventId });

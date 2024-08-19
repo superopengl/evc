@@ -15,10 +15,11 @@ import { handleWatchlistSupportResistanceChangedNotification } from './handleWat
 import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
 import { StockDailyClose } from '../src/entity/StockDailyClose';
 import { redisCache } from '../src/services/redisCache';
+import { v4 as uuidv4 } from 'uuid';
 
 const JOB_NAME = 'feed-historical-close';
 const MAX_CALL_TIMES_PER_MINUTE = 50;
-
+const eventId = uuidv4();
 
 async function scrubSupports() {
 
@@ -152,7 +153,7 @@ start(JOB_NAME, async () => {
     console.log(`Scrubing resistance`)
     await scrubResistances();
 
-    await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView);
+    await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView, { eventId });
 
     await handleWatchlistSupportResistanceChangedNotification();
     await handleWatchlistFairValueChangedNotification();
@@ -163,5 +164,5 @@ start(JOB_NAME, async () => {
   } finally {
     await redisCache.del(JOB_IN_PROGRESS);
   }
-});
+}, { eventId });
 

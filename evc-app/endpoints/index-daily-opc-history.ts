@@ -46,18 +46,18 @@ start(JOB_NAME, async () => {
 
   const optionPutCallDef = await getRepository(OptionPutCallAllDefInformation)
     .createQueryBuilder()
-    .select(['symbol', '"apiSymbol"'])
-    .distinct()
+    .select(['symbol', '"apiSymbol"', 'type'])
     .execute();
 
   for (const entity of optionPutCallDef) {
     counter++;
 
-    const { symbol, apiSymbol } = entity;
+    const { symbol, apiSymbol, type } = entity;
     const limit = await getDataLimit(symbol);
+    const logLabel = `${entity.symbol}${type ? ' of ' + type : ''}`;
 
     if (limit > 0) {
-      console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Grabing ${entity.symbol} option hisotry from Barchart (${limit} days) ...`);
+      console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Grabing ${logLabel} option history from Barchart (${limit} days) ...`);
       const sleepTime = randomNumber(1000, 5000);
       console.log(`Sleeping for ${sleepTime} ms...`);
       await sleep(sleepTime);
@@ -72,9 +72,9 @@ start(JOB_NAME, async () => {
         .orIgnore()
         .execute();
 
-      console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${entity.symbol}.`);
+      console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${logLabel}.`);
     } else {
-      console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Skip for ${entity.symbol} option hisotry because it has been done`);
+      console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Skip for ${logLabel} option history because it has been done`);
     }
   }
 

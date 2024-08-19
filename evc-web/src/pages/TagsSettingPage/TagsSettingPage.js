@@ -10,9 +10,9 @@ const { Title } = Typography;
 const span = {
   xs: 24,
   sm: 24,
-  md: 12,
-  lg: 12,
-  xl: 12,
+  md: 24,
+  lg: 24,
+  xl: 24,
   xxl: 12
 };
 

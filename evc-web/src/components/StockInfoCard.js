@@ -239,7 +239,7 @@ const StockInfoCard = (props) => {
     className={className}
     bordered={false}
     type="inner"
-    title={title ?? <StockName value={stock} />}
+    title={title ?? <StockName value={stock} showsLogo={true} />}
     extra={isMember && <Space>
       {showTags && <StockCustomTagButton value={editingTag} onChange={toggleEditCustomTags} />}
       {showBell && <StockNoticeButton value={belled} onChange={handleToggleBell} />}

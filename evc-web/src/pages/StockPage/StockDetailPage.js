@@ -154,7 +154,7 @@ const StockDetailPage = (props) => {
           ghost={false}
           onBack={() => props.history.goBack()}
           title={<Space size="middle">
-            <StockName value={stock} />
+            <StockName value={stock} showsLogo={true} logoSize={36} />
             {stock?.isOver ? <Tag color="yellow">over valued</Tag> : stock?.isUnder ? <Tag color="cyan">under valued</Tag> : null}
 
           </Space>}
@@ -222,11 +222,11 @@ const StockDetailPage = (props) => {
                   return Promise.reject('Not a valid number');
                 },
               }]}>
-              <Input style={{ textAlign: 'left'}} placeholder="> 0 but not 1" />
+              <Input style={{ textAlign: 'left' }} placeholder="> 0 but not 1" />
             </Form.Item>
             <Paragraph type="secondary">
               closePrice &times; factor = newPrice
-              <br/>
+              <br />
               EPS &times; factor = newEPS
             </Paragraph>
 

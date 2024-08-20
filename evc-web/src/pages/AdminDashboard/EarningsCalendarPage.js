@@ -170,10 +170,10 @@ const EarningsCalendarPage = props => {
               <Text strong>{item.symbol}</Text>
               {showLogo ? <Image src={getStockLogoUrl(item.symbol)}
                 fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC"
-                width={32}
-                height="auto"
+                height={32}
+                width="auto"
                 preview={false}
-                style={{ width: 32, marginLeft: 4 }} /> : <Text type="secondary"><small>{item.company}</small></Text>}
+                style={{ marginLeft: 4 }} /> : <Text type="secondary"><small>{item.company}</small></Text>}
             </div>
           </Card>
         </SymbolLogo>

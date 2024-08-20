@@ -44,7 +44,11 @@ export async function getPostMarketPrice(symbol: string, inMarketInfo: { open: n
     adjusted: true,
     interval: '1min'
   });
-  const timeSeries = rawResponse?.['Time Series (1min)'] || [];
+  const timeSeries = rawResponse?.['Time Series (1min)'];
+  if (!timeSeries) {
+    return null;
+  }
+
   const keys = Object.keys(timeSeries);
   const latestTimeKey = keys[0];
   // const firstTimeKey = keys[keys.length - 1];

@@ -33,20 +33,20 @@ export const MemberOnlyPanel = (props) => {
   const context = React.useContext(GlobalContext)
   const isGuest = context.role === 'guest';
 
-return <StyledSpace>
-  
-  <Text><LockFilled /> {props.message}</Text>
-  {isGuest && <Link to="/signup">
-    <Button type="link">
-      <FormattedMessage id="text.clickToSignUp" />
+  return <StyledSpace>
+    <Text><LockFilled /> {props.message}</Text>
+    {isGuest && <Link to="/signup">
+      <Button type="link">
+        <FormattedMessage id="text.clickToSignUp" />
       </Button>
-  </Link>}
-  {!isGuest && <Link to="/settings/subscription">
-    <Button type="link">
-      <FormattedMessage id="text.clickToUpgrade" />
+    </Link>}
+    {!isGuest && <Link to="/account">
+      <Button type="link">
+        <FormattedMessage id="text.clickToUpgrade" />
       </Button>
-  </Link>}
-</StyledSpace>}
+    </Link>}
+  </StyledSpace>
+}
 
 MemberOnlyPanel.propTypes = {
   message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),

@@ -2,7 +2,7 @@ import queryString from 'query-string';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import parse from 'csv-parse/lib/sync';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 // const alphaApi = alphavantage({key: process.env.ALPHAVANTAGE_API_KEY});
 

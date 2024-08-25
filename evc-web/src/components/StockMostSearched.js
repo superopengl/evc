@@ -19,8 +19,6 @@ const StyledTable = styled(Table)`
 
 .ant-table-cell {
   background-color: white !important;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
 }
 
 .ant-table-thead {
@@ -50,15 +48,6 @@ const StyledTable = styled(Table)`
   }
 }
 `;
-
-const CellSpace = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  width: 100%;
-  text-align: right;
-`;
-
 
 const StyledSymbolTextLink = styled(TextLink)`
 &.ant-typography {

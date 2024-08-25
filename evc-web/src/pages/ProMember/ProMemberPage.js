@@ -711,7 +711,7 @@ const ProMemberPage = (props) => {
                         <Space size="small" direction="vertical">
                           <div>
                             <Text style={{ fontSize: 30 }} strong>133.67 <span className="ant-typography ant-typography-success"><small>+0.720 (+0.536%)</small></span></Text>
-                            <div><Text type="secondary"><small>Price At: 5:59 am EST</small></Text></div>
+                            <div><Text type="secondary"><small>Price At: 5 Dec 2023 EST</small></Text></div>
                           </div>
 
                           <div>

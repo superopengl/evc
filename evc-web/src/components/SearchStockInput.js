@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Select, Button, Typography } from 'antd';
+import { Select, Button, Typography, Space } from 'antd';
 import { listStock, submitStockPlea, incrementStock } from 'services/stockService';
 import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -11,8 +11,9 @@ import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
 import { from } from 'rxjs';
 import orderBy from 'lodash/orderBy';
-
-const { Text } = Typography;
+import { MdOpenInNew } from 'react-icons/md';
+import Icon from '@ant-design/icons';
+const { Text, Link: TextLink } = Typography;
 
 export const SearchStockInput = (props) => {
   const { onChange, traceSearch, mode, style, size } = props;
@@ -86,7 +87,12 @@ export const SearchStockInput = (props) => {
 
     return options
       .map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
-        <StockName value={item} />
+        <Space style={{ justifyContent: 'space-between', width: '100%' }}>
+          <StockName value={item} />
+          <TextLink href={`/stock/${item.symbol}`} target='_blank' strong onClick={e => e.stopPropagation()}>
+            <Icon component={() => <MdOpenInNew />} />
+          </TextLink>
+        </Space>
       </Select.Option>)
   }
 
@@ -94,6 +100,7 @@ export const SearchStockInput = (props) => {
     <>
       <Select
         size={size}
+        listHeight={400}
         mode={mode}
         showSearch
         allowClear={true}

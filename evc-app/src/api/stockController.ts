@@ -266,28 +266,28 @@ async function initlizeStocksAndGetSymbolCompanyMap(symbols: string[]): Promise<
     return map;
   }, new Map());
 
-  const newSymbols = _.difference(symbols, symbolCompanyMap.keys);
-  if (!newSymbols.length) {
-    return;
+  const existingSymbols = [...symbolCompanyMap.keys()];
+
+  const newSymbols = _.difference(symbols, existingSymbols);
+  if (newSymbols.length) {
+    const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
+    const tags = stockTag ? [stockTag] : [];
+
+    const newStocks = [];
+    for (const symbol of newSymbols) {
+      const companyName = await getCompanyName(symbol);
+
+      const stock = new Stock();
+      stock.symbol = symbol;
+      stock.company = companyName;
+      stock.tags = tags;
+      newStocks.push(stock);
+
+      symbolCompanyMap.set(symbol, companyName);
+    }
+
+    createAndInitializeStocks(newStocks);
   }
-
-  const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
-  const tags = stockTag ? [stockTag] : [];
-
-  const newStocks = [];
-  for (const symbol of newSymbols) {
-    const companyName = await getCompanyName(symbol);
-
-    const stock = new Stock();
-    stock.symbol = symbol;
-    stock.company = companyName;
-    stock.tags = tags;
-    newStocks.push(stock);
-
-    symbolCompanyMap.set(symbol, companyName);
-  }
-
-  createAndInitializeStocks(newStocks);
 
   return symbolCompanyMap;
 }

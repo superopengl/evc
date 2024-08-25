@@ -155,6 +155,7 @@ const OptionPutCallPanel = (props) => {
       title: 'Ordinal (smallest first)',
       dataIndex: 'ordinal',
       align: 'right',
+      hideOnDetail: true,
       render: (value, record) => <InputNumber
         defaultValue={value}
         placeholder='ordinal'

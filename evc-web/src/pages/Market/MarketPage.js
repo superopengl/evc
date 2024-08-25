@@ -4,8 +4,9 @@ import { Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';
-import { listHotStock, getMarketGainers, getMarketMostActive, getMarketLosers } from 'services/stockService';
-
+import { listHotStock, getMarketMost$ } from 'services/stockService';
+import { timer } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 const Container = styled.div`
   .ant-table-cell {
@@ -23,6 +24,22 @@ const span = {
 };
 
 const MarketPage = props => {
+
+  const [loading, setLoading] = React.useState(true);
+  const [mostData, setMostData] = React.useState({});
+
+  React.useEffect(() => {
+    const sub$ = timer(0, 5 * 60 * 1000).pipe(
+      mergeMap(() => getMarketMost$()),
+    ).subscribe(data => {
+      setMostData(data || {});
+      setLoading(false);
+    });
+
+    return () => sub$.unsubscribe();
+  }, []);
+
+
   const handleSymbolClick = (symbol) => {
     if (symbol) {
       props.history.push(`/stock/${symbol}`);
@@ -37,13 +54,13 @@ const MarketPage = props => {
           <StockMostSearched onFetch={listHotStock} title="Most searched" onSymbolClick={handleSymbolClick} />
         </Col>
         <Col  {...span}>
-          <StockMostPanel onFetch={getMarketMostActive} title="Most actives" onSymbolClick={handleSymbolClick} />
+          <StockMostPanel value={mostData.mostActives} loading={loading} title="Most actives" onSymbolClick={handleSymbolClick} />
         </Col>
         <Col  {...span}>
-          <StockMostPanel onFetch={getMarketGainers} title="Gainers" onSymbolClick={handleSymbolClick} />
+          <StockMostPanel value={mostData.gainers} loading={loading} title="Gainers" onSymbolClick={handleSymbolClick} />
         </Col>
         <Col  {...span}>
-          <StockMostPanel onFetch={getMarketLosers} title="Losers" onSymbolClick={handleSymbolClick} />
+          <StockMostPanel value={mostData.losers} loading={loading} title="Losers" onSymbolClick={handleSymbolClick} />
         </Col>
       </Row>
 

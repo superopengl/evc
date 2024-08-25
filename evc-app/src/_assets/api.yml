@@ -812,24 +812,12 @@ paths:
       responses:
         200:
           description: OK
-  /stock/data/mostactive:
+  /stock/data/most:
     get:
-      operationId: getMostActive
+      operationId: getMartketMost
       responses:
         200:
-          description: OK
-  /stock/data/gainers:
-    get:
-      operationId: getGainers
-      responses:
-        200:
-          description: OK
-  /stock/data/losers:
-    get:
-      operationId: getLosers
-      responses:
-        200:
-          description: OK
+          description: OK          
   /stock/data/earnings_calendar:
     get:
       operationId: getEarningsCalendar

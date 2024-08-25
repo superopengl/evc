@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Row, Col } from 'antd';
-import { listHotStock, getMarketGainers, getMarketMostActive, getMarketLosers } from 'services/stockService';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';
 import PropTypes from 'prop-types';
-
+import { listHotStock, getMarketMost$ } from 'services/stockService';
+import { timer } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 const Container = styled.div`
 justify-content: center;
@@ -39,23 +40,37 @@ const span = {
 
 const HomeMarketArea = props => {
 
-  const {onSymbolClick} = props;
+  const { onSymbolClick } = props;
+
+  const [loading, setLoading] = React.useState(true);
+  const [mostData, setMostData] = React.useState({});
+
+  React.useEffect(() => {
+    const sub$ = timer(0, 5 * 60 * 1000).pipe(
+      mergeMap(() => getMarketMost$()),
+    ).subscribe(data => {
+      setMostData(data || {});
+      setLoading(false);
+    });
+
+    return () => sub$.unsubscribe();
+  }, []);
 
   return (
     <Container>
       <InnerContainer>
         <Row gutter={[40, 40]}>
           <Col {...span}>
-            <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{color: '#57BB60', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{ color: '#57BB60', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col {...span}>
-            <StockMostPanel onFetch={getMarketMostActive} title="Most actives" titleStyle={{color: '#7DD487', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostPanel value={mostData.mostActives} loading={loading} titleStyle={{ color: '#7DD487', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col {...span}>
-            <StockMostPanel onFetch={getMarketGainers} title="Gainers" titleStyle={{color: '#55B0D4', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostPanel value={mostData.gainers} loading={loading} title="Gainers" titleStyle={{ color: '#55B0D4', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col {...span}>
-            <StockMostPanel onFetch={getMarketLosers} title="Losers" titleStyle={{color: '#89DFF1', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostPanel value={mostData.losers} loading={loading} title="Losers" titleStyle={{ color: '#89DFF1', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
         </Row>
       </InnerContainer>

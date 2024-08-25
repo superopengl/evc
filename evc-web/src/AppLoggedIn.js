@@ -46,6 +46,7 @@ const ChangePasswordModal = loadable(() => import('components/ChangePasswordModa
 const OptionPutCallPage = loadable(() => import('pages/AdminDashboard/OptionPutCallPage'));
 const UnusualOptionsActivityPage = loadable(() => import('pages/AdminDashboard/UnusualOptionsActivityPage'));
 const DataSourcePage = loadable(() => import('pages/AdminDashboard/DataSourcePage'));
+const TaskExecutionPage = loadable(() => import('pages/AdminDashboard/TaskExecutionPage'));
 const EarningsCalendarPage = loadable(() => import('pages/AdminDashboard/EarningsCalendarPage'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 
@@ -225,6 +226,10 @@ const AppLoggedIn = props => {
           path: '/discount_policy',
           name: <FormattedMessage id="menu.globalDiscountPolicy" />,
         },
+        // {
+        //   path: '/tasks',
+        //   name: 'Task Execution',
+        // },
       ]
     },
     // {
@@ -393,6 +398,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/commission_policy" component={ReferralGlobalPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/discount_policy" component={ReferreeDiscountPolicyListPage} />
       <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
+      <RoleRoute visible={isAdmin} exact path="/tasks" component={TaskExecutionPage} />
       <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />
       <RoleRoute visible={isAdmin} exact path="/comission" component={AdminCommissionWithdrawalListPage} />
       <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />

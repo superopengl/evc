@@ -20,6 +20,7 @@ import { Role } from '../types/Role';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 import { OptionPutCallStockOrdinal } from '../entity/OptionPutCallStockOrdinal';
 import { OptionPutCallHistory } from '../entity/OptionPutCallHistory';
+import { DataLog } from '../entity/DataLog';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
@@ -393,5 +394,28 @@ export const getCacheValue = handlerWrapper(async (req, res) => {
   res.json(value);
 });
 
+export const getTaskLogChart = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
 
+  const data = await getManager()
+    .createQueryBuilder()
+    .from(DataLog, 's')
+    .innerJoin(DataLog, 'e', 's."eventId" = e."eventId"')
+    .where(`s.level = 'started'`)
+    .andWhere(`e.level != 'started'`)
+    .andWhere(`s.by = 'task'`)
+    .andWhere(`s."createdAt" >= CURRENT_DATE - INTERVAL '30 days'`)
+    .orderBy('s.id', 'DESC')
+    .select([
+      `s.id as "id"`,
+      `s."createdAt" as "startedAt"`,
+      `e."createdAt" as "endedAt"`,
+      `s."eventType" as "taskName"`,
+      `e."level" as "result"`,
+      `e."data" as error`,
+    ])
+    .execute();
+
+  res.json(data);
+});
 

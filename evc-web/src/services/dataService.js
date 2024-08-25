@@ -1,4 +1,4 @@
-import { httpDelete, httpGet, httpPost } from './http';
+import { httpDelete, httpGet, httpPost, httpGet$ } from './http';
 
 export async function refreshMaterializedViews() {
   return httpPost(`admin/refresh_mv`);
@@ -67,5 +67,8 @@ export async function getCacheKeyedValue(key) {
   return httpGet(`/admin/cache_keys/${key}`);
 }
 
+export function getTaskLogChart$() {
+  return httpGet$(`/admin/task_log_chart`);
+}
 
 

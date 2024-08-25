@@ -150,7 +150,7 @@ const StockDisplayPanel = (props) => {
         </Row>}
         <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<FormattedMessage id="text.news" />} bodyStyle={{ height: 700 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.news" />} bodyStyle={{ maxHeight: 700 }}>
               <StockNewsPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>

@@ -18,7 +18,6 @@ p {
 
 const SubmitButton = styled(Button)`
 border-width: 2px;
-// border-radius: 20px;
 
 &:hover {
   border-color: white;
@@ -74,7 +73,7 @@ const ContactForm = props => {
         <Form.Item>
           <SubmitButton block type="primary" htmlType="submit" disabled={loading}>Submit</SubmitButton>
         </Form.Item>
-          <Button block type="link" onClick={handleCancel} disabled={loading}>Cancel</Button>
+        <Button block type="link" onClick={handleCancel} disabled={loading}>Cancel</Button>
       </Form>
     </Container>
   );

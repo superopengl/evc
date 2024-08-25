@@ -9,7 +9,6 @@ const ContainerStyled = styled.div`
   width: 100%;
   // padding: 1rem;
   // background-color: rgb(240, 242, 245);
-  // border-radius: 4px;
   // border: 1px solid rgba(0,0,0,0.05);
   color: rgba(0,0,0,0.65);
 `;
@@ -19,7 +18,7 @@ const RawHtmlDisplay = (props) => {
 
   return (
     <ContainerStyled
-    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.value) }} 
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.value) }}
     />
   );
 };

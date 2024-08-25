@@ -25,7 +25,7 @@ const NewsImage = styled(Image)`
 width: 200px;
 border: 1px solid #f0f0f0;
 padding: 4px;
-border-radius: 4px;
+border-radius: 6px;
 cursor: pointer;
 `;
 

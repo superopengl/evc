@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { getStockQuote } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { filter, debounceTime } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";
 import isNil from 'lodash/isNil';

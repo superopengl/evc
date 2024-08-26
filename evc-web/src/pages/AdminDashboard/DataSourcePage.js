@@ -87,7 +87,7 @@ const DataSourcePage = () => {
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
 
-      <Card
+      {false && <Card
         bordered={false}
         title="Support / Resistance"
         extra={
@@ -117,7 +117,7 @@ AAPL,120,150-160
 GOOG,1000-1100,2000
 ,2100-2200,2200-2300`}
         </small> </pre></Text>
-      </Card>
+      </Card>}
 
       <Card
         bordered={false}

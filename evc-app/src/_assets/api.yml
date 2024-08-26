@@ -1314,7 +1314,7 @@ paths:
           description: OK
   /admin/cache_keys/:key:
     get:
-      operationId: getCacheValue
+      operationId: getCacheKeyTTL
       parameters:
         - name: key
           in: path

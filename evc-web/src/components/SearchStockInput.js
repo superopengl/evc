@@ -79,7 +79,25 @@ export const SearchStockInput = (props) => {
     let options = [...list];
     if (text) {
       options = options.map(item => {
-        item.ordinal = item.symbol === text ? -9999 : item.symbol.indexOf(text);
+        const symbol = item.symbol.toUpperCase();
+        const company = item.company?.toUpperCase();
+
+        let ordinal = -1;
+        if (symbol === text || company === text) {
+          ordinal = Number.MIN_SAFE_INTEGER;
+        } else {
+          const symbolLeftMatchIndex = symbol.indexOf(text);
+          const compnayLeftMatchIndex = company?.indexOf(text) ?? -1;
+
+          const adjLeftIndex = symbolLeftMatchIndex * compnayLeftMatchIndex;
+          if (adjLeftIndex <= 0) {
+            ordinal = Math.abs(adjLeftIndex);
+          } else {
+            ordinal = Math.min(symbolLeftMatchIndex, compnayLeftMatchIndex)
+          }
+        }
+
+        item.ordinal = ordinal;
         return item;
       }).filter(x => x.ordinal !== -1)
       options = orderBy(options, ['ordinal']);
@@ -88,7 +106,7 @@ export const SearchStockInput = (props) => {
     return options
       .map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         <Space style={{ justifyContent: 'space-between', width: '100%' }}>
-          <StockName value={item} />
+          <StockName value={item} highlightenText={text} />
           {showsLink && <TextLink href={`/stock/${item.symbol}`} target='_blank' strong onClick={e => e.stopPropagation()}>
             <Icon component={() => <MdOpenInNew />} />
           </TextLink>}

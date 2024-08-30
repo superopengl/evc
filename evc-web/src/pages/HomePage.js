@@ -124,6 +124,11 @@ const HomePage = (props) => {
       name: <FormattedMessage id="menu.stockRadar" />,
     },
     {
+      key: '7',
+      path: '/#option',
+      name: <FormattedMessage id="menu.optionPutCall" />,
+    },
+    {
       key: '2',
       path: '/#uoa',
       name: <FormattedMessage id="menu.unusualOptionsActivity" />,
@@ -206,6 +211,9 @@ const HomePage = (props) => {
     </section>
     <section id="stock-radar">
       <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
+    </section>
+    <section id="option">
+      <HomeUnusualOptionActivityArea />
     </section>
     <section id="uoa">
       <HomeUnusualOptionActivityArea />

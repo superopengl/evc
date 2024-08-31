@@ -7,14 +7,23 @@ import { Stock } from './Stock';
 export class StockDailyPutCallRatio {
   @PrimaryColumn()
   symbol: string;
-  
+
   @PrimaryColumn('date')
   date: string;
 
   @ManyToOne(() => Stock)
   @JoinColumn({ name: 'symbol', referencedColumnName: 'symbol' })
   stock: Stock;
-  
+
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   putCallRatio: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  beta: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  peRatio: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  pegRatio: number;
 }

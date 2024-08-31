@@ -1,7 +1,8 @@
 import { getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { isUSMarketOpen, singleBatchRequest } from '../src/services/iexService';
+import { isUSMarketOpen } from '../src/services/iexService';
+import { batchRequest } from '../src/services/iexCoreService';
 import { StockAdvancedStatsInfo, syncManyStockPutCallRatio } from '../src/services/stockPutCallRatioService';
 import * as moment from 'moment';
 import { refreshMaterializedView } from "../src/refreshMaterializedView";
@@ -9,16 +10,18 @@ import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
 import { StockPutCallRatio90 } from '../src/entity/views/StockPutCallRatio90';
 
-async function udpateDatabase(iexBatchResponse) {
+async function udpateDatabase(symbolValueMap) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
-  for (const [symbol, value] of Object.entries(iexBatchResponse)) {
+  for (const [symbol, value] of symbolValueMap) {
     // advanced-stats
-    const advancedStats = value['advanced-stats'];
     advancedStatsInfo.push({
       symbol,
-      putCallRatio: advancedStats.putCallRatio,
+      putCallRatio: value.putCallRatio,
+      beta: value.bata,
+      peRatio: value.peRatio,
+      pegRatio: value.pegRatio,
       date: moment().format('YYYY-MM-DD'),
-      rawResponse: advancedStats
+      rawResponse: value
     });
   }
 
@@ -27,10 +30,8 @@ async function udpateDatabase(iexBatchResponse) {
 
 
 async function syncIexForSymbols(symbols: string[]) {
-  const types = ['advanced-stats'];
-  const params = { last: 1 };
-  const resp = await singleBatchRequest(symbols, types, params);
-  await udpateDatabase(resp);
+  const map = await batchRequest(symbols, 'advanced_stats', symbols.length);
+  await udpateDatabase(map);
 }
 
 const JOB_NAME = 'daily-putCallRatio';

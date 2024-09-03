@@ -18,6 +18,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import { ContactWidget } from 'components/ContactWidget';
 import { scrollToElement } from '../util/scrollToElement';
 import { trackGuestUserVisit } from '../util/trackGuestUserVisit';
+import HomeOptionPutCallArea from 'components/homeAreas/HomeOptionPutCallArea';
 
 smoothscroll.polyfill();
 
@@ -213,7 +214,7 @@ const HomePage = (props) => {
       <HomeStockRadarArea onSymbolClick={handleStockListSymbolClick} />
     </section>
     <section id="option">
-      <HomeUnusualOptionActivityArea />
+      <HomeOptionPutCallArea />
     </section>
     <section id="uoa">
       <HomeUnusualOptionActivityArea />

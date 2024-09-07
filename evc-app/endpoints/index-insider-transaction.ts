@@ -99,7 +99,7 @@ start(JOB_NAME, async () => {
     await syncIexForSymbols(batchSymbols);
   }
 
-  // await handleWatchlistInsiderTransactionNotification();
+  await handleWatchlistInsiderTransactionNotification();
 
   // await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView(StockPutCallRatio90));
 });

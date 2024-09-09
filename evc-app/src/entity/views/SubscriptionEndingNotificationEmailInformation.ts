@@ -15,7 +15,7 @@ import { EmailTemplateType } from '../../types/EmailTemplateType';
     .from(UserAliveSubscriptionSummary, 's')
     .leftJoin(q => q.from(EmailSentOutTask, 'm')
       .where(`m.template IN ('${EmailTemplateType.SubscriptionExpiring}', '${EmailTemplateType.SubscriptionAutoRenewing}')`)
-      .andWhere(`CURRENT_DATE - m."createdAt" <= interval '30 days'`),
+      .andWhere(`CURRENT_DATE - m."sentAt" <= interval '30 days'`),
       'm', `m.vars->>'subscriptionId' = s."currentSubscriptionId"::text`)
     // .where(`s."end" - CURRENT_DATE = 7`)
     // .andWhere(`m."sentAt" IS NULL`)

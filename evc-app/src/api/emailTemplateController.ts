@@ -7,7 +7,6 @@ import { redisCache } from '../services/redisCache';
 import { Translation } from '../entity/Translation';
 import { Locale } from '../types/Locale';
 import { EmailTemplate } from '../entity/EmailTemplate';
-import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const listEmailTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');

@@ -3,8 +3,6 @@ import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
-import { redisCache } from '../services/redisCache';
-import { Translation } from '../entity/Translation';
 import { Locale } from '../types/Locale';
 import { EmailTemplate } from '../entity/EmailTemplate';
 

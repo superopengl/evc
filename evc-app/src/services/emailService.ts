@@ -6,7 +6,7 @@ import * as nodemailer from 'nodemailer';
 import { logError } from '../utils/logger';
 import { EmailRequest } from '../types/EmailRequest';
 import { Locale } from '../types/Locale';
-import { getRepository } from 'typeorm';
+import { getRepository, EntityManager, getManager } from 'typeorm';
 import { EmailTemplate } from '../entity/EmailTemplate';
 import * as handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
@@ -16,6 +16,7 @@ import { EmailTemplateType } from '../types/EmailTemplateType';
 import { User } from '../entity/User';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { EmailSentOutTask } from '../entity/EmailSentOutTask';
+import { v4 as uuidv4 } from 'uuid';
 
 let emailTransporter = null;
 
@@ -111,18 +112,30 @@ export async function sendEmail(req: EmailRequest) {
 }
 
 export async function enqueueEmail(req: EmailRequest) {
-  const { to, template } = req;
-  assert(to, 400, 'Email recipient is not specified');
-  assert(template, 400, 'Email template is not specified');
+  await enqueueEmailInBulk(getManager(), [req]);
+}
 
-  const task = new EmailSentOutTask();
-  task.from = req.from || await getConfigValue('email.sender.noreply');
-  task.to = req.to;
-  task.template = req.template;
-  task.vars = req.vars;
-  task.attachments = req.attachments;
-  task.shouldBcc = req.shouldBcc;
-  await getRepository(EmailSentOutTask).insert(task);
+export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailRequest[]) {
+  const defaultFrom = await getConfigValue('email.sender.noreply');
+  const entities: EmailSentOutTask[] = [];
+  for (const req of emailRequests) {
+    const { to, template } = req;
+    assert(to, 400, 'Email recipient is not specified');
+    assert(template, 400, 'Email template is not specified');
+
+    const emailTask = new EmailSentOutTask();
+    emailTask.id = uuidv4();
+    emailTask.from = req.from || defaultFrom
+    emailTask.to = req.to;
+    emailTask.template = req.template;
+    emailTask.vars = req.vars;
+    emailTask.attachments = req.attachments;
+    emailTask.shouldBcc = req.shouldBcc;
+  }
+
+  if (entities.length) {
+    await m.save(entities);
+  }
 }
 
 export async function enqueueEmailToUserId(userId: string, template: EmailTemplateType, vars: object) {

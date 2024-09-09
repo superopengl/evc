@@ -3,23 +3,14 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateCol
 
 @Entity()
 export class EmailSentOutTask {
-  static scope = {
-    'default': {
-      sentAt: IsNull()
-    },
-    'all': {
-      sentAt: Not(IsNull())
-    }
-  };
-
   @PrimaryGeneratedColumn()
   id: number;
 
   @CreateDateColumn()
-  createAt: Date;
+  createdAt: Date;
 
-  @DeleteDateColumn()
   @Index()
+  @Column({ nullable: true })
   sentAt: Date;
 
   @Column()
@@ -40,6 +31,6 @@ export class EmailSentOutTask {
   @Column({ default: true })
   shouldBcc: boolean;
 
-  @Column('int', {default: 0})
+  @Column('int', { default: 0 })
   failedCount: number;
 }

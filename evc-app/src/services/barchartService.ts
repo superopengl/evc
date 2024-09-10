@@ -13,7 +13,32 @@ function getRequestCookies(resp) {
     xsrfToken: cookies['XSRF-TOKEN']?.value,
     laravelToken: cookies['laravel_token']?.value,
     laravelSession: cookies['laravel_session']?.value,
+    cookies: cookies,
   }
+}
+
+async function getOptionHistory(symbol, limit, tokens) {
+  const url = `https://www.barchart.com/proxies/core-api/v1/options-historical/get?symbol=${encodeURIComponent(symbol)}&fields=date%2CputCallVolumeRatio%2CtotalVolume%2CputCallOpenInterestRatio%2CtotalOpenInterest&orderBy=date&orderDir=desc&limit=${limit}&&raw=0`;
+  const { xsrfToken, cookie } = tokens;
+  const options = {
+    method: 'GET',
+    headers: {
+      'x-xsrf-token': xsrfToken,
+      cookie,
+    }
+  }
+
+  console.debug(`barchart request option-history for ${symbol}`.bgMagenta.white, url.magenta);
+
+  const resp = await fetch(url, options);
+  if (!/^2/.test(resp.status)) {
+    // 429 Too Many Requests
+    // 404 Sandbox doesn't return data
+    throw new Error(`Failed response for option-history from BarChart (${resp.status}: ${await resp.text()})`);
+  }
+  const respBody = await resp.json();
+  const { count, total, data } = respBody;
+  return { count, total, data };
 }
 
 async function getBarChartAccessByLogin(email, password) {

@@ -1,17 +1,16 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
-import { StockDailyPutCallRatio } from '../StockDailyPutCallRatio';
-
+import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
 
 @ViewEntity({
   materialized: true,
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(StockDailyPutCallRatio, 'd')
+    .from(StockDailyAdvancedStat, 'd')
     .leftJoin(q => q
       .from(q => q
-        .from(q => q.from(StockDailyPutCallRatio, 'p')
+        .from(q => q.from(StockDailyAdvancedStat, 'p')
           .innerJoin(q => q
-            .from(StockDailyPutCallRatio, 'x'), 'x', 'x.symbol = p.symbol')
+            .from(StockDailyAdvancedStat, 'x'), 'x', 'x.symbol = p.symbol')
           .where('x.date <= p.date')
           .select([
             'p.symbol as symbol',
@@ -28,13 +27,13 @@ import { StockDailyPutCallRatio } from '../StockDailyPutCallRatio';
         .where('rank <= 90')
         .groupBy('symbol, date')
         , 'x')
-      , 'avg', 'd.symbol = avg.symbol AND d.date = avg.date')  
-      .select([
-        'd.symbol as symbol',
-        'd.date as date',
-        'd."putCallRatio" as "putCallRatio"',
-        'avg."putCallRatioAvg90" as "putCallRatioAvg90"'
-      ])
+      , 'avg', 'd.symbol = avg.symbol AND d.date = avg.date')
+    .select([
+      'd.symbol as symbol',
+      'd.date as date',
+      'd."putCallRatio" as "putCallRatio"',
+      'avg."putCallRatioAvg90" as "putCallRatioAvg90"'
+    ])
 })
 export class StockPutCallRatio90 {
   @ViewColumn()

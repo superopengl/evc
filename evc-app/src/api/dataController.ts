@@ -13,11 +13,11 @@ import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock
 import { UnusualOptionActivityEtfs } from '../entity/UnusualOptionActivityEtfs';
 import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex';
 import { searchUnusualOptionsActivity } from '../utils/searchUnusualOptionsActivity';
-import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 import { getUtcNow } from '../utils/getUtcNow';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Role } from '../types/Role';
+import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
@@ -193,8 +193,8 @@ export const uploadPutCallRatioCsv = handleCsvUpload(
       await m
         .createQueryBuilder()
         .insert()
-        .into(StockDailyPutCallRatio)
-        .values(formattedRows as StockDailyPutCallRatio[])
+        .into(StockDailyAdvancedStat)
+        .values(formattedRows as StockDailyAdvancedStat[])
         .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
         .execute();
     }

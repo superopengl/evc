@@ -18,7 +18,7 @@ import { StockResistance } from '../StockResistance';
         'tg."stockSymbol" as symbol',
         'array_agg(tg."stockTagId") as tags'
       ]),
-    'tg', 'tg.symbol = s.symbol'
+      'tg', 'tg.symbol = s.symbol'
     )
     .addSelect('tg.tags')
     .leftJoin(q => q.from(StockLatestFairValue, 'sfv'),
@@ -45,29 +45,29 @@ import { StockResistance } from '../StockResistance';
             'hi',
             `RANK() OVER (PARTITION BY symbol ORDER BY lo DESC, hi DESC) AS rank`
           ]),
-      'sup')
+        'sup')
         .where(`rank <= 3`)
         .groupBy('symbol')
         .select('symbol')
         .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
-    'support', 'support.symbol = s.symbol'
+      'support', 'support.symbol = s.symbol'
     )
     .addSelect('support.values as supports')
     .leftJoin(q =>
       q.from(q =>
         q.from(StockResistance, 'x')
-        .select([
-          'symbol',
-          'lo',
-          'hi',
-          `RANK() OVER (PARTITION BY symbol ORDER BY lo ASC, hi ASC) AS rank`
-        ]),
-      'sup')
+          .select([
+            'symbol',
+            'lo',
+            'hi',
+            `RANK() OVER (PARTITION BY symbol ORDER BY lo ASC, hi ASC) AS rank`
+          ]),
+        'sup')
         .where(`rank <= 3`)
         .groupBy('symbol')
         .select('symbol')
         .addSelect('array_agg(json_build_object(\'lo\', lo, \'hi\', hi)) as values'),
-    'resistance', 'resistance.symbol = s.symbol'
+      'resistance', 'resistance.symbol = s.symbol'
     )
     .addSelect('resistance.values as resistances')
 })
@@ -90,6 +90,24 @@ export class StockLatestPaidInformation {
 
   @ViewColumn()
   fairValueDate: string;
+
+  @ViewColumn()
+  forwardNextFYFairValue: number;
+
+  @ViewColumn()
+  forwardNextFYFairValueRangeLo: number;
+
+  @ViewColumn()
+  forwardNextFYFairValueRangeHi: number;
+
+  @ViewColumn()
+  beta: number;
+
+  @ViewColumn()
+  peTtm: number;
+
+  @ViewColumn()
+  peg: number;
 
   @ViewColumn()
   lastPrice: number;

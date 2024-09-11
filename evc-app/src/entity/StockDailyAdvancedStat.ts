@@ -3,11 +3,8 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Stock } from './Stock';
 
 
-/**
- * This table is not being used. Can drop after migrating data to StockDailyAdcancedStat table
- */
 @Entity()
-export class StockDailyPutCallRatio {
+export class StockDailyAdvancedStat {
   @PrimaryColumn()
   symbol: string;
 
@@ -20,4 +17,13 @@ export class StockDailyPutCallRatio {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   putCallRatio: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  beta: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  peRatio: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
+  pegRatio: number;
 }

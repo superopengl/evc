@@ -2,8 +2,8 @@ import { getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { isUSMarketOpen } from '../src/services/iexService';
-import { batchRequest } from '../src/services/iexCoreService';
-import { StockAdvancedStatsInfo, syncManyStockPutCallRatio } from '../src/services/stockPutCallRatioService';
+import { sendIexRequest } from '../src/services/iexCoreService';
+import { StockAdvancedStatsInfo, syncManyStockAdcancedStat } from '../src/services/stockPutCallRatioService';
 import * as moment from 'moment';
 import { refreshMaterializedView } from "../src/refreshMaterializedView";
 import { executeWithDataEvents } from '../src/services/dataLogService';
@@ -25,16 +25,16 @@ async function udpateDatabase(symbolValueMap) {
     });
   }
 
-  await syncManyStockPutCallRatio(advancedStatsInfo);
+  await syncManyStockAdcancedStat(advancedStatsInfo);
 }
 
 
 async function syncIexForSymbols(symbols: string[]) {
-  const map = await batchRequest(symbols, 'advanced_stats', symbols.length);
+  const map = await sendIexRequest(symbols, 'advanced_stats');
   await udpateDatabase(map);
 }
 
-const JOB_NAME = 'daily-putCallRatio';
+const JOB_NAME = 'daily-advancedStat';
 
 start(JOB_NAME, async () => {
 

@@ -29,7 +29,6 @@ import { StockLatestFreeInformation } from '../entity/views/StockLatestFreeInfor
 import { StockPlea } from '../entity/StockPlea';
 import { StockPutCallRatio90 } from '../entity/views/StockPutCallRatio90';
 import { StockDailyClose } from '../entity/StockDailyClose';
-import { StockDailyPutCallRatio } from '../entity/StockDailyPutCallRatio';
 import { StockResistance } from '../entity/StockResistance';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { StockSupport } from '../entity/StockSupport';
@@ -47,6 +46,7 @@ import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
 import { getCompanyName } from '../services/alphaVantageService';
 import { StockInsiderTransaction } from '../entity/StockInsiderTransaction';
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';
+import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -349,7 +349,7 @@ export const deleteStock = handlerWrapper(async (req, res) => {
     StockResistance,
     StockDailyClose,
     StockSpecialFairValue,
-    StockDailyPutCallRatio,
+    StockDailyAdvancedStat,
     StockEps,
     StockLastPrice,
     Stock,

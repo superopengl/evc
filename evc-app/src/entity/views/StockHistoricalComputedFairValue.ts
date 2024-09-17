@@ -18,7 +18,7 @@ import { StockComputedPe365 } from './StockComputedPe365';
           'UNNEST(ARRAY["reportDate", "reportDate" + 30, "reportDate" + 60]) as "reportDate"'
         ]),
         'eps', 's.symbol = eps.symbol')
-      .leftJoin(StockComputedPe365, 'pe', 's.symbol = pe.symbol AND pe.date <= eps."reportDate"')
+      .leftJoin(StockComputedPe365, 'pe', 's.symbol = pe.symbol AND pe."date" <= eps."reportDate"')
       .where('eps."reportDate" <= CURRENT_DATE')
       .select([
         's.symbol as symbol',
@@ -28,8 +28,8 @@ import { StockComputedPe365 } from './StockComputedPe365';
         'pe."pe90Avg" as "pe90Avg"',
         'pe."pe90StdDev" as "pe90StdDev"',
         'pe.date as "peDate"',
-        'pe."peLo" as "peLo"',
-        'pe."peHi" as "peHi"',
+        'pe."peYrLo" as "peLo"',
+        'pe."peYrHi" as "peHi"',
         'CASE WHEN pe."fairValueLo" <=0 THEN NULL WHEN pe."fairValueLo" >= pe.close * 1.2 THEN pe.close * 0.95 ELSE pe."fairValueLo" END as "fairValueLo"',
         'CASE WHEN pe."fairValueLo" <=0 THEN NULL WHEN pe."fairValueLo" >= pe.close * 1.2 THEN pe.close * 1.2 ELSE pe."fairValueHi" END as "fairValueHi"',
         'CASE WHEN pe."fairValueLo" >= pe.close * 1.2 THEN TRUE ELSE FALSE END as "isAdjustedFairValue"',

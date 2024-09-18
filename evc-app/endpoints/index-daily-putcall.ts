@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { isUSMarketOpen } from '../src/services/iexService';
@@ -9,6 +9,8 @@ import { refreshMaterializedView } from "../src/refreshMaterializedView";
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import * as _ from 'lodash';
 import { StockPutCallRatio90 } from '../src/entity/views/StockPutCallRatio90';
+import { StockDailyAdvancedStat } from '../src/entity/StockDailyAdvancedStat';
+import { StockDailyPutCallRatio } from '../src/entity/StockDailyPutCallRatio';
 
 async function udpateDatabase(symbolValueMap) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
@@ -26,6 +28,29 @@ async function udpateDatabase(symbolValueMap) {
   }
 
   await syncManyStockAdcancedStat(advancedStatsInfo);
+}
+
+async function backfillDataFromOldStockDailyPutCallRatioTable() {
+  const { schema: newTableSchema, tableName: newTableName } = getRepository(StockDailyAdvancedStat).metadata;
+  const { schema: oldTableSchema, tableName: oldTableName } = getRepository(StockDailyPutCallRatio).metadata;
+
+  console.log(`Start backfilling data from the old "${oldTableSchema}"."${oldTableName}" table`);
+  await getManager()
+    .query(`
+INSERT INTO "${newTableSchema}"."${newTableName}"
+(symbol, "date", "putCallRatio")
+SELECT symbol, "date", "putCallRatio"
+  FROM "${oldTableSchema}"."${oldTableName}" AS d
+  WHERE d."date" < (
+    SELECT MIN("date") from "${newTableSchema}"."${newTableName}" n
+    WHERE n.symbol = d.symbol 
+    GROUP BY n.symbol
+  )
+ON CONFLICT (symbol, "date") DO NOTHING
+    `);
+
+  console.log(`Finished backfilling data from the old "${oldTableSchema}"."${oldTableName}" table.`);
+
 }
 
 
@@ -58,5 +83,7 @@ start(JOB_NAME, async () => {
     await syncIexForSymbols(batchSymbols);
   }
 
-  await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView(StockPutCallRatio90));
+  await backfillDataFromOldStockDailyPutCallRatioTable();
+
+  await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView());
 });

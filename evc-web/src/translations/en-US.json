@@ -141,7 +141,7 @@
   "text.support": "Support",
   "text.resistance": "Resistance",
   "text.fairValue": "Recent FY Fair Value",
-  "text.fairValueMinus": "EPS (TTM) Loss",
+  "text.fairValueLoss": "EPS (TTM) Loss",
   "text.forwardNextFyFairValue": "Forward Next FY Fair Value",
   "text.forwardNextFyFairValueLoss": "EPS (FFY) LOSS",
   "text.forwardNextFyMaxValue": "Forward Next FY Max Value Range",

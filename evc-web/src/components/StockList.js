@@ -1,46 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { List } from 'antd';
+import { Row, Col } from 'antd';
 import StockInfoCard from './StockInfoCard';
-import styled from 'styled-components';
 
-const StyledList = styled(List)`
-.ant-list-item {
-  padding: 0;
+
+const span = {
+  xs: 24,
+  sm: 12,
+  md: 8,
+  lg: 8,
+  xl: 8,
+  xxl: 6,
 }
-`;
 
 const StockList = (props) => {
 
-  const { data, loading, onItemClick, showBell, showTags } = props;
+  const { data, onItemClick, showBell, showTags } = props;
 
-  return (
-    <StyledList
-      grid={{
-        gutter: 10,
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 3,
-        xl: 3,
-        xxl: 4,
-      }}
-      size="small"
-      loading={loading}
-      dataSource={data}
-      renderItem={stock => (
-        <List.Item>
-          <StockInfoCard
-            value={stock}
-            hoverable
-            onClick={() => onItemClick(stock)}
-            showBell={showBell}
-            showTags={showTags}
-          />
-        </List.Item>
-      )}
-    />
+  return (<>
+    <Row gutter={[10, 10]} align="stretch" style={{ marginBottom: 16 }}>
+      {data.map(stock => <Col {...span}>
+        <StockInfoCard
+          value={stock}
+          hoverable
+          onClick={() => onItemClick(stock)}
+          showBell={showBell}
+          showTags={showTags}
+        />
+      </Col>)}
+    </Row>
+  </>
   )
 
 };

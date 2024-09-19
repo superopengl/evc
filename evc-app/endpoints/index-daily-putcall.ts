@@ -11,6 +11,8 @@ import * as _ from 'lodash';
 import { StockPutCallRatio90 } from '../src/entity/views/StockPutCallRatio90';
 import { StockDailyAdvancedStat } from '../src/entity/StockDailyAdvancedStat';
 import { StockDailyPutCallRatio } from '../src/entity/StockDailyPutCallRatio';
+import { assert } from '../src/utils/assert';
+
 
 async function udpateDatabase(symbolValueMap) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
@@ -55,7 +57,11 @@ ON CONFLICT (symbol, "date") DO NOTHING
 
 
 async function syncIexForSymbols(symbols: string[]) {
-  const map = await sendIexRequest(symbols, 'advanced_stats');
+  const resp = await sendIexRequest(symbols, 'advanced_stats');
+  assert(symbols.length === resp.length, 500, `IEX response length is not equal to symbols (${symbols.join(',')})`);
+
+  const map = new Map(symbols.map((s, i) => [s, resp[i]]));
+
   await udpateDatabase(map);
 }
 

@@ -21,24 +21,16 @@ async function requestIexApi(relativeApiPath: string, query?: object) {
   return resp.json();
 }
 
-async function singleBatchRequest(symbols: string[], datasetId: 'advanced_stats', params?: {}) {
+export async function sendIexRequest(symbols: string[], datasetId: 'advanced_stats' | 'insider_transactions', params?: {}) {
   const len = symbols.length;
-  assert(0 < len && len <= 100, 400, `Wrong size of iex batch request ${len}`);
-  return await requestIexApi(`/data/core/${datasetId}/${symbols.join(',')}`, params);
-}
+  assert(len > 0, 500, `Wrong size of iex batch request ${len}`);
+  const resp = await requestIexApi(`/data/core/${datasetId}/${symbols.join(',')}`, params);
+  // assert(symbols.length === resp.length, 500, `IEX response length is not equal to symbols (${symbols.join(',')})`);
 
-
-export async function batchRequest(symbols: string[], datasetId: 'advanced_stats', batchSize = 100) {
-  const result = new Map();
-  for (const batchSymbols of _.chunk(symbols, batchSize)) {
-    const resp = await singleBatchRequest(batchSymbols, datasetId, null);
-    if (batchSymbols.length !== resp.length) {
-      throw new Error(`${batchSymbols.length} symboles but the response has ${resp.length} items`);
-    }
-    batchSymbols.forEach((symbol, i) => {
-      result.set(symbol, resp[i]);
-    })
-  }
-
-  return result;
+  // const map = new Map();
+  // symbols.forEach((s, i) => {
+  //   map.set(s, resp[i]);
+  // });
+  // return map;
+  return resp;
 }

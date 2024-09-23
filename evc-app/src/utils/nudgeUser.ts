@@ -1,7 +1,7 @@
 import { getRepository, getManager } from 'typeorm';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { User } from '../entity/User';
-import * as moment from 'moment';
+import moment from 'moment';
 
 const isProd = process.env.NODE_ENV === 'prod';
 const map = new Map<string, moment.Moment>();

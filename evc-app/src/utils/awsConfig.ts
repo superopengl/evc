@@ -1,4 +1,4 @@
-import * as aws from 'aws-sdk';
+import aws from 'aws-sdk';
 import { assert } from './assert';
 
 export function awsConfig() {

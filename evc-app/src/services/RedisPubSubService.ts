@@ -1,6 +1,6 @@
 import { Subject, Subscription } from 'rxjs';
-import * as redis from 'redis';
-import * as _ from 'lodash';
+import redis from 'redis';
+import _ from 'lodash';
 
 const redisUrl = process.env.REDIS_URL;
 

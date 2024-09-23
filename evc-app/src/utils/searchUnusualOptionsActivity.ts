@@ -4,7 +4,7 @@ import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock
 import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex';
 import { assert } from './assert';
 import { getManager, getRepository } from 'typeorm';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export type UnusualOptionsActivitySearchParams = {
   symbol?: string;

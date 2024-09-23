@@ -1,7 +1,7 @@
 import { start } from './jobStarter';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as csv from 'csv-parser';
+import fs from 'fs';
+import path from 'path';
+import csv from 'csv-parser';
 import { v4 as uuidv4 } from 'uuid';
 import { getRepository } from 'typeorm';
 import { Stock } from '../src/entity/Stock';

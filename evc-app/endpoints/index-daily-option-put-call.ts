@@ -2,10 +2,10 @@ import { UnusualOptionActivityIndex } from '../src/entity/UnusualOptionActivityI
 import { UnusualOptionActivityStock } from '../src/entity/UnusualOptionActivityStock';
 import { getManager } from 'typeorm';
 import { start } from './jobStarter';
-import * as _ from 'lodash';
-import { getOptionPutCallHistory } from '../src/services/barchartService';
+import _ from 'lodash';
+import { getOptionPutCallHistory as fetchOptionPutCallHistory } from '../src/services/barchartService';
 import { UnusualOptionActivityEtfs } from '../src/entity/UnusualOptionActivityEtfs';
-import { OPTION_PUT_CALL_DEF } from './option-put-call-def';
+import OPTION_PUT_CALL_DEF from './option-put-call-def.json';
 import moment = require('moment');
 
 async function upsertDatabase(tableEntity, rawData) {
@@ -17,7 +17,6 @@ async function upsertDatabase(tableEntity, rawData) {
   const tradeDate = entities[0].tradeDate;
 
   await getManager().transaction(async m => {
-    await m.delete(tableEntity, { tradeDate });
     await m.createQueryBuilder()
       .insert()
       .into(tableEntity)
@@ -78,29 +77,26 @@ function convertToEntity(data) {
 
 const JOB_NAME = 'daily-opc';
 
-start(JOB_NAME, async () => {
-  const list = [
-    {
-      type: 'index',
-      table: UnusualOptionActivityStock,
-      symbols: ['$SPX', '$IUXX', '$DJX', '$VIX'],
-      path: '/stocks/quotes/$/options-history'
-    },
-    {
-      type: 'etfs',
-      table: UnusualOptionActivityEtfs,
-      symbols: [],
-      path: '/etfs-funds/quotes/$/options-history'
-    },
-    {
-      type: 'nasdaq',
-      table: UnusualOptionActivityIndex
-    },
-  ];
+const TARGET_TABLE_MAP = new Map([
+  ['index', UnusualOptionActivityStock],
+  ['etfs', UnusualOptionActivityStock],
+  ['nasdaq', UnusualOptionActivityStock],
+]);
 
-  for (const info of list) {
-    const { type, table } = info;
-    const rawData = await getOptionPutCallHistory(type);
-    await upsertDatabase(table, rawData);
+type DEF_INFO = {
+  type: 'index' | 'etfs' | 'nasdaq';
+  symbol: String;
+  name: String;
+  url: String;
+}
+
+start(JOB_NAME, async () => {
+  for (const info of OPTION_PUT_CALL_DEF as any as DEF_INFO[]) {
+    const targetTable = TARGET_TABLE_MAP.get(info.type);
+    if (!targetTable) {
+      throw Error(`Table of type '${info.type}' is unsupported.`);
+    }
+    const rawData = await fetchOptionPutCallHistory(info.symbol, 1);
+    // await upsertDatabase(targetTable, rawData);
   }
 }, { daemon: false });

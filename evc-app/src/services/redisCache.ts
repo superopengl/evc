@@ -1,4 +1,4 @@
-import * as redis from 'redis';
+import redis from 'redis';
 
 class RedisCache {
   private redisCache;

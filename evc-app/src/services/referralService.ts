@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { EntityManager, getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';

@@ -1,8 +1,8 @@
-import * as fetch from 'node-fetch';
-import * as queryString from 'query-string';
+import fetch from 'node-fetch';
+import queryString from 'query-string';
 import 'colors';
 import { assert } from '../utils/assert';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 async function requestIexApi(relativeApiPath: string, query?: object) {
   const path = relativeApiPath.replace(/^\/+|\/+$/g, '');

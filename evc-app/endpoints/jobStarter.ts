@@ -2,7 +2,7 @@ import { Connection } from 'typeorm';
 import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import 'colors';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import { logDataEvent } from '../src/services/dataLogService';
 import { v4 as uuidv4 } from 'uuid';
 

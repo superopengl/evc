@@ -1,5 +1,5 @@
 import { assert } from './assert';
-import * as crypto from 'crypto';
+import crypto from 'crypto';
 
 /**
  * Never ever change this hash on prod !!!!

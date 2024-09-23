@@ -1,7 +1,7 @@
 
 import { getManager, getRepository } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
 import { getTableName } from '../utils/getTableName';
 import { assertRole } from "../utils/assertRole";

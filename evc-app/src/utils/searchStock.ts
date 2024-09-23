@@ -4,7 +4,7 @@ import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockLatestPaidInformation } from '../entity/views/StockLatestPaidInformation';
 import { Stock } from '../entity/Stock';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const demoSymbols = [
   'AAPL',

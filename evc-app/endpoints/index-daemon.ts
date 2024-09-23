@@ -1,4 +1,4 @@
-import * as EventSource from 'eventsource';
+import EventSource from 'eventsource';
 import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService';
 import { StockLastPriceInfo } from '../src/types/StockLastPriceInfo';
 import 'colors';
@@ -12,7 +12,7 @@ import { assert } from '../src/utils/assert';
 import { EmailSentOutTask } from '../src/entity/EmailSentOutTask';
 import { sendEmail } from '../src/services/emailService';
 import { getUtcNow } from '../src/utils/getUtcNow';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { syncStockLastPrice } from '../src/utils/syncStockLastPrice';
 
 const JOB_NAME = 'price-sse';

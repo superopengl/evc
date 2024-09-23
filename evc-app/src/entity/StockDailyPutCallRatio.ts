@@ -4,7 +4,7 @@ import { Stock } from './Stock';
 
 
 /**
- * This table is not being used. Can drop after migrating data to StockDailyAdcancedStat table
+ * @deprecated This table is not being used. Can drop after migrating data to StockDailyAdcancedStat table
  */
 @Entity()
 export class StockDailyPutCallRatio {

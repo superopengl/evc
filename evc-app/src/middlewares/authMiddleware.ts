@@ -1,6 +1,6 @@
 
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
-import * as moment from 'moment';
+import moment from 'moment';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import 'colors';
 import { nudgeUser } from '../utils/nudgeUser';

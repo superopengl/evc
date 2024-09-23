@@ -1,10 +1,10 @@
 import { createAppInstance } from './app';
-import * as http from 'http';
-import * as path from 'path';
+import http from 'http';
+import path from 'path';
 import { connectDatabase } from './db';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import { createWebsocketServer } from './ws';
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 
 function validateEnvVars() {
   const requiredEnvVars = [
@@ -65,7 +65,7 @@ async function launchApp() {
 
   // https.createServer(sslOptions, app).listen(httpsPort);
 
-  const wss = new WebSocket.Server({server});
+  const wss = new WebSocket.Server({ server });
   createWebsocketServer(wss);
 
   server.listen(httpPort);

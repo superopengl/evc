@@ -5,7 +5,7 @@ import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex
 import { assert } from './assert';
 import { getManager, getRepository } from 'typeorm';
 import moment from 'moment';
-import { OptionPutCallInformation } from '../entity/views/OptionPutCallInformation';
+import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 
 export type UnusualOptionsActivitySearchParams = {
   symbol?: string;
@@ -25,11 +25,11 @@ export async function searchOptionPutCallHistory(type, q: any, showFullData: boo
   const pageSize = +size || 60;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
-  let query = getRepository(OptionPutCallInformation)
+  let query = getRepository(OptionPutCallHistoryInformation)
     .createQueryBuilder()
     .where(`type = :type`, { type });
 
-  const symbolsResult = await getRepository(OptionPutCallInformation)
+  const symbolsResult = await getRepository(OptionPutCallHistoryInformation)
     .createQueryBuilder()
     .where('type = :type', { type })
     .select('symbol')
@@ -44,7 +44,7 @@ export async function searchOptionPutCallHistory(type, q: any, showFullData: boo
   }
 
   if (lastDayOnly) {
-    const { tableName, schema } = getRepository(OptionPutCallInformation).metadata;
+    const { tableName, schema } = getRepository(OptionPutCallHistoryInformation).metadata;
     query = query.andWhere(`"date" = (select max("date") from "${schema}"."${tableName}")`);
   } else {
     if (timeFrom) {
@@ -58,8 +58,8 @@ export async function searchOptionPutCallHistory(type, q: any, showFullData: boo
   const count = await query.getCount();
 
   const orderConditions: { field: string, order: 'ASC' | 'DESC' }[] = order?.length ? order : [
-    { field: 'date', order: 'DESC' },
     { field: 'symbol', order: 'ASC' },
+    { field: 'date', order: 'DESC' },
   ]
 
   for (const orderCond of orderConditions) {
@@ -78,12 +78,12 @@ export async function searchOptionPutCallHistory(type, q: any, showFullData: boo
       'symbol',
       '"date"',
       'name',
-      // '"putCallVolumeRatio"',
-      '"totalVolume"',
-      '"putCallOpenInterestRatio"',
+      // '"putCallVol"',
+      '"todayTotalVol"',
+      '"putCallOIRatio"',
       '"totalOpenInterest"',
-      '"todayPercentPutVolume"',
-      '"todayPercentCallVolume"',
+      '"todayPercentPutVol"',
+      '"todayPercentCallVol"',
     ])
   }
   const data = await query.execute();

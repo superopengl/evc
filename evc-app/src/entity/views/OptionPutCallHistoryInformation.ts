@@ -1,24 +1,24 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
-import { OptionPutCall } from '../OptionPutCall';
+import { OptionPutCallHistory } from '../OptionPutCallHistory';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(OptionPutCall, 'i')
+    .from(OptionPutCallHistory, 'i')
     .select([
       'i.symbol as symbol',
       'i.date as date',
       'i.name as name',
       'i.type as type',
-      'i."putCallVolumeRatio" as "putCallVolumeRatio"',
-      'i."totalVolume" as "totalVolume"',
-      'i."putCallOpenInterestRatio" as "putCallOpenInterestRatio"',
+      'i."putCallVol" as "putCallVol"',
+      'i."todayTotalVol" as "todayTotalVol"',
+      'i."putCallOIRatio" as "putCallOIRatio"',
       'i."totalOpenInterest" as "totalOpenInterest"',
-      '1 - 100 / ("putCallVolumeRatio" + 1) as "todayPercentPutVolume"',
-      '100 / ("putCallVolumeRatio" + 1) as "todayPercentCallVolume"',
+      '1 - 100 / ("putCallVol" + 1) as "todayPercentPutVol"',
+      '100 / ("putCallVol" + 1) as "todayPercentCallVol"',
 
     ])
 })
-export class OptionPutCallInformation {
+export class OptionPutCallHistoryInformation {
   @ViewColumn()
   symbol: string;
 
@@ -35,19 +35,19 @@ export class OptionPutCallInformation {
    * P/C Vol
    */
   @ViewColumn()
-  putCallVolumeRatio: number;
+  putCallVol: number;
 
   /**
    * Options Vol; Today Option Volume
    */
   @ViewColumn()
-  totalVolume: number;
+  todayTotalVol: number;
 
   /**
    * P/C OI; Total P/C OI Ratio
    */
   @ViewColumn()
-  putCallOpenInterestRatio: number;
+  putCallOIRatio: number;
 
   /**
    * Total OI; Total Open Interest
@@ -56,8 +56,8 @@ export class OptionPutCallInformation {
   totalOpenInterest: number;
 
   @ViewColumn()
-  todayPercentPutVolume: number;
+  todayPercentPutVol: number;
 
   @ViewColumn()
-  todayPercentCallVolume: number;
+  todayPercentCallVol: number;
 }

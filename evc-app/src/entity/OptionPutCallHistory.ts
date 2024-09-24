@@ -2,7 +2,7 @@ import { Entity, PrimaryColumn, Index, Column, Generated } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 @Entity()
-export class OptionPutCall {
+export class OptionPutCallHistory {
   @PrimaryColumn()
   symbol: string;
 
@@ -16,23 +16,17 @@ export class OptionPutCall {
   @Index()
   type: 'index' | 'etfs' | 'nasdaq';
 
-  /**
-   * P/C Vol
-   */
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  putCallVolumeRatio: number;
+  putCallVol: number;
 
-  /**
-   * Options Vol; Today Option Volume
-   */
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  totalVolume: number;
+  todayTotalVol: number;
 
   /**
    * P/C OI; Total P/C OI Ratio
    */
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  putCallOpenInterestRatio: number;
+  putCallOIRatio: number;
 
   /**
    * Total OI; Total Open Interest

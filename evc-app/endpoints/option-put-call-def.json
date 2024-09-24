@@ -2,1053 +2,878 @@
   {
     "type": "index",
     "symbol": "$SPX",
-    "name": "S&P 500 Index",
-    "url": "https://www.barchart.com/stocks/quotes/$SPX/options-history"
+    "name": "S&P 500 Index"
   },
   {
     "type": "index",
     "symbol": "$IUXX",
     "alias": "NDX (IUXX)",
-    "name": "Nasdaq 100 Index",
-    "url": "https://www.barchart.com/stocks/quotes/$IUXX/options-history"
+    "name": "Nasdaq 100 Index"
   },
   {
     "type": "index",
     "symbol": "$DJX",
     "alias": "DJI (DJX)",
-    "name": "Dow Jones Industrials Average Index",
-    "url": "https://www.barchart.com/stocks/quotes/$DJX/options-history"
+    "name": "Dow Jones Industrials Average Index"
   },
   {
     "type": "index",
     "symbol": "$VIX",
-    "name": "CBOE Volatility Index",
-    "url": "https://www.barchart.com/stocks/quotes/$VIX/options-history"
+    "name": "CBOE Volatility Index"
   },
   {
     "type": "etfs",
     "symbol": "SPY",
-    "name": "S&P 500 SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/SPY/options-history"
+    "name": "S&P 500 SPDR"
   },
   {
     "type": "etfs",
     "symbol": "QQQ",
-    "name": "Nasdaq QQQ Invesco ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/QQQ/options-history"
+    "name": "Nasdaq QQQ Invesco ETF"
   },
   {
     "type": "etfs",
     "symbol": "DIA",
-    "name": "Dow Industrials SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/DIA/options-history"
+    "name": "Dow Industrials SPDR"
   },
   {
     "type": "etfs",
     "symbol": "IWM",
-    "name": "Russell 2000 Ishares ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/IWM/options-history"
+    "name": "Russell 2000 Ishares ETF"
   },
   {
     "type": "etfs",
     "symbol": "TQQQ",
-    "name": "Ultrapro QQQ 3X ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/TQQQ/options-history"
+    "name": "Ultrapro QQQ 3X ETF"
   },
   {
     "type": "etfs",
     "symbol": "SQQQ",
-    "name": "Ultrapro Short QQQ -3X ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/SQQQ/options-history"
+    "name": "Ultrapro Short QQQ -3X ETF"
   },
   {
     "type": "etfs",
     "symbol": "UVXY",
-    "name": "Ultra VIX Short-Term 2X Futures ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/UVXY/options-history"
+    "name": "Ultra VIX Short-Term 2X Futures ETF"
   },
   {
     "type": "etfs",
     "symbol": "XLK",
-    "name": "S&P 500 Technology Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLK/options-history"
+    "name": "S&P 500 Technology Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLY",
-    "name": "S&P 500 Cons Disc Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLY/options-history"
+    "name": "S&P 500 Cons Disc Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLC",
-    "name": "S&P 500 Communication Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLC/options-history"
+    "name": "S&P 500 Communication Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLV",
-    "name": "S&P 500 Healthcare Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLV/options-history"
+    "name": "S&P 500 Healthcare Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLF",
-    "name": "S&P 500 Financials Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLF/options-history"
+    "name": "S&P 500 Financials Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLI",
-    "name": "S&P 500 Industrial Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLI/options-history"
+    "name": "S&P 500 Industrial Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLB",
-    "name": "S&P 500 Materials Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLB/options-history"
+    "name": "S&P 500 Materials Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLE",
-    "name": "S&P 500 Energy Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLE/options-history"
+    "name": "S&P 500 Energy Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLU",
-    "name": "S&P 500 Utilities Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLU/options-history"
+    "name": "S&P 500 Utilities Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XLP",
-    "name": "S&P 500 Cons Staples Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLP/options-history"
+    "name": "S&P 500 Cons Staples Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "IYR",
-    "name": "US Real Estate Ishares ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/IYR/options-history"
+    "name": "US Real Estate Ishares ETF"
   },
   {
     "type": "etfs",
     "symbol": "XLRE",
-    "name": "S&P 500 Real Estate Sector SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XLRE/options-history"
+    "name": "S&P 500 Real Estate Sector SPDR"
   },
   {
     "type": "etfs",
     "symbol": "VNQ",
-    "name": "Real Estate Vanguard ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/VNQ/options-history"
+    "name": "Real Estate Vanguard ETF"
   },
   {
     "type": "etfs",
     "symbol": "SMH",
-    "name": "Vaneck Semiconductor ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/SMH/options-history"
+    "name": "Vaneck Semiconductor ETF"
   },
   {
     "type": "etfs",
     "symbol": "SOXX",
-    "name": "Semiconductor Ishares ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/SOXX/options-history"
+    "name": "Semiconductor Ishares ETF"
   },
   {
     "type": "etfs",
     "symbol": "SOXL",
-    "name": "Semiconductor Bull 3X Direxion",
-    "url": "https://www.barchart.com/etfs-funds/quotes/SOXL/options-history"
+    "name": "Semiconductor Bull 3X Direxion"
   },
   {
     "type": "etfs",
     "symbol": "SOXS",
-    "name": "Semiconductor Bear -3X Direxion",
-    "url": "https://www.barchart.com/etfs-funds/quotes/SOXS/options-history"
+    "name": "Semiconductor Bear -3X Direxion"
   },
   {
     "type": "etfs",
     "symbol": "TNA",
-    "name": "Smallcap Bull 3X Direxion",
-    "url": "https://www.barchart.com/etfs-funds/quotes/TNA/options-history"
+    "name": "Smallcap Bull 3X Direxion"
   },
   {
     "type": "etfs",
     "symbol": "XRT",
-    "name": "S&P Retail SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XRT/options-history"
+    "name": "S&P Retail SPDR"
   },
   {
     "type": "etfs",
     "symbol": "JETS",
-    "name": "US Global Jets ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/JETS/options-history"
+    "name": "US Global Jets ETF"
   },
   {
     "type": "etfs",
     "symbol": "TAN",
-    "name": "Solar Invesco ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/TAN/options-history"
+    "name": "Solar Invesco ETF"
   },
   {
     "type": "etfs",
     "symbol": "XHB",
-    "name": "S&P Homebuilders SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XHB/options-history"
+    "name": "S&P Homebuilders SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XBI",
-    "name": "S&P Biotech SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XBI/options-history"
+    "name": "S&P Biotech SPDR"
   },
   {
     "type": "etfs",
     "symbol": "IBB",
-    "name": "Nasdaq Biotechnology Ishares ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/IBB/options-history"
+    "name": "Nasdaq Biotechnology Ishares ETF"
   },
   {
     "type": "etfs",
     "symbol": "LABU",
-    "name": "S&P Biotech Bull 3X Direxion",
-    "url": "https://www.barchart.com/etfs-funds/quotes/LABU/options-history"
+    "name": "S&P Biotech Bull 3X Direxion"
   },
   {
     "type": "etfs",
     "symbol": "KBE",
-    "name": "S&P Bank ETF SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/KBE/options-history"
+    "name": "S&P Bank ETF SPDR"
   },
   {
     "type": "etfs",
     "symbol": "KRE",
-    "name": "S&P Regional Banking ETF SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/KRE/options-history"
+    "name": "S&P Regional Banking ETF SPDR"
   },
   {
     "type": "etfs",
     "symbol": "KBWB",
-    "name": "KBW Bank Invesco ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/KBWB/options-history"
+    "name": "KBW Bank Invesco ETF"
   },
   {
     "type": "etfs",
     "symbol": "ARKK",
-    "name": "Ark Innovation ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/ARKK/options-history"
+    "name": "Ark Innovation ETF"
   },
   {
     "type": "etfs",
     "symbol": "ARKG",
-    "name": "Ark Genomic Revolution ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/ARKG/options-history"
+    "name": "Ark Genomic Revolution ETF"
   },
   {
     "type": "etfs",
     "symbol": "ARKW",
-    "name": "Ark Next Generation Internet ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/ARKW/options-history"
+    "name": "Ark Next Generation Internet ETF"
   },
   {
     "type": "etfs",
     "symbol": "ARKF",
-    "name": "Ark Fintech Innovation ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/ARKF/options-history"
+    "name": "Ark Fintech Innovation ETF"
   },
   {
     "type": "etfs",
     "symbol": "LQD",
-    "name": "Invst Grade Corp Bond Ishares Iboxx $ ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/LQD/options-history"
+    "name": "Invst Grade Corp Bond Ishares Iboxx $ ETF"
   },
   {
     "type": "etfs",
     "symbol": "HYG",
-    "name": "High Yield Corp Bond Ishares Iboxx $ ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/HYG/options-history"
+    "name": "High Yield Corp Bond Ishares Iboxx $ ETF"
   },
   {
     "type": "etfs",
     "symbol": "IEF",
-    "name": "7-10 Year Treasury Bond Ishares ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/IEF/options-history"
+    "name": "7-10 Year Treasury Bond Ishares ETF"
   },
   {
     "type": "etfs",
     "symbol": "TLT",
-    "name": "20+ Year Treas Bond Ishares ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/TLT/options-history"
+    "name": "20+ Year Treas Bond Ishares ETF"
   },
   {
     "type": "etfs",
     "symbol": "TMF",
-    "name": "20+ Year Trsy Bull 3X Direxion ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/TMF/options-history"
+    "name": "20+ Year Trsy Bull 3X Direxion ETF"
   },
   {
     "type": "etfs",
     "symbol": "GLD",
-    "name": "Gold SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/GLD/options-history"
+    "name": "Gold SPDR"
   },
   {
     "type": "etfs",
     "symbol": "SLV",
-    "name": "Silver Trust Ishares",
-    "url": "https://www.barchart.com/etfs-funds/quotes/SLV/options-history"
+    "name": "Silver Trust Ishares"
   },
   {
     "type": "etfs",
     "symbol": "GDX",
-    "name": "Vaneck Gold Miners ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/GDX/options-history"
+    "name": "Vaneck Gold Miners ETF"
   },
   {
     "type": "etfs",
     "symbol": "USO",
-    "name": "US Oil Fund",
-    "url": "https://www.barchart.com/etfs-funds/quotes/USO/options-history"
+    "name": "US Oil Fund"
   },
   {
     "type": "etfs",
     "symbol": "UNG",
-    "name": "US Natural Gas Fund",
-    "url": "https://www.barchart.com/etfs-funds/quotes/UNG/options-history"
+    "name": "US Natural Gas Fund"
   },
   {
     "type": "etfs",
     "symbol": "XME",
-    "name": "S&P Metals & Mining SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XME/options-history"
+    "name": "S&P Metals & Mining SPDR"
   },
   {
     "type": "etfs",
     "symbol": "XOP",
-    "name": "S&P Oil & Gas Expl & Prod SPDR",
-    "url": "https://www.barchart.com/etfs-funds/quotes/XOP/options-history"
+    "name": "S&P Oil & Gas Expl & Prod SPDR"
   },
   {
     "type": "etfs",
     "symbol": "COPX",
-    "name": "GX Copper Miners ETF",
-    "url": "https://www.barchart.com/etfs-funds/quotes/COPX/options-history"
+    "name": "GX Copper Miners ETF"
   },
   {
     "type": "etfs",
     "symbol": "WEAT",
-    "name": "Teucrium Wheat",
-    "url": "https://www.barchart.com/etfs-funds/quotes/WEAT/options-history"
+    "name": "Teucrium Wheat"
   },
   {
     "type": "etfs",
     "symbol": "DBA",
-    "name": "DB Agriculture Fund Invesco",
-    "url": "https://www.barchart.com/etfs-funds/quotes/DBA/options-history"
+    "name": "DB Agriculture Fund Invesco"
   },
   {
     "type": "nasdaq",
     "symbol": "TSLA",
-    "name": "Tesla Inc",
-    "url": "https://www.barchart.com/stocks/quotes/TSLA/options-history"
+    "name": "Tesla Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "AAPL",
-    "name": "Apple Inc",
-    "url": "https://www.barchart.com/stocks/quotes/AAPL/options-history"
+    "name": "Apple Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "MSFT",
-    "name": "Microsoft Corp",
-    "url": "https://www.barchart.com/stocks/quotes/MSFT/options-history"
+    "name": "Microsoft Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "NVDA",
-    "name": "Nvidia Corp",
-    "url": "https://www.barchart.com/stocks/quotes/NVDA/options-history"
+    "name": "Nvidia Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "AMZN",
-    "name": "Amazon.com Inc",
-    "url": "https://www.barchart.com/stocks/quotes/AMZN/options-history"
+    "name": "Amazon.com Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "META",
-    "name": "Meta Platforms Inc",
-    "url": "https://www.barchart.com/stocks/quotes/META/options-history"
+    "name": "Meta Platforms Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "GOOG",
-    "name": "Alphabet Cl C",
-    "url": "https://www.barchart.com/stocks/quotes/GOOG/options-history"
+    "name": "Alphabet Cl C"
   },
   {
     "type": "nasdaq",
     "symbol": "GOOGL",
-    "name": "Alphabet Cl A",
-    "url": "https://www.barchart.com/stocks/quotes/GOOGL/options-history"
+    "name": "Alphabet Cl A"
   },
   {
     "type": "nasdaq",
     "symbol": "NFLX",
-    "name": "Netflix Inc",
-    "url": "https://www.barchart.com/stocks/quotes/NFLX/options-history"
+    "name": "Netflix Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "AMD",
-    "name": "Adv Micro Devices",
-    "url": "https://www.barchart.com/stocks/quotes/AMD/options-history"
+    "name": "Adv Micro Devices"
   },
   {
     "type": "nasdaq",
     "symbol": "TSM",
-    "name": "Taiwan Semiconductor ADR",
-    "url": "https://www.barchart.com/stocks/quotes/TSM/options-history"
+    "name": "Taiwan Semiconductor ADR"
   },
   {
     "type": "nasdaq",
     "symbol": "ASML",
-    "name": "Asml Holdings NY Reg ADR",
-    "url": "https://www.barchart.com/stocks/quotes/ASML/options-history"
+    "name": "Asml Holdings NY Reg ADR"
   },
   {
     "type": "nasdaq",
     "symbol": "QCOM",
-    "name": "Qualcomm Inc",
-    "url": "https://www.barchart.com/stocks/quotes/QCOM/options-history"
+    "name": "Qualcomm Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "AVGO",
-    "name": "Broadcom Ltd",
-    "url": "https://www.barchart.com/stocks/quotes/AVGO/options-history"
+    "name": "Broadcom Ltd"
   },
   {
     "type": "nasdaq",
     "symbol": "LRCX",
-    "name": "Lam Research Corp",
-    "url": "https://www.barchart.com/stocks/quotes/LRCX/options-history"
+    "name": "Lam Research Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "MRVL",
-    "name": "Marvell Technology Inc",
-    "url": "https://www.barchart.com/stocks/quotes/MRVL/options-history"
+    "name": "Marvell Technology Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "MU",
-    "name": "Micron Technology",
-    "url": "https://www.barchart.com/stocks/quotes/MU/options-history"
+    "name": "Micron Technology"
   },
   {
     "type": "nasdaq",
     "symbol": "NXPI",
-    "name": "Nxp Semiconductors",
-    "url": "https://www.barchart.com/stocks/quotes/NXPI/options-history"
+    "name": "Nxp Semiconductors"
   },
   {
     "type": "nasdaq",
     "symbol": "INTC",
-    "name": "Intel Corp",
-    "url": "https://www.barchart.com/stocks/quotes/INTC/options-history"
+    "name": "Intel Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "PYPL",
-    "name": "Paypal Holdings",
-    "url": "https://www.barchart.com/stocks/quotes/PYPL/options-history"
+    "name": "Paypal Holdings"
   },
   {
     "type": "nasdaq",
     "symbol": "SQ",
-    "name": "Block Inc",
-    "url": "https://www.barchart.com/stocks/quotes/SQ/options-history"
+    "name": "Block Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "CRM",
-    "name": "Salesforce Inc",
-    "url": "https://www.barchart.com/stocks/quotes/CRM/options-history"
+    "name": "Salesforce Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "ADBE",
-    "name": "Adobe Systems Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ADBE/options-history"
+    "name": "Adobe Systems Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "BA",
-    "name": "Boeing Company",
-    "url": "https://www.barchart.com/stocks/quotes/BA/options-history"
+    "name": "Boeing Company"
   },
   {
     "type": "nasdaq",
     "symbol": "COST",
-    "name": "Costco Wholesale",
-    "url": "https://www.barchart.com/stocks/quotes/COST/options-history"
+    "name": "Costco Wholesale"
   },
   {
     "type": "nasdaq",
     "symbol": "HD",
-    "name": "Home Depot",
-    "url": "https://www.barchart.com/stocks/quotes/HD/options-history"
+    "name": "Home Depot"
   },
   {
     "type": "nasdaq",
     "symbol": "ISRG",
-    "name": "Intuitive Surg Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ISRG/options-history"
+    "name": "Intuitive Surg Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "LULU",
-    "name": "Lululemon Athletica",
-    "url": "https://www.barchart.com/stocks/quotes/LULU/options-history"
+    "name": "Lululemon Athletica"
   },
   {
     "type": "nasdaq",
     "symbol": "DIS",
-    "name": "Walt Disney Company",
-    "url": "https://www.barchart.com/stocks/quotes/DIS/options-history"
+    "name": "Walt Disney Company"
   },
   {
     "type": "nasdaq",
     "symbol": "COIN",
-    "name": "Coinbase Global Inc Cl A",
-    "url": "https://www.barchart.com/stocks/quotes/COIN/options-history"
+    "name": "Coinbase Global Inc Cl A"
   },
   {
     "type": "nasdaq",
     "symbol": "ABNB",
-    "name": "Airbnb Inc Cl A",
-    "url": "https://www.barchart.com/stocks/quotes/ABNB/options-history"
+    "name": "Airbnb Inc Cl A"
   },
   {
     "type": "nasdaq",
     "symbol": "UBER",
-    "name": "Uber Technologies Inc",
-    "url": "https://www.barchart.com/stocks/quotes/UBER/options-history"
+    "name": "Uber Technologies Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "AAL",
-    "name": "American Airlines Gp",
-    "url": "https://www.barchart.com/stocks/quotes/AAL/options-history"
+    "name": "American Airlines Gp"
   },
   {
     "type": "nasdaq",
     "symbol": "DAL",
-    "name": "Delta Air Lines Inc",
-    "url": "https://www.barchart.com/stocks/quotes/DAL/options-history"
+    "name": "Delta Air Lines Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "LUV",
-    "name": "Southwest Airlines Company",
-    "url": "https://www.barchart.com/stocks/quotes/LUV/options-history"
+    "name": "Southwest Airlines Company"
   },
   {
     "type": "nasdaq",
     "symbol": "UAL",
-    "name": "United Airlines Holdings Inc ",
-    "url": "https://www.barchart.com/stocks/quotes/UAL/options-history"
+    "name": "United Airlines Holdings Inc "
   },
   {
     "type": "nasdaq",
     "symbol": "ALK",
-    "name": "Alaska Air Group",
-    "url": "https://www.barchart.com/stocks/quotes/ALK/options-history"
+    "name": "Alaska Air Group"
   },
   {
     "type": "nasdaq",
     "symbol": "PLTR",
-    "name": "Palantir Technologies Inc Cl A",
-    "url": "https://www.barchart.com/stocks/quotes/PLTR/options-history"
+    "name": "Palantir Technologies Inc Cl A"
   },
   {
     "type": "nasdaq",
     "symbol": "U",
-    "name": "Unity Software Inc",
-    "url": "https://www.barchart.com/stocks/quotes/U/options-history"
+    "name": "Unity Software Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "ADI",
-    "name": "Analog Devices",
-    "url": "https://www.barchart.com/stocks/quotes/ADI/options-history"
+    "name": "Analog Devices"
   },
   {
     "type": "nasdaq",
     "symbol": "ADP",
-    "name": "Automatic Data Procs",
-    "url": "https://www.barchart.com/stocks/quotes/ADP/options-history"
+    "name": "Automatic Data Procs"
   },
   {
     "type": "nasdaq",
     "symbol": "ADSK",
-    "name": "Autodesk Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ADSK/options-history"
+    "name": "Autodesk Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "AEP",
-    "name": "American Electric Power Company",
-    "url": "https://www.barchart.com/stocks/quotes/AEP/options-history"
+    "name": "American Electric Power Company"
   },
   {
     "type": "nasdaq",
     "symbol": "ALGN",
-    "name": "Align Technology",
-    "url": "https://www.barchart.com/stocks/quotes/ALGN/options-history"
+    "name": "Align Technology"
   },
   {
     "type": "nasdaq",
     "symbol": "AMAT",
-    "name": "Applied Materials",
-    "url": "https://www.barchart.com/stocks/quotes/AMAT/options-history"
+    "name": "Applied Materials"
   },
   {
     "type": "nasdaq",
     "symbol": "AMGN",
-    "name": "Amgen Inc",
-    "url": "https://www.barchart.com/stocks/quotes/AMGN/options-history"
+    "name": "Amgen Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "ANSS",
-    "name": "Ansys Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ANSS/options-history"
+    "name": "Ansys Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "AZN",
-    "name": "Astrazeneca Plc ADR",
-    "url": "https://www.barchart.com/stocks/quotes/AZN/options-history"
+    "name": "Astrazeneca Plc ADR"
   },
   {
     "type": "nasdaq",
     "symbol": "BIIB",
-    "name": "Biogen Inc",
-    "url": "https://www.barchart.com/stocks/quotes/BIIB/options-history"
+    "name": "Biogen Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "BKNG",
-    "name": "Booking Holdings Inc",
-    "url": "https://www.barchart.com/stocks/quotes/BKNG/options-history"
+    "name": "Booking Holdings Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "BKR",
-    "name": "Baker Hughes Company",
-    "url": "https://www.barchart.com/stocks/quotes/BKR/options-history"
+    "name": "Baker Hughes Company"
   },
   {
     "type": "nasdaq",
     "symbol": "CDNS",
-    "name": "Cadence Design Sys",
-    "url": "https://www.barchart.com/stocks/quotes/CDNS/options-history"
+    "name": "Cadence Design Sys"
   },
   {
     "type": "nasdaq",
     "symbol": "CEG",
-    "name": "Constellation Energy Corp",
-    "url": "https://www.barchart.com/stocks/quotes/CEG/options-history"
+    "name": "Constellation Energy Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "CHTR",
-    "name": "Charter Communications Inc",
-    "url": "https://www.barchart.com/stocks/quotes/CHTR/options-history"
+    "name": "Charter Communications Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "CMCSA",
-    "name": "Comcast Corp A",
-    "url": "https://www.barchart.com/stocks/quotes/CMCSA/options-history"
+    "name": "Comcast Corp A"
   },
   {
     "type": "nasdaq",
     "symbol": "CPRT",
-    "name": "Copart Inc",
-    "url": "https://www.barchart.com/stocks/quotes/CPRT/options-history"
+    "name": "Copart Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "CRWD",
-    "name": "Crowdstrike Holdings Inc",
-    "url": "https://www.barchart.com/stocks/quotes/CRWD/options-history"
+    "name": "Crowdstrike Holdings Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "CSCO",
-    "name": "Cisco Systems Inc",
-    "url": "https://www.barchart.com/stocks/quotes/CSCO/options-history"
+    "name": "Cisco Systems Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "CSGP",
-    "name": "Costar Group Inc",
-    "url": "https://www.barchart.com/stocks/quotes/CSGP/options-history"
+    "name": "Costar Group Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "CSX",
-    "name": "CSX Corp",
-    "url": "https://www.barchart.com/stocks/quotes/CSX/options-history"
+    "name": "CSX Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "CTAS",
-    "name": "Cintas Corp",
-    "url": "https://www.barchart.com/stocks/quotes/CTAS/options-history"
+    "name": "Cintas Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "CTSH",
-    "name": "Cognizant Tech Sol",
-    "url": "https://www.barchart.com/stocks/quotes/CTSH/options-history"
+    "name": "Cognizant Tech Sol"
   },
   {
     "type": "nasdaq",
     "symbol": "DDOG",
-    "name": "Datadog Inc Cl A",
-    "url": "https://www.barchart.com/stocks/quotes/DDOG/options-history"
+    "name": "Datadog Inc Cl A"
   },
   {
     "type": "nasdaq",
     "symbol": "DLTR",
-    "name": "Dollar Tree Inc",
-    "url": "https://www.barchart.com/stocks/quotes/DLTR/options-history"
+    "name": "Dollar Tree Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "DXCM",
-    "name": "Dexcom Inc",
-    "url": "https://www.barchart.com/stocks/quotes/DXCM/options-history"
+    "name": "Dexcom Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "EA",
-    "name": "Electronic Arts Inc",
-    "url": "https://www.barchart.com/stocks/quotes/EA/options-history"
+    "name": "Electronic Arts Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "EBAY",
-    "name": "Ebay Inc",
-    "url": "https://www.barchart.com/stocks/quotes/EBAY/options-history"
+    "name": "Ebay Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "ENPH",
-    "name": "Enphase Energy Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ENPH/options-history"
+    "name": "Enphase Energy Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "EXC",
-    "name": "Exelon Corp",
-    "url": "https://www.barchart.com/stocks/quotes/EXC/options-history"
+    "name": "Exelon Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "FANG",
-    "name": "Diamondback Energy",
-    "url": "https://www.barchart.com/stocks/quotes/FANG/options-history"
+    "name": "Diamondback Energy"
   },
   {
     "type": "nasdaq",
     "symbol": "FAST",
-    "name": "Fastenal Company",
-    "url": "https://www.barchart.com/stocks/quotes/FAST/options-history"
+    "name": "Fastenal Company"
   },
   {
     "type": "nasdaq",
     "symbol": "FTNT",
-    "name": "Fortinet Inc",
-    "url": "https://www.barchart.com/stocks/quotes/FTNT/options-history"
+    "name": "Fortinet Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "GEHC",
-    "name": "Ge Healthcare Technologies Inc",
-    "url": "https://www.barchart.com/stocks/quotes/GEHC/options-history"
+    "name": "Ge Healthcare Technologies Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "GFS",
-    "name": "Globalfoundries Inc",
-    "url": "https://www.barchart.com/stocks/quotes/GFS/options-history"
+    "name": "Globalfoundries Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "GILD",
-    "name": "Gilead Sciences Inc",
-    "url": "https://www.barchart.com/stocks/quotes/GILD/options-history"
+    "name": "Gilead Sciences Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "HON",
-    "name": "Honeywell International Inc",
-    "url": "https://www.barchart.com/stocks/quotes/HON/options-history"
+    "name": "Honeywell International Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "INTU",
-    "name": "Intuit Inc",
-    "url": "https://www.barchart.com/stocks/quotes/INTU/options-history"
+    "name": "Intuit Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "IDXX",
-    "name": "Idexx Laboratories",
-    "url": "https://www.barchart.com/stocks/quotes/IDXX/options-history"
+    "name": "Idexx Laboratories"
   },
   {
     "type": "nasdaq",
     "symbol": "ILMN",
-    "name": "Illumina Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ILMN/options-history"
+    "name": "Illumina Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "JD",
-    "name": "Jd.com Inc ADR",
-    "url": "https://www.barchart.com/stocks/quotes/JD/options-history"
+    "name": "Jd.com Inc ADR"
   },
   {
     "type": "nasdaq",
     "symbol": "KDP",
-    "name": "Keurig Dr Pepper Inc",
-    "url": "https://www.barchart.com/stocks/quotes/KDP/options-history"
+    "name": "Keurig Dr Pepper Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "KHC",
-    "name": "Kraft Heinz Company",
-    "url": "https://www.barchart.com/stocks/quotes/KHC/options-history"
+    "name": "Kraft Heinz Company"
   },
   {
     "type": "nasdaq",
     "symbol": "KLAC",
-    "name": "K L A-Tencor Corp",
-    "url": "https://www.barchart.com/stocks/quotes/KLAC/options-history"
+    "name": "K L A-Tencor Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "LCID",
-    "name": "Lucid Group Inc",
-    "url": "https://www.barchart.com/stocks/quotes/LCID/options-history"
+    "name": "Lucid Group Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "MAR",
-    "name": "Marriot Int Cl A",
-    "url": "https://www.barchart.com/stocks/quotes/MAR/options-history"
+    "name": "Marriot Int Cl A"
   },
   {
     "type": "nasdaq",
     "symbol": "MCHP",
-    "name": "Microchip Technology",
-    "url": "https://www.barchart.com/stocks/quotes/MCHP/options-history"
+    "name": "Microchip Technology"
   },
   {
     "type": "nasdaq",
     "symbol": "MDLZ",
-    "name": "Mondelez Intl Inc",
-    "url": "https://www.barchart.com/stocks/quotes/MDLZ/options-history"
+    "name": "Mondelez Intl Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "MELI",
-    "name": "Mercadolibre Inc",
-    "url": "https://www.barchart.com/stocks/quotes/MELI/options-history"
+    "name": "Mercadolibre Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "MNST",
-    "name": "Monster Beverage Cp",
-    "url": "https://www.barchart.com/stocks/quotes/MNST/options-history"
+    "name": "Monster Beverage Cp"
   },
   {
     "type": "nasdaq",
     "symbol": "MRNA",
-    "name": "Moderna Inc",
-    "url": "https://www.barchart.com/stocks/quotes/MRNA/options-history"
+    "name": "Moderna Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "ODFL",
-    "name": "Old Dominion Freight Line Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ODFL/options-history"
+    "name": "Old Dominion Freight Line Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "ON",
-    "name": "On Semiconductor",
-    "url": "https://www.barchart.com/stocks/quotes/ON/options-history"
+    "name": "On Semiconductor"
   },
   {
     "type": "nasdaq",
     "symbol": "ORLY",
-    "name": "O'Reilly Automotive",
-    "url": "https://www.barchart.com/stocks/quotes/ORLY/options-history"
+    "name": "O'Reilly Automotive"
   },
   {
     "type": "nasdaq",
     "symbol": "PANW",
-    "name": "Palo Alto Networks Inc",
-    "url": "https://www.barchart.com/stocks/quotes/PANW/options-history"
+    "name": "Palo Alto Networks Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "PAYX",
-    "name": "Paychex Inc",
-    "url": "https://www.barchart.com/stocks/quotes/PAYX/options-history"
+    "name": "Paychex Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "PCAR",
-    "name": "Paccar Inc",
-    "url": "https://www.barchart.com/stocks/quotes/PCAR/options-history"
+    "name": "Paccar Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "PDD",
-    "name": "Pdd Holdings Inc",
-    "url": "https://www.barchart.com/stocks/quotes/PDD/options-history"
+    "name": "Pdd Holdings Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "BABA",
-    "name": "Alibaba Group Holding ADR ",
-    "url": "https://www.barchart.com/stocks/quotes/BABA/options-history"
+    "name": "Alibaba Group Holding ADR "
   },
   {
     "type": "nasdaq",
     "symbol": "PEP",
-    "name": "Pepsico Inc",
-    "url": "https://www.barchart.com/stocks/quotes/PEP/options-history"
+    "name": "Pepsico Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "REGN",
-    "name": "Regeneron Pharmaceuticals",
-    "url": "https://www.barchart.com/stocks/quotes/REGN/options-history"
+    "name": "Regeneron Pharmaceuticals"
   },
   {
     "type": "nasdaq",
     "symbol": "ROST",
-    "name": "Ross Stores Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ROST/options-history"
+    "name": "Ross Stores Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "SBUX",
-    "name": "Starbucks Corp",
-    "url": "https://www.barchart.com/stocks/quotes/SBUX/options-history"
+    "name": "Starbucks Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "SGEN",
-    "name": "Seagen Inc",
-    "url": "https://www.barchart.com/stocks/quotes/SGEN/options-history"
+    "name": "Seagen Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "SIRI",
-    "name": "Sirius XM Holdings",
-    "url": "https://www.barchart.com/stocks/quotes/SIRI/options-history"
+    "name": "Sirius XM Holdings"
   },
   {
     "type": "nasdaq",
     "symbol": "SNPS",
-    "name": "Synopsys Inc",
-    "url": "https://www.barchart.com/stocks/quotes/SNPS/options-history"
+    "name": "Synopsys Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "TEAM",
-    "name": "Atlassian Corp",
-    "url": "https://www.barchart.com/stocks/quotes/TEAM/options-history"
+    "name": "Atlassian Corp"
   },
   {
     "type": "nasdaq",
     "symbol": "TMUS",
-    "name": "T-Mobile US",
-    "url": "https://www.barchart.com/stocks/quotes/TMUS/options-history"
+    "name": "T-Mobile US"
   },
   {
     "type": "nasdaq",
     "symbol": "TTD",
-    "name": "Trade Desk Inc",
-    "url": "https://www.barchart.com/stocks/quotes/TTD/options-history"
+    "name": "Trade Desk Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "TXN",
-    "name": "Texas Instruments",
-    "url": "https://www.barchart.com/stocks/quotes/TXN/options-history"
+    "name": "Texas Instruments"
   },
   {
     "type": "nasdaq",
     "symbol": "VRSK",
-    "name": "Verisk Analytics Inc",
-    "url": "https://www.barchart.com/stocks/quotes/VRSK/options-history"
+    "name": "Verisk Analytics Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "VRTX",
-    "name": "Vertex Pharmaceutic",
-    "url": "https://www.barchart.com/stocks/quotes/VRTX/options-history"
+    "name": "Vertex Pharmaceutic"
   },
   {
     "type": "nasdaq",
     "symbol": "WBA",
-    "name": "Walgreens Boots Alliance",
-    "url": "https://www.barchart.com/stocks/quotes/WBA/options-history"
+    "name": "Walgreens Boots Alliance"
   },
   {
     "type": "nasdaq",
     "symbol": "WBD",
-    "name": "Discovery Inc Series A",
-    "url": "https://www.barchart.com/stocks/quotes/WBD/options-history"
+    "name": "Discovery Inc Series A"
   },
   {
     "type": "nasdaq",
     "symbol": "WDAY",
-    "name": "Workday Inc",
-    "url": "https://www.barchart.com/stocks/quotes/WDAY/options-history"
+    "name": "Workday Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "XEL",
-    "name": "XCEL Energy Inc",
-    "url": "https://www.barchart.com/stocks/quotes/XEL/options-history"
+    "name": "XCEL Energy Inc"
   },
   {
     "type": "nasdaq",
     "symbol": "ZM",
-    "name": "Zoom Video Communications Cl A",
-    "url": "https://www.barchart.com/stocks/quotes/ZM/options-history"
+    "name": "Zoom Video Communications Cl A"
   },
   {
     "type": "nasdaq",
     "symbol": "ZS",
-    "name": "Zscaler Inc",
-    "url": "https://www.barchart.com/stocks/quotes/ZS/options-history"
+    "name": "Zscaler Inc"
   }
 ]

@@ -1231,6 +1231,17 @@ paths:
       responses:
         200:
           description: OK
+  /admin/data/opc/:type/search:
+    post:
+      operationId: searchOptionPutCall
+      parameters:
+        - name: type
+          in: path
+          type: string
+          required: true      
+      responses:
+        200:
+          description: OK          
   /admin/data/uoa/stock:
     post:
       operationId: uploadUoaStockCsv

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Pagination, Table, Select, Descriptions, DatePicker, Tooltip, Typography, Switch } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
+import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity, listOptionPutCallHistory } from 'services/dataService';
 import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { LockFilled } from '@ant-design/icons';
@@ -91,7 +91,8 @@ const OptionPutCallPanel = (props) => {
       if (!dryRun) {
         setLoading(true);
         const queryCondition = getQueryConditions(queryInfo);
-        const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryCondition) : await listUnusualOptionsActivity(props.type, queryCondition);
+        // const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryCondition) : await listOptionPutCallHistory(props.type, queryCondition);
+        const resp = await listOptionPutCallHistory(props.type, queryCondition);
         updateWithResponse(resp, queryInfo);
       } else {
         setQueryInfo(queryInfo);
@@ -163,7 +164,7 @@ const OptionPutCallPanel = (props) => {
     },
     {
       title: <TableTitle seq={findOrderSeq('tradeDate')}>Date</TableTitle>,
-      dataIndex: 'tradeDate',
+      dataIndex: 'date',
       sorter: { multiple: 1 },
       sortOrder: getSortOrder('tradeDate'),
       width: 155,
@@ -174,34 +175,34 @@ const OptionPutCallPanel = (props) => {
       }
     },
     {
-      title: 'Imp Vol',
-      dataIndex: 'impVol',
-      align: 'right',
-      render: (value) => value,
-    },
-    {
-      title: '1D IV Chg',
-      dataIndex: 'OneDayIVChange',
-      align: 'right',
-      render: (value) => value,
-    },
-    {
-      title: 'IV Rank',
-      dataIndex: 'ivRank',
-      align: 'right',
-      render: (value) => value,
-    },
-    {
-      title: 'IV Pctl',
-      dataIndex: 'ivPctl',
-      align: 'right',
-      render: (value) => value,
-    },
-    {
       title: 'Today Option Volume',
-      dataIndex: 'optionsVol',
+      dataIndex: 'totalVolume',
       align: 'right',
-      render: (value) => value,
+      render: (value) => (+value).toLocaleString(),
+    },
+    {
+      title: 'Today %Put Vol',
+      dataIndex: 'todayPercentPutVolume',
+      align: 'right',
+      render: (value) => (+value * 100).toFixed(0) + '%',
+    },
+    {
+      title: 'Today %Call Vol',
+      dataIndex: 'todayPercentCallVolume',
+      align: 'right',
+      render: (value) => (+value * 100).toFixed(0) + '%',
+    },
+    {
+      title: 'Total P/C OI Ratio',
+      dataIndex: 'putCallVolumeRatio',
+      align: 'right',
+      render: (value) => (+value).toFixed(3),
+    },
+    {
+      title: 'Total Open Interest',
+      dataIndex: 'totalOpenInterest',
+      align: 'right',
+      render: (value) => (+value).toLocaleString(),
     },
     {
       title: 'Today %Put Vol',
@@ -267,24 +268,16 @@ const OptionPutCallPanel = (props) => {
             {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
           </Select>
         </Descriptions.Item>
-        <Descriptions.Item label="Expiration Date">
-          <DatePicker.RangePicker allowClear picker="date" placeholder={['From', 'To']} onChange={handleExpDateChange} />
-        </Descriptions.Item>
-        <Descriptions.Item label="Type">
-          <Select allowClear style={{ width: 100 }} placeholder="Type" onChange={handleTypeChange}>
-            <Select.Option value="Put">Put</Select.Option>
-            <Select.Option value="Call">Call</Select.Option>
-          </Select>
-        </Descriptions.Item>
-        <Descriptions.Item label="">
+        <Descriptions.Item label="Trade Date">
+          <DatePicker.RangePicker allowClear picker="date" disabled={queryInfo.lastDayOnly} placeholder={['From', 'To']} onChange={handleTimeChange} />
         </Descriptions.Item>
         <Descriptions.Item label="Last day only">
           <Tooltip title={queryInfo.lastDayOnly ? "Switch off to view all historical data" : "Switch on to only view the last day's data"}>
             <Switch checked={queryInfo.lastDayOnly} onChange={handleLastDayOnlyChange} />
           </Tooltip>
         </Descriptions.Item>
-        <Descriptions.Item label="Trade Date">
-          <DatePicker.RangePicker allowClear picker="date" disabled={queryInfo.lastDayOnly} placeholder={['From', 'To']} onChange={handleTimeChange} />
+        <Descriptions.Item>
+          {/* <DatePicker.RangePicker allowClear picker="date" placeholder={['From', 'To']} onChange={handleExpDateChange} /> */}
         </Descriptions.Item>
       </Descriptions>
       <Table
@@ -326,7 +319,7 @@ const OptionPutCallPanel = (props) => {
 };
 
 OptionPutCallPanel.propTypes = {
-  type: PropTypes.oneOf(['stock', 'etfs', 'index']).isRequired
+  type: PropTypes.oneOf(['index', 'etfs', 'nasdaq']).isRequired
 };
 
 OptionPutCallPanel.defaultProps = {};

@@ -18,6 +18,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import { Role } from '../types/Role';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
+import { searchOptionPutCallHistory } from '../utils/searchOptionPutCallHistory';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
@@ -268,6 +269,13 @@ function shouldShowFullDataForUoa(req) {
   const role = user?.role || Role.Guest;
   return [Role.Admin, Role.Agent, Role.Member].includes(role);
 }
+
+export const searchOptionPutCall = handlerWrapper(async (req, res) => {
+  const showFullData = shouldShowFullDataForUoa(req);
+  const { type } = req.params;
+  const list = await searchOptionPutCallHistory(type, req.body, showFullData);
+  res.json(list);
+});
 
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);

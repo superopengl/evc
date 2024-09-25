@@ -184,13 +184,13 @@ const OptionPutCallPanel = (props) => {
       title: 'Today %Put Vol',
       dataIndex: 'todayPercentPutVol',
       align: 'right',
-      render: (value) => (+value).toFixed(0) + '%',
+      render: (value) => (+value).toFixed(2) + '%',
     },
     {
       title: 'Today %Call Vol',
       dataIndex: 'todayPercentCallVol',
       align: 'right',
-      render: (value) => (+value).toFixed(0) + '%',
+      render: (value) => (+value).toFixed(2) + '%',
     },
     {
       title: 'Total P/C OI Ratio',

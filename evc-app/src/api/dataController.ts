@@ -272,8 +272,7 @@ function shouldShowFullDataForUoa(req) {
 
 export const searchOptionPutCall = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
-  const { type } = req.params;
-  const list = await searchOptionPutCallHistory(type, req.body, showFullData);
+  const list = await searchOptionPutCallHistory(req.body, showFullData);
   res.json(list);
 });
 

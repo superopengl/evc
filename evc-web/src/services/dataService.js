@@ -15,11 +15,15 @@ export async function getOperationStatus(operation) {
   return httpGet(`admin/operation/${operation}/status`);
 }
 
-export async function listOptionPutCallHistory(type, query) {
-  if (!type) {
-    throw new Error(`operation is not specified.`);
+export async function listOptionPutCallHistory(query) {
+  if (!query.type && !query.symbol) {
+    throw new Error(`Either type or symbol must be specified.`);
   }
-  return httpPost(`/admin/data/opc/${type}/search`, query);
+  return httpPost(`/admin/data/opc/search`, query);
+}
+
+export async function getOptionPutCallHistoryChartData(symbol) {
+  return httpGet(`/stock/s/${symbol}/chart/optionhistory`);
 }
 
 export async function listUnusualOptionsActivity(type, query) {

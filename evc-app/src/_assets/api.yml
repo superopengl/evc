@@ -550,6 +550,17 @@ paths:
       responses:
         200:
           description: OK
+  /stock/s/{symbol}/chart/optionhistory:
+    get:
+      operationId: getOptionPutCallHistoryChart
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /stock/s/{symbol}/quote:
     get:
       operationId: getStockQuote
@@ -1231,14 +1242,9 @@ paths:
       responses:
         200:
           description: OK
-  /admin/data/opc/:type/search:
+  /admin/data/opc/search:
     post:
       operationId: searchOptionPutCall
-      parameters:
-        - name: type
-          in: path
-          type: string
-          required: true      
       responses:
         200:
           description: OK          

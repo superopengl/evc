@@ -47,6 +47,7 @@ import { getCompanyName } from '../services/alphaVantageService';
 import { StockInsiderTransaction } from '../entity/StockInsiderTransaction';
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
+import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -452,6 +453,33 @@ export const getPutCallRatioChart = handlerWrapper(async (req, res) => {
   })
   res.set('Cache-Control', `public, max-age=1800`);
   res.json(list);
+});
+
+export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {
+  const { symbol } = req.params;
+  const list = await getRepository(OptionPutCallHistoryInformation).find({
+    where: {
+      symbol
+    },
+    select: [
+      'date',
+      'putCallOIRatio',
+      'todayPercentPutVol',
+      'todayPercentCallVol',
+    ],
+    order: {
+      date: 'ASC'
+    }
+  })
+
+  const result = list.map(d => ({
+    date: moment(d.date).format('YYYY-MM-DD'),
+    putCallOIRatio: _.round(+d.putCallOIRatio, 3),
+    todayPercentPutVol: _.round(+d.todayPercentPutVol, 2),
+    todayPercentCallVol: _.round(+d.todayPercentCallVol, 2),
+  }));
+  res.set('Cache-Control', `public, max-age=1800`);
+  res.json(result);
 });
 
 async function updateStockLastPrice(info: StockLastPriceInfo) {

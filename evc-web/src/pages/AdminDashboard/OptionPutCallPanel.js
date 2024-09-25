@@ -176,7 +176,7 @@ const OptionPutCallPanel = (props) => {
     },
     {
       title: 'Today Option Volume',
-      dataIndex: 'todayTotalVol',
+      dataIndex: 'todayOptionVol',
       align: 'right',
       render: (value) => (Math.round(+value)).toLocaleString(),
     },
@@ -184,19 +184,19 @@ const OptionPutCallPanel = (props) => {
       title: 'Today %Put Vol',
       dataIndex: 'todayPercentPutVol',
       align: 'right',
-      render: (value) => (+value * 100).toFixed(0) + '%',
+      render: (value) => (+value).toFixed(0) + '%',
     },
     {
       title: 'Today %Call Vol',
       dataIndex: 'todayPercentCallVol',
       align: 'right',
-      render: (value) => (+value * 100).toFixed(0) + '%',
+      render: (value) => (+value).toFixed(0) + '%',
     },
     {
       title: 'Total P/C OI Ratio',
       dataIndex: 'putCallVol',
       align: 'right',
-      render: (value) => (+value).toFixed(2),
+      render: (value) => (+value).toFixed(3),
     },
     {
       title: 'Total Open Interest',

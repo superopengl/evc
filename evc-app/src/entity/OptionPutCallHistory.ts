@@ -20,19 +20,22 @@ export class OptionPutCallHistory {
   putCallVol: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  todayTotalVol: number;
+  todayOptionVol: number;
 
-  /**
-   * P/C OI; Total P/C OI Ratio
-   */
+  @Column('decimal', { transformer: new ColumnNumericTransformer() })
+  todayOptionVolDelta: number;
+
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   putCallOIRatio: number;
 
-  /**
-   * Total OI; Total Open Interest
-   */
+  @Column('decimal', { transformer: new ColumnNumericTransformer() })
+  putCallOIRatioDelta: number;
+
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   totalOpenInterest: number;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer() })
+  totalOpenInterestDelta: number;
 
   @Column('jsonb')
   raw: object;

@@ -10,10 +10,10 @@ import { OptionPutCallHistory } from '../OptionPutCallHistory';
       'i.name as name',
       'i.type as type',
       'i."putCallVol" as "putCallVol"',
-      'i."todayTotalVol" as "todayTotalVol"',
-      'i."putCallOIRatio" as "putCallOIRatio"',
-      'i."totalOpenInterest" as "totalOpenInterest"',
-      '1 - 100 / ("putCallVol" + 1) as "todayPercentPutVol"',
+      'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
+      'i."putCallOIRatio" + i."putCallOIRatioDelta" as "putCallOIRatio"',
+      'i."totalOpenInterest" + i."totalOpenInterest" as "totalOpenInterest"',
+      '100 - 100 / ("putCallVol" + 1) as "todayPercentPutVol"',
       '100 / ("putCallVol" + 1) as "todayPercentCallVol"',
 
     ])
@@ -41,7 +41,7 @@ export class OptionPutCallHistoryInformation {
    * Options Vol; Today Option Volume
    */
   @ViewColumn()
-  todayTotalVol: number;
+  todayOptionVol: number;
 
   /**
    * P/C OI; Total P/C OI Ratio

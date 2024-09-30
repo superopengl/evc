@@ -140,7 +140,7 @@ const OptionPutCallHistoryChart = props => {
         return { name: item.type, value };
       }
     },
-    color: ['#55B0D4', '#ffc53d', '#d7183f'],
+    color: ['#1570FF', '#ffc53d', '#F31dab'],
     lineStyle: {
       lineWidth: 1.5,
     },

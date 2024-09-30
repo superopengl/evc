@@ -60,7 +60,7 @@ const StockEvcInfoPanel = (props) => {
           <NumberRangeDisplay className="number"
             lo={data.fairValueLo}
             hi={data.fairValueHi}
-            empty={data.isLoss ? <Text type="danger"><FormattedMessage id="text.loss" /></Text> : <Text type="warning"><small>N/A</small></Text>} />
+            empty={data.isLoss ? <Text type="danger"><FormattedMessage id="text.loss" /></Text> : <Text type="warning"><small>NONE</small></Text>} />
         }
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -73,7 +73,7 @@ const StockEvcInfoPanel = (props) => {
             hi={data.forwardNextFyFairValueHi}
             empty={data.isForwardNextFyFairValueLoss ?
               <Text type="danger"><small><FormattedMessage id="text.forwardNextFyFairValueLoss" /></small></Text> :
-              <Text type="warning"><small>N/A</small></Text>}
+              <Text type="warning"><small>NONE</small></Text>}
           />
         </div>}
       </Space>
@@ -87,7 +87,7 @@ const StockEvcInfoPanel = (props) => {
             hi={data.forwardNextFyMaxValueHi}
             empty={data.isForwardNextFyMaxValueLoss ?
               <Text type="danger"><small><FormattedMessage id="text.forwardNextFyFairValueLoss" /></small></Text> :
-              <Text type="warning"><small>N/A</small></Text>}
+              <Text type="warning"><small>NONE</small></Text>}
           />
         </div>}
       </Space>

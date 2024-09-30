@@ -232,7 +232,7 @@ const StockInfoCard = (props) => {
   >
     <Row style={editingTag ? { filter: 'opacity(0.2)' } : null} wrap={false}>
       <Col flex="none">
-        <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : 'N/A'}</Text>
+        <Text style={{ fontSize: '1.5rem', marginRight: '1rem' }}>{lastPrice ? lastPrice.toFixed(2) : 'NONE'}</Text>
       </Col>
       <Col flex="auto">
         <StyledList

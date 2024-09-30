@@ -95,7 +95,7 @@
   "text.stockRadarPreviewDescription": "This is Stock Radar preview. Full feature is available for Pro Members",
   "tour.fairValueTitle": "EVC fair values, capturing valuable buy points",
   "tour.fairValueDescription": "EVC fair value, different from long-term target price, is trailing valuation. It closely tracks stock financial performances and reflects current rational prices. We do complicated financial analysis for you. Our aim is to make sure that the buy points are within the intervals of fair values; no more sightless chasing high or horrifying sale low.",
-  "tour.fairValueNote": "Note: NOT all stocks EVC can provide rational fair value. Some you will find N/A, i.e., fair value is not available.",
+  "tour.fairValueNote": "Note: NOT all stocks EVC can provide rational fair value. Some you will find NONE, i.e., fair value is not available.",
   "tour.supportTitle": "Precise support level and buy point, avoiding selling at bottom price",
   "tour.supportDescription": "To what level, the stock market would stop declining? EVC gives precise support level-based on the comprehensive analysis of structural and technical supports, volume indicators, etc. The decline process usually stops at the support level, that is where investors can look for opportunities for rebound or bottom fishing. Panic selling at the bottom price during a correction can be avoided. If the stock price falls below the support level, it indicates that there is no tenable defense position, the stock price would continue dropping. Then, stop the loss as soon as possible to avoid greater losses.",
   "tour.supportNote": "Note: NOT all stocks EVC can provide support level. Some you will find it show as blank, i.e., support level is not available.",

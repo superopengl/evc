@@ -1,25 +1,16 @@
 import fs from 'fs';
-import pdf from 'html-pdf';
 import handlebars from 'handlebars';
-import { Stream } from 'stream';
 import moment from 'moment';
 import { PaymentMethod } from '../types/PaymentMethod';
 import _ from 'lodash';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { assert } from '../utils/assert';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
+import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
 
 const receiptTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/receipt_template.html`);
 const compiledTemplate = handlebars.compile(receiptTemplateHtml.toString());
 
-async function generatePdfStream(html, options) {
-  return new Promise<any>((res, rej) => {
-    pdf.create(html, options).toStream((err, stream) => {
-      if (err) return rej(err);
-      res(stream);
-    })
-  })
-}
 
 function getPaymentMethodName(paymentMethod: PaymentMethod) {
   return _.capitalize(paymentMethod);
@@ -69,13 +60,12 @@ function getVars(receipt: ReceiptInformation) {
   };
 }
 
-export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream: Stream, fileName: string }> {
+export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfBuffer: Buffer, fileName: string }> {
   const vars = getVars(receipt);
   const html = compiledTemplate(vars);
-  const options = { format: 'A4' };
 
-  const pdfStream = await generatePdfStream(html, options);
+  const pdfBuffer = await generatePdfBufferFromHtml(html);
   const fileName = `Receipt_${vars.receiptNumber}.pdf`;
 
-  return { pdfStream, fileName };
+  return { pdfBuffer, fileName };
 }

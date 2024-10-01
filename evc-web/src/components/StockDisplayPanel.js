@@ -23,7 +23,8 @@ import {
 import { FormattedMessage } from 'react-intl';
 import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
-import OptionPutCallHistoryChart from 'components/charts/OptionPutCallHistoryChart';
+import { OptionPutCallHistoryChart } from 'components/charts/OptionPutCallHistoryChart';
+import OptionPutCallPanel from 'pages/AdminDashboard/OptionPutCallPanel';
 
 
 const StockDisplayPanel = (props) => {
@@ -108,15 +109,17 @@ const StockDisplayPanel = (props) => {
         </Row>
         {showInlineStockChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true} bodyStyle={{ height: 450 }}>
-              <OptionPutCallHistoryChart symbol={stock.symbol} />
+            <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true}
+            //  bodyStyle={{ height: 450 }}
+            >
+              {stock.hasNewChart ? <OptionPutCallHistoryChart symbol={stock.symbol} /> : <StockPutCallRatioChart symbol={stock.symbol} />}
             </MemberOnlyCard>
           </Col>
         </Row>}
-        {showInlineStockChart && <Row style={{ marginTop: 30 }}>
+        {stock.hasNewChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true} bodyStyle={{ height: 450 }}>
-              <StockPutCallRatioChart symbol={stock.symbol} />
+            <MemberOnlyCard title={<FormattedMessage id="menu.optionPutCall" />} paidOnly={true} bodyStyle={{ padding: 0 }}>
+              <OptionPutCallPanel symbol={stock.symbol} lastDayOnly={true} />
             </MemberOnlyCard>
           </Col>
         </Row>}
@@ -179,7 +182,7 @@ const StockDisplayPanel = (props) => {
           width="100vw"
           centered
         >
-          <StockPutCallRatioChart symbol={stock.symbol} />
+          {stock.hasNewChart ? <OptionPutCallHistoryChart symbol={stock.symbol} /> : <StockPutCallRatioChart symbol={stock.symbol} />}
         </Modal>}
       </>}
 

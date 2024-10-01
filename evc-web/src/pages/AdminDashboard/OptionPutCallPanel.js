@@ -1,15 +1,12 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Descriptions, Space, DatePicker, Tooltip, Typography, Button } from 'antd';
+import { Pagination, Table, Select, Space, Typography, Button } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity, listOptionPutCallHistory } from 'services/dataService';
-import { from } from 'rxjs';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { CaretRightOutlined, LockFilled, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { listOptionPutCallHistory } from 'services/dataService';
+import { PlusOutlined } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
-import { FormattedMessage } from 'react-intl';
 import { Modal } from 'antd';
 import { Loading } from 'components/Loading';
 
@@ -32,14 +29,17 @@ width: 100%;
 
 `;
 
-const LockIcon = () => <Tooltip title={<FormattedMessage id="text.fullFeatureAfterPay" />}>
-  <LockFilled />
-</Tooltip>
 
 const TableTitle = props => props.seq > 0 ? <>{props.children} <Text type="success" strong><sup>{props.seq}</sup></Text></> : props.children
 
 const OptionPutCallPanel = (props) => {
   const { type, symbol, lastDayOnly } = props;
+
+  if (!type && !symbol) {
+    throw new Error(`Either type or symbol must be specified`);
+  }
+
+  const isMultiSymbolMode = !!type;
   const [loading, setLoading] = React.useState(false);
   const [queryInfo, setQueryInfo] = React.useState({
     // ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
@@ -49,13 +49,6 @@ const OptionPutCallPanel = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
-  const context = React.useContext(GlobalContext);
-
-  const shouldNoCache = ['admin', 'agent'].includes(context.role);
-
-  const loadList = async () => {
-    searchByQueryInfo(queryInfo);
-  }
 
   React.useEffect(() => {
     searchByQueryInfo({
@@ -65,13 +58,6 @@ const OptionPutCallPanel = (props) => {
       lastDayOnly,
     })
   }, [type, symbol, lastDayOnly]);
-
-  // React.useEffect(() => {
-  //   const load$ = from(loadList()).subscribe();
-  //   return () => {
-  //     load$.unsubscribe();
-  //   }
-  // }, []);
 
   const updateWithResponse = (loadResponse, queryInfo) => {
     if (loadResponse) {
@@ -117,29 +103,6 @@ const OptionPutCallPanel = (props) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
-  const handleTypeChange = (type) => {
-    searchByQueryInfo({ ...queryInfo, type, page: 1 });
-  }
-
-  const handleExpDateChange = (dates) => {
-    const [from, to] = dates ?? [];
-    searchByQueryInfo({
-      ...queryInfo,
-      expDateFrom: from?.toDate(),
-      expDateTo: to?.toDate(),
-      page: 1
-    });
-  }
-
-  const handleTimeChange = (dates) => {
-    const [from, to] = dates ?? [];
-    searchByQueryInfo({
-      ...queryInfo,
-      timeFrom: from?.toDate(),
-      timeTo: to?.toDate(),
-      page: 1
-    });
-  }
 
   const getSortOrder = (key) => {
     const order = queryInfo.order ?? [];
@@ -156,7 +119,6 @@ const OptionPutCallPanel = (props) => {
     return index + 1;
   }
 
-  const shouldHide = context.role === 'free' || context.role === 'guest';
 
   const handleShowDetail = async (symbol) => {
     const modalInstance = Modal.info({
@@ -180,7 +142,7 @@ const OptionPutCallPanel = (props) => {
         rowKey="index"
         pagination={false}
         style={{
-          marginBottom: '1rem',
+          // marginBottom: '1rem',
           // height: 'calc(100vh - 320px)' 
         }}
         scroll={{
@@ -265,17 +227,10 @@ const OptionPutCallPanel = (props) => {
     });
   }
 
-  const handleLastDayOnlyChange = (checked) => {
-    searchByQueryInfo({
-      ...queryInfo,
-      lastDayOnly: checked,
-      page: 1,
-    })
-  }
 
   return (
     <ContainerStyled>
-      <Space style={{ marginBottom: 20 }}>
+      {isMultiSymbolMode && <Space style={{ marginBottom: 20 }}>
         <Text>Symbol:</Text>
         <Select allowClear style={{ width: 100 }} placeholder="Symbol"
           // onSearch={handleSymbolChange}
@@ -289,7 +244,7 @@ const OptionPutCallPanel = (props) => {
         >
           {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
         </Select>
-      </Space>
+      </Space>}
       <Table
         bordered={false}
         size="small"
@@ -300,7 +255,7 @@ const OptionPutCallPanel = (props) => {
         pagination={false}
         onChange={handleTableSortChange}
         style={{
-          marginBottom: '1rem',
+          // marginBottom: '1rem',
           // height: 'calc(100vh - 320px)' 
         }}
         scroll={{
@@ -308,7 +263,7 @@ const OptionPutCallPanel = (props) => {
           y: 'calc(100vh - 370px)'
         }}
       ></Table>
-      <Pagination
+      {isMultiSymbolMode && <Pagination
         current={queryInfo.page}
         pageSize={queryInfo.size}
         total={total}
@@ -318,12 +273,13 @@ const OptionPutCallPanel = (props) => {
         showSizeChanger
         showQuickJumper
         showTotal={total => `Total ${total}`}
+        style={{ marginTop: '1rem' }}
         disabled={loading}
         onChange={handlePaginationChange}
         onShowSizeChange={(current, size) => {
           searchByQueryInfo({ ...queryInfo, page: current, size });
         }}
-      />
+      />}
     </ContainerStyled>
   );
 };

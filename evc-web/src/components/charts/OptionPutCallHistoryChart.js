@@ -7,7 +7,7 @@ import { Loading } from "components/Loading";
 import { from } from 'rxjs';
 import { getOptionPutCallHistoryChartData } from "services/dataService";
 
-const OptionPutCallHistoryChart = props => {
+export const OptionPutCallHistoryChart = props => {
   const { symbol } = props;
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
@@ -161,4 +161,3 @@ OptionPutCallHistoryChart.defaultProps = {
   width: 500
 };
 
-export default OptionPutCallHistoryChart;

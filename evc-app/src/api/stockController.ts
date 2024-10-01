@@ -468,8 +468,9 @@ export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {
       'todayPercentCallVol',
     ],
     order: {
-      date: 'ASC'
-    }
+      date: 'DESC'
+    },
+    take: 180,
   })
 
   const result = list.map(d => ({

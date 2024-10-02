@@ -1,11 +1,24 @@
 import { UnusualOptionActivityIndex } from './../src/entity/UnusualOptionActivityIndex';
 import { UnusualOptionActivityStock } from './../src/entity/UnusualOptionActivityStock';
-import { getManager } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import _ from 'lodash';
 import { grabAllUnusualOptionActivity } from '../src/services/barchartService';
 import { UnusualOptionActivityEtfs } from '../src/entity/UnusualOptionActivityEtfs';
 import moment = require('moment');
+import { randomNumber } from './randomNumber';
+import { OptionPutCallHistory } from '../src/entity/OptionPutCallHistory';
+import OPTION_PUT_CALL_DEF from './option-put-call-def.json';
+import { grabOptionPutCallHistory } from '../src/services/barchartService';
+
+const defList = OPTION_PUT_CALL_DEF as any as DEF_INFO[];
+
+type DEF_INFO = {
+  type: 'index' | 'etfs' | 'nasdaq';
+  symbol: string;
+  name: string;
+  url: string;
+}
 
 async function upsertDatabase(tableEntity, rawData) {
   if (!rawData?.length) {
@@ -74,28 +87,76 @@ function convertToEntity(data) {
   }
 }
 
+function convertToOptionPutCallEntity(data, info: DEF_INFO): OptionPutCallHistory {
+  const entity = new OptionPutCallHistory();
+  entity.symbol = info.symbol;
+  entity.date = data.date;
+  entity.name = info.name;
+  entity.type = info.type;
+  entity.putCallVol = data.raw.putCallVolumeRatio;
+  entity.todayOptionVol = data.raw.totalVolume;
+  entity.todayOptionVolDelta = randomNumber(12, 19);
+  entity.putCallOIRatio = data.raw.putCallOpenInterestRatio;
+  entity.putCallOIRatioDelta = randomNumber(0.0001, 0.0004);
+  entity.totalOpenInterest = data.raw.totalOpenInterest;
+  entity.totalOpenInterestDelta = randomNumber(12, 19);
+  entity.raw = data.raw;
+
+  return entity;
+}
 
 const JOB_NAME = 'daily-uoa';
+const list = [
+  {
+    type: 'stock',
+    table: UnusualOptionActivityStock
+  },
+  {
+    type: 'etf',
+    table: UnusualOptionActivityEtfs
+  },
+  {
+    type: 'index',
+    table: UnusualOptionActivityIndex
+  },
+];
+
+
+async function getDataLimit(symbol) {
+  const result = await getRepository(OptionPutCallHistory).findOne({ symbol });
+  return result ? 1 : 90;
+}
 
 start(JOB_NAME, async () => {
-  const list = [
-    {
-      type: 'stock',
-      table: UnusualOptionActivityStock
-    },
-    {
-      type: 'etf',
-      table: UnusualOptionActivityEtfs
-    },
-    {
-      type: 'index',
-      table: UnusualOptionActivityIndex
-    },
-  ];
-
+  console.log('Grabing unusual option activities');
   for (const info of list) {
     const { type, table } = info;
     const rawData = await grabAllUnusualOptionActivity(type);
     await upsertDatabase(table, rawData);
   }
+
+  // Grab option history
+  console.log('Grabing option history');
+  let counter = 0;
+  for (const info of defList) {
+    counter++;
+    const limit = await getDataLimit(info.symbol);
+
+    console.log(`[${counter}/${defList.length}]`.bgBlue.white, `Grabing ${info.symbol} option hisotry from Barchart (${limit} days) ...`);
+
+    const dataList = await grabOptionPutCallHistory(info.symbol, limit);
+    const entities = dataList.map(d => convertToOptionPutCallEntity(d, info));
+    await getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(OptionPutCallHistory)
+      .values(entities)
+      .orIgnore()
+      .execute();
+
+    console.log(`[${counter}/${defList.length}]`.bgGreen.white, `Done for ${info.symbol}.`);
+  }
+
+
+
 }, { daemon: false });

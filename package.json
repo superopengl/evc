@@ -10,7 +10,7 @@
     "bs": "cd ./*app; pnpm dev",
     "fs": "cd ./*web; pnpm start",
     "docker:build": "docker build -t evc -f ./devops/Dockerfile --memory-swap -1 --memory 4g --build-arg NODE_ENV=prod --build-arg REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) .",
-    "docker:run": "docker run -p 80:80 --env-file ./devops/.env.prod evc",
+    "docker:run": "docker run -p 8081:80 --rm --env-file ./devops/.env.prod evc",
     "docker:push": "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 115607939215.dkr.ecr.us-east-1.amazonaws.com; docker tag evc:latest 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest; docker push 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest",
     "ecs:update:portal": "aws ecs update-service --cluster evc --service evc-portal --force-new-deployment --region us-east-1",
     "ecs:update:daemon": "aws ecs update-service --cluster evc --service evc-daemon --force-new-deployment --region us-east-1",

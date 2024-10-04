@@ -14,6 +14,7 @@ import { sendEmail } from '../src/services/emailService';
 import { getUtcNow } from '../src/utils/getUtcNow';
 import _ from 'lodash';
 import { syncStockLastPrice } from '../src/utils/syncStockLastPrice';
+import { sleep } from '../src/utils/sleep';
 
 const JOB_NAME = 'price-sse';
 const SYMBOL_BATCH_SIZE = 50;
@@ -132,12 +133,6 @@ function createSseForSymbols(symbols: string[], generation = 0) {
     es?.close();
     throw err;
   }
-}
-
-async function sleep(ms): Promise<void> {
-  return new Promise(res => {
-    setTimeout(() => res(), ms);
-  });
 }
 
 async function startPriceSseDaemon() {

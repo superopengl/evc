@@ -146,7 +146,7 @@ export const OptionPutCallHistoryChart = props => {
     },
     color: ['#1570FF', '#ffc53d', '#F31dab'],
     lineStyle: {
-      lineWidth: 1.5,
+      lineWidth: 2.0,
     },
   };
 

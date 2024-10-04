@@ -21,7 +21,7 @@ async function udpateDatabase(symbolValueMap) {
     advancedStatsInfo.push({
       symbol,
       putCallRatio: value.putCallRatio,
-      beta: value.bata,
+      beta: value.beta,
       peRatio: value.peRatio,
       pegRatio: value.pegRatio,
       date: moment().format('YYYY-MM-DD'),

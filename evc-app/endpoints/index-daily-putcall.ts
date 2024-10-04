@@ -8,7 +8,6 @@ import moment from 'moment';
 import { refreshMaterializedView } from "../src/refreshMaterializedView";
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import _ from 'lodash';
-import { StockPutCallRatio90 } from '../src/entity/views/StockPutCallRatio90';
 import { StockDailyAdvancedStat } from '../src/entity/StockDailyAdvancedStat';
 import { StockDailyPutCallRatio } from '../src/entity/StockDailyPutCallRatio';
 import { assert } from '../src/utils/assert';
@@ -52,9 +51,7 @@ ON CONFLICT (symbol, "date") DO NOTHING
     `);
 
   console.log(`Finished backfilling data from the old "${oldTableSchema}"."${oldTableName}" table.`);
-
 }
-
 
 async function syncIexForSymbols(symbols: string[]) {
   const resp = await sendIexRequest(symbols, 'advanced_stats');

@@ -96,7 +96,7 @@ const StockEvcInfoPanel = (props) => {
           <FormattedMessage id="text.beta" />
         </TooltipLabel>
         {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          {data.bata ? <Text>{data.beta}</Text> : <Text type="warning"><small>NONE</small></Text>}
+          {data.beta ? <Text>{(+data.beta).toFixed(3)}</Text> : <Text type="warning"><small>NONE</small></Text>}
         </div>}
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>

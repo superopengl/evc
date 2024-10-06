@@ -13,13 +13,16 @@ export class StockTag {
   @Column()
   name: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   builtIn: boolean;
 
   @Column({ default: false })
   officialOnly: boolean;
 
-  @Column({default: 999999})
+  @Column({ default: false })
+  includesOptionPutCall: boolean;
+
+  @Column({ default: 999999 })
   sortGroup: number;
 }
 

@@ -26,6 +26,8 @@ const TagsSettingPage = () => {
           onList={listStockTags}
           onSave={saveStockTag}
           onDelete={deleteStockTag}
+          showOfficialOnly={true}
+          showIncludesOptionPutCall={true}
         />
       </Col>
       <Col {...span}>
@@ -35,6 +37,7 @@ const TagsSettingPage = () => {
           onSave={saveUserTag}
           onDelete={deleteUserTag}
           showOfficialOnly={false}
+          showIncludesOptionPutCall={false}
         />
 
       </Col>

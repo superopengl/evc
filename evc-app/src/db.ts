@@ -9,17 +9,19 @@ import { StockPutCallRatio90 } from './entity/views/StockPutCallRatio90';
 import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
 import { StockComputedPe365 } from './entity/views/StockComputedPe365';
+import { initializeIndexDef } from './utils/initializeIndexDef';
 
 export async function connectDatabase(shouldSyncSchema = false) {
   const connection = await createConnection();
   if (shouldSyncSchema) {
     await syncDatabaseSchema(connection);
-    await initializeData();
+    await initializeData(connection);
   }
   return connection;
 }
 
-async function initializeData() {
+async function initializeData(connection) {
+  await initializeIndexDef(connection);
   await initializeConfig();
   await initializeEmailTemplates();
 }

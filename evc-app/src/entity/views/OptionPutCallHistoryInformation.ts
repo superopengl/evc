@@ -1,21 +1,22 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { OptionPutCallHistory } from '../OptionPutCallHistory';
+import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(OptionPutCallHistory, 'i')
+    .from(OptionPutCallAllDefInformation, 's')
+    .innerJoin(OptionPutCallHistory, 'i', 's.symbol = i.symbol')
     .select([
       'i.symbol as symbol',
-      'i.date as date',
-      'i.name as name',
-      'i.type as type',
+      'i."date" as "date"',
+      's.company as name',
+      's."type" as "type"',
       'i."putCallVol" as "putCallVol"',
       'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
       'i."putCallOIRatio" + i."putCallOIRatioDelta" as "putCallOIRatio"',
       'i."totalOpenInterest" + i."totalOpenInterest" as "totalOpenInterest"',
-      '100 - 100 / ("putCallVol" + 1) as "todayPercentPutVol"',
-      '100 / ("putCallVol" + 1) as "todayPercentCallVol"',
-
+      '100 - 100 / (i."putCallVol" + 1) as "todayPercentPutVol"',
+      '100 / (i."putCallVol" + 1) as "todayPercentCallVol"',
     ])
 })
 export class OptionPutCallHistoryInformation {
@@ -29,7 +30,7 @@ export class OptionPutCallHistoryInformation {
   name: string;
 
   @ViewColumn()
-  type: 'index' | 'etfs' | 'nasdaq';
+  type: string;
 
   /**
    * P/C Vol

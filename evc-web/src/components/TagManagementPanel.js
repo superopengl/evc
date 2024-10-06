@@ -9,7 +9,7 @@ import { Space } from 'antd';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 import { from } from 'rxjs';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 const NEW_TAG_ITEM = Object.freeze({
   isNew: true,
@@ -17,7 +17,7 @@ const NEW_TAG_ITEM = Object.freeze({
 });
 
 const TagManagementPanel = (props) => {
-  const { onList, onSave, onDelete, showOfficialOnly } = props;
+  const { onList, onSave, onDelete, showOfficialOnly, showIncludesOptionPutCall } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([{ ...NEW_TAG_ITEM }]);
@@ -56,6 +56,14 @@ const TagManagementPanel = (props) => {
       render: (value, item) => <Switch
         defaultChecked={value}
         onChange={(checked) => handleOfficialUseChange(item, checked)}
+      />
+    } : null,
+    showIncludesOptionPutCall ? {
+      title: 'Option put/call',
+      dataIndex: 'includesOptionPutCall',
+      render: (value, item) => <Switch
+        defaultChecked={value}
+        onChange={(checked) => handleIncludeOptionPutCallChange(item, checked)}
       />
     } : null,
     {
@@ -104,6 +112,13 @@ const TagManagementPanel = (props) => {
     await onSave(item);
   }
 
+  const handleIncludeOptionPutCallChange = async (item, checked) => {
+    item.includesOptionPutCall = checked;
+    if (item.isNew) return;
+    await onSave(item);
+  }
+
+
   const loadList = async () => {
     try {
       setLoading(true);
@@ -151,10 +166,12 @@ TagManagementPanel.propTypes = {
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   showOfficialOnly: PropTypes.bool,
+  showIncludesOptionPutCall: PropTypes.bool,
 };
 
 TagManagementPanel.defaultProps = {
-  showOfficialOnly: true
+  showOfficialOnly: false,
+  showIncludesOptionPutCall: false,
 };
 
 export default withRouter(TagManagementPanel);

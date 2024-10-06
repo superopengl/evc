@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Index, Column, Generated } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 @Entity()
@@ -8,13 +8,6 @@ export class OptionPutCallHistory {
 
   @PrimaryColumn('date')
   date: string;
-
-  @Column()
-  name: string;
-
-  @Column()
-  @Index()
-  type: 'index' | 'etfs' | 'nasdaq';
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   putCallVol: number;

@@ -134,11 +134,11 @@ GOOG,1000-1100,2000
             />
             <LongRunningActionButton
               operationKey="upload-resistance-etfs"
-              buttonText="ETFS"
+              buttonText="ETFs"
               type="upload"
               uploadAction="/admin/data/uoa/etfs"
               onComplete={() => {
-                notify.success('Successfully upload unusual options activity ETFS')
+                notify.success('Successfully upload unusual options activity ETFs')
               }}
             />
             <LongRunningActionButton

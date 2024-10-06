@@ -43,7 +43,7 @@ import { StockComputedPe365 } from './StockComputedPe365';
       'pe."peYrHi" * pe."forwardEps" as "forwardNextFyMaxValueHi"',
       'pe.beta as beta',
       'pe."peRatio" as "peRatio"',
-      'pe."pegRatio" as "pegRatio"',
+      'pe."forwardPeRatio" as "forwardPeRatio"',
     ])
 })
 export class StockLatestFairValue {
@@ -90,5 +90,5 @@ export class StockLatestFairValue {
   peRatio: number;
 
   @ViewColumn()
-  pegRatio: number;
+  forwardPeRatio: number;
 }

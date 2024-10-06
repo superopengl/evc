@@ -210,8 +210,8 @@ const StockInfoCard = (props) => {
     },
     {
       tooltip: null,
-      textKey: 'text.pegRatio',
-      value: stock.pegRatio,
+      textKey: 'text.forwardRatio',
+      value: stock.forwardPeRatio,
     },
   ], [stock]);
 

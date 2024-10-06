@@ -148,7 +148,7 @@
   "text.forwardNextFyMaxValueLoss": "EPS (FFYMR) LOSS",
   "text.beta": "BETA",
   "text.peRatio": "PE (TTM)",
-  "text.pegRatio": "PEG",
+  "text.forwardRatio": "Forward PE",
   "text.news": "News",
   "text.evcCoreInfo": "EVC Core Info",
   "text.loss": "EPS(TTM) Loss",

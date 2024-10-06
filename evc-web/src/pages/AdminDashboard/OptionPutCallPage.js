@@ -11,7 +11,7 @@ const OptionPutCallPage = (props) => {
         <Tabs.TabPane tab="INDEX" key="index">
           <OptionPutCallPanel type="index" lastDayOnly={true} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="ETFS" key="etfs">
+        <Tabs.TabPane tab="ETFs" key="etfs">
           <OptionPutCallPanel type="etfs" lastDayOnly={true} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Nasdaq 100 Stock+" key="nasdaq">

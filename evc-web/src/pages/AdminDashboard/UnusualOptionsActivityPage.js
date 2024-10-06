@@ -4,19 +4,19 @@ import { withRouter } from 'react-router-dom';
 import UnusualOptionsActivityPanel from './UnusualOptionsActivityPanel';
 
 const UnusualOptionsActivityPage = (props) => {
-  const {size} = props;
+  const { size } = props;
 
   return (
-    <Card style={{backgroundColor: 'white'}} bordered={true}>
+    <Card style={{ backgroundColor: 'white' }} bordered={true}>
       <Tabs defaultActiveKey="stock" type="card">
         <Tabs.TabPane tab="Stocks" key="stocks">
-          <UnusualOptionsActivityPanel type="stock" size={size}/>
+          <UnusualOptionsActivityPanel type="stock" size={size} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="ETFS" key="etfs">
-          <UnusualOptionsActivityPanel type="etfs" size={size}/>
+        <Tabs.TabPane tab="ETFs" key="etfs">
+          <UnusualOptionsActivityPanel type="etfs" size={size} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="INDICES" key="index">
-          <UnusualOptionsActivityPanel type="index" size={size}/>
+          <UnusualOptionsActivityPanel type="index" size={size} />
         </Tabs.TabPane>
       </Tabs>
     </Card>

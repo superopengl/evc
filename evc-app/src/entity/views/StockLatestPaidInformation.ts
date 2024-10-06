@@ -41,7 +41,7 @@ import { existsQuery } from '../../utils/existsQuery';
       .addSelect('CASE WHEN sfv."forwardNextFyMaxValueLo" < 0 THEN TRUE ELSE FALSE END as "isForwardNextFyMaxValueLoss"')
       .addSelect('sfv."beta"')
       .addSelect('sfv."peRatio"')
-      .addSelect('sfv."pegRatio"')
+      .addSelect('sfv."forwardPeRatio"')
       .leftJoin(q => q.from(StockLastPrice, 'slp'),
         'slp', 'slp.symbol = s.symbol'
       )
@@ -156,7 +156,7 @@ export class StockLatestPaidInformation {
   peRatio: number;
 
   @ViewColumn()
-  pegRatio: number;
+  forwardPeRatio: number;
 
   @ViewColumn()
   hasNewChart: boolean;

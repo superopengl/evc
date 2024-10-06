@@ -69,7 +69,7 @@ const StockUnpaidEvcInfoPanel = (props) => {
         </div>
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <FormattedMessage id="text.pegRatio" />
+        <FormattedMessage id="text.forwardRatio" />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
           <BlurSingle />
         </div>

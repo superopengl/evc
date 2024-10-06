@@ -109,10 +109,10 @@ const StockEvcInfoPanel = (props) => {
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="">
-          <FormattedMessage id="text.pegRatio" />
+          <FormattedMessage id="text.forwardRatio" />
         </TooltipLabel>
         {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          {data.pegRatio ? <Text>{(+data.pegRatio).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>}
+          {data.forwardPeRatio ? <Text>{(+data.forwardPeRatio).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>}
         </div>}
       </Space>
       {SHOW_SUPPORT_RESISTANCE && <>

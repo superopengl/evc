@@ -16,13 +16,13 @@ import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
       .addGroupBy('a."date"')
       .addGroupBy('a."beta"')
       .addGroupBy('a."peRatio"')
-      .addGroupBy('a."pegRatio"')
+      .addGroupBy('a."forwardPeRatio"')
       .select([
         'a.symbol as symbol',
         'a."date" as "date"',
         'a."beta" as "beta"',
         'a."peRatio" as "peRatio"',
-        'a."pegRatio" as "pegRatio"',
+        'a."forwardPeRatio" as "forwardPeRatio"',
         'min(back."peRatio") as "peYrLo"',
         'max(back."peRatio") as "peYrHi"'
       ]), 'x'
@@ -39,10 +39,10 @@ import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
       'pe."fairValueHi" as "fairValueHi"',
       'x.beta as beta',
       'x."peRatio" as "peRatio"',
-      'x."pegRatio" as "pegRatio"',
+      'x."forwardPeRatio" as "forwardPeRatio"',
       'x."peYrLo" as "peYrLo"',
       'x."peYrHi" as "peYrHi"',
-      'pe."ttmEps" * (1 + x."peRatio" / x."pegRatio") as "forwardEps"',
+      'pe."close" / x."forwardPeRatio" as "forwardEps"',
     ])
 })
 export class StockComputedPe365 {
@@ -80,7 +80,7 @@ export class StockComputedPe365 {
   peRatio: number;
 
   @ViewColumn()
-  pegRatio: number;
+  forwardPeRatio: number;
 
   @ViewColumn()
   peYrLo: number;
@@ -91,5 +91,3 @@ export class StockComputedPe365 {
   @ViewColumn()
   forwardEps: number;
 }
-
-

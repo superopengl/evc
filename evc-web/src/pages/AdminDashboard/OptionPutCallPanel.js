@@ -9,6 +9,8 @@ import { PlusOutlined } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
 import { Modal } from 'antd';
 import { Loading } from 'components/Loading';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { LockIcon } from '../../components/LockIcon';
 
 const { Text } = Typography;
 
@@ -49,6 +51,9 @@ const OptionPutCallPanel = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
+  const context = React.useContext(GlobalContext);
+
+  const shouldHide = context.role === 'free' || context.role === 'guest';
 
   React.useEffect(() => {
     searchByQueryInfo({
@@ -193,20 +198,20 @@ const OptionPutCallPanel = (props) => {
     {
       title: 'Today %Put Vol',
       dataIndex: 'todayPercentPutVol',
-      align: 'right',
-      render: (value) => (+value).toFixed(2) + '%',
+      align: shouldHide ? 'center' : 'right',
+      render: (value) => shouldHide ? <LockIcon /> : (+value).toFixed(2) + '%',
     },
     {
       title: 'Today %Call Vol',
       dataIndex: 'todayPercentCallVol',
-      align: 'right',
-      render: (value) => (+value).toFixed(2) + '%',
+      align: shouldHide ? 'center' : 'right',
+      render: (value) => shouldHide ? <LockIcon /> : (+value).toFixed(2) + '%',
     },
     {
       title: 'Total P/C OI Ratio',
       dataIndex: 'putCallVol',
-      align: 'right',
-      render: (value) => (+value).toFixed(3),
+      align: shouldHide ? 'center' : 'right',
+      render: (value) => shouldHide ? <LockIcon /> : (+value).toFixed(3),
     },
     {
       title: 'Total Open Interest',

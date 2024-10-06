@@ -7,9 +7,8 @@ import PropTypes from 'prop-types';
 import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
 import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
-import { LockFilled } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
-import { FormattedMessage } from 'react-intl';
+import { LockIcon } from '../../components/LockIcon';
 
 const { Text } = Typography;
 
@@ -29,10 +28,6 @@ width: 100%;
 }
 
 `;
-
-const LockIcon = () => <Tooltip title={<FormattedMessage id="text.fullFeatureAfterPay" />}>
-  <LockFilled />
-</Tooltip>
 
 const TableTitle = props => props.seq > 0 ? <>{props.children} <Text type="success" strong><sup>{props.seq}</sup></Text></> : props.children
 

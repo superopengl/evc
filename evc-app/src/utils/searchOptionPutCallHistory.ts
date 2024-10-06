@@ -88,10 +88,10 @@ export async function searchOptionPutCallHistory(q: any, showFullData: boolean) 
       'name',
       // '"putCallVol"',
       '"todayOptionVol"',
-      '"putCallOIRatio"',
+      // '"putCallOIRatio"',
       '"totalOpenInterest"',
-      '"todayPercentPutVol"',
-      '"todayPercentCallVol"',
+      // '"todayPercentPutVol"',
+      // '"todayPercentCallVol"',
     ])
   }
   const data = await query.execute();

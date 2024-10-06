@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Pagination, Table, Select, Space, Typography, Button, Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { listOptionPutCallHistory } from 'services/dataService';
+import { listOptionPutCallHistory, listLatestOptionPutCall } from 'services/dataService';
 import { PlusOutlined } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
 import { Modal } from 'antd';
@@ -94,7 +94,7 @@ const OptionPutCallPanel = (props) => {
         setLoading(true);
         const queryCondition = getQueryConditions(queryInfo);
         // const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryCondition) : await listOptionPutCallHistory(props.type, queryCondition);
-        const resp = await listOptionPutCallHistory(queryCondition);
+        const resp = await listLatestOptionPutCall(queryCondition);
         updateWithResponse(resp, queryInfo);
       } else {
         setQueryInfo(queryInfo);

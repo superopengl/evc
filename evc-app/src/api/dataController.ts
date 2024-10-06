@@ -19,6 +19,8 @@ import _ from 'lodash';
 import { Role } from '../types/Role';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 import { searchOptionPutCallHistory } from '../utils/searchOptionPutCallHistory';
+import { getRepository } from 'typeorm-plus';
+import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
@@ -278,7 +280,18 @@ export const searchOptionPutCall = handlerWrapper(async (req, res) => {
 
 export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
-  const list = await searchOptionPutCallHistory(req.body, showFullData);
+  const list = await getManager()
+    .getRepository(OptionPutCallHistoryInformation)
+    .createQueryBuilder()
+    .distinctOn([
+      'symbol',
+      'type'
+    ])
+    .orderBy('symbol')
+    .addOrderBy('type')
+    .addOrderBy('date', 'DESC')
+    .getMany();
+
   res.json(list);
 });
 

@@ -5,13 +5,13 @@ import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(OptionPutCallAllDefInformation, 's')
-    .innerJoin(OptionPutCallHistory, 'i', 's.symbol = i.symbol')
+    .leftJoin(OptionPutCallHistory, 'i', 's.symbol = i.symbol')
     .select([
-      'i.symbol as symbol',
-      'i."date" as "date"',
+      's.symbol as symbol',
       's.company as name',
       's."type" as "type"',
       's."sortGroup" as "sortGroup"',
+      'i."date" as "date"',
       'i."putCallVol" as "putCallVol"',
       'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
       'i."putCallOIRatio" + i."putCallOIRatioDelta" as "putCallOIRatio"',

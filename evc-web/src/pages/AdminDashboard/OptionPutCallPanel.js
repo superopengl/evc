@@ -5,13 +5,14 @@ import { Pagination, Table, Select, Space, Typography, Button, Row, Col } from '
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { listOptionPutCallHistory, listLatestOptionPutCall } from 'services/dataService';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
 import { Modal } from 'antd';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { LockIcon } from '../../components/LockIcon';
 import * as _ from 'lodash';
+import { Tag } from 'antd';
 
 const { Text } = Typography;
 
@@ -56,7 +57,6 @@ const OptionPutCallPanel = (props) => {
   React.useEffect(() => {
     setList(data);
     setSymbols(_.sortBy(_.union(data.map(d => d.symbol))));
-    debugger;
     setTotal(data.length);
     setLoading(false);
 
@@ -148,13 +148,13 @@ const OptionPutCallPanel = (props) => {
       fixed: 'left',
       width: 40,
       align: 'center',
-      render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="text" onClick={() => handleShowDetail(record.symbol)} />
+      render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="text" onClick={() => handleShowDetail(record.symbol)} disabled={!record.date} />
     },
     {
       title: <TableTitle seq={findOrderSeq('symbol')}>Symbol</TableTitle>,
       dataIndex: 'symbol',
       fixed: 'left',
-      // width: 85,
+      width: 100,
       filters: symbols.map(s => ({ text: s, value: s })),
       filterMode: 'tree',
       filterSearch: true,
@@ -176,6 +176,9 @@ const OptionPutCallPanel = (props) => {
       // width: 155,
       align: 'left',
       render: (value) => {
+        if (!value) {
+          return <Tag color="warning">Data is coming soon</Tag>
+        }
         const dateString = moment.tz(`${value}`, 'utc').format('DD MMM YYYY');
         return dateString;
       }
@@ -184,31 +187,31 @@ const OptionPutCallPanel = (props) => {
       title: 'Today Option Volume',
       dataIndex: 'todayOptionVol',
       align: 'right',
-      render: (value) => (Math.round(+value)).toLocaleString(),
+      render: (value) => _.isNull(value) ? null : (Math.round(+value)).toLocaleString(),
     },
     {
       title: 'Today %Put Vol',
       dataIndex: 'todayPercentPutVol',
       align: shouldHide ? 'center' : 'right',
-      render: (value) => shouldHide ? <LockIcon /> : (+value).toFixed(2) + '%',
+      render: (value) => shouldHide ? <LockIcon /> : _.isNull(value) ? null : (+value).toFixed(2) + '%',
     },
     {
       title: 'Today %Call Vol',
       dataIndex: 'todayPercentCallVol',
       align: shouldHide ? 'center' : 'right',
-      render: (value) => shouldHide ? <LockIcon /> : (+value).toFixed(2) + '%',
+      render: (value) => shouldHide ? <LockIcon /> : _.isNull(value) ? null : (+value).toFixed(2) + '%',
     },
     {
       title: 'Total P/C OI Ratio',
       dataIndex: 'putCallVol',
       align: shouldHide ? 'center' : 'right',
-      render: (value) => shouldHide ? <LockIcon /> : (+value).toFixed(3),
+      render: (value) => shouldHide ? <LockIcon /> : _.isNull(value) ? null : (+value).toFixed(3),
     },
     {
       title: 'Total Open Interest',
       dataIndex: 'totalOpenInterest',
       align: 'right',
-      render: (value) => (Math.round(+value)).toLocaleString(),
+      render: (value) => _.isNull(value) ? null : (Math.round(+value)).toLocaleString(),
     },
   ];
 
@@ -248,7 +251,12 @@ const OptionPutCallPanel = (props) => {
         dataSource={list.map((x, index) => ({ ...x, index }))}
         loading={loading}
         rowKey="index"
-        pagination={false}
+        pagination={{
+          pageSizeOptions: [20, 50, 100],
+          total: list.length,
+          showSizeChanger: true,
+          showTotal: total => `Total ${total}`,
+        }}
         // onChange={handleTableSortChange}
         onRow={(record, index) => {
           return {

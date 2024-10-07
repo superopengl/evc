@@ -253,6 +253,7 @@ const OptionPutCallPanel = (props) => {
         rowKey="index"
         pagination={{
           pageSizeOptions: [20, 50, 100],
+          defaultPageSize: 50,
           total: list.length,
           showSizeChanger: true,
           showTotal: total => `Total ${total}`,

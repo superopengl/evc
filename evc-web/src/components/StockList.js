@@ -20,7 +20,7 @@ const StockList = (props) => {
 
   return (<>
     <Row gutter={[16, 16]} align="stretch" style={{ marginBottom: 16 }}>
-      {data.map(stock => <Col {...span}>
+      {data.map(stock => <Col {...span} key={stock.symbol}>
         <StockInfoCard
           value={stock}
           hoverable

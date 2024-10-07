@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import OptionPutCallPanel from './OptionPutCallPanel';
 import { listLatestOptionPutCall } from 'services/dataService';
 import * as _ from 'lodash';
+import { Loading } from 'components/Loading';
 
 const OptionPutCallPage = (props) => {
 
@@ -27,13 +28,15 @@ const OptionPutCallPage = (props) => {
 
   return (
     <Card style={{ backgroundColor: 'white' }} bordered={true}>
-      <Tabs defaultActiveKey="stock" type="card" loading={loading}>
-        {
-          typedMap.map(([t, data]) => <Tabs.TabPane tab={t} key={t}>
-            <OptionPutCallPanel data={data} />
-          </Tabs.TabPane>)
-        }
-      </Tabs>
+      <Loading loading={loading}>
+        <Tabs defaultActiveKey="stock" type="card" >
+          {
+            typedMap.map(([t, data]) => <Tabs.TabPane tab={t} key={t}>
+              <OptionPutCallPanel data={data} />
+            </Tabs.TabPane>)
+          }
+        </Tabs>
+      </Loading>
     </Card>
   );
 };

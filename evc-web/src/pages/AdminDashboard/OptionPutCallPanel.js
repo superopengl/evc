@@ -34,22 +34,12 @@ width: 100%;
 `;
 
 
-const TableTitle = props => props.seq > 0 ? <>{props.children} <Text type="success" strong><sup>{props.seq}</sup></Text></> : props.children
-
 const OptionPutCallPanel = (props) => {
-  const { type, symbol, lastDayOnly } = props;
-  const { data } = props;
+  const { data, showPagination } = props;
 
   const [loading, setLoading] = React.useState(true);
-  const [queryInfo, setQueryInfo] = React.useState({
-    // ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
-    size: props.size === 'small' ? 20 : 50,
-    lastDayOnly: true,
-  });
-  const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
-  const [selectedSymbol, setSelectedSymbol] = React.useState();
   const context = React.useContext(GlobalContext);
 
   const shouldHide = context.role === 'free' || context.role === 'guest';
@@ -57,57 +47,9 @@ const OptionPutCallPanel = (props) => {
   React.useEffect(() => {
     setList(data);
     setSymbols(_.sortBy(_.union(data.map(d => d.symbol))));
-    setTotal(data.length);
     setLoading(false);
 
   }, [data]);
-
-  const getQueryConditions = (queryInfo) => {
-    return {
-      ...queryInfo,
-      order: queryInfo.order?.map(x => ({
-        field: x.field,
-        order: x.order === 'descend' ? 'DESC' : 'ASC'
-      }))
-    }
-  }
-
-  const searchByQueryInfo = async (queryInfo, dryRun = false) => {
-    try {
-      if (!dryRun) {
-        setLoading(true);
-        const queryCondition = getQueryConditions(queryInfo);
-        // const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryCondition) : await listOptionPutCallHistory(props.type, queryCondition);
-        const resp = await listLatestOptionPutCall(queryCondition);
-        // updateWithResponse(resp, queryInfo);
-      } else {
-        setQueryInfo(queryInfo);
-      }
-    } catch {
-      setLoading(false);
-    }
-  }
-
-  const handlePaginationChange = (page, pageSize) => {
-    searchByQueryInfo({ ...queryInfo, page, size: pageSize });
-  }
-
-
-  const getSortOrder = (key) => {
-    const order = queryInfo.order ?? [];
-    for (const item of order) {
-      if (item.field === key) {
-        return item.order;
-      }
-    }
-    return false;
-  }
-
-  const findOrderSeq = (key) => {
-    const index = (queryInfo.order ?? []).findIndex(x => x.field === key);
-    return index + 1;
-  }
-
 
   const handleShowDetail = async (symbol) => {
     const modalInstance = Modal.info({
@@ -151,7 +93,7 @@ const OptionPutCallPanel = (props) => {
       render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="text" onClick={() => handleShowDetail(record.symbol)} disabled={!record.date} />
     },
     {
-      title: <TableTitle seq={findOrderSeq('symbol')}>Symbol</TableTitle>,
+      title: 'Symbol',
       dataIndex: 'symbol',
       fixed: 'left',
       width: 100,
@@ -170,7 +112,7 @@ const OptionPutCallPanel = (props) => {
       render: (value) => value,
     },
     {
-      title: <TableTitle seq={findOrderSeq('tradeDate')}>Date</TableTitle>,
+      title: 'Date',
       dataIndex: 'date',
       sorter: (a, b) => moment(a.date) - moment(b.date),
       // width: 155,
@@ -215,17 +157,6 @@ const OptionPutCallPanel = (props) => {
     },
   ];
 
-  const handleSymbolChange = (symbol) => {
-    searchByQueryInfo({ ...queryInfo, symbol, page: 1 });
-  }
-
-  const handleTableSortChange = (pagination, filters, sorter) => {
-    searchByQueryInfo({
-      ...queryInfo,
-      order: (Array.isArray(sorter) ? sorter : [sorter]).filter(x => x.order).map(x => ({ field: x.field, order: x.order })),
-    });
-  }
-
 
   return (
     <ContainerStyled>
@@ -251,15 +182,15 @@ const OptionPutCallPanel = (props) => {
         dataSource={list.map((x, index) => ({ ...x, index }))}
         loading={loading}
         rowKey="index"
-        pagination={{
+        pagination={showPagination ? {
           pageSizeOptions: [20, 50, 100],
           defaultPageSize: 50,
           total: list.length,
           showSizeChanger: true,
           showTotal: total => `Total ${total}`,
-        }}
+        } : false}
         // onChange={handleTableSortChange}
-        onRow={(record, index) => {
+        onRow={(record) => {
           return {
             onDoubleClick: () => {
               handleShowDetail(record.symbol)
@@ -275,35 +206,17 @@ const OptionPutCallPanel = (props) => {
           y: 'calc(100vh - 370px)'
         }}
       ></Table>
-      {/* <Row justify='end'>
-        {total > queryInfo.size && <Pagination
-          current={queryInfo.page}
-          pageSize={queryInfo.size}
-          total={total}
-          defaultCurrent={queryInfo.page}
-          defaultPageSize={queryInfo.size}
-          pageSizeOptions={[20, 50, 100]}
-          showSizeChanger
-          showQuickJumper
-          showTotal={total => `Total ${total}`}
-          style={{ marginTop: '1rem' }}
-          disabled={loading}
-          onChange={handlePaginationChange}
-          onShowSizeChange={(current, size) => {
-            searchByQueryInfo({ ...queryInfo, page: current, size });
-          }}
-        />}
-      </Row> */}
     </ContainerStyled>
   );
 };
 
 OptionPutCallPanel.propTypes = {
-  type: PropTypes.oneOf(['index', 'etfs', 'nasdaq']),
   data: PropTypes.arrayOf(PropTypes.any),
+  showPagination: PropTypes.bool,
 };
 
 OptionPutCallPanel.defaultProps = {
+  showPagination: true,
 };
 
 export default withRouter(OptionPutCallPanel);

@@ -26,6 +26,10 @@ export async function listLatestOptionPutCall() {
   return httpGet(`/admin/data/opc`);
 }
 
+export async function getStockLatestOptionPutCall(symbol) {
+  return httpGet(`/admin/data/opc/${symbol}`);
+}
+
 export async function getOptionPutCallHistoryChartData(symbol) {
   return httpGet(`/stock/s/${symbol}/chart/optionhistory`);
 }

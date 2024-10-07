@@ -11,6 +11,7 @@ import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation
       'i."date" as "date"',
       's.company as name',
       's."type" as "type"',
+      's."sortGroup" as "sortGroup"',
       'i."putCallVol" as "putCallVol"',
       'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
       'i."putCallOIRatio" + i."putCallOIRatioDelta" as "putCallOIRatio"',
@@ -31,6 +32,9 @@ export class OptionPutCallHistoryInformation {
 
   @ViewColumn()
   type: string;
+
+  @ViewColumn()
+  sortGroup: number;
 
   /**
    * P/C Vol

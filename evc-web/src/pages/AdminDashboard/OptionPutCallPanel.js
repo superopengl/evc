@@ -11,6 +11,7 @@ import { Modal } from 'antd';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { LockIcon } from '../../components/LockIcon';
+import * as _ from 'lodash';
 
 const { Text } = Typography;
 
@@ -36,13 +37,9 @@ const TableTitle = props => props.seq > 0 ? <>{props.children} <Text type="succe
 
 const OptionPutCallPanel = (props) => {
   const { type, symbol, lastDayOnly } = props;
+  const { data } = props;
 
-  if (!type && !symbol) {
-    throw new Error(`Either type or symbol must be specified`);
-  }
-
-  const isMultiSymbolMode = !!type;
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [queryInfo, setQueryInfo] = React.useState({
     // ...reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true),
     size: props.size === 'small' ? 20 : 50,
@@ -51,32 +48,19 @@ const OptionPutCallPanel = (props) => {
   const [total, setTotal] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
+  const [selectedSymbol, setSelectedSymbol] = React.useState();
   const context = React.useContext(GlobalContext);
 
   const shouldHide = context.role === 'free' || context.role === 'guest';
 
   React.useEffect(() => {
-    searchByQueryInfo({
-      ...queryInfo,
-      type,
-      symbol,
-      lastDayOnly,
-    })
-  }, [type, symbol, lastDayOnly]);
+    setList(data);
+    setSymbols(_.sortBy(_.union(data.map(d => d.symbol))));
+    debugger;
+    setTotal(data.length);
+    setLoading(false);
 
-  const updateWithResponse = (loadResponse, queryInfo) => {
-    if (loadResponse) {
-      // reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-      const { count, page, data, symbols } = loadResponse;
-      ReactDOM.unstable_batchedUpdates(() => {
-        setTotal(count);
-        setList(data);
-        setSymbols(symbols);
-        setQueryInfo({ ...queryInfo, page });
-        setLoading(false);
-      });
-    }
-  }
+  }, [data]);
 
   const getQueryConditions = (queryInfo) => {
     return {
@@ -95,7 +79,7 @@ const OptionPutCallPanel = (props) => {
         const queryCondition = getQueryConditions(queryInfo);
         // const resp = shouldNoCache ? await listAdminUnusualOptionsActivity(props.type, queryCondition) : await listOptionPutCallHistory(props.type, queryCondition);
         const resp = await listLatestOptionPutCall(queryCondition);
-        updateWithResponse(resp, queryInfo);
+        // updateWithResponse(resp, queryInfo);
       } else {
         setQueryInfo(queryInfo);
       }
@@ -161,6 +145,9 @@ const OptionPutCallPanel = (props) => {
 
   const columnDef = [
     {
+      fixed: 'left',
+      width: 40,
+      align: 'center',
       render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="text" onClick={() => handleShowDetail(record.symbol)} />
     },
     {
@@ -168,20 +155,24 @@ const OptionPutCallPanel = (props) => {
       dataIndex: 'symbol',
       fixed: 'left',
       // width: 85,
-      sorter: { multiple: 1 },
-      sortOrder: getSortOrder('symbol'),
+      filters: symbols.map(s => ({ text: s, value: s })),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.name.startsWith(value),
+      sorter: (a, b) => a.symbol.localeCompare(b.symbol),
+      // sortOrder: getSortOrder('symbol'),
       render: (value) => value,
     },
     {
       title: 'Name',
       dataIndex: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (value) => value,
     },
     {
       title: <TableTitle seq={findOrderSeq('tradeDate')}>Date</TableTitle>,
       dataIndex: 'date',
-      sorter: { multiple: 2 },
-      sortOrder: getSortOrder('date'),
+      sorter: (a, b) => moment(a.date) - moment(b.date),
       // width: 155,
       align: 'left',
       render: (value) => {
@@ -235,7 +226,7 @@ const OptionPutCallPanel = (props) => {
 
   return (
     <ContainerStyled>
-      {isMultiSymbolMode && <Row style={{ marginBottom: 20 }} align='middle'>
+      {/* <Row style={{ marginBottom: 20 }} align='middle'>
         <Text style={{ marginRight: '1rem' }}>Symbol: </Text>
         <Select allowClear style={{ width: 100 }} placeholder="Symbol"
           // onSearch={handleSymbolChange}
@@ -249,7 +240,7 @@ const OptionPutCallPanel = (props) => {
         >
           {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
         </Select>
-      </Row>}
+      </Row> */}
       <Table
         bordered={false}
         size="small"
@@ -258,7 +249,7 @@ const OptionPutCallPanel = (props) => {
         loading={loading}
         rowKey="index"
         pagination={false}
-        onChange={handleTableSortChange}
+        // onChange={handleTableSortChange}
         onRow={(record, index) => {
           return {
             onDoubleClick: () => {
@@ -275,7 +266,7 @@ const OptionPutCallPanel = (props) => {
           y: 'calc(100vh - 370px)'
         }}
       ></Table>
-      {isMultiSymbolMode && <Row justify='end'>
+      <Row justify='end'>
         {total > queryInfo.size && <Pagination
           current={queryInfo.page}
           pageSize={queryInfo.size}
@@ -293,19 +284,17 @@ const OptionPutCallPanel = (props) => {
             searchByQueryInfo({ ...queryInfo, page: current, size });
           }}
         />}
-      </Row>}
+      </Row>
     </ContainerStyled>
   );
 };
 
 OptionPutCallPanel.propTypes = {
   type: PropTypes.oneOf(['index', 'etfs', 'nasdaq']),
-  symbol: PropTypes.string,
-  lastDayOnly: PropTypes.bool,
+  data: PropTypes.arrayOf(PropTypes.any),
 };
 
 OptionPutCallPanel.defaultProps = {
-  lastDayOnly: true,
 };
 
 export default withRouter(OptionPutCallPanel);

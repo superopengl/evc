@@ -3,6 +3,7 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, Unique, CreateDateColumn
 
 @Entity()
 @Unique('idx_stock_tag_name', ['name'])
+@Index('idx_symbol_includeoptioncallput_true', ['id', 'includesOptionPutCall'])
 export class StockTag {
   @PrimaryGeneratedColumn('uuid')
   id: string;

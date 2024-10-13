@@ -316,7 +316,7 @@ const UnusualOptionsActivityPanel = (props) => {
         }}
         scroll={{
           x: 'max-content',
-          y: 'calc(100vh - 460px)'
+          // y: 'calc(100vh - 460px)'
           // y: 'calc(100vh - 400px)' 
         }}
       ></Table>

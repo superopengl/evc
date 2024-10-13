@@ -15,11 +15,12 @@ export async function getOperationStatus(operation) {
   return httpGet(`admin/operation/${operation}/status`);
 }
 
-export async function listOptionPutCallHistory(query) {
-  if (!query.type && !query.symbol) {
-    throw new Error(`Either type or symbol must be specified.`);
-  }
-  return httpPost(`/admin/data/opc/search`, query);
+export async function getStockAllOptionPutCallHistory(symbol) {
+  return httpGet(`/admin/data/opc/${symbol}/all`);
+}
+
+export async function saveStockOptionPutCallHistoryOrdinal(symbol, tag, ordinal) {
+  return httpPost(`/admin/data/opc/${symbol}/ordinal`, { tag, ordinal });
 }
 
 export async function listLatestOptionPutCall() {

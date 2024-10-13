@@ -11,6 +11,8 @@ import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation
       's.company as name',
       's."type" as "type"',
       's."sortGroup" as "sortGroup"',
+      's."tagId" as "tagId"',
+      's."ordinal" as "ordinal"',
       'i."date" as "date"',
       'i."putCallVol" as "putCallVol"',
       'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
@@ -19,6 +21,7 @@ import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation
       '100 - 100 / (i."putCallVol" + 1) as "todayPercentPutVol"',
       '100 / (i."putCallVol" + 1) as "todayPercentCallVol"',
     ])
+    .orderBy('s.ordinal', 'ASC', 'NULLS LAST')
 })
 export class OptionPutCallHistoryInformation {
   @ViewColumn()
@@ -36,6 +39,11 @@ export class OptionPutCallHistoryInformation {
   @ViewColumn()
   sortGroup: number;
 
+  @ViewColumn()
+  tagId: string;
+
+  @ViewColumn()
+  ordinal: number;
   /**
    * P/C Vol
    */

@@ -1247,13 +1247,7 @@ paths:
       operationId: listLatestOptionPutCall
       responses:
         200:
-          description: OK                    
-  /admin/data/opc/search:
-    post:
-      operationId: searchOptionPutCall
-      responses:
-        200:
-          description: OK         
+          description: OK                       
   /admin/data/opc/:symbol:
     get:
       operationId: getStockLatestOptionPutCall
@@ -1264,7 +1258,29 @@ paths:
           required: true      
       responses:
         200:
-          description: OK               
+          description: OK        
+  /admin/data/opc/:symbol/all:
+    get:
+      operationId: getStockAllOptionPutCall
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true      
+      responses:
+        200:
+          description: OK              
+  /admin/data/opc/:symbol/ordinal:
+    post:
+      operationId: saveStockOptionPutCallHistoryOrdinal
+      parameters:
+        - name: symbol
+          in: path
+          type: string
+          required: true          
+      responses:
+        200:
+          description: OK                      
   /admin/data/uoa/stock:
     post:
       operationId: uploadUoaStockCsv

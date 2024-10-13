@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Space, Typography, Button, Row, Col } from 'antd';
+import { Pagination, Table, Select, Space, Typography, Button, Row, Col, Tooltip, InputNumber } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { listOptionPutCallHistory, listLatestOptionPutCall } from 'services/dataService';
+import { getStockAllOptionPutCallHistory, listLatestOptionPutCall, saveStockOptionPutCallHistoryOrdinal } from 'services/dataService';
 import { PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import * as moment from 'moment-timezone';
 import { Modal } from 'antd';
@@ -35,14 +35,17 @@ width: 100%;
 
 
 const OptionPutCallPanel = (props) => {
-  const { data, showPagination } = props;
+  const { data, showPagination, onOrdinalChange } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [symbols, setSymbols] = React.useState([]);
+  const [filteredSymbol, setFilteredSymbol] = React.useState();
+  const [displayList, setDisplayList] = React.useState();
   const context = React.useContext(GlobalContext);
 
   const shouldHide = context.role === 'free' || context.role === 'guest';
+  const isAdmin = context.role === 'admin';
 
   React.useEffect(() => {
     setList(data);
@@ -50,6 +53,12 @@ const OptionPutCallPanel = (props) => {
     setLoading(false);
 
   }, [data]);
+
+  React.useEffect(() => {
+    const filtedList = list.filter(s => !filteredSymbol || s.symbol === filteredSymbol).map((x, index) => ({ ...x, index }));
+    const sortedList = _.orderBy(filtedList, ['ordinal', 'index']);
+    setDisplayList(sortedList);
+  }, [list, filteredSymbol])
 
   const handleShowDetail = async (symbol) => {
     const modalInstance = Modal.info({
@@ -62,7 +71,7 @@ const OptionPutCallPanel = (props) => {
       width: 900,
       content: <Loading />
     })
-    const { data: allHistoryData } = await listOptionPutCallHistory({ symbol });
+    const allHistoryData = await getStockAllOptionPutCallHistory(symbol);
     modalInstance.update({
       content: <Table
         bordered={false}
@@ -85,6 +94,17 @@ const OptionPutCallPanel = (props) => {
     })
   }
 
+  const handleChangeOrder = async (record, ordinal) => {
+    if (_.isNumber(+ordinal) && +(record.ordinal || 0) !== +(ordinal || 0)) {
+      await saveStockOptionPutCallHistoryOrdinal(record.symbol, record.tagId, +ordinal);
+      onOrdinalChange();
+    }
+  }
+
+  const handleSymbolChange = (symbol) => {
+    setFilteredSymbol(symbol || null);
+  }
+
   const columnDef = [
     {
       fixed: 'left',
@@ -97,25 +117,25 @@ const OptionPutCallPanel = (props) => {
       dataIndex: 'symbol',
       fixed: 'left',
       width: 100,
-      filters: symbols.map(s => ({ text: s, value: s })),
-      filterMode: 'tree',
-      filterSearch: true,
-      onFilter: (value, record) => record.name.startsWith(value),
-      sorter: (a, b) => a.symbol.localeCompare(b.symbol),
+      // filters: symbols.map(s => ({ text: s, value: s })),
+      // filterMode: 'tree',
+      // filterSearch: true,
+      // onFilter: (value, record) => record.name.startsWith(value),
+      // sorter: (a, b) => a.symbol.localeCompare(b.symbol),
       // sortOrder: getSortOrder('symbol'),
-      render: (value) => value,
+      render: (value, record) => <Tooltip title={record.name}>{value}</Tooltip>,
     },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      render: (value) => value,
-    },
+    // {
+    //   title: 'Name',
+    //   dataIndex: 'name',
+    //   // sorter: (a, b) => a.name.localeCompare(b.name),
+    //   render: (value) => value,
+    // },
     {
       title: 'Date',
       dataIndex: 'date',
-      sorter: (a, b) => moment(a.date) - moment(b.date),
-      // width: 155,
+      // sorter: (a, b) => moment(a.date) - moment(b.date),
+      width: 155,
       align: 'left',
       render: (value) => {
         if (!value) {
@@ -155,12 +175,25 @@ const OptionPutCallPanel = (props) => {
       align: 'right',
       render: (value) => _.isNull(value) ? null : (Math.round(+value)).toLocaleString(),
     },
-  ];
+    isAdmin ? {
+      title: 'Ordinal (smallest first)',
+      dataIndex: 'ordinal',
+      align: 'right',
+      render: (value, record) => <InputNumber
+        defaultValue={value}
+        placeholder='ordinal'
+        min={1}
+        max={9999}
+        allowClear
+        onBlur={e => handleChangeOrder(record, e.target.value)} />,
+
+    } : null,
+  ].filter(x => !!x);
 
 
   return (
     <ContainerStyled>
-      {/* <Row style={{ marginBottom: 20 }} align='middle'>
+      <Row style={{ marginBottom: 20 }} align='middle'>
         <Text style={{ marginRight: '1rem' }}>Symbol: </Text>
         <Select allowClear style={{ width: 100 }} placeholder="Symbol"
           // onSearch={handleSymbolChange}
@@ -174,12 +207,12 @@ const OptionPutCallPanel = (props) => {
         >
           {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
         </Select>
-      </Row> */}
+      </Row>
       <Table
         bordered={false}
         size="small"
         columns={columnDef}
-        dataSource={list.map((x, index) => ({ ...x, index }))}
+        dataSource={displayList}
         loading={loading}
         rowKey="index"
         pagination={showPagination ? {
@@ -193,7 +226,7 @@ const OptionPutCallPanel = (props) => {
         onRow={(record) => {
           return {
             onDoubleClick: () => {
-              handleShowDetail(record.symbol)
+              // handleShowDetail(record.symbol)
             }
           }
         }}
@@ -203,7 +236,7 @@ const OptionPutCallPanel = (props) => {
         }}
         scroll={{
           x: 'max-content',
-          y: 'calc(100vh - 370px)'
+          // y: 'calc(100vh - 370px)'
         }}
       ></Table>
     </ContainerStyled>
@@ -213,10 +246,12 @@ const OptionPutCallPanel = (props) => {
 OptionPutCallPanel.propTypes = {
   data: PropTypes.arrayOf(PropTypes.any),
   showPagination: PropTypes.bool,
+  onOrdinalChange: PropTypes.func,
 };
 
 OptionPutCallPanel.defaultProps = {
   showPagination: true,
+  onOrdinalChange: () => { },
 };
 
 export default withRouter(OptionPutCallPanel);

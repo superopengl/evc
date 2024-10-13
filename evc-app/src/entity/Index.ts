@@ -25,6 +25,9 @@ export class Index {
   @Column()
   type: string;
 
+  @Column('uuid', { default: '00000000-0000-0000-0000-000000000000' })
+  tagId?: string;
+
   @Column({ default: 10 })
   sortGroup?: number;
 }

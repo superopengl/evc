@@ -123,7 +123,7 @@ const OptionPutCallPanel = (props) => {
       // onFilter: (value, record) => record.name.startsWith(value),
       // sorter: (a, b) => a.symbol.localeCompare(b.symbol),
       // sortOrder: getSortOrder('symbol'),
-      render: (value, record) => <Tooltip title={record.name}>{value}</Tooltip>,
+      render: (value, record) => value // <Tooltip title={record.name}>{value}</Tooltip>,
     },
     // {
     //   title: 'Name',

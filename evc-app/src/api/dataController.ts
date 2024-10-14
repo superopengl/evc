@@ -314,9 +314,7 @@ export const saveStockOptionPutCallHistoryOrdinal = handlerWrapper(async (req, r
       .addOrderBy('date', 'DESC')
       .where(`symbol = '${symbol}'`)
       .getMany();
-
   })
-
 
   res.json(data);
 });

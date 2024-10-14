@@ -17,7 +17,7 @@ import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation
       'i."putCallVol" as "putCallVol"',
       'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
       'i."putCallOIRatio" + i."putCallOIRatioDelta" as "putCallOIRatio"',
-      'i."totalOpenInterest" + i."totalOpenInterest" as "totalOpenInterest"',
+      'i."totalOpenInterest" + i."totalOpenInterestDelta" as "totalOpenInterest"',
       '100 - 100 / (i."putCallVol" + 1) as "todayPercentPutVol"',
       '100 / (i."putCallVol" + 1) as "todayPercentCallVol"',
     ])

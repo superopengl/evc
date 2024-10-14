@@ -165,7 +165,7 @@ const OptionPutCallPanel = (props) => {
     },
     {
       title: 'Total P/C OI Ratio',
-      dataIndex: 'putCallVol',
+      dataIndex: 'putCallOIRatio',
       align: shouldHide ? 'center' : 'right',
       render: (value) => shouldHide ? <LockIcon /> : _.isNull(value) ? null : (+value).toFixed(3),
     },

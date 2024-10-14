@@ -35,7 +35,7 @@ width: 100%;
 
 
 const OptionPutCallPanel = (props) => {
-  const { data, showPagination, onOrdinalChange } = props;
+  const { data, singleMode, onOrdinalChange } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -175,7 +175,7 @@ const OptionPutCallPanel = (props) => {
       align: 'right',
       render: (value) => _.isNull(value) ? null : (Math.round(+value)).toLocaleString(),
     },
-    isAdmin ? {
+    isAdmin && !singleMode ? {
       title: 'Ordinal (smallest first)',
       dataIndex: 'ordinal',
       align: 'right',
@@ -193,7 +193,7 @@ const OptionPutCallPanel = (props) => {
 
   return (
     <ContainerStyled>
-      <Row style={{ marginBottom: 20 }} align='middle'>
+      {!singleMode && <Row style={{ marginBottom: 20 }} align='middle'>
         <Text style={{ marginRight: '1rem' }}>Symbol: </Text>
         <Select allowClear style={{ width: 100 }} placeholder="Symbol"
           // onSearch={handleSymbolChange}
@@ -207,7 +207,7 @@ const OptionPutCallPanel = (props) => {
         >
           {symbols.map(s => <Select.Option key={s} value={s}>{s}</Select.Option>)}
         </Select>
-      </Row>
+      </Row>}
       <Table
         bordered={false}
         size="small"
@@ -215,7 +215,7 @@ const OptionPutCallPanel = (props) => {
         dataSource={displayList}
         loading={loading}
         rowKey="index"
-        pagination={showPagination ? {
+        pagination={!singleMode ? {
           pageSizeOptions: [20, 50, 100],
           defaultPageSize: 50,
           total: list.length,
@@ -245,12 +245,12 @@ const OptionPutCallPanel = (props) => {
 
 OptionPutCallPanel.propTypes = {
   data: PropTypes.arrayOf(PropTypes.any),
-  showPagination: PropTypes.bool,
+  singleMode: PropTypes.bool,
   onOrdinalChange: PropTypes.func,
 };
 
 OptionPutCallPanel.defaultProps = {
-  showPagination: true,
+  singleMode: false,
   onOrdinalChange: () => { },
 };
 

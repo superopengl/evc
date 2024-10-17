@@ -78,7 +78,7 @@ const StockEvcInfoPanel = (props) => {
         </TooltipLabel>
         <NumberValueDisplay className="number"
           loading={loading}
-          lo={[data.forwardNextFyMaxValueLo, data.forwardNextFyMaxValueHi]}
+          value={[data.forwardNextFyMaxValueLo, data.forwardNextFyMaxValueHi]}
           minus={<Text type="danger"><FormattedMessage id="text.forwardNextFyFairValueLoss" /></Text>}
         />
       </Space>

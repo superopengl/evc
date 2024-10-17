@@ -333,6 +333,99 @@ const PutCallDummyChart = () => {
   return <Line {...config} />
 }
 
+const EVC_CORE_INFO = `
+<div class="ant-space ant-space-vertical" style="width: 100%; gap: 8px;">
+   <div class="ant-space-item" id="tour-fair-value">
+      <div class="ant-row ant-row-no-wrap ant-row-center" style="margin-left: -2px; margin-right: -2px; row-gap: 0px;">
+         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 0 0 auto;"><span class="ant-typography">Report Date: 2 Dec 2023</span></div>
+         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 1 1 auto; min-width: 0px; display: flex; align-items: center;">
+            <div class="ant-divider ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
+         </div>
+      </div>
+   </div>
+   <div class="ant-space-item" style="">
+      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; gap: 8px;">
+         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Recent FY Fair Value</span></div>
+         <div class="ant-space-item">
+            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
+               <div class="ant-space-item">
+                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">177.19</span> ~ <span class="ant-typography">187.84</span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="ant-space-item" style="">
+      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
+         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward Next FY Fair Value</span></div>
+         <div class="ant-space-item">
+            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
+               <div class="ant-space-item">
+                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">190.68</span> ~ <span class="ant-typography">205.27</span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="ant-space-item" style="">
+      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 8px;">
+         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward Next FY Max Value Range</span></div>
+         <div class="ant-space-item">
+            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
+               <div class="ant-space-item">
+                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">199.77</span> ~ <span class="ant-typography">208.92</span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="ant-space-item" style="">
+      <div class="ant-row ant-row-no-wrap ant-row-center" style="margin-left: -2px; margin-right: -2px; row-gap: 0px;">
+         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 0 0 auto;">Daily update</div>
+         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 1 1 auto; min-width: 0px; display: flex; align-items: center;">
+            <div class="ant-divider ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
+         </div>
+      </div>
+   </div>
+   <div class="ant-space-item" style="">
+      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
+         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">BETA</span></div>
+         <div class="ant-space-item">
+            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
+               <div class="ant-space-item">
+                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">1.170</span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="ant-space-item" style="">
+      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
+         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">PE (TTM)</span></div>
+         <div class="ant-space-item">
+            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
+               <div class="ant-space-item">
+                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">31.77</span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="ant-space-item">
+      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
+         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward PE</span></div>
+         <div class="ant-space-item">
+            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
+               <div class="ant-space-item">
+                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">30.04</span></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+`;
+
 const ProMemberPage = (props) => {
   const [visible, setVisible] = React.useState(true);
   const [signUpVisible, setSignUpVisible] = React.useState(false);
@@ -509,7 +602,7 @@ const ProMemberPage = (props) => {
                     </div>
                     <div className="ant-card-body" style={{ height: '65px', overflow: 'auto' }}>
                       <div className="ant-space ant-space-horizontal ant-space-align-center">
-                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography" style={{ fontSize: '20px' }}><strong>1 May 2021</strong></span></div>
+                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography" style={{ fontSize: '20px' }}><strong>7 Dec 2023</strong></span></div>
                         <div className="ant-space-item">
                           <div className="ant-space ant-space-horizontal ant-space-align-center sc-bqiQRQ hUhAjW">
                             <div className="ant-space-item">
@@ -532,84 +625,13 @@ const ProMemberPage = (props) => {
                         </div>
                       </div>
                     </div>
-                    <div className="ant-card-body" style={{ height: '274px' }} >
-                      <div className="ant-space ant-space-vertical" style={{ width: '100%' }} >
-                        <div className="ant-space-item" style={{ marginBottom: '8px' }} id="tour-fair-value">
-                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between' }}>
-                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
-                              <FormattedMessage id="text.fairValue" />
-
-                            </span></div>
-                            <div className="ant-space-item">
-                              <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                <div className="ant-space-item">
-                                  <div className="sc-llYToB bepCke"><span className="ant-typography">122.33 </span> ~ <span className="ant-typography">147.22 </span></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="ant-space-item" style={{ marginBottom: '8px' }} id="tour-support">
-                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
-                              <FormattedMessage id="text.support" />
-                            </span></div>
-                            <div className="ant-space-item">
-                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">114.60 </span> ~ <span className="ant-typography">116.00 </span></div>
-                                  </div>
-                                </div>
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">108.00 </span> ~ <span className="ant-typography">111.00 </span></div>
-                                  </div>
-                                </div>
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">88.00 </span> ~ <span className="ant-typography">98.00 </span></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="ant-space-item" id="tour-resistance">
-
-                          <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography ant-typography-secondary">
-                              <FormattedMessage id="text.resistance" />
-                            </span></div>
-                            <div className="ant-space-item">
-                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">122.00 </span> ~ <span className="ant-typography">128.00 </span></div>
-                                  </div>
-                                </div>
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">122.00 </span> ~ <span className="ant-typography">129.00 </span></div>
-                                  </div>
-                                </div>
-                                <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                        <div className="ant-space-item" >
-                                    <div className="sc-llYToB bepCke"><span className="ant-typography">133.00 </span> ~ <span className="ant-typography">137.50 </span></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <div className="ant-card-body" style={{ height: 320, overflow: 'auto' }} dangerouslySetInnerHTML={{ __html: EVC_CORE_INFO }} />
                   </div>
                 </Col>
               </Row>
             </Col>
             {showInlineStockChart && <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
-              <div style={{ height: '649px', minWidth: '400px' }}>
+              <div style={{ height: 695, minWidth: 400 }}>
                 <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
                   <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
                     <div style={{ width: '100%', height: '100%', background: 'transparent', padding: '0 !important' }}>

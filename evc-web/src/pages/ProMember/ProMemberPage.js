@@ -266,15 +266,68 @@ const PutCallDummyChart = () => {
     xField: 'date',
     yField: 'value',
     seriesField: 'type',
-    xAxis: { type: 'time' },
+    smooth: false,
+    //// Don't enable xAxis, which will break tooltip on window resizing. 
+    // xAxis: {
+    //   type: 'time',
+    //   nice: true,
+    // },
     yAxis: {
+      nice: true,
+      position: 'right',
+      // min: 0,
+      // max: 200,
+      tickCount: 10,
+      visible: true,
       label: {
-        formatter: function formatter(v) {
-          return v?.toLocaleString();
+        formatter: (label) => {
+          const value = +label;
+
+          return value === 100 ? '0%\n1.0' : value < 100 ? (value / 100).toFixed(1) : (value - 100) + '%';
         },
       },
+      grid: {
+        line: {
+          style: {
+            lineWidth: 0.5,
+            lineDash: [3, 2],
+          }
+        }
+      }
     },
-    color: ['#531dab', '#ffc53d'],
+    annotations: [
+      {
+        type: 'line',
+        /** 起始位置 */
+        start: ['min', 100],
+        /** 结束位置 */
+        end: ['max', 100],
+        style: {
+          lineWidth: 1,
+          stroke: '#AAAAAA',
+        },
+      },
+    ],
+    tooltip: {
+      formatter: (item, x, y) => {
+        const { value: rawValue, type } = item;
+        let value = rawValue;
+        switch (type) {
+          case 'Today %Put Vol':
+          case 'Today %Call Vol':
+            value = `${(rawValue - 100).toFixed(2)} % `;
+            break;
+          default:
+            value = (value / 100).toFixed(3);
+            break;
+        }
+        return { name: item.type, value };
+      }
+    },
+    color: ['#1570FF', '#ffc53d', '#F31dab'],
+    lineStyle: {
+      lineWidth: 2.0,
+    },
   };
 
   return <Line {...config} />
@@ -541,7 +594,7 @@ const ProMemberPage = (props) => {
                                   </div>
                                 </div>
                                 <div className="ant-space ant-space-horizontal ant-space-align-center number">
-                                  <div className="ant-space-item">
+                        <div className="ant-space-item" >
                                     <div className="sc-llYToB bepCke"><span className="ant-typography">133.00 </span> ~ <span className="ant-typography">137.50 </span></div>
                                   </div>
                                 </div>

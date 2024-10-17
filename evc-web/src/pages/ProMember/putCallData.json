@@ -1,1 +1,1127 @@
-[{"date":"2021-04-28T00:00:00.000Z","value":0.3648971257595712,"type":"daily putCallRatio"},{"date":"2021-04-28T00:00:00.000Z","value":0.35049911911080645,"type":"90 days avg"},{"date":"2021-04-27T00:00:00.000Z","value":0.3648971257595712,"type":"daily putCallRatio"},{"date":"2021-04-27T00:00:00.000Z","value":0.3500991744816741,"type":"90 days avg"},{"date":"2021-04-26T00:00:00.000Z","value":0.3608682904942107,"type":"daily putCallRatio"},{"date":"2021-04-26T00:00:00.000Z","value":0.3496763758737342,"type":"90 days avg"},{"date":"2021-04-23T00:00:00.000Z","value":0.35347513662712376,"type":"daily putCallRatio"},{"date":"2021-04-23T00:00:00.000Z","value":0.3493472019143084,"type":"90 days avg"},{"date":"2021-04-22T00:00:00.000Z","value":0.35347513662712376,"type":"daily putCallRatio"},{"date":"2021-04-22T00:00:00.000Z","value":0.349222112983617,"type":"90 days avg"},{"date":"2021-04-21T00:00:00.000Z","value":0.3505984731693485,"type":"daily putCallRatio"},{"date":"2021-04-21T00:00:00.000Z","value":0.3490892059947574,"type":"90 days avg"},{"date":"2021-04-20T00:00:00.000Z","value":0.3505984731693485,"type":"daily putCallRatio"},{"date":"2021-04-20T00:00:00.000Z","value":0.34904051995686736,"type":"90 days avg"},{"date":"2021-04-19T00:00:00.000Z","value":0.3505984731693485,"type":"daily putCallRatio"},{"date":"2021-04-19T00:00:00.000Z","value":0.348988588183118,"type":"90 days avg"},{"date":"2021-04-16T00:00:00.000Z","value":0.3524564021743582,"type":"daily putCallRatio"},{"date":"2021-04-16T00:00:00.000Z","value":0.34893307490773073,"type":"90 days avg"},{"date":"2021-04-15T00:00:00.000Z","value":0.3535483173664394,"type":"daily putCallRatio"},{"date":"2021-04-15T00:00:00.000Z","value":0.3488072417910655,"type":"90 days avg"},{"date":"2021-04-12T00:00:00.000Z","value":0.359452906863955,"type":"daily putCallRatio"},{"date":"2021-04-12T00:00:00.000Z","value":0.348631646399385,"type":"90 days avg"},{"date":"2021-04-09T00:00:00.000Z","value":0.3649588178692738,"type":"daily putCallRatio"},{"date":"2021-04-09T00:00:00.000Z","value":0.3482154440738246,"type":"90 days avg"},{"date":"2021-04-08T00:00:00.000Z","value":0.36377972756235805,"type":"daily putCallRatio"},{"date":"2021-04-08T00:00:00.000Z","value":0.3475457091220066,"type":"90 days avg"},{"date":"2021-04-07T00:00:00.000Z","value":0.3635049016617115,"type":"daily putCallRatio"},{"date":"2021-04-07T00:00:00.000Z","value":0.346869291686992,"type":"90 days avg"},{"date":"2021-03-31T00:00:00.000Z","value":0.35775907661612566,"type":"daily putCallRatio"},{"date":"2021-03-31T00:00:00.000Z","value":0.34614600429678677,"type":"90 days avg"},{"date":"2021-03-30T00:00:00.000Z","value":0.3548278215141581,"type":"daily putCallRatio"},{"date":"2021-03-30T00:00:00.000Z","value":0.3456181373731805,"type":"90 days avg"},{"date":"2021-03-29T00:00:00.000Z","value":0.35238227561614355,"type":"daily putCallRatio"},{"date":"2021-03-29T00:00:00.000Z","value":0.3451795809855149,"type":"90 days avg"},{"date":"2021-03-26T00:00:00.000Z","value":0.35309500617580786,"type":"daily putCallRatio"},{"date":"2021-03-26T00:00:00.000Z","value":0.3448194462539834,"type":"90 days avg"},{"date":"2021-03-25T00:00:00.000Z","value":0.34856285001392445,"type":"daily putCallRatio"},{"date":"2021-03-25T00:00:00.000Z","value":0.3443838904686242,"type":"90 days avg"},{"date":"2021-03-24T00:00:00.000Z","value":0.3467421990965976,"type":"daily putCallRatio"},{"date":"2021-03-24T00:00:00.000Z","value":0.3441517260494409,"type":"90 days avg"},{"date":"2021-03-23T00:00:00.000Z","value":0.34626439138366877,"type":"daily putCallRatio"},{"date":"2021-03-23T00:00:00.000Z","value":0.3439993452819611,"type":"90 days avg"},{"date":"2021-03-22T00:00:00.000Z","value":0.3450188584422939,"type":"daily putCallRatio"},{"date":"2021-03-22T00:00:00.000Z","value":0.34385777990060434,"type":"90 days avg"},{"date":"2021-03-19T00:00:00.000Z","value":0.34497346871286744,"type":"daily putCallRatio"},{"date":"2021-03-19T00:00:00.000Z","value":0.34378037466449174,"type":"90 days avg"},{"date":"2021-03-18T00:00:00.000Z","value":0.3443782865013483,"type":"daily putCallRatio"},{"date":"2021-03-18T00:00:00.000Z","value":0.3436951536610363,"type":"90 days avg"},{"date":"2021-03-17T00:00:00.000Z","value":0.3443782865013483,"type":"daily putCallRatio"},{"date":"2021-03-17T00:00:00.000Z","value":0.34364260498101235,"type":"90 days avg"},{"date":"2021-03-16T00:00:00.000Z","value":0.3433471029062329,"type":"daily putCallRatio"},{"date":"2021-03-16T00:00:00.000Z","value":0.343581298187651,"type":"90 days avg"},{"date":"2021-03-15T00:00:00.000Z","value":0.3433471029062329,"type":"daily putCallRatio"},{"date":"2021-03-15T00:00:00.000Z","value":0.34360258866777993,"type":"90 days avg"},{"date":"2021-03-12T00:00:00.000Z","value":0.3509660789628098,"type":"daily putCallRatio"},{"date":"2021-03-12T00:00:00.000Z","value":0.3436281372439346,"type":"90 days avg"},{"date":"2021-03-11T00:00:00.000Z","value":0.3509660789628098,"type":"daily putCallRatio"},{"date":"2021-03-11T00:00:00.000Z","value":0.3428128103862818,"type":"90 days avg"},{"date":"2021-03-10T00:00:00.000Z","value":0.3459376783379606,"type":"daily putCallRatio"},{"date":"2021-03-10T00:00:00.000Z","value":0.34179365181421584,"type":"90 days avg"},{"date":"2021-03-09T00:00:00.000Z","value":0.3428661211964511,"type":"daily putCallRatio"},{"date":"2021-03-09T00:00:00.000Z","value":0.34120164802510944,"type":"90 days avg"},{"date":"2021-03-08T00:00:00.000Z","value":0.3428661211964511,"type":"daily putCallRatio"},{"date":"2021-03-08T00:00:00.000Z","value":0.3409242358298858,"type":"90 days avg"},{"date":"2021-03-05T00:00:00.000Z","value":0.3419804905413407,"type":"daily putCallRatio"},{"date":"2021-03-05T00:00:00.000Z","value":0.3405358587565727,"type":"90 days avg"},{"date":"2021-03-04T00:00:00.000Z","value":0.3400378815773279,"type":"daily putCallRatio"},{"date":"2021-03-04T00:00:00.000Z","value":0.34017470081038076,"type":"90 days avg"},{"date":"2021-03-03T00:00:00.000Z","value":0.3411097633830435,"type":"daily putCallRatio"},{"date":"2021-03-03T00:00:00.000Z","value":0.34022030722139834,"type":"90 days avg"},{"date":"2021-03-02T00:00:00.000Z","value":0.3411097633830435,"type":"daily putCallRatio"},{"date":"2021-03-02T00:00:00.000Z","value":0.3397755791405758,"type":"90 days avg"},{"date":"2021-03-01T00:00:00.000Z","value":0.3384413948981081,"type":"daily putCallRatio"},{"date":"2021-03-01T00:00:00.000Z","value":0.3384413948981081,"type":"90 days avg"}]
+[
+  {
+    "date": "2023/8/17",
+    "value": 149.2,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/17",
+    "value": 150.8,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/17",
+    "value": 85.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/18",
+    "value": 146.75,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/18",
+    "value": 153.25,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/18",
+    "value": 83.3,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/21",
+    "value": 142.02,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/21",
+    "value": 157.98,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/21",
+    "value": 87.5,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/22",
+    "value": 144.18,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/22",
+    "value": 155.82,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/22",
+    "value": 87,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/23",
+    "value": 142.88,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/23",
+    "value": 157.12,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/23",
+    "value": 87.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/24",
+    "value": 143.61,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/24",
+    "value": 156.39,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/24",
+    "value": 88.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/25",
+    "value": 144.01,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/25",
+    "value": 155.99,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/25",
+    "value": 87,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/28",
+    "value": 140.52,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/28",
+    "value": 159.48,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/28",
+    "value": 87.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/29",
+    "value": 138.49,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/29",
+    "value": 161.51,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/29",
+    "value": 86.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/30",
+    "value": 132.5,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/30",
+    "value": 167.5,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/30",
+    "value": 87.1,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/8/31",
+    "value": 131.77,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/8/31",
+    "value": 168.23000000000002,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/8/31",
+    "value": 87.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/1",
+    "value": 139.24,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/1",
+    "value": 160.76,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/1",
+    "value": 88,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/5",
+    "value": 138.65,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/5",
+    "value": 161.35,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/5",
+    "value": 89.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/6",
+    "value": 144.91,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/6",
+    "value": 155.09,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/6",
+    "value": 89.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/7",
+    "value": 145.96,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/7",
+    "value": 154.04,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/7",
+    "value": 87.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/8",
+    "value": 138.34,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/8",
+    "value": 161.66,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/8",
+    "value": 86.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/11",
+    "value": 133.92000000000002,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/11",
+    "value": 166.07999999999998,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/11",
+    "value": 87.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/12",
+    "value": 142.19,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/12",
+    "value": 157.81,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/12",
+    "value": 87.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/13",
+    "value": 150.55,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/13",
+    "value": 149.45,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/13",
+    "value": 87.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/14",
+    "value": 142.19,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/14",
+    "value": 157.81,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/14",
+    "value": 84.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/15",
+    "value": 142.81,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/15",
+    "value": 157.19,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/15",
+    "value": 85,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/18",
+    "value": 141.57,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/18",
+    "value": 158.43,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/18",
+    "value": 89.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/19",
+    "value": 142.22,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/19",
+    "value": 157.78,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/19",
+    "value": 90.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/20",
+    "value": 144.87,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/20",
+    "value": 155.13,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/20",
+    "value": 90.9,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/21",
+    "value": 151.07999999999998,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/21",
+    "value": 148.92000000000002,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/21",
+    "value": 89.4,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/22",
+    "value": 145.34,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/22",
+    "value": 154.66,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/22",
+    "value": 89,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/25",
+    "value": 146.25,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/25",
+    "value": 153.75,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/25",
+    "value": 90.10000000000001,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/26",
+    "value": 152.52,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/26",
+    "value": 147.48,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/26",
+    "value": 89,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/27",
+    "value": 155.04,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/27",
+    "value": 144.96,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/27",
+    "value": 75,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/28",
+    "value": 147.59,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/28",
+    "value": 152.41,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/28",
+    "value": 85.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/9/29",
+    "value": 143.24,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/9/29",
+    "value": 156.76,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/9/29",
+    "value": 85.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/2",
+    "value": 146.64,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/2",
+    "value": 153.36,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/2",
+    "value": 87.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/3",
+    "value": 152.21,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/3",
+    "value": 147.79,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/3",
+    "value": 88,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/4",
+    "value": 152.81,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/4",
+    "value": 147.19,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/4",
+    "value": 88.3,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/5",
+    "value": 148.76,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/5",
+    "value": 151.24,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/5",
+    "value": 88.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/6",
+    "value": 144.42000000000002,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/6",
+    "value": 155.57999999999998,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/6",
+    "value": 88.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/9",
+    "value": 146.59,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/9",
+    "value": 153.41,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/9",
+    "value": 87.9,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/10",
+    "value": 148.79,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/10",
+    "value": 151.21,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/10",
+    "value": 87.9,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/11",
+    "value": 149.23,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/11",
+    "value": 150.77,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/11",
+    "value": 88.5,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/12",
+    "value": 150.06,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/12",
+    "value": 149.94,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/12",
+    "value": 88.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/13",
+    "value": 154.06,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/13",
+    "value": 145.94,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/13",
+    "value": 89.60000000000001,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/16",
+    "value": 153.99,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/16",
+    "value": 146.01,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/16",
+    "value": 88.5,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/17",
+    "value": 148.94,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/17",
+    "value": 151.06,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/17",
+    "value": 89.60000000000001,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/18",
+    "value": 156.67000000000002,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/18",
+    "value": 143.32999999999998,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/18",
+    "value": 89.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/19",
+    "value": 149.88,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/19",
+    "value": 150.12,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/19",
+    "value": 89,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/20",
+    "value": 150.26,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/20",
+    "value": 149.74,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/20",
+    "value": 88.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/23",
+    "value": 145.37,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/23",
+    "value": 154.63,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/23",
+    "value": 91.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/24",
+    "value": 140.61,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/24",
+    "value": 159.39,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/24",
+    "value": 90.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/25",
+    "value": 153.06,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/25",
+    "value": 146.94,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/25",
+    "value": 89.60000000000001,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/26",
+    "value": 147.07,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/26",
+    "value": 152.93,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/26",
+    "value": 88.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/27",
+    "value": 146.66,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/27",
+    "value": 153.34,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/27",
+    "value": 87.5,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/30",
+    "value": 151.07999999999998,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/30",
+    "value": 148.92000000000002,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/30",
+    "value": 90.5,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/10/31",
+    "value": 153.82,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/10/31",
+    "value": 146.18,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/10/31",
+    "value": 91.60000000000001,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/1",
+    "value": 152.32999999999998,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/1",
+    "value": 147.67000000000002,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/1",
+    "value": 92.10000000000001,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/2",
+    "value": 151.52,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/2",
+    "value": 148.48,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/2",
+    "value": 92.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/3",
+    "value": 145.07999999999998,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/3",
+    "value": 154.92000000000002,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/3",
+    "value": 95.89999999999999,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/6",
+    "value": 154.03,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/6",
+    "value": 145.97,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/6",
+    "value": 94.39999999999999,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/7",
+    "value": 150,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/7",
+    "value": 150,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/7",
+    "value": 95.39999999999999,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/8",
+    "value": 143.36,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/8",
+    "value": 156.64,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/8",
+    "value": 97.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/9",
+    "value": 147.6,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/9",
+    "value": 152.4,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/9",
+    "value": 98.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/10",
+    "value": 144.46,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/10",
+    "value": 155.54,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/10",
+    "value": 100.69999999999999,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/13",
+    "value": 140.28,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/13",
+    "value": 159.72,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/13",
+    "value": 97.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/14",
+    "value": 141.78,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/14",
+    "value": 158.22,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/14",
+    "value": 96.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/15",
+    "value": 147.19,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/15",
+    "value": 152.81,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/15",
+    "value": 96.89999999999999,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/16",
+    "value": 153.44,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/16",
+    "value": 146.56,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/16",
+    "value": 97.6,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/17",
+    "value": 145.3,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/17",
+    "value": 154.7,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/17",
+    "value": 99.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/20",
+    "value": 145.32,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/20",
+    "value": 154.68,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/20",
+    "value": 97.2,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/21",
+    "value": 142.89,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/21",
+    "value": 157.11,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/21",
+    "value": 97,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/22",
+    "value": 145.32999999999998,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/22",
+    "value": 154.67000000000002,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/22",
+    "value": 95.8,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/11/24",
+    "value": 149.73,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/11/24",
+    "value": 150.27,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/11/24",
+    "value": 96.7,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/12/1",
+    "value": 147.52,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/12/1",
+    "value": 152.48,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/12/1",
+    "value": 97.89999999999999,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/12/4",
+    "value": 149.06,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/12/4",
+    "value": 150.94,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/12/4",
+    "value": 95.89999999999999,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/12/5",
+    "value": 143.1,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/12/5",
+    "value": 156.9,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/12/5",
+    "value": 96.1,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/12/6",
+    "value": 139.14,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/12/6",
+    "value": 160.86,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/12/6",
+    "value": 96,
+    "type": "Total P/C OI Ratio"
+  },
+  {
+    "date": "2023/12/7",
+    "value": 146.59,
+    "type": "Today %Put Vol"
+  },
+  {
+    "date": "2023/12/7",
+    "value": 153.41,
+    "type": "Today %Call Vol"
+  },
+  {
+    "date": "2023/12/7",
+    "value": 95,
+    "type": "Total P/C OI Ratio"
+  }
+]

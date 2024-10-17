@@ -120,7 +120,7 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      target: '#tour-forward-next-fy-fair-value',
+      target: '#tour-forward-next-fy-fair-value-off',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
@@ -135,7 +135,7 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      target: '#tour-forward-next-fy-fair-value-range',
+      target: '#tour-forward-next-fy-fair-value-range-off',
       disableBeacon: true,
       content: <>
         <Paragraph strong>
@@ -197,7 +197,7 @@ const WalkthroughTour = withRouter((props) => {
       </>
     },
     {
-      target: '#tour-putcall-table',
+      target: '#tour-putcall-table-off',
       placement: 'auto',
       disableBeacon: true,
       content: <>

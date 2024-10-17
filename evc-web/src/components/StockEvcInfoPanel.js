@@ -4,12 +4,12 @@ import { Typography, Space, Tooltip } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { getStockEvcInfo } from 'services/stockService';
 import ReactDOM from "react-dom";
-import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { Skeleton } from 'antd';
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 import { SectionTitleDivider } from './SectionTitleDivider';
+import { NumberValueDisplay } from './NumberValueDisplay';
 
 const { Text } = Typography;
 
@@ -57,66 +57,61 @@ const StockEvcInfoPanel = (props) => {
         <TooltipLabel message="How to use fair value">
           <FormattedMessage id="text.fairValue" />
         </TooltipLabel>
-        {loading ?
-          <Skeleton.Input size="small" style={{ width: 150 }} active /> :
-          <NumberRangeDisplay className="number"
-            lo={data.fairValueLo}
-            hi={data.fairValueHi}
-            empty={data.isLoss ? <Text type="danger"><FormattedMessage id="text.loss" /></Text> : <Text type="warning"><small>NONE</small></Text>} />
-        }
+        <NumberValueDisplay className="number"
+          loading={loading}
+          value={[data.fairValueLo, data.fairValueHi]}
+          minus={<Text type="danger"><FormattedMessage id="text.loss" /></Text>} />
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="">
           <FormattedMessage id="text.forwardNextFyFairValue" />
         </TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          <NumberRangeDisplay className="number"
-            lo={data.forwardNextFyFairValueLo}
-            hi={data.forwardNextFyFairValueHi}
-            empty={data.isForwardNextFyFairValueLoss ?
-              <Text type="danger"><small><FormattedMessage id="text.forwardNextFyFairValueLoss" /></small></Text> :
-              <Text type="warning"><small>NONE</small></Text>}
-          />
-        </div>}
+        <NumberValueDisplay className="number"
+          loading={loading}
+          value={[data.forwardNextFyFairValueLo, data.forwardNextFyFairValueHi]}
+          minus={<Text type="danger"><FormattedMessage id="text.forwardNextFyFairValueLoss" /></Text>}
+        />
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
         <TooltipLabel message="">
           <FormattedMessage id="text.forwardNextFyMaxValue" />
         </TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          <NumberRangeDisplay className="number"
-            lo={data.forwardNextFyMaxValueLo}
-            hi={data.forwardNextFyMaxValueHi}
-            empty={data.isForwardNextFyMaxValueLoss ?
-              <Text type="danger"><small><FormattedMessage id="text.forwardNextFyFairValueLoss" /></small></Text> :
-              <Text type="warning"><small>NONE</small></Text>}
-          />
-        </div>}
+        <NumberValueDisplay className="number"
+          loading={loading}
+          lo={[data.forwardNextFyMaxValueLo, data.forwardNextFyMaxValueHi]}
+          minus={<Text type="danger"><FormattedMessage id="text.forwardNextFyFairValueLoss" /></Text>}
+        />
       </Space>
       <SectionTitleDivider title={<FormattedMessage id="text.dailyUpdate" />} ></SectionTitleDivider>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="">
           <FormattedMessage id="text.beta" />
         </TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          {data.beta ? <Text>{(+data.beta).toFixed(3)}</Text> : <Text type="warning"><small>NONE</small></Text>}
-        </div>}
+        <NumberValueDisplay className="number"
+          loading={loading}
+          value={data.beta}
+          fixedDecimal={3}
+        />
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="">
           <FormattedMessage id="text.peRatio" />
         </TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          {data.peRatio ? <Text>{(+data.peRatio).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>}
-        </div>}
+        <NumberValueDisplay className="number"
+          loading={loading}
+          value={data.peRatio}
+          minus={<Text type="danger"><FormattedMessage id="text.epsTtmLoss" /></Text>}
+        />
       </Space>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <TooltipLabel message="">
           <FormattedMessage id="text.forwardRatio" />
         </TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          {data.forwardPeRatio ? <Text>{(+data.forwardPeRatio).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>}
-        </div>}
+        <NumberValueDisplay className="number"
+          loading={loading}
+          value={data.forwardPeRatio}
+          minus={<Text type="danger"><FormattedMessage id="text.forwardEpsLoss" /></Text>}
+        />
       </Space>
       {SHOW_SUPPORT_RESISTANCE && <>
         <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -124,7 +119,7 @@ const StockEvcInfoPanel = (props) => {
             <FormattedMessage id="text.support" />
           </TooltipLabel>
           {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            {data.supports?.map((s, i) => <NumberRangeDisplay className="number" key={i} lo={s.lo} hi={s.hi} />)}
+            {data.supports?.map((s, i) => <NumberValueDisplay className="number" key={i} value={[s.lo, s.hi]} />)}
           </div>}
         </Space>
         <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -132,7 +127,7 @@ const StockEvcInfoPanel = (props) => {
             <FormattedMessage id="text.resistance" />
           </TooltipLabel>
           {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            {data.resistances?.map((r, i) => <NumberRangeDisplay className="number" key={i} lo={r.lo} hi={r.hi} />)}
+            {data.resistances?.map((r, i) => <NumberValueDisplay className="number" key={i} value={[r.lo, r.hi]} />)}
           </div>}
         </Space>
       </>}

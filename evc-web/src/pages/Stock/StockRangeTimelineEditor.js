@@ -4,11 +4,11 @@ import { List, Space, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { NumberRangeInput } from 'components/NumberRangeInput';
-import { NumberRangeDisplay } from 'components/NumberRangeDisplay';
 import styled from 'styled-components';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
 import { from } from 'rxjs';
+import { NumberValueDisplay } from 'components/NumberValueDisplay';
 
 const Container = styled.div`
   .current-published {
@@ -73,7 +73,7 @@ export const StockRangeTimelineEditor = (props) => {
         itemLayout="horizontal"
         rowKey="id"
         size="small"
-        locale={{emptyText: ' '}}
+        locale={{ emptyText: ' ' }}
         loadMore={list.length >= 6 && <div style={{ width: '100%', textAlign: 'center' }}>
           <Button block size="large" type="link" icon={<EllipsisOutlined />} />
         </div>}
@@ -86,7 +86,7 @@ export const StockRangeTimelineEditor = (props) => {
             <List.Item.Meta
               description={<Space size="small">
                 <TimeAgo value={item.createdAt} showAgo={false} accurate={false} />
-              <NumberRangeDisplay lo={item.lo} hi={item.hi} />
+                <NumberValueDisplay value={[item.lo, item.hi]} />
               </Space>}
             />
           </List.Item>

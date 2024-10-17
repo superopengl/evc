@@ -18,6 +18,7 @@ import { List } from 'antd';
 import isObject from 'lodash/isObject';
 import { SectionTitleDivider } from './SectionTitleDivider';
 import moment from 'moment';
+import { NumberValueDisplay } from './NumberValueDisplay';
 
 const { Text } = Typography;
 
@@ -218,16 +219,19 @@ const StockInfoCard = (props) => {
       tooltip: null,
       textKey: 'text.beta',
       value: stock.beta,
+      fixedDecimal: 3,
     },
     {
       tooltip: null,
       textKey: 'text.peRatio',
       value: stock.peRatio,
+      textKeyOnLoss: 'text.epsTtmLoss',
     },
     {
       tooltip: null,
       textKey: 'text.forwardRatio',
       value: stock.forwardPeRatio,
+      textKeyOnLoss: 'text.forwardEpsLoss',
     },
   ], [stock]);
 
@@ -264,9 +268,9 @@ const StockInfoCard = (props) => {
               </Col>
               <Col flex="auto" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {
-                  isObject(item.value) ?
-                    (shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={item.value.lo} hi={item.value.hi} empty={item.isLoss ? <Text type="danger"><small><FormattedMessage id={item.textKeyOnLoss} /></small></Text> : <Text type="warning"><small>NONE</small></Text>} />)
-                    : (shouldHideData ? <HiddenNumberSingle /> : item.value ? <Text>{(+item.value).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>)
+                  shouldHideData ?
+                    isObject(item.value) ? <HiddenNumberPair /> : <HiddenNumberSingle /> :
+                    <NumberValueDisplay value={isObject(item.value) ? [item.value.lo, item.value.hi] : item.value} minus={item.textKeyOnLoss ? <Text type="danger"><FormattedMessage id={item.textKeyOnLoss} /></Text> : null} />
                 }
               </Col>
             </Row>
@@ -285,9 +289,12 @@ const StockInfoCard = (props) => {
               </Col>
               <Col flex="auto" style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {
-                  isObject(item.value) ?
-                    (shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay lo={item.value.lo} hi={item.value.hi} empty={item.isLoss ? <Text type="danger"><small><FormattedMessage id={item.textKeyOnLoss} /></small></Text> : <Text type="warning"><small>NONE</small></Text>} />)
-                    : (shouldHideData ? <HiddenNumberSingle /> : item.value ? <Text>{(+item.value).toFixed(2)}</Text> : <Text type="warning"><small>NONE</small></Text>)
+                  shouldHideData ?
+                    isObject(item.value) ? <HiddenNumberPair /> : <HiddenNumberSingle /> :
+                    <NumberValueDisplay
+                      fixedDecimal={item.fixedDecimal}
+                      value={isObject(item.value) ? [item.value.lo, item.value.hi] : item.value}
+                      minus={item.textKeyOnLoss ? <Text type="danger"><FormattedMessage id={item.textKeyOnLoss} /></Text> : null} />
                 }
               </Col>
             </Row>

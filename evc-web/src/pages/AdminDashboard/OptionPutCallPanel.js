@@ -76,7 +76,7 @@ const OptionPutCallPanel = (props) => {
       content: <Table
         bordered={false}
         size="small"
-        columns={columnDef.filter((x, i) => i > 2)}
+        columns={columnDef.filter((x) => !x.hideOnDetail)}
         dataSource={allHistoryData.map((x, index) => ({ ...x, index }))}
         loading={loading}
         rowKey="index"
@@ -110,6 +110,7 @@ const OptionPutCallPanel = (props) => {
       fixed: 'left',
       width: 40,
       align: 'center',
+      hideOnDetail: true,
       render: (value, record) => <Button shape='circle' size="small" icon={<PlusOutlined />} type="text" onClick={() => handleShowDetail(record.symbol)} disabled={!record.date} />
     },
     {
@@ -117,6 +118,7 @@ const OptionPutCallPanel = (props) => {
       dataIndex: 'symbol',
       fixed: 'left',
       width: 100,
+      hideOnDetail: true,
       // filters: symbols.map(s => ({ text: s, value: s })),
       // filterMode: 'tree',
       // filterSearch: true,
@@ -135,7 +137,7 @@ const OptionPutCallPanel = (props) => {
       title: 'Date',
       dataIndex: 'date',
       // sorter: (a, b) => moment(a.date) - moment(b.date),
-      width: 155,
+      // width: 135,
       align: 'left',
       render: (value) => {
         if (!value) {

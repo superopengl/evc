@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Typography, Space, Tooltip, Row, Col } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { NumberRangeDisplay } from './NumberRangeDisplay';
 import { StockWatchButton } from 'components/StockWatchButton';
 import { StockCustomTagButton } from 'components/StockCustomTagButton';
 import { StockName } from './StockName';
@@ -310,7 +309,7 @@ const StockInfoCard = (props) => {
                   </TooltipLabel>
                 </td>
                 <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  {shouldHideData ? <HiddenNumberPair count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumberPair /> : <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={s.lo} hi={s.hi} />) : null}
+                  {shouldHideData ? <HiddenNumberPair count={2} /> : stock.supports?.length ? stock.supports.map((s, i) => shouldHideData ? <HiddenNumberPair /> : <NumberValueDisplay className={`text-color-level-${i}`} key={i} value={[s.lo, s.hi]} />) : null}
                 </td>
               </tr>
               <tr>
@@ -320,7 +319,7 @@ const StockInfoCard = (props) => {
                   </TooltipLabel>
                 </td>
                 <td style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  {shouldHideData ? <HiddenNumberPair count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberRangeDisplay className={`text-color-level-${i}`} key={i} lo={r.lo} hi={r.hi} />) : null}
+                  {shouldHideData ? <HiddenNumberPair count={2} /> : stock.resistances?.length ? stock.resistances.map((r, i) => <NumberValueDisplay className={`text-color-level-${i}`} key={i} value={[r.lo, r.hi]} />) : null}
                 </td>
               </tr>
             </>}

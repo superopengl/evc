@@ -2,9 +2,7 @@ import { getManager, getRepository } from 'typeorm';
 import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';
 import _ from 'lodash';
-import delay from 'delay';
 import { backOff } from "exponential-backoff";
-import { existsQuery } from '../utils/existsQuery';
 import { StockScrappedEps } from '../entity/StockScrappedEps';
 
 type StockIexEpsInfo = {

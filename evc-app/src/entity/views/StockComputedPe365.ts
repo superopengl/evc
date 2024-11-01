@@ -1,6 +1,4 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
-import { existsQuery } from '../../utils/existsQuery';
-import { StockDailyPe } from './StockDailyPe';
 import { StockComputedPe90 } from './StockComputedPe90';
 import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
 

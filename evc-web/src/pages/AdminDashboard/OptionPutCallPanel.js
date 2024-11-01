@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
-import { Pagination, Table, Select, Space, Typography, Button, Row, Col, Tooltip, InputNumber } from 'antd';
+import { Pagination, Table, Select, Space, Typography, Button, Row, Col, Tooltip, InputNumber, Drawer } from 'antd';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { getStockAllOptionPutCallHistory, listLatestOptionPutCall, saveStockOptionPutCallHistoryOrdinal } from 'services/dataService';
@@ -42,6 +42,8 @@ const OptionPutCallPanel = (props) => {
   const [symbols, setSymbols] = React.useState([]);
   const [filteredSymbol, setFilteredSymbol] = React.useState();
   const [displayList, setDisplayList] = React.useState();
+  const [selectedSymbol, setSelectedSymbol] = React.useState();
+  const [allData, setAllData] = React.useState(null);
   const context = React.useContext(GlobalContext);
 
   const shouldHide = context.role === 'free' || context.role === 'guest';
@@ -61,37 +63,9 @@ const OptionPutCallPanel = (props) => {
   }, [list, filteredSymbol])
 
   const handleShowDetail = async (symbol) => {
-    const modalInstance = Modal.info({
-      icon: null,
-      title: <><Text strong>{symbol}</Text> Option History</>,
-      closable: true,
-      maskClosable: true,
-      style: { top: 40, height: 500 },
-      // width: 'calc(100vw - 80px)',
-      width: 900,
-      content: <Loading />
-    })
     const allHistoryData = await getStockAllOptionPutCallHistory(symbol);
-    modalInstance.update({
-      content: <Table
-        bordered={false}
-        size="small"
-        columns={columnDef.filter((x) => !x.hideOnDetail)}
-        dataSource={allHistoryData.map((x, index) => ({ ...x, index }))}
-        loading={loading}
-        rowKey="index"
-        pagination={false}
-        style={{
-          // marginBottom: '1rem',
-          // height: 'calc(100vh - 320px)' 
-        }}
-        scroll={{
-          x: 'max-content',
-          y: 'calc(100vh - 300px)'
-
-        }}
-      />
-    })
+    setSelectedSymbol(symbol);
+    setAllData(allHistoryData);
   }
 
   const handleChangeOrder = async (record, ordinal) => {
@@ -241,6 +215,35 @@ const OptionPutCallPanel = (props) => {
           // y: 'calc(100vh - 370px)'
         }}
       ></Table>
+      <Drawer
+        title={<><Text strong>{selectedSymbol}</Text> Option History</>}
+        visible={!!allData}
+        closable={true}
+        maskClosable={true}
+        onClose={() => setAllData(null)}
+        footer={null}
+        bodyStyle={{ padding: '0 4px' }}
+        width={840}
+      >
+        <Table
+          bordered={false}
+          size="small"
+          columns={columnDef.filter((x) => !x.hideOnDetail)}
+          dataSource={(allData ?? []).map((x, index) => ({ ...x, index }))}
+          loading={loading}
+          rowKey="index"
+          pagination={false}
+          style={{
+            // marginBottom: '1rem',
+            // height: 'calc(100vh - 320px)' 
+          }}
+          scroll={{
+            x: 'max-content',
+            // y: 'calc(100vh - 55px)'
+
+          }}
+        />
+      </Drawer>
     </ContainerStyled>
   );
 };

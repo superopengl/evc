@@ -61,7 +61,7 @@ const StockDataInfoPanel = (props) => {
   const columnDef = [
     {
       dataIndex: 'key',
-      render: (value) => <Text type="secondary"><small>{getLabel(value)}</small></Text>
+      render: (value) => <Text type="secondary">{getLabel(value)}</Text>
     },
     {
       dataIndex: 'value',

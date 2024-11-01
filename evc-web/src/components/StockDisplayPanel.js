@@ -76,6 +76,8 @@ const StockDisplayPanel = (props) => {
 
   const shouldHidePutCall = ['guest', 'free'].includes(context.role);
 
+  const shouldShowRoster = context.role === 'admin';
+
   return (
     <>
       {(loading || !stock) ? <Loading /> : <>
@@ -119,7 +121,7 @@ const StockDisplayPanel = (props) => {
         </Row>}
         {stock.hasNewChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<FormattedMessage id="menu.optionPutCall" />} paidOnly={true} bodyStyle={{ padding: 0 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} paidOnly={true} bodyStyle={{ padding: 0 }}>
               <StockOptionPutCallPanel symbol={stock.symbol} lastDayOnly={true} />
             </MemberOnlyCard>
           </Col>
@@ -136,7 +138,7 @@ const StockDisplayPanel = (props) => {
             </Button>
           </Col>
         </Row>}
-        <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+        {shouldShowRoster && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
           <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
             <MemberOnlyCard title={<FormattedMessage id="text.roster" />} bodyStyle={{ height: 500 }}>
               <StockRosterPanel symbol={stock.symbol} />
@@ -147,7 +149,7 @@ const StockDisplayPanel = (props) => {
               <StockInsiderTransactionPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
-        </Row>
+        </Row>}
         <Row style={{ marginTop: 30 }}>
           <Col span={24}>
             <MemberOnlyCard title={<FormattedMessage id="text.news" />} bodyStyle={{ height: 700 }}>

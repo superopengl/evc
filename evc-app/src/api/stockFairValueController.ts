@@ -7,13 +7,13 @@ import { StockHistoricalComputedFairValue } from '../entity/views/StockHistorica
 import _ from 'lodash';
 import moment = require('moment');
 import { refreshMaterializedView } from "../refreshMaterializedView";
-import { StockComputedPe90 } from '../entity/views/StockComputedPe90';
+import { StockComputedPe365 } from '../entity/views/StockComputedPe365';
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { symbol } = req.params;
 
-  const latestPe90: any = await getRepository(StockComputedPe90).findOne({
+  const latestPe365: any = await getRepository(StockComputedPe365).findOne({
     where: {
       symbol
     },
@@ -22,9 +22,9 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
     }
   });
 
-  if (latestPe90) {
-    latestPe90.reportDate = latestPe90.date;
-    latestPe90.isLatest = true;
+  if (latestPe365) {
+    latestPe365.reportDate = latestPe365.date;
+    latestPe365.isLatest = true;
   }
 
   const computedList = await getRepository(StockHistoricalComputedFairValue).find({
@@ -39,7 +39,7 @@ export const getStockFairValue = handlerWrapper(async (req, res) => {
   });
   const list = _.orderBy([...computedList, ...specialList], [(item) => moment(item.reportDate).toDate()], ['desc']);
 
-  const result = latestPe90 ? [latestPe90, ...list] : list;
+  const result = latestPe365 ? [latestPe365, ...list] : list;
   res.json(result);
 });
 

@@ -62,11 +62,11 @@ const JOB_NAME = 'daily-advancedStat';
 
 start(JOB_NAME, async () => {
 
-  // const isMarketOpen = await isUSMarketOpen();
-  // if (isMarketOpen) {
-  //   console.warn('Market is still open');
-  //   return;
-  // }
+  const isMarketOpen = await isUSMarketOpen();
+  if (isMarketOpen) {
+    console.warn('Market is still open');
+    return;
+  }
 
   const stocks = await getRepository(Stock)
     .createQueryBuilder()

@@ -31,6 +31,10 @@ import { StockComputedPe365 } from './StockComputedPe365';
     .select([
       's.symbol as symbol',
       'COALESCE(sp."reportDate", sc."reportDate") as "reportDate"',
+      'pe.date as "peDate"',
+      'pe."pe90Avg" as "pe90Avg"',
+      'pe."pe90StdDev" as "pe90StdDev"',
+      'pe."forwardEps" as "peForwardEps"',
       'sp."createdAt" as "specialCreatedAt"',
       'sc."ttmEps" as "ttmEps"',
       'sc."fairValueLo" as "computedFairValueLo"',
@@ -52,6 +56,18 @@ export class StockLatestFairValue {
 
   @ViewColumn()
   reportDate: string;
+
+  @ViewColumn()
+  peDate: string;
+
+  @ViewColumn()
+  pe90Avg: number;
+
+  @ViewColumn()
+  pe90StdDev: number;
+
+  @ViewColumn()
+  peForwardEps: number;
 
   @ViewColumn()
   specialCreatedAt: Date;

@@ -6,8 +6,6 @@ import { sendIexRequest } from '../src/services/iexCoreService';
 import { StockAdvancedStatsInfo, syncManyStockAdcancedStat } from '../src/services/syncManyStockAdcancedStat';
 import moment from 'moment';
 import _ from 'lodash';
-import { StockDailyAdvancedStat } from '../src/entity/StockDailyAdvancedStat';
-import { StockDailyPutCallRatio } from '../src/entity/StockDailyPutCallRatio';
 import { assert } from '../src/utils/assert';
 
 
@@ -29,27 +27,27 @@ async function udpateDatabase(symbolValueMap) {
   await syncManyStockAdcancedStat(advancedStatsInfo);
 }
 
-async function backfillDataFromOldStockDailyPutCallRatioTable() {
-  const { schema: newTableSchema, tableName: newTableName } = getRepository(StockDailyAdvancedStat).metadata;
-  const { schema: oldTableSchema, tableName: oldTableName } = getRepository(StockDailyPutCallRatio).metadata;
+// async function backfillDataFromOldStockDailyPutCallRatioTable() {
+//   const { schema: newTableSchema, tableName: newTableName } = getRepository(StockDailyAdvancedStat).metadata;
+//   const { schema: oldTableSchema, tableName: oldTableName } = getRepository(StockDailyPutCallRatio).metadata;
 
-  console.log(`Start backfilling data from the old "${oldTableSchema}"."${oldTableName}" table`);
-  await getManager()
-    .query(`
-INSERT INTO "${newTableSchema}"."${newTableName}"
-(symbol, "date", "putCallRatio")
-SELECT symbol, "date", "putCallRatio"
-  FROM "${oldTableSchema}"."${oldTableName}" AS d
-  WHERE d."date" < (
-    SELECT MIN("date") from "${newTableSchema}"."${newTableName}" n
-    WHERE n.symbol = d.symbol 
-    GROUP BY n.symbol
-  )
-ON CONFLICT (symbol, "date") DO NOTHING
-    `);
+//   console.log(`Start backfilling data from the old "${oldTableSchema}"."${oldTableName}" table`);
+//   await getManager()
+//     .query(`
+// INSERT INTO "${newTableSchema}"."${newTableName}"
+// (symbol, "date", "putCallRatio")
+// SELECT symbol, "date", "putCallRatio"
+//   FROM "${oldTableSchema}"."${oldTableName}" AS d
+//   WHERE d."date" < (
+//     SELECT MIN("date") from "${newTableSchema}"."${newTableName}" n
+//     WHERE n.symbol = d.symbol 
+//     GROUP BY n.symbol
+//   )
+// ON CONFLICT (symbol, "date") DO NOTHING
+//     `);
 
-  console.log(`Finished backfilling data from the old "${oldTableSchema}"."${oldTableName}" table.`);
-}
+//   console.log(`Finished backfilling data from the old "${oldTableSchema}"."${oldTableName}" table.`);
+// }
 
 async function syncIexForSymbols(symbols: string[]) {
   const resp = await sendIexRequest(symbols, 'advanced_stats');
@@ -84,7 +82,7 @@ start(JOB_NAME, async () => {
     await syncIexForSymbols(batchSymbols);
   }
 
-  await backfillDataFromOldStockDailyPutCallRatioTable();
+  // await backfillDataFromOldStockDailyPutCallRatioTable();
 
   // await executeWithDataEvents('refresh materialized views', JOB_NAME, () => refreshMaterializedView());
 });

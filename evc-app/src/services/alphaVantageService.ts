@@ -3,6 +3,7 @@ import _ from 'lodash';
 import fetch from 'node-fetch';
 import parse from 'csv-parse/lib/sync';
 import moment from 'moment-timezone';
+import { sleep } from '../utils/sleep';
 
 // const alphaApi = alphavantage({key: process.env.ALPHAVANTAGE_API_KEY});
 
@@ -180,12 +181,44 @@ async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 
     apikey: process.env.ALPHAVANTAGE_API_KEY
   });
   const url = `${process.env.ALPHAVANTAGE_API_ENDPOINT}/query?${queryParams}`;
+  let resp = await requestAlphaVantageApiOnce(url, format);
+
+  if (hasBeenRateLimited(resp)) {
+    console.log('AlphaVantage rate limited. Waiting for 10 seconds and retry 1/3 ...'.yellow)
+    await sleep(10 * 1000);
+    resp = await requestAlphaVantageApiOnce(url, format);
+  }
+
+  if (hasBeenRateLimited(resp)) {
+    console.log('AlphaVantage rate limited. Waiting for 30 seconds and retry 2/3...'.yellow)
+    await sleep(30 * 1000);
+    resp = await requestAlphaVantageApiOnce(url, format);
+  }
+
+  if (hasBeenRateLimited(resp)) {
+    console.log('AlphaVantage rate limited. Waiting for 60 seconds and retry 3/3...'.yellow)
+    await sleep(60 * 1000);
+    resp = await requestAlphaVantageApiOnce(url, format);
+  }
+
+  return resp;
+}
+
+function hasBeenRateLimited(resp) {
+  return resp.Information && /volume/.test(resp.Information + '');
+}
+
+async function requestAlphaVantageApiOnce(url: string, format: 'json' | 'text' = 'json') {
   const resp = await fetch(url, { timeout: 10000 });
-  console.debug('alphavantage request'.bgMagenta.white, resp.status, url.magenta);
   if (/^4/.test(`${resp.status}`)) {
     // 429 Too Many Requests
     // 404 Sandbox doesn't return data
+    console.debug('alphavantage request'.bgMagenta.white, resp.status, url);
     return null;
   }
-  return format === 'json' ? resp.json() : resp.text();
+
+  const r = await (format === 'json' ? resp.json() : resp.text());
+  console.debug('alphavantage request'.bgMagenta.white, resp.status, url, (_.isEmpty(r) || r.length === 0 ? '(empty response)' : '').magenta);
+
+  return r;
 }

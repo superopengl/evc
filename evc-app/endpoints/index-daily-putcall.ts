@@ -1,3 +1,4 @@
+import errorToJson from 'error-to-json';
 import { getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
@@ -9,16 +10,20 @@ import { getAdvancedStat, isUSMarkertOpenNow } from '../src/services/alphaVantag
 async function syncForSymbols(symbols: string[]) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
   for (const symbol of symbols) {
-    const value = await getAdvancedStat(symbol);
+    try {
+      const value = await getAdvancedStat(symbol);
 
-    advancedStatsInfo.push({
-      symbol,
-      beta: +value.Beta || null,
-      peRatio: +value.TrailingPE || null,
-      forwardPeRatio: +value.ForwardPE || null,
-      date: moment().format('YYYY-MM-DD'),
-      rawResponse: value
-    });
+      advancedStatsInfo.push({
+        symbol,
+        beta: +value.Beta || null,
+        peRatio: +value.TrailingPE || null,
+        forwardPeRatio: +value.ForwardPE || null,
+        date: moment().format('YYYY-MM-DD'),
+        rawResponse: value
+      });
+    } catch (e) {
+      console.error(`Failed to fetch advanced stat info for ${symbol}`, errorToJson(e));
+    }
   }
 
   await syncManyStockAdcancedStat(advancedStatsInfo);

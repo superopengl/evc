@@ -205,7 +205,7 @@ async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 
 }
 
 function hasBeenRateLimited(resp) {
-  return resp.Information && /higher API/.test(resp.Information + '');
+  return resp.Information && /higher API/i.test(resp.Information + '');
 }
 
 async function requestAlphaVantageApiOnce(url: string, format: 'json' | 'text' = 'json') {

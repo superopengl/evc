@@ -1,7 +1,6 @@
 import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-// import { singleBatchRequest } from '../src/services/iexService';
 import { sendIexRequest } from '../src/services/iexCoreService';
 import _ from 'lodash';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';

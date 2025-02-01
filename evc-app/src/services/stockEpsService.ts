@@ -5,12 +5,6 @@ import _ from 'lodash';
 import { backOff } from "exponential-backoff";
 import { StockScrappedEps } from '../entity/StockScrappedEps';
 
-type StockIexEpsInfo = {
-  symbol: string;
-  reportDate: string;
-  value: number;
-};
-
 async function getEarningsWithThreeAttempts(symbol: string, howManyQuarters: number) {
   let attempt = 0;
   const earningsResult = await backOff(async () => {

@@ -14,7 +14,6 @@ import { StockEps } from '../entity/StockEps';
 import {
   getNews,
   getInsiderRoster,
-  getInsiderTransactions,
   getMarketGainers,
   getMarketLosers,
   getMarketMostActive,

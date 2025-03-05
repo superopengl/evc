@@ -23,6 +23,8 @@
     "feed:close:prod": "TZ=utc node ./endpoints/feed-close-pe",
     "daily:uoa": "TZ=utc ts-node ./endpoints/index-daily-uoa.ts",
     "daily:uoa:prod": "TZ=utc node ./endpoints/index-daily-uoa",
+    "daily:opc": "TZ=utc ts-node ./endpoints/index-daily-opc-history.ts",
+    "daily:opc:prod": "TZ=utc node ./endpoints/index-daily-opc-history",
     "daily:putcall": "TZ=utc ts-node ./endpoints/index-daily-putcall.ts",
     "daily:putcall:prod": "TZ=utc node ./endpoints/index-daily-putcall",
     "daily:insider": "TZ=utc ts-node ./endpoints/index-insider-transaction.ts",

@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import queryString from 'query-string';
 import 'colors';
-import { assert } from '../utils/assert';
 
 async function requestIexApi(relativeApiPath: string, query?: object) {
   const path = relativeApiPath.replace(/^\/+|\/+$/g, '');
@@ -50,35 +49,4 @@ export async function isUSMarketOpen(): Promise<boolean> {
   const result = await requestIexApi(`/stock/AAPL/quote`);
   const { isUSMarketOpen } = result;
   return !!isUSMarketOpen;
-}
-
-export async function singleBatchRequest(symbols: string[], types: string[], params?: {}) {
-  const len = symbols.length;
-  assert(0 < len && len <= 100, 400, `Wrong size of iex batch request ${len}`);
-  return await requestIexApi('/stock/market/batch', {
-    ...params,
-    symbols: symbols.join(','),
-    types: types.join(',')
-  });
-}
-
-export async function batchRequest(symbols: string[], types: string[], options?: {}) {
-  const batchSize = 100;
-  let batchSymbols = [];
-  const result = {};
-  for (const symbol of symbols) {
-    batchSymbols.push(symbol);
-    if (batchSymbols.length === batchSize) {
-      const resp = await singleBatchRequest(batchSymbols, types, options);
-      Object.assign(result, resp);
-      batchSymbols = [];
-    }
-  }
-
-  if (batchSymbols.length > 0) {
-    const resp = await singleBatchRequest(batchSymbols, types, options);
-    Object.assign(result, resp);
-  }
-
-  return result;
 }

@@ -1,23 +1,22 @@
-import { getManager, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { isUSMarketOpen } from '../src/services/iexService';
 import { StockAdvancedStatsInfo, syncManyStockAdcancedStat } from '../src/services/syncManyStockAdcancedStat';
 import moment from 'moment';
 import _ from 'lodash';
-import { assert } from '../src/utils/assert';
+import { getAdvancedStat } from '../src/services/alphaVantageService';
 
-
-async function udpateDatabase(symbolValueMap) {
+async function syncIexForSymbols(symbols: string[]) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
-  for (const [symbol, value] of symbolValueMap) {
-    // advanced-stats
+  for (const symbol of symbols) {
+    const value = await getAdvancedStat(symbol);
+
     advancedStatsInfo.push({
       symbol,
-      putCallRatio: value.putCallRatio,
-      beta: value.beta,
-      peRatio: value.peRatio,
-      forwardPeRatio: value.forwardPERatio,
+      beta: +value.Beta || null,
+      peRatio: +value.TrailingPE || null,
+      forwardPeRatio: +value.ForwardPE || null,
       date: moment().format('YYYY-MM-DD'),
       rawResponse: value
     });

@@ -4,7 +4,6 @@ import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 
 export type StockAdvancedStatsInfo = {
   symbol: string;
-  putCallRatio: number;
   beta: number;
   peRatio: number;
   forwardPeRatio: number;
@@ -12,31 +11,15 @@ export type StockAdvancedStatsInfo = {
   rawResponse: any;
 }
 
-function temp_adjustForwardPeRatio(symbol, rawForwardPeRatio) {
-  switch (symbol) {
-    case 'WMT':
-      return (+rawForwardPeRatio) * 3;
-    case 'NVDA':
-    // return (+rawForwardPeRatio) * 10;
-    case 'AVGO':
-      return (+rawForwardPeRatio) * 10;
-    case 'CMG':
-      return (+rawForwardPeRatio) * 50;
-    default:
-      return rawForwardPeRatio;
-  }
-}
-
 export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) {
   const entites = info.map(item => {
-    const { symbol, putCallRatio, beta, peRatio, forwardPeRatio, date } = item;
+    const { symbol, beta, peRatio, forwardPeRatio, date } = item;
 
     const entity = new StockDailyAdvancedStat();
     entity.symbol = symbol;
-    entity.putCallRatio = putCallRatio;
     entity.beta = beta;
     entity.peRatio = peRatio;
-    entity.forwardPeRatio = temp_adjustForwardPeRatio(symbol, forwardPeRatio);
+    entity.forwardPeRatio = forwardPeRatio;
     entity.date = date;
     return entity;
   }).filter(x => !!x);
@@ -46,7 +29,10 @@ export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) 
     .insert()
     .into(StockDailyAdvancedStat)
     .values(entites)
-    .orIgnore()
+    .onConflict(`(symbol, date) DO UPDATE SET  
+"beta"=excluded."beta", 
+"peRatio"=excluded."peRatio", 
+"forwardPeRatio"=excluded."forwardPeRatio"`)
     .execute();
 }
 

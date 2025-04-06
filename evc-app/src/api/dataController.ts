@@ -20,6 +20,7 @@ import { Role } from '../types/Role';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 import { OptionPutCallStockOrdinal } from '../entity/OptionPutCallStockOrdinal';
+import { OptionPutCallHistory } from '../entity/OptionPutCallHistory';
 
 const convertHeaderToPropName = header => {
   return header.split(' ')
@@ -39,8 +40,11 @@ const formatUoaUploadRow = row => {
   }
 }
 
-const formatPutCallRatioUploadRow = row => {
-  row.date = moment(row.date, 'MM/DD/YY').toDate();
+const formatPutCallRatioUploadRow = (row): OptionPutCallHistory => {
+  const entity = new OptionPutCallHistory();
+  entity.symbol = row.symbol;
+  entity.date = moment(row.date, 'MM/DD/YY').format('YYYY-MM-DD');
+  entity.
   return row;
 }
 
@@ -195,7 +199,7 @@ export const uploadPutCallRatioCsv = handleCsvUpload(
       await m
         .createQueryBuilder()
         .insert()
-        .into(StockDailyAdvancedStat)
+        .into(OptionPutCallHistory)
         .values(formattedRows as StockDailyAdvancedStat[])
         .onConflict(`(symbol, date) DO UPDATE SET "putCallRatio" = excluded."putCallRatio"`)
         .execute();

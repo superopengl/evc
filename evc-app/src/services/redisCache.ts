@@ -32,7 +32,7 @@ class RedisCache {
     });
   }
 
-  async setex(key: string, seconds: number, value: any) {
+  async setex(key: string, value: any, seconds: number) {
     return new Promise((res, rej) => {
       this.redisCache.setex(key, seconds, JSON.stringify(value), (err, result) => {
         return err ? rej(err) : res(result);

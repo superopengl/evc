@@ -14,7 +14,6 @@ import { StockEps } from '../entity/StockEps';
 import {
   getQuote,
 } from '../services/iexService';
-import { getStockLogoUrl } from '../utils/getStockLogoUrl';
 import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';
@@ -305,7 +304,6 @@ export const createStock = handlerWrapper(async (req, res) => {
 
   stock.symbol = symbol;
   stock.company = companyName
-  stock.logoUrl = getStockLogoUrl(symbol);
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({
       where: {
@@ -460,7 +458,6 @@ export const getEarningsCalendar = handlerWrapper(async (req, res) => {
       `c."reportDate" as "reportDate"`,
       `s.symbol as symbol`,
       `s.company as company`,
-      `s."logoUrl" as "logoUrl"`
     ])
     .execute();
 

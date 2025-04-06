@@ -76,7 +76,7 @@ const StockDisplayPanel = (props) => {
 
   const shouldHidePutCall = ['guest', 'free'].includes(context.role);
 
-  const shouldShowRoster = context.role === 'admin';
+  const shouldShowRoster = false; // context.role === 'admin';
 
   return (
     <>

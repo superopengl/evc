@@ -12,7 +12,6 @@ import { Role } from '../types/Role';
 import { redisCache } from '../services/redisCache';
 import { StockEps } from '../entity/StockEps';
 import {
-  getInsiderRoster,
   getQuote,
 } from '../services/iexService';
 import { getStockLogoUrl } from '../utils/getStockLogoUrl';
@@ -39,7 +38,6 @@ import moment from 'moment-timezone';
 import _ from 'lodash';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../utils/stockTagService';
 import { getCompanyName, getNews, getTopGainersLosers } from '../services/alphaVantageService';
-import { StockInsiderTransaction } from '../entity/StockInsiderTransaction';
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
@@ -475,21 +473,27 @@ export const getEarningsCalendar = handlerWrapper(async (req, res) => {
 
 
 export const getStockInsiderTransaction = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member');
-  const { symbol } = req.params;
-  const result = await getRepository(StockInsiderTransaction).findOne(symbol);
+  res.status(404);
+  res.end();
 
-  res.set('Cache-Control', `public, max-age=3600`);
-  res.json(result?.value);
+  // assertRole(req, 'admin', 'agent', 'member');
+  // const { symbol } = req.params;
+  // const result = await getRepository(StockInsiderTransaction).findOne(symbol);
+
+  // res.set('Cache-Control', `public, max-age=3600`);
+  // res.json(result?.value);
 });
 
 export const getStockRoster = handlerWrapper(async (req, res) => {
-  const { symbol } = req.params;
-  const result = await getInsiderRoster(symbol);
-  const list = _.chain(result).orderBy(['position'], ['desc']).take(10).value();
+  res.status(404);
+  res.end();
 
-  res.set('Cache-Control', `public, max-age=3600`);
-  res.json(list);
+  // const { symbol } = req.params;
+  // const result = await getInsiderRoster(symbol);
+  // const list = _.chain(result).orderBy(['position'], ['desc']).take(10).value();
+
+  // res.set('Cache-Control', `public, max-age=3600`);
+  // res.json(list);
 });
 
 export const getStockNews = handlerWrapper(async (req, res) => {

@@ -18,6 +18,10 @@ function temp_adjustForwardPeRatio(symbol, rawForwardPeRatio) {
       return (+rawForwardPeRatio) * 3;
     case 'NVDA':
     // return (+rawForwardPeRatio) * 10;
+    case 'AVGO':
+      return (+rawForwardPeRatio) * 10;
+    case 'CMG':
+      return (+rawForwardPeRatio) * 50;
     default:
       return rawForwardPeRatio;
   }

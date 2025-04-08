@@ -22,6 +22,6 @@
   "author": "mr.shaojun@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "loadtest": "^5.1.2"
+    "loadtest": "^5.2.0"
   }
 }

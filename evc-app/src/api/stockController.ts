@@ -39,6 +39,7 @@ import { getCompanyName, getNews, getTopGainersLosers } from '../services/alphaV
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
+import { getCachedOrFetch } from '../utils/getCachedOrFetch';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -225,7 +226,13 @@ const initilizedNewStockData = async (symbol) => {
 }
 
 async function createAndInitializeStocks(stocks: Stock[]) {
-  await getManager().save(stocks);
+  await getManager()
+    .createQueryBuilder()
+    .insert()
+    .into(Stock)
+    .values(stocks)
+    .orIgnore()
+    .execute();
 
   await syncDetailsForNewSymbols(stocks.map(s => s.symbol));
 }
@@ -398,26 +405,25 @@ function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): 
 }
 
 const getTopsData = async (): Promise<TopsResponse> => {
-  const CACHE_KEY = 'STOCK_MARKET_MOST_ACTIVITIES_TOP_GAINERS_LOSERS';
-  let data = await redisCache.get(CACHE_KEY) as TopsResponse;
+  const data = await getCachedOrFetch(
+    () => 'STOCK_MARKET_MOST_ACTIVITIES_TOP_GAINERS_LOSERS',
+    async () => {
+      const responseData = await getTopGainersLosers();
+      const allSymbols = []
+        .concat(responseData.top_gainers.map(x => x.ticker))
+        .concat(responseData.top_losers.map(x => x.ticker))
+        .concat(responseData.most_actively_traded.map(x => x.ticker));
 
-  if (!data) {
-    const responseData = await getTopGainersLosers();
-    const allSymbols = []
-      .concat(responseData.top_gainers.map(x => x.ticker))
-      .concat(responseData.top_losers.map(x => x.ticker))
-      .concat(responseData.most_actively_traded.map(x => x.ticker));
+      const symbols = Array.from(new Set(allSymbols));
 
-    const symbols = Array.from(new Set(allSymbols));
+      const symbolCompanyMap = await initlizeStocksAndGetSymbolCompanyMap(symbols);
 
-    const symbolCompanyMap = await initlizeStocksAndGetSymbolCompanyMap(symbols);
+      return formatTopResponse(responseData, symbolCompanyMap);
+    },
+    300,
+  );
 
-    data = formatTopResponse(responseData, symbolCompanyMap);
-
-    await redisCache.setex(CACHE_KEY, data, 300);
-  }
-
-  return data;
+  return data as TopsResponse;
 };
 
 export const getMostActive = handlerWrapper(async (req, res) => {
@@ -494,16 +500,25 @@ export const getStockRoster = handlerWrapper(async (req, res) => {
 
 export const getStockNews = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
-  const data = await getNews(symbol);
-  const formatted = data.map(x => ({
-    datetime: moment(x.time_published, 'YYYYMMDDTHHmmss').toDate(),
-    headline: x.title,
-    summary: x.summary,
-    url: x.url,
-    image: x.banner_image,
-  }));
+
+  const data = await getCachedOrFetch(
+    () => `STOCK_NEWS_${symbol}`,
+    async () => {
+      const responseNews = await getNews(symbol);
+      const formatted = responseNews.map(x => ({
+        datetime: moment(x.time_published, 'YYYYMMDDTHHmmss').toDate(),
+        headline: x.title,
+        summary: x.summary,
+        url: x.url,
+        image: x.banner_image,
+      }));
+      return formatted;
+    },
+    600
+  );
+
   res.set('Cache-Control', `public, max-age=600`);
-  res.json(formatted);
+  res.json(data);
 });
 
 export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {

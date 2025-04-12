@@ -591,30 +591,3 @@ export const getStockEvcInfo = handlerWrapper(async (req, res) => {
   res.set('Cache-Control', `public, max-age=600`);
   res.json(result);
 });
-
-export const getStockPrice = handlerWrapper(async (req, res) => {
-  const { symbol } = req.params;
-  const cacheKey = `stock.${symbol}.lastPrice`;
-  let data = await redisCache.get(cacheKey) as StockLastPriceInfo;
-  if (!data) {
-    const quote = await getQuote(symbol);
-    if (quote) {
-      data = {
-        price: quote.latestPrice,
-        change: quote.change,
-        changePercent: quote.changePercent,
-        time: quote.latestUpdate
-      };
-
-      redisCache.set(cacheKey, data);
-    }
-  }
-  const result = {
-    price: data?.price,
-    time: data?.time
-  };
-
-  res.set('Cache-Control', `public, max-age=10`);
-  res.json(result);
-});
-

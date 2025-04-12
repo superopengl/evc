@@ -51,7 +51,7 @@ export const NumberValueDisplay = (props) => {
 NumberValueDisplay.propTypes = {
   value: PropTypes.oneOfType([
     PropTypes.number,
-    PropTypes.arrayOf(PropTypes.number),
+    PropTypes.arrayOf(PropTypes.number).isRequired,
   ]),
   fixedDecimal: PropTypes.number,
   empty: PropTypes.any,

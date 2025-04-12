@@ -572,17 +572,6 @@ paths:
       responses:
         200:
           description: OK
-  /stock/s/{symbol}/price:
-    get:
-      operationId: getStockPrice
-      parameters:
-        - name: symbol
-          in: path
-          type: string
-          required: true
-      responses:
-        200:
-          description: OK
   /stock/s/{symbol}/news:
     get:
       operationId: getStockNews

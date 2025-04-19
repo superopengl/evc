@@ -114,7 +114,7 @@ function createSseForSymbols(symbols: string[], generation = 0) {
   const symbolEncodedString = symbols.map(s => encodeURIComponent(s)).join(',');
   let es: EventSource = null;
   try {
-    const url = `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
+    const url = ``; // `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
     es = new EventSource(url);
 
     es.onopen = () => {
@@ -136,6 +136,9 @@ function createSseForSymbols(symbols: string[], generation = 0) {
 }
 
 async function startPriceSseDaemon() {
+  console.log('Skip price daemon because of deprecation of IEX SSE APIs');
+  return;
+
   console.log('Starting price daemon');
   await initialize();
 

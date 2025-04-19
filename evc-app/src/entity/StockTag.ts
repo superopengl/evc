@@ -23,6 +23,9 @@ export class StockTag {
   @Column({ default: false })
   includesOptionPutCall: boolean;
 
+  @Column({ nullable: true })
+  optionPutCallFetchTagOrdinal: number;
+
   @Column({ default: 999999 })
   sortGroup: number;
 }

@@ -18,6 +18,7 @@ import { OptionPutCallStockOrdinal } from '../OptionPutCallStockOrdinal';
           '"type"',
           '"tagId"',
           '"sortGroup"',
+          '-1 as "optionPutCallFetchTagOrdinal"',
         ]);
       const query2 = connection.createQueryBuilder()
         .from(OptionPutCallStockDefInformation, 's')
@@ -28,6 +29,7 @@ import { OptionPutCallStockOrdinal } from '../OptionPutCallStockOrdinal';
           '"type"',
           '"tagId"',
           '"sortGroup"',
+          '"optionPutCallFetchTagOrdinal"',
         ]);
 
       return unionAll(q, query1, query2);
@@ -40,8 +42,11 @@ import { OptionPutCallStockOrdinal } from '../OptionPutCallStockOrdinal';
       `x.type AS type`,
       `x."tagId" AS "tagId"`,
       `x."sortGroup" AS "sortGroup"`,
+      `x."optionPutCallFetchTagOrdinal" AS "optionPutCallFetchTagOrdinal"`,
       `n.ordinal AS ordinal`,
     ])
+    .orderBy('x."optionPutCallFetchTagOrdinal"', 'ASC', 'NULLS LAST')
+    .addOrderBy('n.ordinal', 'ASC', 'NULLS LAST')
 })
 export class OptionPutCallAllDefInformation {
   @ViewColumn()
@@ -62,6 +67,9 @@ export class OptionPutCallAllDefInformation {
 
   @ViewColumn()
   sortGroup: number;
+
+  @ViewColumn()
+  optionPutCallFetchTagOrdinal: number;
 
   @ViewColumn()
   ordinal: number;

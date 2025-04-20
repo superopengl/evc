@@ -169,7 +169,7 @@ const EarningsCalendarPage = props => {
             <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
               <Text strong>{item.symbol}</Text>
               {showLogo ? <Image src={getStockLogoUrl(item.symbol)}
-                fallback="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs="
+                fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC"
                 width={32}
                 height="auto"
                 preview={false}

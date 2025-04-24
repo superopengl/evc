@@ -14,7 +14,7 @@ export async function getMyCurrentSubscription() {
 }
 
 export async function listMySubscriptionHistory() {
-  return httpGet(`subscription/history`);
+  return httpGet(`/subscription/history`);
 }
 
 export async function listUserSubscriptionHistory(userId) {
@@ -22,15 +22,15 @@ export async function listUserSubscriptionHistory(userId) {
 }
 
 export async function provisionSubscription(payload) {
-  return httpPost(`subscription`, payload);
+  return httpPost(`/subscription`, payload);
 }
 
 export async function confirmSubscriptionPayment(paymentId, payload) {
-  return httpPost(`subscription/payment/${paymentId}/confirm`, payload);
+  return httpPost(`/subscription/payment/${paymentId}/confirm`, payload);
 }
 
 export async function calculatePaymentDetail(type) {
-  return httpPost(`subscription/preview`, { type });
+  return httpPost(`/subscription/preview`, { type });
 }
 
 export async function fetchStripeCheckoutSession() {

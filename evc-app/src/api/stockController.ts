@@ -9,11 +9,7 @@ import { StockTag } from '../entity/StockTag';
 import { searchStock, searchStockForGuest } from '../utils/searchStock';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { Role } from '../types/Role';
-import { redisCache } from '../services/redisCache';
 import { StockEps } from '../entity/StockEps';
-import {
-  getQuote,
-} from '../services/iexService';
 import { StockLastPriceInfo } from '../types/StockLastPriceInfo';
 import { StockLastPrice } from '../entity/StockLastPrice';
 import { RedisRealtimePricePubService } from '../services/RedisPubSubService';

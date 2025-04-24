@@ -147,6 +147,33 @@ export async function getAdvancedStat(symbol: string) {
   return data;
 }
 
+export async function isUSMarkertOpenNow(): Promise<boolean> {
+  // Get the current time in Eastern Time (ET)
+  const now = moment.tz('America/New_York');
+  // Check if it's a weekday (Monday to Friday)
+  if (now.day() === 0 || now.day() === 6) { // 0 = Sunday, 6 = Saturday
+    return false; // Market is closed on weekends
+  }
+  const marketOpenTime = moment.tz('America/New_York').set({ hour: 9, minute: 30, second: 0, millisecond: 0 });
+  const marketCloseTime = moment.tz('America/New_York').set({ hour: 16, minute: 0, second: 0, millisecond: 0 });
+
+  // Check if current time is within market hours
+  if (!now.isBetween(marketOpenTime, marketCloseTime)) {
+    return false;
+  }
+
+  const data = await requestAlphaVantageApi({
+    function: 'GLOBAL_QUOTE',
+    symbol: 'AAPL',
+  });
+  const latestTradingDay = data?.['Global Quote']?.['07. latest trading day'];
+
+  // Get the current date in Eastern Time
+  const currentTime = moment.tz('America/New_York').format('YYYY-MM-DD');
+
+  return latestTradingDay === currentTime;
+}
+
 async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 'json') {
   const queryParams = queryString.stringify({
     ...query,

@@ -379,7 +379,6 @@ export const deleteStock = handlerWrapper(async (req, res) => {
 
 type TopsResponse = { mostActives: [], gainers: [], losers: [] };
 
-
 function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): TopsResponse {
   const singleItemFormatter = (rawItem) => {
     return {
@@ -400,7 +399,7 @@ function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): 
   return response;
 }
 
-const getMarketTopsData = async (): Promise<TopsResponse> => {
+export const getMartketMost = handlerWrapper(async (req, res) => {
   const data = await getCachedOrFetch(
     () => 'STOCK_MARKET_MOST_ACTIVITIES_TOP_GAINERS_LOSERS',
     async () => {
@@ -419,11 +418,6 @@ const getMarketTopsData = async (): Promise<TopsResponse> => {
     300,
   );
 
-  return data as TopsResponse;
-};
-
-export const getMartketMost = handlerWrapper(async (req, res) => {
-  const data = await getMarketTopsData();
   res.set('Cache-Control', `public, max-age=300`);
   res.json(data);
 });
@@ -498,7 +492,7 @@ export const getStockNews = handlerWrapper(async (req, res) => {
       }));
       return formatted;
     },
-    600
+    3600
   );
 
   res.set('Cache-Control', `public, max-age=600`);

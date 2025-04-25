@@ -64,7 +64,7 @@ const HomeMarketArea = props => {
             <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{ color: '#57BB60', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col {...span}>
-            <StockMostPanel value={mostData.mostActives} loading={loading} titleStyle={{ color: '#7DD487', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <StockMostPanel value={mostData.mostActives} loading={loading} title="Most actives" titleStyle={{ color: '#7DD487', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
           </Col>
           <Col {...span}>
             <StockMostPanel value={mostData.gainers} loading={loading} title="Gainers" titleStyle={{ color: '#55B0D4', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />

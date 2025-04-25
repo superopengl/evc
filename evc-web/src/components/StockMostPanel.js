@@ -17,7 +17,6 @@ const StyledTable = styled(Table)`
 
 .ant-table-cell {
   background-color: white !important;
-  padding: 2px 4px !important;
 }
 
 .ant-table-thead {

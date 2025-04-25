@@ -19,7 +19,6 @@ import _ from 'lodash';
 import { Role } from '../types/Role';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 import { OptionPutCallStockOrdinal } from '../entity/OptionPutCallStockOrdinal';
-import { OptionPutCallHistory } from '../entity/OptionPutCallHistory';
 import { DataLog } from '../entity/DataLog';
 
 const convertHeaderToPropName = header => {

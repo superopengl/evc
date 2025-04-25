@@ -6,7 +6,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import { getAdvancedStat, isUSMarkertOpenNow } from '../src/services/alphaVantageService';
 
-async function syncIexForSymbols(symbols: string[]) {
+async function syncForSymbols(symbols: string[]) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
   for (const symbol of symbols) {
     const value = await getAdvancedStat(symbol);
@@ -45,7 +45,7 @@ start(JOB_NAME, async () => {
   const chunks = _.chunk(symbols, batchSize);
   for (const batchSymbols of chunks) {
     console.log(JOB_NAME, `${++round}/${chunks.length}`);
-    await syncIexForSymbols(batchSymbols);
+    await syncForSymbols(batchSymbols);
   }
 
   // await backfillDataFromOldStockDailyPutCallRatioTable();

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from "react-dom";
-import { Tabs, Card } from 'antd';
 import { withRouter } from 'react-router-dom';
 import OptionPutCallPanel from './OptionPutCallPanel';
 import { getStockLatestOptionPutCall } from 'services/dataService';

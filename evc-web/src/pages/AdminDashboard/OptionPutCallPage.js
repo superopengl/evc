@@ -37,7 +37,7 @@ const OptionPutCallPage = (props) => {
         <Tabs defaultActiveKey="stock" type="card" >
           {
             typedMap.map(([t, data]) => <Tabs.TabPane tab={t} key={t}>
-              <OptionPutCallPanel data={data} tagId={t} onOrdinalChange={handleOrdinalChange} />
+              <OptionPutCallPanel data={data} tagId={t} onOrdinalChange={handleOrdinalChange} showsLink={true} />
             </Tabs.TabPane>)
           }
         </Tabs>

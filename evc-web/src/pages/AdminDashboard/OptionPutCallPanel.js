@@ -37,7 +37,7 @@ width: 100%;
 
 
 const OptionPutCallPanel = (props) => {
-  const { data, singleMode, onOrdinalChange } = props;
+  const { data, singleMode, onOrdinalChange, showsLink } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -101,7 +101,7 @@ const OptionPutCallPanel = (props) => {
       // onFilter: (value, record) => record.name.startsWith(value),
       // sorter: (a, b) => a.symbol.localeCompare(b.symbol),
       // sortOrder: getSortOrder('symbol'),
-      render: (value, record) => record.type === 'INDEX' ? value : <TextLink href={`/stock/${value}`} target='_blank' strong>
+      render: (value, record) => !showsLink || record.type === 'INDEX' ? value : <TextLink href={`/stock/${value}`} target='_blank' strong>
         {value} <Icon component={() => <MdOpenInNew />} />
       </TextLink> // <Tooltip title={record.name}>{value}</Tooltip>,
     },
@@ -257,11 +257,13 @@ OptionPutCallPanel.propTypes = {
   data: PropTypes.arrayOf(PropTypes.any),
   singleMode: PropTypes.bool,
   onOrdinalChange: PropTypes.func,
+  showsLink: PropTypes.bool,
 };
 
 OptionPutCallPanel.defaultProps = {
   data: [],
   singleMode: false,
+  showsLink: false,
   onOrdinalChange: () => { },
 };
 

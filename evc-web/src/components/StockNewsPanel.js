@@ -95,6 +95,9 @@ const StockNewsPanel = (props) => {
     <Container direction="vertical">
       <List
         dataSource={data}
+        locale={{
+          emptyText: 'No news data available for ' + symbol
+        }}
         renderItem={item => (
           <StyledListItem
           // onClick={() => handleOpenNews(item.url)}

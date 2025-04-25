@@ -9,7 +9,7 @@ import { Loading } from 'components/Loading';
 import PropTypes from "prop-types";
 
 const StockOptionPutCallPanel = (props) => {
-  const { symbol } = props;
+  const { symbol, showsLink } = props;
 
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -28,15 +28,16 @@ const StockOptionPutCallPanel = (props) => {
 
   return (
     <Loading loading={loading}>
-      <OptionPutCallPanel data={data} singleMode={true} />
+      <OptionPutCallPanel data={data} singleMode={true} showsLink={false} />
     </Loading>
   );
 };
 
 StockOptionPutCallPanel.propTypes = {
-  symbol: PropTypes.string.isRequired
+  symbol: PropTypes.string.isRequired,
 };
 
-StockOptionPutCallPanel.defaultProps = {};
+StockOptionPutCallPanel.defaultProps = {
+};
 
 export default withRouter(StockOptionPutCallPanel);

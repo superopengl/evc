@@ -16,7 +16,7 @@ import Icon from '@ant-design/icons';
 const { Text, Link: TextLink } = Typography;
 
 export const SearchStockInput = (props) => {
-  const { onChange, traceSearch, mode, style, size } = props;
+  const { onChange, traceSearch, mode, style, size, showsLink } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
@@ -89,9 +89,9 @@ export const SearchStockInput = (props) => {
       .map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         <Space style={{ justifyContent: 'space-between', width: '100%' }}>
           <StockName value={item} />
-          <TextLink href={`/stock/${item.symbol}`} target='_blank' strong onClick={e => e.stopPropagation()}>
+          {showsLink && <TextLink href={`/stock/${item.symbol}`} target='_blank' strong onClick={e => e.stopPropagation()}>
             <Icon component={() => <MdOpenInNew />} />
-          </TextLink>
+          </TextLink>}
         </Space>
       </Select.Option>)
   }
@@ -140,11 +140,13 @@ SearchStockInput.propTypes = {
   traceSearch: PropTypes.bool,
   size: PropTypes.string,
   mode: PropTypes.string,
+  showsLink: PropTypes.bool,
 };
 
 SearchStockInput.defaultProps = {
   onChange: () => { },
   traceSearch: false,
   mode: '',
-  size: 'middle'
+  size: 'middle',
+  showsLink: false,
 };

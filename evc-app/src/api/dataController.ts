@@ -296,6 +296,7 @@ export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {
       'symbol',
       'type'
     ])
+    .where(`type IS NOT NULL`)
     .orderBy('symbol')
     .addOrderBy('type')
     .addOrderBy('date', 'DESC')

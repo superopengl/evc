@@ -400,7 +400,7 @@ function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): 
   return response;
 }
 
-const getTopsData = async (): Promise<TopsResponse> => {
+const getMarketTopsData = async (): Promise<TopsResponse> => {
   const data = await getCachedOrFetch(
     () => 'STOCK_MARKET_MOST_ACTIVITIES_TOP_GAINERS_LOSERS',
     async () => {
@@ -422,20 +422,8 @@ const getTopsData = async (): Promise<TopsResponse> => {
   return data as TopsResponse;
 };
 
-export const getMostActive = handlerWrapper(async (req, res) => {
-  const data = (await getTopsData()).mostActives;
-  res.set('Cache-Control', `public, max-age=300`);
-  res.json(data);
-});
-
-export const getGainers = handlerWrapper(async (req, res) => {
-  const data = (await getTopsData()).gainers;
-  res.set('Cache-Control', `public, max-age=300`);
-  res.json(data);
-});
-
-export const getLosers = handlerWrapper(async (req, res) => {
-  const data = (await getTopsData()).losers;
+export const getMartketMost = handlerWrapper(async (req, res) => {
+  const data = await getMarketTopsData();
   res.set('Cache-Control', `public, max-age=300`);
   res.json(data);
 });

@@ -3,6 +3,12 @@ import get from 'lodash/get';
 import { notify } from 'util/notify';
 import * as FormData from 'form-data';
 import { Modal } from 'antd';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import * as queryString from 'query-string';
+import { Subject, of } from 'rxjs';
+import { ajax } from 'rxjs/ajax';
+import * as _ from 'lodash';
+
 
 let isSessionTimeoutModalOn = false;
 
@@ -112,7 +118,47 @@ export async function uploadFile(fileBlob) {
   }
 }
 
+export function request$(method, path, queryParams, body, responseType = 'json') {
+  const qs = queryString.stringify(queryParams);
+  const stopOnError$ = new Subject();
+  return ajax({
+    method,
+    url: `${API_BASE_URL}/${trimSlash(path)}${qs ? `?${qs}` : ''}`,
+    headers: getHeaders(responseType),
+    body,
+    crossDomain: true,
+    withCredentials: true,
+    responseType,
+  }).pipe(
+    map(r => {
+      return r.response
+    }),
+    catchError(e => {
+      const code = e.status;
+      if (code === 401) {
+        handleSessionTimeout();
+        return false;
+      }
+      const errorMessage = responseType === 'blob' ? e.message : e.response || _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
+      const displayErrorMessage = errorMessage === 'ajax error' ? `Network error.`
+        : errorMessage;
+      notify.error('Error', displayErrorMessage);
+      console.error(e.response);
+
+      stopOnError$.next();
+      // throw e;
+      return of(null);
+    }),
+    takeUntil(stopOnError$)
+  );
+}
+
 export const httpGet = async (path, queryParams = null) => request('GET', path, queryParams);
 export const httpPost = async (path, body, queryParams = null) => request('POST', path, queryParams, body);
 export const httpPut = async (path, body, queryParams = null) => request('PUT', path, queryParams, body);
 export const httpDelete = async (path, body = null, queryParams = null) => request('DELETE', path, queryParams, body);
+
+export const httpGet$ = (path, queryParams = null) => request$('GET', path, queryParams);
+export const httpPost$ = (path, body, queryParams = null) => request$('POST', path, queryParams, body);
+export const httpPut$ = (path, body, queryParams = null) => request$('PUT', path, queryParams, body);
+export const httpDelete$ = (path, body = null, queryParams = null) => request$('DELETE', path, queryParams, body);

@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpDelete, httpPut } from './http';
+import { httpGet, httpPost, httpDelete, httpPut, httpGet$ } from './http';
 
 export async function searchStock(payload) {
   return httpPost(`stock/search`, { page: 0, size: 20, ...payload });
@@ -115,16 +115,8 @@ export async function deleteStockFairValue(id) {
   return httpDelete(`stock/fairvalue/${id}`);
 }
 
-export async function getMarketMostActive() {
-  return httpGet(`/stock/data/mostactive`);
-}
-
-export async function getMarketGainers() {
-  return httpGet(`/stock/data/gainers`);
-}
-
-export async function getMarketLosers() {
-  return httpGet(`/stock/data/losers`);
+export function getMarketMost$() {
+  return httpGet$(`/stock/data/most`);
 }
 
 export async function getEarningsCalender(week = 0) {

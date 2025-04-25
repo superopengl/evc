@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { Table, Typography } from 'antd';
 import NumberAmount from 'components/NumberAmount';
 import { withRouter } from 'react-router-dom';
-import { timer } from 'rxjs';
-import { mergeMap, filter } from 'rxjs/operators';
 import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 
@@ -97,44 +95,25 @@ const StockMostPanel = (props) => {
     },
   ];
 
-  const { title, onFetch, titleStyle, onSymbolClick } = props;
+  const { title, value, titleStyle, loading, onSymbolClick } = props;
 
-  const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
-  const pollData = () => {
-    return timer(0, 5 * 60 * 1000).pipe(
-      mergeMap(() => onFetch()),
-      filter(data => !!data),
-    ).subscribe(data => {
-      ReactDOM.unstable_batchedUpdates(() => {
-        setList(data);
-        setLoading(false);
-      })
-    });
-  }
-
   React.useEffect(() => {
-    const poll$ = pollData();
-    return () => {
-      poll$.unsubscribe();
-    }
-  }, []);
-
-  const getFormattedList = () => {
-    const data = [];
-    list.forEach((item, i) => {
-      data.push({ key: i * 2, ...item });
-      data.push({ key: i * 2 + 1, ...item });
+    const dataList = [];
+    (value || []).forEach((item, i) => {
+      dataList.push({ key: i * 2, ...item });
+      dataList.push({ key: i * 2 + 1, ...item });
     })
-    return data;
-  }
+
+    setList(dataList);
+  }, [value]);
 
   return (
     <>
       {title && <Title level={5} style={{ ...titleStyle }} strong>{title}</Title>}
       <StyledTable
-        dataSource={getFormattedList()}
+        dataSource={list}
         loading={loading}
         columns={columnDef}
         rowKey="key"
@@ -157,11 +136,14 @@ const StockMostPanel = (props) => {
 StockMostPanel.propTypes = {
   title: PropTypes.string,
   titleStyle: PropTypes.any,
-  onFetch: PropTypes.func.isRequired,
+  value: PropTypes.array,
+  loading: PropTypes.bool,
   onSymbolClick: PropTypes.func
 };
 
 StockMostPanel.defaultProps = {
+  value: [],
+  loading: true,
   onSymbolClick: () => { },
 };
 

@@ -103,7 +103,7 @@ const StockQuotePanel = (props) => {
         <Space size="small" direction="vertical">
           <div>
             <Text style={{ fontSize: 30 }} strong>{quote.latestPrice?.toFixed(2)} {getDeltaComponent(quote.change, quote.changePercent)}</Text>
-            <div><Text type="secondary"><small>Price At: {moment(quote.latestUpdate).format('D MMM YYYY h:mm a')} EST</small></Text></div>
+            <div><Text type="secondary"><small>Price At: {moment(quote.latestUpdate).format('D MMM YYYY')} EST</small></Text></div>
           </div>
           {!isIntra && quote.extendedPrice && <div>
             <Text style={{ fontSize: 20 }} strong>{quote.extendedPrice?.toFixed(2)} {getDeltaComponent(quote.extendedChange, quote.extendedChangePercent)}</Text>

@@ -563,10 +563,15 @@ const getAndFeedStockQuote = async (symbol) => {
 
 export const getStockQuote = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
-  const quote = await getAndFeedStockQuote(symbol);
 
-  res.set('Cache-Control', `public, max-age=10`);
-  res.json(quote);
+  const data = await getCachedOrFetch(
+    () => `STOCK_QUOTE_FOR_${symbol}`,
+    async () => await getAndFeedStockQuote(symbol),
+    3600, // 1 hour
+  );
+
+  res.set('Cache-Control', `public, max-age=600`);
+  res.json(data);
 });
 
 export const getStockEvcInfo = handlerWrapper(async (req, res) => {

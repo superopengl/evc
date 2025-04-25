@@ -4,7 +4,6 @@ import { Stock } from '../src/entity/Stock';
 import _ from 'lodash';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
 import { handleWatchlistInsiderTransactionNotification } from './handleWatchlistInsiderTransactionNotification';
-import objHash from 'object-hash';
 import { promoteLatestSnapshotToPreviousSnapshot } from './promoteLatestSnapshotToPreviousSnapshot';
 
 async function syncManyStockInsiderTransactions(list: StockInsiderTransaction[]) {

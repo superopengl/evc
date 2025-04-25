@@ -329,7 +329,7 @@ const AppLoggedIn = props => {
     //   ]
     // }}
     headerContentRender={() => (
-      <Space>
+      <>
         {/* <div
             onClick={() => setCollapsed(!collapsed)}
             style={{
@@ -346,7 +346,7 @@ const AppLoggedIn = props => {
             {collapsed ? <RightCircleOutlined /> : <LeftCircleOutlined />}
           </div> */}
         <HeaderStockSearch />
-      </Space>
+      </>
     )}
     rightContentRender={() => (
       <div style={{ marginLeft: 16 }}>

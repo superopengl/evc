@@ -13,8 +13,10 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { LockIcon } from '../../components/LockIcon';
 import * as _ from 'lodash';
 import { Tag } from 'antd';
+import { MdOpenInNew } from 'react-icons/md';
+import Icon from '@ant-design/icons';
 
-const { Text } = Typography;
+const { Text, Link: TextLink } = Typography;
 
 const ContainerStyled = styled.div`
 width: 100%;
@@ -99,7 +101,9 @@ const OptionPutCallPanel = (props) => {
       // onFilter: (value, record) => record.name.startsWith(value),
       // sorter: (a, b) => a.symbol.localeCompare(b.symbol),
       // sortOrder: getSortOrder('symbol'),
-      render: (value, record) => value // <Tooltip title={record.name}>{value}</Tooltip>,
+      render: (value, record) => record.type === 'INDEX' ? value : <TextLink href={`/stock/${value}`} target='_blank' strong>
+        {value} <Icon component={() => <MdOpenInNew />} />
+      </TextLink> // <Tooltip title={record.name}>{value}</Tooltip>,
     },
     // {
     //   title: 'Name',

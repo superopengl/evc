@@ -71,13 +71,13 @@ const colourStyles = {
     // width: '100%',
     // color: getFontColor(data.color),
     // backgroundColor: data.color,
-    borderRadius: '4px 0 0 4px',
+    borderRadius: '6px 0 0 6px',
   }),
   multiValueRemove: (styles, { }) => {
     return {
       ...styles,
       // backgroundColor: data.color,
-      borderRadius: '0 4px 4px 0',
+      borderRadius: '0 6px 6px 0',
       ':hover': {
         // backgroundColor: data.color, //color.alpha(0.5).css(),
         // color: 'white',

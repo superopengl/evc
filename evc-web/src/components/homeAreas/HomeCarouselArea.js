@@ -39,7 +39,6 @@ width: 100%;
 }
 
 .ant-select-selector {
-  // border-radius: 40px !important;
   padding:0 20px !important;
   // height: 50px !important;
   background-color: rgba(255,255,255,0.8) !important;

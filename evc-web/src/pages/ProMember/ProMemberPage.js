@@ -47,7 +47,7 @@ img {
   filter: brightness(1);
   width: 100%;
   outline: 4px solid red;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 `;
 

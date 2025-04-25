@@ -33,7 +33,6 @@ const defs = [
         minute: '30',
         hourNY: '0,4,16,20',
         daysOfWeek: 'MON-SAT',
-        // AlphaVantage
     },
     {
         name: 'daily-putcall',
@@ -41,7 +40,6 @@ const defs = [
         minute: '10',
         hourNY: '16',
         daysOfWeek: 'MON-FRI',
-        // IEX
     },
     {
         name: 'daily-subscription',

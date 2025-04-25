@@ -36,40 +36,7 @@ function includesTransactionCode(transactionCode: string) {
   }
 }
 
-async function udpateDatabase(iexBatchResponse) {
-  const entities: StockInsiderTransaction[] = [];
-  for (const [symbol, value] of Object.entries(iexBatchResponse)) {
-    // advanced-stats
-    const insiderTransactionData = value as [any];
-    const list = insiderTransactionData
-      .filter(x => includesTransactionCode(x.transactionCode))
-      .map(x => _.pick(x, [
-        'fullName',
-        'reportedTitle',
-        'conversionOrExercisePrice',
-        'filingDate',
-        'postShares',
-        'transactionCode',
-        'transactionDate',
-        'transactionPrice',
-        'transactionShares',
-        'transactionValue',
-      ]));
-    const sortedList = _.orderBy(list, ['filingDate', 'transactionDate', 'fullName'], ['desc', 'desc', 'asc']);
-    const first = sortedList[0];
-    const entity = new StockInsiderTransaction();
-    entity.symbol = symbol;
-    entity.value = sortedList;
-    entity.first = first;
-    entity.firstHash = objHash(first || {});
-    entities.push(entity);
-  }
-
-  await syncManyStockInsiderTransactions(entities);
-}
-
-
-async function syncIexForSymbols(symbols: string[]) {
+async function syncForSymbols(symbols: string[]) {
   throw Error('Not implemented. Need to find a data provider for insider transations')
   // const resp = await sendIexRequest(symbols, 'insider_transactions', { last: 30 });
   // const map = _.groupBy(resp, x => x.symbol);
@@ -79,6 +46,9 @@ async function syncIexForSymbols(symbols: string[]) {
 const JOB_NAME = 'feed-insiderTransactions';
 
 start(JOB_NAME, async () => {
+
+  console.log('Skip insider transactions fetching');
+  return;
 
   const stocks = await getRepository(Stock)
     .createQueryBuilder()
@@ -95,7 +65,7 @@ start(JOB_NAME, async () => {
   const chunks = _.chunk(symbols, batchSize);
   for (const batchSymbols of chunks) {
     console.log(JOB_NAME, `${++round}/${chunks.length}`);
-    await syncIexForSymbols(batchSymbols);
+    await syncForSymbols(batchSymbols);
   }
 
   await handleWatchlistInsiderTransactionNotification();

@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/charts": "^1.4.3",
     "@ant-design/icons": "^4.6.2",
+    "@ant-design/plots": "^2.2.8",
     "@ant-design/pro-layout": "^6.19.7",
     "@loadable/component": "^5.15.0",
     "@stripe/react-stripe-js": "^1.4.1",

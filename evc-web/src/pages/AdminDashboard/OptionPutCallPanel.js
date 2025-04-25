@@ -255,6 +255,7 @@ OptionPutCallPanel.propTypes = {
 };
 
 OptionPutCallPanel.defaultProps = {
+  data: [],
   singleMode: false,
   onOrdinalChange: () => { },
 };

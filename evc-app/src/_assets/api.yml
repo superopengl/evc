@@ -1333,6 +1333,12 @@ paths:
       responses:
         200:
           description: OK
+  /admin/task_log_chart:
+    get:
+      operationId: getTaskLogChart
+      responses:
+        200:
+          description: OK          
   /custom_tags:
     get:
       operationId: listStockCustomTag

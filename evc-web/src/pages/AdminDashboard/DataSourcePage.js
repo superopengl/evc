@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Space, Card, Button, List, Table } from 'antd';
+import { Typography, Space, Card, Button, Table } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { refreshMaterializedViews, flushCache, getCacheKeys, deleteCacheKey, getCacheKeyedValue } from 'services/dataService';
 import { LongRunningActionButton } from 'components/LongRunningActionButton';
@@ -16,6 +16,7 @@ const DataSourcePage = () => {
   const [loading, setLoading] = React.useState(true);
 
   const load = async () => {
+    setLoading(true);
     const keys = await getCacheKeys();
     const value = keys.map(k => ({ key: k }));
     setCachedItems(value);
@@ -46,6 +47,10 @@ const DataSourcePage = () => {
     } finally {
       setLoading(false);
     }
+  }
+
+  const handleRefreshCacheKeys = async () => {
+    await load();
   }
 
   const columns = [
@@ -180,13 +185,17 @@ DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/2
       <Card
         bordered={false}
         title="Flush Cache"
-        extra={<LongRunningActionButton
-          danger
-          operationKey="flush-cache"
-          buttonText="Flush Cache All"
-          type="button"
-          onOk={flushCache}
-        />}>
+        extra={<Space>
+          <Button loading={loading} onClick={handleRefreshCacheKeys} icon={<SyncOutlined />}>Refresh</Button>
+          <LongRunningActionButton
+            danger
+            operationKey="flush-cache"
+            buttonText="Flush Cache All"
+            type="button"
+            disabled={loading}
+            onOk={flushCache}
+          />
+        </Space>}>
         <Paragraph>Manage cached locks. Be albe to flush all of them from the Redis cache.</Paragraph>
         {cachedItems?.length > 0 && <Table
           loading={loading}

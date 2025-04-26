@@ -386,12 +386,18 @@ export const deleteCacheKey = handlerWrapper(async (req, res) => {
   res.json(value);
 });
 
-export const getCacheValue = handlerWrapper(async (req, res) => {
+export const getCacheKeyTTL = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { key } = req.params;
   assert(key, 400, 'key is not specified');
-  const value = await redisCache.get(key);
-  res.json(value);
+
+  const ttl = await redisCache.ttl(key);
+  const value = ttl === -1 ? (await redisCache.get(key)) : null;
+
+  res.json({
+    ttl,
+    value,
+  });
 });
 
 export const getTaskLogChart = handlerWrapper(async (req, res) => {

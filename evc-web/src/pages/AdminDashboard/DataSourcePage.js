@@ -6,6 +6,7 @@ import { LongRunningActionButton } from 'components/LongRunningActionButton';
 import { notify } from 'util/notify';
 import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
+import moment from 'moment';
 
 const { Text, Paragraph } = Typography;
 
@@ -54,19 +55,21 @@ const DataSourcePage = () => {
       key: 'key',
     },
     {
-      title: 'Time',
+      title: 'Created',
       dataIndex: 'value',
-      key: 'value',
-      render: value => value,
+      key: 'created',
+      render: item => item?.value && <>{item.value} <TimeAgo value={item.value} direction="horizontal" showTime={false} /></>,
     },
     {
-      title: 'Age',
+      title: 'TTL',
       dataIndex: 'value',
-      render: value => <TimeAgo value={value} direction="horizontal" showTime={false} />
+      key: 'ttl',
+      render: item => item?.ttl > 0 && <>{item.ttl} seconds (<TimeAgo value={moment().add(item.ttl, 'seconds')} direction="horizontal" showTime={false} />)</>
     },
     {
       fixed: 'right',
       width: 80,
+      key: 'buttons',
       render: item => {
         return <Space>
           <Button disabled={loading} shape='circle' onClick={() => handleGetValue(item)} icon={<SyncOutlined />}></Button>

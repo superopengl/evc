@@ -15,6 +15,14 @@ class RedisCache {
     });
   }
 
+  async ttl(key) {
+    return new Promise((res, rej) => {
+      this.redisCache.ttl(key, (err, result) => {
+        return err ? rej(err) : res(JSON.parse(result));
+      });
+    });
+  }
+
   async del(key) {
     return new Promise((res, rej) => {
       this.redisCache.del(key, (err, result) => {

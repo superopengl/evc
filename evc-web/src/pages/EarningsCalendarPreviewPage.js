@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import EarningsCalendarPage from 'pages/AdminDashboard/EarningsCalendarPage';
 import { FormattedMessage } from 'react-intl';
 import loadable from '@loadable/component'
+import HomeFooter from 'components/HomeFooter';
 
 const StockGuestPreviewDrawer = loadable(() => import('components/StockGuestPreviewDrawer'));
 
@@ -43,17 +44,20 @@ export const EarningsCalendarPreviewPage = props => {
   }
 
   return (
-    <Container>
-      <Title><FormattedMessage id="menu.earningsCalendar" /></Title>
-      <InnerContainer>
-        <EarningsCalendarPage onSymbolClick={handleStockListSymbolClick} height="100%"/>
-      </InnerContainer>
-      <StockGuestPreviewDrawer
-      symbol={selectedSymbol}
-      visible={!!selectedSymbol}
-      onClose={() => setSelectedSymbol()}
-    />
-    </Container>
+    <>
+      <Container>
+        <Title><FormattedMessage id="menu.earningsCalendar" /></Title>
+        <InnerContainer>
+          <EarningsCalendarPage onSymbolClick={handleStockListSymbolClick} height="100%" />
+        </InnerContainer>
+        <StockGuestPreviewDrawer
+          symbol={selectedSymbol}
+          visible={!!selectedSymbol}
+          onClose={() => setSelectedSymbol()}
+        />
+      </Container>
+      <HomeFooter />
+    </>
   )
 }
 

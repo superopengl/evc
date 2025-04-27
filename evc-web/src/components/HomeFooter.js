@@ -42,7 +42,7 @@ const HomeFooter = () => (
             All data provided on Easy Value Check is provided to individuals for informational purposes only, and is not intended for trading or investing purposes. You must not redistribute information displayed on or provided by Easy Value Check.
           </p>
           <p style={{ marginTop: 10 }}>©{new Date().getFullYear()} Easy Value Check. All right reserved.</p>
-          <p><a href="https://parqet.com/api">Logos provided by Parqet</a></p>
+          <p><a href="https://parqet.com/api" target="_blank">Logos provided by Parqet</a></p>
           <p style={{ display: 'none' }}>Version {gitVersion}</p>
           <p><a href="/terms_and_conditions" target="_blank">
             <FormattedMessage id="menu.tc" />

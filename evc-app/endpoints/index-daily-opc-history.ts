@@ -7,7 +7,7 @@ import { OptionPutCallHistory } from '../src/entity/OptionPutCallHistory';
 import { grabOptionPutCallHistory } from '../src/services/barchartService';
 import { sleep } from '../src/utils/sleep';
 import { OptionPutCallAllDefInformation } from '../src/entity/views/OptionPutCallAllDefInformation';
-
+import errorToJson from 'error-to-json';
 
 const JOB_NAME = 'daily-opc-history';
 
@@ -62,17 +62,21 @@ start(JOB_NAME, async () => {
       console.log(`Sleeping for ${sleepTime} ms...`);
       await sleep(sleepTime);
 
-      const dataList = await grabOptionPutCallHistory(apiSymbol, limit);
-      const entities = dataList.map(d => convertToOptionPutCallEntity(d, symbol));
-      await getManager()
-        .createQueryBuilder()
-        .insert()
-        .into(OptionPutCallHistory)
-        .values(entities)
-        .orIgnore()
-        .execute();
+      try {
+        const dataList = await grabOptionPutCallHistory(apiSymbol, limit);
+        const entities = dataList.map(d => convertToOptionPutCallEntity(d, symbol));
+        await getManager()
+          .createQueryBuilder()
+          .insert()
+          .into(OptionPutCallHistory)
+          .values(entities)
+          .orIgnore()
+          .execute();
 
-      console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${logLabel}.`);
+        console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${logLabel}.`);
+      } catch (e) {
+        console.log('Error for', symbol, errorToJson(e));
+      }
     } else {
       console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Skip for ${logLabel} option history because it has been done`);
     }

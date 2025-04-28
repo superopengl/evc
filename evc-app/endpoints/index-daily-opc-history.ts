@@ -75,7 +75,7 @@ start(JOB_NAME, async () => {
 
         console.log(`[${counter}/${optionPutCallDef.length}]`.bgGreen.white, `Done for ${logLabel}.`);
       } catch (e) {
-        console.log('Error for', symbol, errorToJson(e));
+        console.log(`[${counter}/${optionPutCallDef.length}]`.bgRed.white, `Failed for ${logLabel}.`, errorToJson(e));
       }
     } else {
       console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Skip for ${logLabel} option history because it has been done`);

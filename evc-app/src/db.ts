@@ -3,7 +3,7 @@ import { Connection, createConnection, getManager, getRepository } from 'typeorm
 import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalComputedFairValue';
 import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
-import { initializeEmailTemplates } from "./utils/initializeEmailTemplates";
+import { initializeEmailTemplates } from './utils/initializeEmailTemplates';
 import { initializeConfig } from './utils/initializeConfig';
 import { StockDataInformation } from './entity/views/StockDataInformation';
 import { StockDailyPe } from './entity/views/StockDailyPe';
@@ -61,7 +61,7 @@ where schemaname = 'evc'
 }
 
 async function createIndexOnMaterilializedView() {
-  const list: { tableEntity: any, fields: string[], unique?: boolean }[] = [
+  const list: { tableEntity: any; fields: string[]; unique?: boolean }[] = [
     {
       tableEntity: StockDataInformation,
       fields: ['symbol'],

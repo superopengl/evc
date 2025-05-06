@@ -9,7 +9,7 @@ import moment = require('moment');
 
 async function upsertDatabase(tableEntity, rawData) {
   if (!rawData?.length) {
-    console.log('Skip, no date to update')
+    console.log('Skip, no date to update');
     return;
   }
   const entities = rawData.map(x => convertToEntity(x));
@@ -46,7 +46,7 @@ function getTradeDateTime(rawValue) {
   return {
     date,
     time,
-  }
+  };
 }
 
 function stringToInt(str) {
@@ -71,7 +71,7 @@ function convertToEntity(data) {
     openInt: stringToInt(data.openInterest),
     voloi: stringToInt(data.volumeOpenInterestRatio),
     iv: stringToInt(data.volatility),
-  }
+  };
 }
 
 

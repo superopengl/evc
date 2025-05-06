@@ -2,7 +2,7 @@ import { getManager, getRepository } from 'typeorm';
 import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';
 import _ from 'lodash';
-import { backOff } from "exponential-backoff";
+import { backOff } from 'exponential-backoff';
 import { StockScrappedEps } from '../entity/StockScrappedEps';
 
 async function getEarningsWithThreeAttempts(symbol: string, howManyQuarters: number) {
@@ -70,5 +70,5 @@ WHERE EXISTS(
   WHERE e.symbol = x.symbol AND e."reportDate" = x."reportDate"
 ) AND source = 'alpha-vantage'
     `);
-  })
+  });
 };

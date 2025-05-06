@@ -7,17 +7,17 @@ import { UserCommissionDiscountPolicy } from './UserCommissionDiscountPolicy';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
-    .createQueryBuilder()
-    .from(User, 'u')
-    .leftJoin(UserCommissionDiscountPolicy, 'up', `u.id = up."userId"`)
-    .leftJoin(UserCommissionDiscountPolicy, 'cd', `u."referredBy" = cd."userId"`)
-    .select([
-      'up.*',
-      'u."everPaid" as "everPaid"',
-      'u."referredBy" as "referredBy"',
-      'CASE WHEN u."everPaid" THEN 0 ELSE coalesce(cd."referreeDiscountPerc", NULL) END as "my1stBuyDiscountPerc"',
+  .createQueryBuilder()
+  .from(User, 'u')
+  .leftJoin(UserCommissionDiscountPolicy, 'up', `u.id = up."userId"`)
+  .leftJoin(UserCommissionDiscountPolicy, 'cd', `u."referredBy" = cd."userId"`)
+  .select([
+    'up.*',
+    'u."everPaid" as "everPaid"',
+    'u."referredBy" as "referredBy"',
+    'CASE WHEN u."everPaid" THEN 0 ELSE coalesce(cd."referreeDiscountPerc", NULL) END as "my1stBuyDiscountPerc"',
     ])
-})
+  })
 export class UserCommissionDiscountInformation {
   @ViewColumn()
   @PrimaryColumn()

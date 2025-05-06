@@ -1,5 +1,5 @@
 import { getRepository, getManager } from 'typeorm';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockWatchList } from '../entity/StockWatchList';
 import { searchStock } from '../utils/searchStock';

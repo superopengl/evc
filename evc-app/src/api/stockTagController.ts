@@ -4,7 +4,7 @@ import { Blog } from '../entity/Blog';
 import { StockTag } from '../entity/StockTag';
 import { Role } from '../types/Role';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 
@@ -29,7 +29,7 @@ export const listStockTags = handlerWrapper(async (req, res) => {
     }
   });
   if (!isAdminOrAgent) {
-    res.set('Cache-Control', `public, max-age=3600`);
+    res.set('Cache-Control', 'public, max-age=3600');
   }
   res.json(list);
 });

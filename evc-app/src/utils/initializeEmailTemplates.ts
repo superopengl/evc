@@ -1,6 +1,6 @@
-import { EmailTemplate } from "../entity/EmailTemplate";
+import { EmailTemplate } from '../entity/EmailTemplate';
 import { getManager } from 'typeorm';
-import { EmailTemplateType } from "../types/EmailTemplateType";
+import { EmailTemplateType } from '../types/EmailTemplateType';
 import { Locale } from '../types/Locale';
 
 export async function initializeEmailTemplates() {

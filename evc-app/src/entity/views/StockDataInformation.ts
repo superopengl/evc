@@ -8,50 +8,50 @@ import { StockComputedPe90 } from './StockComputedPe90';
 @ViewEntity({
   materialized: true,
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(Stock, 's')
-    .leftJoin(q => q
-      .from(StockEps, 'e')
-      .groupBy('symbol')
-      .select([
-        'symbol',
-        'min("reportDate") as "epsFrom"',
-        'max("reportDate") as "epsTo"',
-        'count(*) as "epsCount"',
-      ])
-      , 'eps', 's.symbol = eps.symbol')
-    .leftJoin(q => q
-      .from(StockDailyClose, 'c')
-      .groupBy('symbol')
-      .select([
-        'symbol',
-        'min(date) as "closeFrom"',
-        'max(date) as "closeTo"',
-        'count(*) as "closeCount"',
-      ])
-      , 'close', 's.symbol = close.symbol')
-    .leftJoin(q => q
-      .from(StockComputedPe90, 'e')
-      .groupBy('symbol')
-      .select([
-        'symbol',
-        'min(date) as "pe90From"',
-        'max(date) as "pe90To"',
-        'count(*) as "pe90Count"',
-      ])
-      , 'pe', 's.symbol = pe.symbol')
+  .from(Stock, 's')
+  .leftJoin(q => q
+    .from(StockEps, 'e')
+    .groupBy('symbol')
     .select([
-      `s.symbol as symbol`,
-      `"epsFrom"`,
-      `"epsTo"`,
-      `"epsCount"`,
-      `"closeFrom"`,
-      `"closeTo"`,
-      `"closeCount"`,
-      `"pe90From"`,
-      `"pe90To"`,
-      `"pe90Count"`,
+      'symbol',
+      'min("reportDate") as "epsFrom"',
+      'max("reportDate") as "epsTo"',
+      'count(*) as "epsCount"',
+      ])
+    , 'eps', 's.symbol = eps.symbol')
+  .leftJoin(q => q
+    .from(StockDailyClose, 'c')
+    .groupBy('symbol')
+    .select([
+      'symbol',
+      'min(date) as "closeFrom"',
+      'max(date) as "closeTo"',
+      'count(*) as "closeCount"',
+      ])
+    , 'close', 's.symbol = close.symbol')
+  .leftJoin(q => q
+    .from(StockComputedPe90, 'e')
+    .groupBy('symbol')
+    .select([
+      'symbol',
+      'min(date) as "pe90From"',
+      'max(date) as "pe90To"',
+      'count(*) as "pe90Count"',
+      ])
+    , 'pe', 's.symbol = pe.symbol')
+  .select([
+    `s.symbol as symbol`,
+    `"epsFrom"`,
+    `"epsTo"`,
+    `"epsCount"`,
+    `"closeFrom"`,
+    `"closeTo"`,
+    `"closeCount"`,
+    `"pe90From"`,
+    `"pe90To"`,
+    `"pe90Count"`,
     ])
-})
+  })
 export class StockDataInformation {
   @ViewColumn()
   @PrimaryColumn()

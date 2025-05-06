@@ -1,7 +1,7 @@
 import { getManager, getRepository, In, MoreThanOrEqual } from 'typeorm';
 import { Stock } from '../entity/Stock';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockHotSearch } from '../entity/StockHotSearch';
 import { StockWatchList } from '../entity/StockWatchList';
@@ -25,7 +25,7 @@ import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex
 import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock';
 import { syncStockEps } from '../services/stockEpsService';
 import { syncStockHistoricalClose } from '../services/stockCloseService';
-import { refreshMaterializedView } from "../refreshMaterializedView";
+import { refreshMaterializedView } from '../refreshMaterializedView';
 import { StockDataInformation } from '../entity/views/StockDataInformation';
 import { StockEarningsCalendar } from '../entity/StockEarningsCalendar';
 import moment from 'moment-timezone';
@@ -77,7 +77,7 @@ export const getStockNextReportDate = handlerWrapper(async (req, res) => {
     }
   });
 
-  res.set('Cache-Control', `public, max-age=3600`);
+  res.set('Cache-Control', 'public, max-age=3600');
   res.json(entity?.reportDate);
 });
 
@@ -102,8 +102,8 @@ export const getStock = handlerWrapper(async (req, res) => {
         .where('s.symbol = :symbol', { symbol })
         .leftJoin(q => q.from(StockWatchList, 'sw')
           .where('sw."userId" = :id', { id: userId }),
-          'sw',
-          'sw.symbol = s.symbol')
+      'sw',
+      'sw.symbol = s.symbol')
         .select('s.*')
         .addSelect('sw."createdAt" as watched')
         .addSelect('sw.belled as belled')
@@ -117,8 +117,8 @@ export const getStock = handlerWrapper(async (req, res) => {
         .where('s.symbol = :symbol', { symbol })
         .leftJoin(q => q.from(StockWatchList, 'sw')
           .where('sw."userId" = :id', { id: userId }),
-          'sw',
-          'sw.symbol = s.symbol')
+      'sw',
+      'sw.symbol = s.symbol')
         .select('s.*')
         .addSelect('sw."createdAt" as watched')
         .addSelect('sw.belled as belled')
@@ -127,7 +127,7 @@ export const getStock = handlerWrapper(async (req, res) => {
       break;
     }
     case Role.Guest: {
-      // Guest user, who has no req.user
+    // Guest user, who has no req.user
       stock = await getRepository(StockLatestFreeInformation).findOne({ symbol });
       break;
     }
@@ -147,7 +147,7 @@ export const getStockForGuest = handlerWrapper(async (req, res) => {
 
   assert(stock, 404);
 
-  res.set('Cache-Control', `public, max-age=600`);
+  res.set('Cache-Control', 'public, max-age=600');
   res.json(stock);
 });
 
@@ -170,7 +170,7 @@ export const listStock = handlerWrapper(async (req, res) => {
     }
   });
 
-  res.set('Cache-Control', `public, max-age=600`);
+  res.set('Cache-Control', 'public, max-age=600');
   res.json(list);
 });
 
@@ -182,21 +182,21 @@ export const listHotStock = handlerWrapper(async (req, res) => {
     .createQueryBuilder('h')
     .innerJoin(Stock, 's', 's.symbol = h.symbol')
     .select([
-      `h.symbol as symbol`,
-      `s.company as company`
+      'h.symbol as symbol',
+      's.company as company'
     ])
     .orderBy('count', 'DESC')
     .limit(limit)
     .execute();
 
-  res.set('Cache-Control', `public, max-age=300`);
+  res.set('Cache-Control', 'public, max-age=300');
   res.json(list);
 });
 
 export const searchStockList = handlerWrapper(async (req, res) => {
   const { user } = req as any;
   const query = req.body as StockSearchParams;
-  let list: { count: number, page: number, data: any } = null;
+  let list: { count: number; page: number; data: any } = null;
 
   if (user) {
     // For logged in users
@@ -219,7 +219,7 @@ const initilizedNewStockData = async (symbol) => {
   await syncStockEps(symbol);
   await syncStockHistoricalClose(symbol, 200);
   await refreshMaterializedView();
-}
+};
 
 async function createAndInitializeStocks(stocks: Stock[]) {
   await getManager()
@@ -306,7 +306,7 @@ export const createStock = handlerWrapper(async (req, res) => {
   const symbol = reqSymbol.toUpperCase();
 
   stock.symbol = symbol;
-  stock.company = companyName
+  stock.company = companyName;
   if (tags?.length) {
     stock.tags = await getRepository(StockTag).find({
       where: {
@@ -377,7 +377,7 @@ export const deleteStock = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-type TopsResponse = { mostActives: [], gainers: [], losers: [] };
+type TopsResponse = { mostActives: []; gainers: []; losers: [] };
 
 function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): TopsResponse {
   const singleItemFormatter = (rawItem) => {
@@ -387,8 +387,8 @@ function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): 
       latestPrice: +rawItem.price,
       change: +rawItem.change_amount,
       changePercent: +(rawItem.change_percentage.replace('%', '')) / 100,
-    }
-  }
+    };
+  };
 
   const response = {
     mostActives: rawResponse.most_actively_traded.map(singleItemFormatter),
@@ -418,7 +418,7 @@ export const getMartketMost = handlerWrapper(async (req, res) => {
     300,
   );
 
-  res.set('Cache-Control', `public, max-age=300`);
+  res.set('Cache-Control', 'public, max-age=300');
   res.json(data);
 });
 
@@ -432,22 +432,22 @@ export const getEarningsCalendar = handlerWrapper(async (req, res) => {
   const data = await getRepository(Stock)
     .createQueryBuilder('s')
     .innerJoin(StockEarningsCalendar, 'c', 's.symbol = c.symbol')
-    .where(`c."reportDate" BETWEEN :start AND :end`, {
+    .where('c."reportDate" BETWEEN :start AND :end', {
       start: theWeek.startOf('week').toDate(),
       end: theWeek.endOf('week').toDate()
     })
-    .orderBy(`c."reportDate"`)
-    .addOrderBy(`s.symbol`)
+    .orderBy('c."reportDate"')
+    .addOrderBy('s.symbol')
     .select([
-      `c."reportDate" as "reportDate"`,
-      `s.symbol as symbol`,
-      `s.company as company`,
+      'c."reportDate" as "reportDate"',
+      's.symbol as symbol',
+      's.company as company',
     ])
     .execute();
 
   const result = _.groupBy(data, x => moment(x.reportDate).format('ddd'));
 
-  res.set('Cache-Control', `public, max-age=1800`);
+  res.set('Cache-Control', 'public, max-age=1800');
   res.json(result);
 });
 
@@ -495,7 +495,7 @@ export const getStockNews = handlerWrapper(async (req, res) => {
     3600
   );
 
-  res.set('Cache-Control', `public, max-age=600`);
+  res.set('Cache-Control', 'public, max-age=600');
   res.json(data);
 });
 
@@ -503,7 +503,7 @@ export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const list = await getRepository(OptionPutCallHistoryInformation)
     .createQueryBuilder()
-    .where(`symbol = :symbol`, { symbol })
+    .where('symbol = :symbol', { symbol })
     .select([
       '"date"',
       '"putCallOIRatio"',
@@ -518,7 +518,7 @@ export const getOptionPutCallHistoryChart = handlerWrapper(async (req, res) => {
     .addOrderBy('date', 'ASC')
     .execute();
 
-  res.set('Cache-Control', `public, max-age=1800`);
+  res.set('Cache-Control', 'public, max-age=1800');
   res.json(list);
 });
 
@@ -564,7 +564,7 @@ export const getStockQuote = handlerWrapper(async (req, res) => {
     3600, // 1 hour
   );
 
-  res.set('Cache-Control', `public, max-age=600`);
+  res.set('Cache-Control', 'public, max-age=600');
   res.json(data);
 });
 
@@ -573,6 +573,6 @@ export const getStockEvcInfo = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const result = await getRepository(StockLatestPaidInformation).findOne(symbol);
 
-  res.set('Cache-Control', `public, max-age=600`);
+  res.set('Cache-Control', 'public, max-age=600');
   res.json(result);
 });

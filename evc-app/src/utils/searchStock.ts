@@ -26,21 +26,21 @@ export async function searchStockForGuest(queryInfo: StockSearchParams) {
   const pageNo = 1;
   const pageSize = 12;
 
-  let query = getManager()
+  const query = getManager()
     .createQueryBuilder()
-    .from(StockLatestPaidInformation, 's')
+    .from(StockLatestPaidInformation, 's');
 
   const count = await query.getCount();
   const result = await query
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
-    .where(`symbol IN (:...symbols)`, { symbols: demoSymbols })
+    .where('symbol IN (:...symbols)', { symbols: demoSymbols })
     .select([
-      `s.symbol as symbol`,
-      `s.company as company`,
-      `s."lastPrice" as "lastPrice"`,
-      `s."isUnder" as "isUnder"`,
-      `s."isOver" as "isOver"`,
+      's.symbol as symbol',
+      's.company as company',
+      's."lastPrice" as "lastPrice"',
+      's."isUnder" as "isUnder"',
+      's."isOver" as "isOver"',
     ])
     .execute();
 
@@ -80,13 +80,13 @@ export async function searchStock(queryInfo: StockSearchParams, includesWatchFor
     if (watchOnly) {
       query = query.innerJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :userId', { userId }),
-        'sw',
-        'sw.symbol = s.symbol');
+      'sw',
+      'sw.symbol = s.symbol');
     } else {
       query = query.leftJoin(q => q.from(StockWatchList, 'sw')
         .where('sw."userId" = :userId', { userId }),
-        'sw',
-        'sw.symbol = s.symbol');
+      'sw',
+      'sw.symbol = s.symbol');
     }
   }
 

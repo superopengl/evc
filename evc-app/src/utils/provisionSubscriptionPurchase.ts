@@ -21,7 +21,7 @@ export type ProvisionSubscriptionRequest = {
   recurring: boolean;
 };
 
-async function getSubscriptionPeriod(q: QueryRunner, userId: string, newSubscriptionType: SubscriptionType): Promise<{ start: Date, end: Date }> {
+async function getSubscriptionPeriod(q: QueryRunner, userId: string, newSubscriptionType: SubscriptionType): Promise<{ start: Date; end: Date }> {
   const aliveSubscription = await getUserCurrentSubscriptionInfo(userId, q);
 
   const start = aliveSubscription ? moment(aliveSubscription.end).add(1, 'day').toDate() : getUtcNow();

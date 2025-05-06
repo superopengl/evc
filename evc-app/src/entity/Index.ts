@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 /**
- *   
+ *
  * SELECT 'SPX' as symbol, '$SPX' as "apiSymbol", 'S&P 500 Index' as company, 'INDEX' as type
   UNION ALL
   SELECT 'NDX(IUXX)' as symbol, '$IUXX' as "apiSymbol", 'Nasdaq 100 Index' as company, 'INDEX' as type

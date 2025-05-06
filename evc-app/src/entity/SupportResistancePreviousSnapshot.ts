@@ -7,10 +7,10 @@ export class SupportResistancePreviousSnapshot {
   symbol: string;
 
   @Column('json', { array: true, nullable: true })
-  supports: { lo: number; hi: number; }[];
+  supports: { lo: number; hi: number }[];
 
   @Column('json', { array: true, nullable: true })
-  resistances: { lo: number; hi: number; }[];
+  resistances: { lo: number; hi: number }[];
 
   @Column()
   @Index()

@@ -39,7 +39,7 @@ async function promoteFairValueLatestSnapshotToPreviousSnapshot() {
 }
 
 export async function handleWatchlistFairValueChangedNotification() {
-  console.log(`Sending watchlist fair value changed notification emails`);
+  console.log('Sending watchlist fair value changed notification emails');
   await sendFairValueChangedEmails();
   await promoteFairValueLatestSnapshotToPreviousSnapshot();
 }

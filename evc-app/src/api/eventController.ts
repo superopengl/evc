@@ -1,5 +1,5 @@
 
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { RedisRealtimePricePubService, RedisRealtimePriceSubService } from '../services/RedisPubSubService';
 

@@ -2,7 +2,7 @@
 import { getRepository, Not, getManager, In } from 'typeorm';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
@@ -111,8 +111,8 @@ export const listAllUsers = handlerWrapper(async (req, res) => {
 
   const list = await getRepository(UserProfile)
     .createQueryBuilder('p')
-    .innerJoin(User, 'u', `u."profileId" = p.id`)
-    .andWhere(`u."deletedAt" IS NUll`)
+    .innerJoin(User, 'u', 'u."profileId" = p.id')
+    .andWhere('u."deletedAt" IS NUll')
     .select([
       'u.id as id',
       '"givenName"',
@@ -142,7 +142,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await getManager().transaction(async m => {
       await m.getRepository(UserProfile).delete(profileId);
       await m.getRepository(User).softDelete(id);
-    })
+    });
 
     await enqueueEmail({
       to: user.profile.email,
@@ -251,10 +251,10 @@ export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
     .createQueryBuilder()
     .from(q => q
       .from(GuestUserStats, 'u')
-      .andWhere(start ? `:start <= "createdAt"` : `1=1`, { start })
-      .andWhere(end ? `"lastNudgedAt" <= :end` : `1=1`, { end })
+      .andWhere(start ? ':start <= "createdAt"' : '1=1', { start })
+      .andWhere(end ? '"lastNudgedAt" <= :end' : '1=1', { end })
       .select(`TO_CHAR("lastNudgedAt", '${format}') as time`)
-      , 'x')
+    , 'x')
     .groupBy('time')
     .select([
       'time',
@@ -267,10 +267,10 @@ export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
     .from(q => q
       .from(User, 'u')
       .where(`role != '${Role.Admin}'`)
-      .andWhere(start ? `:start <= "createdAt"` : `1=1`, { start })
-      .andWhere(end ? `"createdAt" <= :end` : `1=1`, { end })
+      .andWhere(start ? ':start <= "createdAt"' : '1=1', { start })
+      .andWhere(end ? '"createdAt" <= :end' : '1=1', { end })
       .select(`TO_CHAR("createdAt", '${format}') as time`)
-      , 'x')
+    , 'x')
     .groupBy('time')
     .select([
       'time',
@@ -281,7 +281,7 @@ export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
   const result = {
     guests,
     signUps: newSignUps,
-  }
+  };
 
   res.json(result);
 });

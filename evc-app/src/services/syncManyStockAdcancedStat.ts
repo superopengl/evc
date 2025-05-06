@@ -9,7 +9,7 @@ export type StockAdvancedStatsInfo = {
   forwardPeRatio: number;
   date: string;
   rawResponse: any;
-}
+};
 
 export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) {
   const entites = info.map(item => {

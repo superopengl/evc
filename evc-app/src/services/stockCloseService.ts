@@ -9,7 +9,7 @@ export type StockCloseInfo = {
   symbol: string;
   close: number;
   date: string;
-}
+};
 
 export async function syncStockHistoricalClose(symbol: string, days = 100) {
   const data = await getHistoricalClose(symbol, days);

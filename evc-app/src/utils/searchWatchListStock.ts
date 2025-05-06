@@ -16,8 +16,8 @@ export async function searchWatchListStock(userId: string, tags: string[]) {
     .innerJoin(q => q
       .from(StockWatchListWithCustomTags, 'sw')
       .where('sw."userId" = :userId', { userId }),
-      'sw',
-      'sw.symbol = s.symbol')
+    'sw',
+    'sw.symbol = s.symbol')
     .where('1 = 1');
 
   if (tags?.length) {
@@ -29,7 +29,7 @@ export async function searchWatchListStock(userId: string, tags: string[]) {
     .addSelect('TRUE as watched')
     .addSelect('sw.belled as belled')
     .addSelect('sw.tags as tags')
-    .orderBy('s.symbol')
+    .orderBy('s.symbol');
 
   const data = await query.execute();
 

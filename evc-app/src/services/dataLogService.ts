@@ -1,4 +1,4 @@
-import { DataEvent } from "../types/DataEvent";
+import { DataEvent } from '../types/DataEvent';
 import { DataLog } from '../entity/DataLog';
 import { getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';

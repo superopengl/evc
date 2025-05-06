@@ -15,11 +15,11 @@ export function getRequestGeoInfo(req) {
     region,
     latitude,
     longitude,
-  }
+  };
 }
 
 /**
- * res.headers is like 
+ * res.headers is like
 {
     "x-forwarded-for": "159.196.113.221, 64.252.174.152",
     "x-forwarded-proto": "http",

@@ -25,7 +25,7 @@ export function createWebsocketServer(wss) {
           const outMessage = JSON.stringify(data);
           const participants = ensureActiveParticipants(chatId);
           participants.forEach(p => {
-            // broadcast to all parties in this conversation, excluding itself.
+          // broadcast to all parties in this conversation, excluding itself.
             if (p !== person) {
               p.send(outMessage);
             }

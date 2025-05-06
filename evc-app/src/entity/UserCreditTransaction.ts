@@ -24,5 +24,5 @@ export class UserCreditTransaction {
   revertedCreditTransactionId?: string;
 
   @Column()
-  type: 'adjust' | 'withdrawal' | 'recurring' | 'user-pay' | 'revert' | 'commission'
+  type: 'adjust' | 'withdrawal' | 'recurring' | 'user-pay' | 'revert' | 'commission';
 }

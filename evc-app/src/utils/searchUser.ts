@@ -31,7 +31,7 @@ export async function searchUser(queryInfo: StockUserParams) {
   }
   query = query.leftJoin(q => q.from(UserAliveSubscriptionSummary, 's'), 's', 's."userId" = u.id');
   if (subscription?.length) {
-    query = query.andWhere(`(COALESCE(s."currentType", 'free') IN (:...subscription))`, { subscription });
+    query = query.andWhere('(COALESCE(s."currentType", \'free\') IN (:...subscription))', { subscription });
   }
   query = query.leftJoin(q => q
     .from('user_tags_user_tag', 'tg')
@@ -40,7 +40,7 @@ export async function searchUser(queryInfo: StockUserParams) {
       'tg."userId" as "userId"',
       'array_agg(tg."userTagId") as tags'
     ]),
-    'tg', 'tg."userId" = u.id');
+  'tg', 'tg."userId" = u.id');
 
   if (tags?.length) {
     query = query.andWhere('(tg.tags && array[:...tags]::uuid[]) IS TRUE', { tags });
@@ -54,11 +54,11 @@ export async function searchUser(queryInfo: StockUserParams) {
     .limit(pageSize)
     .select([
       'p.*',
-      `p.geo ->> 'country' as "ipCountry"`,
+      'p.geo ->> \'country\' as "ipCountry"',
       'u.id as id',
       'u."loginType"',
       'u.role as role',
-      `COALESCE(s."currentType", 'free') as subscription`,
+      'COALESCE(s."currentType", \'free\') as subscription',
       'tg.tags as tags',
       'COALESCE(u."lastNudgedAt", u."lastLoggedInAt") as "lastNudgedAt"',
       'u."createdAt" as "createdAt"',

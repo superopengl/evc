@@ -9,7 +9,7 @@ import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
 import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
 import { StockComputedPe365 } from './entity/views/StockComputedPe365';
 
-const REFRESHING_MV_CACHE_KEY = 'operation.status.refresh-mv'
+const REFRESHING_MV_CACHE_KEY = 'operation.status.refresh-mv';
 
 const MV_REFRESH_ORDER = [
   StockHistoricalTtmEps,
@@ -44,15 +44,15 @@ where schemaname = 'evc'
     const list = mviewEnitity ? [getManager().getRepository(mviewEnitity).metadata] : matviews;
     const sortedMviews = _.sortBy(list, x => mvRefreshOrder.get(x.tableName));
 
-    console.log('Start refreshing mv')
+    console.log('Start refreshing mv');
     await getManager().transaction(async (m) => {
       for (const item of sortedMviews) {
         await redisCache.set(REFRESHING_MV_CACHE_KEY, new Date().toUTCString());
         const { schema, tableName } = item;
 
-        console.log(`Start refreshing ${tableName}`)
+        console.log(`Start refreshing ${tableName}`);
         await m.query(`REFRESH MATERIALIZED VIEW CONCURRENTLY "${schema}"."${tableName}" `);
-        console.log(`Done with refreshing ${tableName}`)
+        console.log(`Done with refreshing ${tableName}`);
       }
     });
 
@@ -62,6 +62,6 @@ where schemaname = 'evc'
     // }
   } finally {
     await redisCache.del(REFRESHING_MV_CACHE_KEY);
-    console.log('Done with refreshing mv')
+    console.log('Done with refreshing mv');
   }
 }

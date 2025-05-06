@@ -1,7 +1,7 @@
 import { getManager, getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
-import { refreshMaterializedView } from "../src/refreshMaterializedView";
+import { refreshMaterializedView } from '../src/refreshMaterializedView';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import _ from 'lodash';
 import delay from 'delay';
@@ -49,7 +49,7 @@ async function scrubSupports() {
       entity.lo = x.supportLo;
       entity.hi = x.supportHi;
       return entity;
-    })
+    });
 
     const insertResult = await m.createQueryBuilder()
       .insert()
@@ -124,8 +124,8 @@ start(JOB_NAME, async () => {
         .distinctOn(['symbol'])
         .orderBy('symbol', 'DESC')
         .addOrderBy('date', 'DESC'),
-        'c', `s.symbol = c.symbol`)
-      .where(`c.date < CURRENT_DATE`)
+      'c', 's.symbol = c.symbol')
+      .where('c.date < CURRENT_DATE')
       .select('s.symbol as symbol')
       .orderBy('s.symbol', 'ASC')
       .execute();
@@ -141,16 +141,16 @@ start(JOB_NAME, async () => {
         await delay(sleepTime);
       } catch (e) {
         const errorJson = errorToJson(e);
-        const msg = `${JOB_NAME} ${symbol} ${++count}/${symbols.length} failed`
+        const msg = `${JOB_NAME} ${symbol} ${++count}/${symbols.length} failed`;
         console.error(msg.red, errorJson);
         failed.push(msg + JSON.stringify(errorJson));
       }
     }
 
     // Scrub supports and resistance
-    console.log(`Scrubing supports`)
+    console.log('Scrubing supports');
     await scrubSupports();
-    console.log(`Scrubing resistance`)
+    console.log('Scrubing resistance');
     await scrubResistances();
 
     await executeWithDataEvents('refresh materialized views', JOB_NAME, refreshMaterializedView, { eventId });

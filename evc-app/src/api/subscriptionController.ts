@@ -1,6 +1,6 @@
 import { getRepository, In } from 'typeorm';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
@@ -91,7 +91,7 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
 
   const { pdfBuffer, fileName } = await generateReceiptPdfStream(receipt);
 
-  res.set('Cache-Control', `public, max-age=31536000, immutable`);
+  res.set('Cache-Control', 'public, max-age=31536000, immutable');
   res.set('Content-Type', 'application/pdf');
   res.attachment(fileName);
 
@@ -127,7 +127,7 @@ export const provisionSubscription = handlerWrapper(async (req, res) => {
   switch (method) {
     case PaymentMethod.Credit:
     case PaymentMethod.PayPal:
-      // No need to do anything extra
+    // No need to do anything extra
       break;
     case PaymentMethod.Card: {
       const clientSecret = await createStripeClientSecretForCardPayment(payment);
@@ -162,7 +162,7 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 
   switch (method) {
     case PaymentMethod.Credit:
-      // Immidiately commit the subscription purchase if it can be paied fully by credit
+    // Immidiately commit the subscription purchase if it can be paied fully by credit
       await commitSubscription(payment);
       break;
     case PaymentMethod.Card:
@@ -177,7 +177,7 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
       await commitSubscription(payment);
       break;
     case PaymentMethod.AliPay:
-      assert(false, 404, `AliPay should use this API to commit payment`);
+      assert(false, 404, 'AliPay should use this API to commit payment');
       break;
     default:
       assert(false, 500, `Unknown payment method ${method}`);

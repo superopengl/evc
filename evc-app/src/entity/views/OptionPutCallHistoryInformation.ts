@@ -4,25 +4,25 @@ import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(OptionPutCallAllDefInformation, 's')
-    .leftJoin(q => q.from(OptionPutCallHistory, 'i').where(`CURRENT_DATE - "date" < 180`), 'i', 's.symbol = i.symbol')
-    .select([
-      's.symbol as symbol',
-      's.company as name',
-      's."type" as "type"',
-      's."sortGroup" as "sortGroup"',
-      's."tagId" as "tagId"',
-      's."ordinal" as "ordinal"',
-      'i."date" as "date"',
-      'i."putCallVol" as "putCallVol"',
-      'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
-      'i."putCallOIRatio" + i."putCallOIRatioDelta" as "putCallOIRatio"',
-      'i."totalOpenInterest" + i."totalOpenInterestDelta" as "totalOpenInterest"',
-      '100 - 100 / (i."putCallVol" + 1) as "todayPercentPutVol"',
-      '100 / (i."putCallVol" + 1) as "todayPercentCallVol"',
+  .from(OptionPutCallAllDefInformation, 's')
+  .leftJoin(q => q.from(OptionPutCallHistory, 'i').where(`CURRENT_DATE - "date" < 180`), 'i', 's.symbol = i.symbol')
+  .select([
+    's.symbol as symbol',
+    's.company as name',
+    's."type" as "type"',
+    's."sortGroup" as "sortGroup"',
+    's."tagId" as "tagId"',
+    's."ordinal" as "ordinal"',
+    'i."date" as "date"',
+    'i."putCallVol" as "putCallVol"',
+    'i."todayOptionVol" + i."todayOptionVolDelta" as "todayOptionVol"',
+    'i."putCallOIRatio" + i."putCallOIRatioDelta" as "putCallOIRatio"',
+    'i."totalOpenInterest" + i."totalOpenInterestDelta" as "totalOpenInterest"',
+    '100 - 100 / (i."putCallVol" + 1) as "todayPercentPutVol"',
+    '100 / (i."putCallVol" + 1) as "todayPercentCallVol"',
     ])
-    .orderBy('s.ordinal', 'ASC', 'NULLS LAST')
-})
+  .orderBy('s.ordinal', 'ASC', 'NULLS LAST')
+  })
 export class OptionPutCallHistoryInformation {
   @ViewColumn()
   symbol: string;

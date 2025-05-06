@@ -10,12 +10,14 @@ import { StockComputedPe365 } from './StockComputedPe365';
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(Stock, 's')
-    .leftJoin(q => q.from(StockComputedPe365, 'pe')
-      .distinctOn([
-        'symbol'
-      ])
-      .orderBy('symbol')
-      .addOrderBy('"date"', 'DESC'),
+    // .leftJoin(q => q.from(StockComputedPe365, 'pe')
+    //   .distinctOn([
+    //     'symbol'
+    //     ])
+    //   .orderBy('symbol')
+    //   .addOrderBy('"date"', 'DESC'),
+    //   'pe', 's.symbol = pe.symbol')
+    .leftJoin(StockComputedPe365,
       'pe', 's.symbol = pe.symbol')
     .leftJoin(q => q.from(StockHistoricalComputedFairValue, 'sc')
       .distinctOn(['symbol'])
@@ -28,6 +30,7 @@ import { StockComputedPe365 } from './StockComputedPe365';
       .orderBy('symbol')
       .addOrderBy('"reportDate"', 'DESC'),
       'sp', 'sp.symbol = s.symbol AND (sc."reportDate" IS NULL OR sc."reportDate" <= sp."reportDate")')
+    .where(`pe."date" = sc."peDate"`)
     .select([
       's.symbol as symbol',
       'COALESCE(sp."reportDate", sc."reportDate") as "reportDate"',

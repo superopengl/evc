@@ -119,8 +119,8 @@ export const factorStockValue = handlerWrapper(async (req, res) => {
         date: LessThan(dbDateString)
       })
       .execute();
+  });
 
-  })
   res.json();
 });
 

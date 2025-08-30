@@ -218,7 +218,7 @@ async function requestAlphaVantageApiOnce(url: string, format: 'json' | 'text' =
   }
 
   const r = await (format === 'json' ? resp.json() : resp.text());
-  console.debug('alphavantage request'.bgMagenta.white, resp.status, url, (_.isEmpty(r) || r.length === 0 ? '(empty response)' : '').magenta);
+  console.debug('alphavantage request'.bgMagenta.white, resp.status, url, (_.isEmpty(r) ? '(empty response)' : '').magenta);
 
   return r;
 }

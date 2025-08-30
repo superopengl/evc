@@ -13,8 +13,6 @@ async function syncForSymbols(symbols: string[]) {
     try {
       const value = await getAdvancedStat(symbol);
 
-      console.log(`Raw response for ${symbol}`, JSON.stringify(value));
-
       advancedStatsInfo.push({
         symbol,
         beta: +value.Beta || null,

@@ -5,37 +5,37 @@ import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairV
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(StockLatestPaidInformation, 'h')
-    .leftJoin(q => q
+  .from(StockLatestPaidInformation, 'h')
+  .leftJoin(q => q
+    .from(q => q
       .from(q => q
-        .from(q => q
-          .from(StockHistoricalComputedFairValue, 'x')
-          .select([
-            `symbol`,
-            `"reportDate"`,
-            `"fairValueLo"`,
-            `"fairValueHi"`,
-            `rank() over (partition by symbol order by x."reportDate" desc)`
+        .from(StockHistoricalComputedFairValue, 'x')
+        .select([
+          `symbol`,
+          `"reportDate"`,
+          `"fairValueLo"`,
+          `"fairValueHi"`,
+          `rank() over (partition by symbol order by x."reportDate" desc)`
           ]), 'x')
-        .where(`rank <=5`)
-        .andWhere(`"fairValueLo" IS NOT NULL AND "fairValueHi" IS NOT NULL`)
-        .groupBy('symbol')
-        .select('symbol')
-        .addSelect(`array_agg(json_build_object(
-          'date', "reportDate", 
-          'lo', case rank when 1 then null else "fairValueLo" end, 
+      .where(`rank <=5`)
+      .andWhere(`"fairValueLo" IS NOT NULL AND "fairValueHi" IS NOT NULL`)
+      .groupBy('symbol')
+      .select('symbol')
+      .addSelect(`array_agg(json_build_object(
+          'date', "reportDate",
+          'lo', case rank when 1 then null else "fairValueLo" end,
           'hi', case rank when 1 then null else "fairValueHi" end)
           ) as "fairValues"`)
-        , 'f')
-      , 'f', 'h.symbol = f.symbol')
-    .select([
-      `h.symbol as symbol`,
-      `h.company as company`,
-      `h.tags as tags`,
-      `f."fairValues" as "fairValues"`,
-      `h."lastPrice" as "lastPrice"`,
+      , 'f')
+    , 'f', 'h.symbol = f.symbol')
+  .select([
+    `h.symbol as symbol`,
+    `h.company as company`,
+    `h.tags as tags`,
+    `f."fairValues" as "fairValues"`,
+    `h."lastPrice" as "lastPrice"`,
     ])
-})
+  })
 export class StockLatestFreeInformation {
   @ViewColumn()
   @PrimaryColumn()
@@ -48,7 +48,7 @@ export class StockLatestFreeInformation {
   tags: string[];
 
   @ViewColumn()
-  fairValues: { lo: number, hi: number }[];
+  fairValues: { lo: number; hi: number }[];
 
   @ViewColumn()
   lastPrice: number;

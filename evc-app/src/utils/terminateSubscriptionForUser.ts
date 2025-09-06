@@ -22,9 +22,9 @@ export async function terminateSubscriptionForUser(userId: string) {
         {
           id: target.currentSubscriptionId
         }, {
-        status: SubscriptionStatus.Terminated,
-        end: () => `NOW()`
-      });
+          status: SubscriptionStatus.Terminated,
+          end: () => 'NOW()'
+        });
 
       await m.update(User, {
         id: userId,

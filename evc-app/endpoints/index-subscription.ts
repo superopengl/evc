@@ -77,7 +77,7 @@ async function expireSubscriptions() {
 
       // Set user's role to Free
       const userIds = list.map(x => x.userId);
-      await m.update(User, userIds, { role: Role.Free })
+      await m.update(User, userIds, { role: Role.Free });
 
       console.log(`Expired subscriptions ${subscriptionIds.join(', ')}`);
       console.log(`Set Free role to users ${userIds.join(', ')}`);
@@ -153,9 +153,9 @@ async function getPreviousPaymentInfo(subscription: Subscription) {
     });
   const { stripeCustomerId, stripePaymentMethodId, geo } = lastPaidPayment || {};
 
-  assert(stripeCustomerId, 500, `Cannot get previous stripeCustomerId for subscription ${subscription.id}`)
-  assert(stripePaymentMethodId, 500, `Cannot get previous stripePaymentMethodId for subscription ${subscription.id}`)
-  assert(geo, 500, `Cannot get previous geo for subscription ${subscription.id}`)
+  assert(stripeCustomerId, 500, `Cannot get previous stripeCustomerId for subscription ${subscription.id}`);
+  assert(stripePaymentMethodId, 500, `Cannot get previous stripePaymentMethodId for subscription ${subscription.id}`);
+  assert(geo, 500, `Cannot get previous geo for subscription ${subscription.id}`);
 
   return { stripeCustomerId, stripePaymentMethodId, geo };
 }
@@ -179,7 +179,7 @@ async function renewRecurringSubscription(targetSubscription: UserAliveSubscript
   payment.creditTransaction = null;
   payment.userId = userId;
   payment.start = startDate;
-  payment.end = endDate
+  payment.end = endDate;
   payment.amount = price;
   payment.method = PaymentMethod.Card;
   payment.status = PaymentStatus.Pending;
@@ -264,12 +264,12 @@ async function revokeUnpaidUsersRole() {
       .createQueryBuilder()
       .from(User, 'u')
       .where(`role = '${Role.Member}'`)
-      .andWhere(`"deletedAt" IS NULL`)
+      .andWhere('"deletedAt" IS NULL')
       .andWhere(
         notExistsQuery(
           getRepository(UserAliveSubscriptionSummary)
             .createQueryBuilder('s')
-            .where(`u.id = s."userId"`)
+            .where('u.id = s."userId"')
         )
       )
       .select('id')
@@ -281,7 +281,7 @@ async function revokeUnpaidUsersRole() {
 
       console.log(`Revoked membership from users ${userIds.join(', ')}`);
     }
-  })
+  });
 }
 
 start(JOB_NAME, async () => {

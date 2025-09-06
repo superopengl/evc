@@ -1,7 +1,7 @@
 
 import { getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { json2csvAsync } from 'json-2-csv';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
@@ -27,7 +27,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
 
   const queryNzUsdOnly = getRepository(RevenueUsdChartInformation)
     .createQueryBuilder()
-    .where(`"isNZ" is true`)
+    .where('"isNZ" is true')
     .groupBy(period)
     .orderBy(period, 'ASC')
     .select([
@@ -39,7 +39,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
 
   const queryNonNzUsd = getRepository(RevenueUsdChartInformation)
     .createQueryBuilder()
-    .where(`"isNZ" is false`)
+    .where('"isNZ" is false')
     .groupBy(period)
     .orderBy(period, 'ASC')
     .select([
@@ -62,7 +62,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
 
   const queryNzCnyOnly = getRepository(RevenueCnyChartInformation)
     .createQueryBuilder()
-    .where(`"isNZ" is true`)
+    .where('"isNZ" is true')
     .groupBy(period)
     .orderBy(period, 'ASC')
     .select([
@@ -74,7 +74,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
 
   const queryNonNzCny = getRepository(RevenueCnyChartInformation)
     .createQueryBuilder()
-    .where(`"isNZ" is false`)
+    .where('"isNZ" is false')
     .groupBy(period)
     .orderBy(period, 'ASC')
     .select([
@@ -91,7 +91,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
     combinedCny: await conbimedCnyQuery.execute(),
     NzCny: await queryNzCnyOnly.execute(),
     nonNzCny: await queryNonNzCny.execute(),
-  }
+  };
 
   res.json(result);
 });
@@ -100,7 +100,7 @@ export const getRevenueChart = handlerWrapper(async (req, res) => {
 export const downloadAllPaymentCsv = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
 
-  const result = await getRepository(ReceiptInformation).find({})
+  const result = await getRepository(ReceiptInformation).find({});
 
   const csv = await json2csvAsync(result, { emptyFieldValue: '', useLocaleFormat: true });
 

@@ -26,6 +26,6 @@ async function sendInsiderTransactionChangedEmails() {
 }
 
 export async function handleWatchlistInsiderTransactionNotification() {
-  console.log(`Sending watchlist insider transaction change emails`);
+  console.log('Sending watchlist insider transaction change emails');
   await sendInsiderTransactionChangedEmails();
 }

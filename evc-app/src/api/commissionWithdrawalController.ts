@@ -2,7 +2,7 @@
 import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { v4 as uuidv4 } from 'uuid';
 import { CommissionWithdrawal } from '../entity/CommissionWithdrawal';
 import moment from 'moment';
@@ -25,22 +25,22 @@ export const searchCommissionWithdrawal = handlerWrapper(async (req, res) => {
     .createQueryBuilder('x')
     .innerJoin(User, 'u', 'u.id = x."userId"')
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id')
-    .where(`1=1`)
+    .where('1=1');
 
   if (id) {
-    query = query.where(`x.id = :id`, { id });
+    query = query.where('x.id = :id', { id });
   }
   if (userId) {
-    query = query.andWhere(`x."userId" = :userId`, { userId });
+    query = query.andWhere('x."userId" = :userId', { userId });
   }
   if (after) {
-    query = query.andWhere(`x."createdAt" >= :after`, { after: moment(after).startOf('day') })
+    query = query.andWhere('x."createdAt" >= :after', { after: moment(after).startOf('day') });
   }
   if (before) {
-    query = query.andWhere(`x."createdAt" <= :before`, { before: moment(before).endOf('day') })
+    query = query.andWhere('x."createdAt" <= :before', { before: moment(before).endOf('day') });
   }
   if (status) {
-    query = query.andWhere(`x.status = :status`, { status })
+    query = query.andWhere('x.status = :status', { status });
   }
 
   const count = await query.getCount();
@@ -100,9 +100,9 @@ export const createCommissionWithdrawal = handlerWrapper(async (req, res) => {
     hasEnoughCredit = await getRepository(UserCreditTransaction)
       .createQueryBuilder()
       .where({ userId })
-      .groupBy(`"userId"`)
-      .having(`SUM(amount) >= :amount`, { amount })
-      .select(`"userId"`)
+      .groupBy('"userId"')
+      .having('SUM(amount) >= :amount', { amount })
+      .select('"userId"')
       .getRawOne();
     if (hasEnoughCredit) {
       await m.insert(CommissionWithdrawal, entity);
@@ -135,16 +135,16 @@ export const getCommissionWithdrawal = handlerWrapper(async (req, res) => {
 async function completeAndAdjustCredit(withdrawal: CommissionWithdrawal, comment) {
   const { amount, userId } = withdrawal;
 
-  assert(amount > 0, 400, `Amount must be a positive number`);
+  assert(amount > 0, 400, 'Amount must be a positive number');
 
   let hasEnoughCredit = false;
   await getManager().transaction(async m => {
     hasEnoughCredit = await getRepository(UserCreditTransaction)
       .createQueryBuilder()
       .where({ userId })
-      .groupBy(`"userId"`)
-      .having(`SUM(amount) >= :amount`, { amount })
-      .select(`"userId"`)
+      .groupBy('"userId"')
+      .having('SUM(amount) >= :amount', { amount })
+      .select('"userId"')
       .getRawOne();
 
     if (hasEnoughCredit) {
@@ -206,7 +206,7 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
       break;
     case 'rejected':
     case 'done':
-      assert(false, 400, `This commission withdrawal application was finished already`);
+      assert(false, 400, 'This commission withdrawal application was finished already');
       break;
     default:
       assert(false, 500, `Unknown status ${withdrawal.status}`);

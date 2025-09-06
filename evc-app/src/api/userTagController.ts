@@ -3,7 +3,7 @@ import { getRepository } from 'typeorm';
 import { Blog } from '../entity/Blog';
 import { UserTag } from '../entity/UserTag';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 

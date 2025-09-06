@@ -6,23 +6,23 @@ import { RevenueChartInformation } from './RevenueChartInformation';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(RevenueChartInformation, 'r')
-    .where(`r."payableCny" IS NULL`)
-    .orderBy('r."date"', 'DESC')
-    .select([
-      'r."subscriptionType"',
-      'r."method"',
-      'r."date"',
-      'r."isNZ"',
-      'r."price"',
-      'r."payable"',
-      'r."deduction"',
-      'r."year"',
-      'r."month"',
-      'r."week"',
-      'r."day"',
+  .from(RevenueChartInformation, 'r')
+  .where(`r."payableCny" IS NULL`)
+  .orderBy('r."date"', 'DESC')
+  .select([
+    'r."subscriptionType"',
+    'r."method"',
+    'r."date"',
+    'r."isNZ"',
+    'r."price"',
+    'r."payable"',
+    'r."deduction"',
+    'r."year"',
+    'r."month"',
+    'r."week"',
+    'r."day"',
     ])
-})
+  })
 export class RevenueUsdChartInformation {
   @ViewColumn()
   subscriptionType: SubscriptionType;

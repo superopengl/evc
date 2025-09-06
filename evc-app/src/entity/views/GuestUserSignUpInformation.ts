@@ -26,8 +26,8 @@ import { PaymentStatus } from '../../types/PaymentStatus';
     `to_char("paidAt", 'YYYY/MM') as month`,
     `to_char("paidAt", 'YYYY/"w"IW') as week`,
     `to_char("paidAt", 'YYYY/MM/DD') as day`,
-  ])
-})
+    ])
+  })
 export class GuestUserSignUpInformation {
   @ViewColumn()
   subscriptionType: SubscriptionType;

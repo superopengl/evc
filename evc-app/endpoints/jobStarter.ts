@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import { logDataEvent } from '../src/services/dataLogService';
 import { v4 as uuidv4 } from 'uuid';
 
-export const start = async (jobName: string, jobFunc: () => Promise<any>, options?: { syncSchema?: boolean, daemon?: boolean, eventId?: string }) => {
+export const start = async (jobName: string, jobFunc: () => Promise<any>, options?: { syncSchema?: boolean; daemon?: boolean; eventId?: string }) => {
   let connection: Connection = null;
   const eventId = options?.eventId ?? uuidv4();
   const shouldSyncSchema = !!options?.syncSchema;

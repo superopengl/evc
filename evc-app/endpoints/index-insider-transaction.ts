@@ -36,7 +36,7 @@ function includesTransactionCode(transactionCode: string) {
 }
 
 async function syncForSymbols(symbols: string[]) {
-  throw Error('Not implemented. Need to find a data provider for insider transations')
+  throw Error('Not implemented. Need to find a data provider for insider transations');
   // const resp = await sendIexRequest(symbols, 'insider_transactions', { last: 30 });
   // const map = _.groupBy(resp, x => x.symbol);
   // await udpateDatabase(map);

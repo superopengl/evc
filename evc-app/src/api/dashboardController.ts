@@ -1,6 +1,6 @@
 import { getManager, getRepository } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { StockPlea } from '../entity/StockPlea';
 import { StockLatestFairValue } from '../entity/views/StockLatestFairValue';
 import { StockSupport } from '../entity/StockSupport';
@@ -30,8 +30,8 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
         'close',
         '"createdAt"'
       ])
-      , 'c')
-    .where(`date < "createdAt"::date - 1`)
+    , 'c')
+    .where('date < "createdAt"::date - 1')
     .orderBy('date', 'DESC')
     .addOrderBy('symbol', 'ASC')
     .getRawMany();
@@ -64,7 +64,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .andWhere('"ttmEps" <= 0')
       .select('symbol')
       .orderBy('symbol'),
-      'sub')
+    'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
 
@@ -76,7 +76,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .andWhere('"ttmEps" IS NULL')
       .select('symbol')
       .orderBy('symbol'),
-      'sub')
+    'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
 
@@ -88,7 +88,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .having('COUNT(*) = 1')
       .select('symbol')
       .orderBy('symbol'),
-      'sub'
+    'sub'
     )
     .select('array_agg(symbol) as value')
     .getRawOne();
@@ -101,7 +101,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .having('COUNT(*) = 1')
       .select('symbol')
       .orderBy('symbol'),
-      'sub'
+    'sub'
     )
     .select('array_agg(symbol) as value')
     .getRawOne();
@@ -113,7 +113,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .where('supports IS NULL')
       .select('symbol')
       .orderBy('symbol'),
-      'sub')
+    'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
 
@@ -124,7 +124,7 @@ export const getAdminDashboard = handlerWrapper(async (req, res) => {
       .where('resistances IS NULL')
       .select('symbol')
       .orderBy('symbol'),
-      'sub')
+    'sub')
     .select('array_agg(symbol) as value')
     .getRawOne();
 

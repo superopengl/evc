@@ -3,25 +3,25 @@ import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
-    .createQueryBuilder()
-    .from(StockLatestPaidInformation, 'spi')
-    .select([
-      'symbol',
-      'supports',
-      'resistances',
-      'md5(row(supports, resistances)::text) as hash',
-      'CURRENT_DATE as date'
+  .createQueryBuilder()
+  .from(StockLatestPaidInformation, 'spi')
+  .select([
+    'symbol',
+    'supports',
+    'resistances',
+    'md5(row(supports, resistances)::text) as hash',
+    'CURRENT_DATE as date'
     ])
-})
+  })
 export class SupportResistanceLatestSnapshot {
   @ViewColumn()
   symbol: string;
 
   @ViewColumn()
-  supports: { lo: number, hi: number }[];
+  supports: { lo: number; hi: number }[];
 
   @ViewColumn()
-  resistances: { lo: number, hi: number }[];
+  resistances: { lo: number; hi: number }[];
 
   @ViewColumn()
   hash: string;

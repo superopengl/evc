@@ -7,7 +7,7 @@ import errorToJson from 'error-to-json';
 import moment from 'moment';
 import { redisCache } from '../src/services/redisCache';
 import { handleWatchlistSupportResistanceChangedNotification } from './handleWatchlistSupportResistanceChangedNotification';
-import { refreshMaterializedView } from "../src/refreshMaterializedView";
+import { refreshMaterializedView } from '../src/refreshMaterializedView';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
 import { v4 as uuidv4 } from 'uuid';
@@ -39,7 +39,7 @@ start(JOB_NAME, async () => {
           'symbol'
         ],
       });
-    const symbols = stocks.map(s => s.symbol);
+    const symbols = ['AAPL']; // stocks.map(s => s.symbol);
 
     let count = 0;
     const failed = [];
@@ -57,7 +57,7 @@ start(JOB_NAME, async () => {
         }
       } catch (e) {
         const errorJson = errorToJson(e);
-        const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${JSON.stringify(errorJson)}`
+        const msg = `${JOB_NAME} ${Symbol} ${++count}/${symbols.length} failed ${JSON.stringify(errorJson)}`;
         console.error(msg, e);
         failed.push(msg);
       }

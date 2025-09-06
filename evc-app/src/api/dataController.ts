@@ -2,9 +2,9 @@
 import { getManager, EntityManager, In } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import path from 'path';
-import { refreshMaterializedView } from "../refreshMaterializedView";
+import { refreshMaterializedView } from '../refreshMaterializedView';
 import { redisCache } from '../services/redisCache';
 import parse from 'csv-parse/lib/sync';
 import { StockSupport } from '../entity/StockSupport';
@@ -26,7 +26,7 @@ const convertHeaderToPropName = header => {
     .map(x => x.replace(/[\/ ]/g, ''))
     .map((w, i) => i === 0 ? w.toLowerCase() : _.capitalize(w))
     .join('');
-}
+};
 
 const formatUoaUploadRow = row => {
   try {
@@ -35,17 +35,17 @@ const formatUoaUploadRow = row => {
     row.iv = row.iv.replace(/%/g, '');
     return row;
   } catch (e) {
-    throw new Error(`${e.message} from row: ${Object.values(row).join(',')}`)
+    throw new Error(`${e.message} from row: ${Object.values(row).join(',')}`);
   }
-}
+};
 
 function parseUoaDate(value) {
   let m = moment(value, 'MM/DD/YY');
   if (!m.isValid()) {
-    m = moment(value, 'YYYY/MM/DD')
+    m = moment(value, 'YYYY/MM/DD');
   }
   if (!m.isValid()) {
-    throw new Error(`'${value}' is not a valid date.`)
+    throw new Error(`'${value}' is not a valid date.`);
   }
   return m.toDate();
 }
@@ -92,7 +92,7 @@ export const refreshMaterializedViews = handlerWrapper(async (req, res) => {
 
 export const flushCache = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const key = `operation.status.flush_cache`;
+  const key = 'operation.status.flush_cache';
   await redisCache.set(key, 'in-progress');
   redisCache.flush().finally(() => {
     redisCache.del(key);
@@ -101,7 +101,7 @@ export const flushCache = handlerWrapper(async (req, res) => {
 });
 
 function parseLoHi(strData: string, rowNumber: number) {
-  assert(strData?.trim(), 400, `Empty lo-hi pair value`)
+  assert(strData?.trim(), 400, 'Empty lo-hi pair value');
   const [loStr, hiStr] = strData.split('-');
   const lo = +(loStr?.trim());
   let hi = +(hiStr?.trim());
@@ -170,7 +170,7 @@ export const uploadSupportResistanceCsv = handleCsvUpload(
     await deleteAndInsertIntoSupportOrResistance(m, StockSupport, supports);
     await deleteAndInsertIntoSupportOrResistance(m, StockResistance, resistances);
   },
-)
+);
 
 async function cleanUpOldUoaData(m: EntityManager, table) {
   const now = getUtcNow();
@@ -282,7 +282,7 @@ export const saveStockOptionPutCallHistoryOrdinal = handlerWrapper(async (req, r
       .addOrderBy('date', 'DESC')
       .where(`symbol = '${symbol}'`)
       .getMany();
-  })
+  });
 
   res.json(data);
 });
@@ -295,7 +295,7 @@ export const listLatestOptionPutCall = handlerWrapper(async (req, res) => {
       'symbol',
       'type'
     ])
-    .where(`type IS NOT NULL`)
+    .where('type IS NOT NULL')
     .orderBy('symbol')
     .addOrderBy('type')
     .addOrderBy('date', 'DESC')
@@ -325,21 +325,21 @@ export const getStockLatestOptionPutCall = handlerWrapper(async (req, res) => {
 export const listUoaStocks = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
   const list = await searchUnusualOptionsActivity('stock', req.body, showFullData);
-  res.set('Cache-Control', `public, max-age=1800`);
+  res.set('Cache-Control', 'public, max-age=1800');
   res.json(list);
 });
 
 export const listUoaEtfs = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
   const list = await searchUnusualOptionsActivity('etfs', req.body, showFullData);
-  res.set('Cache-Control', `public, max-age=1800`);
+  res.set('Cache-Control', 'public, max-age=1800');
   res.json(list);
 });
 
 export const listUoaindex = handlerWrapper(async (req, res) => {
   const showFullData = shouldShowFullDataForUoa(req);
   const list = await searchUnusualOptionsActivity('index', req.body, showFullData);
-  res.set('Cache-Control', `public, max-age=1800`);
+  res.set('Cache-Control', 'public, max-age=1800');
   res.json(list);
 });
 
@@ -407,18 +407,18 @@ export const getTaskLogChart = handlerWrapper(async (req, res) => {
     .createQueryBuilder()
     .from(DataLog, 's')
     .innerJoin(DataLog, 'e', 's."eventId" = e."eventId"')
-    .where(`s.level = 'started'`)
-    .andWhere(`e.level != 'started'`)
-    .andWhere(`s.by = 'task'`)
-    .andWhere(`s."createdAt" >= CURRENT_DATE - INTERVAL '30 days'`)
+    .where('s.level = \'started\'')
+    .andWhere('e.level != \'started\'')
+    .andWhere('s.by = \'task\'')
+    .andWhere('s."createdAt" >= CURRENT_DATE - INTERVAL \'30 days\'')
     .orderBy('s.id', 'DESC')
     .select([
-      `s.id as "id"`,
-      `s."createdAt" as "startedAt"`,
-      `e."createdAt" as "endedAt"`,
-      `s."eventType" as "taskName"`,
-      `e."level" as "result"`,
-      `e."data" as error`,
+      's.id as "id"',
+      's."createdAt" as "startedAt"',
+      'e."createdAt" as "endedAt"',
+      's."eventType" as "taskName"',
+      'e."level" as "result"',
+      'e."data" as error',
     ])
     .execute();
 

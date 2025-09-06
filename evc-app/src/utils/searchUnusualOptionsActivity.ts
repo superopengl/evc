@@ -15,7 +15,7 @@ export type UnusualOptionsActivitySearchParams = {
   timeTo: string;
   page?: number;
   size?: number;
-  order?: { field: string, order: 'ASC' | 'DESC' }[];
+  order?: { field: string; order: 'ASC' | 'DESC' }[];
   lastDayOnly: boolean;
 };
 
@@ -47,16 +47,16 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
   const symbols = symbolsResult.map(x => x.symbol);
 
   if (symbol) {
-    query = query.andWhere(`symbol = :symbol`, { symbol: symbol.toUpperCase() });
+    query = query.andWhere('symbol = :symbol', { symbol: symbol.toUpperCase() });
   }
   if (type) {
-    query = query.andWhere(`type = :type`, { type });
+    query = query.andWhere('type = :type', { type });
   }
   if (expDateFrom) {
-    query = query.andWhere(`"expDate" >= :a::date`, { a: expDateFrom });
+    query = query.andWhere('"expDate" >= :a::date', { a: expDateFrom });
   }
   if (expDateTo) {
-    query = query.andWhere(`"expDate" <= :b::date`, { b: expDateTo });
+    query = query.andWhere('"expDate" <= :b::date', { b: expDateTo });
   }
 
   if (lastDayOnly) {
@@ -64,19 +64,19 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
     query = query.andWhere(`"tradeDate" = (select max("tradeDate") from "${schema}"."${tableName}")`);
   } else {
     if (timeFrom) {
-      query = query.andWhere(`"tradeDate" >= :c::date`, { c: timeFrom });
+      query = query.andWhere('"tradeDate" >= :c::date', { c: timeFrom });
     }
     if (timeTo) {
-      query = query.andWhere(`"tradeDate" <= :d::date`, { d: timeTo });
+      query = query.andWhere('"tradeDate" <= :d::date', { d: timeTo });
     }
   }
 
   const count = await query.getCount();
 
-  const orderConditions: { field: string, order: 'ASC' | 'DESC' }[] = order?.length ? order : [
+  const orderConditions: { field: string; order: 'ASC' | 'DESC' }[] = order?.length ? order : [
     { field: 'tradeDate', order: 'DESC' },
     { field: 'symbol', order: 'ASC' },
-  ]
+  ];
 
   for (const orderCond of orderConditions) {
     const { field, order } = orderCond;
@@ -87,7 +87,7 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
     .limit(pageSize);
 
   if (showFullData) {
-    query = query.select('*')
+    query = query.select('*');
   } else {
     query = query.select([
       'row_number() over (order by "tradeDate" desc, symbol) as id',
@@ -100,7 +100,7 @@ export async function searchUnusualOptionsActivity(entityType: 'stock' | 'etfs' 
       '"openInt"',
       'voloi',
       'iv'
-    ])
+    ]);
   }
   const data = await query.execute();
 

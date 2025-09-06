@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { compareTrend } from '../utils/compareTrend';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';

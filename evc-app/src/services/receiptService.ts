@@ -44,7 +44,7 @@ function getVars(receipt: ReceiptInformation) {
       symbol: '¥',
       currency: 'CNY',
       total: (+(receipt.payableCny)).toFixed(2)
-    }
+    };
   }
   return {
     receiptNumber: receipt.receiptNumber,
@@ -60,7 +60,7 @@ function getVars(receipt: ReceiptInformation) {
   };
 }
 
-export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfBuffer: Buffer, fileName: string }> {
+export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfBuffer: Buffer; fileName: string }> {
   const vars = getVars(receipt);
   const html = compiledTemplate(vars);
 

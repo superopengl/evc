@@ -83,7 +83,7 @@ async function updateLastPriceInDatabase(priceList: StockLastPriceInfo[]) {
   if (values.length) {
     const chunks = _.chunk(values, 1000);
     for (const chunk of chunks) {
-      await syncStockLastPrice(getManager(), chunk)
+      await syncStockLastPrice(getManager(), chunk);
     }
   }
 }
@@ -114,7 +114,7 @@ function createSseForSymbols(symbols: string[], generation = 0) {
   const symbolEncodedString = symbols.map(s => encodeURIComponent(s)).join(',');
   let es: EventSource = null;
   try {
-    const url = ``; // `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
+    const url = ''; // `${process.env.IEXCLOUD_SSE_ENDPOINT}/${process.env.IEXCLOUD_API_VERSION}/last?token=${process.env.IEXCLOUD_PUBLIC_KEY}&symbols=${symbolEncodedString}`;
     es = new EventSource(url);
 
     es.onopen = () => {

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, CreateDateColumn, ManyToOne } from 'typeorm';
 import { ManyToMany, JoinTable } from 'typeorm-plus';
-import { StockUserCustomTag } from "./StockUserCustomTag";
+import { StockUserCustomTag } from './StockUserCustomTag';
 
 
 @Entity()

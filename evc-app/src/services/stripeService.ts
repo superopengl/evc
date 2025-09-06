@@ -77,9 +77,9 @@ export async function createStripeClientSecretForCardPayment(payment: Payment): 
 //   return intent.client_secret;
 // }
 
-const DUMMY_STRIPE_RESPONSE = { 
-  status: 'succeeded', 
-  dummyStripeResponse: true 
+const DUMMY_STRIPE_RESPONSE = {
+  status: 'succeeded',
+  dummyStripeResponse: true
 };
 
 export async function chargeStripeForCardPayment(payment: Payment, onSessionPayment: boolean) {

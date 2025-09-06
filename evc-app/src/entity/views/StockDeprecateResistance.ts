@@ -6,23 +6,23 @@ import { StockDailyClose } from '../StockDailyClose';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
-    .from(StockResistance, 'sr')
-    .innerJoin(Stock, 's', 'sr.symbol = s.symbol')
-    .innerJoin(q => q
-      .from(StockDailyClose, 'c')
-      .distinctOn(['symbol'])
-      .orderBy('symbol', 'DESC')
-      .addOrderBy('date', 'DESC'),
-      'c', 'c.symbol = sr.symbol AND c.close > sr.hi')
-    .select([
-      `sr.id as "resistanceId"`,
-      `sr.symbol as symbol`,
-      `sr.lo as "resistanceLo"`,
-      `sr.hi as "resistanceHi"`,
-      `c.close as close`,
-      `c.date as date`,
+  .from(StockResistance, 'sr')
+  .innerJoin(Stock, 's', 'sr.symbol = s.symbol')
+  .innerJoin(q => q
+    .from(StockDailyClose, 'c')
+    .distinctOn(['symbol'])
+    .orderBy('symbol', 'DESC')
+    .addOrderBy('date', 'DESC'),
+    'c', 'c.symbol = sr.symbol AND c.close > sr.hi')
+  .select([
+    `sr.id as "resistanceId"`,
+    `sr.symbol as symbol`,
+    `sr.lo as "resistanceLo"`,
+    `sr.hi as "resistanceHi"`,
+    `c.close as close`,
+    `c.date as date`,
     ])
-})
+  })
 export class StockDeprecateResistance {
   @ViewColumn()
   resistanceId: string;

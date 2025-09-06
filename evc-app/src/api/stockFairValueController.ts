@@ -1,12 +1,12 @@
 import { getRepository } from 'typeorm';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';
 import { normalizeLoHiValues } from '../utils/normalizeLoHiValues';
 import { StockHistoricalComputedFairValue } from '../entity/views/StockHistoricalComputedFairValue';
 import _ from 'lodash';
 import moment = require('moment');
-import { refreshMaterializedView } from "../refreshMaterializedView";
+import { refreshMaterializedView } from '../refreshMaterializedView';
 import { StockComputedPe365 } from '../entity/views/StockComputedPe365';
 
 export const getStockFairValue = handlerWrapper(async (req, res) => {

@@ -11,7 +11,7 @@ axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay });
 
 function getRequestCookies(resp) {
   const setCookieHeaders = resp.headers['set-cookie'];
-  const splitCookieHeaders = cookieParser.splitCookiesString(setCookieHeaders)
+  const splitCookieHeaders = cookieParser.splitCookiesString(setCookieHeaders);
   const cookies = cookieParser.parse(splitCookieHeaders, { decodeValues: true, map: true });
   const rawCookie = setCookieHeaders.join(';');
   return {
@@ -19,11 +19,11 @@ function getRequestCookies(resp) {
     laravelToken: cookies['laravel_token']?.value,
     laravelSession: cookies['laravel_session']?.value,
     rawCookie: rawCookie,
-  }
+  };
 }
 
 async function grabOptionHistory(tokens, symbol, limit) {
-  const url = `https://www.barchart.com/proxies/core-api/v1/options-historical/get`;
+  const url = 'https://www.barchart.com/proxies/core-api/v1/options-historical/get';
   const { xsrfToken, rawCookie, laravelToken } = tokens;
 
   console.debug(`barchart request option-history for ${symbol}`.bgMagenta.white, url.magenta);
@@ -62,18 +62,18 @@ async function getBarChartAccessByLogin(email, password) {
   const guestTokens = await getBarChartGuestAccess();
   const { xsrfToken, laravelSession, laravelToken } = guestTokens;
 
-  const url = `https://www.barchart.com/login`;
+  const url = 'https://www.barchart.com/login';
   const resp = await axios(url, {
     method: 'POST',
     headers: {
-      "accept": "application/json",
-      "content-type": "application/json",
-      "Referer": "https://www.barchart.com/login",
-      "Referrer-Policy": "strict-origin-when-cross-origin",
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
-      "x-xsrf-token": xsrfToken,
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'Referer': 'https://www.barchart.com/login',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-origin',
+      'x-xsrf-token': xsrfToken,
       cookie: `laravel_token=${encodeURIComponent(laravelToken)};laravel_session=${encodeURIComponent(laravelSession)}`,
     },
     data: {
@@ -108,14 +108,14 @@ async function getBarChartAccessByLogin(email, password) {
     throw new Error('Failed to get XSRF-TOKEN from BarChart response cookie');
   }
 
-  console.debug(`x-xsrf-token`, tokens.xsrfToken);
-  console.debug(`cookie`, `laravel_token=${encodeURIComponent(tokens.laravelToken)}`);
+  console.debug('x-xsrf-token', tokens.xsrfToken);
+  console.debug('cookie', `laravel_token=${encodeURIComponent(tokens.laravelToken)}`);
 
   return tokens;
 }
 
 async function getBarChartGuestAccess() {
-  const url = `https://www.barchart.com/options/unusual-activity/stocks`;
+  const url = 'https://www.barchart.com/options/unusual-activity/stocks';
   const resp = await axios(url);
   console.debug('barchart poke request'.bgMagenta.white, resp.status, url.magenta);
   if (/^4/.test(`${resp.status}`)) {
@@ -140,8 +140,8 @@ async function getBarChartGuestAccess() {
     throw new Error('Failed to get XSRF-TOKEN from BarChart response cookie');
   }
 
-  console.debug(`x-xsrf-token`, tokens.xsrfToken);
-  console.debug(`cookie`, `laravel_token=${encodeURIComponent(tokens.laravelToken)}`);
+  console.debug('x-xsrf-token', tokens.xsrfToken);
+  console.debug('cookie', `laravel_token=${encodeURIComponent(tokens.laravelToken)}`);
 
   return tokens;
 }
@@ -159,7 +159,7 @@ async function grabOptionsData(tokens, type: 'stock' | 'etf' | 'index', page) {
     page,
     limit: 1000
   };
-  const url = `https://www.barchart.com/proxies/core-api/v1/options/get`;
+  const url = 'https://www.barchart.com/proxies/core-api/v1/options/get';
 
   const { xsrfToken, laravelToken } = tokens;
   const options = {
@@ -168,7 +168,7 @@ async function grabOptionsData(tokens, type: 'stock' | 'etf' | 'index', page) {
       'x-xsrf-token': xsrfToken,
       cookie: `laravel_token=${encodeURIComponent(laravelToken)}`,
     }
-  }
+  };
 
   console.debug(`barchart request for ${type}`.bgMagenta.white, url.magenta);
 

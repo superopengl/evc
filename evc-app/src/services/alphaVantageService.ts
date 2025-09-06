@@ -36,7 +36,7 @@ export async function getGlobalQuotePrice(symbol: string) {
   };
 }
 
-export async function getPostMarketPrice(symbol: string, inMarketInfo: { open: number, latestPrice: number }) {
+export async function getPostMarketPrice(symbol: string, inMarketInfo: { open: number; latestPrice: number }) {
   const rawResponse = await requestAlphaVantageApi({
     function: 'TIME_SERIES_INTRADAY',
     symbol,
@@ -60,10 +60,10 @@ export async function getPostMarketPrice(symbol: string, inMarketInfo: { open: n
       high: +timeItem['2. high'],
       low: +timeItem['3. low'],
       close: +timeItem['4. close'],
-    }
-  }
+    };
+  };
 
-  const last = parseItem(timeSeries[latestTimeKey])
+  const last = parseItem(timeSeries[latestTimeKey]);
 
   return {
     extendedPrice: last.close,
@@ -97,7 +97,7 @@ export async function getHistoricalClose(symbol: string, days = 1) {
   return result;
 }
 
-export async function getEarningsCalendarForAll(): Promise<{ symbol: string, reportDate: string }[]> {
+export async function getEarningsCalendarForAll(): Promise<{ symbol: string; reportDate: string }[]> {
   const data = await requestAlphaVantageApi({
     function: 'EARNINGS_CALENDAR',
     horizon: '12month',
@@ -184,19 +184,19 @@ async function requestAlphaVantageApi(query?: object, format: 'json' | 'text' = 
   let resp = await requestAlphaVantageApiOnce(url, format);
 
   if (hasBeenRateLimited(resp)) {
-    console.log('AlphaVantage rate limited. Waiting for 10 seconds and retry 1/3 ...'.yellow)
+    console.log('AlphaVantage rate limited. Waiting for 10 seconds and retry 1/3 ...'.yellow);
     await sleep(10 * 1000);
     resp = await requestAlphaVantageApiOnce(url, format);
   }
 
   if (hasBeenRateLimited(resp)) {
-    console.log('AlphaVantage rate limited. Waiting for 30 seconds and retry 2/3...'.yellow)
+    console.log('AlphaVantage rate limited. Waiting for 30 seconds and retry 2/3...'.yellow);
     await sleep(30 * 1000);
     resp = await requestAlphaVantageApiOnce(url, format);
   }
 
   if (hasBeenRateLimited(resp)) {
-    console.log('AlphaVantage rate limited. Waiting for 60 seconds and retry 3/3...'.yellow)
+    console.log('AlphaVantage rate limited. Waiting for 60 seconds and retry 3/3...'.yellow);
     await sleep(60 * 1000);
     resp = await requestAlphaVantageApiOnce(url, format);
   }

@@ -3,17 +3,17 @@ import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
-    .createQueryBuilder()
-    .from(StockLatestPaidInformation, 'spi')
-    .select([
-      'symbol',
-      '"fairValueLo"',
-      '"fairValueHi"',
-      'md5(row("fairValueLo", "fairValueHi")::text) as hash',
-      'CURRENT_DATE as date'
+  .createQueryBuilder()
+  .from(StockLatestPaidInformation, 'spi')
+  .select([
+    'symbol',
+    '"fairValueLo"',
+    '"fairValueHi"',
+    'md5(row("fairValueLo", "fairValueHi")::text) as hash',
+    'CURRENT_DATE as date'
     ])
-    .where(`"fairValueLo" IS NOT NULL`)
-})
+  .where(`"fairValueLo" IS NOT NULL`)
+  })
 export class FairValueLatestSnapshot {
   @ViewColumn()
   symbol: string;

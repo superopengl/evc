@@ -3,6 +3,10 @@ FROM --platform=linux/amd64 node:18-slim
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
+RUN corepack prepare pnpm@10.7.1 --activate
+
+# ENV PNPM_STORE_PATH=/pnpm-store
+# RUN pnpm config set store-dir $PNPM_STORE_PATH
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer

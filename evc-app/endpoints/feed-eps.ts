@@ -39,7 +39,7 @@ start(JOB_NAME, async () => {
           'symbol'
         ],
       });
-    const symbols = ['AAPL']; // stocks.map(s => s.symbol);
+    const symbols = stocks.map(s => s.symbol);
 
     let count = 0;
     const failed = [];

@@ -1,7 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.less';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
-import HomePage from 'pages/HomePage';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
@@ -37,6 +36,7 @@ const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const DisclaimerPage = loadable(() => import('pages/DisclaimerPage'));
 const ChineseUserPaymentGuidePage = loadable(() => import('pages/ChineseUserPaymentGuidePage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
+const HomePage = loadable(() => import('pages/HomePage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const ProMemberPage = loadable(() => import('pages/ProMember/ProMemberPage'));
 const EarningsCalendarPreviewPage = loadable(() => import('pages/EarningsCalendarPreviewPage'));

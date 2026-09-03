@@ -145,20 +145,34 @@ async function grabOptionsData(type: 'stock' | 'etf' | 'index', page) {
   return { count, total, page, data };
 }
 
+// 1000 rows per page, and the biggest type runs to a couple of thousand rows, so this is
+// only ever reached if Barchart stops honouring the `page` param.
+const MAX_PAGES = 100;
+
 async function grabDataByType(type: 'stock' | 'etf' | 'index') {
   const allData: any[] = [];
 
   let page = 1;
-  let totalReceived = 0;
-  while (true) {
-    const { count, total, data } = await grabOptionsData(type, page);
-    totalReceived += count;
-    allData.push(...data);
-    page++;
-    if (totalReceived >= total) {
-      break;
+  let total = 0;
+
+  do {
+    const resp = await grabOptionsData(type, page);
+    // Count the rows we actually got rather than the API's `count`: a mismatch between the
+    // two is exactly the case that used to spin forever.
+    const rows = resp.data ?? [];
+    total = +resp.total || 0;
+    allData.push(...rows);
+
+    // The caller deletes the whole trade date before re-inserting, so returning a short read
+    // would silently replace good rows with a truncated set. Fail loudly instead.
+    if (!rows.length && allData.length < total) {
+      throw new Error(`BarChart pagination stalled for ${type} at page ${page} (got ${allData.length} of ${total} rows)`);
     }
-  }
+    if (page > MAX_PAGES) {
+      throw new Error(`BarChart pagination exceeded ${MAX_PAGES} pages for ${type} (got ${allData.length} of ${total} rows)`);
+    }
+    page++;
+  } while (allData.length < total);
 
   return allData;
 }

@@ -3,6 +3,7 @@ import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
+import { fireAndForget } from '../utils/fireAndForget';
 import { redisCache } from '../services/redisCache';
 import { Translation } from '../entity/Translation';
 import { Locale } from '../types/Locale';
@@ -44,7 +45,7 @@ export const getLocaleResource = handlerWrapper(async (req, res) => {
       pre[curr.key] = curr.value;
       return pre;
     }, {});
-    redisCache.set(cachekey, data);
+    fireAndForget(redisCache.set(cachekey, data), 'cache locale resource');
   }
 
   res.json(data);
@@ -70,7 +71,7 @@ export const saveLocaleResourceItem = handlerWrapper(async (req, res) => {
     .execute();
 
   const cacheKey = getCacheKey(locale);
-  redisCache.del(cacheKey);
+  fireAndForget(redisCache.del(cacheKey), 'invalidate locale resource cache');
   res.json();
 });
 

@@ -22,6 +22,7 @@ import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { getRequestGeoInfo } from '../utils/getIpGeoLocation';
+import { fireAndForget } from '../utils/fireAndForget';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -130,7 +131,7 @@ export const signup = handlerWrapper(async (req, res) => {
 
   const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
-  sendEmail({
+  fireAndForget(sendEmail({
     template: EmailTemplateType.SignUp,
     to: email,
     vars: {
@@ -138,7 +139,7 @@ export const signup = handlerWrapper(async (req, res) => {
       url
     },
     shouldBcc: true
-  });
+  }), 'send sign-up email');
 
   const info = {
     id,

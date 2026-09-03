@@ -36,6 +36,7 @@ import { syncStockLastPrice } from '../utils/syncStockLastPrice';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHistoryInformation';
 import { getCachedOrFetch } from '../utils/getCachedOrFetch';
+import { fireAndForget } from '../utils/fireAndForget';
 
 const redisPricePublisher = new RedisRealtimePricePubService();
 
@@ -286,7 +287,7 @@ async function initlizeStocksAndGetSymbolCompanyMap(symbols: string[]): Promise<
       symbolCompanyMap.set(symbol, companyName);
     }
 
-    createAndInitializeStocks(newStocks);
+    fireAndForget(createAndInitializeStocks(newStocks), 'create and initialize new stocks');
   }
 
   return symbolCompanyMap;

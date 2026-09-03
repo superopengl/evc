@@ -14,6 +14,7 @@ import { UnusualOptionActivityEtfs } from '../entity/UnusualOptionActivityEtfs';
 import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex';
 import { searchUnusualOptionsActivity } from '../utils/searchUnusualOptionsActivity';
 import { getUtcNow } from '../utils/getUtcNow';
+import { fireAndForget } from '../utils/fireAndForget';
 import moment from 'moment';
 import _ from 'lodash';
 import { Role } from '../types/Role';
@@ -86,7 +87,7 @@ function handleCsvUpload(
 
 export const refreshMaterializedViews = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  refreshMaterializedView();
+  fireAndForget(refreshMaterializedView(), 'refresh materialized views');
   res.json();
 });
 
@@ -94,9 +95,10 @@ export const flushCache = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const key = 'operation.status.flush_cache';
   await redisCache.set(key, 'in-progress');
-  redisCache.flush().finally(() => {
-    redisCache.del(key);
-  });
+  fireAndForget(
+    redisCache.flush().finally(() => redisCache.del(key)),
+    'flush cache'
+  );
   res.json();
 });
 

@@ -6,10 +6,18 @@ import { StockAdvancedStatsInfo, syncManyStockAdcancedStat } from '../src/servic
 import moment from 'moment';
 import _ from 'lodash';
 import { getAdvancedStat, isUSMarkertOpenNow } from '../src/services/alphaVantageService';
+import { mapWithRateLimit } from '../src/utils/mapWithRateLimit';
+
+// Same API key as feed-eps, which already runs at this budget.
+const MAX_CALL_TIMES_PER_MINUTE = 300;
+// Enough in flight to keep hitting the budget when a call is slow, but the
+// budget above is what actually caps the request rate.
+const CONCURRENCY = 10;
 
 async function syncForSymbols(symbols: string[]) {
   const advancedStatsInfo: StockAdvancedStatsInfo[] = [];
-  for (const symbol of symbols) {
+
+  await mapWithRateLimit(symbols, { maxPerMinute: MAX_CALL_TIMES_PER_MINUTE, concurrency: CONCURRENCY }, async symbol => {
     try {
       const value = await getAdvancedStat(symbol);
 
@@ -24,9 +32,11 @@ async function syncForSymbols(symbols: string[]) {
     } catch (e) {
       console.error(`Failed to fetch advanced stat info for ${symbol}`, errorToJson(e));
     }
-  }
+  });
 
-  await syncManyStockAdcancedStat(advancedStatsInfo);
+  if (advancedStatsInfo.length) {
+    await syncManyStockAdcancedStat(advancedStatsInfo);
+  }
 }
 
 const JOB_NAME = 'daily-advancedStat';

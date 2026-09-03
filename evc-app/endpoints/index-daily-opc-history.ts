@@ -4,7 +4,7 @@ import _ from 'lodash';
 import moment = require('moment');
 import { randomNumber } from './randomNumber';
 import { OptionPutCallHistory } from '../src/entity/OptionPutCallHistory';
-import { grabOptionPutCallHistory } from '../src/services/barchartService';
+import { closeBarchartSession, grabOptionPutCallHistory } from '../src/services/barchartService';
 import { sleep } from '../src/utils/sleep';
 import { OptionPutCallAllDefInformation } from '../src/entity/views/OptionPutCallAllDefInformation';
 import errorToJson from 'error-to-json';
@@ -82,4 +82,5 @@ start(JOB_NAME, async () => {
     }
   }
 
+  await closeBarchartSession();
 }, { daemon: false });

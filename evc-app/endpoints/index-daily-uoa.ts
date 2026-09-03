@@ -3,7 +3,7 @@ import { UnusualOptionActivityStock } from './../src/entity/UnusualOptionActivit
 import { getManager } from 'typeorm';
 import { start } from './jobStarter';
 import _ from 'lodash';
-import { grabAllUnusualOptionActivity } from '../src/services/barchartService';
+import { closeBarchartSession, grabAllUnusualOptionActivity } from '../src/services/barchartService';
 import { UnusualOptionActivityEtfs } from '../src/entity/UnusualOptionActivityEtfs';
 import moment = require('moment');
 
@@ -98,4 +98,6 @@ start(JOB_NAME, async () => {
     const rawData = await grabAllUnusualOptionActivity(type);
     await upsertDatabase(table, rawData);
   }
+
+  await closeBarchartSession();
 }, { daemon: false });

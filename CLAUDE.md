@@ -79,7 +79,12 @@ In production each job is an ECS scheduled task driven by a CloudWatch Events ru
 
 Data sources: AlphaVantage (EPS, earnings calendar), Barchart scraping, Stripe/PayPal for payments. IEX Cloud integration is dead code (the SSE price daemon early-returns).
 
-`src/services/barchartService.ts` scrapes Barchart with plain axios: it first pokes a public page to harvest `laravel_token`/`XSRF-TOKEN` cookies (`getBarChartGuestAccess`), then calls the `core-api` proxies with those. Barchart sits behind AWS WAF Bot Control, which answers unsolved clients with an empty `202` + `x-amzn-waf-action: challenge` and no `Set-Cookie` — so this bootstrap is the fragile part of both `daily-opc-history` and `daily-uoa`. Puppeteer is *not* used for scraping; it only renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`), which is why the Docker image installs google-chrome-stable.
+`src/services/barchartService.ts` (used by `daily-opc-history` and `daily-uoa`) reaches Barchart's `core-api` proxies **through headless Chrome, not an HTTP client**. Barchart sits behind AWS WAF Bot Control, which answers any plain client — regardless of headers — with an empty `202` + `x-amzn-waf-action: challenge` and no `Set-Cookie`; the old `laravel_token`/`XSRF-TOKEN` cookie bootstrap died with it (Aug 2026). Chrome solves the challenge on page load, so the module keeps **one** Puppeteer page alive per process (`getBarchartSession`) and runs each API call as an in-page `fetch`. Two constraints when touching this file:
+
+- Don't open a session per symbol — the previous code re-poked the landing page once per symbol (~7.8k times a run), which is the pattern bot mitigation looks for.
+- Don't use `async`/`await` inside `page.evaluate()`. With `target: es6`, tsc downlevels it into an `__awaiter` helper that doesn't exist in the page, and the call fails at runtime with `__awaiter is not defined`. Use promise chaining.
+
+Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). Both call sites launch with `--no-sandbox --disable-setuid-sandbox` and rely on the browser bundled with the `puppeteer` package. Set `PUPPETEER_EXECUTABLE_PATH` to your own Chrome if the bundled one won't launch locally (it crashes on Apple Silicon).
 
 ## Frontend architecture (`evc-web`)
 

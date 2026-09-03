@@ -81,6 +81,11 @@ ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
+# pnpm 10 does not run dependency lifecycle scripts by default, so puppeteer never downloads
+# its bundled Chrome (`Could not find Chrome ... /root/.cache/puppeteer`). Point it at the
+# google-chrome-stable installed above instead of paying for a second browser in the image.
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 ENV REACT_APP_EVC_API_ENDPOINT=/api/v1
 ENV REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID=305430338996-fmmjqqkon9hvngpctccis9t1biqtqile.apps.googleusercontent.com
 ENV REACT_APP_EVC_PAYPAL_CLIENT_ID=AQ7I1Qy9ngFsqIHt1rQAziFADJiE9441IEmXFiqEM5kWNWM_SqKKtfClcViWRDcs3rQ2OW_T4q8JE53s

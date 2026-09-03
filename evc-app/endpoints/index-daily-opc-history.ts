@@ -58,7 +58,7 @@ start(JOB_NAME, async () => {
 
     if (limit > 0) {
       console.log(`[${counter}/${optionPutCallDef.length}]`.bgBlue.white, `Grabing ${logLabel} option history from Barchart (${limit} days) ...`);
-      const sleepTime = randomNumber(1000, 5000);
+      const sleepTime = randomNumber(1000, 3000);
       console.log(`Sleeping for ${sleepTime} ms...`);
       await sleep(sleepTime);
 

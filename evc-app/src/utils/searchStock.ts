@@ -28,13 +28,16 @@ export async function searchStockForGuest(queryInfo: StockSearchParams) {
 
   const query = getManager()
     .createQueryBuilder()
-    .from(StockLatestPaidInformation, 's');
+    .from(StockLatestPaidInformation, 's')
+    .where('symbol IN (:...symbols)', { symbols: demoSymbols });
 
-  const count = await query.getCount();
+  // Count off a clone: the builder mutates in place, so counting the shared
+  // instance would pick up the paging applied below.
+  const count = await query.clone().getCount();
+
   const result = await query
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
-    .where('symbol IN (:...symbols)', { symbols: demoSymbols })
     .select([
       's.symbol as symbol',
       's.company as company',

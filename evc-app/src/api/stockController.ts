@@ -222,7 +222,19 @@ const initilizedNewStockData = async (symbol) => {
   await refreshMaterializedView();
 };
 
-async function createAndInitializeStocks(stocks: Stock[]) {
+async function createAndInitializeStocks(symbols: string[]) {
+  const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
+  const tags = stockTag ? [stockTag] : [];
+
+  const stocks: Stock[] = [];
+  for (const symbol of symbols) {
+    const stock = new Stock();
+    stock.symbol = symbol;
+    stock.company = await getCompanyName(symbol);
+    stock.tags = tags;
+    stocks.push(stock);
+  }
+
   await getManager()
     .createQueryBuilder()
     .insert()
@@ -231,7 +243,7 @@ async function createAndInitializeStocks(stocks: Stock[]) {
     .orIgnore()
     .execute();
 
-  await syncDetailsForNewSymbols(stocks.map(s => s.symbol));
+  await syncDetailsForNewSymbols(symbols);
 }
 
 async function syncDetailsForNewSymbols(symbols: string[]) {
@@ -271,23 +283,11 @@ async function initlizeStocksAndGetSymbolCompanyMap(symbols: string[]): Promise<
 
   const newSymbols = _.difference(symbols, existingSymbols);
   if (newSymbols.length) {
-    const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
-    const tags = stockTag ? [stockTag] : [];
-
-    const newStocks = [];
-    for (const symbol of newSymbols) {
-      const companyName = await getCompanyName(symbol);
-
-      const stock = new Stock();
-      stock.symbol = symbol;
-      stock.company = companyName;
-      stock.tags = tags;
-      newStocks.push(stock);
-
-      symbolCompanyMap.set(symbol, companyName);
-    }
-
-    fireAndForget(createAndInitializeStocks(newStocks), 'create and initialize new stocks');
+    // Resolving a company name costs one AlphaVantage call per symbol, and the
+    // rate-limit backoff in requestAlphaVantageApi can stall each one for over
+    // a minute. Keep that off the request path: the names are persisted for the
+    // next call, and until then the client falls back to rendering the ticker.
+    fireAndForget(createAndInitializeStocks(newSymbols), 'create and initialize new stocks');
   }
 
   return symbolCompanyMap;

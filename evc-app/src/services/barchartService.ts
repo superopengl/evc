@@ -1,6 +1,7 @@
 import 'colors';
 import moment from 'moment';
 import * as puppeteer from 'puppeteer';
+import { sleep } from '../utils/sleep';
 
 /**
  * Barchart sits behind AWS WAF Bot Control. A plain HTTP client (axios, curl, ...) gets an
@@ -13,6 +14,10 @@ import * as puppeteer from 'puppeteer';
  */
 const BARCHART_ORIGIN = 'https://www.barchart.com';
 const BARCHART_LANDING_URL = `${BARCHART_ORIGIN}/options/unusual-activity/stocks`;
+// Somewhere to sit once the challenge is solved. Any same-origin document works for the
+// fetches, and the landing page keeps ~250 ad/tracker requests running in the background,
+// which is what wedges the renderer on a 0.5 vCPU task.
+const BARCHART_PARK_URL = `${BARCHART_ORIGIN}/robots.txt`;
 // Chrome's own headless UA gets challenged outright; a stock desktop UA passes.
 const BARCHART_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36';
 
@@ -22,6 +27,7 @@ let sessionPromise: Promise<{ browser: puppeteer.Browser; page: puppeteer.Page }
 // stalled request costs seconds, not the full protocolTimeout.
 const FETCH_TIMEOUT_MS = 45 * 1000;
 const FETCH_ATTEMPTS = 3;
+const BROWSER_CLOSE_TIMEOUT_MS = 10 * 1000;
 
 async function createBarchartSession() {
   const browser = await puppeteer.launch({
@@ -39,9 +45,10 @@ async function createBarchartSession() {
     await page.goto(BARCHART_LANDING_URL, { waitUntil: 'domcontentloaded', timeout: 90 * 1000 });
     // The WAF challenge runs in the background and drops aws-waf-token once it passes.
     await page.waitForFunction(() => document.cookie.includes('aws-waf-token'), { polling: 500, timeout: 60 * 1000 });
-    // Passing the challenge reloads the page. Re-navigate now that the token exists, so the
-    // fetches below run against a settled context instead of one about to be torn down.
-    await page.goto(BARCHART_LANDING_URL, { waitUntil: 'domcontentloaded', timeout: 90 * 1000 });
+    // Passing the challenge reloads the page, so navigate away now that the token exists: it
+    // settles the execution context and drops the ad/tracker load the landing page carries.
+    // Do not block those resources during the goto above - the challenge needs them to pass.
+    await page.goto(BARCHART_PARK_URL, { waitUntil: 'domcontentloaded', timeout: 90 * 1000 });
     console.debug('barchart session ready'.bgMagenta.white);
 
     return { browser, page };
@@ -74,7 +81,15 @@ export async function closeBarchartSession() {
   }
   try {
     const { browser } = await pending;
-    await browser.close();
+    const proc = browser.process();
+    // A wedged browser never answers Browser.close. Waiting on it would leave the old Chrome
+    // alive while we start a replacement, and two Chromes on a 0.5 vCPU task starve each
+    // other badly enough that even the new browser's CDP handshake times out.
+    await Promise.race([browser.close().catch(() => { }), sleep(BROWSER_CLOSE_TIMEOUT_MS)]);
+    if (proc && proc.exitCode === null && !proc.killed) {
+      console.debug('barchart browser did not exit, killing'.bgMagenta.white);
+      proc.kill('SIGKILL');
+    }
   } catch {
     // Nothing useful to do if the browser is already gone.
   }

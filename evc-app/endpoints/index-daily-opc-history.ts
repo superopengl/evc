@@ -27,16 +27,26 @@ function convertToOptionPutCallEntity(data, symbol): OptionPutCallHistory {
   return entity;
 }
 
-async function getDataLimit(symbol) {
-  const result = await getRepository(OptionPutCallHistory)
+const DEFAULT_DATA_LIMIT = 90;
+
+/**
+ * Days of history missing per symbol, for every symbol at once.
+ *
+ * Asking per symbol meant one round trip for each of the ~5.6k definitions.
+ * Symbols with no history are absent from the map and fall back to
+ * DEFAULT_DATA_LIMIT, which is what the per-symbol query returned for them.
+ */
+async function getDataLimitBySymbol(): Promise<Map<string, any>> {
+  const rows = await getRepository(OptionPutCallHistory)
     .createQueryBuilder()
-    .where(`symbol = '${symbol}'`)
     .select([
+      'symbol',
       'EXTRACT(DAY FROM NOW() - MAX("date")) AS value'
     ])
+    .groupBy('symbol')
     .execute();
 
-  return result?.[0]?.value ?? 90;
+  return new Map(rows.map(r => [r.symbol, r.value]));
 }
 
 start(JOB_NAME, async () => {
@@ -49,11 +59,13 @@ start(JOB_NAME, async () => {
     .select(['symbol', '"apiSymbol"', 'type'])
     .execute();
 
+  const dataLimitBySymbol = await getDataLimitBySymbol();
+
   for (const entity of optionPutCallDef) {
     counter++;
 
     const { symbol, apiSymbol, type } = entity;
-    const limit = await getDataLimit(symbol);
+    const limit = dataLimitBySymbol.get(symbol) ?? DEFAULT_DATA_LIMIT;
     const logLabel = `${entity.symbol}${type ? ' of ' + type : ''}`;
 
     if (limit > 0) {

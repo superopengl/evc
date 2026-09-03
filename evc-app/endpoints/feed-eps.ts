@@ -15,18 +15,20 @@ import { v4 as uuidv4 } from 'uuid';
 const JOB_NAME = 'feed-eps';
 
 const MAX_CALL_TIMES_PER_MINUTE = 300; // 300 calls/min
+// Renewed on every symbol, but the work after the symbol loop runs without a
+// heartbeat, so the window has to cover that tail too.
+const JOB_LOCK_TTL_SECONDS = 60 * 60 * 2;
+
 const eventId = uuidv4();
 
 
 start(JOB_NAME, async () => {
   const JOB_IN_PROGRESS = `JOBKEY_${JOB_NAME}`;
-  const running = await redisCache.get(JOB_IN_PROGRESS);
-  if (running) {
+  const acquired = await redisCache.acquireLock(JOB_IN_PROGRESS, JOB_LOCK_TTL_SECONDS);
+  if (!acquired) {
     console.log('Other process is still running, skip this run');
     return;
   }
-  // await redisCache.setex(JOB_IN_PROGRESS, 60 * 60 * 2, true); // Lock for 120 minutes
-  await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
 
   try {
     const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
@@ -44,7 +46,7 @@ start(JOB_NAME, async () => {
     let count = 0;
     const failed = [];
     for await (const symbol of symbols) {
-      await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
+      await redisCache.renewLock(JOB_IN_PROGRESS, JOB_LOCK_TTL_SECONDS);
 
       try {
         const startTime = moment();

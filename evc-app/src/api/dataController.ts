@@ -22,6 +22,11 @@ import { OptionPutCallHistoryInformation } from '../entity/views/OptionPutCallHi
 import { OptionPutCallStockOrdinal } from '../entity/OptionPutCallStockOrdinal';
 import { DataLog } from '../entity/DataLog';
 
+// These keys only drive the admin progress indicator. They are deleted in a
+// finally block, but expire on their own so a killed process cannot leave the
+// UI showing an operation as permanently in progress.
+const OPERATION_STATUS_TTL_SECONDS = 60 * 60;
+
 const convertHeaderToPropName = header => {
   return header.split(' ')
     .map(x => x.replace(/[\/ ]/g, ''))
@@ -67,7 +72,7 @@ function handleCsvUpload(
 
     const key = `operation.status.${operation}`;
     try {
-      await redisCache.set(key, 'in-progress');
+      await redisCache.setex(key, 'in-progress', OPERATION_STATUS_TTL_SECONDS);
       const rows = parse(data, {
         columns: headers => headers.map(convertHeaderToPropName),
         skip_empty_lines: true
@@ -94,7 +99,7 @@ export const refreshMaterializedViews = handlerWrapper(async (req, res) => {
 export const flushCache = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const key = 'operation.status.flush_cache';
-  await redisCache.set(key, 'in-progress');
+  await redisCache.setex(key, 'in-progress', OPERATION_STATUS_TTL_SECONDS);
   fireAndForget(
     redisCache.flush().finally(() => redisCache.del(key)),
     'flush cache'

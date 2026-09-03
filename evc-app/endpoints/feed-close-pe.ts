@@ -18,6 +18,10 @@ import { redisCache } from '../src/services/redisCache';
 import { v4 as uuidv4 } from 'uuid';
 
 const JOB_NAME = 'feed-historical-close';
+
+// Renewed on every symbol, but the work after the symbol loop runs without a
+// heartbeat, so the window has to cover that tail too.
+const JOB_LOCK_TTL_SECONDS = 60 * 60 * 2;
 const MAX_CALL_TIMES_PER_MINUTE = 50;
 const eventId = uuidv4();
 
@@ -108,12 +112,11 @@ start(JOB_NAME, async () => {
   // }
 
   const JOB_IN_PROGRESS = `JOBKEY_${JOB_NAME}`;
-  const running = await redisCache.get(JOB_IN_PROGRESS);
-  if (running) {
+  const acquired = await redisCache.acquireLock(JOB_IN_PROGRESS, JOB_LOCK_TTL_SECONDS);
+  if (!acquired) {
     console.log('Other process is still running, skip this run');
     return;
   }
-  await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
 
   try {
     const sleepTime = 60 * 1000 / MAX_CALL_TIMES_PER_MINUTE;
@@ -134,7 +137,7 @@ start(JOB_NAME, async () => {
     let count = 0;
     const failed = [];
     for await (const symbol of symbols) {
-      await redisCache.set(JOB_IN_PROGRESS, new Date().toUTCString());
+      await redisCache.renewLock(JOB_IN_PROGRESS, JOB_LOCK_TTL_SECONDS);
       try {
         await syncStockHistoricalClose(symbol, 10);
         console.log(JOB_NAME, symbol, `${++count}/${symbols.length} done`);

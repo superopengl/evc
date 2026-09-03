@@ -11,6 +11,10 @@ import { StockComputedPe365 } from './entity/views/StockComputedPe365';
 
 const REFRESHING_MV_CACHE_KEY = 'operation.status.refresh-mv';
 
+// Renewed before each view, so this only has to outlive the slowest single
+// REFRESH MATERIALIZED VIEW rather than the whole chain.
+const REFRESHING_MV_LOCK_TTL_SECONDS = 60 * 60;
+
 const MV_REFRESH_ORDER = [
   StockHistoricalTtmEps,
   StockDailyPe,
@@ -22,14 +26,12 @@ const MV_REFRESH_ORDER = [
 ];
 
 export async function refreshMaterializedView(mviewEnitity?: any) {
-  const refreshing = await redisCache.get(REFRESHING_MV_CACHE_KEY);
-  if (refreshing) {
+  const acquired = await redisCache.acquireLock(REFRESHING_MV_CACHE_KEY, REFRESHING_MV_LOCK_TTL_SECONDS);
+  if (!acquired) {
     console.log('Other process is refreshing materialized view, skip this request');
     return;
   }
   try {
-    await redisCache.set(REFRESHING_MV_CACHE_KEY, new Date().toUTCString());
-
     const matviews = await getManager().query(`
 select schemaname as schema, matviewname as "tableName"
 from pg_catalog.pg_matviews 
@@ -47,7 +49,7 @@ where schemaname = 'evc'
     console.log('Start refreshing mv');
     await getManager().transaction(async (m) => {
       for (const item of sortedMviews) {
-        await redisCache.set(REFRESHING_MV_CACHE_KEY, new Date().toUTCString());
+        await redisCache.renewLock(REFRESHING_MV_CACHE_KEY, REFRESHING_MV_LOCK_TTL_SECONDS);
         const { schema, tableName } = item;
 
         console.log(`Start refreshing ${tableName}`);

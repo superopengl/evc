@@ -18,10 +18,18 @@ const BARCHART_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) App
 
 let sessionPromise: Promise<{ browser: puppeteer.Browser; page: puppeteer.Page }> | null = null;
 
+// Barchart sometimes accepts a request and never answers it. Bound the fetch ourselves so a
+// stalled request costs seconds, not the full protocolTimeout.
+const FETCH_TIMEOUT_MS = 45 * 1000;
+const FETCH_ATTEMPTS = 3;
+
 async function createBarchartSession() {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-    headless: 'new'
+    headless: 'new',
+    // Must stay above FETCH_TIMEOUT_MS, otherwise puppeteer kills the call first and we lose
+    // the page instead of just failing the one request.
+    protocolTimeout: FETCH_TIMEOUT_MS + 60 * 1000
   });
   try {
     const page = await browser.newPage();
@@ -75,37 +83,56 @@ export async function closeBarchartSession() {
 // No async/await inside evaluate(): tsc (target es6) would downlevel it into an `__awaiter`
 // helper that does not exist in the page, and the call fails with `__awaiter is not defined`.
 function fetchJsonInPage(page: puppeteer.Page, url: string, params: Record<string, any>) {
-  return page.evaluate((u, p) => {
+  return page.evaluate((u, p, timeoutMs) => {
     const qs = new URLSearchParams(p as Record<string, string>).toString();
     return fetch(`${u}?${qs}`, {
       credentials: 'include',
-      headers: { accept: 'application/json' }
-    }).then(resp => resp.text().then(text => ({ status: resp.status, body: text })));
-  }, url, params);
+      headers: { accept: 'application/json' },
+      // Without this a request Barchart never answers hangs until puppeteer's protocolTimeout,
+      // which costs minutes per symbol and takes the whole page down with it.
+      signal: AbortSignal.timeout(timeoutMs)
+    }).then(
+      resp => resp.text().then(text => ({ status: resp.status, body: text })),
+      // Report the failure instead of rejecting: a rejected evaluate is indistinguishable from
+      // a dead execution context, and only the latter is worth rebuilding the browser for.
+      err => ({ status: 0, body: `fetch failed: ${err && err.message ? err.message : err}` })
+    );
+  }, url, params, FETCH_TIMEOUT_MS);
 }
 
 async function barchartApiGet(path: string, params: Record<string, any>) {
   const url = `${BARCHART_ORIGIN}${path}`;
+  let lastError: Error;
 
-  let result;
-  try {
-    result = await fetchJsonInPage((await getBarchartSession()).page, url, params);
-  } catch (e) {
-    // Barchart occasionally navigates the page under us (ad frames, challenge re-checks),
-    // which tears down the execution context. Rebuild the session once and retry.
-    console.debug('barchart session lost, reopening'.bgMagenta.white, e.message);
-    await closeBarchartSession();
-    result = await fetchJsonInPage((await getBarchartSession()).page, url, params);
-  }
-  const { status, body } = result;
+  for (let attempt = 1; attempt <= FETCH_ATTEMPTS; attempt++) {
+    let status;
+    let body;
+    try {
+      ({ status, body } = await fetchJsonInPage((await getBarchartSession()).page, url, params));
+    } catch (e) {
+      // Barchart occasionally navigates the page under us (ad frames, challenge re-checks),
+      // which tears down the execution context. Only this warrants a new browser.
+      console.debug('barchart session lost, reopening'.bgMagenta.white, e.message);
+      await closeBarchartSession();
+      lastError = e;
+      continue;
+    }
 
-  if (!/^2/.test(`${status}`)) {
+    if (/^2/.test(`${status}`)) {
+      return JSON.parse(body);
+    }
+
+    // 0   Timed out or network error, worth another go on the same session.
     // 429 Too Many Requests
-    // 403 Session no longer accepted by the core-api
-    throw new Error(`Failed response from BarChart (${status}: ${(body || '').slice(0, 200)})`);
+    // 403 Session no longer accepted by the core-api - the session needs replacing.
+    lastError = new Error(`Failed response from BarChart (${status}: ${(body || '').slice(0, 200)})`);
+    console.debug(`barchart attempt ${attempt}/${FETCH_ATTEMPTS} failed`.bgMagenta.white, lastError.message);
+    if (status === 403) {
+      await closeBarchartSession();
+    }
   }
 
-  return JSON.parse(body);
+  throw lastError;
 }
 
 async function grabOptionHistory(symbol, limit) {

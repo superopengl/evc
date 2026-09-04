@@ -1,5 +1,6 @@
 
-import { getManager, EntityManager, In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
+import { getManager } from '../dataSource';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';

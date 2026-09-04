@@ -1,11 +1,11 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { Stock } from '../Stock';
 import { StockResistance } from '../StockResistance';
 import { StockDailyClose } from '../StockDailyClose';
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(StockResistance, 'sr')
   .innerJoin(Stock, 's', 'sr.symbol = s.symbol')
   .innerJoin(q => q

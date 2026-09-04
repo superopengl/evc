@@ -1,4 +1,5 @@
-import { getRepository, In } from 'typeorm';
+import { In } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -25,9 +26,7 @@ async function getUserSubscriptionHistory(userId) {
     order: {
       start: 'ASC',
     },
-    relations: [
-      'payments'
-    ]
+    relations: { payments: true }
   });
 
   return list;
@@ -83,7 +82,7 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { user } = req as any;
 
-  const receipt = await getRepository(ReceiptInformation).findOne({
+  const receipt = await getRepository(ReceiptInformation).findOneBy({
     paymentId: id,
     userId: user.id,
   });
@@ -153,9 +152,9 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
   const userId = user.id;
 
   const payment = await getRepository(Payment).findOne({
-    id: paymentId,
-    userId,
-  }, { relations: ['subscription'] });
+    where: { id: paymentId, userId },
+    relations: { subscription: true },
+  });
 
   assert(payment, 404);
   const { method } = payment;
@@ -193,9 +192,9 @@ export const confirmSubscriptionAlipayPayment = handlerWrapper(async (req, res) 
   const userId = user.id;
 
   const payment = await getRepository(Payment).findOne({
-    id: paymentId,
-    userId,
-  }, { relations: ['subscription'] });
+    where: { id: paymentId, userId },
+    relations: { subscription: true },
+  });
 
   assert(payment, 404);
   assert(payment.method === PaymentMethod.AliPay, 400, 'Not an Alipay payment');

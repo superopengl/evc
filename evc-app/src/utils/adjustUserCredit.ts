@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { v4 as uuidv4 } from 'uuid';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 

@@ -1,5 +1,6 @@
 import { SubscriptionStatus } from './../types/SubscriptionStatus';
-import { getManager, IsNull } from 'typeorm';
+import { IsNull } from 'typeorm';
+import { getManager } from '../dataSource';
 import { Subscription } from '../entity/Subscription';
 import { User } from '../entity/User';
 import { Role } from '../types/Role';
@@ -16,7 +17,7 @@ export async function terminateSubscriptionForUser(userId: string) {
   let target: UserAliveSubscriptionSummary;
   await getManager().transaction(async m => {
 
-    target = await m.findOne(UserAliveSubscriptionSummary, { userId });
+    target = await m.findOneBy(UserAliveSubscriptionSummary, { userId });
     if (target) {
       await m.update(Subscription,
         {

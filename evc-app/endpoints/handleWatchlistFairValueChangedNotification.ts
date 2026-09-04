@@ -1,4 +1,4 @@
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager } from '../src/dataSource';
 import { FairValuePreviousSnapshot } from '../src/entity/FairValuePreviousSnapshot';
 import { FairValueLatestSnapshot } from '../src/entity/views/FairValueLatestSnapshot';
 import { FairValueWatchlistEmailTask } from '../src/entity/views/FairValueWatchlistEmailTask';

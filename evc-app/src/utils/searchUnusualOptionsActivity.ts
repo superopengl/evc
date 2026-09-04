@@ -1,9 +1,9 @@
-
+import { getManager, getRepository } from '../dataSource';
 import { UnusualOptionActivityEtfs } from '../entity/UnusualOptionActivityEtfs';
 import { UnusualOptionActivityStock } from '../entity/UnusualOptionActivityStock';
 import { UnusualOptionActivityIndex } from '../entity/UnusualOptionActivityIndex';
 import { assert } from './assert';
-import { getManager, getRepository } from 'typeorm';
+
 import moment from 'moment';
 
 export type UnusualOptionsActivitySearchParams = {

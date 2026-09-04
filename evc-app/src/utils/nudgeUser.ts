@@ -1,4 +1,4 @@
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager } from '../dataSource';
 import _ from 'lodash';
 import { User } from '../entity/User';
 import moment from 'moment';

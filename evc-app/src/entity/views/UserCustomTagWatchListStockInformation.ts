@@ -1,11 +1,11 @@
-import { ViewEntity, Connection } from 'typeorm';
+import { ViewEntity, DataSource } from 'typeorm';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
 import { StockWatchList } from '../StockWatchList';
 import { StockUserCustomTag } from '../StockUserCustomTag';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(StockWatchList, 's')
   .innerJoin(User, 'u', 'u.id = s."userId"')
   .innerJoin(UserProfile, 'f', 'u."profileId" = f.id')

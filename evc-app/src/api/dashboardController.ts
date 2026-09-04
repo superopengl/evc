@@ -1,4 +1,4 @@
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository } from '../dataSource';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from '../utils/assertRole';
 import { StockPlea } from '../entity/StockPlea';

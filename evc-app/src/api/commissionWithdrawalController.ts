@@ -1,5 +1,5 @@
+import { getRepository, getManager } from '../dataSource';
 
-import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
@@ -126,7 +126,7 @@ export const getCommissionWithdrawal = handlerWrapper(async (req, res) => {
   const { id } = req.params;
 
   const query = ['admin', 'agent'].includes(role) ? { id } : { id, userId };
-  const entity = await getRepository(CommissionWithdrawal).findOne(query);
+  const entity = await getRepository(CommissionWithdrawal).findOneBy(query);
   assert(entity, 404);
 
   res.json(entity);
@@ -170,7 +170,7 @@ export const changeCommissionWithdrawalStatus = handlerWrapper(async (req, res) 
   const { id } = req.params;
   const { status, comment } = req.body;
 
-  const withdrawal = await getRepository(CommissionWithdrawal).findOne(id);
+  const withdrawal = await getRepository(CommissionWithdrawal).findOneBy({ id });
   assert(withdrawal, 404);
 
   switch (withdrawal.status) {

@@ -1,5 +1,6 @@
+import { getManager, getRepository } from '../dataSource';
 import { StockLastPrice } from './../entity/StockLastPrice';
-import { getManager, getRepository } from 'typeorm';
+
 import { StockDailyClose } from '../entity/StockDailyClose';
 import { getHistoricalClose } from './alphaVantageService';
 import { syncStockLastPrice } from '../utils/syncStockLastPrice';

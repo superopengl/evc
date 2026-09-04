@@ -1,5 +1,6 @@
 
-import { getRepository, Not, getManager, In } from 'typeorm';
+import { Not, In } from 'typeorm';
+import { getRepository, getManager } from '../dataSource';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
@@ -20,7 +21,7 @@ import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
 import { GuestUserStats } from '../entity/GuestUserStats';
 import { Role } from '../types/Role';
-import { getTableName } from '../utils/getTableName';
+import { getTableName, getQualifiedTableName } from '../utils/getTableName';
 import { v4 as uuidv4, validate as validateUuid } from 'uuid';
 
 export const changePassword = handlerWrapper(async (req, res) => {
@@ -30,7 +31,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
 
   const repo = getRepository(User);
   const { user: { id } } = req as any;
-  const user = await repo.findOne(id);
+  const user = await repo.findOneBy({ id });
   assert(password && newPassword && user.secret === computeUserSecret(password, user.salt), 400, 'Invalid password');
 
   const newSalt = uuidv4();
@@ -51,7 +52,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   }
   const { email } = req.body;
   const repo = getRepository(User);
-  const user = await repo.findOne(id, { relations: ['profile'] });
+  const user = await repo.findOne({ where: { id }, relations: { profile: true } });
   assert(user, 404);
 
   Object.assign(user.profile, req.body);
@@ -134,7 +135,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
       id,
       emailHash: Not(BUILTIN_ADMIN_EMIAL_HASH)
     },
-    relations: ['profile']
+    relations: { profile: true }
   });
 
   if (user) {
@@ -164,7 +165,7 @@ export const setUserTags = handlerWrapper(async (req, res) => {
 
   const { tags } = req.body;
   const repo = getRepository(User);
-  const user = await repo.findOne(id);
+  const user = await repo.findOneBy({ id });
   if (tags?.length) {
     user.tags = await getRepository(UserTag).find({
       where: {
@@ -289,15 +290,14 @@ export const getUserGuestSignUpChart = handlerWrapper(async (req, res) => {
 export const guestUserPing = handlerWrapper((req, res) => {
   const { deviceId } = req.body;
   if (validateUuid(deviceId)) {
+    // Raw SQL because orUpdate() cannot express `count + 1`. lastNudgedAt is set explicitly
+    // on insert too, matching what the @UpdateDateColumn did through the query builder.
+    const guestStatsTable = getQualifiedTableName(GuestUserStats);
     getManager()
-      .createQueryBuilder()
-      .insert()
-      .into(GuestUserStats)
-      .values({
-        deviceId
-      })
-      .onConflict(`("deviceId") DO UPDATE SET count = ${getTableName(GuestUserStats)}.count + 1, "lastNudgedAt" = NOW()`)
-      .execute()
+      .query(
+        `INSERT INTO ${guestStatsTable} AS t ("deviceId", "lastNudgedAt") VALUES ($1, NOW())
+         ON CONFLICT ("deviceId") DO UPDATE SET "count" = t."count" + 1, "lastNudgedAt" = NOW()`,
+        [deviceId])
       .catch(() => {});
   }
 

@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository } from '../src/dataSource';
 import { enqueueEmail } from '../src/services/emailService';
 import { EmailTemplateType } from '../src/types/EmailTemplateType';
 import { InsiderTransactionWatchlistEmailTask } from '../src/entity/views/InsiderTransactionWatchlistEmailTask';

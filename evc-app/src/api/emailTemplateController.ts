@@ -1,5 +1,5 @@
+import { getManager, getRepository } from '../dataSource';
 
-import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -38,7 +38,7 @@ export const saveEmailTemplate = handlerWrapper(async (req, res) => {
     .insert()
     .into(EmailTemplate)
     .values(entity)
-    .onConflict('(key, locale) DO UPDATE SET subject = excluded.subject, body = excluded.body')
+    .orUpdate(['subject', 'body'], ['key', 'locale'])
     .execute();
 
   res.json();

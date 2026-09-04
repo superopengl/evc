@@ -1,8 +1,10 @@
-import { getManager, getRepository, In, MoreThanOrEqual } from 'typeorm';
+import { In, MoreThanOrEqual } from 'typeorm';
+import { getManager, getRepository } from '../dataSource';
 import { Stock } from '../entity/Stock';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
+import { getQualifiedTableName } from '../utils/getTableName';
 import { StockHotSearch } from '../entity/StockHotSearch';
 import { StockWatchList } from '../entity/StockWatchList';
 import { StockTag } from '../entity/StockTag';
@@ -43,13 +45,15 @@ const redisPricePublisher = new RedisRealtimePricePubService();
 export const incrementStock = handlerWrapper((req, res) => {
   const symbol = req.params.symbol.toUpperCase();
 
+  // TypeORM 1.x dropped onConflict(), and orUpdate() can only overwrite from EXCLUDED, so
+  // this atomic increment is raw SQL. `AS t` aliases the target: Postgres does not accept a
+  // schema-qualified name on the left of ON CONFLICT ... DO UPDATE SET.
+  const hotSearchTable = getQualifiedTableName(StockHotSearch);
   getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockHotSearch)
-    .values({ symbol, count: 1 })
-    .onConflict('(symbol) DO UPDATE SET count = stock_hot_search.count + 1')
-    .execute()
+    .query(
+      `INSERT INTO ${hotSearchTable} AS t ("symbol", "count") VALUES ($1, 1)
+       ON CONFLICT ("symbol") DO UPDATE SET "count" = t."count" + 1`,
+      [symbol])
     .catch(() => { });
 
   res.json();
@@ -59,7 +63,7 @@ export const getStockDataInfo = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const symbol = req.params.symbol.toUpperCase();
 
-  const result = await getRepository(StockDataInformation).findOne(symbol);
+  const result = await getRepository(StockDataInformation).findOneBy({ symbol });
 
   res.json(result);
 });
@@ -71,7 +75,7 @@ export const getStockNextReportDate = handlerWrapper(async (req, res) => {
   const entity = await getRepository(StockEarningsCalendar).findOne({
     where: {
       symbol,
-      reportDate: MoreThanOrEqual(moment().startOf('day').toDate())
+      reportDate: MoreThanOrEqual(moment().startOf('day').format('YYYY-MM-DD'))
     },
     order: {
       reportDate: 'ASC'
@@ -94,7 +98,7 @@ export const getStock = handlerWrapper(async (req, res) => {
   switch (role) {
     case Role.Admin:
     case Role.Agent: {
-      stock = await getRepository(StockLatestPaidInformation).findOne({ symbol });
+      stock = await getRepository(StockLatestPaidInformation).findOneBy({ symbol });
       break;
     }
     case Role.Member: {
@@ -129,7 +133,7 @@ export const getStock = handlerWrapper(async (req, res) => {
     }
     case Role.Guest: {
     // Guest user, who has no req.user
-      stock = await getRepository(StockLatestFreeInformation).findOne({ symbol });
+      stock = await getRepository(StockLatestFreeInformation).findOneBy({ symbol });
       break;
     }
     default:
@@ -144,7 +148,7 @@ export const getStock = handlerWrapper(async (req, res) => {
 export const getStockForGuest = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
 
-  const stock = await getRepository(StockLatestFreeInformation).findOne({ symbol });
+  const stock = await getRepository(StockLatestFreeInformation).findOneBy({ symbol });
 
   assert(stock, 404);
 
@@ -157,7 +161,7 @@ export const existsStock = handlerWrapper(async (req, res) => {
   const { user } = req as any;
   const symbol = req.params.symbol.toUpperCase();
 
-  const result = await getRepository(Stock).findOne(symbol);
+  const result = await getRepository(Stock).findOneBy({ symbol });
   const exists = !!result;
 
   res.json(exists);
@@ -165,7 +169,7 @@ export const existsStock = handlerWrapper(async (req, res) => {
 
 export const listStock = handlerWrapper(async (req, res) => {
   const list = await getRepository(Stock).find({
-    select: ['symbol', 'company'],
+    select: { symbol: true, company: true },
     order: {
       symbol: 'ASC'
     }
@@ -223,7 +227,7 @@ const initilizedNewStockData = async (symbol) => {
 };
 
 async function createAndInitializeStocks(symbols: string[]) {
-  const stockTag = await getRepository(StockTag).findOne(AUTO_ADDED_MOST_STOCK_TAG_ID);
+  const stockTag = await getRepository(StockTag).findOneBy({ id: AUTO_ADDED_MOST_STOCK_TAG_ID });
   const tags = stockTag ? [stockTag] : [];
 
   const stocks: Stock[] = [];
@@ -268,10 +272,7 @@ async function initlizeStocksAndGetSymbolCompanyMap(symbols: string[]): Promise<
       where: {
         symbol: In(symbols)
       },
-      select: [
-        'symbol',
-        'company'
-      ]
+      select: { symbol: true, company: true }
     });
 
   const symbolCompanyMap = stocks.reduce((map, curr) => {
@@ -329,7 +330,7 @@ export const updateStock = handlerWrapper(async (req, res) => {
   const { symbol } = req.params;
   const repo = getRepository(Stock);
   const { tags, ...other } = req.body;
-  const stock = await repo.findOne(symbol.toUpperCase());
+  const stock = await repo.findOneBy({ symbol: symbol.toUpperCase() });
 
   assert(stock, 404);
   Object.assign(stock, other);
@@ -572,7 +573,7 @@ export const getStockQuote = handlerWrapper(async (req, res) => {
 export const getStockEvcInfo = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
   const { symbol } = req.params;
-  const result = await getRepository(StockLatestPaidInformation).findOne(symbol);
+  const result = await getRepository(StockLatestPaidInformation).findOneBy({ symbol });
 
   res.set('Cache-Control', 'public, max-age=600');
   res.json(result);

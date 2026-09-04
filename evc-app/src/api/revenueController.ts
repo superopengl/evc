@@ -1,5 +1,5 @@
+import { getRepository } from '../dataSource';
 
-import { getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';

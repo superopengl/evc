@@ -1,9 +1,9 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { OptionPutCallHistory } from '../OptionPutCallHistory';
 import { OptionPutCallAllDefInformation } from './OptionPutCallAllDefInformation';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(OptionPutCallAllDefInformation, 's')
   .leftJoin(q => q.from(OptionPutCallHistory, 'i').where(`CURRENT_DATE - "date" < 180`), 'i', 's.symbol = i.symbol')
   .select([

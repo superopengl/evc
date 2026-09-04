@@ -1,5 +1,5 @@
+import { getRepository } from '../dataSource';
 
-import { getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -42,7 +42,7 @@ const getAccountForUser = async (userId) => {
     specialReferreeDiscountPerc,
     referreeDiscountPerc,
     my1stBuyDiscountPerc
-  } = await getRepository(UserCommissionDiscountInformation).findOne(userId);
+  } = await getRepository(UserCommissionDiscountInformation).findOneBy({ userId });
 
   const result = {
     subscription,

@@ -1,9 +1,9 @@
-import { ViewEntity, Connection } from 'typeorm';
+import { ViewEntity, DataSource } from 'typeorm';
 import { StockWatchList } from '../StockWatchList';
 import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(q => q
     .from(StockWatchList, 'w')
     .groupBy('symbol')

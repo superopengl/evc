@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { SysLog } from '../entity/SysLog';
 import { serializeError } from 'serialize-error';
 import { String } from 'aws-sdk/clients/cloudsearchdomain';

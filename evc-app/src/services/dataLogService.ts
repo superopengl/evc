@@ -1,6 +1,7 @@
+import { getRepository } from '../dataSource';
 import { DataEvent } from '../types/DataEvent';
 import { DataLog } from '../entity/DataLog';
-import { getRepository } from 'typeorm';
+
 import { v4 as uuidv4 } from 'uuid';
 import errorToJson from 'error-to-json';
 

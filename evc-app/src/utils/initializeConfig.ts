@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm';
+import { getManager } from '../dataSource';
 import { Config } from '../entity/Config';
 
 export async function initializeConfig() {

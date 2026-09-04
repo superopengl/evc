@@ -1,5 +1,6 @@
 import { StockComputedPe90 } from './entity/views/StockComputedPe90';
-import { Connection, createConnection, getManager, getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { getDataSource, getManager, getRepository } from './dataSource';
 import { StockHistoricalComputedFairValue } from './entity/views/StockHistoricalComputedFairValue';
 import { StockLatestFairValue } from './entity/views/StockLatestFairValue';
 import { StockHistoricalTtmEps } from './entity/views/StockHistoricalTtmEps';
@@ -11,7 +12,7 @@ import { StockComputedPe365 } from './entity/views/StockComputedPe365';
 import { initializeIndexDef } from './utils/initializeIndexDef';
 
 export async function connectDatabase(shouldSyncSchema = false) {
-  const connection = await createConnection();
+  const connection = await getDataSource().initialize();
   if (shouldSyncSchema) {
     await syncDatabaseSchema(connection);
     await initializeData(connection);
@@ -25,7 +26,7 @@ async function initializeData(connection) {
   await initializeEmailTemplates();
 }
 
-async function syncDatabaseSchema(connection: Connection) {
+async function syncDatabaseSchema(connection: DataSource) {
   /**
    * We have to drop all views manually before typeorm sync up the database schema,
    * because typeorm cannot handle the view dependencies (view A depends on view B) correctly

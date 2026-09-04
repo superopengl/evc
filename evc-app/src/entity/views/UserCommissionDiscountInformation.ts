@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, PrimaryColumn, DataSource } from 'typeorm';
 import { User } from '../User';
 import { UserCommissionDiscountPolicy } from './UserCommissionDiscountPolicy';
 
@@ -6,7 +6,7 @@ import { UserCommissionDiscountPolicy } from './UserCommissionDiscountPolicy';
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
   .createQueryBuilder()
   .from(User, 'u')
   .leftJoin(UserCommissionDiscountPolicy, 'up', `u.id = up."userId"`)

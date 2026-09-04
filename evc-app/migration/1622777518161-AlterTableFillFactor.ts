@@ -1,4 +1,5 @@
-import { getRepository, MigrationInterface, QueryRunner } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
+import { getRepository } from '../src/dataSource';
 import { StockLastPrice } from '../src/entity/StockLastPrice';
 import { StockEps } from '../src/entity/StockEps';
 

@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, PrimaryColumn, DataSource } from 'typeorm';
 import { Stock } from '../Stock';
 import { StockLastPrice } from '../StockLastPrice';
 import { StockLatestFairValue } from './StockLatestFairValue';
@@ -6,7 +6,7 @@ import { StockSupport } from '../StockSupport';
 import { StockResistance } from '../StockResistance';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
   .createQueryBuilder()
   .from(Stock, 's')
   .select([

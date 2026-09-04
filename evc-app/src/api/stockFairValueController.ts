@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockSpecialFairValue } from '../entity/StockSpecialFairValue';

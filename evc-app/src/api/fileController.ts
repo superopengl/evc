@@ -1,5 +1,5 @@
+import { getRepository } from '../dataSource';
 
-import { getRepository } from 'typeorm';
 import { File } from '../entity/File';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -18,7 +18,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
 
   const fileRepo = getRepository(File);
   const query = [Role.Guest, Role.Admin, Role.Agent].includes(role) ? { id } : { id, createdBy: userId };
-  const file = await fileRepo.findOne(query);
+  const file = await fileRepo.findOneBy(query);
   assert(file, 404);
 
   const { fileName, mime } = file;
@@ -35,7 +35,7 @@ export const getFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member', 'free');
   const { id } = req.params;
   const repo = getRepository(File);
-  const file = await repo.findOne(id);
+  const file = await repo.findOneBy({ id });
   assert(file, 404);
 
   res.set('Cache-Control', 'public, max-age=31536000, immutable');

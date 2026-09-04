@@ -1,4 +1,5 @@
-import {getRepository, MigrationInterface, QueryRunner} from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
+import { getRepository } from '../src/dataSource';
 import { Config } from '../src/entity/Config';
 
 export class AddUsdToCnyExchangeRate1621910546999 implements MigrationInterface {

@@ -1,10 +1,10 @@
-import { ViewEntity, Connection, PrimaryColumn, ViewColumn } from 'typeorm';
+import { ViewEntity, PrimaryColumn, ViewColumn, DataSource } from 'typeorm';
 import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 import { StockHistoricalComputedFairValue } from './StockHistoricalComputedFairValue';
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(StockLatestPaidInformation, 'h')
   .leftJoin(q => q
     .from(q => q

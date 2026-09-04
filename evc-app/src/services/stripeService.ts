@@ -1,5 +1,6 @@
+import { getRepository, getManager } from '../dataSource';
 import Stripe from 'stripe';
-import { getRepository, getManager } from 'typeorm';
+
 import { Payment } from '../entity/Payment';
 import { assert } from '../utils/assert';
 import { UserProfile } from '../entity/UserProfile';
@@ -43,7 +44,7 @@ async function createStripeCustomer(userId: string, userProfile: UserProfile) {
 
 async function getUserStripeCustomerId(payment: Payment) {
   if (!payment.stripeCustomerId) {
-    const user = await getRepository(User).findOne(payment.userId, { relations: ['profile'] });
+    const user = await getRepository(User).findOne({ where: { id: payment.userId }, relations: { profile: true } });
     const stripeCustomer = await createStripeCustomer(payment.userId, user.profile);
     payment.stripeCustomerId = stripeCustomer.id;
     await getManager().save(payment);

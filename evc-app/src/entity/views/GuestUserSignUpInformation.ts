@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { PaymentMethod } from '../../types/PaymentMethod';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { Subscription } from '../Subscription';
@@ -7,7 +7,7 @@ import { UserCreditTransaction } from '../UserCreditTransaction';
 import { PaymentStatus } from '../../types/PaymentStatus';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(Payment, 'p')
   .innerJoin(Subscription, 's', 'p."subscriptionId" = s.id')
   .leftJoin(UserCreditTransaction, 'c', 'p."creditTransactionId" = c.id')

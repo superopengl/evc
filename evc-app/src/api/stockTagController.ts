@@ -1,5 +1,5 @@
+import { getRepository } from '../dataSource';
 
-import { getRepository } from 'typeorm';
 import { Blog } from '../entity/Blog';
 import { StockTag } from '../entity/StockTag';
 import { Role } from '../types/Role';

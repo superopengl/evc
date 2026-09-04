@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { assert } from './assert';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';

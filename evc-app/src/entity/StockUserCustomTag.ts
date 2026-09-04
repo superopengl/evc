@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany } from 'typeorm';
-import { ManyToMany, JoinTable } from 'typeorm-plus';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 import { StockWatchList } from './StockWatchList';
 
 

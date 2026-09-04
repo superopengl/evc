@@ -1,5 +1,6 @@
 import { SubscriptionEndingNotificationEmailInformation } from './../src/entity/views/SubscriptionEndingNotificationEmailInformation';
-import { getManager, getRepository, getConnection, In, Not, IsNull, Between } from 'typeorm';
+import { In, Not, IsNull, Between } from 'typeorm';
+import { getManager, getRepository, getConnection } from '../src/dataSource';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
 import { UserCreditTransaction } from '../src/entity/UserCreditTransaction';
@@ -109,7 +110,7 @@ async function expireSubscriptions() {
 async function sendEndingNotificationEmails() {
   await getManager().transaction(async m => {
 
-    const list = await m.find(SubscriptionEndingNotificationEmailInformation, {
+    const list = await m.findBy(SubscriptionEndingNotificationEmailInformation, {
       sentAt: IsNull(),
       daysBeforeEnd: Between(1, 7)
     });
@@ -162,7 +163,7 @@ async function getPreviousPaymentInfo(subscription: Subscription) {
 
 async function renewRecurringSubscription(targetSubscription: UserAliveSubscriptionSummary) {
   const { lastSubscriptionId, userId, lastType: type, lastEnd } = targetSubscription;
-  const subscription = await getRepository(Subscription).findOne({
+  const subscription = await getRepository(Subscription).findOneBy({
     id: lastSubscriptionId,
     recurring: true,
   });

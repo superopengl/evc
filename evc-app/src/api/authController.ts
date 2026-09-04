@@ -1,5 +1,5 @@
+import { getRepository, getConnection, getManager } from '../dataSource';
 
-import { getRepository, getConnection, getManager } from 'typeorm';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
@@ -212,7 +212,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
   assert(token, 400, 'Invalid token');
 
   const userRepo = getRepository(User);
-  const user = await userRepo.findOne({ resetPasswordToken: token });
+  const user = await userRepo.findOneBy({ resetPasswordToken: token });
 
   assert(user, 401, 'Token expired');
 

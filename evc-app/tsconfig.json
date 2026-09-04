@@ -18,6 +18,8 @@
   "include": [
     "src/**/*",
     "migration/**/*",
-    "index.ts", "endpoints"
+    "index.ts",
+    "endpoints",
+    "datasource-cli.ts"
   ]
 }

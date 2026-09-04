@@ -1,5 +1,5 @@
+import { getRepository, getManager } from '../dataSource';
 
-import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
@@ -11,7 +11,7 @@ export const getCommissionUserPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id: userId } = req.params;
 
-  const policy = await getRepository(CommissionUserPolicy).findOne({ userId });
+  const policy = await getRepository(CommissionUserPolicy).findOneBy({ userId });
 
   res.json(policy);
 });
@@ -56,7 +56,7 @@ export const listCommissionGlobalPolicy = handlerWrapper(async (req, res) => {
 export const getCommissionGlobalPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
-  const policy = await getRepository(CommissionGlobalPolicy).findOne(id);
+  const policy = await getRepository(CommissionGlobalPolicy).findOneBy({ id });
 
   res.json(policy);
 });

@@ -1,4 +1,4 @@
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository } from '../src/dataSource';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import _ from 'lodash';
@@ -14,11 +14,9 @@ async function syncManyStockInsiderTransactions(list: StockInsiderTransaction[])
     .insert()
     .into(StockInsiderTransaction)
     .values(entites)
-    .onConflict(`(symbol) DO UPDATE SET 
-    value = excluded.value, 
-    first = excluded.first, 
-    "firstHash" = excluded."firstHash", 
-    "createdAt" = NOW()`)
+    // createdAt is a @CreateDateColumn, so the insert carries a fresh value and
+    // EXCLUDED."createdAt" reproduces the old `"createdAt" = NOW()`.
+    .orUpdate(['value', 'first', 'firstHash', 'createdAt'], ['symbol'])
     .execute();
 }
 

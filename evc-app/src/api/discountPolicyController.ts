@@ -1,5 +1,5 @@
+import { getRepository, getManager } from '../dataSource';
 
-import { getRepository, getManager } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
@@ -11,7 +11,7 @@ export const getDiscountUserPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id: userId } = req.params;
 
-  const policy = await getRepository(DiscountUserPolicy).findOne({ userId });
+  const policy = await getRepository(DiscountUserPolicy).findOneBy({ userId });
 
   res.json(policy);
 });
@@ -56,7 +56,7 @@ export const listDiscountGlobalPolicy = handlerWrapper(async (req, res) => {
 export const getDiscountGlobalPolicy = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
-  const policy = await getRepository(DiscountGlobalPolicy).findOne(id);
+  const policy = await getRepository(DiscountGlobalPolicy).findOneBy({ id });
 
   res.json(policy);
 });

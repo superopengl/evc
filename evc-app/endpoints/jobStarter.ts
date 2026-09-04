@@ -1,4 +1,4 @@
-import { Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import 'colors';
@@ -7,7 +7,7 @@ import { logDataEvent } from '../src/services/dataLogService';
 import { v4 as uuidv4 } from 'uuid';
 
 export const start = async (jobName: string, jobFunc: () => Promise<any>, options?: { syncSchema?: boolean; daemon?: boolean; eventId?: string }) => {
-  let connection: Connection = null;
+  let connection: DataSource = null;
   const eventId = options?.eventId ?? uuidv4();
   const shouldSyncSchema = !!options?.syncSchema;
   const oneTimeRun = !options?.daemon;
@@ -27,7 +27,7 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>, option
   } finally {
     if (error) {
       try {
-        await connection?.close();
+        await connection?.destroy();
       } catch {
       }
       process.exit(1);

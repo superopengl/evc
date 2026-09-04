@@ -1,9 +1,9 @@
-import { Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Index } from '../entity/Index';
-import { getManager } from 'typeorm-plus';
+import { getManager } from '../dataSource';
 
 
-export async function initializeIndexDef(connection: Connection) {
+export async function initializeIndexDef(connection: DataSource) {
   const entities: Index[] = [
     {
       symbol: 'SPX',

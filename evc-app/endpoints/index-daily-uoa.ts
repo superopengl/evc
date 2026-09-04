@@ -1,6 +1,7 @@
+import { getManager } from '../src/dataSource';
 import { UnusualOptionActivityIndex } from './../src/entity/UnusualOptionActivityIndex';
 import { UnusualOptionActivityStock } from './../src/entity/UnusualOptionActivityStock';
-import { getManager } from 'typeorm';
+
 import { start } from './jobStarter';
 import _ from 'lodash';
 import { closeBarchartSession, grabAllUnusualOptionActivity } from '../src/services/barchartService';

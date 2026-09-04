@@ -6,7 +6,8 @@ export async function syncStockLastPrice(m: EntityManager, entity: StockLastPric
   await m.createQueryBuilder()
     .insert()
     .into(StockLastPrice)
-    .onConflict('(symbol) DO UPDATE SET price = excluded.price, change = excluded.change, "changePercent" = excluded."changePercent", "updatedAt" = now()')
+    // updatedAt is an @UpdateDateColumn, so EXCLUDED."updatedAt" reproduces `= now()`.
+    .orUpdate(['price', 'change', 'changePercent', 'updatedAt'], ['symbol'])
     .values(entity)
     .execute();
 }

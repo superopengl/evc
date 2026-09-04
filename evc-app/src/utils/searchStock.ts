@@ -1,4 +1,4 @@
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository } from '../dataSource';
 import { StockSearchParams } from '../types/StockSearchParams';
 import { assert } from './assert';
 import { StockWatchList } from '../entity/StockWatchList';

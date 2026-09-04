@@ -1,4 +1,5 @@
-import { getRepository, EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 
 export async function getUserCreditBalance(userId) {

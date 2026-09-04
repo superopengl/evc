@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, CreateDateColumn, ManyToOne } from 'typeorm';
-import { ManyToMany, JoinTable } from 'typeorm-plus';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Unique, CreateDateColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { StockUserCustomTag } from './StockUserCustomTag';
 
 

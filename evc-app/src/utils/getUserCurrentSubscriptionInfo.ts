@@ -1,4 +1,5 @@
-import { getRepository, QueryRunner } from 'typeorm';
+import { QueryRunner } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { UserAliveSubscriptionSummary } from '../entity/views/UserAliveSubscriptionSummary';
 
 

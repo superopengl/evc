@@ -1,4 +1,4 @@
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository } from '../dataSource';
 import { StockEps } from '../entity/StockEps';
 import { getEarnings } from './alphaVantageService';
 import _ from 'lodash';

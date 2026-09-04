@@ -1,4 +1,5 @@
-import { getConnection, QueryRunner } from 'typeorm';
+import { QueryRunner } from 'typeorm';
+import { getConnection } from '../dataSource';
 import { v4 as uuidv4 } from 'uuid';
 import { getUtcNow } from './getUtcNow';
 import moment from 'moment';

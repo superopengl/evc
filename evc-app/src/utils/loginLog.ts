@@ -1,5 +1,6 @@
+import { getRepository } from '../dataSource';
 import { UserLogin } from '../entity/UserLogin';
-import { getRepository } from 'typeorm';
+
 
 export async function logUserLogin(user, req, loginType: 'local' | 'google') {
   const entity = new UserLogin();

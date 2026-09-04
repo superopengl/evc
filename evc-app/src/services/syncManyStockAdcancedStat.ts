@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm';
+import { getManager } from '../dataSource';
 import { StockDailyAdvancedStat } from '../entity/StockDailyAdvancedStat';
 
 
@@ -29,10 +29,7 @@ export async function syncManyStockAdcancedStat(info: StockAdvancedStatsInfo[]) 
     .insert()
     .into(StockDailyAdvancedStat)
     .values(entites)
-    .onConflict(`(symbol, date) DO UPDATE SET  
-"beta"=excluded."beta", 
-"peRatio"=excluded."peRatio", 
-"forwardPeRatio"=excluded."forwardPeRatio"`)
+    .orUpdate(['beta', 'peRatio', 'forwardPeRatio'], ['symbol', 'date'])
     .execute();
 }
 

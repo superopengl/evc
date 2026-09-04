@@ -1,4 +1,4 @@
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager } from '../src/dataSource';
 import { start } from './jobStarter';
 import { getEarningsCalendarForAll } from '../src/services/alphaVantageService';
 import { StockEarningsCalendar } from '../src/entity/StockEarningsCalendar';

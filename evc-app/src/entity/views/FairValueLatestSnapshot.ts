@@ -1,8 +1,8 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
   .createQueryBuilder()
   .from(StockLatestPaidInformation, 'spi')
   .select([

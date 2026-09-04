@@ -1,4 +1,5 @@
-import { getRepository, getManager, LessThan } from 'typeorm';
+import { LessThan } from 'typeorm';
+import { getRepository, getManager } from '../dataSource';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -52,7 +53,7 @@ export const deleteStockEps = handlerWrapper(async (req, res) => {
 
   let happened = false;
   await getManager().transaction(async m => {
-    const entity = await m.findOne(StockEps, { symbol, reportDate });
+    const entity = await m.findOneBy(StockEps, { symbol, reportDate });
     if (entity) {
       happened = true;
 

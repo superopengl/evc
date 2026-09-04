@@ -1,5 +1,5 @@
+import { getManager, getRepository } from '../dataSource';
 
-import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -26,7 +26,7 @@ export const saveConfig = handlerWrapper(async (req, res) => {
     .insert()
     .into(Config)
     .values(item)
-    .onConflict('(key) DO UPDATE SET value = excluded.value')
+    .orUpdate(['value'], ['key'])
     .execute();
 
   res.json();

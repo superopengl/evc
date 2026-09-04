@@ -1,5 +1,6 @@
+import { getManager } from '../dataSource';
 import { EmailTemplate } from '../entity/EmailTemplate';
-import { getManager } from 'typeorm';
+
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { Locale } from '../types/Locale';
 

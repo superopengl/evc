@@ -1,11 +1,11 @@
 import { EmailSentOutTask } from './../EmailSentOutTask';
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, PrimaryColumn, DataSource } from 'typeorm';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { UserAliveSubscriptionSummary } from './UserAliveSubscriptionSummary';
 import { EmailTemplateType } from '../../types/EmailTemplateType';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(UserAliveSubscriptionSummary, 's')
   .leftJoin(q => q.from(EmailSentOutTask, 'm')
     .where(`m.template IN ('${EmailTemplateType.SubscriptionExpiring}', '${EmailTemplateType.SubscriptionAutoRenewing}')`)

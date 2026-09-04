@@ -1,10 +1,10 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { existsQuery } from '../../utils/existsQuery';
 import { StockDailyPe } from './StockDailyPe';
 
 @ViewEntity({
   materialized: true,
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
   .createQueryBuilder()
   .from(q => q.from(StockDailyPe, 'pe')
     .innerJoin(StockDailyPe, 'back', 'pe.symbol = back.symbol')

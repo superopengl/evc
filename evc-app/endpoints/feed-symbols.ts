@@ -1,9 +1,10 @@
+import { getRepository } from '../src/dataSource';
 import { start } from './jobStarter';
 import fs from 'fs';
 import path from 'path';
 import csv from 'csv-parser';
 import { v4 as uuidv4 } from 'uuid';
-import { getRepository } from 'typeorm';
+
 import { Stock } from '../src/entity/Stock';
 import { StockTag } from '../src/entity/StockTag';
 
@@ -11,7 +12,7 @@ const CSV_DIR_PATH = path.resolve(__dirname, 'init-stock-list');
 
 async function feedOneStockTag(tagName: string): Promise<StockTag> {
   const repo = getRepository(StockTag);
-  let tag = await repo.findOne({ name: tagName });
+  let tag = await repo.findOneBy({ name: tagName });
   if (!tag) {
     tag = new StockTag();
     tag.id = uuidv4();
@@ -24,7 +25,7 @@ async function feedOneStockTag(tagName: string): Promise<StockTag> {
 
 async function feedOneStock(symbol: string, company: string, tag: StockTag): Promise<Stock> {
   const repo = getRepository(Stock);
-  let stock = await repo.findOne(symbol, { relations: ['tags'] });
+  let stock = await repo.findOne({ where: { symbol }, relations: { tags: true } });
   if (!stock) {
     stock = new Stock();
     stock.symbol = symbol;

@@ -1,5 +1,5 @@
+import { getManager, getRepository } from '../dataSource';
 
-import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -37,9 +37,9 @@ export const getLocaleResource = handlerWrapper(async (req, res) => {
   let data = await redisCache.get(cachekey);
   if (!data) {
     const repo = getRepository(Translation);
-    let list = await repo.find({ locale: locale as Locale });
+    let list = await repo.findBy({ locale: locale as Locale });
     if (!list.length) {
-      list = await repo.find({ locale: Locale.Engish });
+      list = await repo.findBy({ locale: Locale.Engish });
     }
     data = list.reduce((pre, curr) => {
       pre[curr.key] = curr.value;
@@ -67,7 +67,7 @@ export const saveLocaleResourceItem = handlerWrapper(async (req, res) => {
     .insert()
     .into(Translation)
     .values(item)
-    .onConflict('(key, locale) DO UPDATE SET value = excluded.value')
+    .orUpdate(['value'], ['key', 'locale'])
     .execute();
 
   const cacheKey = getCacheKey(locale);

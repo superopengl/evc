@@ -1,4 +1,5 @@
-import {getRepository, MigrationInterface, QueryRunner} from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
+import { getRepository } from '../src/dataSource';
 import { StockTag } from '../src/entity/StockTag';
 import { AUTO_ADDED_MOST_STOCK_TAG_ID } from '../src/utils/stockTagService';
 

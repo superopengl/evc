@@ -1,4 +1,4 @@
-import { ViewEntity, Connection } from 'typeorm';
+import { ViewEntity, DataSource } from 'typeorm';
 import { Role } from '../../types/Role';
 import { Subscription } from '../Subscription';
 import { User } from '../User';
@@ -6,7 +6,7 @@ import { UserProfile } from '../UserProfile';
 import { Payment } from '../Payment';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(User, 'u')
   .where(`u."deletedAt" IS NULL`)
   .andWhere(`u.role != '${Role.Admin}'`)

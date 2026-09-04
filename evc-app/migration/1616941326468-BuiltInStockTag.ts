@@ -1,4 +1,5 @@
-import { getRepository, MigrationInterface, QueryRunner } from 'typeorm';
+import { MigrationInterface, QueryRunner } from 'typeorm';
+import { getRepository } from '../src/dataSource';
 import { StockTag } from '../src/entity/StockTag';
 
 export class BuiltInStockTag1616941326468 implements MigrationInterface {

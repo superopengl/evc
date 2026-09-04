@@ -1,22 +1,23 @@
+import { getManager, getRepository } from '../dataSource';
 
-import { getManager, getRepository } from 'typeorm';
 import { handlerWrapper } from '../utils/asyncHandler';
 import _ from 'lodash';
 import { StockPlea } from '../entity/StockPlea';
-import { getTableName } from '../utils/getTableName';
+import { getTableName, getQualifiedTableName } from '../utils/getTableName';
 import { assertRole } from '../utils/assertRole';
 
 
 export const submitStockPlea = handlerWrapper((req, res) => {
   const symbol = req.params.symbol.toUpperCase();
 
+  // Raw SQL because orUpdate() cannot express `count + 1`. createdAt relies on the column
+  // default that @CreateDateColumn generates.
+  const pleaTable = getQualifiedTableName(StockPlea);
   getManager()
-    .createQueryBuilder()
-    .insert()
-    .into(StockPlea)
-    .values({ symbol, count: 1 })
-    .onConflict(`(symbol) DO UPDATE SET count = ${getTableName(StockPlea)}.count + 1, "deletedAt" = NULL`)
-    .execute()
+    .query(
+      `INSERT INTO ${pleaTable} AS t ("symbol", "count") VALUES ($1, 1)
+       ON CONFLICT ("symbol") DO UPDATE SET "count" = t."count" + 1, "deletedAt" = NULL`,
+      [symbol])
     .catch(() => { });
 
   res.json();

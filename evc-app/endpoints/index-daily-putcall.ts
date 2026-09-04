@@ -1,5 +1,6 @@
+import { getRepository } from '../src/dataSource';
 import errorToJson from 'error-to-json';
-import { getRepository } from 'typeorm';
+
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { StockAdvancedStatsInfo, syncManyStockAdcancedStat } from '../src/services/syncManyStockAdcancedStat';

@@ -1,4 +1,5 @@
-import { getRepository, getManager, Raw } from 'typeorm';
+import { Raw } from 'typeorm';
+import { getRepository, getManager } from '../src/dataSource';
 import { StockInsiderTransaction } from '../src/entity/StockInsiderTransaction';
 import { StockInsiderTransactionPreviousSnapshot } from '../src/entity/StockInsiderTransactionPreviousSnapshot';
 

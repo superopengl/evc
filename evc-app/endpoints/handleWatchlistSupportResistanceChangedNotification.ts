@@ -1,4 +1,4 @@
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager } from '../src/dataSource';
 import { SupportResistancePreviousSnapshot } from '../src/entity/SupportResistancePreviousSnapshot';
 import { SupportResistanceLatestSnapshot } from '../src/entity/views/SupportResistanceLatestSnapshot';
 import { SupportResistanceWatchlistEmailTask } from '../src/entity/views/SupportResistanceWatchlistEmailTask';

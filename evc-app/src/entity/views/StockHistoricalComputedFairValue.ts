@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { Stock } from '../Stock';
 import { StockComputedPe90 } from './StockComputedPe90';
 import { StockHistoricalTtmEps as StockHistoricalTtmEps } from './StockHistoricalTtmEps';
@@ -6,7 +6,7 @@ import { StockComputedPe365 } from './StockComputedPe365';
 
 @ViewEntity({
   materialized: true,
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(q => q
       .from(Stock, 's')

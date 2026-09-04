@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { EntityManager, getRepository } from 'typeorm';
+import { EntityManager } from 'typeorm';
+import { getRepository } from '../dataSource';
 import { User } from '../entity/User';
 import { UserCreditTransaction } from '../entity/UserCreditTransaction';
 import { SubscriptionType } from '../types/SubscriptionType';
@@ -7,7 +8,7 @@ import { getSubscriptionPrice } from '../utils/getSubscriptionPrice';
 import { UserCommissionDiscountPolicy } from '../entity/views/UserCommissionDiscountPolicy';
 
 export async function handleReferralCommissionWhenPaid(m: EntityManager, userId: string, subscriptionType: SubscriptionType) {
-  const user = await m.getRepository(User).findOne(userId);
+  const user = await m.getRepository(User).findOneBy({ id: userId });
   if (user.everPaid) {
     return;
   }
@@ -16,7 +17,7 @@ export async function handleReferralCommissionWhenPaid(m: EntityManager, userId:
   const entitiesToSave: any[] = [user];
   const { referredBy: referrerUserId } = user;
   if (referrerUserId) {
-    const { referralCommissionPerc } = await getRepository(UserCommissionDiscountPolicy).findOne(referrerUserId);
+    const { referralCommissionPerc } = await getRepository(UserCommissionDiscountPolicy).findOneBy({ userId: referrerUserId });
     const subscriptionPrice = getSubscriptionPrice(subscriptionType);
     const ubt = new UserCreditTransaction();
     ubt.referredUserId = userId;

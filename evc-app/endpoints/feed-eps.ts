@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository } from '../src/dataSource';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { syncStockEps } from '../src/services/stockEpsService';
@@ -37,9 +37,7 @@ start(JOB_NAME, async () => {
         order: {
           symbol: 'ASC'
         },
-        select: [
-          'symbol'
-        ],
+        select: { symbol: true },
       });
     const symbols = stocks.map(s => s.symbol);
 

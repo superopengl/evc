@@ -1,4 +1,4 @@
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository } from '../src/dataSource';
 import { start } from './jobStarter';
 import { Stock } from '../src/entity/Stock';
 import { refreshMaterializedView } from '../src/refreshMaterializedView';

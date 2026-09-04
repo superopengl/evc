@@ -1,4 +1,5 @@
-import { getRepository, getManager } from 'typeorm';
+import { In } from 'typeorm';
+import { getRepository, getManager } from '../dataSource';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { StockWatchList } from '../entity/StockWatchList';
@@ -55,10 +56,10 @@ export const saveStockCustomTags = handlerWrapper(async (req, res) => {
   const symbol = req.params.symbol.toUpperCase();
   const { user: { id: userId } } = req as any;
   const { tags } = req.body;
-  const sw = await getRepository(StockWatchList).findOne({ userId, symbol }, { relations: ['tags'] });
+  const sw = await getRepository(StockWatchList).findOne({ where: { userId, symbol }, relations: { tags: true } });
   assert(sw, 404);
   if (sw) {
-    sw.tags = tags?.length ? await getRepository(StockUserCustomTag).findByIds(tags) : null;
+    sw.tags = tags?.length ? await getRepository(StockUserCustomTag).findBy({ id: In(tags) }) : null;
     await getManager().save(sw);
   }
 
@@ -72,10 +73,7 @@ export const listStockCustomTag = handlerWrapper(async (req, res) => {
     where: {
       userId
     },
-    select: [
-      'id',
-      'name',
-    ],
+    select: { id: true, name: true },
     order: {
       name: 'ASC'
     }

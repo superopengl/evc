@@ -1,11 +1,11 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { PaymentMethod } from '../../types/PaymentMethod';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { RevenueChartInformation } from './RevenueChartInformation';
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
   .from(RevenueChartInformation, 'r')
   .where(`r."payableCny" IS NULL`)
   .orderBy('r."date"', 'DESC')

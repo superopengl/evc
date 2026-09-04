@@ -1,11 +1,11 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { StockComputedPe90 } from './StockComputedPe90';
 import { StockDailyAdvancedStat } from '../StockDailyAdvancedStat';
 import { StockDailyPe } from './StockDailyPe';
 
 @ViewEntity({
   materialized: true,
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
   .createQueryBuilder()
   .from(q => q.from(StockComputedPe90, 'pe')
     .leftJoin(StockDailyPe, 'yr', 'pe.symbol = yr.symbol AND yr.date BETWEEN pe.date - 365 AND pe.date')

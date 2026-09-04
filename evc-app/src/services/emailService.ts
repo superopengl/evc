@@ -6,7 +6,8 @@ import nodemailer from 'nodemailer';
 import { logError } from '../utils/logger';
 import { EmailRequest } from '../types/EmailRequest';
 import { Locale } from '../types/Locale';
-import { getRepository, EntityManager, getManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
+import { getRepository, getManager } from '../dataSource';
 import { EmailTemplate } from '../entity/EmailTemplate';
 import handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
@@ -35,7 +36,7 @@ async function getEmailTemplate(templateName: string, locale: Locale): Promise<E
     locale = Locale.Engish;
   }
 
-  const template = await getRepository(EmailTemplate).findOne({ key: templateName, locale });
+  const template = await getRepository(EmailTemplate).findOneBy({ key: templateName, locale });
   assert(template, 500, `Cannot find email template for key ${templateName} and locale ${locale}`);
 
   return template;
@@ -46,7 +47,7 @@ async function getEmailSignature(locale: Locale): Promise<string> {
     locale = Locale.Engish;
   }
 
-  const { body } = await getRepository(EmailTemplate).findOne({ key: 'signature', locale });
+  const { body } = await getRepository(EmailTemplate).findOneBy({ key: 'signature', locale });
   assert(body, 500, `Cannot find email signature for locale ${locale}`);
 
   return body;
@@ -141,7 +142,7 @@ export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailR
 
 export async function enqueueEmailToUserId(userId: string, template: EmailTemplateType, vars: object) {
   try {
-    const user = await getRepository(User).findOne(userId, { relations: ['profile'] });
+    const user = await getRepository(User).findOne({ where: { id: userId }, relations: { profile: true } });
     if (!user) {
       return;
     }

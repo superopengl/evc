@@ -3,7 +3,8 @@ import { RedisRealtimePricePubService } from '../src/services/RedisPubSubService
 import { StockLastPriceInfo } from '../src/types/StockLastPriceInfo';
 import 'colors';
 import { start } from './jobStarter';
-import { getManager, getRepository, IsNull, LessThan } from 'typeorm';
+import { IsNull, LessThan } from 'typeorm';
+import { getManager, getRepository } from '../src/dataSource';
 import { StockLastPrice } from '../src/entity/StockLastPrice';
 import { Stock } from '../src/entity/Stock';
 import { combineLatest, Subject } from 'rxjs';
@@ -45,7 +46,7 @@ function createSourceForClientPublish() {
 async function initialize() {
   if (symbolSourceMap) return;
   const stocks = await getRepository(Stock).find({
-    select: ['symbol']
+    select: { symbol: true }
   });
   symbolSourceMap = new Map<string, Subject<StockLastPriceInfo>>();
   for (const s of stocks) {

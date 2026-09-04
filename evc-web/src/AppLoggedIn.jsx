@@ -364,7 +364,7 @@ const AppLoggedIn = props => {
     menuFooterRender={props => (
       props?.collapsed ?
         <QuestionOutlined style={{ color: 'rgba(255,255,255,0.65' }} onClick={() => setCollapsed(!collapsed)} /> :
-        <Space direction="vertical" style={{ width: 188 }}>
+        <Space orientation="vertical" style={{ width: 188 }}>
           <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
           <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
           <LinkText href="/terms_and_conditions" target="_blank">
@@ -422,9 +422,7 @@ const AppLoggedIn = props => {
       onOk={() => setContactVisible(false)}
       onCancel={() => setContactVisible(false)}
       footer={null}
-      destroyOnClose={true}
-      maskClosable={false}
-    >
+      destroyOnHidden={true} mask={{ closable: false }}>
       <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
     </Modal>
     <AboutDrawer

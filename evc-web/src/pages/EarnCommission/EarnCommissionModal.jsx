@@ -44,10 +44,10 @@ const EarnCommissionModal = props => {
       title={<FormattedMessage id="menu.earnCommission" />}
       width={680}
       closable={true}
-      maskClosable={true}
-      destroyOnClose={true}
+     
+      destroyOnHidden={true}
       footer={null}
-      {...props}>
+      {...props} mask={{ closable: true }}>
       <Paragraph type="secondary"><FormattedMessage id="text.shareReferralLink" /></Paragraph>
       <ReferralLinkInput value={account?.referralUrl} />
       <Row gutter={[10, 10]} wrap={true} justify="end" style={{marginTop: 10, marginBottom: 30}}>

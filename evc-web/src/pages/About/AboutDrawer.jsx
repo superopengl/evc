@@ -15,13 +15,12 @@ const AboutDrawer = (props) => {
     <Modal
       title="About"
       placement="bottom"
-      destroyOnClose={false}
-      maskClosable={true}
+      destroyOnHidden={false}
+     
       footer={null}
       onOk={() => onClose()}
       onCancel={() => onClose()}
-      {...other}
-    >
+      {...other} mask={{ closable: true }}>
       <Paragraph>
         All data provided on Easy Value Check is provided to individuals for informational purposes only, and is not intended for trading or investing purposes. You must not redistribute information displayed on or provided by Easy Value Check.
       </Paragraph>

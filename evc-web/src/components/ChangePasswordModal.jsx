@@ -46,11 +46,11 @@ const ChangePasswordModal = props => {
     <Modal
       title="Change Password"
       closable={true}
-      maskClosable={true}
-      destroyOnClose={true}
+     
+      destroyOnHidden={true}
       width={400}
       footer={null}
-      {...props}>
+      {...props} mask={{ closable: true }}>
       <ContainerStyled>
         <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
           <Form.Item label="Old Password" name="password" rules={[{ required: true, message: ' ' }]}>

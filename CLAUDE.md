@@ -48,7 +48,7 @@ pnpm g -- Name # scaffold a component into src/components (generate-react-cli)
 pnpm p -- Name # scaffold a page into src/pages
 ```
 
-Both frontend scripts need `NODE_OPTIONS=--openssl-legacy-provider --no-experimental-fetch` (already baked into the scripts) because of react-scripts 5 on modern Node.
+The frontend scripts used to carry `NODE_OPTIONS=--openssl-legacy-provider --no-experimental-fetch` for react-scripts 5. Both flags were dropped when the runtime moved to Node 24: `--no-experimental-fetch` no longer exists there (the process exits with code 9 before webpack starts), and `--openssl-legacy-provider` is no longer needed for the webpack 5 build. Don't reintroduce them.
 
 Local config lives in gitignored `.env` files: `evc-app/.env` (TypeORM `TYPEORM_*` vars, AWS, Redis, Stripe/PayPal, AlphaVantage, Google SSO) and `evc-web/.env` (`REACT_APP_*`). `evc-app/src/index.ts` hard-fails at boot if required env vars are missing, and in non-prod also loads `.env.${NODE_ENV}` on top of `.env`.
 

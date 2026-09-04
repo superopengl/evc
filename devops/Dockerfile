@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:18-slim
+FROM --platform=linux/amd64 node:24-slim
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"

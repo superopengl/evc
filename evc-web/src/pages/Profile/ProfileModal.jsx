@@ -21,7 +21,6 @@ const ProfileModal = props => {
     <Modal
       title="Update Profile"
       closable={closable}
-     
       destroyOnHidden={true}
       footer={null}
       open={visible}

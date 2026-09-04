@@ -78,7 +78,7 @@ const ProfileForm = (props) => {
       >
         <LocaleSelector />
       </Form.Item>
-      <Form.Item style={{ marginTop: '1rem' }}>
+      <Form.Item style={{ marginTop: '3rem' }}>
         <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
       </Form.Item>
     </Form>

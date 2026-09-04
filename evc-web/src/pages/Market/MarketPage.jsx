@@ -20,7 +20,7 @@ const span = {
   md: 24,
   lg: 12,
   xl: 12,
-  xxl: 12
+  xxl: 6
 };
 
 const MarketPage = props => {
@@ -48,8 +48,7 @@ const MarketPage = props => {
 
   return (
     <Container>
-
-      <Row gutter={[30, 50]}>
+      <Row gutter={[48, 48]}>
         <Col {...span}>
           <StockMostSearched onFetch={listHotStock} title="Most searched" onSymbolClick={handleSymbolClick} />
         </Col>

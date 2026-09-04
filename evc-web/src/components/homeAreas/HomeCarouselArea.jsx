@@ -88,9 +88,21 @@ const Lockup = styled.div`
   }
 `;
 
+/**
+ * The search field and the two buttons under it form one stack, so they are sized off a
+ * single set of numbers rather than each carrying its own. The search box used to be a
+ * round 420px against a 402px button row, which left it visibly 18px proud on either side.
+ *
+ * Google renders its own button and only takes a pixel `width`, so ACTION_WIDTH has to be
+ * passed to it as a number as well as used in CSS here.
+ */
+const ACTION_WIDTH = 195;
+const ACTION_GAP = 12;
+const STACK_WIDTH = ACTION_WIDTH * 2 + ACTION_GAP;
+
 const SearchSlot = styled.div`
   width: 100%;
-  max-width: 420px;
+  max-width: ${STACK_WIDTH}px;
   margin: clamp(24px, 3vw, 34px) 0 20px;
 `;
 
@@ -98,7 +110,7 @@ const Actions = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: ${ACTION_GAP}px;
 `;
 
 /**
@@ -108,7 +120,7 @@ const Actions = styled.div`
  */
 const SignUpButton = styled(Button)`
   &&& {
-    width: 195px;
+    width: ${ACTION_WIDTH}px;
     height: 40px;
     background: var(--evc-ink);
     border-color: var(--evc-ink);
@@ -250,7 +262,7 @@ const HomeCarouselAreaRaw = props => {
                 <SignUpButton type="primary" onClick={() => handleSignOn()}>
                   <FormattedMessage id="button.signUpWithEmail" />
                 </SignUpButton>
-                <GoogleSsoButton width={195} />
+                <GoogleSsoButton width={ACTION_WIDTH} />
               </Actions>
             </Lockup>
           </Col>

@@ -1,65 +1,84 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Button, Space, Alert } from 'antd';
+import { Button } from 'antd';
 import styled from 'styled-components';
 import StockRadarPage from 'pages/Stock/StockRadarPage';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import HomeSection from 'components/homeAreas/HomeSection';
 
-const { Title, Paragraph } = Typography;
+/**
+ * The preview caveat used to be an antd `<Alert type="success">`, which put a green panel
+ * around the whole description and gave a secondary note the loudest surface on the page.
+ * It is a single tinted line now, so the emphasis order is title -> description -> caveat.
+ */
+const PreviewNote = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-start: 20px;
+  padding: 7px 14px;
+  border: 1px solid rgba(87, 187, 96, 0.3);
+  border-radius: 999px;
+  background: var(--evc-signal-wash);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--evc-signal-deep);
 
-const Container = styled.div`
-justify-content: center;
-margin-bottom: 0rem;
-width: 100%;
-text-align: center;
-padding: 4rem 1rem;
-// background: #7DD487;
-// background-image: linear-gradient(150deg, #55B0D4, #55B0D4 25%, #89DFF1 25%, #89DFF1 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--evc-signal);
+  }
 `;
 
-const InnerContainer = styled.div`
-margin-left: auto;
-margin-right: auto;
-width: 100%;
-border: 1px solid #f0f0f0;
-padding: 1rem;
-background: rgb(240, 242, 245);
-// filter: contrast(0.6);
-// transform: scale(0.8);
+const Cta = styled.div`
+  margin-block-start: 22px;
 
-max-width: 1600px;
+  .ant-btn {
+    min-width: 168px;
+    height: 42px;
+    font-size: 15px;
+  }
 `;
 
+/* The board keeps a panel of its own so the dense card grid reads as one object against the
+   band, but as white-on-tint with a soft edge rather than the old grey-on-white slab. */
+const Board = styled.div`
+  padding: clamp(12px, 1.6vw, 22px);
+  border: 1px solid var(--evc-line);
+  border-radius: 18px;
+  background: var(--evc-paper);
+  box-shadow: 0 18px 44px rgba(16, 34, 44, 0.05);
+`;
 
 export const HomeStockRadarArea = props => {
   const { onSymbolClick = () => { } } = props;
   return (
-    <Container>
-      <Space orientation="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
-        <Title><FormattedMessage id="menu.stockRadar" /></Title>
-        <Alert 
-        type="success" 
-        description={<>
-          <Paragraph>
-            <FormattedMessage id="text.stockRadarDescription"/>
-        </Paragraph>
-        <Paragraph type="success" strong>
-            <FormattedMessage id="text.stockRadarPreviewDescription"/>
-        </Paragraph>
-        <Link to="/signup">
-          <Button type="primary" style={{ minWidth: 140 }}>
-            <FormattedMessage id="menu.signUpNow" />
-          </Button>
-        </Link>
-        </>} />
-
-
-      </Space>
-      <InnerContainer>
-        <StockRadarPage onItemClick={onSymbolClick} size={12}/>
-      </InnerContainer>
-    </Container>
+    <HomeSection
+      tone="sub"
+      wide
+      title={<FormattedMessage id="menu.stockRadar" />}
+      subtitle={<FormattedMessage id="text.stockRadarDescription" />}
+      extra={<>
+        <PreviewNote>
+          <FormattedMessage id="text.stockRadarPreviewDescription" />
+        </PreviewNote>
+        <Cta>
+          <Link to="/signup">
+            <Button type="primary">
+              <FormattedMessage id="menu.signUpNow" />
+            </Button>
+          </Link>
+        </Cta>
+      </>}
+    >
+      <Board>
+        <StockRadarPage onItemClick={onSymbolClick} size={12} />
+      </Board>
+    </HomeSection>
   )
 }
 

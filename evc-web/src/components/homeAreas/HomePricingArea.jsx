@@ -1,14 +1,10 @@
 import React from 'react';
-import { Typography, Col, Row } from 'antd';
+import { Col, Row } from 'antd';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { withRouter } from 'util/withRouter';
-
-const { Title, Paragraph } = Typography;
-
-const StyledRow = styled(Row)`
-`;
+import HomeSection from 'components/homeAreas/HomeSection';
 
 const StyledCol = styled(Col)`
 display: flex;
@@ -24,34 +20,19 @@ const span = {
   xxl: 8
 };
 
-const Container = styled.div`
-justify-content: center;
-margin-bottom: 6rem;
-width: 100%;
-text-align: center;
-padding: 4rem 1rem;
-// background: #fafafa;
-// background: rgb(240, 242, 245);
+const Plans = styled.div`
+  max-width: 1080px;
+  margin-inline: auto;
 `;
-
-const InnerContainer = styled.div`
-margin-left: auto;
-margin-right: auto;
-width: 100%;
-max-width: 1000px;
-`;
-
-
 
 const HomePricingArea = props => {
   return (
-    <Container>
-      <InnerContainer>
-        <Title>Choose the plan that's right for you</Title>
-        <Paragraph type="secondary">
-        Membership plans start at USD $29.00 / month
-        </Paragraph>
-        <StyledRow gutter={[40, 40]}>
+    <HomeSection
+      title="Choose the plan that's right for you"
+      subtitle="Membership plans start at USD $29.00 / month"
+    >
+      <Plans>
+        <Row gutter={[24, 24]} align="stretch">
           {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>
             <SubscriptionCard
               title={s.title}
@@ -59,13 +40,13 @@ const HomePricingArea = props => {
               description={s.description}
               price={s.price}
               interactive={true}
-              unit={s.unit} 
+              unit={s.unit}
               onClick={() => props.history.push('/signup')}
-              />
+            />
           </StyledCol>)}
-        </StyledRow>
-      </InnerContainer>
-    </Container>
+        </Row>
+      </Plans>
+    </HomeSection>
   )
 }
 

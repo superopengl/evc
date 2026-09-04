@@ -48,7 +48,7 @@ const StockNextReportDatePanel = (props) => {
 
   return (
     <Space>
-      <Text strong style={{fontSize: 20}}>{dayjs(reportDate).format('D MMM YYYY')}</Text>
+      <Text strong style={{fontSize: 20}}>{dayjs(reportDate).format('ll')}</Text>
       <TimeAgo value={reportDate} showTime={false} accurate={false} direction="horizontal" />
     </Space>
   );

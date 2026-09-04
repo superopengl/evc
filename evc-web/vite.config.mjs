@@ -4,7 +4,7 @@ import path from 'path';
 
 // CRA resolved bare specifiers like `services/stockService` against src (jsconfig baseUrl).
 // Vite needs those spelled out.
-const SRC_DIRS = ['components', 'contexts', 'def', 'fonts', 'pages', 'services', 'translations', 'util'];
+const SRC_DIRS = ['components', 'contexts', 'def', 'fonts', 'hooks', 'pages', 'services', 'translations', 'util'];
 
 export default defineConfig(({ mode }) => {
   // Keep the REACT_APP_* contract rather than renaming everything to VITE_*: the Dockerfile
@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       alias: [
         { find: /^tslib$/, replacement: path.resolve(__dirname, 'node_modules/tslib') },
         // `import('AppLoggedIn')` and friends: bare specifiers naming a file at the root of src.
-        { find: /^(App|AppLoggedIn|antdTheme|serviceWorker)$/, replacement: path.resolve(__dirname, 'src') + '/$1' },
+        { find: /^(App|AppLoggedIn|antdTheme|designTokens|serviceWorker)$/, replacement: path.resolve(__dirname, 'src') + '/$1' },
         ...SRC_DIRS.map(d => ({
           find: new RegExp(`^${d}/`),
           replacement: path.resolve(__dirname, `src/${d}/`) + '/',

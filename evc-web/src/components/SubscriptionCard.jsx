@@ -11,27 +11,49 @@ import { QuestionCircleFilled } from '@ant-design/icons';
 const { Text } = Typography;
 
 const StyledCard = styled(Card)`
-padding: 10px;
+padding: 8px 8px 16px;
 text-align: center;
 height: 100%;
-& .ant-card-head {
-  color: #333333;
-}
 position: relative;
 width: 100%;
 max-width: 400px;
+border: 1px solid var(--evc-line);
+border-radius: 14px;
+transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 
-&.subscription-active {
-// box-shadow: 0 5px 3px rgba(255,197,61,0.8);
-border: 2px solid #57BB60;
-background-color: rgba(87,187,96, 0.1);
-// transform: scale(1.02);
+& .ant-card-head {
+  color: var(--evc-text);
+  border-bottom: none;
 }
 
+& .ant-card-head-title {
+  font-family: var(--evc-font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--evc-text-faint);
+}
+
+&.subscription-active {
+border: 1px solid var(--evc-signal);
+background-color: var(--evc-signal-wash);
+}
+
+/* The hover used to be a 1.05 scale, which nudged the neighbouring cards on
+   every pointer pass and blurred the card's own text mid-transition. A 2px
+   lift plus a shadow reads the same and only repaints the one card. */
 &.interactive:hover {
-// background-color: #ffe7ba;
-border: 2px solid #57BB60;
-transform: scale(1.05);
+border-color: var(--evc-signal);
+box-shadow: 0 14px 34px rgba(16, 34, 44, 0.1);
+transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  transition: none;
+
+  &.interactive:hover {
+    transform: none;
+  }
 }
 `;
 
@@ -68,12 +90,12 @@ export const SubscriptionCard = props => {
         title={<div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#57BB60' }}><sup><small>$</small></sup> {price}</Text> */}
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%', justifyContent: 'space-evenly', marginBottom: shouldApplyDiscount ? 0 : 22 }} size="small">
-            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px', fontWeight: 500 }} value={price * (1 - discount)} />
+            <MoneyAmount className="evc-mono" style={{ fontSize: '2.4rem', margin: '0 4px', fontWeight: 600, letterSpacing: '-0.03em', color: 'var(--evc-text)' }} value={price * (1 - discount)} />
             {shouldApplyDiscount && <div>
               <Text type="danger" style={{marginRight: 6}}><s><i>was <MoneyAmount type="danger" style={{ fontWeight: 500 }} value={price} /></i></s></Text>
             </div>}
           </div>
-          <Text style={{ fontSize: 14 }} type="secondary">{unit}</Text>
+          <Text style={{ fontSize: 12.5, letterSpacing: '0.02em' }} type="secondary">{unit}</Text>
           <Divider />
         </div>}
         description={description}

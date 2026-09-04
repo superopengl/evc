@@ -1,6 +1,20 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ConfigProvider } from 'antd';
+
+// Self-hosted webfonts, bundled by Vite rather than pulled from a CDN, so the
+// Docker build has no network dependency and there is no render-blocking
+// third-party request.
+//
+// Archivo ships a width axis as well as a weight one; `wdth.css` is the cut
+// that carries it (font-stretch: 62%-125%). The headings are set wide, which
+// is where the display voice comes from - see .evc-display in index.less.
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource-variable/inter';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+
 import './index.less';
 import App from './App';
 import { antdTheme } from './antdTheme';

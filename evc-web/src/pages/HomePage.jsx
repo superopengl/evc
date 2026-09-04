@@ -20,6 +20,7 @@ import { scrollToElement } from '../util/scrollToElement';
 import { trackGuestUserVisit } from '../util/trackGuestUserVisit';
 import HomeOptionPutCallArea from 'components/homeAreas/HomeOptionPutCallArea';
 import { APP_TITLE, createPageTitleRender } from 'util/pageTitle';
+import { homeProLayoutToken } from 'antdTheme';
 
 smoothscroll.polyfill();
 
@@ -31,14 +32,6 @@ const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStock
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
   background-color: white;
-}
-
-.ant-menu-item:hover {
-  .ant-pro-menu-item-title {
-    color: rgba(255,255,255, 0.7);
-    // font-weight: 500;
-  }
-  background-color: transparent !important;
 }
 
 // pro-components 3 gutters the content with padding (32px 40px) where pro-layout 5
@@ -67,30 +60,79 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-pro-top-nav-header-main {
   margin: auto;
-  // max-width: 1200px;
 }
 
-.ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
-  background-color: rgba(87,187,96,0.7);
-  // background-color: rgba(255,255,255,0.6);
-  // background-color: rgba(0, 41, 61, 0.6); 
-// background-image: linear-gradient(125deg, #57BB60, #57BB60 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
+// #57BB60 is the exact green of the logo tile, so the mark sits on the bar without a seam.
+// It used to be rgba(87,187,96,0.7), which let whatever was underneath tint it - a different
+// green over the hero than over the white boards further down.
+// Both selectors are needed: pro-components renders ant-pro-top-nav-header on desktop and a
+// plain ant-pro-global-header below the lg breakpoint, and the wrapping ant-layout-header
+// carries an inline background-color: transparent that only !important can beat.
+.ant-layout-header,
+.ant-pro-global-header,
+.ant-pro-global-header-layout-top,
+.ant-pro-top-nav-header {
+  background-color: #57bb60 !important;
+}
+
+.ant-layout-header {
+  border-block-end: 1px solid rgba(6, 32, 46, 0.08);
+  box-shadow: 0 1px 3px rgba(6, 32, 46, 0.08);
 }
 
 .ant-pro-global-header-collapsed-button {
-  // color: rgba(255,255,255,0.75);
-  color: rgba(0,0,0,0.75);
+  color: var(--evc-ink);
 }
 
+// Mobile drawer. ProLayout renders it as an *inline* drawer, so it stacks inside the layout
+// rather than over the viewport - and the ant-layout-content override above makes the page a
+// positioned element, which painted the whole page on top of the drawer's mask. Fixed
+// positioning takes the drawer out of that contest so the mask actually dims the page.
+.ant-drawer.ant-drawer-inline {
+  position: fixed;
+  z-index: 1001;
+}
+
+.ant-drawer-content-wrapper {
+  box-shadow: 8px 0 32px rgba(6, 32, 46, 0.18);
+}
+
+.ant-drawer-body {
+  background-color: #ffffff;
+  padding: 0;
+}
+
+.ant-menu-item, .ant-menu-submenu {
+  &::after {
+    display: none !important;
+  }
+}
+
+// Ink on the green bar, not the grey used elsewhere: --evc-text-muted is only ~2.9:1 on
+// #57BB60, where the ink clears 6:1.
 .ant-pro-menu-item-title {
-  // color: rgba(255,255,255,0.75);
-  color: rgba(0,0,0,0.75);
+  color: rgba(6, 32, 46, 0.78);
+  font-size: 14px;
   font-weight: 500;
+  letter-spacing: -0.005em;
+  transition: color 0.15s ease;
+}
+
+.ant-menu-item:hover, .ant-menu-item-selected {
+  background-color: transparent !important;
+
+  .ant-pro-menu-item-title {
+    color: var(--evc-ink);
+  }
+}
+
+.ant-menu-item-selected .ant-pro-menu-item-title {
+  font-weight: 600;
 }
 
 .ant-menu-submenu-title {
-  color: rgba(0,0,0,0.75) !important;
-  font-weight: 900 !important;
+  color: rgba(6, 32, 46, 0.78) !important;
+  font-weight: 500 !important;
 }
 `;
 
@@ -183,6 +225,7 @@ const HomePage = (props) => {
     layout="top"
     breakpoint="lg"
     navTheme="dark"
+    token={homeProLayoutToken}
     route={{ routes: ROUTES }}
     location={{ pathname: '/' }}
     fixedHeader={true}
@@ -206,7 +249,7 @@ const HomePage = (props) => {
 
       return [
         <Dropdown key="locale" popupRender={() => menu} trigger={['click']} placement="bottomRight">
-          <Icon style={{ fontSize: 20, color: 'rgba(0,0,0,0.75)' }} component={() => <IoLanguage />} />
+          <Icon style={{ fontSize: 19, color: 'rgba(6, 32, 46, 0.78)' }} component={() => <IoLanguage />} />
         </Dropdown>
       ];
     }}
@@ -246,7 +289,14 @@ const HomePage = (props) => {
       visible={!!selectedSymbol}
       onClose={() => setSelectedSymbol()}
     />
-    <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
+    <CookieConsent
+      location="bottom"
+      overlay={false}
+      expires={365}
+      style={{ alignItems: 'center', padding: '10px 24px', background: 'rgba(6, 32, 46, 0.96)', backdropFilter: 'blur(8px)', fontSize: 13 }}
+      buttonStyle={{ borderRadius: 8, margin: '10px 0 10px 16px', padding: '9px 22px', background: '#57BB60', color: '#ffffff', fontSize: 13, fontWeight: 600 }}
+      buttonText="Accept"
+    >
       We use cookies to improve your experiences on our website.
     </CookieConsent>
   </StyledLayout>

@@ -9,24 +9,22 @@ import { timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
 const Container = styled.div`
-justify-content: center;
-margin-bottom: 0rem;
-width: 100%;
-// text-align: center;
-padding: 1.5rem 1rem;
-// background: #fafafa;
+  width: 100%;
+  padding: clamp(44px, 5vw, 68px) var(--evc-gutter);
+  background: var(--evc-paper);
 `;
 
 const InnerContainer = styled.div`
-margin-left: auto;
-margin-right: auto;
-width: 100%;
-max-width: 1600px;
+  width: 100%;
+  max-width: var(--evc-measure-wide);
+  margin-inline: auto;
+`;
 
-.ant-col {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
+/* No frame: the boards separate on the gutter and on their own header rule alone. */
+const Board = styled.div`
+  height: 100%;
+  padding: 0 4px 8px;
+  background: var(--evc-paper);
 `;
 
 const span = {
@@ -37,6 +35,32 @@ const span = {
   xl: 6,
   xxl: 6
 };
+
+/**
+ * The board headings were #57BB60 / #7DD487 / #55B0D4 / #89DFF1 - four brand tints picked for
+ * variety, two of which (the mint and the pale cyan) land around 1.7:1 on white and were
+ * effectively invisible. The colour moves to a 7px dot, so all four hues survive while the
+ * label itself is ink.
+ */
+const TITLE_STYLE = {
+  color: 'var(--evc-text)',
+  fontSize: 12,
+  fontWeight: 600,
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
+  marginBottom: 14,
+};
+
+const dotStyle = color => ({
+  display: 'inline-block',
+  width: 7,
+  height: 7,
+  borderRadius: '50%',
+  background: color,
+  marginInlineEnd: 9,
+  verticalAlign: 'middle',
+  transform: 'translateY(-1px)',
+});
 
 const HomeMarketArea = props => {
 
@@ -59,18 +83,53 @@ const HomeMarketArea = props => {
   return (
     <Container>
       <InnerContainer>
-        <Row gutter={[40, 40]}>
+        <Row gutter={[24, 24]}>
           <Col {...span}>
-            <StockMostSearched onFetch={listHotStock} title="Most searched" titleStyle={{ color: '#57BB60', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <Board>
+              <StockMostSearched
+                onFetch={listHotStock}
+                title="Most searched"
+                titleDot={dotStyle('#57BB60')}
+                titleStyle={TITLE_STYLE}
+                onSymbolClick={onSymbolClick}
+              />
+            </Board>
           </Col>
           <Col {...span}>
-            <StockMostPanel value={mostData.mostActives} loading={loading} title="Most actives" titleStyle={{ color: '#7DD487', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <Board>
+              <StockMostPanel
+                value={mostData.mostActives}
+                loading={loading}
+                title="Most actives"
+                titleDot={dotStyle('#7DD487')}
+                titleStyle={TITLE_STYLE}
+                onSymbolClick={onSymbolClick}
+              />
+            </Board>
           </Col>
           <Col {...span}>
-            <StockMostPanel value={mostData.gainers} loading={loading} title="Gainers" titleStyle={{ color: '#55B0D4', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <Board>
+              <StockMostPanel
+                value={mostData.gainers}
+                loading={loading}
+                title="Gainers"
+                titleDot={dotStyle('#55B0D4')}
+                titleStyle={TITLE_STYLE}
+                onSymbolClick={onSymbolClick}
+              />
+            </Board>
           </Col>
           <Col {...span}>
-            <StockMostPanel value={mostData.losers} loading={loading} title="Losers" titleStyle={{ color: '#89DFF1', textTransform: 'uppercase' }} onSymbolClick={onSymbolClick} />
+            <Board>
+              <StockMostPanel
+                value={mostData.losers}
+                loading={loading}
+                title="Losers"
+                titleDot={dotStyle('#89DFF1')}
+                titleStyle={TITLE_STYLE}
+                onSymbolClick={onSymbolClick}
+              />
+            </Board>
           </Col>
         </Row>
       </InnerContainer>

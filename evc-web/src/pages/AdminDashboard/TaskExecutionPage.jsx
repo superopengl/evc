@@ -19,7 +19,7 @@ const TaskExecutionPage = () => {
   const [list, setList] = React.useState([]);
 
   const utcStringToEstEpochMills = (utcString) => {
-    return dayjs.utc(utcString).tz('America/New_York').format('D MMM');
+    return dayjs.utc(utcString).tz('America/New_York').format('ll');
   }
 
   const formatData = (data) => {

@@ -84,7 +84,7 @@ const SignUpForm = (props) => {
        }} 
        />
         <Form.Item style={{ marginTop: '1rem' }}>
-          <Button block type="primary" htmlType="submit" disabled={sending}>
+          <Button block size="large" type="primary" htmlType="submit" disabled={sending}>
             <FormattedMessage id="menu.signUp" />
           </Button>
         </Form.Item>
@@ -94,7 +94,7 @@ const SignUpForm = (props) => {
       </Form>
       {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
       <Divider><Text type="secondary"><small>or</small></Text></Divider>
-      <GoogleSsoButton referralCode={referralCode} />
+      <GoogleSsoButton block referralCode={referralCode} />
     </ContainerStyled>
   );
 }

@@ -98,7 +98,7 @@ export const StockFairValueEditor = (props) => {
       title: 'Report Date',
       dataIndex: 'reportDate',
       render: (value, item) => <Text type="secondary">
-        {dayjs(value, 'YYYY-MM-DD').format('D MMM YYYY')}
+        {dayjs(value, 'YYYY-MM-DD').format('ll')}
       </Text>
     },
     {

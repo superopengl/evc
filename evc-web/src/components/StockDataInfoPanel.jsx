@@ -71,7 +71,7 @@ const StockDataInfoPanel = (props) => {
           return +value?.toLocaleString();
         } else if (time.isValid()) {
           // Date
-          return time.format('D MMM YYYY');
+          return time.format('ll');
         }
         return value;
       }

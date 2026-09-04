@@ -175,7 +175,7 @@ const UnusualOptionsActivityPanel = (props) => {
       sorter: shouldHide ? false : { multiple: 1 },
       sortOrder: getSortOrder('expDate'),
       align: shouldHide ? 'center' : 'right',
-      render: (value) => shouldHide ? <LockIcon /> : dayjs.tz(value, 'utc').format('D MMM YYYY'),
+      render: (value) => shouldHide ? <LockIcon /> : dayjs.tz(value, 'utc').format('ll'),
     },
     {
       title: 'Days To Expiration',
@@ -230,7 +230,7 @@ const UnusualOptionsActivityPanel = (props) => {
       width: 155,
       align: 'left',
       render: (value) => {
-        const dateString = dayjs.tz(`${value}`, 'utc').format('DD MMM YYYY');
+        const dateString = dayjs.tz(`${value}`, 'utc').format('ll');
         return dateString;
       }
     },

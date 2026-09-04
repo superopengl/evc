@@ -68,7 +68,9 @@ const ColInnerCard = props => {
     }, header: {
       backgroundColor: '#55B0D4',
       color: 'white',
-    } }} variant="borderless">
+      // antd draws a drop shadow on every borderless Card, so `variant="borderless"`
+      // alone still leaves a box; these want no boundary at all.
+    } }} variant="borderless" style={{ boxShadow: 'none' }}>
     {props.children}
   </Card>
 };

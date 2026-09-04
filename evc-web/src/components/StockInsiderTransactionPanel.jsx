@@ -84,7 +84,7 @@ const StockInsiderTransactionPanel = (props) => {
   }, []);
 
   const formatDate = (dateString) => {
-    return dateString ? dayjs(dateString, 'YYYY-MM-DD').format('DD MMM YYYY') : null;
+    return dateString ? dayjs(dateString, 'YYYY-MM-DD').format('ll') : null;
   }
 
   return (

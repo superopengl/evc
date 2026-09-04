@@ -176,9 +176,9 @@ const AdminCommissionWithdrawalListPage = () => {
       title: <>
         <div>Created At</div>
         <Space>
-          <DatePicker picker="date" onChange={handleAfterChange} format="D MMM YYYY" />
+          <DatePicker picker="date" onChange={handleAfterChange} format="ll" />
           -
-          <DatePicker picker="date" onChange={handleBeforeChange} format="D MMM YYYY" />
+          <DatePicker picker="date" onChange={handleBeforeChange} format="ll" />
         </Space>
       </>,
       dataIndex: 'createdAt',

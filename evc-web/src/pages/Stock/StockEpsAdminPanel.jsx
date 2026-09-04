@@ -113,7 +113,7 @@ const StockEpsAdminEditor = (props) => {
               <div style={{ flex: 1, minWidth: 0, cursor: 'pointer' }} onClick={() => onSelected(item)}>
                 <ListyItemMeta
                   description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                    <Text type="secondary"><small>{dayjs(item.reportDate).format('D MMM YYYY')}</small>
+                    <Text type="secondary"><small>{dayjs(item.reportDate).format('ll')}</small>
                       {item.source === 'evc' && <Tooltip title="Manually input EPS"><Badge status="success" style={{ marginLeft: 4 }} /></Tooltip>}
                     </Text>
                     <MoneyAmount symbol="" value={item.value} digital={4} />

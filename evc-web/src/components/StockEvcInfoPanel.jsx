@@ -48,9 +48,9 @@ const StockEvcInfoPanel = (props) => {
         <TooltipLabel>
           <FormattedMessage id="text.reportDate" />
         </TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text>{dayjs(data.fairValueDate).format('D MMM YYYY')}</Text>}
+        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text>{dayjs(data.fairValueDate).format('ll')}</Text>}
       </Space> */}
-      <SectionTitleDivider title={loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text><FormattedMessage id="text.reportDate" />: {dayjs(data.fairValueDate).format('D MMM YYYY')}</Text>} />
+      <SectionTitleDivider title={loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text><FormattedMessage id="text.reportDate" />: {dayjs(data.fairValueDate).format('ll')}</Text>} />
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <TooltipLabel message="How to use fair value">
           <FormattedMessage id="text.fairValue" />

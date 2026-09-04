@@ -47,17 +47,127 @@
 //   font-style: normal;
 // }
 
+// ---------------------------------------------------------------------------
+// EVC design tokens
+//
+// Written as CSS custom properties, not less variables, so styled-components
+// and inline React styles can read the same values (see src/designTokens.js,
+// which is a thin JS mirror of the names below).
+//
+// Colour has one job here: it encodes direction. Green is up / undervalued /
+// primary action, red is down / overvalued, the blue is a neutral reference
+// mark, and everything else is ink at an opacity. The four-way mint-and-cyan
+// palette the homepage used to paint sections with is gone - it carried no
+// meaning, and on a market page an unexplained green means "up" whether you
+// intended it to or not.
+// ---------------------------------------------------------------------------
+:root {
+  // Ink. #00293d already themes the sider, footer and layout header, so the
+  // dark hero is the product adopting its own chrome rather than a new colour.
+  --evc-ink: #06202e;
+  --evc-ink-raise: #0d3243;
+  --evc-ink-line: rgba(255, 255, 255, 0.1);
+  --evc-ink-line-soft: rgba(255, 255, 255, 0.06);
+  --evc-on-ink: rgba(255, 255, 255, 0.94);
+  --evc-on-ink-muted: rgba(255, 255, 255, 0.62);
+  --evc-on-ink-faint: rgba(255, 255, 255, 0.4);
+
+  // Signal. --evc-signal is antd's colorPrimary; the lift is the same hue
+  // pushed light enough to clear 4.5:1 against the ink.
+  --evc-signal: #57bb60;
+  --evc-signal-deep: #3f9e48;
+  --evc-signal-lift: #8be39a;
+  --evc-signal-wash: rgba(87, 187, 96, 0.1);
+
+  --evc-tide: #55b0d4;
+  --evc-alert: #d7183f;
+  --evc-alert-lift: #ff7a94;
+
+  // Paper.
+  --evc-paper: #ffffff;
+  --evc-paper-sub: #f5f7f8;
+  --evc-line: #e6eaec;
+  --evc-line-soft: #eef2f3;
+  --evc-text: #10222c;
+  --evc-text-muted: #5b7180;
+  --evc-text-faint: #90a3ae;
+
+  // Type. Archivo carries a width axis, which is where the headline voice
+  // comes from - see .evc-display.
+  --evc-font-display: "Archivo Variable", "Inter Variable", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --evc-font-body: "Inter Variable", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --evc-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+
+  // Rhythm. One section spacing value, replacing the 1.5rem / 4rem / 6rem mix.
+  --evc-section-y: clamp(56px, 7vw, 104px);
+  --evc-gutter: clamp(16px, 4vw, 40px);
+  --evc-measure: 1240px;
+  --evc-measure-wide: 1600px;
+}
+
+// Every price, ticker, change and percentage on the site. tabular-nums is the
+// point: without it the market boards jitter column-to-column as prices tick.
+.evc-mono,
+.evc-mono .ant-typography {
+  font-family: var(--evc-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+  letter-spacing: -0.01em;
+}
+
+// Archivo set wide. A slightly expanded grotesque is the house voice of
+// financial editorial, and it is what keeps the headings from reading as the
+// system stack at a larger size.
+.evc-display {
+  font-family: var(--evc-font-display);
+  font-stretch: 112%;
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  line-height: 1.08;
+}
+
+// Small uppercase mono label. Used for section eyebrows and column headers, so
+// the same device means "this names the thing below it" everywhere.
+.evc-eyebrow {
+  font-family: var(--evc-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+// The "klavika" family this used to name never actually loaded: the @font-face
+// block above declares format("woff") for .otf files, so every browser rejected
+// it and silently fell through to the system stack. The faces are self-hosted
+// webfonts now (imported in src/index.jsx).
 body {
   margin: 0;
-  font-family: "klavika", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: var(--evc-font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff !important;
-  color: #141414;
+  color: var(--evc-text);
   font-size: 14px;
+  line-height: 1.55;
   height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.ant-typography h1,
+.ant-typography h2,
+.ant-typography h3,
+.ant-typography h4,
+.ant-typography h5 {
+  font-family: var(--evc-font-display);
+  font-stretch: 108%;
+  letter-spacing: -0.018em;
 }
 
 html {
@@ -157,6 +267,14 @@ code {
 // tokens cannot reach it. Class comes from AppLoggedIn's `menuProps.classNames.popup.root`.
 .ant-menu-submenu-popup.evc-sider-menu-popup > .ant-menu {
   background-color: #00293d;
+}
+
+// The homepage's in-page nav links (#stock-radar, #option, #uoa, #pricing) use
+// scrollIntoView, which parks the target's top edge at the viewport top - under
+// the fixed header. scroll-margin-top is what scrollIntoView honours to offset
+// that; keep it at least the header height.
+section[id] {
+  scroll-margin-top: 72px;
 }
 
 // Listy draws a divider under every item; antd List (which these lists were migrated from)

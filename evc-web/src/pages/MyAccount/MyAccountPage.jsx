@@ -183,11 +183,11 @@ const MyAccountPage = (props) => {
           >
             <Space orientation="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
-                Your subscription will expire on <Text underline strong>{dayjs.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
+                Your subscription will expire on <Text underline strong>{dayjs.tz(currentSubscription.end, 'utc').format('ll')}</Text>.
                 You can extend the subscription by continue purchasing a new plan.
               </>} />}
               {currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
-                Auto renew payment is on. The next payment date will be on <Text underline strong>{dayjs(currentSubscription.end).format('D MMM YYYY')}</Text>.
+                Auto renew payment is on. The next payment date will be on <Text underline strong>{dayjs(currentSubscription.end).format('ll')}</Text>.
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>.
               </>} />}
               {!currentSubscription && <Alert type="info" showIcon description={<>

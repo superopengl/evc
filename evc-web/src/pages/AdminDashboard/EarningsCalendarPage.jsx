@@ -185,7 +185,7 @@ const EarningsCalendarPage = props => {
     const isToday = date.isSame(dayjs(), 'day');
     return <>
       <div><Text style={{ fontWeight: isToday ? 800 : 400 }}>{dayOfWeek}</Text></div>
-      <Text type="secondary" style={{ fontWeight: isToday ? 600 : 400 }}><small>{date.format('D MMM YYYY')}</small></Text>
+      <Text type="secondary" style={{ fontWeight: isToday ? 600 : 400 }}><small>{date.format('ll')}</small></Text>
     </>
   }
 

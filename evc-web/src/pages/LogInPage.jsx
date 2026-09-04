@@ -69,7 +69,7 @@ const LogInPage = props => {
       <ContainerStyled>
         <LogoContainer><Logo /></LogoContainer>
         <Title level={2}><FormattedMessage id="menu.login" /></Title>
-        <GoogleSsoButton />
+        <GoogleSsoButton block />
         <Divider><Text type="secondary"><small>or</small></Text></Divider>
         <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
           <Form.Item label="" name="name"
@@ -81,7 +81,7 @@ const LogInPage = props => {
             <Input.Password placeholder={intl.formatMessage({id: "placeholder.password"})} autoComplete="current-password" maxLength="50" disabled={sending} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={sending}><FormattedMessage id="menu.login" /></Button>
+            <Button block size="large" type="primary" htmlType="submit" disabled={sending}><FormattedMessage id="menu.login" /></Button>
           </Form.Item>
 
           {/* <Form.Item>

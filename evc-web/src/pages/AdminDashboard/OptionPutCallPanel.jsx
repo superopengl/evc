@@ -120,7 +120,7 @@ const OptionPutCallPanel = (props) => {
         if (!value) {
           return <Tag color="warning">Data is coming soon</Tag>
         }
-        const dateString = dayjs.tz(`${value}`, 'utc').format('DD MMM YYYY');
+        const dateString = dayjs.tz(`${value}`, 'utc').format('ll');
         return dateString;
       }
     },

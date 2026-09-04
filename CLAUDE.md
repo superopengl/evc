@@ -83,6 +83,8 @@ The pipeline is roughly: `StockHistoricalTtmEps` → `StockDailyPe` → `StockCo
 
 **Real-time price/events** go client → SSE (`GET /api/v1/event`, `express-sse-middleware`) ← Redis pub/sub (`src/services/RedisPubSubService.ts`), so multiple API instances can fan out events published by the daemon. A separate WebSocket server (`src/ws.ts`) handles chat rooms only.
 
+The Redis client is node-redis 5, which is promise-based and does **not** connect from the constructor. `redisCache` connects lazily on first use and races that connect against a 5s timeout - node-redis retries forever by default, so without the race a call made while Redis is down would hang instead of failing, and the background reconnect still heals it. Commands are camelCase (`setEx`, `flushAll`) and `SET NX EX` takes an options object (`{ NX: true, EX: seconds }`) rather than positional flags. Subscribers get their listener via `subscribe(channel, listener)`; there is no `'message'` event any more, and a subscriber must be its own connection.
+
 **Static serving:** `src/app.ts` serves `evc-app/www` (the frontend build, symlinked in dev by `pnpm link-web`) with a 1-year immutable cache header, and falls back to `index.html` for client-side routes. `/webhook/stripe` is excluded from JSON body parsing — it needs the raw body for signature verification. Note the middleware carve-out exists but the handler does not: `webhookStripe` is declared in api.yml with no matching export, so the route answers 501 from the swagger-routes-express not-implemented stub.
 
 ## Batch jobs (`evc-app/endpoints/`)

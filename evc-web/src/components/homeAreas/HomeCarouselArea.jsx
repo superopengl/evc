@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Space, Row, Col, List } from 'antd';
+import { Typography, Button, Space, Row, Col, Listy } from 'antd';
 import { withRouter } from 'util/withRouter';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
@@ -49,18 +49,16 @@ width: 100%;
 }
 `;
 
-const StyledList = styled(List)`
+// List -> Listy. styled() still applies for the container metrics; the item rules move to
+// Listy's styles.item, which also has to switch off the divider Listy draws by default.
+const StyledList = styled(Listy)`
 font-size: 14px;
 max-width: 500px;
 margin-left: auto;
 margin-right: auto;
-
-
-.ant-list-item {
-  border: none;
-  padding: 8px 0;
-}
 `;
+
+const SLOGAN_ITEM_STYLE = { border: 'none', padding: '8px 0' };
 
 const InnerContainer = styled.div`
 margin-left: auto;
@@ -120,22 +118,27 @@ const HomeCarouselAreaRaw = props => {
   const data = [
     {
       icon: <Icon component={() => <RiLineChartLine />} />,
+      key: 'slogan1',
       description: <FormattedMessage id="text.slogan1" />,
     },
     {
       icon: <Icon component={() => <BsArrowBarUp />} />,
+      key: 'slogan2',
       description: <FormattedMessage id="text.slogan2" />,
     },
     {
       icon: <Icon component={() => <BsCalendar />} />,
+      key: 'slogan5',
       description: <FormattedMessage id="text.slogan5" />,
     },
     {
       icon: <Icon component={() => <GiRadarSweep />} />,
+      key: 'slogan6',
       description: <FormattedMessage id="text.slogan6" />,
     },
     {
       icon: <Icon component={() => <AiOutlineNotification />} />,
+      key: 'slogan7',
       description: <FormattedMessage id="text.slogan7" />,
     },
   ];
@@ -169,17 +172,14 @@ const HomeCarouselAreaRaw = props => {
           </Col>
           <Col {...span}>
             <StyledList
-              itemLayout="horizontal"
-              dataSource={data}
-              // bordered
-              size="large"
-              renderItem={item => (
-                <List.Item>
-                  <Space size="large">
-                    <Text style={{ fontSize: 30, color: 'rgba(255,255,255,0.9)' }}>{item.icon}</Text>
-                    <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>{item.description}</Text>
-                  </Space>
-                </List.Item>
+              items={data}
+              rowKey="key"
+              styles={{ item: SLOGAN_ITEM_STYLE }}
+              itemRender={item => (
+                <Space size="large">
+                  <Text style={{ fontSize: 30, color: 'rgba(255,255,255,0.9)' }}>{item.icon}</Text>
+                  <Text style={{ fontSize: 15, color: 'rgba(255,255,255,0.9)', fontWeight: 500 }}>{item.description}</Text>
+                </Space>
               )}
             />
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Space, List, Tooltip, Descriptions, Tag } from 'antd';
+import { Typography, Space, Listy, Tooltip, Descriptions, Tag } from 'antd';
 import { withRouter } from 'util/withRouter';
 import { getStockInsiderTransaction } from 'services/stockService';
 import { Loading } from './Loading';
@@ -11,12 +11,14 @@ import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
-const RosterList = styled(List)`
-.ant-list-item {
-  padding-left: 0;
-  padding-right: 0;
-}
-`;
+// List -> Listy: `grid={{column: 1}}` was a plain vertical stack, and the styled(List)
+// wrapper only zeroed the item's horizontal padding - styles.item does that directly.
+const ITEM_STYLE = { paddingInline: 0, paddingBlock: 8 };
+
+// The rows come out of a JSON blob (StockInsiderTransaction.value) with no id of their own,
+// so Listy's required rowKey has to be composed from the fields that identify a filing.
+const rosterRowKey = item =>
+  `${item.fullName}.${item.filingDate}.${item.transactionDate}.${item.transactionCode}.${item.transactionShares}`;
 
 
 const Container = styled(Space)`
@@ -94,28 +96,25 @@ const StockInsiderTransactionPanel = (props) => {
             {v.message}
           </div>)}
         </Space>
-        <RosterList
-          grid={{ column: 1 }}
-          itemLayout="horizontal"
-          size="small"
-          dataSource={data}
-          renderItem={item => (
-            <List.Item>
-              <Descriptions
-                title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
-                size="small"
-                column={span}
-                extra={getBadgeComponent(item.transactionCode)}
-              >
-                <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
-                <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
-                <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
-                <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
-                <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
-                <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
-                <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
-              </Descriptions>
-            </List.Item>
+        <Listy
+          items={data}
+          rowKey={rosterRowKey}
+          styles={{ item: ITEM_STYLE }}
+          itemRender={item => (
+            <Descriptions
+              title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
+              size="small"
+              column={span}
+              extra={getBadgeComponent(item.transactionCode)}
+            >
+              <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
+              <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
+              <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
+              <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
+              <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
+              <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
+              <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
+            </Descriptions>
           )}
         />
       </Container>

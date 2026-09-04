@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Switch } from 'antd';
+import { Typography, Space, Table, Image, Card, Listy, Tooltip, Button, Switch } from 'antd';
 import { withRouter } from 'util/withRouter';
 import PropTypes from 'prop-types';
 import { getEarningsCalender } from 'services/stockService';
@@ -155,13 +155,14 @@ const EarningsCalendarPage = props => {
   const renderDataList = (list) => {
     if (!list) return null;
 
-    return <List
-      grid={{
-        column: 1,
-        gutter: [0, 10]
-      }}
-      dataSource={showMore ? list : take(list, 10)}
-      renderItem={item => <Tooltip title={item.company} placement="top">
+    // List -> Listy. The single-column grid was a plain stack; its 10px row gutter becomes
+    // the item's block padding, and the divider/hover Listy adds by default is turned off
+    // because each row is already a Card.
+    return <Listy
+      items={showMore ? list : take(list, 10)}
+      rowKey="symbol"
+      styles={{ item: { padding: '5px 0', border: 'none' } }}
+      itemRender={item => <Tooltip title={item.company} placement="top">
         <SymbolLogo>
           <Card size="small" onClick={() => handleItemClick(item.symbol)} >
             <div style={{ display: 'flex', flexDirection: showLogo ? 'row' : 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>

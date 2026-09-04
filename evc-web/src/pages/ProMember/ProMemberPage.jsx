@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Space, Modal, Image, Row, Col, List, Tooltip, Tag, Descriptions } from 'antd';
+import { Alert, Button, Card, Space, Modal, Image, Row, Col, Listy, Tooltip, Tag, Descriptions } from 'antd';
 import React from 'react';
 import { Typography } from 'antd';
 import styled from 'styled-components';
@@ -55,12 +55,13 @@ margin: 0 auto;
 max-width: 1400px;
 `;
 
-const RosterList = styled(List)`
-.ant-list-item {
-  padding-left: 0;
-  padding-right: 0;
-}
-`;
+// List -> Listy. `grid={{column: 1}}` was a plain vertical stack; the styled(List) wrapper
+// only zeroed the item's horizontal padding, which is styles.item now.
+const ROSTER_ITEM_STYLE = { paddingInline: 0, paddingBlock: 8 };
+
+// Insider rows come from a JSON blob with no id, so compose the required rowKey.
+const rosterRowKey = item =>
+  `${item.fullName}.${item.filingDate}.${item.transactionDate}.${item.transactionCode}.${item.transactionShares}`;
 
 const RosterContainer = styled(Space)`
 .ant-descriptions-title {
@@ -942,28 +943,25 @@ const ProMemberPage = (props) => {
                         {v.message}
                       </div>)}
                     </Space>
-                    <RosterList
-                      grid={{ column: 1 }}
-                      itemLayout="horizontal"
-                      size="small"
-                      dataSource={rosterListData}
-                      renderItem={item => (
-                        <List.Item>
-                          <Descriptions
-                            title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
-                            size="small"
-                            column={insiderSpan}
-                            extra={getBadgeComponent(item.transactionCode)}
-                          >
-                            <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
-                            <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
-                            <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
-                            <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
-                            <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
-                            <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
-                            <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
-                          </Descriptions>
-                        </List.Item>
+                    <Listy
+                      items={rosterListData}
+                      rowKey={rosterRowKey}
+                      styles={{ item: ROSTER_ITEM_STYLE }}
+                      itemRender={item => (
+                        <Descriptions
+                          title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
+                          size="small"
+                          column={insiderSpan}
+                          extra={getBadgeComponent(item.transactionCode)}
+                        >
+                          <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
+                          <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
+                          <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
+                          <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
+                        </Descriptions>
                       )}
                     />
                   </RosterContainer>

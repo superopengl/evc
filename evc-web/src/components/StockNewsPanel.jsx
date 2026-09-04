@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image, Skeleton } from 'antd';
+import { Listy, Typography, Space, Image, Skeleton, Empty } from 'antd';
 import { withRouter } from 'util/withRouter';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
+import { ListyItemMeta } from 'components/ListyItemMeta';
 import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
 import { from } from 'rxjs';
@@ -14,12 +15,10 @@ const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
 width: 100%;
-
-.ant-list-item {
-  align-items: flex-start;
-  border: none;
-}
 `;
+// Was `.ant-list-item { border: none }` on the container above. Listy owns the item element,
+// so it moves to styles.item - including the horizontal padding, which antd List left at 0.
+const NEWS_ITEM_STYLE = { padding: '12px 0', border: 'none' };
 
 const NewsImage = styled(Image)`
 width: 200px;
@@ -28,7 +27,11 @@ width: 200px;
 cursor: pointer;
 `;
 
-const StyledListItem = styled(List.Item)`
+// List -> Listy. Listy owns the item element, so the hover rule that used to live on
+// styled(List.Item) moves to a wrapper rendered inside itemRender.
+const SKELETON_ROWS = [{ key: 0 }, { key: 1 }, { key: 2 }];
+
+const StyledListItem = styled.div`
 
 .news-title {
   font-weight: 400;
@@ -75,31 +78,31 @@ const StockNewsPanel = (props) => {
   }
 
   if (loading) {
-    return <List
-      dataSource={[0, 0, 0]}
-      renderItem={() => (
-        <List.Item>
-          <List.Item.Meta
-            avatar={<Skeleton.Image />}
-          />
+    // rowKey is required by Listy and must be unique, so the placeholder rows carry one.
+    return <Listy
+      items={SKELETON_ROWS}
+      rowKey="key"
+      styles={{ item: NEWS_ITEM_STYLE }}
+      itemRender={() => (
+        <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+          <ListyItemMeta avatar={<Skeleton.Image />} />
           <Skeleton loading={true} active />
-        </List.Item>
+        </div>
       )}
     />
   }
 
   return (
     <Container direction="vertical">
-      <List
-        dataSource={data}
-        locale={{
-          emptyText: 'No news data available for ' + symbol
-        }}
-        renderItem={item => (
-          <StyledListItem
-          // onClick={() => handleOpenNews(item.url)}
-          >
-            <List.Item.Meta
+      {/* Listy has no `locale.emptyText`, so the empty state is rendered explicitly. */}
+      {!data?.length && <Empty description={'No news data available for ' + symbol} />}
+      <Listy
+        items={data}
+        rowKey="url"
+        styles={{ item: NEWS_ITEM_STYLE }}
+        itemRender={item => (
+          <StyledListItem>
+            <ListyItemMeta
               avatar={item.image && showImage ? <NewsImage
                 style={{ width: showBigImage ? 200 : 100 }}
                 preview={false}

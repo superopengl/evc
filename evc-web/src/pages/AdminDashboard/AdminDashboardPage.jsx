@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Collapse, Tag, Badge, List, Table, Space } from 'antd';
+import { Typography, Collapse, Tag, Badge, Table, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'util/withRouter';
 import { Loading } from 'components/Loading';

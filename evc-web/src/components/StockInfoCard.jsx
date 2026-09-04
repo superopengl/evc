@@ -13,7 +13,7 @@ import { StockNoticeButton } from './StockNoticeButton';
 import { filter } from 'rxjs/operators';
 import { FormattedMessage } from 'react-intl';
 import StockCustomTagSelect from './StockCustomTagSelect';
-import { List } from 'antd';
+import { Listy } from 'antd';
 import isObject from 'lodash/isObject';
 import { SectionTitleDivider } from './SectionTitleDivider';
 import { NumberValueDisplay } from './NumberValueDisplay';
@@ -24,13 +24,9 @@ const { Text } = Typography;
 const SHOW_SUPPORT_RESISTANCE = false;
 
 
-const StyledList = styled(List)`
-.ant-list-item {
-  padding: 0 0 0 0;
-  margin: 0;
-  border: 0;
-}
-`;
+// List -> Listy. The styled(List) wrapper existed only to flatten the item box; Listy takes
+// that as styles.item, so the rows stay flush the way the card layout expects.
+const FLAT_ITEM_STYLE = { padding: 0, margin: 0, border: 0 };
 
 const StyledCard = styled(Card)`
 height: 100%;
@@ -255,10 +251,12 @@ const StockInfoCard = (props) => {
       </Col>
       <Col flex="auto">
         <SectionTitleDivider title={<Text style={{ fontSize: '0.8rem' }}><FormattedMessage id="text.reportDate" />: {stock.fairValueDate ? dayjs(stock.fairValueDate).format('D MMM YYYY') : 'NONE'}</Text>} />
-        <StyledList
-          dataSource={cardDataSource}
+        <Listy
+          items={cardDataSource}
+          rowKey="textKey"
+          styles={{ item: FLAT_ITEM_STYLE }}
           style={{ width: '100%', marginBottom: '1rem' }}
-          renderItem={item => <List.Item>
+          itemRender={item => (
             <Row gutter={4} justify='space-between' style={{ width: '100%' }}>
               <Col>
                 <TooltipLabel message="">
@@ -273,13 +271,15 @@ const StockInfoCard = (props) => {
                 }
               </Col>
             </Row>
-          </List.Item>}
+          )}
         />
         <SectionTitleDivider title={<small><Text style={{ fontSize: '0.8rem' }} ><FormattedMessage id="text.dailyUpdate" /></Text></small>} />
-        <StyledList
-          dataSource={cardDailyUpdateDataSource}
+        <Listy
+          items={cardDailyUpdateDataSource}
+          rowKey="textKey"
+          styles={{ item: FLAT_ITEM_STYLE }}
           style={{ width: '100%' }}
-          renderItem={item => <List.Item>
+          itemRender={item => (
             <Row gutter={4} justify='space-between' style={{ width: '100%' }}>
               <Col>
                 <TooltipLabel message="">
@@ -297,7 +297,7 @@ const StockInfoCard = (props) => {
                 }
               </Col>
             </Row>
-          </List.Item>}
+          )}
         />
         <table>
           <tbody>

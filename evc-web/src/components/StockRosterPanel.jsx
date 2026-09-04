@@ -1,21 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Space, List } from 'antd';
+import { Typography, Space, Listy } from 'antd';
 import { withRouter } from 'util/withRouter';
 import { getStockRoster } from 'services/stockService';
 import { Loading } from './Loading';
-import styled from 'styled-components';
 import { from } from 'rxjs';
 
 const { Text } = Typography;
 
-
-const RosterList = styled(List)`
-.ant-list-item {
-  padding-left: 0;
-  padding-right: 0;
-}
-`;
+// List -> Listy: the single-column `grid` was only ever a plain vertical stack, and the
+// styled(List) wrapper only existed to zero the item's horizontal padding, which Listy
+// exposes directly as styles.item.
+const ITEM_STYLE = { paddingInline: 0, paddingBlock: 8 };
 
 const StockRosterPanel = (props) => {
 
@@ -45,26 +41,15 @@ const StockRosterPanel = (props) => {
 
   return (
     <Loading loading={loading}>
-      <RosterList
-        grid={{
-          gutter: 10,
-          xs: 1,
-          sm: 1,
-          md: 1,
-          lg: 1,
-          xl: 1,
-          xxl: 1
-        }}
-        itemLayout="horizontal"
-        size="small"
-        dataSource={data}
-        renderItem={item => (
-          <List.Item>
-            <Space style={{width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0,0,0,0.1)'}}>
-              <Text>{item.entityName}</Text>
-              <Text>{item.position?.toLocaleString()}</Text>
-            </Space>
-          </List.Item>
+      <Listy
+        items={data}
+        rowKey="entityName"
+        styles={{ item: ITEM_STYLE }}
+        itemRender={item => (
+          <Space style={{width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0,0,0,0.1)'}}>
+            <Text>{item.entityName}</Text>
+            <Text>{item.position?.toLocaleString()}</Text>
+          </Space>
         )}
       />
     </Loading>

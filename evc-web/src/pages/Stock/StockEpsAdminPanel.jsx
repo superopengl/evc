@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { List, Typography, Space, Button, Tooltip, Alert, Tag, Badge } from 'antd';
+import { Listy, Spin, Typography, Space, Button, Tooltip, Alert, Tag, Badge } from 'antd';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
+import { ListyItemMeta } from 'components/ListyItemMeta';
 import styled from 'styled-components';
 import { StockEpsInput } from './StockEpsInput';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
@@ -17,6 +18,10 @@ const Container = styled.div`
     background-color: rgba(87,187,96, 0.1);
   }
 `;
+
+// A plain antd List laid its items out with `8px 0` at size="small"; Listy defaults to
+// `12px 16px`, so both axes have to be restated or every row gains a 16px inset.
+const SMALL_ITEM_STYLE = { paddingBlock: 8, paddingInline: 0 };
 
 
 const StockEpsAdminEditor = (props) => {
@@ -91,29 +96,35 @@ const StockEpsAdminEditor = (props) => {
           <Button type="primary" disabled={loading} onClick={() => handleSyncEps()} loading={loading} icon={<SyncOutlined />}></Button>
         </Tooltip>
       </Space>
-      <List
-        dataSource={list}
-        loading={loading}
-        itemLayout="horizontal"
-        rowKey="id"
-        size="small"
-        locale={{ emptyText: ' ' }}
-        renderItem={(item) => (
-          <List.Item
-            onClick={() => onSelected(item)}
-            extra={<ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />}
-          >
-            <List.Item.Meta
-              description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                <Text type="secondary"><small>{dayjs(item.reportDate).format('D MMM YYYY')}</small>
-                  {item.source === 'evc' && <Tooltip title="Manually input EPS"><Badge status="success" style={{ marginLeft: 4 }} /></Tooltip>}
-                </Text>
-                <MoneyAmount symbol="" value={item.value} digital={4} />
-              </Space>}
-            />
-          </List.Item>
-        )}
-      />
+      {/* List -> Listy. List.Item's `onClick` and `extra` have no equivalent on Listy (it owns
+          the item wrapper), so the row becomes a flex box inside itemRender. `size="small"`
+          is styles.item, `loading` is a Spin, and `locale.emptyText` is unnecessary because
+          Listy renders nothing for an empty list. */}
+      <Spin spinning={loading}>
+        <Listy
+          items={list}
+          // StockEps is keyed on (symbol, reportDate) - it has no `id`. The old
+          // `rowKey="id"` was already wrong, but antd List silently fell back to the row
+          // index; Listy requires a real key, so this now uses the one that exists.
+          rowKey="reportDate"
+          styles={{ item: SMALL_ITEM_STYLE }}
+          itemRender={item => (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ flex: 1, minWidth: 0, cursor: 'pointer' }} onClick={() => onSelected(item)}>
+                <ListyItemMeta
+                  description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
+                    <Text type="secondary"><small>{dayjs(item.reportDate).format('D MMM YYYY')}</small>
+                      {item.source === 'evc' && <Tooltip title="Manually input EPS"><Badge status="success" style={{ marginLeft: 4 }} /></Tooltip>}
+                    </Text>
+                    <MoneyAmount symbol="" value={item.value} digital={4} />
+                  </Space>}
+                />
+              </div>
+              <ConfirmDeleteButton onOk={() => handleDeleteItem(item)} />
+            </div>
+          )}
+        />
+      </Spin>
     </Space>
   </Container>
 }

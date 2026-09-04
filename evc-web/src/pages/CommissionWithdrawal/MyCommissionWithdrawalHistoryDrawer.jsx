@@ -1,4 +1,4 @@
-import { List, Drawer } from 'antd';
+import { Listy, Spin, Drawer } from 'antd';
 import React from 'react';
 import { withRouter } from 'util/withRouter';
 import { listMyCommissionWithdrawal } from 'services/commissionService';
@@ -45,21 +45,16 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
       closable={true}
       open={visible}
       onClose={onClose} mask={{ closable: true }}>
-      <List
-        title={false}
-        loading={loading}
-        grid={{
-          gutter: [0, 20],
-          column: 1
-        }}
-        dataSource={list}
-        size="small"
-        renderItem={item => {
-          return <List.Item style={{ paddingLeft: 0, paddingRight: 0 }}>
-            <CommissionWithdrawalCard value={item} />
-          </List.Item>
-        }}
-      />
+      {/* List -> Listy. The single-column grid was a plain stack; its 20px row gutter is now
+          the item's block padding, and `loading` becomes an explicit Spin. */}
+      <Spin spinning={loading}>
+        <Listy
+          items={list}
+          rowKey="id"
+          styles={{ item: { paddingInline: 0, paddingBlock: 10, border: 'none' } }}
+          itemRender={item => <CommissionWithdrawalCard value={item} />}
+        />
+      </Spin>
     </Drawer>
   );
 };

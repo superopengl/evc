@@ -1,9 +1,10 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, List, Drawer } from 'antd';
+import { Typography, Listy, Spin, Drawer } from 'antd';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
+import { ListyItemMeta } from 'components/ListyItemMeta';
 import { TimeAgo } from 'components/TimeAgo';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import sumBy from 'lodash/sumBy';
@@ -12,11 +13,9 @@ import { FormattedMessage } from 'react-intl';
 
 const { Text } = Typography;
 
-const StyledDrawer = styled(Drawer)`
-  .ant-list-item {
-    padding: 8px 0;
-  }
-`
+// List -> Listy. `size="small"` and the drawer's own .ant-list-item override both collapse
+// into Listy's styles.item.
+const ITEM_STYLE = { padding: '8px 0' }
 
 const CreditHistoryListDrawer = (props) => {
 
@@ -47,7 +46,7 @@ const CreditHistoryListDrawer = (props) => {
   const total = sumBy(data, x => (+x.amount) || 0);
 
   return (
-    <StyledDrawer
+    <Drawer
       title={<FormattedMessage id="text.creditHistory" />}
       open={visible}
       closable={true}
@@ -64,21 +63,23 @@ const CreditHistoryListDrawer = (props) => {
       }
       footerStyle={{ textAlign: 'right' }}
     >
-      <List
-        loading={loading}
-        dataSource={data}
-        size="small"
-        renderItem={item => {
-          return <List.Item>
-            <List.Item.Meta
-              description={<TimeAgo value={item.createdAt} />}
-              title={item.referredUserEmail || getSubscriptionName(item.type)}
-            />
-            <MoneyAmount type={item.amount < 0 ? 'danger' : 'success'} value={item.amount} />
-          </List.Item>
-        }}
-      />
-    </StyledDrawer>
+      <Spin spinning={loading}>
+        <Listy
+          items={data}
+          rowKey="id"
+          styles={{ item: ITEM_STYLE }}
+          itemRender={item => (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <ListyItemMeta
+                description={<TimeAgo value={item.createdAt} />}
+                title={item.referredUserEmail || getSubscriptionName(item.type)}
+              />
+              <MoneyAmount type={item.amount < 0 ? 'danger' : 'success'} value={item.amount} />
+            </div>
+          )}
+        />
+      </Spin>
+    </Drawer>
   )
 };
 

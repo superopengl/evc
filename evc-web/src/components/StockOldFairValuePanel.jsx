@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Typography, Space, Image } from 'antd';
+import { Listy, Typography, Space, Image, Empty, Spin } from 'antd';
 import { withRouter } from 'util/withRouter';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
+import { ListyItemMeta } from 'components/ListyItemMeta';
 import styled from 'styled-components';
 import { MdOpenInNew } from 'react-icons/md';
 import { from } from 'rxjs';
@@ -13,12 +14,10 @@ const { Title } = Typography;
 
 const Container = styled(Space)`
 width: 100%;
-
-.ant-list-item {
-  align-items: flex-start;
-  border: none;
-}
 `;
+// Was `.ant-list-item { border: none }` on the container above. Listy owns the item element,
+// so it moves to styles.item - including the horizontal padding, which antd List left at 0.
+const NEWS_ITEM_STYLE = { padding: '12px 0', border: 'none' };
 
 const NewsImage = styled(Image)`
 width: 200px;
@@ -28,7 +27,9 @@ border-radius: 6px;
 cursor: pointer;
 `;
 
-const StyledListItem = styled(List.Item)`
+// List -> Listy: Listy owns the item element, so this hover rule moves onto a wrapper
+// rendered inside itemRender.
+const StyledListItem = styled.div`
 &:hover {
   .news-title {
     color: #3273A4;
@@ -70,14 +71,15 @@ const StockOldFairValuePanel = (props) => {
 
   return (
     <Container direction="vertical">
-      <List
-        loading={loading}
-        dataSource={data}
-        renderItem={item => (
-          <StyledListItem
-          // onClick={() => handleOpenNews(item.url)}
-          >
-            <List.Item.Meta
+      <Spin spinning={loading}>
+      {!loading && !data?.length && <Empty description="No news" />}
+      <Listy
+        items={data}
+        rowKey="url"
+        styles={{ item: NEWS_ITEM_STYLE }}
+        itemRender={item => (
+          <StyledListItem>
+            <ListyItemMeta
               avatar={item.image ? <NewsImage preview={false} src={item.image} onClick={() => handleOpenNews(item.url)} /> : null}
               title={<>
                 <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ width: '100%' }}>
@@ -98,6 +100,7 @@ const StockOldFairValuePanel = (props) => {
           </StyledListItem>
         )}
       />
+      </Spin>
     </Container>
   );
 };

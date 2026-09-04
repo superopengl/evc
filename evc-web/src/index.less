@@ -158,3 +158,10 @@ code {
 .ant-menu-submenu-popup.evc-sider-menu-popup > .ant-menu {
   background-color: #00293d;
 }
+
+// Listy draws a divider under every item; antd List (which these lists were migrated from)
+// suppressed it on the last one. Keep that, otherwise every migrated list gains a stray rule
+// above whatever follows it.
+.ant-listy-item:last-child {
+  border-block-end: none;
+}

@@ -7,6 +7,7 @@ import HomeSection from 'components/homeAreas/HomeSection';
 export const HomeUnusualOptionActivityArea = props => {
   return (
     <HomeSection
+      tone="mint"
       wide
       title={<FormattedMessage id="menu.unusualOptionsActivity" />}
     >

@@ -11,17 +11,82 @@ import styled from 'styled-components';
  * 4rem there, a 6rem bottom margin on pricing). Spacing, measure and the heading scale
  * are decided once here and read from the --evc-* tokens in index.less.
  *
- *  tone   'paper' (default) | 'sub' | 'ink'   band background
+ *  tone   'paper' (default) | 'sub' | 'signal' | 'tide' | 'mint' | 'ink'   band background
  *  wide   opt into --evc-measure-wide (1600px) for the full-width data boards
  *
- * paper and sub alternate down the page. 'ink' is the one dark band - #00293d, the same
- * navy as the nav and the footer - and it is deliberately used once, on pricing, so the
- * plans read as the page's closing statement rather than as one more white section.
+ * paper and sub alternate down the page. 'ink' is the one dark band, built around the #00293d
+ * of the nav and the footer, and it is deliberately used once, on pricing, so the plans read
+ * as the page's closing statement rather than as one more white section.
+ *
+ * ink is not flat. Three layers, painted back to front:
+ *   1. a diagonal navy ramp, #013246 at the top-left down to #001e2e at the bottom-right,
+ *      which also hands off cleanly to the darker footer below it;
+ *   2. a green glow off the top-left corner;
+ *   3. a cyan glow off the bottom-right.
+ * The two glows are the hero's own #57BB60 and #55B0D4 at low alpha, so the band closes the
+ * page on the same two colours it opened with.
  */
+// Exported: components/AuthPageShell reuses this band for the /login and /signup panel,
+// so the two auth screens sit on the same ink as the homepage's closing section.
+export const INK_BG = [
+  'radial-gradient(1100px 560px at 12% -10%, rgba(87, 187, 96, 0.18), transparent 62%)',
+  'radial-gradient(900px 520px at 92% 108%, rgba(85, 176, 212, 0.16), transparent 60%)',
+  'linear-gradient(168deg, #013246 0%, #00293d 46%, #001e2e 100%)',
+].join(', ');
+
+/**
+ * The three data sections each get a tinted wash rather than a neutral grey. Four layers,
+ * front to back:
+ *
+ *   1. EDGE_FADE  - white at the very top and bottom edge of the band, easing out over 140px.
+ *                   This is what keeps section boundaries from being a hard line: two
+ *                   adjacent bands meet through near-white instead of tint-against-tint.
+ *   2. pattern    - a faint market/instrument motif, one per section (see PATTERN).
+ *   3. glow       - an off-canvas radial in the band's own hue.
+ *   4. ramp       - the diagonal tint itself.
+ *
+ * Hue alternates green -> cyan -> mint down the page. Three genuinely distinct tints are not
+ * available from a two-hue palette, so the rule is that *adjacent* bands never share a hue -
+ * signal and mint are both green-family but Option Put/Call sits between them. The pattern
+ * and the glow corner differ in all three, which is what stops the pale bands from reading
+ * as a repeat.
+ */
+
+// Fixed px, not a percentage: these sections range from ~700px to well over 2000px tall, and
+// a percentage fade would be a 20px hairline on one and a 400px wash on another.
+const EDGE_FADE = [
+  'linear-gradient(180deg,',
+  '#ffffff 0px, rgba(255, 255, 255, 0) 140px,',
+  'rgba(255, 255, 255, 0) calc(100% - 140px), #ffffff 100%)',
+].join(' ');
+
+// Ink at 3-5% - legible as texture at arm's length, invisible as a distraction behind data.
+const PATTERN = {
+  // Radar sweep: concentric rings struck from the same corner the glow comes from.
+  signal: 'repeating-radial-gradient(circle at 15% 0%, rgba(6, 32, 46, 0.045) 0 1px, transparent 1px 64px)',
+  // Chart grid.
+  tide: [
+    'repeating-linear-gradient(0deg, rgba(6, 32, 46, 0.04) 0 1px, transparent 1px 48px)',
+    'repeating-linear-gradient(90deg, rgba(6, 32, 46, 0.04) 0 1px, transparent 1px 48px)',
+  ].join(', '),
+  // Order flow: diagonal hatch.
+  mint: 'repeating-linear-gradient(45deg, rgba(6, 32, 46, 0.035) 0 1px, transparent 1px 14px)',
+};
+
+const wash = (tone, glow, corner, from, mid, to) => [
+  EDGE_FADE,
+  PATTERN[tone],
+  `radial-gradient(900px 460px at ${corner}, ${glow}, transparent 62%)`,
+  `linear-gradient(170deg, ${from} 0%, ${mid} 55%, ${to} 100%)`,
+].join(', ');
+
 const TONE_BG = {
   paper: 'var(--evc-paper)',
   sub: 'var(--evc-paper-sub)',
-  ink: '#00293d',
+  signal: wash('signal', 'rgba(87, 187, 96, 0.13)', '15% 0%', '#eef8f0', '#e9f5ec', '#f3faf5'),
+  tide: wash('tide', 'rgba(85, 176, 212, 0.14)', '85% 0%', '#ecf6fc', '#e7f2fa', '#f2f9fd'),
+  mint: wash('mint', 'rgba(125, 212, 135, 0.16)', '20% 100%', '#f0faf2', '#eaf7ee', '#f5fbf7'),
+  ink: INK_BG,
 };
 
 const Outer = styled.div`
@@ -99,7 +164,7 @@ HomeSection.propTypes = {
   title: PropTypes.node,
   subtitle: PropTypes.node,
   extra: PropTypes.node,
-  tone: PropTypes.oneOf(['paper', 'sub', 'ink']),
+  tone: PropTypes.oneOf(['paper', 'sub', 'signal', 'tide', 'mint', 'ink']),
   wide: PropTypes.bool,
   align: PropTypes.oneOf(['left', 'center']),
   children: PropTypes.node,

@@ -58,7 +58,7 @@ export const HomeStockRadarArea = props => {
   const { onSymbolClick = () => { } } = props;
   return (
     <HomeSection
-      tone="sub"
+      tone="signal"
       wide
       title={<FormattedMessage id="menu.stockRadar" />}
       subtitle={<FormattedMessage id="text.stockRadarDescription" />}

@@ -195,7 +195,7 @@ const MyAccountPage = (props) => {
                 {account.my1stBuyDiscountPerc > 0 && <strong> <FormattedMessage id="text.initialBuyDiscountMessage" values={{ percentage: account.my1stBuyDiscountPerc * 100 }} /></strong>}
               </>} />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
-                <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
+                <StyledRow gutter={[30, 30]}>
                   {subscriptionDef.filter(x => x.key !== 'free' || isCurrentFree).map(s => <StyledCol key={s.key} {...priceCardSpan}>
                     <SubscriptionCard
                       title={s.title}

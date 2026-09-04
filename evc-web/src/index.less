@@ -289,6 +289,89 @@ section[id] {
   scroll-margin-top: 72px;
 }
 
+// The /login and /signup control stack - Google button, "or" rule, fields, one primary
+// action. It lives here rather than in components/AuthPageShell because SignUpForm is also
+// opened in a modal from ProMemberPage, which is outside the shell; both roots carry the
+// class, and nesting them on the /signup page is harmless.
+//
+// Every control is size="large", i.e. 40px - the height the Google button and the hero's
+// buttons already are - so the whole stack is one row height. Only the radius is restated:
+// 10px matches the homepage's cards rather than antd's 8px default.
+.evc-auth-form {
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-btn {
+    border-radius: 10px;
+  }
+
+  .ant-form-item-label > label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--evc-text-muted);
+  }
+
+  .auth-divider {
+    margin: 22px 0;
+
+    .ant-divider-inner-text {
+      color: var(--evc-text-faint);
+    }
+  }
+
+  // The "already a user / not a user" line. A full-width antd link Button read as a second
+  // action next to the primary one; as a sentence with one link in it, it reads as the
+  // footnote it is.
+  .auth-alt {
+    margin: 20px 0 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--evc-text-muted);
+
+    // Green, not the theme's #55B0D4 link blue: on these two screens the only other blue is
+    // the hero strip along the top of the card, and a blue text link read as a third accent.
+    a {
+      color: var(--evc-signal-deep);
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // Forgot-password sits directly under the primary button, so it stays muted - green there
+  // would read as a second action rather than as a way out.
+  .auth-secondary {
+    display: block;
+    margin-block-start: 14px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--evc-text-muted);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--evc-signal-deep);
+      text-decoration: underline;
+    }
+  }
+
+  .auth-fine-print {
+    display: block;
+    margin-block-end: 20px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--evc-text-faint);
+
+    a {
+      color: var(--evc-text-muted);
+      text-decoration: underline;
+    }
+  }
+}
+
 // Listy draws a divider under every item; antd List (which these lists were migrated from)
 // suppressed it on the last one. Keep that, otherwise every migrated list gains a stray rule
 // above whatever follows it.

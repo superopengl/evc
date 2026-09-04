@@ -1,28 +1,27 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'util/withRouter';
 import { Typography, Button, Form, Input, Divider } from 'antd';
+import PropTypes from 'prop-types';
 import { signUp } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
 import queryString from 'query-string';
-import { FormattedMessage } from 'react-intl';
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 const { Title, Text } = Typography;
 
-
-const ContainerStyled = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
-  width: 100%;
-`;
-
+/**
+ * The control stack is the same one /login uses, in the same order - Google, an "or" rule,
+ * then the email field and one primary action - because the two pages sit side by side in the
+ * nav and previously disagreed about it (signup put Google last and the "already a user" link
+ * *above* the email field, where it read as the form's first control).
+ *
+ * showTitle is for the one caller that is not the /signup page: ProMemberPage opens this in a
+ * modal that has no title of its own. On the page, AuthPageShell renders the heading.
+ */
 const SignUpForm = (props) => {
 
-  const { onOk } = props;
+  const { onOk, showTitle = true } = props;
 
   const intl = useIntl();
   const [sending, setSending] = React.useState(false);
@@ -54,51 +53,62 @@ const SignUpForm = (props) => {
   }
 
   return (
-    <ContainerStyled>
-      <Title level={2}>
-        <FormattedMessage id="menu.signUp"/>
-      </Title>
-      <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'member' }}>
-        <Form.Item>
-          <Link to="/login"><Button size="small" block type="link">
-            <FormattedMessage id="text.alreadyAUserClickToLogin"/>
-            </Button></Link>
+    <div className="evc-auth-form">
+      {showTitle && <Title level={2} style={{ marginBottom: 24 }}>
+        <FormattedMessage id="menu.signUp" />
+      </Title>}
+      <GoogleSsoButton block referralCode={referralCode} />
+      <Divider className="auth-divider" plain>
+        <FormattedMessage id="text.or" />
+      </Divider>
+      <Form layout="vertical" onFinish={handleSignIn} requiredMark={false} initialValues={{ role: 'member' }}>
+        <Form.Item
+          label={<FormattedMessage id="placeholder.emailAddress" />}
+          name="email"
+          rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}
+        >
+          <Input
+            size="large"
+            placeholder={intl.formatMessage({ id: 'placeholder.emailAddress' })}
+            type="email"
+            autoComplete="email"
+            allowClear={true}
+            maxLength="100"
+            autoFocus={true}
+          />
         </Form.Item>
-        <Form.Item label="" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
-          <Input placeholder={intl.formatMessage({id: 'placeholder.emailAddress'})} type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
-        </Form.Item>
-        {/* <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
-          validator: (_, value) =>
-            value ? Promise.resolve() : Promise.reject('You have to agree to continue.'),
-        }]}>
-          <Checkbox disabled={sending}>I have read and agree to the <a target="_blank" href="/terms_and_conditions">terms & conditions</a> and <a target="_blank" href="/privacy_policy">privacy policy</a>.</Checkbox>
-        </Form.Item> */}
-       <FormattedMessage id="text.byClickingAgreement" 
-       values={{
-         tc: <a target="_blank" href="/terms_and_conditions">
-           <FormattedMessage id="menu.tc"/>
-         </a>,
-         pp: <a target="_blank" href="/privacy_policy">
-           <FormattedMessage id="menu.pp"/>
-         </a>
-       }} 
-       />
-        <Form.Item style={{ marginTop: '1rem' }}>
-          <Button block size="large" type="primary" htmlType="submit" disabled={sending}>
+        <span className="auth-fine-print">
+          <FormattedMessage
+            id="text.byClickingAgreement"
+            values={{
+              tc: <a target="_blank" rel="noreferrer" href="/terms_and_conditions">
+                <FormattedMessage id="menu.tc" />
+              </a>,
+              pp: <a target="_blank" rel="noreferrer" href="/privacy_policy">
+                <FormattedMessage id="menu.pp" />
+              </a>
+            }}
+          />
+        </span>
+        <Form.Item style={{ marginBottom: 0 }}>
+          <Button block size="large" type="primary" htmlType="submit" loading={sending} disabled={sending}>
             <FormattedMessage id="menu.signUp" />
           </Button>
         </Form.Item>
-        {/* <Form.Item>
-                  <Button block type="link" onClick={() => goBack()}>Cancel</Button>
-                </Form.Item> */}
       </Form>
-      {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-      <Divider><Text type="secondary"><small>or</small></Text></Divider>
-      <GoogleSsoButton block referralCode={referralCode} />
-    </ContainerStyled>
+      <p className="auth-alt">
+        <FormattedMessage
+          id="auth.haveAccountPrompt"
+          values={{ link: <Link to="/login"><FormattedMessage id="menu.login" /></Link> }}
+        />
+      </p>
+    </div>
   );
 }
 
-SignUpForm.propTypes = {};
+SignUpForm.propTypes = {
+  onOk: PropTypes.func.isRequired,
+  showTitle: PropTypes.bool,
+};
 
 export default withRouter(SignUpForm);

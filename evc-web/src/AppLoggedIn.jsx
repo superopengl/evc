@@ -349,7 +349,25 @@ const AppLoggedIn = props => {
           >
             {collapsed ? <RightCircleOutlined /> : <LeftCircleOutlined />}
           </div> */}
-        <HeaderStockSearch />
+        {/*
+          Centred on the nav bar itself, not on the space left over between the logo and the
+          avatar - the logo block is much wider than the avatar, so flow-centring lands ~80px
+          right of true centre. .ant-pro-global-header is position:relative and spans the full
+          bar, so absolute centring against it is exact. Absolute takes the box out of the
+          header's flex row, hence re-centring on both axes. The width clamp keeps the left edge
+          at >=280px, clear of the 224px logo, at every viewport down to the mobile breakpoint.
+        */}
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          display: 'flex',
+          justifyContent: 'center',
+          width: 'min(400px, calc(100vw - 560px))',
+        }}>
+          <HeaderStockSearch />
+        </div>
       </>
     )}
     // pro-components 3 dropped rightContentRender; avatarProps is the supported way to put the

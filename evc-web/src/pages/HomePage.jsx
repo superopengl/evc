@@ -41,8 +41,11 @@ const StyledLayout = styled(ProLayout)`
   background-color: transparent !important;
 }
 
+// pro-components 3 gutters the content with padding (32px 40px) where pro-layout 5
+// used margin, so zeroing the margin alone no longer makes the page full-bleed.
 .ant-layout-content {
   margin: 0;
+  padding: 0;
   position: absolute;
   top: 0;
   width: 100%;

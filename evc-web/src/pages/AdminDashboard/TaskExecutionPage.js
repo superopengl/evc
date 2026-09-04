@@ -66,6 +66,4 @@ const TaskExecutionPage = () => {
 
 TaskExecutionPage.propTypes = {};
 
-TaskExecutionPage.defaultProps = {};
-
 export default withRouter(TaskExecutionPage);

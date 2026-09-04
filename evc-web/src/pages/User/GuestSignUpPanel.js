@@ -11,6 +11,7 @@ import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import GuestSignUpChart from 'components/charts/GuestSignUpChart';
 import { getUserGuestSignUpChart } from 'services/userService';
+import dayjs from 'dayjs';
 
 const { Title } = Typography;
 
@@ -19,7 +20,7 @@ const GuestSignUpPanel = () => {
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
   const [interval, setInterval] = React.useState('month');
-  const [period, setPeriod] = React.useState([null, moment()]);
+  const [period, setPeriod] = React.useState([null, dayjs()]);
   const [showTime, setShowTime] = React.useState(false);
   const [format, setFormat] = React.useState('YYYY-MM-DD');
   const [picker, setPicker] = React.useState('month');
@@ -124,7 +125,5 @@ const GuestSignUpPanel = () => {
 };
 
 GuestSignUpPanel.propTypes = {};
-
-GuestSignUpPanel.defaultProps = {};
 
 export default withRouter(GuestSignUpPanel);

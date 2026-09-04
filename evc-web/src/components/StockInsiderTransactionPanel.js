@@ -129,7 +129,4 @@ StockInsiderTransactionPanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockInsiderTransactionPanel.defaultProps = {
-};
-
 export default withRouter(StockInsiderTransactionPanel);

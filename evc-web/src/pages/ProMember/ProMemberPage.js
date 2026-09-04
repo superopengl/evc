@@ -13,7 +13,7 @@ import { FormattedMessage } from 'react-intl';
 import { useMediaQuery } from 'react-responsive'
 import { TimeAgo } from 'components/TimeAgo';
 
-import Joyride from 'react-joyride';
+import { Joyride } from 'react-joyride';
 import {
   BarChartOutlined,
   LineChartOutlined,
@@ -1230,7 +1230,5 @@ const ProMemberPage = (props) => {
 
 ProMemberPage.propTypes = {
 };
-
-ProMemberPage.defaultProps = {};
 
 export default withRouter(ProMemberPage);

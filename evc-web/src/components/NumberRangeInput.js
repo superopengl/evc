@@ -6,7 +6,7 @@ import isNumber from 'lodash/isNumber';
 import { CheckOutlined } from '@ant-design/icons';
 
 export const NumberRangeInput = (props) => {
-  const { onChange, onSave, value, disabled: propsDisabled, readOnly, allowInputNone, showSave } = props;
+  const { onChange = () => { }, onSave = () => { }, value = [null, null], disabled: propsDisabled = false, readOnly = false, allowInputNone = false, showSave = true } = props;
   const [lo, setLo] = React.useState(value[0]);
   const [hi, setHi] = React.useState(value[1]);
   const [disabled, setDisabled] = React.useState(propsDisabled);
@@ -65,12 +65,3 @@ NumberRangeInput.propTypes = {
   allowInputNone: PropTypes.bool,
 };
 
-NumberRangeInput.defaultProps = {
-  value: [null, null],
-  onChange: () => { },
-  onSave: () => { },
-  showSave: true,
-  disabled: false,
-  readOnly: false,
-  allowInputNone: false
-};

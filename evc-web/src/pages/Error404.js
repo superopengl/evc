@@ -16,6 +16,4 @@ const Error404 = props => {
 
 Error404.propTypes = {};
 
-Error404.defaultProps = {};
-
 export default withRouter(Error404);

@@ -97,7 +97,4 @@ StockUnpaidEvcInfoPanel.propTypes = {
   fairValues: PropTypes.array.isRequired
 };
 
-StockUnpaidEvcInfoPanel.defaultProps = {
-};
-
 export default withRouter(StockUnpaidEvcInfoPanel);

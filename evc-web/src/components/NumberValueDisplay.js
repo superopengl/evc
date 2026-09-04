@@ -12,7 +12,7 @@ const NumberPanel = styled.div`
 `;
 
 export const NumberValueDisplay = (props) => {
-  const { value, className, loading, fixedDecimal } = props;
+  const { value, className, loading = false, fixedDecimal = 2, empty = <Text type="warning">NONE</Text>, minus = null } = props;
   const isSingleValue = !Array.isArray(value);
   const [lo, hi] = isSingleValue ? [] : value;
 
@@ -59,9 +59,3 @@ NumberValueDisplay.propTypes = {
   loading: PropTypes.bool,
 };
 
-NumberValueDisplay.defaultProps = {
-  empty: <Text type="warning">NONE</Text>,
-  fixedDecimal: 2,
-  minus: null,
-  loading: false,
-};

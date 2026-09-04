@@ -7,7 +7,7 @@ const { Text } = Typography;
 
 const MoneyAmount = (props) => {
 
-  const { value, postfix, digital, ...other } = props;
+  const { value = 0, postfix = '', digital = 2, ...other } = props;
 
   const isGreen = value >= 0;
   return (
@@ -21,12 +21,6 @@ MoneyAmount.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   postfix: PropTypes.string,
   digital: PropTypes.number,
-};
-
-MoneyAmount.defaultProps = {
-  value: 0,
-  postfix: '',
-  digital: 2
 };
 
 export default MoneyAmount;

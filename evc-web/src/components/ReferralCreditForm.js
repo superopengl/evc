@@ -283,6 +283,4 @@ ReferralCreditForm.propTypes = {
   onOk: PropTypes.func,
 };
 
-ReferralCreditForm.defaultProps = {};
-
 export default ReferralCreditForm;

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { CheckOutlined } from '@ant-design/icons';
 
 export const StockEpsInput = (props) => {
-  const { onSave, disabled } = props;
+  const { onSave = () => { }, disabled = false, value = {} } = props;
 
   const handleSave = (values) => {
     onSave(values);
@@ -29,8 +29,3 @@ StockEpsInput.propTypes = {
   value: PropTypes.object,
 };
 
-StockEpsInput.defaultProps = {
-  value: {},
-  onSave: () => { },
-  disabled: false
-};

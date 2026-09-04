@@ -1,5 +1,4 @@
 import React from 'react';
-import 'antd/dist/antd.less';
 import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import StockPage from 'pages/StockPage/StockPage';

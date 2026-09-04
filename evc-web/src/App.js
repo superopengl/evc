@@ -1,5 +1,4 @@
 import React from 'react';
-import 'antd/dist/antd.less';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser } from 'services/authService';
@@ -10,11 +9,13 @@ import ReactDOM from 'react-dom';
 import { ConfigProvider } from 'antd';
 import loadable from '@loadable/component'
 import { IntlProvider } from "react-intl";
-import antdLocaleEN from 'antd/lib/locale/en_US';
-import antdLocaleZH from 'antd/lib/locale/zh_CN';
+import antdLocaleEN from 'antd/locale/en_US';
+import antdLocaleZH from 'antd/locale/zh_CN';
 import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
+import { antdTheme } from './antdTheme';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { from } from 'rxjs';
 import * as moment from 'moment-timezone';
@@ -147,7 +148,8 @@ const App = () => {
 
   return (
     <GlobalContext.Provider value={contextValue}>
-      <ConfigProvider locale={antdLocale}>
+      <GoogleOAuthProvider clientId={process.env.REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID}>
+      <ConfigProvider locale={antdLocale} theme={antdTheme}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Switch>
@@ -168,6 +170,7 @@ const App = () => {
           </BrowserRouter>
         </IntlProvider>
       </ConfigProvider>
+      </GoogleOAuthProvider>
     </GlobalContext.Provider>
   );
 }

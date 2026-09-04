@@ -324,6 +324,4 @@ const MyAccountPage = (props) => {
 
 MyAccountPage.propTypes = {};
 
-MyAccountPage.defaultProps = {};
-
 export default withRouter(MyAccountPage);

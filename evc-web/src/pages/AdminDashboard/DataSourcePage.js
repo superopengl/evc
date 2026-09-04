@@ -211,6 +211,4 @@ DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/2
 
 DataSourcePage.propTypes = {};
 
-DataSourcePage.defaultProps = {};
-
 export default withRouter(DataSourcePage);

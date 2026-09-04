@@ -12,6 +12,4 @@ const OtherPage = (props) => {
 
 OtherPage.propTypes = {};
 
-OtherPage.defaultProps = {};
-
 export default withRouter(OtherPage);

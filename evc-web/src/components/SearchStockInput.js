@@ -16,7 +16,7 @@ import Icon from '@ant-design/icons';
 const { Text, Link: TextLink } = Typography;
 
 export const SearchStockInput = (props) => {
-  const { onChange, traceSearch, mode, style, size, showsLink } = props;
+  const { onChange = () => { }, traceSearch = false, mode = '', style, size = 'middle', showsLink = false } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [text, setText] = React.useState('');
@@ -161,10 +161,3 @@ SearchStockInput.propTypes = {
   showsLink: PropTypes.bool,
 };
 
-SearchStockInput.defaultProps = {
-  onChange: () => { },
-  traceSearch: false,
-  mode: '',
-  size: 'middle',
-  showsLink: false,
-};

@@ -50,7 +50,4 @@ ReferralLinkInput.propTypes = {
   value: PropTypes.string,
 };
 
-ReferralLinkInput.defaultProps = {
-};
-
 export default ReferralLinkInput;

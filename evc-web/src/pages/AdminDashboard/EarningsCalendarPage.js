@@ -114,7 +114,7 @@ const StyledTable = styled(Table)`
 `;
 
 const EarningsCalendarPage = props => {
-  const { onSymbolClick, height } = props;
+  const { onSymbolClick = () => { }, height } = props;
   const [loading, setLoading] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [week, setWeek] = React.useState(0);
@@ -272,10 +272,6 @@ const EarningsCalendarPage = props => {
 EarningsCalendarPage.propTypes = {
   onSymbolClick: PropTypes.func,
   height: PropTypes.number
-};
-
-EarningsCalendarPage.defaultProps = {
-  onSymbolClick: () => { }
 };
 
 export default withRouter(EarningsCalendarPage);

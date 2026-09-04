@@ -9,7 +9,7 @@ const ProfileModal = props => {
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
 
-  const { visible, onOk, closable } = props;
+  const { visible, onOk, closable = true } = props;
 
   const handlePostSave = (updatedUser) => {
     setUser(updatedUser);
@@ -34,10 +34,6 @@ const ProfileModal = props => {
 
 ProfileModal.propTypes = {
   closable: PropTypes.bool
-};
-
-ProfileModal.defaultProps = {
-  closable: true
 };
 
 export default withRouter(ProfileModal);

@@ -93,6 +93,4 @@ const StockWatchListPage = (props) => {
 
 StockWatchListPage.propTypes = {};
 
-StockWatchListPage.defaultProps = {};
-
 export default withRouter(StockWatchListPage);

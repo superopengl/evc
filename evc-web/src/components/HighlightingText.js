@@ -22,7 +22,4 @@ HighlightingText.propTypes = {
   value: PropTypes.string
 };
 
-HighlightingText.defaultProps = {
-};
-
 export default HighlightingText;

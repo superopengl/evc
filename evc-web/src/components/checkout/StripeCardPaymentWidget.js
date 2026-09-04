@@ -160,7 +160,4 @@ StripeCardPaymentWidget.propTypes = {
   onLoading: PropTypes.func.isRequired,
 };
 
-StripeCardPaymentWidget.defaultProps = {
-};
-
 export default StripeCardPaymentWidget;

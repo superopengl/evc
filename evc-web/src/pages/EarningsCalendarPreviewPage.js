@@ -65,8 +65,4 @@ EarningsCalendarPreviewPage.propTypes = {
   onSymbolClick: PropTypes.func,
 };
 
-EarningsCalendarPreviewPage.defaultProps = {
-  onSymbolClick: () => { }
-};
-
 export default EarningsCalendarPreviewPage;

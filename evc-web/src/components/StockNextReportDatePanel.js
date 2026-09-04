@@ -60,7 +60,4 @@ StockNextReportDatePanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockNextReportDatePanel.defaultProps = {
-};
-
 export default withRouter(StockNextReportDatePanel);

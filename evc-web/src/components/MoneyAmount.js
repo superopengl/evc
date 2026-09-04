@@ -7,7 +7,7 @@ const { Text } = Typography;
 
 const MoneyAmount = (props) => {
 
-  const { value, symbol, postfix, digital, ...other } = props;
+  const { value = 0, symbol = '$', postfix = '', digital = 2, ...other } = props;
 
   return (
     <Text {...other}>
@@ -21,13 +21,6 @@ MoneyAmount.propTypes = {
   symbol: PropTypes.string,
   postfix: PropTypes.string,
   digital: PropTypes.number,
-};
-
-MoneyAmount.defaultProps = {
-  value: 0,
-  symbol: '$',
-  postfix: '',
-  digital: 2
 };
 
 export default MoneyAmount;

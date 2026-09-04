@@ -44,7 +44,4 @@ FullCreditPayButton.propTypes = {
   onLoading: PropTypes.func.isRequired,
 };
 
-FullCreditPayButton.defaultProps = {
-};
-
 export default FullCreditPayButton;

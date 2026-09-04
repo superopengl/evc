@@ -19,7 +19,7 @@ const StyledCard = styled(Card)`
 `;
 
 export const MemberOnlyCard = (props) => {
-  const { paidOnly, message, children, blockedComponent, bodyStyle: propBodyStyle, ...otherProps } = props;
+  const { paidOnly = false, message, children, blockedComponent, bodyStyle: propBodyStyle, ...otherProps } = props;
   const context = React.useContext(GlobalContext);
   const { role } = context;
   const shouldBlock = paidOnly && !['admin', 'agent', 'member'].includes(role);
@@ -65,6 +65,3 @@ MemberOnlyCard.propTypes = {
   blockedComponent: PropTypes.any,
 };
 
-MemberOnlyCard.defaultProps = {
-  paidOnly: false
-}

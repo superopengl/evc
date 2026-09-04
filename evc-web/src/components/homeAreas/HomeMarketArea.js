@@ -40,7 +40,7 @@ const span = {
 
 const HomeMarketArea = props => {
 
-  const { onSymbolClick } = props;
+  const { onSymbolClick = () => { } } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [mostData, setMostData] = React.useState({});
@@ -80,10 +80,6 @@ const HomeMarketArea = props => {
 
 HomeMarketArea.propTypes = {
   onSymbolClick: PropTypes.func,
-};
-
-HomeMarketArea.defaultProps = {
-  onSymbolClick: () => { }
 };
 
 export default HomeMarketArea;

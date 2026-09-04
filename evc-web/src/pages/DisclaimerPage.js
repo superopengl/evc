@@ -45,6 +45,4 @@ const DisclaimerPage = () => (
 
 DisclaimerPage.propTypes = {};
 
-DisclaimerPage.defaultProps = {};
-
 export default DisclaimerPage;

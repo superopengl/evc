@@ -245,6 +245,4 @@ const TermAndConditionPage = () => <>
 
 TermAndConditionPage.propTypes = {};
 
-TermAndConditionPage.defaultProps = {};
-
 export default TermAndConditionPage;

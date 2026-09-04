@@ -19,6 +19,4 @@ const HeaderStockSearch = (props) => {
 
 HeaderStockSearch.propTypes = {};
 
-HeaderStockSearch.defaultProps = {};
-
 export default withRouter(HeaderStockSearch);

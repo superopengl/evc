@@ -21,7 +21,7 @@ font-size: 0.8rem;
 `
 
 export const TimeAgo = props => {
-  const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime, type, toNYTime } = props;
+  const { prefix, value, defaultContent, direction = 'vertical', strong = false, extra = null, accurate = true, showAgo = true, showTime = true, type = 'secondary', toNYTime = true } = props;
   if (!value) {
     return defaultContent || null;
   }
@@ -53,13 +53,3 @@ TimeAgo.propTypes = {
   toNYTime: PropTypes.bool
 };
 
-TimeAgo.defaultProps = {
-  direction: 'vertical',
-  extra: null,
-  strong: false,
-  accurate: true,
-  showAgo: true,
-  showTime: true,
-  type: 'secondary',
-  toNYTime: true
-};

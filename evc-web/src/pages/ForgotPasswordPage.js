@@ -80,6 +80,4 @@ const ForgotPasswordPage = props => {
 
 ForgotPasswordPage.propTypes = {};
 
-ForgotPasswordPage.defaultProps = {};
-
 export default withRouter(ForgotPasswordPage);

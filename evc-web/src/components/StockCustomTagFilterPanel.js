@@ -34,7 +34,7 @@ input {
 
 export const StockCustomTagFilterPanel = (props) => {
 
-  const { onChange, onDeleteTag, onAddTag, value } = props;
+  const { onChange = () => { }, onDeleteTag, onAddTag, value = [] } = props;
 
   const context = React.useContext(GlobalContext);
   const [tagName, setTagName] = React.useState('');
@@ -122,10 +122,5 @@ StockCustomTagFilterPanel.propTypes = {
   onDeleteTag: PropTypes.func.isRequired,
   onAddTag: PropTypes.func.isRequired,
   value: PropTypes.arrayOf(PropTypes.string),
-};
-
-StockCustomTagFilterPanel.defaultProps = {
-  onChange: () => { },
-  value: [],
 };
 

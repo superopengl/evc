@@ -69,6 +69,4 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
 
 MyCommissionWithdrawalHistoryDrawer.propTypes = {};
 
-MyCommissionWithdrawalHistoryDrawer.defaultProps = {};
-
 export default withRouter(MyCommissionWithdrawalHistoryDrawer);

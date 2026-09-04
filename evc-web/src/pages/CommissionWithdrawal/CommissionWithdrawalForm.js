@@ -158,7 +158,4 @@ const CommissionWithdrawalForm = (props) => {
 CommissionWithdrawalForm.propTypes = {
 };
 
-CommissionWithdrawalForm.defaultProps = {
-};
-
 export default withRouter(CommissionWithdrawalForm);

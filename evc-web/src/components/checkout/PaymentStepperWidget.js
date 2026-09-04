@@ -46,7 +46,7 @@ const CardButton = styled(Button)`
 
 const PaymentStepperWidget = (props) => {
 
-  const { planType, onComplete, onLoading, discount } = props;
+  const { planType, onComplete, onLoading, discount = 0 } = props;
   const [loading, setLoading] = React.useState(false);
   const [paymentDetail, setPaymentDetail] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
@@ -279,10 +279,6 @@ PaymentStepperWidget.propTypes = {
   onComplete: PropTypes.func.isRequired,
   onLoading: PropTypes.func.isRequired,
   discount: PropTypes.number
-};
-
-PaymentStepperWidget.defaultProps = {
-  discount: 0
 };
 
 export default withRouter(PaymentStepperWidget);

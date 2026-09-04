@@ -20,7 +20,7 @@ export const ConfirmDeleteButton = (props) => {
   }
 
   return <Popover
-    title={<>{props.message || 'Confirm'}</>}
+    title={<>{props.message ?? 'Delete it?'}</>}
     trigger="click"
     placement="topRight"
     visible={visible}
@@ -29,9 +29,9 @@ export const ConfirmDeleteButton = (props) => {
       <Button onClick={() => setVisible(false)} disabled={loading}>Cancel</Button>
       <Button style={{ marginLeft: 10 }}
         type="primary"
-        {...props.okButtonProps}
+        {...(props.okButtonProps ?? { danger: true })}
         onClick={handleDelete}
-        disabled={loading}>{props.okText || 'OK'}</Button>
+        disabled={loading}>{props.okText ?? 'Yes, delete'}</Button>
     </>}
   >
     <Button type="link" danger icon={<CloseOutlined style={{ fontSize: '0.8rem' }} />} disabled={loading} />
@@ -45,10 +45,3 @@ ConfirmDeleteButton.propTypes = {
   message: PropTypes.any
 };
 
-ConfirmDeleteButton.defaultProps = {
-  okButtonProps: {
-    danger: true
-  },
-  okText: 'Yes, delete',
-  message: 'Delete it?'
-};

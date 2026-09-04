@@ -96,7 +96,7 @@ background-color: rgba(255,255,255,0.8) !important;
 
 const HomeCarouselAreaRaw = props => {
 
-  const { onSymbolClick } = props;
+  const { onSymbolClick = () => { } } = props;
 
   const handleSignOn = () => {
     props.history.push('/signup')
@@ -163,22 +163,7 @@ const HomeCarouselAreaRaw = props => {
                 </SignUpButton>
               </Col>
               <Col flex="auto">
-                <GoogleSsoButton
-                  render={
-                    renderProps => (
-                      <StyledGoogleButton
-                        type="secondary"
-                        block
-                        icon={<GoogleLogoSvg size={16} />}
-                        // icon={<GoogleOutlined />}
-                        style={{ width: 195 }}
-                        onClick={renderProps.onClick}
-                        disabled={renderProps.disabled}
-                      >
-                        <FormattedMessage id="button.continueWithGoogle" />
-                      </StyledGoogleButton>
-                    )}
-                />
+                <GoogleSsoButton width={195} />
               </Col>
             </Row>
           </Col>
@@ -207,10 +192,6 @@ const HomeCarouselAreaRaw = props => {
 
 HomeCarouselAreaRaw.propTypes = {
   onSymbolClick: PropTypes.func,
-};
-
-HomeCarouselAreaRaw.defaultProps = {
-  onSymbolClick: () => { }
 };
 
 export const HomeCarouselArea = withRouter(HomeCarouselAreaRaw);

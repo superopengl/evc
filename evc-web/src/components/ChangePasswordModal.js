@@ -73,6 +73,4 @@ const ChangePasswordModal = props => {
 
 ChangePasswordModal.propTypes = {};
 
-ChangePasswordModal.defaultProps = {};
-
 export default withRouter(ChangePasswordModal);

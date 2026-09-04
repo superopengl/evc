@@ -92,6 +92,4 @@ const ResetPasswordPage = props => {
 
 ResetPasswordPage.propTypes = {};
 
-ResetPasswordPage.defaultProps = {};
-
 export default withRouter(ResetPasswordPage);

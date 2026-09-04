@@ -101,6 +101,4 @@ const HomeServiceArea = props => {
 
 HomeServiceArea.propTypes = {};
 
-HomeServiceArea.defaultProps = {};
-
 export default HomeServiceArea;

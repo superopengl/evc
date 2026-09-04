@@ -36,7 +36,4 @@ StockOptionPutCallPanel.propTypes = {
   symbol: PropTypes.string.isRequired,
 };
 
-StockOptionPutCallPanel.defaultProps = {
-};
-
 export default withRouter(StockOptionPutCallPanel);

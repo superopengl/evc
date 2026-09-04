@@ -108,7 +108,7 @@ const HiddenNumberSingle = props => {
 
 const StockInfoCard = (props) => {
 
-  const { value: stock, title, hoverable, actions, showWatch, showBell, showTags } = props;
+  const { value: stock, title = null, hoverable, actions, showWatch = true, showBell = false, showTags = false } = props;
 
   const [watched, setWatched] = React.useState(stock?.watched);
   const [belled, setBelled] = React.useState(stock?.belled);
@@ -359,13 +359,6 @@ StockInfoCard.propTypes = {
   showWatch: PropTypes.bool,
   showBell: PropTypes.bool,
   showTags: PropTypes.bool,
-};
-
-StockInfoCard.defaultProps = {
-  title: null,
-  showWatch: true,
-  showBell: false,
-  showTags: false,
 };
 
 export default withRouter(StockInfoCard);

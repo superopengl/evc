@@ -124,6 +124,4 @@ We may also automatically collect information, such as:
 
 PrivacyPolicyPage.propTypes = {};
 
-PrivacyPolicyPage.defaultProps = {};
-
 export default PrivacyPolicyPage;

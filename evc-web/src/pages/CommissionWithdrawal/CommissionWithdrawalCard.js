@@ -13,7 +13,14 @@ const country = countryList();
 const { Text } = Typography;
 
 const CommissionWithdrawalCard = (props) => {
-  const { value, grid } = props;
+  const { value, grid = {
+    xxl: 4,
+    xl: 3,
+    lg: 3,
+    md: 3,
+    sm: 2,
+    xs: 1
+  } } = props;
 
   const getIdLabel = (identityType) => {
     switch (identityType) {
@@ -76,17 +83,6 @@ const CommissionWithdrawalCard = (props) => {
 CommissionWithdrawalCard.propTypes = {
   value: PropTypes.object.isRequired,
   grid: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
-};
-
-CommissionWithdrawalCard.defaultProps = {
-  grid: {
-    xxl: 4,
-    xl: 3,
-    lg: 3,
-    md: 3,
-    sm: 2,
-    xs: 1
-  }
 };
 
 export default withRouter(CommissionWithdrawalCard);

@@ -136,7 +136,4 @@ StockMostSearched.propTypes = {
   onFetch: PropTypes.func.isRequired,
 };
 
-StockMostSearched.defaultProps = {
-};
-
 export default withRouter(StockMostSearched);

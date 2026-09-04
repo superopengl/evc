@@ -137,7 +137,4 @@ StockNewsPanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockNewsPanel.defaultProps = {
-};
-
 export default withRouter(StockNewsPanel);

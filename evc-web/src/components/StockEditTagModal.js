@@ -6,7 +6,7 @@ import TagSelect from 'components/TagSelect';
 
 
 const StockEditTagModal = props => {
-  const { visible, value, tags, onOk, onCancel } = props;
+  const { visible = false, value, tags, onOk, onCancel } = props;
 
   const [changedValue, setChangedValue] = React.useState(value);
   const [modalVisible, setModalVisible] = React.useState(visible);
@@ -37,10 +37,6 @@ StockEditTagModal.propTypes = {
   tags: PropTypes.array.isRequired,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
-};
-
-StockEditTagModal.defaultProps = {
-  visible: false,
 };
 
 export default withRouter(StockEditTagModal);

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TradingViewWidget from 'react-tradingview-widget';
+import { AdvancedRealTimeChart } from 'react-ts-tradingview-widgets';
 
 const StockChart = props => {
-  const { symbol } = props;
+  const { symbol, period = '1d', interval = '5m' } = props;
 
   return <div style={{ height: 695, minWidth: 400 }}>
-    <TradingViewWidget
+    <AdvancedRealTimeChart
       symbol={`${symbol}`}
       timezone="America/New_York"
       allow_symbol_change={false}
@@ -21,11 +21,6 @@ StockChart.propTypes = {
   symbol: PropTypes.string.isRequired,
   period: PropTypes.string.isRequired,
   interval: PropTypes.string.isRequired,
-};
-
-StockChart.defaultProps = {
-  period: '1d',
-  interval: '5m'
 };
 
 export default StockChart;

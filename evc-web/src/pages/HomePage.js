@@ -247,6 +247,4 @@ const HomePage = (props) => {
 
 HomePage.propTypes = {};
 
-HomePage.defaultProps = {};
-
 export default withRouter(HomePage);

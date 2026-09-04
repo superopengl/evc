@@ -69,6 +69,4 @@ const EarnCommissionGuideZh = props => {
 
 EarnCommissionGuideZh.propTypes = {};
 
-EarnCommissionGuideZh.defaultProps = {};
-
 export default withRouter(EarnCommissionGuideZh);

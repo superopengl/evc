@@ -49,6 +49,4 @@ const TagsSettingPage = () => {
 
 TagsSettingPage.propTypes = {};
 
-TagsSettingPage.defaultProps = {};
-
 export default withRouter(TagsSettingPage);

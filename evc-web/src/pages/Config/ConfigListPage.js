@@ -140,6 +140,4 @@ const ConfigListPage = () => {
 
 ConfigListPage.propTypes = {};
 
-ConfigListPage.defaultProps = {};
-
 export default withRouter(ConfigListPage);

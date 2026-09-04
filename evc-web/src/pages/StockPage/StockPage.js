@@ -25,6 +25,4 @@ const StockPage = (props) => {
 
 StockPage.propTypes = {};
 
-StockPage.defaultProps = {};
-
 export default withRouter(StockPage);

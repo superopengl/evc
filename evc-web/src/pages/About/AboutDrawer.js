@@ -48,6 +48,4 @@ const AboutDrawer = (props) => {
 
 AboutDrawer.propTypes = {};
 
-AboutDrawer.defaultProps = {};
-
 export default withRouter(AboutDrawer);

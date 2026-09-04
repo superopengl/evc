@@ -99,7 +99,7 @@ function convertTagsToOptions(tags) {
 
 const TagSelect = (props) => {
 
-  const { value: selectedTagIds, readonly, onChange, tags, onSave } = props;
+  const { value: selectedTagIds = [], readonly = false, onChange = () => { }, tags, onSave = () => { } } = props;
   const allOptions = convertTagsToOptions(tags);
 
   const [loading, setLoading] = React.useState(false);
@@ -198,13 +198,6 @@ TagSelect.propTypes = {
   readonly: PropTypes.bool,
   onChange: PropTypes.func,
   onSave: PropTypes.func,
-};
-
-TagSelect.defaultProps = {
-  value: [],
-  readonly: false,
-  onChange: () => { },
-  onSave: () => { },
 };
 
 export default TagSelect;

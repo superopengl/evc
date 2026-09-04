@@ -19,7 +19,7 @@ const NEW_TAG_ITEM = Object.freeze({
 });
 
 const TagManagementPanel = (props) => {
-  const { onList, onSave, onDelete, showOfficialOnly, showIncludesOptionPutCall } = props;
+  const { onList, onSave, onDelete, showOfficialOnly = false, showIncludesOptionPutCall = false } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([{ ...NEW_TAG_ITEM }]);
@@ -201,11 +201,6 @@ TagManagementPanel.propTypes = {
   onDelete: PropTypes.func.isRequired,
   showOfficialOnly: PropTypes.bool,
   showIncludesOptionPutCall: PropTypes.bool,
-};
-
-TagManagementPanel.defaultProps = {
-  showOfficialOnly: false,
-  showIncludesOptionPutCall: false,
 };
 
 export default withRouter(TagManagementPanel);

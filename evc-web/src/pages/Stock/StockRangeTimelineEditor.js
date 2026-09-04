@@ -18,7 +18,7 @@ const Container = styled.div`
 
 
 export const StockRangeTimelineEditor = (props) => {
-  const { onLoadList, onSaveNew, onChange, onDelete, onSelected, disableInput } = props;
+  const { onLoadList, onSaveNew, onChange = () => { }, onDelete = () => { }, onSelected = () => { }, disableInput = false, showTime = true, mode = null } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -108,11 +108,3 @@ StockRangeTimelineEditor.propTypes = {
   disableInput: PropTypes.bool.isRequired,
 };
 
-StockRangeTimelineEditor.defaultProps = {
-  showTime: true,
-  mode: null,
-  onChange: () => { },
-  onDelete: () => { },
-  onSelected: () => { },
-  disableInput: false,
-};

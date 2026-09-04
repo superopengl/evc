@@ -344,6 +344,4 @@ UnusualOptionsActivityPanel.propTypes = {
   type: PropTypes.oneOf(['stock', 'etfs', 'index']).isRequired
 };
 
-UnusualOptionsActivityPanel.defaultProps = {};
-
 export default withRouter(UnusualOptionsActivityPanel);

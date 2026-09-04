@@ -20,7 +20,7 @@ const StyledDrawer = styled(Drawer)`
 
 const CreditHistoryListDrawer = (props) => {
 
-  const { visible: propVisible, onFetch, onOk } = props;
+  const { visible: propVisible = false, onFetch, onOk } = props;
   const [visible, setVisible] = React.useState(propVisible);
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState();
@@ -88,10 +88,6 @@ CreditHistoryListDrawer.propTypes = {
   visible: PropTypes.bool.isRequired,
   onFetch: PropTypes.func.isRequired,
   onOk: PropTypes.func.isRequired,
-};
-
-CreditHistoryListDrawer.defaultProps = {
-  visible: false
 };
 
 export default CreditHistoryListDrawer;

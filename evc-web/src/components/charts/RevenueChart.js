@@ -64,7 +64,4 @@ RevenueChart.propTypes = {
   value: PropTypes.array.isRequired,
 };
 
-RevenueChart.defaultProps = {
-};
-
 export default RevenueChart;

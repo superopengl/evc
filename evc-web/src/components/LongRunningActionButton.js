@@ -12,7 +12,7 @@ import { from } from 'rxjs';
 
 
 export const LongRunningActionButton = props => {
-  const { operationKey, confirmMessage, onOk, buttonText, onComplete, type, uploadAction, ...otherButtonProps } = props;
+  const { operationKey, confirmMessage = 'This operation may take several minutes to complete. In the mean time, there is no functional impact when in progress.', onOk = () => { }, buttonText, onComplete = () => { }, type = 'button', uploadAction, ...otherButtonProps } = props;
 
   const [loading, setLoading] = React.useState(false);
   // const [ping$, setPing$] = React.useState();
@@ -121,9 +121,3 @@ LongRunningActionButton.propTypes = {
   type: PropTypes.oneOf(['button', 'upload'])
 };
 
-LongRunningActionButton.defaultProps = {
-  type: 'button',
-  confirmMessage: 'This operation may take several minutes to complete. In the mean time, there is no functional impact when in progress.',
-  onOk: () => { },
-  onComplete: () => { }
-};

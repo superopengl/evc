@@ -111,7 +111,13 @@ Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). 
 - `App.js` handles anonymous/public routes and locale (react-intl, `en-US` / `zh-CN` from `src/translations/`); `AppLoggedIn.js` renders the `@ant-design/pro-layout` shell and builds its route/menu list from `role` (`admin` / `agent` / `member` / `free`). Pages are code-split with `@loadable/component`.
 - Shared state is one `GlobalContext` (`src/contexts/GlobalContext.js`) carrying `user`, `role`, `setUser`, and an rxjs `event$` subject fed by the backend SSE stream.
 - All API calls go through `src/services/*Service.js` → `src/services/http.js`. That module centralizes `withCredentials`, 401 → "session timeout" modal + reload, and error toasts; it exposes both promise (`httpGet`) and rxjs (`httpGet$`) variants.
-- antd theming is done with less `modifyVars` in `craco.config.js` (primary green `#57BB60`), so component styles should use antd tokens rather than hard-coded colors.
+- **React 19 + antd 5.** Theming moved out of less: antd 5 dropped less variables, so the palette lives in `src/antdTheme.js` as design tokens passed to `<ConfigProvider theme>`. craco-less stays only for the app's own `index.less`. Use tokens, not hard-coded colors.
+- antd 5 ships no less bundle - never `import 'antd/dist/antd.less'`. Locales come from `antd/locale/*`. `PageHeader` and `Comment` are gone; the one PageHeader call site uses the local `components/PageHeader.js` shim.
+- **Pickers take dayjs, not moment.** antd 5 swapped its internals. `DateInput`/`RangePickerInput` convert for you; anything else feeding a `value`/`defaultValue` into a picker must pass dayjs. moment is still used for non-antd date work (and for react-big-calendar's `Date` objects), so both libraries are present on purpose.
+- **`defaultProps` on function components does nothing in React 19.** All 128 were converted to destructuring defaults, which matches React's old semantics (apply when the prop is `undefined`). Don't reintroduce the pattern - it fails silently.
+- Entry point uses `createRoot`, and `src/index.js` imports `@ant-design/v5-patch-for-react-19`, which is what keeps antd 5's imperative `message`/`notification`/`Modal` APIs working on React 19.
+- Google SSO is `@react-oauth/google` (Google Identity Services). GIS only issues the id_token the backend reads from **its own rendered button**, so the old custom-antd-button `render` prop is gone for good; theme/size/width are the only styling knobs.
+- `craco.config.js` aliases `tslib` to one hoisted copy: `@antv/g2plot` (via `@ant-design/charts`) reaches G2 v4, whose `@antv/adjust` declares tslib ^1.10 but emits `__spreadArray`, a tslib 2.1+ helper. Note pnpm 10.7.1 ignores the `pnpm` field in `package.json` (both `overrides` and `onlyBuiltDependencies`), which is why this is a bundler alias rather than a dependency override.
 
 ## Deploy
 

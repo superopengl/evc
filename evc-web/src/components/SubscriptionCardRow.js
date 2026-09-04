@@ -41,5 +41,3 @@ export const SubscriptionCardRow = props => {
 SubscriptionCardRow.propTypes = {
 };
 
-SubscriptionCardRow.defaultProps = {
-};

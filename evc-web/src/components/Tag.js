@@ -12,7 +12,7 @@ const ClicableTag = styled(AntdTag)`
 
 const Tag = (props) => {
 
-  const { children, clickable, checked, style: propStyle, onClick, ...other } = props;
+  const { children, clickable = false, checked = false, style: propStyle, onClick = () => { }, ...other } = props;
 
   const style = {
     textAlign: 'center',
@@ -41,12 +41,6 @@ Tag.propTypes = {
   checked: PropTypes.bool,
   clickable: PropTypes.bool,
   onClick: PropTypes.func,
-};
-
-Tag.defaultProps = {
-  checked: false,
-  clickable: false,
-  onClick: () => { }
 };
 
 export default Tag;

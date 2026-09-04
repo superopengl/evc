@@ -139,7 +139,4 @@ StockEvcInfoPanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockEvcInfoPanel.defaultProps = {
-};
-
 export default withRouter(StockEvcInfoPanel);

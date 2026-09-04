@@ -9,7 +9,7 @@ const { Text } = Typography;
 
 export const StockName = (props) => {
 
-  const { value, size, style, direction, showsLogo, logoSize, highlightenText, ...other } = props;
+  const { value, size, style, direction = 'horizontal', showsLogo = false, logoSize = 18, highlightenText, ...other } = props;
 
   const { symbol, company } = value;
 
@@ -37,10 +37,3 @@ StockName.propTypes = {
   logoSize: PropTypes.number,
   highlightenText: PropTypes.string,
 };
-
-StockName.defaultProps = {
-  // size: 14,
-  direction: 'horizontal',
-  showsLogo: false,
-  logoSize: 18
-}

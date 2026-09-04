@@ -59,6 +59,4 @@ const HomeFooter = () => (
 
 HomeFooter.propTypes = {};
 
-HomeFooter.defaultProps = {};
-
 export default HomeFooter;

@@ -172,6 +172,4 @@ const TranslationListPage = () => {
 
 TranslationListPage.propTypes = {};
 
-TranslationListPage.defaultProps = {};
-
 export default withRouter(TranslationListPage);

@@ -71,7 +71,4 @@ const MarketPage = props => {
 MarketPage.propTypes = {
 };
 
-MarketPage.defaultProps = {
-};
-
 export default withRouter(MarketPage);

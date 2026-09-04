@@ -24,7 +24,7 @@ const getDisplayName = (client) => {
 }
 
 const UserSelect = (props) => {
-  const { value, onChange, showName, ...other } = props;
+  const { value, onChange, showName = false, ...other } = props;
 
   const [list, setList] = React.useState([]);
 
@@ -57,10 +57,6 @@ UserSelect.propTypes = {
   value: PropTypes.string,
   showName: PropTypes.bool,
   onChange: PropTypes.func,
-};
-
-UserSelect.defaultProps = {
-  showName: false
 };
 
 export default UserSelect;

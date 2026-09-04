@@ -37,7 +37,7 @@ const Container = styled.div`
 `;
 
 export const StockFairValueEditor = (props) => {
-  const { symbol, onLoadList, onSaveNew, onDelete } = props;
+  const { symbol, onLoadList = () => { }, onSaveNew = () => { }, onDelete = () => { }, showTime = true, onChange = () => { } } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -204,10 +204,3 @@ StockFairValueEditor.propTypes = {
   symbol: PropTypes.string.isRequired,
 };
 
-StockFairValueEditor.defaultProps = {
-  showTime: true,
-  onChange: () => { },
-  onDelete: () => { },
-  onSaveNew: () => { },
-  onLoadList: () => { },
-};

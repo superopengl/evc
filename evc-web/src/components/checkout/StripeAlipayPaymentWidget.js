@@ -79,7 +79,4 @@ StripeAlipayPaymentWidget.propTypes = {
   onLoading: PropTypes.func.isRequired,
 };
 
-StripeAlipayPaymentWidget.defaultProps = {
-};
-
 export default StripeAlipayPaymentWidget;

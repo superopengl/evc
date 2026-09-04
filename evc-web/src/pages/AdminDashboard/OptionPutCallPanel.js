@@ -37,7 +37,7 @@ width: 100%;
 
 
 const OptionPutCallPanel = (props) => {
-  const { data, singleMode, onOrdinalChange, showsLink } = props;
+  const { data = [], singleMode = false, onOrdinalChange = () => { }, showsLink = false } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -258,13 +258,6 @@ OptionPutCallPanel.propTypes = {
   singleMode: PropTypes.bool,
   onOrdinalChange: PropTypes.func,
   showsLink: PropTypes.bool,
-};
-
-OptionPutCallPanel.defaultProps = {
-  data: [],
-  singleMode: false,
-  showsLink: false,
-  onOrdinalChange: () => { },
 };
 
 export default withRouter(OptionPutCallPanel);

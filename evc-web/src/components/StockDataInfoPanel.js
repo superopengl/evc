@@ -100,7 +100,4 @@ StockDataInfoPanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockDataInfoPanel.defaultProps = {
-};
-
 export default withRouter(StockDataInfoPanel);

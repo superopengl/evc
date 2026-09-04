@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 import moment from 'moment';
 
 export const OptionPutCallHistoryChart = props => {
-  const { symbol } = props;
+  const { symbol, width = 500 } = props;
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
 
@@ -137,9 +137,5 @@ export const OptionPutCallHistoryChart = props => {
 OptionPutCallHistoryChart.propTypes = {
   symbol: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
-};
-
-OptionPutCallHistoryChart.defaultProps = {
-  width: 500
 };
 

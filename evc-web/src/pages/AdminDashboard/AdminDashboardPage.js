@@ -303,6 +303,4 @@ const AdminDashboardPage = () => {
 
 AdminDashboardPage.propTypes = {};
 
-AdminDashboardPage.defaultProps = {};
-
 export default withRouter(AdminDashboardPage);

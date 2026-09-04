@@ -95,7 +95,4 @@ AdminEditCommissionWithdrawalDrawer.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-AdminEditCommissionWithdrawalDrawer.defaultProps = {
-};
-
 export default withRouter(AdminEditCommissionWithdrawalDrawer);

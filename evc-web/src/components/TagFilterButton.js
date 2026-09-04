@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 export const TagFilterButton = (props) => {
 
-  const { tags, group, value, onChange } = props;
+  const { tags = [], group = false, value = [], onChange = () => { } } = props;
   const [visible, setVisible] = React.useState(false);
   const [selectedTags, setSelectedTags] = React.useState(value || []);
   const [loading, setLoading] = React.useState(false);
@@ -60,13 +60,6 @@ TagFilterButton.propTypes = {
   onChange: PropTypes.func,
   tags: PropTypes.arrayOf(PropTypes.object),
   group: PropTypes.bool,
-};
-
-TagFilterButton.defaultProps = {
-  value: [],
-  tags: [],
-  onChange: () => { },
-  group: false
 };
 
 export default TagFilterButton;

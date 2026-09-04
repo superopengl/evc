@@ -48,6 +48,4 @@ const OptionPutCallPage = (props) => {
 
 OptionPutCallPage.propTypes = {};
 
-OptionPutCallPage.defaultProps = {};
-
 export default withRouter(OptionPutCallPage);

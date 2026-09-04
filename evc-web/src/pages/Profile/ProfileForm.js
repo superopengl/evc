@@ -11,7 +11,7 @@ import { getAuthUser } from 'services/authService';
 const { Link } = Typography;
 
 const ProfileForm = (props) => {
-  const { user, initial, onOk, refreshAfterLocaleChange } = props;
+  const { user, initial = false, onOk, refreshAfterLocaleChange = true } = props;
   const [loading, setLoading] = React.useState(false);
   const [profile] = React.useState(user.profile || user);
 
@@ -89,11 +89,6 @@ ProfileForm.propTypes = {
   user: PropTypes.any.isRequired,
   initial: PropTypes.bool,
   refreshAfterLocaleChange: PropTypes.bool,
-};
-
-ProfileForm.defaultProps = {
-  initial: false,
-  refreshAfterLocaleChange: true
 };
 
 export default withRouter(ProfileForm);

@@ -66,6 +66,4 @@ const EarnCommissionModal = props => {
 
 EarnCommissionModal.propTypes = {};
 
-EarnCommissionModal.defaultProps = {};
-
 export default withRouter(EarnCommissionModal);

@@ -138,6 +138,4 @@ const EmailTemplateListPage = () => {
 
 EmailTemplateListPage.propTypes = {};
 
-EmailTemplateListPage.defaultProps = {};
-
 export default withRouter(EmailTemplateListPage);

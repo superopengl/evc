@@ -94,7 +94,7 @@ const StockMostPanel = (props) => {
     },
   ];
 
-  const { title, value, titleStyle, loading, onSymbolClick } = props;
+  const { title, value = [], titleStyle, loading = true, onSymbolClick = () => { } } = props;
 
   const [list, setList] = React.useState([]);
 
@@ -138,12 +138,6 @@ StockMostPanel.propTypes = {
   value: PropTypes.array,
   loading: PropTypes.bool,
   onSymbolClick: PropTypes.func
-};
-
-StockMostPanel.defaultProps = {
-  value: [],
-  loading: true,
-  onSymbolClick: () => { },
 };
 
 export default withRouter(StockMostPanel);

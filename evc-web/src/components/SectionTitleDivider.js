@@ -15,5 +15,3 @@ SectionTitleDivider.propTypes = {
   title: PropTypes.any,
 };
 
-SectionTitleDivider.defaultProps = {
-}

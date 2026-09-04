@@ -108,7 +108,4 @@ StockOldFairValuePanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockOldFairValuePanel.defaultProps = {
-};
-
 export default withRouter(StockOldFairValuePanel);

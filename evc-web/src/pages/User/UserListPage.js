@@ -477,6 +477,4 @@ const UserListPage = () => {
 
 UserListPage.propTypes = {};
 
-UserListPage.defaultProps = {};
-
 export default withRouter(UserListPage);

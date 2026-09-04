@@ -5,7 +5,7 @@ import { Tooltip } from 'antd';
 
 export const StockCustomTagButton = (props) => {
 
-  const { onChange, value, size } = props;
+  const { onChange = () => { }, value = false, size = 18 } = props;
 
   const style = {
     fontSize: size,
@@ -35,11 +35,5 @@ StockCustomTagButton.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.any,
   size: PropTypes.number,
-};
-
-StockCustomTagButton.defaultProps = {
-  onChange: () => { },
-  value: false,
-  size: 18,
 };
 

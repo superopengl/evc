@@ -48,8 +48,4 @@ HomeUnusualOptionActivityArea.propTypes = {
   onSymbolClick: PropTypes.func,
 };
 
-HomeUnusualOptionActivityArea.defaultProps = {
-  onSymbolClick: () => { }
-};
-
 export default HomeUnusualOptionActivityArea;

@@ -17,7 +17,7 @@ width: 100%;
 
 const StockCustomTagSelect = (props) => {
 
-  const { value, readonly, onChange, onBlur } = props;
+  const { value = [], readonly = true, onChange = () => { }, onBlur = () => { } } = props;
   const intl = useIntl();
   const context = React.useContext(GlobalContext);
   const [selected, setSelected] = React.useState(value);
@@ -88,13 +88,6 @@ StockCustomTagSelect.propTypes = {
   readonly: PropTypes.bool,
   onChange: PropTypes.func,
   onBlur: PropTypes.func,
-};
-
-StockCustomTagSelect.defaultProps = {
-  value: [],
-  readonly: true,
-  onChange: () => { },
-  onBlur: () => { },
 };
 
 export default StockCustomTagSelect;

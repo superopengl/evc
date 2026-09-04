@@ -195,6 +195,4 @@ StockDisplayPanel.propTypes = {
   stock: PropTypes.object.isRequired,
 };
 
-StockDisplayPanel.defaultProps = {};
-
 export default withRouter(StockDisplayPanel);

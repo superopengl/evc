@@ -2,94 +2,91 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { API_BASE_URL } from 'services/http';
-import { extend } from 'wangeditor-for-react';
-import i18next from 'i18next';
+import { Editor, Toolbar } from '@wangeditor/editor-for-react';
+import { i18nChangeLanguage } from '@wangeditor/editor';
+import '@wangeditor/editor/dist/css/style.css';
 
-const ReactWEditor = extend({ i18next });
+// v5 defaults to zh-CN; the v4 config this replaced set `lang: 'en'`.
+i18nChangeLanguage('en');
 
-const DEFAULT_SAMPLE = ``;
-
+/**
+ * wangeditor-for-react wrapped wangEditor 4 and was capped at React 17. wangEditor 5
+ * (@wangeditor/editor-for-react) has a different shape: the toolbar is a separate component, the
+ * v4 `menus` array and `uploadImgHooks` are replaced by toolbarConfig/MENU_CONF, and onChange
+ * hands back the editor rather than an HTML string.
+ */
 const RichTextInput = (props) => {
-
-  const { value, disabled, onChange } = props;
-  let editorRef = React.useRef(null);
+  const { value = '', disabled = false, onChange = () => { } } = props;
+  const [editor, setEditor] = React.useState(null);
 
   React.useEffect(() => {
     return () => {
-      editorRef?.current?.destroy();
+      if (editor) {
+        editor.destroy();
+      }
+    };
+  }, [editor]);
+
+  // readOnly is only read when the editor is created, so track it separately.
+  React.useEffect(() => {
+    if (!editor) {
+      return;
     }
-  }, [])
+    if (disabled) {
+      editor.disable();
+    } else {
+      editor.enable();
+    }
+  }, [editor, disabled]);
 
-  const handleCustomImageInsert = (insertImgFn, result) => {
-    const { id, fileName } = result;
-    const url = `${API_BASE_URL}/file/${id}/download`;
-    insertImgFn(url, fileName, url);
-  }
+  const toolbarConfig = React.useMemo(() => ({
+    // v5 renames every menu key, so excluding the few we never offered is safer than
+    // re-listing all twenty by hand - an unknown key throws at runtime.
+    excludeKeys: ['group-video', 'insertVideo', 'uploadVideo', 'emotion', 'fullScreen'],
+  }), []);
 
-  return <ReactWEditor
-    ref={editorRef}
-    defaultValue={value}
-    onChange={onChange}
-    disabled={disabled}
-    config={{
-      lang: 'en',
-      fontSizes: {
-        'x-small': { name: '10px', value: '1' },
-        small: { name: '12px', value: '2' },
-        normal: { name: '14px', value: '3' },
-        large: { name: '16px', value: '4' },
-        'x-large': { name: '20px', value: '5' },
-        'xx-large': { name: '24px', value: '6' },
-        'xxx-large': { name: '32px', value: '7' },
+  const editorConfig = React.useMemo(() => ({
+    placeholder: '',
+    readOnly: disabled,
+    MENU_CONF: {
+      uploadImage: {
+        server: `${API_BASE_URL}/file`,
+        fieldName: 'file',
+        maxNumberOfFiles: 1,
+        timeout: 20 * 1000,
+        withCredentials: true,
+        customInsert(result, insertFn) {
+          const { id, fileName } = result;
+          const url = `${API_BASE_URL}/file/${id}/download`;
+          insertFn(url, fileName, url);
+        },
       },
-      uploadImgServer: `${API_BASE_URL}/file`,
-      uploadImgMaxLength: 1,
-      withCredentials: true,
-      uploadFileName: 'file',
-      uploadImgTimeout: 20 * 1000, // 20 seconds
-      uploadImgHooks: {
-        customInsert: handleCustomImageInsert
-      },
-      menus: [
-        'head',
-        'bold',
-        'fontSize',
-        'fontName',
-        'italic',
-        'underline',
-        'strikeThrough',
-        'indent',
-        'lineHeight',
-        'foreColor',
-        'backColor',
-        'link',
-        'list',
-        'todo',
-        'justify',
-        'quote',
-        // 'emoticon',
-        'image',
-        // 'video',
-        'table',
-        'code',
-        'splitLine',
-        // 'undo',
-        // 'redo',
-      ]
-    }}
-  />
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), []);
+
+  return <div style={{ border: '1px solid #d9d9d9', borderRadius: 6 }}>
+    <Toolbar
+      editor={editor}
+      defaultConfig={toolbarConfig}
+      mode="default"
+      style={{ borderBottom: '1px solid #d9d9d9' }}
+    />
+    <Editor
+      defaultConfig={editorConfig}
+      value={value}
+      onCreated={setEditor}
+      onChange={e => onChange(e.getHtml())}
+      mode="default"
+      style={{ minHeight: 300, overflowY: 'hidden' }}
+    />
+  </div>;
 };
 
 RichTextInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
-};
-
-RichTextInput.defaultProps = {
-  value: DEFAULT_SAMPLE,
-  onChange: () => { },
-  disabled: false,
 };
 
 export default withRouter(RichTextInput);

@@ -51,7 +51,4 @@ GuestSignUpChart.propTypes = {
   value: PropTypes.array.isRequired,
 };
 
-GuestSignUpChart.defaultProps = {
-};
-
 export default GuestSignUpChart;

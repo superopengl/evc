@@ -18,7 +18,7 @@ const RawHtmlDisplay = (props) => {
 
   return (
     <ContainerStyled
-      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.value) }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.value ?? '') }}
     />
   );
 };
@@ -27,8 +27,5 @@ RawHtmlDisplay.propTypes = {
   value: PropTypes.string
 };
 
-RawHtmlDisplay.defaultProps = {
-  value: ''
-};
 
 export default withRouter(RawHtmlDisplay);

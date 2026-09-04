@@ -123,7 +123,4 @@ StockQuotePanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockQuotePanel.defaultProps = {
-};
-
 export default withRouter(StockQuotePanel);

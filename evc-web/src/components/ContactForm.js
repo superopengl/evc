@@ -81,6 +81,4 @@ const ContactForm = props => {
 
 ContactForm.propTypes = {};
 
-ContactForm.defaultProps = {};
-
 export default ContactForm;

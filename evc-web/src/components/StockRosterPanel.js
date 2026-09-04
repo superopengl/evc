@@ -77,7 +77,4 @@ StockRosterPanel.propTypes = {
   symbol: PropTypes.string.isRequired
 };
 
-StockRosterPanel.defaultProps = {
-};
-
 export default withRouter(StockRosterPanel);

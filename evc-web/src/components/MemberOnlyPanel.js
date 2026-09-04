@@ -34,7 +34,7 @@ export const MemberOnlyPanel = (props) => {
   const isGuest = context.role === 'guest';
 
   return <StyledSpace>
-    <Text><LockFilled /> {props.message}</Text>
+    <Text><LockFilled /> {props.message ?? <FormattedMessage id="text.fullFeatureAfterPay" />}</Text>
     {isGuest && <Link to="/signup">
       <Button type="link">
         <FormattedMessage id="text.clickToSignUp" />
@@ -50,8 +50,4 @@ export const MemberOnlyPanel = (props) => {
 
 MemberOnlyPanel.propTypes = {
   message: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-};
-
-MemberOnlyPanel.defaultProps = {
-  message: <FormattedMessage id="text.fullFeatureAfterPay" />
 };

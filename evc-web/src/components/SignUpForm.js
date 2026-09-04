@@ -93,29 +93,11 @@ const SignUpForm = (props) => {
       </Form>
       {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
       <Divider><Text type="secondary"><small>or</small></Text></Divider>
-      <GoogleSsoButton
-        render={
-          renderProps => (
-            <Button
-              ghost
-              type="primary"
-              block
-              icon={<GoogleLogoSvg size={16} />}
-              // icon={<GoogleOutlined />}
-              onClick={renderProps.onClick}
-              disabled={renderProps.disabled}
-            >
-              <FormattedMessage id="menu.continueWithGoogle"/>
-            </Button>
-          )}
-        referralCode={referralCode}
-      />
+      <GoogleSsoButton referralCode={referralCode} />
     </ContainerStyled>
   );
 }
 
 SignUpForm.propTypes = {};
-
-SignUpForm.defaultProps = {};
 
 export default withRouter(SignUpForm);

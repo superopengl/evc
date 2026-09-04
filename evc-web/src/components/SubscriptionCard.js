@@ -36,7 +36,7 @@ transform: scale(1.05);
 `;
 
 export const SubscriptionCard = props => {
-  const { onClick, title, description, recurring, price, discount, unit, active, interactive } = props;
+  const { onClick, title, description, recurring, price, discount = 0, unit, active = false, interactive = true } = props;
 
   const classNameArray = [];
   if (active) {
@@ -93,8 +93,3 @@ SubscriptionCard.propTypes = {
   interactive: PropTypes.bool,
 };
 
-SubscriptionCard.defaultProps = {
-  active: false,
-  interactive: true,
-  discount: 0,
-};

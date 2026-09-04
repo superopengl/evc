@@ -1,4 +1,5 @@
-import { Space, PageHeader, Tag, Button, Modal, Typography, Form, Input, Tooltip, DatePicker } from 'antd';
+import { Space, Tag, Button, Modal, Typography, Form, Input, Tooltip, DatePicker } from 'antd';
+import { PageHeader } from 'components/PageHeader';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
@@ -246,7 +247,5 @@ const StockDetailPage = (props) => {
 StockDetailPage.propTypes = {
   symbol: PropTypes.string.isRequired,
 };
-
-StockDetailPage.defaultProps = {};
 
 export default withRouter(StockDetailPage);

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Drawer, Table, Tooltip, Modal, Input, Typography } from 'antd';
-import Text from 'antd/lib/typography/Text';
 import {
   StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
 } from '@ant-design/icons';
@@ -20,6 +19,9 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
+import dayjs from 'dayjs';
+
+const { Text } = Typography;
 
 const { Title } = Typography;
 
@@ -154,7 +156,7 @@ const ReferralGlobalPolicyListPage = () => {
     const { percentage, start, end, description } = copyPolicy;
     setNewPolicy({
       percentage,
-      range: [moment(start), moment(end)],
+      range: [dayjs(start), dayjs(end)],
       description,
       active: false,
     });
@@ -193,7 +195,7 @@ const ReferralGlobalPolicyListPage = () => {
     const { percentage, start, end, description, active } = event;
     setNewPolicy({
       percentage,
-      range: [moment(start), moment(end)],
+      range: [dayjs(start), dayjs(end)],
       description,
       active,
     })
@@ -290,7 +292,5 @@ const ReferralGlobalPolicyListPage = () => {
 };
 
 ReferralGlobalPolicyListPage.propTypes = {};
-
-ReferralGlobalPolicyListPage.defaultProps = {};
 
 export default withRouter(ReferralGlobalPolicyListPage);

@@ -80,6 +80,4 @@ StockGuestPreviewDrawer.propTypes = {
   symbol: PropTypes.string,
 };
 
-StockGuestPreviewDrawer.defaultProps = {};
-
 export default StockGuestPreviewDrawer;

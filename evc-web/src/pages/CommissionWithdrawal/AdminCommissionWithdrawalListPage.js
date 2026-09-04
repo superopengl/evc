@@ -240,6 +240,4 @@ const AdminCommissionWithdrawalListPage = () => {
 
 AdminCommissionWithdrawalListPage.propTypes = {};
 
-AdminCommissionWithdrawalListPage.defaultProps = {};
-
 export default withRouter(AdminCommissionWithdrawalListPage);

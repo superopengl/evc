@@ -16,7 +16,7 @@ const span = {
 
 const StockList = (props) => {
 
-  const { data, onItemClick, showBell, showTags } = props;
+  const { data, onItemClick = () => { }, showBell = false, showTags = false } = props;
 
   return (<>
     <Row gutter={[16, 16]} align="stretch" style={{ marginBottom: 16 }}>
@@ -40,12 +40,6 @@ StockList.propTypes = {
   onItemClick: PropTypes.func,
   showBell: PropTypes.bool,
   showTags: PropTypes.bool,
-};
-
-StockList.defaultProps = {
-  showBell: false,
-  showTags: false,
-  onItemClick: () => { }
 };
 
 export default withRouter(StockList);

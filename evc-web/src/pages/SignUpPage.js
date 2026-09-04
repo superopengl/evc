@@ -51,6 +51,4 @@ const SignUpPage = (props) => {
 
 SignUpPage.propTypes = {};
 
-SignUpPage.defaultProps = {};
-
 export default withRouter(SignUpPage);

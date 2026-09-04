@@ -13,7 +13,7 @@ import { from } from 'rxjs';
 const { Link } = Typography;
 
 const CreateStockModal = props => {
-  const { visible, onOk, onCancel } = props;
+  const { visible = false, onOk, onCancel, defaultSymbol = '' } = props;
   const [loading, setLoading] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(visible);
   const [stockTags, setStockTags] = React.useState([]);
@@ -111,11 +111,6 @@ CreateStockModal.propTypes = {
   defaultSymbol: PropTypes.string,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
-};
-
-CreateStockModal.defaultProps = {
-  visible: false,
-  defaultSymbol: ''
 };
 
 export default withRouter(CreateStockModal);

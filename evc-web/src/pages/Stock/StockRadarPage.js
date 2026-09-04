@@ -62,7 +62,7 @@ const LOCAL_STORAGE_QUERY_KEY = 'stock_query'
 
 const StockRadarPage = (props) => {
 
-  const { onItemClick } = props;
+  const { onItemClick, size = 60 } = props;
 
   const { create } = queryString.parse(props.location.search);
 
@@ -210,10 +210,6 @@ const StockRadarPage = (props) => {
 StockRadarPage.propTypes = {
   onItemClick: PropTypes.func,
   size: PropTypes.number,
-};
-
-StockRadarPage.defaultProps = {
-  size: 60
 };
 
 export default withRouter(StockRadarPage);

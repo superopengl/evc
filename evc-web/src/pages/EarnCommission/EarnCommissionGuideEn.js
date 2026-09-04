@@ -73,6 +73,4 @@ const EarnCommissionGuideEn = props => {
 
 EarnCommissionGuideEn.propTypes = {};
 
-EarnCommissionGuideEn.defaultProps = {};
-
 export default withRouter(EarnCommissionGuideEn);

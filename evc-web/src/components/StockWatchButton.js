@@ -5,7 +5,7 @@ import { Tooltip } from 'antd';
 
 export const StockWatchButton = (props) => {
 
-  const { onChange, value, size } = props;
+  const { onChange = () => { }, value = false, size = 18 } = props;
 
   const style = {
     fontSize: size,
@@ -35,11 +35,5 @@ StockWatchButton.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.any,
   size: PropTypes.number,
-};
-
-StockWatchButton.defaultProps = {
-  onChange: () => { },
-  value: false,
-  size: 18,
 };
 

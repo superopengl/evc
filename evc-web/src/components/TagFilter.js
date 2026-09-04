@@ -5,7 +5,7 @@ import groupBy from 'lodash/groupBy';
 
 export const TagFilter = (props) => {
 
-  const { onChange, tags, group, value, style } = props;
+  const { onChange = () => { }, tags = [], group = false, value = [], style } = props;
   const [selected, setSelected] = React.useState(value);
 
   const isSelected = (tag) => {
@@ -54,13 +54,6 @@ TagFilter.propTypes = {
   onChange: PropTypes.func,
   tags: PropTypes.arrayOf(PropTypes.object),
   group: PropTypes.bool,
-};
-
-TagFilter.defaultProps = {
-  value: [],
-  tags: [],
-  onChange: () => { },
-  group: false
 };
 
 export default TagFilter;

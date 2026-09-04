@@ -33,6 +33,4 @@ const DeclarationPage = () => (
 
 DeclarationPage.propTypes = {};
 
-DeclarationPage.defaultProps = {};
-
 export default DeclarationPage;

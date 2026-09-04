@@ -48,6 +48,4 @@ const ChineseUserPaymentGuidePage = () => (
 
 ChineseUserPaymentGuidePage.propTypes = {};
 
-ChineseUserPaymentGuidePage.defaultProps = {};
-
 export default ChineseUserPaymentGuidePage;

@@ -20,7 +20,7 @@ const Container = styled.div`
 
 
 const StockEpsAdminEditor = (props) => {
-  const { onLoadList, onSaveNew, onDelete, onChange, onSelected } = props;
+  const { onLoadList, onSaveNew, onDelete, onChange = () => { }, onSelected = () => { }, showTime = true } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -126,12 +126,6 @@ StockEpsAdminEditor.propTypes = {
   onSelected: PropTypes.func,
   showTime: PropTypes.bool,
   symbol: PropTypes.string.isRequired,
-};
-
-StockEpsAdminEditor.defaultProps = {
-  showTime: true,
-  onChange: () => { },
-  onSelected: () => { },
 };
 
 export default StockEpsAdminEditor;

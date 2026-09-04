@@ -18,7 +18,7 @@ const StyledPaymentTable = styled(Table)`
 `;
 
 const MySubscriptionHistoryPanel = (props) => {
-  const { data } = props;
+  const { data = [] } = props;
   const [list, setList] = React.useState(data || []);
 
   React.useEffect(() => {
@@ -107,10 +107,6 @@ const MySubscriptionHistoryPanel = (props) => {
 
 MySubscriptionHistoryPanel.propTypes = {
   data: PropTypes.array.isRequired
-};
-
-MySubscriptionHistoryPanel.defaultProps = {
-  data: []
 };
 
 export default withRouter(MySubscriptionHistoryPanel);

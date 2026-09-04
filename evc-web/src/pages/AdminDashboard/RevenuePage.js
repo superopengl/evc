@@ -100,6 +100,4 @@ const RevenuePage = () => {
 
 RevenuePage.propTypes = {};
 
-RevenuePage.defaultProps = {};
-
 export default withRouter(RevenuePage);

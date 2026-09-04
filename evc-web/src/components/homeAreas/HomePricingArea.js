@@ -72,7 +72,4 @@ const HomePricingArea = props => {
 HomePricingArea.propTypes = {
 };
 
-HomePricingArea.defaultProps = {
-};
-
 export default withRouter(HomePricingArea);

@@ -1,104 +1,108 @@
 import React from "react";
 import { Loading } from "../Loading";
-import { PayPalButton } from "react-paypal-button-v2";
+import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import PropTypes from 'prop-types';
 import { notify } from "util/notify";
 
-//create button here
-// next create the class and Bind React and ReactDom to window
-//as we will be needing them later
+const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID;
+const CURRENCY_USD = 'USD';
 
-const PAYPAL_CLIENT_ID = process.env.REACT_APP_EVC_PAYPAL_CLIENT_ID
+const BUTTON_STYLE = {
+  layout: 'vertical',
+  color: 'gold',
+  shape: 'rect',
+  label: 'paypal',
+  height: 40,
+};
 
-export const PayPalCheckoutButton = (props) => {
-
-  const CURRENCY_USD = 'USD';
-  const { onProvision, onCommit, onLoading } = props;
-  const [loading, setLoading] = React.useState(true);
-  const [paymentId, setPaymentId] = React.useState();
+/**
+ * react-paypal-button-v2 (last published 2021, capped at React 17) bundled the script loader and
+ * the buttons in one component. @paypal/react-paypal-js splits them, so the loading state that
+ * used to arrive via `onButtonReady` now comes from the script reducer.
+ */
+const Buttons = ({ onProvision, onCommit, onLoading, setPaymentId, paymentIdRef }) => {
+  const [{ isPending }] = usePayPalScriptReducer();
 
   React.useEffect(() => {
-    onLoading(loading);
-  }, [loading]);
-
-  const handleTransactionSuccess = async (details, data) => {
-    await onCommit(paymentId, details);
-  }
+    onLoading(isPending);
+  }, [isPending, onLoading]);
 
   const handleCreateOrder = async (data, actions) => {
     const payment = await onProvision();
-    const { paymentId, amount} = payment;
+    const { paymentId, amount } = payment;
     setPaymentId(paymentId);
+    paymentIdRef.current = paymentId;
 
     return actions.order.create({
       purchase_units: [{
         amount: {
           currency_code: CURRENCY_USD,
-          value: amount
-        }
+          value: amount,
+        },
       }],
       application_context: {
-        shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
-      }
+        shipping_preference: "NO_SHIPPING", // default is "GET_FROM_FILE"
+      },
     });
-  }
+  };
 
-  const handleCheckoutError = err => {
-    notify.error('Error in PayPal checkout', err.message);
-  }
+  // v2 captured the order internally and handed the result to onSuccess; here we capture.
+  const handleApprove = async (data, actions) => {
+    const details = await actions.order.capture();
+    await onCommit(paymentIdRef.current, details);
+  };
 
-  const handleCatchError = err => {
-    notify.error('Error in PayPal checkout', err.message);
-  }
+  const handleError = err => {
+    notify.error('Error in PayPal checkout', err?.message);
+  };
 
-  const handleShippingChange = async (data,actions) => {
-    /**
-     * Workaround for PERMISSION_DENIED error
-     * See https://github.com/paypal/paypal-checkout-components/issues/1521
-     */
-    return actions.resolve();
-  }
+  /**
+   * Workaround for PERMISSION_DENIED error
+   * See https://github.com/paypal/paypal-checkout-components/issues/1521
+   */
+  const handleShippingChange = async (data, actions) => actions.resolve();
 
-  return (<Loading loading={loading} style={{ minWidth: 240, height: 80,  width: '100%', marginLeft: 'auto', marginRight: 'auto' }}>
-    <PayPalButton
-      // amount={amount}
-      // currency={CURRENCY_USD}
-      createOrder={handleCreateOrder}
-      catchError={handleCatchError}
-      onError={handleCheckoutError}
-      onSuccess={handleTransactionSuccess}
-      onButtonReady={() => setLoading(false)}
-      onShippingChange={handleShippingChange}
-      // createSubscription={handleCreateSubscription}
-      // onApprove={handleApprove}
-      style={{
-        layout: 'vertical',
-        color: 'gold',
-        shape: 'rect',
-        label: 'paypal',
-        height: 40
-      }}
-      
-      options={{
-        vault: true,
-        clientId: PAYPAL_CLIENT_ID,
-        disableFunding: 'card',
-        locale: 'en_US',
-        // currency: CURRENCY,
-        // intent: 'subscription'
-      }}
-    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-    />
+  return <PayPalButtons
+    style={BUTTON_STYLE}
+    createOrder={handleCreateOrder}
+    onApprove={handleApprove}
+    onError={handleError}
+    onShippingChange={handleShippingChange}
+  />;
+};
+
+export const PayPalCheckoutButton = (props) => {
+  const { onProvision, onCommit, onLoading } = props;
+  const [loading, setLoading] = React.useState(true);
+  const [, setPaymentId] = React.useState();
+  const paymentIdRef = React.useRef();
+
+  const handleLoading = React.useCallback(pending => {
+    setLoading(pending);
+    onLoading(pending);
+  }, [onLoading]);
+
+  return (<Loading loading={loading} style={{ minWidth: 240, height: 80, width: '100%', marginLeft: 'auto', marginRight: 'auto' }}>
+    <PayPalScriptProvider options={{
+      clientId: PAYPAL_CLIENT_ID,
+      vault: true,
+      disableFunding: 'card',
+      locale: 'en_US',
+    }}>
+      <Buttons
+        onProvision={onProvision}
+        onCommit={onCommit}
+        onLoading={handleLoading}
+        setPaymentId={setPaymentId}
+        paymentIdRef={paymentIdRef}
+      />
+    </PayPalScriptProvider>
   </Loading>
-  )
-}
+  );
+};
 
 PayPalCheckoutButton.propTypes = {
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
   onLoading: PropTypes.func.isRequired,
-  onSuccess: PropTypes.func,
-  onApprove: PropTypes.func,
 };
-
-PayPalCheckoutButton.defaultProps = {};

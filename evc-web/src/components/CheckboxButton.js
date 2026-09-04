@@ -5,7 +5,7 @@ import { Button } from 'antd';
 
 const CheckboxButton = (props) => {
 
-  const { value, onChange, children, ...other } = props;
+  const { value = false, onChange, children, ...other } = props;
   const [checked, setChecked] = React.useState(value);
 
   const handleToggle = () => {
@@ -29,10 +29,6 @@ const CheckboxButton = (props) => {
 CheckboxButton.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.bool.isRequired
-};
-
-CheckboxButton.defaultProps = {
-  value: false
 };
 
 export default CheckboxButton;

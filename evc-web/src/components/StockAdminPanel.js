@@ -76,7 +76,7 @@ const ColInnerCard = props => {
 
 const StockAdminPanel = (props) => {
 
-  const { onDataChange } = props;
+  const { onDataChange = () => { } } = props;
 
   const [stock] = React.useState(props.stock);
   const [simulatorVisible, setSimulatorVisible] = React.useState(false);
@@ -233,10 +233,6 @@ const StockAdminPanel = (props) => {
 StockAdminPanel.propTypes = {
   stock: PropTypes.object.isRequired,
   onDataChange: PropTypes.func,
-};
-
-StockAdminPanel.defaultProps = {
-  onDataChange: () => { }
 };
 
 export default withRouter(StockAdminPanel);

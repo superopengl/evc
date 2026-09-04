@@ -25,6 +25,4 @@ const UnusualOptionsActivityPage = (props) => {
 
 UnusualOptionsActivityPage.propTypes = {};
 
-UnusualOptionsActivityPage.defaultProps = {};
-
 export default withRouter(UnusualOptionsActivityPage);

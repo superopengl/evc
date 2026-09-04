@@ -47,8 +47,4 @@ HomeOptionPutCallArea.propTypes = {
   onSymbolClick: PropTypes.func,
 };
 
-HomeOptionPutCallArea.defaultProps = {
-  onSymbolClick: () => { }
-};
-
 export default HomeOptionPutCallArea;

@@ -43,7 +43,11 @@ const Container = styled.div`
 
 
 export const FileUploader = (props) => {
-  const { onChange, onUploadingChange, showUploadList } = props;
+  const { onChange = () => { }, onUploadingChange, showUploadList = {
+    showPreviewIcon: true,
+    showDownloadIcon: false,
+    showRemoveIcon: true,
+  }, disabled = false } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -104,7 +108,7 @@ export const FileUploader = (props) => {
     onChange(fileList.map(f => get(f, 'response.id', f.uid)));
   }
 
-  const { size, disabled } = props;
+  const { size } = props;
 
   const maxSize = size || 3;
 
@@ -148,12 +152,3 @@ FileUploader.propTypes = {
   onChange: PropTypes.func,
 };
 
-FileUploader.defaultProps = {
-  disabled: false,
-  showUploadList: {
-    showPreviewIcon: true,
-    showDownloadIcon: false,
-    showRemoveIcon: true,
-  },
-  onChange: () => { }
-};

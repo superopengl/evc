@@ -33,7 +33,7 @@ max-width: 1600px;
 
 
 export const HomeStockRadarArea = props => {
-  const { onSymbolClick } = props;
+  const { onSymbolClick = () => { } } = props;
   return (
     <Container>
       <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
@@ -65,10 +65,6 @@ export const HomeStockRadarArea = props => {
 
 HomeStockRadarArea.propTypes = {
   onSymbolClick: PropTypes.func,
-};
-
-HomeStockRadarArea.defaultProps = {
-  onSymbolClick: () => { }
 };
 
 export default HomeStockRadarArea;

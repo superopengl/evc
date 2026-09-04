@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Table } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { getStockDataInfo } from 'services/stockService';
 import * as moment from 'moment-timezone';
 import ReactDOM from "react-dom";

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Typography, Input, Button, Form, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { forgotPassword } from 'services/authService';

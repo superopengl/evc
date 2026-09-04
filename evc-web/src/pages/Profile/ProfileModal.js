@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import ProfileForm from './ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Modal } from 'antd';

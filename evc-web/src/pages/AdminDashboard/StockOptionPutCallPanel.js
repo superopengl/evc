@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from "react-dom";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import OptionPutCallPanel from './OptionPutCallPanel';
 import { getStockLatestOptionPutCall } from 'services/dataService';
 import * as _ from 'lodash';

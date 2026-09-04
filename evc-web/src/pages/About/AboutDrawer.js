@@ -1,7 +1,7 @@
 import { Typography, Modal, Divider } from 'antd';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 
 const { Paragraph } = Typography;
 

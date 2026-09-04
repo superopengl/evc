@@ -3,7 +3,7 @@ import { Typography, Col, Row } from 'antd';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 
 const { Title, Paragraph } = Typography;
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Typography, Button, Divider, Card, Row, Col } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';

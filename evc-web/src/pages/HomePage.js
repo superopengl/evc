@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import HomePricingArea from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
 import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
 import { ProLayout } from '@ant-design/pro-components';

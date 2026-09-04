@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Space, Card, Button, Table } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { refreshMaterializedViews, flushCache, getCacheKeys, deleteCacheKey, getCacheKeyedValue } from 'services/dataService';
 import { LongRunningActionButton } from 'components/LongRunningActionButton';
 import { notify } from 'util/notify';

@@ -3,7 +3,7 @@ import React from 'react';
 import { Typography } from 'antd';
 import styled from 'styled-components';
 import { StockNoticeButton } from 'components/StockNoticeButton';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import SignUpForm from 'components/SignUpForm';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/charts';

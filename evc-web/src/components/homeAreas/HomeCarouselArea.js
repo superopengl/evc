@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Space, Row, Col, List } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { SearchStockInput } from 'components/SearchStockInput';

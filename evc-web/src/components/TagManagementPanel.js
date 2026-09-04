@@ -4,7 +4,7 @@ import { Button, Table, Input, Switch, InputNumber, Typography } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Space } from 'antd';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 import { from } from 'rxjs';

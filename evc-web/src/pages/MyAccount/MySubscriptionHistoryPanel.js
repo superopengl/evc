@@ -1,6 +1,6 @@
 import { Tag, Space, Table, Button } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt } from 'services/subscriptionService';

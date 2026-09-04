@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { API_BASE_URL } from 'services/http';
 import { Editor, Toolbar } from '@wangeditor/editor-for-react';
 import { i18nChangeLanguage } from '@wangeditor/editor';

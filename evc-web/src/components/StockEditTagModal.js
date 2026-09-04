@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Modal } from 'antd';
 import PropTypes from 'prop-types';
 import TagSelect from 'components/TagSelect';

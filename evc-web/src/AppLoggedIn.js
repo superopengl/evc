@@ -7,7 +7,8 @@ import Icon, {
   BarChartOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
   DashboardOutlined, QuestionOutlined, AlertOutlined, WarningOutlined
 } from '@ant-design/icons';
-import { Link, withRouter, Redirect } from 'react-router-dom';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { logout } from 'services/authService';
 import { Space, Dropdown, Menu, Typography, Modal } from 'antd';
 import HeaderStockSearch from 'components/HeaderStockSearch';
@@ -15,7 +16,7 @@ import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
 import AboutDrawer from 'pages/About/AboutDrawer';
-import { Switch } from 'react-router-dom';
+
 import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
 import { BsCalendar } from 'react-icons/bs';
 import { FaMoneyBillWave } from 'react-icons/fa';
@@ -380,30 +381,30 @@ const AppLoggedIn = props => {
         </Space>
     )}
   >
-    <Switch>
-      <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminDashboardPage} />
-      <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} />
-      <RoleRoute visible={true} exact path="/option_put_call" component={OptionPutCallPage} />
-      <RoleRoute visible={true} exact path="/unusual_options_activity" component={UnusualOptionsActivityPage} />
-      <RoleRoute visible={true} path="/market" exact component={MarketPage} />
-      <RoleRoute visible={true} path="/stock" exact component={StockRadarPage} />
-      <RoleRoute visible={true} path="/stock/:symbol" exact component={StockPage} />
+    <Routes>
+      <Route path="dashboard" element={<RoleRoute visible={isAdmin} component={AdminDashboardPage} />} />
+      <Route path="watchlist" element={<RoleRoute visible={isMember || isFree} component={StockWatchListPage} />} />
+      <Route path="option_put_call" element={<RoleRoute visible={true} component={OptionPutCallPage} />} />
+      <Route path="unusual_options_activity" element={<RoleRoute visible={true} component={UnusualOptionsActivityPage} />} />
+      <Route path="market" element={<RoleRoute visible={true} component={MarketPage} />} />
+      <Route path="stock" element={<RoleRoute visible={true} component={StockRadarPage} />} />
+      <Route path="stock/:symbol" element={<RoleRoute visible={true} component={StockPage} />} />
 
-      <RoleRoute visible={true} exact path="/earnings_calendar" component={() => <EarningsCalendarPage onSymbolClick={symbol => props.history.push(`/stock/${symbol}`)} />} />
-      <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
-      <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
-      <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
-      <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
+      <Route path="earnings_calendar" element={<RoleRoute visible={true} component={() => <EarningsCalendarPage onSymbolClick={symbol => props.history.push(`/stock/${symbol}`)} />} />} />
+      <Route path="user" element={<RoleRoute visible={isAdmin} component={UserListPage} />} />
+      <Route path="tags" element={<RoleRoute visible={isAdmin} component={TagsSettingPage} />} />
+      <Route path="config" element={<RoleRoute visible={isAdmin} component={ConfigListPage} />} />
+      <Route path="email_template" element={<RoleRoute visible={isAdmin} component={EmailTemplateListPage} />} />
       {/* <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} /> */}
-      <RoleRoute visible={isAdmin} exact path="/commission_policy" component={ReferralGlobalPolicyListPage} />
-      <RoleRoute visible={isAdmin} exact path="/discount_policy" component={ReferreeDiscountPolicyListPage} />
-      <RoleRoute visible={isAdmin} exact path="/data" component={DataSourcePage} />
-      <RoleRoute visible={isAdmin} exact path="/tasks" component={TaskExecutionPage} />
-      <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />
-      <RoleRoute visible={isAdmin} exact path="/comission" component={AdminCommissionWithdrawalListPage} />
-      <RoleRoute visible={isMember || isFree} path="/account" exact component={MyAccountPage} />
-      <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
-    </Switch>
+      <Route path="commission_policy" element={<RoleRoute visible={isAdmin} component={ReferralGlobalPolicyListPage} />} />
+      <Route path="discount_policy" element={<RoleRoute visible={isAdmin} component={ReferreeDiscountPolicyListPage} />} />
+      <Route path="data" element={<RoleRoute visible={isAdmin} component={DataSourcePage} />} />
+      <Route path="tasks" element={<RoleRoute visible={isAdmin} component={TaskExecutionPage} />} />
+      <Route path="revenue" element={<RoleRoute visible={isAdmin} component={RevenuePage} />} />
+      <Route path="comission" element={<RoleRoute visible={isAdmin} component={AdminCommissionWithdrawalListPage} />} />
+      <Route path="account" element={<RoleRoute visible={isMember || isFree} component={MyAccountPage} />} />
+      <Route path="*" element={<Navigate to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} replace />} />
+    </Routes>
 
     <ChangePasswordModal
       visible={changePasswordVisible}

@@ -1,6 +1,6 @@
 import { Drawer, Space, Input, Button, Modal } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { changeCommissionWithdrawalStatus } from 'services/commissionService';
 import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import PropTypes from 'prop-types';

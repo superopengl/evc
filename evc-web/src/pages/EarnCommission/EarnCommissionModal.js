@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Space, Button, Typography, Modal, Row, Col } from 'antd';
 import ReactDOM from 'react-dom';
 import { getMyAccount } from 'services/accountService';

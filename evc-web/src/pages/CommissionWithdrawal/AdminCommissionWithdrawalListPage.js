@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
 import { Typography, Tag, Select, DatePicker, Table, Input, Button, Space } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import Icon from '@ant-design/icons';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { searchCommissionWithdrawal } from 'services/commissionService';

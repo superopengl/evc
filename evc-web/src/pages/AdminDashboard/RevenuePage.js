@@ -1,6 +1,6 @@
 import React from 'react';
 import { Space, Select, Button, Card, Typography, Row, Col } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import RevenueChart from 'components/charts/RevenueChart';
 import { Loading } from 'components/Loading';
 import { getRevenueChartData, downloadAllPaymentCsv } from 'services/revenueService';

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
 import { Pagination, Table, Select, Space, Typography, Button, Row, Col, Tooltip, InputNumber, Drawer } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import PropTypes from 'prop-types';
 import { getStockAllOptionPutCallHistory, listLatestOptionPutCall, saveStockOptionPutCallHistoryOrdinal } from 'services/dataService';
 import { PlusOutlined, SyncOutlined } from '@ant-design/icons';

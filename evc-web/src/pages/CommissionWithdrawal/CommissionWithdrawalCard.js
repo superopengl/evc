@@ -1,6 +1,6 @@
 import { Typography, Tag, Descriptions, Space } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { TimeAgo } from 'components/TimeAgo';
 import countryList from 'react-select-country-list'
 import PropTypes from 'prop-types';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Typography, Divider } from 'antd';
 
 const { Title, Text, Paragraph } = Typography;

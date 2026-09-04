@@ -1,7 +1,7 @@
 import { Space, Tag, Button, Modal, Typography, Form, Input, Tooltip, DatePicker } from 'antd';
 import { PageHeader } from 'components/PageHeader';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { deleteStock, getStock } from 'services/stockService';

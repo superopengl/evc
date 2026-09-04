@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from "react-dom";
 import styled from 'styled-components';
 import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Switch } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getEarningsCalender } from 'services/stockService';

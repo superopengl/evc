@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Typography, Button, Form, Modal, InputNumber, Row, Col, Card, Space, Alert } from 'antd';
 import PropTypes from 'prop-types';
 import { notify } from 'util/notify';

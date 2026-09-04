@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Space, Tooltip } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { getStockEvcInfo } from 'services/stockService';
 import ReactDOM from "react-dom";
 import { Skeleton } from 'antd';

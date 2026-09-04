@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Typography, Button, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { saveProfile } from 'services/userService';

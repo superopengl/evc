@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import { Tabs, Card } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import OptionPutCallPanel from './OptionPutCallPanel';
 import { listLatestOptionPutCall } from 'services/dataService';
 import * as _ from 'lodash';

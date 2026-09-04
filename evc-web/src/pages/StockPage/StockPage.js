@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import styled from 'styled-components';
 import StockDetailPage from './StockDetailPage';
 

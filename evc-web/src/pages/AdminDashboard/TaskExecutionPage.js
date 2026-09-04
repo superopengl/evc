@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Typography } from 'antd';
 import { Bar } from '@ant-design/plots';
 import { getTaskLogChart$ } from 'services/dataService';

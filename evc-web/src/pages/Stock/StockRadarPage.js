@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Divider, Space, Pagination, Button, Row, Col } from 'antd';
 import StockList from '../../components/StockList';
 import { searchStock } from 'services/stockService';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { CheckSquareOutlined, BorderOutlined, PlusOutlined } from '@ant-design/icons';
 import CreateStockModal from './CreateStockModal';

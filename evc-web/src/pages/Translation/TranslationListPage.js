@@ -4,7 +4,7 @@ import { Typography, Button, Table, Input } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Space } from 'antd';
 import { flushTranslation, listAllTranslationsForEdit, saveTranslation, newLocaleResource } from 'services/translationService';
 import { notify } from 'util/notify';

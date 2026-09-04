@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Table, Typography } from 'antd';
 import NumberAmount from 'components/NumberAmount';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import ReactDOM from 'react-dom';
 import { FormattedMessage } from 'react-intl';
 

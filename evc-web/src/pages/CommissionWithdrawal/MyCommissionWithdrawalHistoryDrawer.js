@@ -1,6 +1,6 @@
 import { List, Drawer } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { listMyCommissionWithdrawal } from 'services/commissionService';
 import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import ReactDOM from 'react-dom';

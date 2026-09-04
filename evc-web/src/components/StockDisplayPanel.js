@@ -1,6 +1,6 @@
 import { Button, Row, Col, Modal } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Loading } from 'components/Loading';
 import StockNewsPanel from 'components/StockNewsPanel';
 import StockChart from 'components/charts/StockChart';

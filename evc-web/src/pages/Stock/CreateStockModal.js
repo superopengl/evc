@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Typography, Input, Button, Form, Space, Modal } from 'antd';
 import { createStock } from 'services/stockService';
 import PropTypes from 'prop-types';

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, Typography, Space, Image } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { IconContext } from "react-icons";
 import { getStockNews } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';

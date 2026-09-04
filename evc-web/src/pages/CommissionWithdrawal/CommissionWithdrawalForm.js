@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Button, Form, Input, Radio, Typography, Checkbox, Modal, Space } from 'antd';
 import { notify } from 'util/notify';
 import { CountrySelector } from 'components/CountrySelector';

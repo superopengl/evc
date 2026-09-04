@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Space, Card } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { getStockQuote } from 'services/stockService';
 import { TimeAgo } from 'components/TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';

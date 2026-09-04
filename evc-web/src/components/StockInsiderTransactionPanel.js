@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Space, List, Tooltip, Descriptions, Tag } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { getStockInsiderTransaction } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';

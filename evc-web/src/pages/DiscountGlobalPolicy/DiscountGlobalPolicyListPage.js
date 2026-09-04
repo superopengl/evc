@@ -4,7 +4,7 @@ import { Button, Drawer, Table, Tooltip, Modal, Input, Typography } from 'antd';
 import {
   StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Space } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';

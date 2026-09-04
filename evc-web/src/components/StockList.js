@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Row, Col } from 'antd';
 import StockInfoCard from './StockInfoCard';
 

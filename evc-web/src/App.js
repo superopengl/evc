@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
@@ -152,21 +152,22 @@ const App = () => {
       <ConfigProvider locale={antdLocale} theme={antdTheme}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
-            <Switch>
-              <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
-              <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
-              <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
-              <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
-              <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
-              <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
-              <RoleRoute loading={loading} exact path="/disclaimer" component={DisclaimerPage} />
-              <RoleRoute loading={loading} exact path="/pro-member" component={ProMemberPage} />
-              <RoleRoute loading={loading} exact path="/earnings_calendar_preview" component={EarningsCalendarPreviewPage} />
-              <RoleRoute loading={loading} exact path="/chinese_user_payment_guide" component={ChineseUserPaymentGuidePage} />
-              <RoleRoute loading={loading} path="/" component={isLoggedIn ? AppLoggedIn : HomePage} />
-              <Redirect to="/" />
-              {/* <RoleRoute loading={loading} component={Error404} /> */}
-            </Switch>
+            {/* v6 matches exactly by default, so `exact` is gone. The last route keeps the
+                splat because AppLoggedIn renders its own nested <Routes>; v6 ranks the literal
+                paths above it, so they still win. */}
+            <Routes>
+              <Route path="/login" element={<RoleRoute visible={isGuest} loading={loading} component={LogInPage} />} />
+              <Route path="/signup" element={<RoleRoute visible={isGuest} loading={loading} component={SignUpPage} />} />
+              <Route path="/forgot_password" element={<RoleRoute visible={isGuest} loading={loading} component={ForgotPasswordPage} />} />
+              <Route path="/reset_password" element={<RoleRoute loading={loading} component={ResetPasswordPage} />} />
+              <Route path="/terms_and_conditions" element={<RoleRoute loading={loading} component={TermAndConditionPage} />} />
+              <Route path="/privacy_policy" element={<RoleRoute loading={loading} component={PrivacyPolicyPage} />} />
+              <Route path="/disclaimer" element={<RoleRoute loading={loading} component={DisclaimerPage} />} />
+              <Route path="/pro-member" element={<RoleRoute loading={loading} component={ProMemberPage} />} />
+              <Route path="/earnings_calendar_preview" element={<RoleRoute loading={loading} component={EarningsCalendarPreviewPage} />} />
+              <Route path="/chinese_user_payment_guide" element={<RoleRoute loading={loading} component={ChineseUserPaymentGuidePage} />} />
+              <Route path="/*" element={<RoleRoute loading={loading} component={isLoggedIn ? AppLoggedIn : HomePage} />} />
+            </Routes>
           </BrowserRouter>
         </IntlProvider>
       </ConfigProvider>

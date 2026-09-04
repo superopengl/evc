@@ -4,7 +4,7 @@ import { Typography, Button, Table, Input } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Space } from 'antd';
 import { listConfig, saveConfig } from 'services/configService';
 import { from } from 'rxjs';

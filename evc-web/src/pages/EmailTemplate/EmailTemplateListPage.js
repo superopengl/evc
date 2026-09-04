@@ -4,7 +4,7 @@ import { Typography, Card, Button, Input, Form, Tooltip, Drawer, Row } from 'ant
 import {
   EditOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Space } from 'antd';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';

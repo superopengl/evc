@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { deleteStockTag, listStockTags, saveStockTag } from 'services/stockTagService';
 import { deleteUserTag, listUserTags, saveUserTag } from 'services/userTagService';
 import TagManagementPanel from 'components/TagManagementPanel';

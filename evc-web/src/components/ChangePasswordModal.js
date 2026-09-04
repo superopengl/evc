@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Input, Button, Form, Modal } from 'antd';
 import { changePassword } from 'services/userService';
 import { notify } from 'util/notify';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { ssoGoogle } from 'services/authService';
 import { GoogleLogin } from '@react-oauth/google';

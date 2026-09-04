@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, Card } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import UnusualOptionsActivityPanel from './UnusualOptionsActivityPanel';
 
 const UnusualOptionsActivityPage = (props) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Space } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { FormattedMessage } from 'react-intl';
 import { TimeAgo } from './TimeAgo';
 import styled from 'styled-components';

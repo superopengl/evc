@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Row, Col } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import StockMostPanel from 'components/StockMostPanel';
 import StockMostSearched from 'components/StockMostSearched';
 import { listHotStock, getMarketMost$ } from 'services/stockService';

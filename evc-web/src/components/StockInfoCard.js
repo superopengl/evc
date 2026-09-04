@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, Typography, Space, Tooltip, Row, Col } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { StockWatchButton } from 'components/StockWatchButton';
 import { StockCustomTagButton } from 'components/StockCustomTagButton';
 import { StockName } from './StockName';

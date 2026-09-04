@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Space } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { TimeAgo } from 'components/TimeAgo';
 import ReactDOM from "react-dom";
 import { Skeleton } from 'antd';

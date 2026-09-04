@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Space, Table, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { timer } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 

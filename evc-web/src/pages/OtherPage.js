@@ -1,7 +1,7 @@
 
 // import 'App.css';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 
 const OtherPage = (props) => {
   React.useEffect(() => {

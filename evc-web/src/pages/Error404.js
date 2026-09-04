@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Result, Button } from 'antd';
 const Error404 = props => {
   const handleGoHome = () => {

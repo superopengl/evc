@@ -7,7 +7,7 @@ import {
   UserOutlined, ExclamationCircleFilled,
   ClearOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'util/withRouter';
 import { Space } from 'antd';
 import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
 import { inviteUser, impersonate } from 'services/authService';

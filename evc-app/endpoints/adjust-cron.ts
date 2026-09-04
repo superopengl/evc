@@ -1,10 +1,9 @@
-import AWS from 'aws-sdk';
+import { CloudWatchEventsClient, PutRuleCommand } from '@aws-sdk/client-cloudwatch-events';
 import moment from 'moment-timezone';
 import { start } from './jobStarter';
 import _ from 'lodash';
 
-AWS.config.update({ region: 'us-east-1' });
-const cloudwatchevents = new AWS.CloudWatchEvents();
+const cloudwatchevents = new CloudWatchEventsClient({ region: 'us-east-1' });
 
 const NY_TIMEZONE = 'America/New_York';
 const UTC_TIMEZONE = 'UTC';
@@ -96,7 +95,7 @@ function getRuleParams(data) {
     Name: data.name,
     Description: getDescription(data),
     ScheduleExpression: getCronInUtcTime(data.minute, data.hourNY, data.daysOfWeek),
-    State: 'ENABLED',
+    State: 'ENABLED' as const,
     RoleArn: 'arn:aws:iam::115607939215:role/ecsEventsRole',
   };
 }
@@ -104,14 +103,7 @@ function getRuleParams(data) {
 async function updateEventRule(cloudwatchevents, def) {
   const params = getRuleParams(def);
   console.log(def.name, 'params', params);
-  return new Promise((res, rej) => {
-    cloudwatchevents.putRule(params, (err, data) => {
-      if (err) {
-        return rej(err);
-      }
-      res(data);
-    });
-  });
+  return cloudwatchevents.send(new PutRuleCommand(params));
 }
 
 const JOB_NAME = 'adjust-cron';

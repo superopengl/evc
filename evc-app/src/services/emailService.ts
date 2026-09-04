@@ -1,5 +1,5 @@
-import aws from 'aws-sdk';
-import { awsConfig } from '../utils/awsConfig';
+import { SESClient, SendRawEmailCommand } from '@aws-sdk/client-ses';
+import { getAwsClientConfig } from '../utils/awsConfig';
 import { assert } from '../utils/assert';
 import _ from 'lodash';
 import nodemailer from 'nodemailer';
@@ -23,9 +23,13 @@ let emailTransporter = null;
 
 function getEmailer() {
   if (!emailTransporter) {
-    awsConfig();
     emailTransporter = nodemailer.createTransport({
-      SES: new aws.SES({ apiVersion: '2010-12-01' })
+      // nodemailer detects the v3 client by the { ses, aws } shape and calls
+      // ses.send(new SendRawEmailCommand(...)) itself.
+      SES: {
+        ses: new SESClient(getAwsClientConfig()),
+        aws: { SendRawEmailCommand },
+      },
     });
   }
   return emailTransporter;

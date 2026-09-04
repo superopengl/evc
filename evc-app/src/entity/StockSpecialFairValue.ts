@@ -1,4 +1,3 @@
-import { DateFilterList } from 'aws-sdk/clients/securityhub';
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 

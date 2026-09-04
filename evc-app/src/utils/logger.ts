@@ -1,7 +1,6 @@
 import { getRepository } from '../dataSource';
 import { SysLog } from '../entity/SysLog';
 import { serializeError } from 'serialize-error';
-import { String } from 'aws-sdk/clients/cloudsearchdomain';
 import _ from 'lodash';
 
 

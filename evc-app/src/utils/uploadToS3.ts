@@ -1,12 +1,21 @@
+import { Readable } from 'stream';
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 import { assert } from './assert';
-import aws from 'aws-sdk';
-import { awsConfig } from './awsConfig';
+import { getAwsClientConfig } from './awsConfig';
 
-function getS3Service() {
-  awsConfig();
-  return new aws.S3();
-}// Upload your image to S3
+let s3Client: S3Client | undefined;
 
+/**
+ * v2 built a fresh `new aws.S3()` per call, which was cheap because the v2 SDK shared one global
+ * HTTP agent. v3 clients own their agent, so the client is cached instead of rebuilt per request.
+ */
+function getS3Client(): S3Client {
+  if (!s3Client) {
+    s3Client = new S3Client(getAwsClientConfig());
+  }
+  return s3Client;
+}
 
 function getDefaultConfig(id, name) {
   const bucketName = process.env.EVC_S3_BUCKET;
@@ -20,22 +29,25 @@ function getDefaultConfig(id, name) {
 }
 
 export async function uploadToS3(id, name, data): Promise<string> {
-  const s3 = getS3Service();
-  const defaultOpt = getDefaultConfig(id, name);
+  // lib-storage's Upload is the v3 equivalent of s3.upload(): PutObjectCommand alone would not
+  // give us back a Location, which the File entity stores.
+  const upload = new Upload({
+    client: getS3Client(),
+    params: {
+      ...getDefaultConfig(id, name),
+      Body: data,
+    },
+  });
 
-  const opt = {
-    ...defaultOpt,
-    Body: data
-  };
-  const resp = await s3.upload(opt).promise();
+  const resp = await upload.done();
 
   // return the S3's path to the image
-  return resp.Location;
+  return (resp as { Location?: string }).Location;
 }
 
-export function getS3ObjectStream(id, name) {
-  const s3 = getS3Service();
-  const opt = getDefaultConfig(id, name);
-
-  return s3.getObject(opt).createReadStream();
+export async function getS3ObjectStream(id, name): Promise<Readable> {
+  // v2 returned a stream synchronously via createReadStream(); in v3 the body arrives with the
+  // response, so this is async now and callers must await it.
+  const resp = await getS3Client().send(new GetObjectCommand(getDefaultConfig(id, name)));
+  return resp.Body as Readable;
 }

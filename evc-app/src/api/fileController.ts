@@ -23,7 +23,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
 
   const { fileName, mime } = file;
 
-  const stream = getS3ObjectStream(id, fileName);
+  const stream = await getS3ObjectStream(id, fileName);
   res.setHeader('Content-type', mime);
   res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
 

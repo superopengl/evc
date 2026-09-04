@@ -255,7 +255,7 @@ const DiscountGlobalPolicyListPage = () => {
 
       <Drawer
         title="New Global Discount Policy"
-        visible={newPolicy}
+        open={newPolicy}
         destroyOnClose={true}
         closable={true}
         maskClosable={true}

@@ -36,7 +36,7 @@ const ReferralLinkInput = (props) => {
   }
 
   return (
-    <Tooltip title={tipMessage} onVisibleChange={handleTipVisibleChange}>
+    <Tooltip title={tipMessage} onOpenChange={handleTipVisibleChange}>
       <CopyToClipboard text={value} onCopy={handleCopied}>
         <div>
           <StyledInput value={value} addonBefore={<CopyOutlined />} readOnly={true} />

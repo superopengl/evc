@@ -2,14 +2,14 @@ import React from 'react';
 import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import StockPage from 'pages/StockPage/StockPage';
-import ProLayout from '@ant-design/pro-layout';
+import { ProLayout } from '@ant-design/pro-components';
 import Icon, {
   BarChartOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
   DashboardOutlined, QuestionOutlined, AlertOutlined, WarningOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
-import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
+import { Space, Dropdown, Menu, Typography, Modal } from 'antd';
 import HeaderStockSearch from 'components/HeaderStockSearch';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
@@ -347,18 +347,19 @@ const AppLoggedIn = props => {
         <HeaderStockSearch />
       </>
     )}
-    rightContentRender={() => (
-      <div style={{ marginLeft: 16 }}>
-        <Dropdown overlay={avatarMenu} trigger={['click']}>
-          <a onClick={e => e.preventDefault()}>
-            <Avatar size={40}
-              icon={<UserOutlined style={{ fontSize: 20 }} />}
-              style={{ backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#57BB60' }}
-            />
-          </a>
+    // pro-components 3 dropped rightContentRender; avatarProps is the supported way to put the
+    // user menu in the sider, which is where it rendered before. Losing this silently makes
+    // profile / change password / logout unreachable.
+    avatarProps={{
+      size: 40,
+      icon: <UserOutlined style={{ fontSize: 20 }} />,
+      style: { backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#57BB60' },
+      render: (_avatarProps, dom) => (
+        <Dropdown popupRender={() => avatarMenu} trigger={['click']}>
+          <a onClick={e => e.preventDefault()}>{dom}</a>
         </Dropdown>
-      </div>
-    )}
+      ),
+    }}
     menuFooterRender={props => (
       props?.collapsed ?
         <QuestionOutlined style={{ color: 'rgba(255,255,255,0.65' }} onClick={() => setCollapsed(!collapsed)} /> :
@@ -416,7 +417,7 @@ const AppLoggedIn = props => {
     />
     <Modal
       title="Contact Us"
-      visible={contactVisible}
+      open={contactVisible}
       onOk={() => setContactVisible(false)}
       onCancel={() => setContactVisible(false)}
       footer={null}

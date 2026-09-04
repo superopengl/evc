@@ -63,7 +63,7 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
 
   return (
     <Drawer
-      visible={!!item}
+      open={!!item}
       title={<FormattedMessage id="text.commissionWithdrawalApplication"/>}
       width={600}
       destroyOnClose={true}

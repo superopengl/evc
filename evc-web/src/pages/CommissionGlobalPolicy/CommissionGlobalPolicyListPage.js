@@ -254,7 +254,7 @@ const ReferralGlobalPolicyListPage = () => {
 
       <Drawer
         title="New Global Commission Policy"
-        visible={newPolicy}
+        open={newPolicy}
         destroyOnClose={true}
         closable={true}
         maskClosable={true}

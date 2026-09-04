@@ -157,7 +157,7 @@ const StockDisplayPanel = (props) => {
         </Row>
 
         <Modal
-          visible={stockChartVisible}
+          open={stockChartVisible}
           title={stock.symbol}
           onOk={() => setStockChartVisible(false)}
           onCancel={() => setStockChartVisible(false)}
@@ -172,7 +172,7 @@ const StockDisplayPanel = (props) => {
           <StockChart symbol={stock.symbol} period="1d" interval="5m" />
         </Modal>
         {!shouldHidePutCall && <Modal
-          visible={putCallChartVisible}
+          open={putCallChartVisible}
           title={stock.symbol}
           onOk={() => setPutCallChartVisible(false)}
           onCancel={() => setPutCallChartVisible(false)}

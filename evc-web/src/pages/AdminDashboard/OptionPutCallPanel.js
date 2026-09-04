@@ -222,7 +222,7 @@ const OptionPutCallPanel = (props) => {
       ></Table>
       <Drawer
         title={<><Text strong>{selectedSymbol}</Text> Option History</>}
-        visible={!!allData}
+        open={!!allData}
         closable={true}
         maskClosable={true}
         onClose={() => setAllData(null)}

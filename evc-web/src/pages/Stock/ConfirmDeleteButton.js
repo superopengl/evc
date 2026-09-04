@@ -23,8 +23,8 @@ export const ConfirmDeleteButton = (props) => {
     title={<>{props.message ?? 'Delete it?'}</>}
     trigger="click"
     placement="topRight"
-    visible={visible}
-    onVisibleChange={handleVisibleChange}
+    open={visible}
+    onOpenChange={handleVisibleChange}
     content={<>
       <Button onClick={() => setVisible(false)} disabled={loading}>Cancel</Button>
       <Button style={{ marginLeft: 10 }}

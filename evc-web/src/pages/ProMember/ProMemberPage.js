@@ -607,7 +607,7 @@ const ProMemberPage = (props) => {
       <ContainerBody>
         <WalkthroughTour visible={visible} onClose={() => setVisible(false)} onComplete={() => setSignUpVisible(true)} />
         <Modal
-          visible={stockChartVisible}
+          open={stockChartVisible}
           title="EVCT"
           onOk={() => setStockChartVisible(false)}
           onCancel={() => setStockChartVisible(false)}
@@ -630,7 +630,7 @@ const ProMemberPage = (props) => {
           </div>
         </Modal>
         <Modal
-          visible={putCallChartVisible}
+          open={putCallChartVisible}
           title="EVCT"
           onOk={() => setPutCallChartVisible(false)}
           onCancel={() => setPutCallChartVisible(false)}
@@ -646,7 +646,7 @@ const ProMemberPage = (props) => {
         <Modal
           style={{ maxWidth: 'calc(100vw - 20px)', width: 300 }}
           width={340}
-          visible={signUpVisible}
+          open={signUpVisible}
           maskClosable={true}
           destroyOnClose={true}
           onOk={() => setSignUpVisible(false)}

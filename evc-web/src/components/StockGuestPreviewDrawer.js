@@ -43,7 +43,7 @@ export const StockGuestPreviewDrawer = (props) => {
 
   return (
     <Drawer
-      visible={visible}
+      open={visible}
       bodyStyle={{
         backgroundColor: 'rgb(240, 242, 245)'
       }}

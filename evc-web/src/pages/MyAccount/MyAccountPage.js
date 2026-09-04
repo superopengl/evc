@@ -278,7 +278,7 @@ const MyAccountPage = (props) => {
             </Paragraph>
           </Card>
           <Modal
-            visible={modalVisible}
+            open={modalVisible}
             closable={!paymentLoading}
             maskClosable={false}
             title="Subscribe plan"
@@ -302,7 +302,7 @@ const MyAccountPage = (props) => {
           />
           <Modal
             title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
-            visible={cashBackVisible}
+            open={cashBackVisible}
             closable={true}
             maskClosable={false}
             destroyOnClose={true}

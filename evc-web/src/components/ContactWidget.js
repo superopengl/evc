@@ -35,7 +35,7 @@ export const ContactWidget = () => {
     </Affix>
     <Modal
       title="Contact Us"
-      visible={modalVisible}
+      open={modalVisible}
       onOk={() => setModalVisible(false)}
       onCancel={() => setModalVisible(false)}
       footer={null}

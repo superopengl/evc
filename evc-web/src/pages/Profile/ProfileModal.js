@@ -24,7 +24,7 @@ const ProfileModal = props => {
       maskClosable={closable}
       destroyOnClose={true}
       footer={null}
-      visible={visible}
+      open={visible}
       onOk={onOk}
       {...props}>
       <ProfileForm user={user} onOk={updatedUser => handlePostSave(updatedUser)} />

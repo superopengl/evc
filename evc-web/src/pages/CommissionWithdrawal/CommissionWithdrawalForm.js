@@ -41,7 +41,7 @@ const PayPalHelpIconButton = (props) => {
       closable={true}
       maskClosable={true}
       destroyOnClose={true}
-      visible={visible}
+      open={visible}
       onOk={() => setVisible(false)}
       onCancel={() => setVisible(false)}
       width={580}

@@ -10,7 +10,7 @@ import HomeMarketArea from 'components/homeAreas/HomeMarketArea';
 import { withRouter } from 'react-router-dom';
 import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
-import ProLayout from '@ant-design/pro-layout';
+import { ProLayout } from '@ant-design/pro-components';
 import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
 import { FormattedMessage } from 'react-intl';
@@ -189,19 +189,19 @@ const HomePage = (props) => {
         {dom}
       </div>
     }}
-    rightContentRender={props => {
+    // pro-components 3 dropped rightContentRender; actionsRender is its replacement for the
+    // top layout and takes an array of nodes.
+    actionsRender={() => {
       const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
         <Menu.Item key="en-US">English</Menu.Item>
         <Menu.Item key="zh-CN">中 文</Menu.Item>
       </Menu>
 
-      const dropdown = <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
-        {/* <GlobalOutlined /> */}
-        <Icon style={{ fontSize: 20, color: 'rgba(0,0,0,0.75)' }} component={() => <IoLanguage />} />
-      </Dropdown>
-      return props.collapsed ? <div style={{ display: 'flex', alignItems: 'center', }}>
-        {dropdown}
-      </div> : dropdown
+      return [
+        <Dropdown key="locale" popupRender={() => menu} trigger={['click']} placement="bottomRight">
+          <Icon style={{ fontSize: 20, color: 'rgba(0,0,0,0.75)' }} component={() => <IoLanguage />} />
+        </Dropdown>
+      ];
     }}
   >
     <section>

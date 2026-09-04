@@ -18,7 +18,7 @@ const StockEditTagModal = props => {
   return (
     <Modal
       title="Edit Stock Tags"
-      visible={modalVisible}
+      open={modalVisible}
       destroyOnClose={true}
       onOk={() => onOk(changedValue)}
       onCancel={onCancel}

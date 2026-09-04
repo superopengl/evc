@@ -1,8 +1,5 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-// antd 5 needs this shim to work with React 19: it repoints the imperative
-// message/notification/Modal APIs off the removed ReactDOM.render.
-import '@ant-design/v5-patch-for-react-19';
 import './index.less';
 import App from './App';
 import * as serviceWorker from './serviceWorker';

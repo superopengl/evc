@@ -102,7 +102,7 @@ const EmailTemplateListPage = () => {
       <Drawer
         // title=" "
         id="scrolling-container"
-        visible={drawerVisible}
+        open={drawerVisible}
         closable={true}
         maskClosable={true}
         onClose={() => setDrawerVisible(false)}

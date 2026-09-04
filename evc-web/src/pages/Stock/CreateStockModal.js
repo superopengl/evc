@@ -71,7 +71,7 @@ const CreateStockModal = props => {
   return (
     <Modal
       title="Add New Stock"
-      visible={modalVisible}
+      open={modalVisible}
       destroyOnClose={true}
       onOk={onOk}
       onCancel={onCancel}

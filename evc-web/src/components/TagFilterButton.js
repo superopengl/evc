@@ -40,7 +40,7 @@ export const TagFilterButton = (props) => {
       <Modal
         title={<FormattedMessage id="text.filterByTags" />}
         confirmLoading={loading}
-        visible={visible}
+        open={visible}
         closable
         maskClosable
         destroyOnClose={true}

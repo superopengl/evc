@@ -59,7 +59,9 @@ const UserListPage = () => {
   const [tags, setTags] = React.useState([]);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
-  const [queryInfo, setQueryInfo] = useLocalStorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
+  // use-local-storage-state 13+ takes an options object; passing the default positionally
+  // (the v11 signature) silently yields undefined.
+  const [queryInfo, setQueryInfo] = useLocalStorageState(LOCAL_STORAGE_KEY, { defaultValue: DEFAULT_QUERY_INFO })
 
   const handleTagChange = async (user, tags) => {
     await setUserTags(user.id, tags);
@@ -375,7 +377,7 @@ const UserListPage = () => {
         />
       </Space>
       <Modal
-        visible={setPasswordVisible}
+        open={setPasswordVisible}
         destroyOnClose={true}
         maskClosable={false}
         onOk={() => setSetPasswordVisible(false)}
@@ -397,7 +399,7 @@ const UserListPage = () => {
         </Form>
       </Modal>
       <Modal
-        visible={inviteVisible}
+        open={inviteVisible}
         destroyOnClose={true}
         maskClosable={false}
         onOk={() => setInviteVisible(false)}
@@ -426,7 +428,7 @@ const UserListPage = () => {
         </Form>
       </Modal>
       <Modal
-        visible={chartVisible}
+        open={chartVisible}
         placement="bottom"
         width={700}
         // height="calc(100% - 100px)"
@@ -441,7 +443,7 @@ const UserListPage = () => {
         <GuestSignUpPanel />
       </Modal>
       <Drawer
-        visible={profileModalVisible}
+        open={profileModalVisible}
         destroyOnClose={true}
         maskClosable={true}
         title="Update Profile"
@@ -454,7 +456,7 @@ const UserListPage = () => {
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
       </Drawer>
       <Drawer
-        visible={referralCreditModal}
+        open={referralCreditModal}
         destroyOnClose={true}
         maskClosable={true}
         title="Referral & Credit"

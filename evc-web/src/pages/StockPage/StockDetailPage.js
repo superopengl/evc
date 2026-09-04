@@ -182,7 +182,7 @@ const StockDetailPage = (props) => {
           onCancel={() => setEditTagVisible(false)}
         />
         <Modal
-          visible={bulkEditVisible}
+          open={bulkEditVisible}
           title="Bulk edit values"
           closable={true}
           maskClosable

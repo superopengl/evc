@@ -205,7 +205,7 @@ const StockAdminPanel = (props) => {
     </Row>
 
     <Modal
-      visible={simulatorVisible}
+      open={simulatorVisible}
       destroyOnClose={true}
       closable={true}
       maskClosable={false}

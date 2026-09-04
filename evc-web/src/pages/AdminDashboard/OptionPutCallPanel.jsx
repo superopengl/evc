@@ -5,7 +5,6 @@ import { withRouter } from 'util/withRouter';
 import PropTypes from 'prop-types';
 import { getStockAllOptionPutCallHistory, listLatestOptionPutCall, saveStockOptionPutCallHistoryOrdinal } from 'services/dataService';
 import { PlusOutlined, SyncOutlined } from '@ant-design/icons';
-import moment from 'moment-timezone';
 import { Modal } from 'antd';
 import { Loading } from 'components/Loading';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -14,6 +13,7 @@ import * as _ from 'lodash';
 import { Tag } from 'antd';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
+import dayjs from 'util/dayjs';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -113,14 +113,14 @@ const OptionPutCallPanel = (props) => {
     {
       title: 'Date',
       dataIndex: 'date',
-      // sorter: (a, b) => moment(a.date) - moment(b.date),
+      // sorter: (a, b) => dayjs(a.date) - dayjs(b.date),
       // width: 135,
       align: 'left',
       render: (value) => {
         if (!value) {
           return <Tag color="warning">Data is coming soon</Tag>
         }
-        const dateString = moment.tz(`${value}`, 'utc').format('DD MMM YYYY');
+        const dateString = dayjs.tz(`${value}`, 'utc').format('DD MMM YYYY');
         return dateString;
       }
     },

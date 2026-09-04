@@ -3,7 +3,7 @@ import { withRouter } from 'util/withRouter';
 import { Typography } from 'antd';
 import { Bar } from '@ant-design/plots';
 import { getTaskLogChart$ } from 'services/dataService';
-import moment from 'moment-timezone';
+import dayjs from 'util/dayjs';
 const { Title } = Typography;
 
 const span = {
@@ -19,7 +19,7 @@ const TaskExecutionPage = () => {
   const [list, setList] = React.useState([]);
 
   const utcStringToEstEpochMills = (utcString) => {
-    return moment.utc(utcString).tz('America/New_York').format('D MMM');
+    return dayjs.utc(utcString).tz('America/New_York').format('D MMM');
   }
 
   const formatData = (data) => {

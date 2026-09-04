@@ -14,9 +14,9 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
-import moment from 'moment-timezone';
 import MySubscriptionHistoryPanel from './MySubscriptionHistoryPanel';
 import { from } from 'rxjs';
+import dayjs from 'util/dayjs';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
@@ -182,11 +182,11 @@ const MyAccountPage = (props) => {
           >
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
-                Your subscription will expire on <Text underline strong>{moment.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
+                Your subscription will expire on <Text underline strong>{dayjs.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
                 You can extend the subscription by continue purchasing a new plan.
               </>} />}
               {currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
-                Auto renew payment is on. The next payment date will be on <Text underline strong>{moment(currentSubscription.end).format('D MMM YYYY')}</Text>.
+                Auto renew payment is on. The next payment date will be on <Text underline strong>{dayjs(currentSubscription.end).format('D MMM YYYY')}</Text>.
                 You can turn off the auto-renew payment <Link onClick={() => handleTurnOffRecurring(false)}>here</Link>.
               </>} />}
               {!currentSubscription && <Alert type="info" showIcon description={<>

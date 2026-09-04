@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import { listUnusualOptionsActivity, listAdminUnusualOptionsActivity } from 'services/dataService';
 import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
-import moment from 'moment-timezone';
 import { LockIcon } from '../../components/LockIcon';
+import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
@@ -175,7 +175,7 @@ const UnusualOptionsActivityPanel = (props) => {
       sorter: shouldHide ? false : { multiple: 1 },
       sortOrder: getSortOrder('expDate'),
       align: shouldHide ? 'center' : 'right',
-      render: (value) => shouldHide ? <LockIcon /> : moment.tz(value, 'utc').format('D MMM YYYY'),
+      render: (value) => shouldHide ? <LockIcon /> : dayjs.tz(value, 'utc').format('D MMM YYYY'),
     },
     {
       title: 'Days To Expiration',
@@ -230,7 +230,7 @@ const UnusualOptionsActivityPanel = (props) => {
       width: 155,
       align: 'left',
       render: (value) => {
-        const dateString = moment.tz(`${value}`, 'utc').format('DD MMM YYYY');
+        const dateString = dayjs.tz(`${value}`, 'utc').format('DD MMM YYYY');
         return dateString;
       }
     },

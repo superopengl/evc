@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Typography, Table } from 'antd';
 import { withRouter } from 'util/withRouter';
 import { getStockDataInfo } from 'services/stockService';
-import moment from 'moment-timezone';
 import isFinite from 'lodash/isFinite';
 import { from } from 'rxjs';
+import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
@@ -65,7 +65,7 @@ const StockDataInfoPanel = (props) => {
       dataIndex: 'value',
       align: 'right',
       render: (value) => {
-        const time = moment(value);
+        const time = dayjs(value);
         if (isFinite(+value)) {
           // Number
           return +value?.toLocaleString();

@@ -6,7 +6,7 @@ import { LongRunningActionButton } from 'components/LongRunningActionButton';
 import { notify } from 'util/notify';
 import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
-import moment from 'moment';
+import dayjs from 'util/dayjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -69,7 +69,7 @@ const DataSourcePage = () => {
       title: 'TTL',
       dataIndex: 'value',
       key: 'ttl',
-      render: item => item?.ttl > 0 && <>{item.ttl} seconds (<TimeAgo value={moment().add(item.ttl, 'seconds')} direction="horizontal" showTime={false} />)</>
+      render: item => item?.ttl > 0 && <>{item.ttl} seconds (<TimeAgo value={dayjs().add(item.ttl, 'seconds')} direction="horizontal" showTime={false} />)</>
     },
     {
       fixed: 'right',

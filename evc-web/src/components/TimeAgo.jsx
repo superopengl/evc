@@ -4,8 +4,8 @@ import JavascriptTimeAgo from 'javascript-time-ago'
 import { Space, Typography } from 'antd';
 import en from 'javascript-time-ago/locale/en'
 import ReactTimeAgo from 'react-time-ago'
-import moment from 'moment';
 import styled from 'styled-components';
+import dayjs from 'util/dayjs';
 
 JavascriptTimeAgo.addLocale(en);
 
@@ -25,7 +25,7 @@ export const TimeAgo = props => {
   if (!value) {
     return defaultContent || null;
   }
-  let m = moment.utc(value);
+  let m = dayjs.utc(value);
   if(toNYTime) {
     m = m.tz('America/New_York');
   }

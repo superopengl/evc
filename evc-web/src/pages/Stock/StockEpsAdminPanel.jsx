@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { List, Typography, Space, Button, Tooltip, Alert, Tag, Badge } from 'antd';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
 import styled from 'styled-components';
@@ -10,6 +9,7 @@ import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { syncStockEps } from 'services/stockService';
 import { SyncOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
+import dayjs from 'util/dayjs';
 const { Text } = Typography;
 
 const Container = styled.div`
@@ -105,7 +105,7 @@ const StockEpsAdminEditor = (props) => {
           >
             <List.Item.Meta
               description={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                <Text type="secondary"><small>{moment(item.reportDate).format('D MMM YYYY')}</small>
+                <Text type="secondary"><small>{dayjs(item.reportDate).format('D MMM YYYY')}</small>
                   {item.source === 'evc' && <Tooltip title="Manually input EPS"><Badge status="success" style={{ marginLeft: 4 }} /></Tooltip>}
                 </Text>
                 <MoneyAmount symbol="" value={item.value} digital={4} />

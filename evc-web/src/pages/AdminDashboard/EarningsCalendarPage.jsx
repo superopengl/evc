@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Typography, Space, Table, Image, Card, List, Tooltip, Button, Switch } from 'antd';
 import { withRouter } from 'util/withRouter';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { getEarningsCalender } from 'services/stockService';
 import {
   LeftOutlined,
@@ -12,6 +11,7 @@ import {
 import { from } from 'rxjs';
 import take from 'lodash/take';
 import { getStockLogoUrl } from '../../util/getStockLogoUrl';
+import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
@@ -180,8 +180,8 @@ const EarningsCalendarPage = props => {
   }
 
   const renderTitleComponent = (dayOfWeek) => {
-    const date = moment().add(week, 'week').day(dayOfWeek);
-    const isToday = date.isSame(moment(), 'day');
+    const date = dayjs().add(week, 'week').day(dayOfWeek);
+    const isToday = date.isSame(dayjs(), 'day');
     return <>
       <div><Text style={{ fontWeight: isToday ? 800 : 400 }}>{dayOfWeek}</Text></div>
       <Text type="secondary" style={{ fontWeight: isToday ? 600 : 400 }}><small>{date.format('D MMM YYYY')}</small></Text>

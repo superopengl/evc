@@ -6,8 +6,8 @@ import { getStockInsiderTransaction } from 'services/stockService';
 import { Loading } from './Loading';
 import styled from 'styled-components';
 import INSIDER_LEGEND_INFOS from '../def/insiderLegendDef';
-import moment from 'moment';
 import { from } from 'rxjs';
+import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
@@ -82,7 +82,7 @@ const StockInsiderTransactionPanel = (props) => {
   }, []);
 
   const formatDate = (dateString) => {
-    return dateString ? moment(dateString, 'YYYY-MM-DD').format('DD MMM YYYY') : null;
+    return dateString ? dayjs(dateString, 'YYYY-MM-DD').format('DD MMM YYYY') : null;
   }
 
   return (

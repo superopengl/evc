@@ -6,7 +6,7 @@ import { Loading } from "components/Loading";
 import { from } from 'rxjs';
 import { getOptionPutCallHistoryChartData } from "services/dataService";
 import * as _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'util/dayjs';
 
 export const OptionPutCallHistoryChart = props => {
   const { symbol, width = 500 } = props;
@@ -17,7 +17,7 @@ export const OptionPutCallHistoryChart = props => {
     const chartData = [];
     for (const d of resp) {
       const { date: rawDate, todayPercentPutVol, todayPercentCallVol, putCallOIRatio } = d;
-      const m = moment(rawDate);
+      const m = dayjs(rawDate);
       const date = m.format("YYYY/M/D");
       chartData.push({
         date: date,

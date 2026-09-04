@@ -6,7 +6,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { Skeleton } from 'antd';
 import { from } from 'rxjs';
 import { getStockNextReportDate } from 'services/stockService';
-import moment from 'moment';
+import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
@@ -48,7 +48,7 @@ const StockNextReportDatePanel = (props) => {
 
   return (
     <Space>
-      <Text strong style={{fontSize: 20}}>{moment(reportDate).format('D MMM YYYY')}</Text>
+      <Text strong style={{fontSize: 20}}>{dayjs(reportDate).format('D MMM YYYY')}</Text>
       <TimeAgo value={reportDate} showTime={false} accurate={false} direction="horizontal" />
     </Space>
   );

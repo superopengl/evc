@@ -17,15 +17,15 @@ import { antdTheme } from './antdTheme';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { reactLocalStorage } from 'util/reactLocalStorage';
 import { from } from 'rxjs';
-import moment from 'moment-timezone';
 import { Loading } from 'components/Loading';
 import { listCustomTags } from 'services/watchListService';
+import dayjs from 'util/dayjs';
 
-// moment.tz.setDefault('America/New_York');
+// dayjs.tz.setDefault('America/New_York');
 
 
-console.log('Now', moment(1622148159000).format('YYYYMMDD HHmmss Z'));
-console.log('Now tz', moment.tz().format('YYYYMMDD HHmmss Z'));
+console.log('Now', dayjs(1622148159000).format('YYYYMMDD HHmmss Z'));
+console.log('Now tz', dayjs.tz().format('YYYYMMDD HHmmss Z'));
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 // const Error404 = loadable(() => import('pages/Error404'));

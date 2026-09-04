@@ -19,7 +19,7 @@ import {
   LineChartOutlined,
 } from '@ant-design/icons';
 import INSIDER_LEGEND_INFOS from '../../def/insiderLegendDef';
-import moment from 'moment';
+import dayjs from 'util/dayjs';
 
 const { Paragraph, Text } = Typography;
 
@@ -596,7 +596,7 @@ const ProMemberPage = (props) => {
   }
 
   const formatDate = (dateString) => {
-    return dateString ? moment(dateString, 'YYYY-MM-DD').format('DD MMM YYYY') : null;
+    return dateString ? dayjs(dateString, 'YYYY-MM-DD').format('DD MMM YYYY') : null;
   }
 
   return (
@@ -716,7 +716,7 @@ const ProMemberPage = (props) => {
                             <div>
                               <Space size="small" style={{ width: '100%', alignItems: 'flex-start' }}>
                                 <Text type="secondary"><small>extended hours</small></Text>
-                                <TimeAgo direction={superNarrow ? 'vertical' : 'horizontal'} value={moment().add(-1, 'day').toDate()} />
+                                <TimeAgo direction={superNarrow ? 'vertical' : 'horizontal'} value={dayjs().add(-1, 'day').toDate()} />
                               </Space>
                             </div>
                           </div>

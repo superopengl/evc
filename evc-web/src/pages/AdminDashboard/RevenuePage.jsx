@@ -7,7 +7,7 @@ import { getRevenueChartData, downloadAllPaymentCsv } from 'services/revenueServ
 import { DownloadOutlined, SyncOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
 import { saveAs } from 'file-saver';
-import moment from 'moment';
+import dayjs from 'util/dayjs';
 
 const { Title } = Typography;
 
@@ -43,7 +43,7 @@ const RevenuePage = () => {
   const handleDownloadCsv = async () => {
     const data = await downloadAllPaymentCsv();
     const blob = new Blob([data], { type: 'text/csv,charset=utf-8' });
-    saveAs(blob, `EVC-All-Payment-${moment().format('YYYY-MM-DD_HH-mm-ss')}.csv`);
+    saveAs(blob, `EVC-All-Payment-${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.csv`);
   }
 
   return (

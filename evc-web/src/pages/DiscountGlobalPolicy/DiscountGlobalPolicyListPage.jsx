@@ -13,19 +13,18 @@ import { enableDiscountGlobalPolicy, listDiscountGlobalPolicies, saveDiscountGlo
 import { Form } from 'antd';
 import { InputNumber } from 'antd';
 import { DatePicker } from 'antd';
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment';
+import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
-import dayjs from 'dayjs';
+import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
 const { Title } = Typography;
-const localizer = momentLocalizer(moment);
+const localizer = dayjsLocalizer(dayjs);
 const DnDCalendar = withDragAndDrop(Calendar);
 
 const ContainerStyled = styled.div`
@@ -204,8 +203,8 @@ const DiscountGlobalPolicyListPage = () => {
   const calendarEvents = list.map((a, i) => ({
     id: i,
     title: `${a.description}${a.active ? ' Active' : ''}`,
-    start: moment(a.start).toDate(),
-    end: moment(a.end).toDate(),
+    start: dayjs(a.start).toDate(),
+    end: dayjs(a.end).toDate(),
     allDay: true
   }));
 
@@ -226,7 +225,7 @@ const DiscountGlobalPolicyListPage = () => {
             events={calendarEvents}
             defaultView="month"
             views={['month']}
-            defaultDate={moment().toDate()}
+            defaultDate={dayjs().toDate()}
             startAccessor="start"
             endAccessor="end"
             onEventDrop={onEventDrop}

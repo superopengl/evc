@@ -7,9 +7,9 @@ import { downloadReceipt } from 'services/subscriptionService';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import MoneyAmount from 'components/MoneyAmount';
 import orderBy from 'lodash/orderBy';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import dayjs from 'util/dayjs';
 
 const StyledPaymentTable = styled(Table)`
 .ant-table {
@@ -43,8 +43,8 @@ const MySubscriptionHistoryPanel = (props) => {
           <TimeAgo value={item.end} showAgo={false} accurate={false} />
           {item.status === 'alive' && item.recurring && <Tag>auto renew</Tag>}
           {item.status === 'alive' && <Tag color="#57BB60"><strong>current</strong></Tag>}
-          {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
-          {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
+          {/* {dayjs(item.createdAt).isAfter(dayjs()) && <Tag color="warning">new purchase</Tag>} */}
+          {/* {dayjs().isBefore(dayjs(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
       }
     },
@@ -81,7 +81,7 @@ const MySubscriptionHistoryPanel = (props) => {
           bordered={true}
           rowKey="id"
           showHeader={false}
-          dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
+          dataSource={orderBy(payments, [x => dayjs(x.paidAt).toDate()], 'asc')}
           pagination={false}
           scroll={false}
         />

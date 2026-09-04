@@ -2,12 +2,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker } from 'antd';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import dayjs from 'util/dayjs';
 
-// antd 5 replaced moment with dayjs internally, so pickers only accept dayjs values.
-// customParseFormat is what makes the `format` branch below behave like moment(value, format).
-dayjs.extend(customParseFormat);
+// antd 5 replaced dayjs with dayjs internally, so pickers only accept dayjs values.
+// customParseFormat is what makes the `format` branch below behave like dayjs(value, format).
 
 export const DateInput = (props) => {
   const {defaultValue, value} = props;

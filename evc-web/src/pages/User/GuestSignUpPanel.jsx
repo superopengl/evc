@@ -7,10 +7,9 @@ import { getRevenueChartData, downloadAllPaymentCsv } from 'services/revenueServ
 import { DownloadOutlined, SyncOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
 import { saveAs } from 'file-saver';
-import moment from 'moment';
 import GuestSignUpChart from 'components/charts/GuestSignUpChart';
 import { getUserGuestSignUpChart } from 'services/userService';
-import dayjs from 'dayjs';
+import dayjs from 'util/dayjs';
 
 const { Title } = Typography;
 

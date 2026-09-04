@@ -6,9 +6,9 @@ import { getStockEvcInfo } from 'services/stockService';
 import { Skeleton } from 'antd';
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
-import moment from 'moment';
 import { SectionTitleDivider } from './SectionTitleDivider';
 import { NumberValueDisplay } from './NumberValueDisplay';
+import dayjs from 'util/dayjs';
 
 const { Text } = Typography;
 
@@ -48,9 +48,9 @@ const StockEvcInfoPanel = (props) => {
         <TooltipLabel>
           <FormattedMessage id="text.reportDate" />
         </TooltipLabel>
-        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text>{moment(data.fairValueDate).format('D MMM YYYY')}</Text>}
+        {loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text>{dayjs(data.fairValueDate).format('D MMM YYYY')}</Text>}
       </Space> */}
-      <SectionTitleDivider title={loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text><FormattedMessage id="text.reportDate" />: {moment(data.fairValueDate).format('D MMM YYYY')}</Text>} />
+      <SectionTitleDivider title={loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> : <Text><FormattedMessage id="text.reportDate" />: {dayjs(data.fairValueDate).format('D MMM YYYY')}</Text>} />
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <TooltipLabel message="How to use fair value">
           <FormattedMessage id="text.fairValue" />

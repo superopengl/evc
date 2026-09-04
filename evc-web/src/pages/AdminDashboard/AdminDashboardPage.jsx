@@ -10,7 +10,7 @@ import { from } from 'rxjs';
 import { deleteStockPlea } from 'services/stockService';
 import { ConfirmDeleteButton } from 'pages/Stock/ConfirmDeleteButton';
 import { TimeAgo } from 'components/TimeAgo';
-import moment from 'moment';
+import dayjs from 'util/dayjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -53,8 +53,8 @@ const stringNumberComparer = (a, b) => {
 }
 
 const stringDateComparer = (a, b) => {
-  const x = moment(a).toDate();
-  const y = moment(b).toDate();
+  const x = dayjs(a).toDate();
+  const y = dayjs(b).toDate();
   return x === y ? 0 : x < y ? -1 : 1;
 }
 

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import isNil from 'lodash/isNil';
 import styled from 'styled-components';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
-import moment from 'moment';
 import { NumberRangeInput } from 'components/NumberRangeInput';
 import {
   listStockFairValue,
@@ -13,6 +12,7 @@ import {
 import { CheckOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
 import { FairValueSpecialLabel } from 'components/FairValueSpecialLabel';
+import dayjs from 'util/dayjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -98,7 +98,7 @@ export const StockFairValueEditor = (props) => {
       title: 'Report Date',
       dataIndex: 'reportDate',
       render: (value, item) => <Text type="secondary">
-        {moment(value, 'YYYY-MM-DD').format('D MMM YYYY')}
+        {dayjs(value, 'YYYY-MM-DD').format('D MMM YYYY')}
       </Text>
     },
     {

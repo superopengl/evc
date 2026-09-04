@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { DatePicker } from 'antd';
-import dayjs from 'dayjs';
+import dayjs from 'util/dayjs';
 
 const { RangePicker } = DatePicker;
 
-// antd 5 pickers take dayjs values, not moment.
+// antd 5 pickers take dayjs values, not dayjs.
 function convertToDayjs(value) {
   if (!value) return value;
   return Array.isArray(value) ? value.map(x => dayjs(x)) : dayjs(value);

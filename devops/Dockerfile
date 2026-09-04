@@ -60,6 +60,14 @@ WORKDIR /usr/portal
 COPY ./evc-web/pnpm-lock.yaml /usr/portal/web/
 COPY ./evc-app/pnpm-lock.yaml /usr/portal/app/
 
+# evc-app allowlists puppeteer in `pnpm.onlyBuiltDependencies` so a local `pnpm install`
+# fetches the Chrome build that matches the puppeteer version. The image must NOT do that:
+# it already installed google-chrome-stable above, and a second browser costs ~150MB.
+# These two must stay ABOVE the `pnpm install` lines, otherwise the allowlisted lifecycle
+# script downloads Chrome before the skip flag is ever set.
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+
 WORKDIR /usr/portal/web
 RUN pnpm fetch
 
@@ -81,11 +89,6 @@ ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
-# pnpm 10 does not run dependency lifecycle scripts by default, so puppeteer never downloads
-# its bundled Chrome (`Could not find Chrome ... /root/.cache/puppeteer`). Point it at the
-# google-chrome-stable installed above instead of paying for a second browser in the image.
-ENV PUPPETEER_SKIP_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 ENV REACT_APP_EVC_API_ENDPOINT=/api/v1
 ENV REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID=305430338996-fmmjqqkon9hvngpctccis9t1biqtqile.apps.googleusercontent.com
 ENV REACT_APP_EVC_PAYPAL_CLIENT_ID=AQ7I1Qy9ngFsqIHt1rQAziFADJiE9441IEmXFiqEM5kWNWM_SqKKtfClcViWRDcs3rQ2OW_T4q8JE53s

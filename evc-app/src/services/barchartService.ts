@@ -32,7 +32,7 @@ const BROWSER_CLOSE_TIMEOUT_MS = 10 * 1000;
 async function createBarchartSession() {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-    headless: 'new',
+    headless: true,
     // Must stay above FETCH_TIMEOUT_MS, otherwise puppeteer kills the call first and we lose
     // the page instead of just failing the one request.
     protocolTimeout: FETCH_TIMEOUT_MS + 60 * 1000

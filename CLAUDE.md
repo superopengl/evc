@@ -84,7 +84,11 @@ Data sources: AlphaVantage (EPS, earnings calendar), Barchart scraping, Stripe/P
 - Don't open a session per symbol — the previous code re-poked the landing page once per symbol (~7.8k times a run), which is the pattern bot mitigation looks for.
 - Don't use `async`/`await` inside `page.evaluate()`. With `target: es6`, tsc downlevels it into an `__awaiter` helper that doesn't exist in the page, and the call fails at runtime with `__awaiter is not defined`. Use promise chaining.
 
-Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). Both call sites launch with `--no-sandbox --disable-setuid-sandbox` and rely on the browser bundled with the `puppeteer` package. Set `PUPPETEER_EXECUTABLE_PATH` to your own Chrome if the bundled one won't launch locally (it crashes on Apple Silicon).
+Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). Both call sites launch with `--no-sandbox --disable-setuid-sandbox`. Three things to know:
+
+- **Locally**, `pnpm install` downloads the Chrome build matching the pinned puppeteer version, because `evc-app/.npmrc` sets `only-built-dependencies[]=puppeteer` (pnpm 10 skips dependency lifecycle scripts otherwise). Note the `pnpm.onlyBuiltDependencies` field in `package.json` is **not** honoured by pnpm 10.7.1 — it has to be the `.npmrc`. If the browser is ever missing, `pnpm exec puppeteer browsers install chrome` fetches it. Don't pin an old puppeteer: its Chrome is pinned too, and builds more than a year or so behind the OS crash on launch on current macOS — that was the long-standing "crashes on Apple Silicon" problem, not an arm64 issue.
+- **In the image**, `PUPPETEER_SKIP_DOWNLOAD=true` and `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable` reuse the apt-installed Chrome instead of paying ~150MB for a second browser. Those two ENVs must stay **above** the `pnpm install` lines in the Dockerfile, or the allowlisted lifecycle script downloads Chrome before the skip flag is set.
+- `page.pdf()` returns a `Uint8Array`, not a `Buffer`. `generatePdfBufferFromHtml` wraps it in `Buffer.from()` because `res.send` and the nodemailer attachments need a real Buffer.
 
 ## Frontend architecture (`evc-web`)
 

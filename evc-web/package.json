@@ -44,7 +44,6 @@
     "react-select-country-list": "^2.2.3",
     "react-time-ago": "^7.4.4",
     "react-ts-tradingview-widgets": "^1.2.8",
-    "reactjs-localstorage": "^1.0.1",
     "rxjs": "^6.6.7",
     "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^6.5.3",
@@ -54,24 +53,20 @@
     "validator": "^13.6.0"
   },
   "scripts": {
-    "start": "cross-env PORT=6007 REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco start",
-    "build": "pnpm clean && cross-env CLIENT_ENV=development GENERATE_SOURCEMAP=true craco build",
+    "start": "cross-env REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) vite",
+    "build": "pnpm clean && cross-env GENERATE_SOURCEMAP=true vite build",
     "build:prod": "pnpm clean && pnpm compile",
-    "compile": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=false REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco build",
-    "compile:prod": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=false craco build",
+    "compile": "pnpm clean && cross-env REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) vite build",
+    "compile:prod": "pnpm clean && vite build",
     "clean": "rm -rf build",
-    "test": "craco test",
-    "eject": "react-scripts eject",
     "dev": "pnpm i && pnpm build && pnpm start",
     "watched": "nodemon -w src --ext js --exec pnpm build",
     "watch": "npm-watch",
     "g": "pnpx generate-react-cli component --",
     "p": "pnpx generate-react-cli component -- --type=page",
     "upload": " aws s3 sync build s3://evc-web/",
-    "analyze": "pnpm build; pnpx source-map-explorer 'build/static/js/*.js'"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "analyze": "pnpm build; pnpx source-map-explorer 'build/assets/*.js'",
+    "preview": "vite preview --port 6007"
   },
   "browserslist": {
     "production": [
@@ -86,15 +81,15 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^6.4.0",
     "@testing-library/jest-dom": "^5.14.1",
+    "@vitejs/plugin-react": "^6.1.1",
     "babel-plugin-import": "^1.13.3",
-    "craco-less": "^3.0.1",
     "cross-env": "^7.0.3",
+    "less": "^4.9.0",
     "nodemon": "^2.0.7",
     "prop-types": "^15.7.2",
-    "react-scripts": "5.0.1",
-    "source-map-explorer": "^2.5.2"
+    "source-map-explorer": "^2.5.2",
+    "vite": "^8.2.2"
   },
   "watch": {
     "build": {

@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { reactLocalStorage } from 'reactjs-localstorage';
+import { reactLocalStorage } from 'util/reactLocalStorage';
 import { guestUserPing } from 'services/userService';
 
 const DEVICE_ID_KEY = 'deviceId';

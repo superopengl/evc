@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 EasyValueCheck (evc) — a stock fair-value analysis SaaS (easyvaluecheck.com). Three sub-projects in one repo, each with its own `package.json` and its own `pnpm-lock.yaml` (there is **no** pnpm workspace; install deps inside each folder):
 
 - `evc-app/` — TypeScript Express API + TypeORM/PostgreSQL + Redis. Also serves the built frontend as static files.
-- `evc-web/` — JavaScript React 17 SPA (CRA via craco, antd 4).
+- `evc-web/` — JavaScript React 19 SPA (Vite, antd 6, react-router 7).
 - `evc-chrome-ext/` — small unbundled Chrome extension (plain JS/manifest, no build step).
 
 Package manager is pinned to `pnpm@10.7.1` everywhere.
@@ -18,7 +18,7 @@ From the repo root:
 
 ```bash
 pnpm bs          # backend: cd evc-app && pnpm dev  (nodemon + ts-node, watches src)
-pnpm fs          # frontend: cd evc-web && pnpm start (craco dev server on :6007)
+pnpm fs          # frontend: cd evc-web && pnpm start (vite dev server on :6007)
 pnpm release     # docker build → push to ECR → force ECS redeploy (portal+daemon) → CloudFront invalidation
 ```
 
@@ -40,15 +40,14 @@ pnpm feed:eps        # one-off data jobs; see "Batch jobs" below
 `evc-web`:
 
 ```bash
-pnpm start     # dev server, PORT=6007
+pnpm start     # vite dev server on :6007
 pnpm build     # dev-flavored build (sourcemaps on)
 pnpm compile   # production build (CLIENT_ENV=production, no sourcemaps)
-pnpm test      # craco test
 pnpm g -- Name # scaffold a component into src/components (generate-react-cli)
 pnpm p -- Name # scaffold a page into src/pages
 ```
 
-The frontend scripts used to carry `NODE_OPTIONS=--openssl-legacy-provider --no-experimental-fetch` for react-scripts 5. Both flags were dropped when the runtime moved to Node 24: `--no-experimental-fetch` no longer exists there (the process exits with code 9 before webpack starts), and `--openssl-legacy-provider` is no longer needed for the webpack 5 build. Don't reintroduce them.
+The frontend is Vite, not CRA. `vite.config.mjs` carries the pieces CRA used to provide: aliases for the bare `components/...`-style imports that used to come from `jsconfig.json` baseUrl, `define` for `process.env`, and less support. Build output still goes to `build/` so the Dockerfile's copy into `evc-app/www` is unchanged.
 
 Local config lives in gitignored `.env` files: `evc-app/.env` (TypeORM `TYPEORM_*` vars, AWS, Redis, Stripe/PayPal, AlphaVantage, Google SSO) and `evc-web/.env` (`REACT_APP_*`). `evc-app/src/index.ts` hard-fails at boot if required env vars are missing, and in non-prod also loads `.env.${NODE_ENV}` on top of `.env`.
 
@@ -111,7 +110,10 @@ Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). 
 - `App.js` handles anonymous/public routes and locale (react-intl, `en-US` / `zh-CN` from `src/translations/`); `AppLoggedIn.js` renders the `@ant-design/pro-layout` shell and builds its route/menu list from `role` (`admin` / `agent` / `member` / `free`). Pages are code-split with `@loadable/component`.
 - Shared state is one `GlobalContext` (`src/contexts/GlobalContext.js`) carrying `user`, `role`, `setUser`, and an rxjs `event$` subject fed by the backend SSE stream.
 - All API calls go through `src/services/*Service.js` → `src/services/http.js`. That module centralizes `withCredentials`, 401 → "session timeout" modal + reload, and error toasts; it exposes both promise (`httpGet`) and rxjs (`httpGet$`) variants.
-- **React 19 + antd 6.** Theming moved out of less: antd 5 dropped less variables, so the palette lives in `src/antdTheme.js` as design tokens passed to `<ConfigProvider theme>`. craco-less stays only for the app's own `index.less`. Use tokens, not hard-coded colors.
+- **Vite specifics.** Every component is a `.jsx` file: Rolldown will not parse JSX out of a `.js`, and Vite's `oxc` option omits `lang`, so the extension is what decides. Keep new components as `.jsx`. `process.env.REACT_APP_*` still works - `vite.config.mjs` replaces the whole `process.env` object via `define`, which keeps the Dockerfile build args and `devops/.env.prod` unchanged rather than renaming everything to `VITE_*`.
+- **ESM is strict mode, and that surfaces bugs webpack hid.** Two classes bit us: namespace imports of CJS packages that are then called (`import * as axios` then `axios(...)`) need to be default imports; and `reactjs-localstorage` assigned to an undeclared global inside `getObject`, which was a silent implicit global under CRA's CommonJS output and a hard `ReferenceError` under Vite. It is replaced by `src/util/reactLocalStorage.js`.
+- `ReactDOM.unstable_batchedUpdates` is not on react-dom's ESM default export. All 33 call sites were removed; React 18+ batches automatically.
+- **React 19 + antd 6.** Theming moved out of less: antd 5 dropped less variables, so the palette lives in `src/antdTheme.js` as design tokens passed to `<ConfigProvider theme>`. Vite compiles the app's own `index.less` directly. Use tokens, not hard-coded colors.
 - antd 6 ships no less bundle - never `import 'antd/dist/antd.less'`. Locales come from `antd/locale/*`. `PageHeader` and `Comment` are gone; the one PageHeader call site uses the local `components/PageHeader.js` shim.
 - **The layout is `@ant-design/pro-components@3.x`, which is a PRERELEASE.** There is no stable antd 6 build of pro-layout - `@ant-design/pro-layout` tops out at 7.22.7, which peers antd 4/5 only. Swap back to a stable release when pro-components 3 ships one. It also is not on Indeed's npm proxy, so it was installed with `--registry=https://registry.npmjs.org`; the lockfile stores no registry URLs, so Docker resolves it from public npm normally.
 - **pro-components 3 removed `rightContentRender`.** Use `avatarProps` (sider, as `AppLoggedIn` does for the user menu) or `actionsRender` (top layout, as `HomePage` does for the language switcher). This fails *silently* - it cost the logout menu until it was spotted on screen.
@@ -120,7 +122,7 @@ Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). 
 - **`defaultProps` on function components does nothing in React 19.** All 128 were converted to destructuring defaults, which matches React's old semantics (apply when the prop is `undefined`). Don't reintroduce the pattern - it fails silently.
 - Entry point uses `createRoot`. antd 6 supports React 19 natively, so `@ant-design/v5-patch-for-react-19` is no longer needed and was removed.
 - Google SSO is `@react-oauth/google` (Google Identity Services). GIS only issues the id_token the backend reads from **its own rendered button**, so the old custom-antd-button `render` prop is gone for good; theme/size/width are the only styling knobs.
-- `craco.config.js` aliases `tslib` to one hoisted copy: `@antv/g2plot` (via `@ant-design/charts`) reaches G2 v4, whose `@antv/adjust` declares tslib ^1.10 but emits `__spreadArray`, a tslib 2.1+ helper. Note pnpm 10.7.1 ignores the `pnpm` field in `package.json` (both `overrides` and `onlyBuiltDependencies`), which is why this is a bundler alias rather than a dependency override.
+- `vite.config.mjs` aliases `tslib` to one hoisted copy: `@antv/g2plot` (via `@ant-design/charts`) reaches G2 v4, whose `@antv/adjust` declares tslib ^1.10 but emits `__spreadArray`, a tslib 2.1+ helper. Note pnpm 10.7.1 ignores the `pnpm` field in `package.json` (both `overrides` and `onlyBuiltDependencies`), which is why this is a bundler alias rather than a dependency override.
 
 ## Deploy
 

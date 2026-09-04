@@ -1,0 +1,70 @@
+import { List, Drawer } from 'antd';
+import React from 'react';
+import { withRouter } from 'util/withRouter';
+import { listMyCommissionWithdrawal } from 'services/commissionService';
+import CommissionWithdrawalCard from './CommissionWithdrawalCard';
+import { FormattedMessage } from 'react-intl';
+import { from } from 'rxjs';
+
+const MyCommissionWithdrawalHistoryDrawer = (props) => {
+  const { visible, onClose } = props;
+
+  const [loading, setLoading] = React.useState(true);
+  const [list, setList] = React.useState([]);
+
+  const loadSubscrptions = async () => {
+    try {
+      setLoading(true);
+      const list = await listMyCommissionWithdrawal();
+      setList(list);
+      setLoading(false);
+      
+    } catch {
+      setLoading(false);
+    }
+  }
+
+  React.useEffect(() => {
+    let load$;
+    if (visible) {
+      load$?.unsubscribe();
+      load$ = from(loadSubscrptions()).subscribe();
+    }
+
+    return () => {
+      load$?.unsubscribe();
+    }
+  }, [visible]);
+
+  return (
+    <Drawer
+      title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
+      width="80vw"
+      destroyOnClose={true}
+      maskClosable={true}
+      closable={true}
+      open={visible}
+      onClose={onClose}
+    >
+      <List
+        title={false}
+        loading={loading}
+        grid={{
+          gutter: [0, 20],
+          column: 1
+        }}
+        dataSource={list}
+        size="small"
+        renderItem={item => {
+          return <List.Item style={{ paddingLeft: 0, paddingRight: 0 }}>
+            <CommissionWithdrawalCard value={item} />
+          </List.Item>
+        }}
+      />
+    </Drawer>
+  );
+};
+
+MyCommissionWithdrawalHistoryDrawer.propTypes = {};
+
+export default withRouter(MyCommissionWithdrawalHistoryDrawer);

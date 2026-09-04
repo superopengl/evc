@@ -1,0 +1,194 @@
+import { Button, Row, Col, Modal } from 'antd';
+import React from 'react';
+import { withRouter } from 'util/withRouter';
+import { Loading } from 'components/Loading';
+import StockNewsPanel from 'components/StockNewsPanel';
+import StockChart from 'components/charts/StockChart';
+import StockQuotePanel from 'components/StockQuotePanel';
+import PropTypes from "prop-types";
+import StockRosterPanel from 'components/StockRosterPanel';
+import StockInsiderTransactionPanel from 'components/StockInsiderTransactionPanel';
+import { MemberOnlyCard } from 'components/MemberOnlyCard';
+import StockEvcInfoPanel from './StockEvcInfoPanel';
+import { from } from 'rxjs';
+import StockNextReportDatePanel from './StockNextReportDatePanel';
+import { useMediaQuery } from 'react-responsive'
+import {
+  BarChartOutlined,
+  LineChartOutlined,
+  LockFilled,
+} from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
+import StockUnpaidEvcInfoPanel from './StockUnpaidEvcInfoPanel';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { OptionPutCallHistoryChart } from 'components/charts/OptionPutCallHistoryChart';
+import StockOptionPutCallPanel from 'pages/AdminDashboard/StockOptionPutCallPanel';
+
+
+const StockDisplayPanel = (props) => {
+  const { stock } = props;
+
+  const [loading, setLoading] = React.useState(true);
+  const [stockChartVisible, setStockChartVisible] = React.useState(false);
+  const [putCallChartVisible, setPutCallChartVisible] = React.useState(false);
+  const context = React.useContext(GlobalContext);
+
+  const superNarrow = useMediaQuery({ query: '(max-width: 465px)' });
+
+  const loadEntity = async () => {
+    try {
+      setLoading(true);
+      // const { data: toSignTaskList } = await searchTask({ status: ['to_sign'] });
+      setLoading(false);
+      
+    } catch {
+      setLoading(false);
+    }
+  }
+
+  React.useEffect(() => {
+    const load$ = from(loadEntity()).subscribe();
+
+    return () => {
+      load$.unsubscribe();
+    }
+  }, []);
+
+  const handleShowStockChart = () => {
+    setStockChartVisible(true);
+    setPutCallChartVisible(false);
+    
+  }
+
+  const handleShowPutCallRatioChart = () => {
+    setStockChartVisible(false);
+    setPutCallChartVisible(true);
+    
+  }
+
+  const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
+
+  const shouldHidePutCall = ['guest', 'free'].includes(context.role);
+
+  const shouldShowRoster = false; // context.role === 'admin';
+
+  return (
+    <>
+      {(loading || !stock) ? <Loading /> : <>
+        {/* {!isGuest && <TagSelect value={stock.tags} tags={stockTags} readonly={!isAdminOrAgent} />} */}
+        {/* {isAdminOrAgent && <AdminStockPublishPanel stock={stock} />} */}
+        <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 10, xxl: 8 }}>
+            <Row gutter={[30, 30]}>
+              <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
+                <StockQuotePanel symbol={stock.symbol} />
+                <MemberOnlyCard title={<FormattedMessage id="text.nextReportDate" />} bodyStyle={{ height: 65 }} style={{ marginTop: 30 }}>
+                  <StockNextReportDatePanel symbol={stock.symbol} />
+                </MemberOnlyCard>
+              </Col>
+              <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
+                <MemberOnlyCard
+                  title={<FormattedMessage id="text.evcCoreInfo" />}
+                  paidOnly={true}
+                  bodyStyle={{ height: 320 }}
+                  blockedComponent={
+                    <StockUnpaidEvcInfoPanel fairValues={stock.fairValues || []} />
+                  }>
+                  <StockEvcInfoPanel symbol={stock.symbol} />
+                </MemberOnlyCard>
+              </Col>
+            </Row>
+          </Col>
+          {showInlineStockChart && <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
+            <StockChart symbol={stock.symbol} period="1d" interval="5m" />
+          </Col>}
+
+        </Row>
+        {showInlineStockChart && <Row style={{ marginTop: 30 }}>
+          <Col span={24}>
+            <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true}
+            //  bodyStyle={{ height: 450 }}
+            >
+              <OptionPutCallHistoryChart symbol={stock.symbol} />
+            </MemberOnlyCard>
+          </Col>
+        </Row>}
+        <Row style={{ marginTop: 30 }}>
+          <Col span={24}>
+            <MemberOnlyCard title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} paidOnly={true} bodyStyle={{ padding: 0 }}>
+              <StockOptionPutCallPanel symbol={stock.symbol} lastDayOnly={true} />
+            </MemberOnlyCard>
+          </Col>
+        </Row>
+        {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col span={superNarrow ? 24 : 12}>
+            <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
+              {' '}<FormattedMessage id="text.stockChart" />
+            </Button>
+          </Col>
+          <Col span={superNarrow ? 24 : 12}>
+            <Button block type="primary" icon={shouldHidePutCall ? <LockFilled /> : <LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()} disabled={shouldHidePutCall}>
+              {' '}<FormattedMessage id="text.optionPutCallRatio" />
+            </Button>
+          </Col>
+        </Row>}
+        {shouldShowRoster && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.roster" />} bodyStyle={{ height: 500 }}>
+              <StockRosterPanel symbol={stock.symbol} />
+            </MemberOnlyCard>
+          </Col>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 16, xxl: 18 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.insiderTransactions" />} paidOnly={true} bodyStyle={{ height: 500 }}>
+              <StockInsiderTransactionPanel symbol={stock.symbol} />
+            </MemberOnlyCard>
+          </Col>
+        </Row>}
+        <Row style={{ marginTop: 30 }}>
+          <Col span={24}>
+            <MemberOnlyCard title={<FormattedMessage id="text.news" />} bodyStyle={{ maxHeight: 700 }}>
+              <StockNewsPanel symbol={stock.symbol} />
+            </MemberOnlyCard>
+          </Col>
+        </Row>
+
+        <Modal
+          open={stockChartVisible}
+          title={stock.symbol}
+          onOk={() => setStockChartVisible(false)}
+          onCancel={() => setStockChartVisible(false)}
+          closable={true}
+          destroyOnClose={true}
+          maskClosable={true}
+          footer={null}
+          width="100vw"
+          centered
+          bodyStyle={{ padding: 0 }}
+        >
+          <StockChart symbol={stock.symbol} period="1d" interval="5m" />
+        </Modal>
+        {!shouldHidePutCall && <Modal
+          open={putCallChartVisible}
+          title={stock.symbol}
+          onOk={() => setPutCallChartVisible(false)}
+          onCancel={() => setPutCallChartVisible(false)}
+          closable={true}
+          maskClosable={true}
+          destroyOnClose={true}
+          footer={null}
+          width="100vw"
+          centered
+        >
+          <OptionPutCallHistoryChart symbol={stock.symbol} />
+        </Modal>}
+      </>}
+
+    </>
+  );
+};
+
+StockDisplayPanel.propTypes = {
+  stock: PropTypes.object.isRequired,
+};
+
+export default withRouter(StockDisplayPanel);

@@ -1,0 +1,101 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Typography, Table } from 'antd';
+import { withRouter } from 'util/withRouter';
+import { getStockDataInfo } from 'services/stockService';
+import moment from 'moment-timezone';
+import isFinite from 'lodash/isFinite';
+import { from } from 'rxjs';
+
+const { Text } = Typography;
+
+const StockDataInfoPanel = (props) => {
+
+  const { symbol } = props;
+  const [list, setList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const info = await getStockDataInfo(symbol);
+      const list = formatList(info);
+      setList(list);
+      setLoading(false);
+      
+    } catch {
+      setLoading(false);
+    }
+  }
+
+  const formatList = (info) => {
+    return Object.entries(info).map(([key, value]) => ({
+      key,
+      value
+    })).filter(x => x.key !== 'symbol')
+  }
+
+  React.useEffect(() => {
+    const load$ = from(loadData()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
+  }, []);
+
+  const getLabel = (key) => {
+    return {
+      closeFrom: 'Earliest close price',
+      closeTo: 'Latest close price',
+      closeCount: 'Total close price data points',
+      epsFrom: 'Earliest EPS',
+      epsTo: 'Latest EPS',
+      epsCount: 'Total EPS data points',
+      pe90From: 'Earliest PE90',
+      pe90To: 'Latest PE90',
+      pe90Count: 'Total PE90 data points'
+    }[key] || key;
+  }
+
+  const columnDef = [
+    {
+      dataIndex: 'key',
+      render: (value) => <Text type="secondary">{getLabel(value)}</Text>
+    },
+    {
+      dataIndex: 'value',
+      align: 'right',
+      render: (value) => {
+        const time = moment(value);
+        if (isFinite(+value)) {
+          // Number
+          return +value?.toLocaleString();
+        } else if (time.isValid()) {
+          // Date
+          return time.format('D MMM YYYY');
+        }
+        return value;
+      }
+    }
+  ];
+
+  return (
+    <Table
+      columns={columnDef}
+      dataSource={list}
+      showHeader={false}
+      rowKey="key"
+      size="small"
+      loading={loading}
+      pagination={false}
+      style={{ width: '100%' }}
+    />
+
+
+  );
+};
+
+StockDataInfoPanel.propTypes = {
+  symbol: PropTypes.string.isRequired
+};
+
+export default withRouter(StockDataInfoPanel);

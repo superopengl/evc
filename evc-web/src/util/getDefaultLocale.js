@@ -1,4 +1,4 @@
-import { reactLocalStorage } from 'reactjs-localstorage';
+import { reactLocalStorage } from 'util/reactLocalStorage';
 
 function getNavigatorLocale() {
   const navigatorLang = navigator.language.split(/[-_]/)[0];

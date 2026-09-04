@@ -7,7 +7,7 @@ import { withRouter } from 'util/withRouter';
 import { reactLocalStorage } from 'util/reactLocalStorage';
 import { CheckSquareOutlined, BorderOutlined, PlusOutlined } from '@ant-design/icons';
 import CreateStockModal from './CreateStockModal';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { listStockTags } from 'services/stockTagService';
 import PropTypes from 'prop-types';

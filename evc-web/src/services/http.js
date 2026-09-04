@@ -1,10 +1,9 @@
 import axios from 'axios';
 import get from 'lodash/get';
 import { notify } from 'util/notify';
-import FormData from 'form-data';
 import { Modal } from 'antd';
 import { catchError, map, takeUntil, tap } from 'rxjs/operators';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 import { Subject, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import * as _ from 'lodash';

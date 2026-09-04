@@ -16,7 +16,6 @@ import CreditHistoryListDrawer from 'components/CreditHistoryListDrawer';
 import { TimeAgo } from 'components/TimeAgo';
 import { from } from 'rxjs';
 import { Modal } from 'antd';
-import { async } from 'rxjs';
 import { terminateSubscription } from 'services/subscriptionService';
 
 const { Paragraph, Text, Title } = Typography;

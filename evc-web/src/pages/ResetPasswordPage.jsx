@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'util/withRouter';
 import { Typography, Input, Button, Form, Divider, Layout } from 'antd';
 import { Logo } from 'components/Logo';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 import { resetPassword } from 'services/authService';
 import { notify } from 'util/notify';
 

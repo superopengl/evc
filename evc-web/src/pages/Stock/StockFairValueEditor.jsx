@@ -30,7 +30,7 @@ const Container = styled.div`
 }
 
 .latest-pe90-row {
-  background-color: #57BB6033;
+  background-color: #3f9e4833;
   font-weight: 600;
 }
 `;

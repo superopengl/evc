@@ -10,7 +10,7 @@ import styled from 'styled-components';
 const StyledInput = styled(Input)`
 &:hover {
   .ant-input {
-    background-color: rgba(87,187,96,0.1);
+    background-color: rgba(63, 158, 72,0.1);
   }
 }
 `;

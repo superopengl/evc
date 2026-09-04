@@ -9,8 +9,8 @@ const StyledCard = styled(Card)`
 // margin-bottom: 30px;
 
 .ant-card-head {
-  background-color: #57BB60;
-  // background-image: linear-gradient(-45deg, #89DFF1, #89DFF1 25%, #55B0D4 25%, #55B0D4 50%, #7DD487 50%, #7DD487 75%, #57BB60 75%, #57BB60 100%);
+  background-color: #3f9e48;
+  // background-image: linear-gradient(-45deg, #89DFF1, #89DFF1 25%, #55B0D4 25%, #55B0D4 50%, #7DD487 50%, #7DD487 75%, #3f9e48 75%, #3f9e48 100%);
 
   .ant-card-head-title {
     color: rgba(255,255,255,0.9);

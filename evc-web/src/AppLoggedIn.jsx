@@ -395,7 +395,7 @@ const AppLoggedIn = props => {
     avatarProps={{
       size: 40,
       icon: <UserOutlined style={{ fontSize: 20 }} />,
-      style: { backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#57BB60' },
+      style: { backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#3f9e48' },
       render: (_avatarProps, dom) => (
         <Dropdown popupRender={() => avatarMenu} trigger={['click']}>
           <a onClick={e => e.preventDefault()}>{dom}</a>

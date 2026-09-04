@@ -77,10 +77,19 @@
 
   // Signal. --evc-signal is antd's colorPrimary; the lift is the same hue
   // pushed light enough to clear 4.5:1 against the ink.
-  --evc-signal: #57bb60;
-  --evc-signal-deep: #3f9e48;
+  //
+  // The signal was #57bb60, the green of the logo tile. As a UI accent that was
+  // too light to carry white text - 2.4:1 - which is why five call sites had
+  // already routed around it to --evc-signal-deep. So the ramp moved down one
+  // step: the old deep is the new signal (white on it is 3.4:1, enough for the
+  // buttons and chips it fills), and deep goes to #2f7a38, which clears 4.5:1 on
+  // white for green *text* and for anything that wants a stronger fill.
+  // #57bb60 itself is not gone: it still paints the homepage nav bar and the
+  // fourth carousel band, where it has to match the logo asset exactly.
+  --evc-signal: #3f9e48;
+  --evc-signal-deep: #2f7a38;
   --evc-signal-lift: #8be39a;
-  --evc-signal-wash: rgba(87, 187, 96, 0.1);
+  --evc-signal-wash: rgba(63, 158, 72, 0.1);
 
   --evc-tide: #55b0d4;
   --evc-alert: #d7183f;
@@ -250,7 +259,7 @@ code {
 }
 
 .tour-helper {
-  --reactour-accent: #57bb60;
+  --reactour-accent: #3f9e48;
   line-height: 1.3;
   color: #00293d;
   // width: 400px;

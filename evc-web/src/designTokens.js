@@ -15,10 +15,10 @@ export const tokens = {
   onInk: 'rgba(255, 255, 255, 0.94)',
   onInkMuted: 'rgba(255, 255, 255, 0.62)',
 
-  signal: '#57bb60',
-  signalDeep: '#3f9e48',
+  signal: '#3f9e48',
+  signalDeep: '#2f7a38',
   signalLift: '#8be39a',
-  signalWash: 'rgba(87, 187, 96, 0.1)',
+  signalWash: 'rgba(63, 158, 72, 0.1)',
 
   tide: '#55b0d4',
   tideLift: '#89dff1',

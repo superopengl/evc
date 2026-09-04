@@ -42,7 +42,7 @@ const MySubscriptionHistoryPanel = (props) => {
           {/* <DoubleRightOutlined /> */}
           <TimeAgo value={item.end} showAgo={false} accurate={false} />
           {item.status === 'alive' && item.recurring && <Tag>auto renew</Tag>}
-          {item.status === 'alive' && <Tag color="#57BB60"><strong>current</strong></Tag>}
+          {item.status === 'alive' && <Tag color="#3f9e48"><strong>current</strong></Tag>}
           {/* {dayjs(item.createdAt).isAfter(dayjs()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {dayjs().isBefore(dayjs(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>

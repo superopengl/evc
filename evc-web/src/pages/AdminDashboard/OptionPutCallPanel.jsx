@@ -24,7 +24,7 @@ width: 100%;
   font-size: 0.8rem;
 
   td.ant-table-column-sort {
-    background-color: #57BB6022;
+    background-color: #3f9e4822;
   }
 }
 

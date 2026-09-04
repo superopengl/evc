@@ -13,7 +13,7 @@ import { ListyItemMeta } from 'components/ListyItemMeta';
 
 const Container = styled.div`
   .current-published {
-    background-color: rgba(87,187,96, 0.1);
+    background-color: rgba(63, 158, 72, 0.1);
   }
 `;
 

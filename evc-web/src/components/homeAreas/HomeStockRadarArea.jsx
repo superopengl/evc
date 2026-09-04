@@ -18,7 +18,7 @@ const PreviewNote = styled.div`
   gap: 8px;
   margin-block-start: 20px;
   padding: 7px 14px;
-  border: 1px solid rgba(87, 187, 96, 0.3);
+  border: 1px solid rgba(63, 158, 72, 0.3);
   border-radius: 999px;
   background: var(--evc-signal-wash);
   font-size: 13px;

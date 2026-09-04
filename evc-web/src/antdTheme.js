@@ -7,8 +7,8 @@
  */
 export const antdTheme = {
   token: {
-    colorPrimary: '#57BB60',   // @primary-color / @success-color
-    colorSuccess: '#57BB60',
+    colorPrimary: '#3f9e48',   // @primary-color / @success-color, darkened - see --evc-signal in index.less
+    colorSuccess: '#3f9e48',
     colorInfo: '#55B0D4',      // @info-color
     colorLink: '#55B0D4',      // @link-color
     colorWarning: '#fa8c16',
@@ -72,7 +72,7 @@ export const proLayoutToken = {
     colorTextSubMenuSelected: '#ffffff',
     colorBgMenuItemHover: 'rgba(255, 255, 255, 0.08)',
     colorBgMenuItemActive: 'rgba(255, 255, 255, 0.12)',
-    colorBgMenuItemSelected: '#57BB60',
+    colorBgMenuItemSelected: '#3f9e48',
     colorBgCollapsedButton: siderDarkBg,
     colorTextCollapsedButton: 'rgba(255, 255, 255, 0.65)',
     colorTextCollapsedButtonHover: '#ffffff',
@@ -98,7 +98,7 @@ export const homeProLayoutToken = {
     colorTextMenuItemHover: '#06202e',
     colorTextMenuSelected: '#06202e',
     colorTextSubMenuSelected: '#06202e',
-    colorBgMenuItemHover: 'rgba(87, 187, 96, 0.1)',
-    colorBgMenuItemSelected: 'rgba(87, 187, 96, 0.14)',
+    colorBgMenuItemHover: 'rgba(63, 158, 72, 0.1)',
+    colorBgMenuItemSelected: 'rgba(63, 158, 72, 0.14)',
   },
 };

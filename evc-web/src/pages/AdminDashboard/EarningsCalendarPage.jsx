@@ -38,19 +38,19 @@ const StyledTable = styled(Table)`
 .ant-table-thead {
   .ant-table-row:hover {
     .col-mon {
-      background-color: rgba(87,187,96,0.5);
+      background-color: rgba(63, 158, 72,0.5);
     }
     .col-tue {
-      background-color: rgba(87,187,96,0.4);
+      background-color: rgba(63, 158, 72,0.4);
     }
     .col-wed {
-      background-color: rgba(87,187,96,0.3);
+      background-color: rgba(63, 158, 72,0.3);
     }
     .col-thu {
-      background-color: rgba(87,187,96,0.2);
+      background-color: rgba(63, 158, 72,0.2);
     }
     .col-fri {
-      background-color: rgba(87,187,96,0.1);
+      background-color: rgba(63, 158, 72,0.1);
     }
   }
 }
@@ -77,19 +77,19 @@ const StyledTable = styled(Table)`
 
 .ant-table-thead {
   .col-mon {
-    background-color: rgba(87,187,96,0.5);
+    background-color: rgba(63, 158, 72,0.5);
   }
   .col-tue {
-    background-color: rgba(87,187,96,0.4);
+    background-color: rgba(63, 158, 72,0.4);
   }
   .col-wed {
-    background-color: rgba(87,187,96,0.3);
+    background-color: rgba(63, 158, 72,0.3);
   }
   .col-thu {
-    background-color: rgba(87,187,96,0.2);
+    background-color: rgba(63, 158, 72,0.2);
   }
   .col-fri {
-    background-color: rgba(87,187,96,0.1);
+    background-color: rgba(63, 158, 72,0.1);
   }
 }
 

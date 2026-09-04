@@ -35,7 +35,7 @@ img {
 }
 
 .ant-card-head {
-  background-color: #57BB60;
+  background-color: #3f9e48;
 
   .ant-card-head-title {
     color: rgba(255,255,255,0.9);
@@ -293,7 +293,7 @@ const WalkthroughTour = withRouter((props) => {
         // arrowColor: '#e3ffeb',
         // backgroundColor: '#e3ffeb',
         // overlayColor: 'rgba(79, 26, 0, 0.4)',
-        primaryColor: '#57BB60',
+        primaryColor: '#3f9e48',
         textAlign: 'left',
         // textColor: '#004a14',
         width: 600,

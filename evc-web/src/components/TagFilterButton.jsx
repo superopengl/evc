@@ -32,7 +32,7 @@ export const TagFilterButton = (props) => {
 
   return (
     <>
-      <Badge count={selectedTags.length} showZero={false} style={{ backgroundColor: "#57BB60" }}>
+      <Badge count={selectedTags.length} showZero={false} style={{ backgroundColor: "#3f9e48" }}>
         <Button onClick={() => setVisible(true)}>
           <FormattedMessage id="text.filter" />
         </Button>

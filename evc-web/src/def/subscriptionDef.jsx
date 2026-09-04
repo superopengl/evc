@@ -28,8 +28,8 @@ justify-content: center;
  * on green. Not antd's CheckCircleFilled - that one cuts the check out of the disc, so the
  * "white" would actually be whatever wash is behind it, which differs per card.
  *
- * --evc-signal-deep rather than --evc-signal: white on #3f9e48 is 3.4:1, where on #57BB60 it
- * is 2.6:1 and the check starts to dissolve into the disc.
+ * --evc-signal-deep rather than --evc-signal: white on #2f7a38 is 5.3:1, where on the signal
+ * itself it is 3.4:1 and the check starts to dissolve into the disc.
  */
 const Tick = styled.span`
   display: inline-flex;

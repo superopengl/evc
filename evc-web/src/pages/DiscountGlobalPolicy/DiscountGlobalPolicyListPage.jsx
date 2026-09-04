@@ -29,14 +29,14 @@ const DnDCalendar = withDragAndDrop(Calendar);
 
 const ContainerStyled = styled.div`
   .active-referral {
-    background-color: rgba(87,187,96, 0.1);
+    background-color: rgba(63, 158, 72, 0.1);
   }
 
   .rbc-event {
     background: repeating-linear-gradient(
       165deg,
-      #57BB60,
-      #57BB60 10px,
+      #3f9e48,
+      #3f9e48 10px,
       #3e9448 10px,
       #3e9448 20px
     );

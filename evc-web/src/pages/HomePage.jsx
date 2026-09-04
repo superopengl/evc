@@ -332,7 +332,7 @@ const HomePage = (props) => {
       overlay={false}
       expires={365}
       style={{ alignItems: 'center', padding: '10px 24px', background: 'rgba(6, 32, 46, 0.96)', backdropFilter: 'blur(8px)', fontSize: 13 }}
-      buttonStyle={{ borderRadius: 8, margin: '10px 0 10px 16px', padding: '9px 22px', background: '#57BB60', color: '#ffffff', fontSize: 13, fontWeight: 600 }}
+      buttonStyle={{ borderRadius: 8, margin: '10px 0 10px 16px', padding: '9px 22px', background: '#3f9e48', color: '#ffffff', fontSize: 13, fontWeight: 600 }}
       buttonText="Accept"
     >
       We use cookies to improve your experiences on our website.

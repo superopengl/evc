@@ -83,7 +83,7 @@ const HomeMarketArea = props => {
   return (
     <Container>
       <InnerContainer>
-        <Row gutter={[24, 24]}>
+        <Row gutter={[48, 48]}>
           <Col {...span}>
             <Board>
               <StockMostSearched

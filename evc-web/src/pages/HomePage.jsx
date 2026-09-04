@@ -81,7 +81,12 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-collapsed-button {
-  color: var(--evc-ink);
+  color: #000000;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: #ffffff;
+  }
 }
 
 // Mobile drawer. ProLayout renders it as an *inline* drawer, so it stacks inside the layout
@@ -108,31 +113,64 @@ const StyledLayout = styled(ProLayout)`
   }
 }
 
-// Ink on the green bar, not the grey used elsewhere: --evc-text-muted is only ~2.9:1 on
-// #57BB60, where the ink clears 6:1.
-.ant-pro-menu-item-title {
-  color: rgba(6, 32, 46, 0.78);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
-  transition: color 0.15s ease;
-}
+// Black at rest, white on hover, on the #57BB60 bar.
+//
+// Scoped to .ant-menu-horizontal on purpose: the same <Menu> is re-rendered vertically inside
+// the mobile drawer, which is white, and a white hover there would be invisible.
+//
+// The class to colour is the <li>, not ant-pro-menu-item-title - that class is pro-layout 5
+// and does not exist in pro-components 3, which emits ant-pro-base-menu-horizontal-item-*
+// instead. The children below inherit rather than being listed one by one, so a future
+// rename of those internals cannot silently drop the colour again.
+.ant-menu-horizontal {
+  &.ant-menu, .ant-menu-item, .ant-menu-submenu-title {
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    transition: color 0.15s ease;
+  }
 
-.ant-menu-item:hover, .ant-menu-item-selected {
-  background-color: transparent !important;
+  .ant-menu-item, .ant-menu-item-selected, .ant-menu-submenu {
+    background-color: transparent !important;
+  }
 
-  .ant-pro-menu-item-title {
-    color: var(--evc-ink);
+  // !important, and matched as a direct child, because antd's own hover rule is
+  // ant-menu-light > ant-menu-item:not(.ant-menu-item-selected):hover - four class
+  // selectors, so it outranks a plain descendant rule and repaints the label back to
+  // colorText. That :not() is why this looked half-broken rather than broken: the selected
+  // item is the one case antd does not claim, so Pricing went white and nothing else did.
+  > .ant-menu-item:hover,
+  > .ant-menu-submenu:hover > .ant-menu-submenu-title {
+    color: #ffffff !important;
+  }
+
+  // The current item stays black - white here would read as permanently hovered.
+  .ant-menu-item-selected {
+    color: #000000;
+    font-weight: 600;
+  }
+
+  // The label is four elements deep inside the <li>. These have to track the <li> in every
+  // state, so the inherit is !important too - otherwise the same antd rules that beat the
+  // hover colour above can pin a child back to colorText.
+  .ant-menu-title-content,
+  .ant-menu-title-content a,
+  .ant-pro-base-menu-horizontal-item-title,
+  .ant-pro-base-menu-horizontal-item-text,
+  .ant-pro-base-menu-horizontal-item-icon {
+    color: inherit !important;
   }
 }
 
-.ant-menu-item-selected .ant-pro-menu-item-title {
-  font-weight: 600;
-}
+// Language switcher, in the header's actions slot rather than the menu.
+.ant-pro-global-header-header-actions-item {
+  color: #000000;
+  transition: color 0.15s ease;
 
-.ant-menu-submenu-title {
-  color: rgba(6, 32, 46, 0.78) !important;
-  font-weight: 500 !important;
+  &:hover {
+    color: #ffffff;
+  }
 }
 `;
 
@@ -249,7 +287,7 @@ const HomePage = (props) => {
 
       return [
         <Dropdown key="locale" popupRender={() => menu} trigger={['click']} placement="bottomRight">
-          <Icon style={{ fontSize: 19, color: 'rgba(6, 32, 46, 0.78)' }} component={() => <IoLanguage />} />
+          <Icon style={{ fontSize: 19, color: 'inherit' }} component={() => <IoLanguage />} />
         </Dropdown>
       ];
     }}

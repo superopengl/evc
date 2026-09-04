@@ -16,10 +16,9 @@ import { RiLineChartLine } from 'react-icons/ri';
 const { Text, Paragraph } = Typography;
 
 /**
- * The four brand bands, in the order and at the widths they always had (#89DFF1 / #55B0D4 /
- * #7DD487 / #57BB60 at 25% each). The only change is that each boundary now carries an ~8%
- * blend instead of a hard stop, which takes the razor seam off the headline and the
- * slogan list while leaving the four colours reading as four bands.
+ * The original four brand bands, unchanged: #89DFF1 / #55B0D4 / #7DD487 / #57BB60, hard stops
+ * at 25 / 50 / 75 on a -45deg axis. No blend between them and no white overlay on top - the
+ * four colours are flat.
  *
  * All hero text is ink rather than white: the pale cyan band put white body copy under 2:1,
  * and ink clears 6:1 on every one of the four.
@@ -28,12 +27,11 @@ const Container = styled.div`
   position: relative;
   width: 100%;
   padding: clamp(92px, 10vw, 132px) var(--evc-gutter) clamp(56px, 7vw, 92px);
-  background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0) 88%, rgba(255, 255, 255, 0.6) 100%),
-    linear-gradient(-45deg,
-      #89dff1 0%, #89dff1 23%, #55b0d4 27%,
-      #55b0d4 48%, #7dd487 52%,
-      #7dd487 73%, #57bb60 77%, #57bb60 100%);
+  background-image: linear-gradient(-45deg,
+    #89dff1, #89dff1 25%,
+    #55b0d4 25%, #55b0d4 50%,
+    #7dd487 50%, #7dd487 75%,
+    #57bb60 75%, #57bb60 100%);
 
   /* The search field is the one control on a coloured ground, so it gets a solid white
      fill rather than the 0.8 alpha it used to have - translucent white over four different

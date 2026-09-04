@@ -30,7 +30,7 @@ export const TimeAgo = props => {
     m = m.tz('America/New_York');
   }
   return <StyledSpace size="small" direction="horizontal">
-    <Space direction={direction} size="small">
+    <Space orientation={direction} size="small">
       {prefix}
       {showAgo && <Text strong={strong} type={type}><ReactTimeAgo date={m.toDate()} /></Text>}
       {showTime && <Text strong={strong} type={type}>{m.format(accurate ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</Text>}

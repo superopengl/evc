@@ -158,13 +158,11 @@ const StockDisplayPanel = (props) => {
           onOk={() => setStockChartVisible(false)}
           onCancel={() => setStockChartVisible(false)}
           closable={true}
-          destroyOnClose={true}
-          maskClosable={true}
+          destroyOnHidden={true}
+         
           footer={null}
           width="100vw"
-          centered
-          bodyStyle={{ padding: 0 }}
-        >
+          centered styles={{ body: { padding: 0 } }} mask={{ closable: true }}>
           <StockChart symbol={stock.symbol} period="1d" interval="5m" />
         </Modal>
         {!shouldHidePutCall && <Modal
@@ -173,12 +171,11 @@ const StockDisplayPanel = (props) => {
           onOk={() => setPutCallChartVisible(false)}
           onCancel={() => setPutCallChartVisible(false)}
           closable={true}
-          maskClosable={true}
-          destroyOnClose={true}
+         
+          destroyOnHidden={true}
           footer={null}
           width="100vw"
-          centered
-        >
+          centered mask={{ closable: true }}>
           <OptionPutCallHistoryChart symbol={stock.symbol} />
         </Modal>}
       </>}

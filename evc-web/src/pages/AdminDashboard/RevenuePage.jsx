@@ -48,7 +48,7 @@ const RevenuePage = () => {
 
   return (
     <Loading loading={loading}>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Select defaultValue={period} onChange={setPeriod} style={{ width: 100 }}>
             <Select.Option value="day">Daily</Select.Option>

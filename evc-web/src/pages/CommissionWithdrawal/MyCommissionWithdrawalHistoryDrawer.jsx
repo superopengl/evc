@@ -39,13 +39,12 @@ const MyCommissionWithdrawalHistoryDrawer = (props) => {
   return (
     <Drawer
       title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
-      width="80vw"
-      destroyOnClose={true}
-      maskClosable={true}
+      size="80vw"
+      destroyOnHidden={true}
+     
       closable={true}
       open={visible}
-      onClose={onClose}
-    >
+      onClose={onClose} mask={{ closable: true }}>
       <List
         title={false}
         loading={loading}

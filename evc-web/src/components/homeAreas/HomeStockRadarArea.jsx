@@ -36,7 +36,7 @@ export const HomeStockRadarArea = props => {
   const { onSymbolClick = () => { } } = props;
   return (
     <Container>
-      <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%', marginBottom: 30 }}>
         <Title><FormattedMessage id="menu.stockRadar" /></Title>
         <Alert 
         type="success" 

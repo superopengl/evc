@@ -39,16 +39,15 @@ const PayPalHelpIconButton = (props) => {
     <Modal
       title={<FormattedMessage id="text.paypalScreenshotUploadHowToTitle" />}
       closable={true}
-      maskClosable={true}
-      destroyOnClose={true}
+     
+      destroyOnHidden={true}
       open={visible}
       onOk={() => setVisible(false)}
       onCancel={() => setVisible(false)}
       width={580}
       centered
-      footer={null}
-    >
-      <Space direction="vertical">
+      footer={null} mask={{ closable: true }}>
+      <Space orientation="vertical">
         <FormattedMessage id="text.paypalScreenshotUploadHowToDescription" />
         <Image src="/images/paypal-personal-info.jpg" />
       </Space>

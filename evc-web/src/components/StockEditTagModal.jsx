@@ -19,13 +19,12 @@ const StockEditTagModal = props => {
     <Modal
       title="Edit Stock Tags"
       open={modalVisible}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       onOk={() => onOk(changedValue)}
       onCancel={onCancel}
       closable={true}
-      maskClosable={false}
-      okText="Save"
-    >
+     
+      okText="Save" mask={{ closable: false }}>
       <TagSelect value={value} tags={tags} onChange={setChangedValue} readonly={false} />
     </Modal>
   );

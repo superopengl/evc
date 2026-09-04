@@ -150,7 +150,7 @@ const StockRadarPage = (props) => {
 
   return (
     <>
-      <Space direction="vertical" size="large" style={{ width: '100%', marginBottom: 24 }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%', marginBottom: 24 }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Row gutter={[10, 10]}>
             <Col flex="auto">

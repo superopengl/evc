@@ -21,12 +21,12 @@ const ProfileModal = props => {
     <Modal
       title="Update Profile"
       closable={closable}
-      maskClosable={closable}
-      destroyOnClose={true}
+     
+      destroyOnHidden={true}
       footer={null}
       open={visible}
       onOk={onOk}
-      {...props}>
+      {...props} mask={{ closable: closable }}>
       <ProfileForm user={user} onOk={updatedUser => handlePostSave(updatedUser)} />
     </Modal>
   );

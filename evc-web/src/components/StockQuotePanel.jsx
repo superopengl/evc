@@ -92,13 +92,14 @@ const StockQuotePanel = (props) => {
     <Card
       size="middle"
       title={null}
-      bodyStyle={{ minHeight: 178 }}
+     
     // style={{height: 178}}
+      styles={{ body: { minHeight: 178 } }}
     >
       {loading ?
         <Skeleton active />
         :
-        <Space size="small" direction="vertical">
+        <Space size="small" orientation="vertical">
           <div>
             <Text style={{ fontSize: 30 }} strong>{quote.latestPrice?.toFixed(2)} {getDeltaComponent(quote.change, quote.changePercent)}</Text>
             <div><Text type="secondary"><small>Price At: {dayjs(quote.latestUpdate).format('D MMM YYYY')} EST</small></Text></div>

@@ -609,13 +609,11 @@ const ProMemberPage = (props) => {
           onOk={() => setStockChartVisible(false)}
           onCancel={() => setStockChartVisible(false)}
           closable={true}
-          destroyOnClose={true}
-          maskClosable={true}
+          destroyOnHidden={true}
+         
           footer={null}
           width="100vw"
-          centered
-          bodyStyle={{ padding: 0 }}
-        >
+          centered styles={{ body: { padding: 0 } }} mask={{ closable: true }}>
           <div style={{ height: '649px', minWidth: '400px' }}>
             <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
               <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
@@ -632,24 +630,22 @@ const ProMemberPage = (props) => {
           onOk={() => setPutCallChartVisible(false)}
           onCancel={() => setPutCallChartVisible(false)}
           closable={true}
-          maskClosable={true}
-          destroyOnClose={true}
+         
+          destroyOnHidden={true}
           footer={null}
           width="100vw"
-          centered
-        >
+          centered mask={{ closable: true }}>
           <PutCallDummyChart />
         </Modal>
         <Modal
           style={{ maxWidth: 'calc(100vw - 20px)', width: 300 }}
           width={340}
           open={signUpVisible}
-          maskClosable={true}
-          destroyOnClose={true}
+         
+          destroyOnHidden={true}
           onOk={() => setSignUpVisible(false)}
           onCancel={() => setSignUpVisible(false)}
-          footer={null}
-        >
+          footer={null} mask={{ closable: true }}>
           <SignUpForm onOk={() => props.history.push('/')} />
         </Modal>
         <main className="ant-layout-content ant-pro-basicLayout-content ant-pro-basicLayout-has-header">
@@ -705,7 +701,7 @@ const ProMemberPage = (props) => {
                   <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                     <div className="ant-card ant-card-bordered ant-card-small">
                       <div className="ant-card-body" style={{ minHeight: '178px' }}>
-                        <Space size="small" direction="vertical">
+                        <Space size="small" orientation="vertical">
                           <div>
                             <Text style={{ fontSize: 30 }} strong>133.67 <span className="ant-typography ant-typography-success"><small>+0.720 (+0.536%)</small></span></Text>
                             <div><Text type="secondary"><small>Price At: 5 Dec 2023 EST</small></Text></div>
@@ -801,9 +797,8 @@ const ProMemberPage = (props) => {
                 <Card
                   size="small"
                   type="inner"
-                  bodyStyle={{ padding: 0 }}
-                  title={<FormattedMessage id="text.historicalDailyPutCallRatio" />}
-                >
+                 
+                  title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} styles={{ body: { padding: 0 } }}>
                   <div dangerouslySetInnerHTML={{ __html: PUTCALL_TABLE }} />
                 </Card>
               </Col>
@@ -938,11 +933,10 @@ const ProMemberPage = (props) => {
                 <Card
                   size="small"
                   type="inner"
-                  title={<FormattedMessage id="text.insiderTransactions" />}
-                  bodyStyle={{ height: 500, overflow: 'auto' }}>
+                  title={<FormattedMessage id="text.insiderTransactions" />} styles={{ body: { height: 500, overflow: 'auto' } }}>
                   <RosterContainer direction="vertical" size="small" style={{ width: '100%' }}>
 
-                    <Space direction="vertical" size="small" style={{ marginBottom: 24 }}>
+                    <Space orientation="vertical" size="small" style={{ marginBottom: 24 }}>
                       {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
                         <Tag color={v.color}>{k}</Tag>
                         {v.message}

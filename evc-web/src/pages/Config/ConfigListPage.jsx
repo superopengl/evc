@@ -122,7 +122,7 @@ const ConfigListPage = () => {
 
   return (
     <ContainerStyled>
-      <Space direction="vertical" style={{ width: '100%' }}>
+      <Space orientation="vertical" style={{ width: '100%' }}>
         <StyledTitleRow>
           <Title level={2} style={{ margin: 'auto' }}>System Configurations</Title>
         </StyledTitleRow>

@@ -70,13 +70,12 @@ const CreateStockModal = props => {
     <Modal
       title="Add New Stock"
       open={modalVisible}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       onOk={onOk}
       onCancel={onCancel}
       closable={true}
-      maskClosable={false}
-      footer={null}
-    >
+     
+      footer={null} mask={{ closable: false }}>
       <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }} initialValues={{ symbol: props.defaultSymbol?.toUpperCase() }}>
         <Form.Item label="Symbol" name="symbol"
           rules={[{ required: true, validator: validateExsitsSymbol, whitespace: true, max: 10 }]}

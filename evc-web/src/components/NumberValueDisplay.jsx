@@ -34,7 +34,7 @@ export const NumberValueDisplay = (props) => {
   const isMinus = isSingleValue ? displayValue < 0 : displayLo < 0;
 
 
-  return <Space size="small" direction="horizontal" className={className}>
+  return <Space size="small" orientation="horizontal" className={className}>
     {
       loading ? <Skeleton.Input size="small" style={{ width: 150 }} active /> :
         <NumberPanel>

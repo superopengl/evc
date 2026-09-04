@@ -311,7 +311,7 @@ const UserListPage = () => {
 
   return (
     <>
-      <Space direction="vertical" style={{ width: '100%' }}>
+      <Space orientation="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Input.Search
             placeholder="Search name or email"
@@ -376,14 +376,13 @@ const UserListPage = () => {
       </Space>
       <Modal
         open={setPasswordVisible}
-        destroyOnClose={true}
-        maskClosable={false}
+        destroyOnHidden={true}
+       
         onOk={() => setSetPasswordVisible(false)}
         onCancel={() => setSetPasswordVisible(false)}
         title={<>Reset Password</>}
         footer={null}
-        width={400}
-      >
+        width={400} mask={{ closable: false }}>
         <Form layout="vertical" onFinish={values => handleSetPassword(currentUser?.id, values)}>
           <Space style={{ justifyContent: 'center', width: '100%' }}>
             <Paragraph code>{currentUser?.email}</Paragraph>
@@ -398,14 +397,13 @@ const UserListPage = () => {
       </Modal>
       <Modal
         open={inviteVisible}
-        destroyOnClose={true}
-        maskClosable={false}
+        destroyOnHidden={true}
+       
         onOk={() => setInviteVisible(false)}
         onCancel={() => setInviteVisible(false)}
         title={<>Invite User</>}
         footer={null}
-        width={500}
-      >
+        width={500} mask={{ closable: false }}>
         <Paragraph>System will send an invitation to the email address if the email address hasn't signed up before.</Paragraph>
         <Form layout="vertical" onFinish={handleInviteUser} initialValues={{ role: 'free' }}>
           <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
@@ -430,38 +428,35 @@ const UserListPage = () => {
         placement="bottom"
         width={700}
         // height="calc(100% - 100px)"
-        destroyOnClose={true}
-        maskClosable={true}
+        destroyOnHidden={true}
+       
         closable
         title="Guest / New Sign Up"
         onOk={() => setChartVisible(false)}
         onCancel={() => setChartVisible(false)}
-        footer={null}
-      >
+        footer={null} mask={{ closable: true }}>
         <GuestSignUpPanel />
       </Modal>
       <Drawer
         open={profileModalVisible}
-        destroyOnClose={true}
-        maskClosable={true}
+        destroyOnHidden={true}
+       
         title="Update Profile"
         onClose={() => setProfileModalVisible(false)}
         footer={null}
-        width={400}
-      >
+        size={400} mask={{ closable: true }}>
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
       </Drawer>
       <Drawer
         open={referralCreditModal}
-        destroyOnClose={true}
-        maskClosable={true}
+        destroyOnHidden={true}
+       
         title="Referral & Credit"
         onClose={() => setReferralCreditModal(false)}
-        width={400}
-      >
-        {currentUser && <Space size="large" direction="vertical" style={{ width: '100%', alignItems: 'center' }}>
+        size={400} mask={{ closable: true }}>
+        {currentUser && <Space size="large" orientation="vertical" style={{ width: '100%', alignItems: 'center' }}>
           <Text code>{currentUser.email}</Text>
           <ReferralCreditForm user={currentUser} onOk={() => {
             setProfileModalVisible(false);

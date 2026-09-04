@@ -210,7 +210,7 @@ const ReferralGlobalPolicyListPage = () => {
 
   return (
     <ContainerStyled>
-      <Space direction="vertical" style={{ width: '100%' }} size="large">
+      <Space orientation="vertical" style={{ width: '100%' }} size="large">
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Title level={3}>
             <FormattedMessage id="menu.globalCommissionPolicy" />
@@ -254,13 +254,12 @@ const ReferralGlobalPolicyListPage = () => {
       <Drawer
         title="New Global Commission Policy"
         open={newPolicy}
-        destroyOnClose={true}
+        destroyOnHidden={true}
         closable={true}
-        maskClosable={true}
-        width={400}
+       
+        size={400}
         onClose={() => setNewPolicy()}
-        footer={null}
-      >
+        footer={null} mask={{ closable: true }}>
         <Form layout="vertical" onFinish={handleSave} initialValues={newPolicy}>
           <Form.Item label="Commission % per referral" name="percentage" rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, message: ' ' }]}>
             <InputNumber

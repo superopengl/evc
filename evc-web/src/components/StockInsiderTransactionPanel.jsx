@@ -88,7 +88,7 @@ const StockInsiderTransactionPanel = (props) => {
   return (
     <Loading loading={loading}>
       <Container direction="vertical" size="small" style={{ width: '100%' }}>
-        <Space direction="vertical" size="small" style={{ marginBottom: 24 }}>
+        <Space orientation="vertical" size="small" style={{ marginBottom: 24 }}>
           {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
             <Tag color={v.color}>{k}</Tag>
             {v.message}

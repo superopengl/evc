@@ -39,9 +39,9 @@ export const ContactWidget = () => {
       onOk={() => setModalVisible(false)}
       onCancel={() => setModalVisible(false)}
       footer={null}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       // centered={true}
-      maskClosable={false}
+      mask={{ closable: false }}
     >
       <ContactForm onDone={() => setModalVisible(false)}></ContactForm>
     </Modal>

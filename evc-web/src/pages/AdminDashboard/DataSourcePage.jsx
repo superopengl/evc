@@ -85,10 +85,10 @@ const DataSourcePage = () => {
   ]
 
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Space orientation="vertical" size="large" style={{ width: '100%' }}>
 
       {false && <Card
-        bordered={false}
+       
         title="Support / Resistance"
         extra={
           <Space>
@@ -102,7 +102,7 @@ const DataSourcePage = () => {
               }}
             />
           </Space>
-        }>
+        } variant="borderless">
         <Paragraph>
           Bulk update support/resistance values with CSV file, which will replace the existing support/resistance values. The CSV file must have a header row with three columns <Text code>Symbol</Text>, <Text code>Support</Text>, <Text code>Resistance</Text>. Duplicate rows (same symbol, lo and hi values) will be inserted into database only once.
         </Paragraph>
@@ -120,7 +120,7 @@ GOOG,1000-1100,2000
       </Card>}
 
       <Card
-        bordered={false}
+       
         title="Unusual Options Activity"
         extra={
           <Space>
@@ -152,8 +152,7 @@ GOOG,1000-1100,2000
               }}
             />
           </Space>
-        }
-      >
+        } variant="borderless">
         <Paragraph>
           Bulk upload from CSV file. The CSV file must have a header row as below.
         </Paragraph>
@@ -170,20 +169,20 @@ DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/2
       </Card>
 
       <Card
-        bordered={false}
+       
         title="Refresh Materialized Views"
         extra={<LongRunningActionButton
           operationKey="refresh-mv"
           buttonText="Refresh Materialized Views"
           type="button"
           onOk={refreshMaterializedViews}
-        />}>
+        />} variant="borderless">
         A heavy operation (may take several minutes to complete) that updates all client facing information based on the latest data provided. This should only be executed by data admins when data inconsistency is detected.
       </Card>
 
 
       <Card
-        bordered={false}
+       
         title="Flush Cache"
         extra={<Space>
           <Button loading={loading} onClick={handleRefreshCacheKeys} icon={<SyncOutlined />}>Refresh</Button>
@@ -195,7 +194,7 @@ DISCA,41.23,Call,75,05/21/21,53,0.25,0.48,0.7,0.5,12660,307,41.24,99.10%,03/29/2
             disabled={loading}
             onOk={flushCache}
           />
-        </Space>}>
+        </Space>} variant="borderless">
         <Paragraph>Manage cached locks. Be albe to flush all of them from the Redis cache.</Paragraph>
         {cachedItems?.length > 0 && <Table
           loading={loading}

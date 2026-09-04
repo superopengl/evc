@@ -237,7 +237,7 @@ const EarningsCalendarPage = props => {
   }
 
   return (
-    <Space style={{ width: '100%' }} direction="vertical" size="large">
+    <Space style={{ width: '100%' }} orientation="vertical" size="large">
       <Space style={{ width: '100%', justifyContent: "space-between" }}>
         <Space>
           <Button type="primary" disabled={week === 0 || loading} onClick={() => handleWeekChange(0)}>Today</Button>

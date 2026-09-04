@@ -121,7 +121,7 @@ const PaymentStepperWidget = (props) => {
 
   const stepDef = [
     {
-      component: <Space direction="vertical" style={{ width: '100%' }} size="large">
+      component: <Space orientation="vertical" style={{ width: '100%' }} size="large">
         <Space style={{ alignItems: 'flex-start' }} size="middle">
           <Text type="danger" style={{ fontSize: 28, color: '#55B0D4' }}><ExclamationCircleOutlined /></Text>
           <div>
@@ -166,7 +166,7 @@ const PaymentStepperWidget = (props) => {
       </Space>
     },
     {
-      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+      component: <Space orientation="vertical" style={{ width: '100%' }} size="middle">
         <Alert
           type="info"
           showIcon
@@ -190,7 +190,7 @@ const PaymentStepperWidget = (props) => {
       </Space>
     },
     {
-      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+      component: <Space orientation="vertical" style={{ width: '100%' }} size="middle">
         <Alert
           type="info"
           showIcon
@@ -222,7 +222,7 @@ const PaymentStepperWidget = (props) => {
     },
     {
       // Alipay
-      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+      component: <Space orientation="vertical" style={{ width: '100%' }} size="middle">
         <Alert
           type="info"
           showIcon
@@ -244,7 +244,7 @@ const PaymentStepperWidget = (props) => {
 
   return (
     <Loading loading={loading} message={'In progress. Please do not close the window.'}>
-      <Space direction="vertical" size="large" style={{ width: '100%', paddingBottom: 20 }} >
+      <Space orientation="vertical" size="large" style={{ width: '100%', paddingBottom: 20 }} >
         <Card>
           <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Title level={3}>{newPlanDef.title}</Title>

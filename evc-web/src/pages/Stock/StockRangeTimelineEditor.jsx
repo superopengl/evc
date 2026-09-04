@@ -65,7 +65,7 @@ export const StockRangeTimelineEditor = (props) => {
   }
 
   return <Container>
-    <Space size="small" direction="vertical" style={{ width: '100%' }}>
+    <Space size="small" orientation="vertical" style={{ width: '100%' }}>
       {!disableInput && <NumberRangeInput onSave={handleSaveSupport} disabled={loading} />}
       <List
         dataSource={list}

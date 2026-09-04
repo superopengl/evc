@@ -63,7 +63,7 @@ const EmailTemplateListPage = () => {
 
   return (
     <ContainerStyled>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%' }}>
         {/* <StyledTitleRow>
           <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
         </StyledTitleRow> */}
@@ -85,7 +85,7 @@ const EmailTemplateListPage = () => {
               onClick={() => handleEdit(item)} ></Button>
           </Tooltip>}
         >
-          <Space direction="vertical" style={{ width: '100%' }}>
+          <Space orientation="vertical" style={{ width: '100%' }}>
             {item.key !== 'signature' && <Row>
               {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
             </Row>}
@@ -104,11 +104,10 @@ const EmailTemplateListPage = () => {
         id="scrolling-container"
         open={drawerVisible}
         closable={true}
-        maskClosable={true}
+       
         onClose={() => setDrawerVisible(false)}
-        width={600}
-        destroyOnClose={true}
-      >
+        size={600}
+        destroyOnHidden={true} mask={{ closable: true }}>
         <Form
           layout="vertical"
           onFinish={handleSaveNew}

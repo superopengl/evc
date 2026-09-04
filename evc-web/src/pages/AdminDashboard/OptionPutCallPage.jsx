@@ -30,7 +30,7 @@ const OptionPutCallPage = (props) => {
   }
 
   return (
-    <Card style={{ backgroundColor: 'white' }} bordered={true}>
+    <Card style={{ backgroundColor: 'white' }}>
       <Loading loading={loading}>
         <Tabs defaultActiveKey="stock" type="card" >
           {

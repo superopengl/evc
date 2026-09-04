@@ -7,7 +7,7 @@ const UnusualOptionsActivityPage = (props) => {
   const { size } = props;
 
   return (
-    <Card style={{ backgroundColor: 'white' }} bordered={true}>
+    <Card style={{ backgroundColor: 'white' }}>
       <Tabs defaultActiveKey="stock" type="card">
         <Tabs.TabPane tab="Stocks" key="stocks">
           <UnusualOptionsActivityPanel type="stock" size={size} />

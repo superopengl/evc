@@ -103,7 +103,7 @@ const GuestSignUpPanel = () => {
 
   return (
     <Loading loading={loading}>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Space orientation="vertical" size="large" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 20 }}>
           <Select defaultValue={interval} onChange={setInterval} style={{ width: 100 }}>
             {/* <Select.Option value="minute">Minute</Select.Option> */}

@@ -223,12 +223,11 @@ const OptionPutCallPanel = (props) => {
         title={<><Text strong>{selectedSymbol}</Text> Option History</>}
         open={!!allData}
         closable={true}
-        maskClosable={true}
+       
         onClose={() => setAllData(null)}
         footer={null}
-        bodyStyle={{ padding: '0 4px' }}
-        width={840}
-      >
+       
+        size={840} styles={{ body: { padding: '0 4px' } }} mask={{ closable: true }}>
         <Table
           bordered={false}
           size="small"

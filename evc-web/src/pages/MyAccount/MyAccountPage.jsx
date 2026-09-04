@@ -171,16 +171,17 @@ const MyAccountPage = (props) => {
   return (
     <ContainerStyled>
       {!account ? <Loading loading={loading} style={{ width: '100%' }} /> :
-        <Space direction="vertical" size="large" style={{ width: '100%', justifyContent: 'center' }}>
+        <Space orientation="vertical" size="large" style={{ width: '100%', justifyContent: 'center' }}>
           <Card
-            bordered={false}
+           
             title="Subscription"
             style={{ width: '100%' }}
           // extra={
           //   <Button key={0} onClick={() => setSubscriptionHistoryVisible(true)}>Subscription History & Billings</Button>
           // }
+            variant="borderless"
           >
-            <Space direction="vertical" style={{ width: '100%' }} size="large">
+            <Space orientation="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Your subscription will expire on <Text underline strong>{dayjs.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
                 You can extend the subscription by continue purchasing a new plan.
@@ -214,12 +215,11 @@ const MyAccountPage = (props) => {
             {subscriptionHistory?.length > 0 && <MySubscriptionHistoryPanel data={subscriptionHistory} />}
           </Card>
           <Card
-            bordered={false}
+           
             title={<FormattedMessage id="text.referralLinkTitle" />}
             extra={
               <Space><Text><FormattedMessage id="text.haveReferred" /></Text><Title type="success">{account.referralCount}</Title></Space>
-            }
-          >
+            } variant="borderless">
             <ReferralLinkInput value={account?.referralUrl} />
             <Paragraph type="secondary" style={{ marginTop: 20 }}>{<FormattedMessage id="text.shareReferralLink" />}</Paragraph>
             <Paragraph type="secondary">
@@ -233,12 +233,11 @@ const MyAccountPage = (props) => {
             </Paragraph>
           </Card>
           <Card
-            bordered={false}
+           
             title={<FormattedMessage id="text.creditBalance" />}
             extra={
               <Title><MoneyAmount type="success" value={account.credit} /></Title>
-            }
-          >
+            } variant="borderless">
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">
                 <FormattedMessage id="text.commissionBalanceDescription1" /><br />
@@ -250,7 +249,7 @@ const MyAccountPage = (props) => {
             </Space>
           </Card>
           <Card
-            bordered={false}
+           
             title={<Row gutter={[10, 10]} justify="space-between">
               <Col>
                 <FormattedMessage id="text.commissionWithdrawal" />
@@ -269,8 +268,7 @@ const MyAccountPage = (props) => {
                   </Col>
                 </Row>
               </Col>
-            </Row>}
-          >
+            </Row>} variant="borderless">
             <Paragraph type="secondary">
               <FormattedMessage id="text.commissionWithdrawalDescription" />
             </Paragraph>
@@ -278,14 +276,13 @@ const MyAccountPage = (props) => {
           <Modal
             open={modalVisible}
             closable={!paymentLoading}
-            maskClosable={false}
+           
             title="Subscribe plan"
             destroyOnClose
             footer={null}
             width={520}
             onOk={handleCancelPayment}
-            onCancel={handleCancelPayment}
-          >
+            onCancel={handleCancelPayment} mask={{ closable: false }}>
             <PaymentStepperWidget
               planType={planType}
               discount={account.my1stBuyDiscountPerc}
@@ -302,12 +299,11 @@ const MyAccountPage = (props) => {
             title={<FormattedMessage id="text.commissionWithdrawalApplication" />}
             open={cashBackVisible}
             closable={true}
-            maskClosable={false}
-            destroyOnClose={true}
+           
+            destroyOnHidden={true}
             footer={null}
             onOk={() => setCashBackVisible(false)}
-            onCancel={() => setCashBackVisible(false)}
-          >
+            onCancel={() => setCashBackVisible(false)} mask={{ closable: false }}>
             <CommissionWithdrawalForm onOk={() => setCashBackVisible(false)} />
           </Modal>
           <MyCommissionWithdrawalHistoryDrawer

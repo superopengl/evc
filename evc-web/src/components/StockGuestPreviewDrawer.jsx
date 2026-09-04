@@ -44,16 +44,14 @@ export const StockGuestPreviewDrawer = (props) => {
   return (
     <Drawer
       open={visible}
-      bodyStyle={{
-        backgroundColor: 'rgb(240, 242, 245)'
-      }}
+     
       placement="bottom"
       closable={true}
-      maskClosable={true}
-      destroyOnClose={true}
+     
+      destroyOnHidden={true}
       onClose={onClose}
       footer={null}
-      title={<Space direction="vertical" size="large" style={{ width: '100%' }}>
+      title={<Space orientation="vertical" size="large" style={{ width: '100%' }}>
         <Text>{stock ? <StockName value={stock} /> : symbol}</Text>
         <Alert
           showIcon
@@ -68,8 +66,9 @@ export const StockGuestPreviewDrawer = (props) => {
           }
           type="success" />
       </Space>}
-      height="85vh"
-    >
+      size="85vh" styles={{ body: {
+        backgroundColor: 'rgb(240, 242, 245)'
+      } }} mask={{ closable: true }}>
 
       {stock ? <StockDisplayPanel stock={stock} /> : <Loading loading={true} />}
     </Drawer>

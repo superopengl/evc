@@ -57,19 +57,18 @@ const ColInnerCard = props => {
   const { children, ...other } = props
   return <Card
     type="inner"
-    bordered={false}
+   
     size="small"
-    headStyle={{
-      backgroundColor: '#55B0D4',
-      color: 'white',
-    }}
-    bodyStyle={{
+   
+   
+    {...other} styles={{ body: {
       maxHeight: 500,
       overflow: 'auto',
 
-    }}
-    {...other}
-  >
+    }, header: {
+      backgroundColor: '#55B0D4',
+      color: 'white',
+    } }} variant="borderless">
     {props.children}
   </Card>
 };
@@ -169,7 +168,7 @@ const StockAdminPanel = (props) => {
         <ColInnerCard
           type="inner"
           title="Fair Value">
-          <Space direction="vertical">
+          <Space orientation="vertical">
 
             <Alert
               type="info"
@@ -206,14 +205,13 @@ const StockAdminPanel = (props) => {
 
     <Modal
       open={simulatorVisible}
-      destroyOnClose={true}
+      destroyOnHidden={true}
       closable={true}
-      maskClosable={false}
+     
       title={<StockName value={stock} />}
       onCancel={() => setSimulatorVisible(false)}
       onOk={() => setSimulatorVisible(false)}
-      footer={null}
-    >
+      footer={null} mask={{ closable: false }}>
       <Paragraph type="secondary">Publishing price in here will broadcast to all online clients.</Paragraph>
       <Form
         onFinish={handlePublishMarketPrice}

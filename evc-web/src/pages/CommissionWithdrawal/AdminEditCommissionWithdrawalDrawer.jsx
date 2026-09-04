@@ -65,11 +65,11 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
     <Drawer
       open={!!item}
       title={<FormattedMessage id="text.commissionWithdrawalApplication"/>}
-      width={600}
-      destroyOnClose={true}
-      maskClosable={true}
+      size={600}
+      destroyOnHidden={true}
+     
       onClose={() => onClose(false)}
-      footer={<Space direction="vertical" style={{ width: '100%', marginBottom: 10 }}>
+      footer={<Space orientation="vertical" style={{ width: '100%', marginBottom: 10 }}>
         <Input.TextArea
           placeholder="Comments"
           allowClear
@@ -83,8 +83,7 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
           <Button danger type="primary" disabled={disabled} loading={loading} icon={<CloseOutlined />} onClick={handleReject}>Reject</Button>
           <Button type="primary" disabled={disabled} loading={loading} icon={<CheckOutlined />} onClick={handleApprove}>Complete</Button>
         </Space>
-      </Space>}
-    >
+      </Space>} mask={{ closable: true }}>
       {item && <CommissionWithdrawalCard value={item} grid={1} />}
     </Drawer>
   );

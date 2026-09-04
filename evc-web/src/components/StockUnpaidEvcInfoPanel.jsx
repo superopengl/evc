@@ -30,7 +30,7 @@ const StockUnpaidEvcInfoPanel = (props) => {
   const { fairValues } = props;
 
   return (
-    <Space direction="vertical" style={{ width: '100%' }}>
+    <Space orientation="vertical" style={{ width: '100%' }}>
       <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <FormattedMessage id="text.fairValue" />
         <OldFairValueContainer>

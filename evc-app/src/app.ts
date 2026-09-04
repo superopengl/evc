@@ -1,7 +1,6 @@
 import express from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
-import listEndpoints from 'express-list-endpoints';
 import cors from 'cors';
 import path from 'path';
 import fileUpload from 'express-fileupload';
@@ -13,6 +12,7 @@ import cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
 import { sseMiddleware } from 'express-sse-middleware';
 import serveStatic from 'serve-static';
+import { listAppEndpoints } from './utils/listAppEndpoints';
 
 function errorHandler(err, req, res, next) {
   if (err && !/^4/.test(res.status)) {
@@ -119,7 +119,7 @@ export function createAppInstance() {
   app.get('/r/:token', (req, res) => res.redirect(`/api/v1/auth/r/${req.params.token}`));
 
   // app.get('/env', (req, res) => res.json(process.env));
-  // app.get('/routelist', (req, res) => res.json(listEndpoints(app)));
+  // app.get('/routelist', (req, res) => res.json(listAppEndpoints(app)));
   app.use('/', serveStatic(staticWwwDir, {
     cacheControl: true,
     setHeaders: (res, path) => {
@@ -129,10 +129,12 @@ export function createAppInstance() {
 
   app.use(errorHandler);
 
-  // Debounce to frontend routing
-  app.get('*', (req, res) => res.sendFile(`${staticWwwDir}/index.html`));
+  // Debounce to frontend routing.
+  // Express 5 uses path-to-regexp 8, where a bare '*' is a syntax error. '/{*splat}' is the
+  // equivalent catch-all: the braces make it optional so it still matches '/' the way '*' did.
+  app.get('/{*splat}', (req, res) => res.sendFile(`${staticWwwDir}/index.html`));
 
-  console.log(listEndpoints(app));
+  console.log(listAppEndpoints(app));
 
   return app;
 }

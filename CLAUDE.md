@@ -56,6 +56,13 @@ Local config lives in gitignored `.env` files: `evc-app/.env` (TypeORM `TYPEORM_
 
 **Routing is Swagger-driven, not code-driven.** `src/_assets/api.yml` (~1.3k lines, basePath `/api/v1`) declares each path with an `operationId`; `swagger-routes-express` binds that operationId to the same-named export from `src/api/index.ts`. To add an endpoint you must do all three: write the handler in a `src/api/*Controller.ts`, re-export it from `src/api/index.ts`, and add the path + `operationId` to `api.yml`. A missing yml entry means the route silently doesn't exist.
 
+**Express 5 gotchas.** The app runs Express 5 (path-to-regexp 8):
+
+- A bare `'*'` route is a parse error. The SPA fallback in `src/app.ts` uses `'/{*splat}'` — the braces make the wildcard optional so it still matches `/` the way `'*'` did.
+- `@types/express` 5 widens `req.params` values to `string | string[]`, because a wildcard can capture an array of segments. `handlerWrapper` (`src/utils/asyncHandler.ts`) pins params to `Record<string, string>` for all controllers, since every api.yml route uses plain `:name` params. Don't re-widen it without also fixing ~45 call sites.
+- `req.query` is a getter and cannot be assigned to. All current uses are reads.
+- `express-list-endpoints` reads the Express 4 `app._router` and silently returns `[]` on Express 5, so the startup route dump uses `src/utils/listAppEndpoints.ts` instead.
+
 **Auth is cookie-JWT and permissive at the middleware layer.** `src/middlewares/authMiddleware.ts` runs globally: it decodes the JWT cookie, transparently renews it, and sets `req.user` — but never rejects anonymous requests. Authorization is per-handler via `assertRole(req, 'admin', 'agent', ...)` at the top of the controller. Roles: `admin`, `agent`, `member`, `free`, `guest` (`src/types/Role.ts`). Handlers are wrapped in `handlerWrapper` (express-async-handler) and signal failures with `assert(cond, statusCode, message)` from `src/utils/assert.ts`.
 
 **The fair-value engine is a chain of PostgreSQL materialized views**, not application code. Defined as TypeORM `@ViewEntity({materialized: true})` in `src/entity/views/`. The dependency order matters and is encoded in two places that must stay in sync:
@@ -69,7 +76,7 @@ The pipeline is roughly: `StockHistoricalTtmEps` → `StockDailyPe` → `StockCo
 
 **Real-time price/events** go client → SSE (`GET /api/v1/event`, `express-sse-middleware`) ← Redis pub/sub (`src/services/RedisPubSubService.ts`), so multiple API instances can fan out events published by the daemon. A separate WebSocket server (`src/ws.ts`) handles chat rooms only.
 
-**Static serving:** `src/app.ts` serves `evc-app/www` (the frontend build, symlinked in dev by `pnpm link-web`) with a 1-year immutable cache header, and falls back to `index.html` for client-side routes. `/webhook/stripe` is excluded from JSON body parsing — it needs the raw body for signature verification.
+**Static serving:** `src/app.ts` serves `evc-app/www` (the frontend build, symlinked in dev by `pnpm link-web`) with a 1-year immutable cache header, and falls back to `index.html` for client-side routes. `/webhook/stripe` is excluded from JSON body parsing — it needs the raw body for signature verification. Note the middleware carve-out exists but the handler does not: `webhookStripe` is declared in api.yml with no matching export, so the route answers 501 from the swagger-routes-express not-implemented stub.
 
 ## Batch jobs (`evc-app/endpoints/`)
 

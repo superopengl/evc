@@ -14,7 +14,7 @@ const { Paragraph } = Typography;
 
 const EarnCommissionModal = props => {
 
-  const { onOk } = props;
+  const { onOk, visible, ...other } = props;
 
   const [account, setAccount] = React.useState({});
   const intl = useIntl();
@@ -47,7 +47,9 @@ const EarnCommissionModal = props => {
      
       destroyOnHidden={true}
       footer={null}
-      {...props} mask={{ closable: true }}>
+      open={visible}
+      onOk={onOk}
+      {...other} mask={{ closable: true }}>
       <Paragraph type="secondary"><FormattedMessage id="text.shareReferralLink" /></Paragraph>
       <ReferralLinkInput value={account?.referralUrl} />
       <Row gutter={[10, 10]} wrap={true} justify="end" style={{marginTop: 10, marginBottom: 30}}>

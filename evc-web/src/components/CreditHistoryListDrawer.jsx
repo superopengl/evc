@@ -49,7 +49,7 @@ const CreditHistoryListDrawer = (props) => {
   return (
     <StyledDrawer
       title={<FormattedMessage id="text.creditHistory" />}
-      visible={visible}
+      open={visible}
       closable={true}
       maskClosable={true}
       destroyOnClose={false}

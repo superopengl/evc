@@ -9,7 +9,7 @@ const gitVersion = process.env.REACT_APP_GIT_HASH;
 
 const AboutDrawer = (props) => {
 
-  const { staticContext, onClose, ...other } = props;
+  const { staticContext, onClose, visible, ...other } = props;
 
   return (
     <Modal
@@ -20,6 +20,7 @@ const AboutDrawer = (props) => {
       footer={null}
       onOk={() => onClose()}
       onCancel={() => onClose()}
+      open={visible}
       {...other} mask={{ closable: true }}>
       <Paragraph>
         All data provided on Easy Value Check is provided to individuals for informational purposes only, and is not intended for trading or investing purposes. You must not redistribute information displayed on or provided by Easy Value Check.

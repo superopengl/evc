@@ -13,6 +13,7 @@ const ContainerStyled = styled.div`
 
 
 const ChangePasswordModal = props => {
+  const { visible, ...other } = props;
   const [loading, setLoading] = React.useState(false);
 
   const handleSubmit = async values => {
@@ -50,7 +51,8 @@ const ChangePasswordModal = props => {
       destroyOnHidden={true}
       width={400}
       footer={null}
-      {...props} mask={{ closable: true }}>
+      open={visible}
+      {...other} mask={{ closable: true }}>
       <ContainerStyled>
         <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
           <Form.Item label="Old Password" name="password" rules={[{ required: true, message: ' ' }]}>

@@ -29,6 +29,7 @@ import { RiCoinsLine } from 'react-icons/ri';
 import { IoLanguage } from 'react-icons/io5';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import { saveProfile } from 'services/userService';
+import { proLayoutToken } from './antdTheme';
 import { APP_TITLE, createPageTitleRender } from 'util/pageTitle';
 
 const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
@@ -64,6 +65,13 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-pro-global-header-collapsed-button {
   margin-right: 16px;
+}
+
+// pro-layout spins the fold arrow 180deg (90deg -> -90deg) over 0.3s on every collapse.
+// Keep the direction change, drop the spin.
+.ant-pro-sider-collapsed-button,
+.ant-pro-sider-collapsed-button > svg {
+  transition: none;
 }
 
 `;
@@ -300,13 +308,24 @@ const AppLoggedIn = props => {
     // logo="/header-logo.png"
     route={{ routes }}
     location={{ pathname }}
-    navTheme="dark"
+    // navTheme only understands 'light' | 'realDark' in pro-components 3, and 'realDark' would
+    // darken the whole app. The dark sider is design tokens now - see antdTheme.js.
+    token={proLayoutToken}
+    // layout="mix" is what gives back the top bar. pro-layout 7+ renders NO header at all when
+    // layout is 'side' (the default) on desktop - see DefaultHeader's early
+    // `if (layout === 'side' && !isMobile) return null`. That is why headerContentRender (the
+    // symbol search) vanished, and why avatarProps fell through to the sider's own actions area.
+    // In 'mix' the sider drops its logo/title (the header renders them instead) and hands the
+    // avatar back to the header, which is the pre-upgrade arrangement.
+    layout="mix"
     siderWidth={240}
     fixSiderbar={true}
     fixedHeader={true}
-    headerRender={true}
     collapsed={collapsed}
     onCollapse={setCollapsed}
+    // The collapsed sub-menu flyout is portalled to body, so the sider tokens above cannot reach
+    // it and ProLayout hard-codes its popupBg to the light colorBgElevated. Tag it for index.less.
+    menuProps={{ classNames: { popup: { root: 'evc-sider-menu-popup' } } }}
     menuItemRender={(item, dom) => {
       if (item.clickHandler) {
         return <div onClick={() => item.clickHandler()}>
@@ -371,7 +390,7 @@ const AppLoggedIn = props => {
       </>
     )}
     // pro-components 3 dropped rightContentRender; avatarProps is the supported way to put the
-    // user menu in the sider, which is where it rendered before. Losing this silently makes
+    // user menu back on the right of the header. Losing this silently makes
     // profile / change password / logout unreachable.
     avatarProps={{
       size: 40,

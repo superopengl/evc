@@ -29,3 +29,34 @@ export const antdTheme = {
     },
   },
 };
+
+/**
+ * pro-components 3 dropped the `navTheme="dark"` sider (it only understands 'light' | 'realDark',
+ * and 'realDark' darkens the whole app, not just the nav). The dark sider is a set of layout
+ * design tokens passed to <ProLayout token={...}> instead. Colors mirror the old less palette:
+ * @layout-header-background for the panel, @primary-color for the selected menu item.
+ */
+const siderDarkBg = '#00293d';
+
+// Only the sider goes dark. The header stays on pro-layout's light default, which is what
+// pro-layout 5's side layout did - the role-coloured avatar (admin is #00293d) is unreadable
+// against a dark bar.
+export const proLayoutToken = {
+  sider: {
+    colorMenuBackground: siderDarkBg,
+    colorMenuItemDivider: 'rgba(255, 255, 255, 0.15)',
+    colorTextMenu: 'rgba(255, 255, 255, 0.75)',
+    colorTextMenuSecondary: 'rgba(255, 255, 255, 0.65)',
+    colorTextMenuTitle: '#ffffff',
+    colorTextMenuActive: '#ffffff',
+    colorTextMenuItemHover: '#ffffff',
+    colorTextMenuSelected: '#ffffff',
+    colorTextSubMenuSelected: '#ffffff',
+    colorBgMenuItemHover: 'rgba(255, 255, 255, 0.08)',
+    colorBgMenuItemActive: 'rgba(255, 255, 255, 0.12)',
+    colorBgMenuItemSelected: '#57BB60',
+    colorBgCollapsedButton: siderDarkBg,
+    colorTextCollapsedButton: 'rgba(255, 255, 255, 0.65)',
+    colorTextCollapsedButtonHover: '#ffffff',
+  },
+};

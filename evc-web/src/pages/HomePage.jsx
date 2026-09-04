@@ -13,12 +13,13 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { ProLayout } from '@ant-design/pro-components';
 import Icon from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import smoothscroll from 'smoothscroll-polyfill';
 import { ContactWidget } from 'components/ContactWidget';
 import { scrollToElement } from '../util/scrollToElement';
 import { trackGuestUserVisit } from '../util/trackGuestUserVisit';
 import HomeOptionPutCallArea from 'components/homeAreas/HomeOptionPutCallArea';
+import { APP_TITLE, createPageTitleRender } from 'util/pageTitle';
 
 smoothscroll.polyfill();
 
@@ -91,6 +92,8 @@ const StyledLayout = styled(ProLayout)`
 `;
 
 const HomePage = (props) => {
+  const intl = useIntl();
+  const pageTitleRender = React.useMemo(() => createPageTitleRender(intl), [intl]);
 
   const [selectedSymbol, setSelectedSymbol] = React.useState();
   const [collapsed, setCollapsed] = React.useState(false);
@@ -168,7 +171,8 @@ const HomePage = (props) => {
 
   return <StyledLayout
     logo="/favicon-32x32.png"
-    title="Easy Value Check"
+    title={APP_TITLE}
+    pageTitleRender={pageTitleRender}
     // logo="/images/logo-transparent.png"
     collapsed={collapsed}
     onCollapse={setCollapsed}

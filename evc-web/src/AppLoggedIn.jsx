@@ -23,12 +23,13 @@ import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import EarnCommissionModal from 'pages/EarnCommission/EarnCommissionModal';
 import loadable from '@loadable/component'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { GoDatabase } from 'react-icons/go';
 import { RiCoinsLine } from 'react-icons/ri';
 import { IoLanguage } from 'react-icons/io5';
 import { RiArrowUpDownLine } from 'react-icons/ri';
 import { saveProfile } from 'services/userService';
+import { APP_TITLE, createPageTitleRender } from 'util/pageTitle';
 
 const AdminDashboardPage = loadable(() => import('pages/AdminDashboard/AdminDashboardPage'));
 const StockWatchListPage = loadable(() => import('pages/Stock/StockWatchListPage'));
@@ -83,6 +84,8 @@ const AppLoggedIn = props => {
   const { history } = props;
 
   const context = React.useContext(GlobalContext);
+  const intl = useIntl();
+  const pageTitleRender = React.useMemo(() => createPageTitleRender(intl), [intl]);
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
   const [contactVisible, setContactVisible] = React.useState(false);
@@ -291,7 +294,8 @@ const AppLoggedIn = props => {
   </StyledMenu>
 
   return <StyledLayout
-    title="Easy Value Check"
+    title={APP_TITLE}
+    pageTitleRender={pageTitleRender}
     logo="/favicon-32x32.png"
     // logo="/header-logo.png"
     route={{ routes }}

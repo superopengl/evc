@@ -11,12 +11,17 @@ import styled from 'styled-components';
  * 4rem there, a 6rem bottom margin on pricing). Spacing, measure and the heading scale
  * are decided once here and read from the --evc-* tokens in index.less.
  *
- *  tone   'paper' (default) | 'sub'   alternating band background
+ *  tone   'paper' (default) | 'sub' | 'ink'   band background
  *  wide   opt into --evc-measure-wide (1600px) for the full-width data boards
+ *
+ * paper and sub alternate down the page. 'ink' is the one dark band - #00293d, the same
+ * navy as the nav and the footer - and it is deliberately used once, on pricing, so the
+ * plans read as the page's closing statement rather than as one more white section.
  */
 const TONE_BG = {
   paper: 'var(--evc-paper)',
   sub: 'var(--evc-paper-sub)',
+  ink: '#00293d',
 };
 
 const Outer = styled.div`
@@ -44,21 +49,23 @@ const Head = styled.div`
 
   .evc-eyebrow {
     display: block;
-    color: var(--evc-signal-deep);
+    /* The deep green is there to clear 4.5:1 on paper; on ink it is too dark, so the
+       lifted tint takes over. */
+    color: ${props => (props.$tone === 'ink' ? 'var(--evc-signal-lift)' : 'var(--evc-signal-deep)')};
     margin-block-end: 14px;
   }
 
   h2 {
     margin: 0;
     font-size: clamp(26px, 3.2vw, 40px);
-    color: var(--evc-text);
+    color: ${props => (props.$tone === 'ink' ? 'var(--evc-on-ink)' : 'var(--evc-text)')};
   }
 
   p {
     margin: 14px 0 0;
     font-size: clamp(15px, 1.2vw, 17px);
     line-height: 1.6;
-    color: var(--evc-text-muted);
+    color: ${props => (props.$tone === 'ink' ? 'var(--evc-on-ink-muted)' : 'var(--evc-text-muted)')};
   }
 `;
 
@@ -74,7 +81,7 @@ export const HomeSection = props => {
     <Outer $tone={tone}>
       <Inner $wide={wide}>
         {hasHead && (
-          <Head $align={align}>
+          <Head $align={align} $tone={tone}>
             {eyebrow && <span className="evc-eyebrow">{eyebrow}</span>}
             {title && <h2 className="evc-display">{title}</h2>}
             {subtitle && <p>{subtitle}</p>}
@@ -92,7 +99,7 @@ HomeSection.propTypes = {
   title: PropTypes.node,
   subtitle: PropTypes.node,
   extra: PropTypes.node,
-  tone: PropTypes.oneOf(['paper', 'sub']),
+  tone: PropTypes.oneOf(['paper', 'sub', 'ink']),
   wide: PropTypes.bool,
   align: PropTypes.oneOf(['left', 'center']),
   children: PropTypes.node,

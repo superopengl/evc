@@ -11,6 +11,7 @@
 export const tokens = {
   ink: '#06202e',
   inkRaise: '#0d3243',
+  inkDeep: '#000f18',
   onInk: 'rgba(255, 255, 255, 0.94)',
   onInkMuted: 'rgba(255, 255, 255, 0.62)',
 
@@ -25,7 +26,7 @@ export const tokens = {
   alert: '#d7183f',
 
   paper: '#ffffff',
-  paperSub: '#f5f7f8',
+  paperSub: '#f2f5f6',
   line: '#e6eaec',
   lineSoft: '#eef2f3',
   text: '#10222c',

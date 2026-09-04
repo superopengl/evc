@@ -17,7 +17,8 @@ height: 100%;
 position: relative;
 width: 100%;
 max-width: 400px;
-border: 1px solid var(--evc-line);
+background: ${props => (props.$tint ? props.$tint.bg : 'var(--evc-paper)')};
+border: 1px solid ${props => (props.$tint ? props.$tint.border : 'var(--evc-line)')};
 border-radius: 14px;
 transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 
@@ -58,7 +59,7 @@ transform: translateY(-2px);
 `;
 
 export const SubscriptionCard = props => {
-  const { onClick, title, description, recurring, price, discount = 0, unit, active = false, interactive = true } = props;
+  const { onClick, title, description, recurring, price, discount = 0, unit, active = false, interactive = true, tint } = props;
 
   const classNameArray = [];
   if (active) {
@@ -72,6 +73,7 @@ export const SubscriptionCard = props => {
 
   return <IconContext.Provider value={{ size: '3rem' }}>
     <StyledCard
+      $tint={tint}
       className={classNameArray.join(' ')}
       title={<>
         {/* {icon} */}
@@ -113,5 +115,7 @@ SubscriptionCard.propTypes = {
   active: PropTypes.bool,
   recurring: PropTypes.bool,
   interactive: PropTypes.bool,
+  // { bg, border } - see the `tint` field in def/subscriptionDef. Omit for a plain white card.
+  tint: PropTypes.shape({ bg: PropTypes.string, border: PropTypes.string }),
 };
 

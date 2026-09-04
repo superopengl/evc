@@ -8,13 +8,16 @@ import { FormattedMessage } from 'react-intl';
 const gitVersion = process.env.REACT_APP_GIT_HASH;
 
 /**
- * Same #00293d as the layout header and the sider. The type scale is what changed: the
- * disclaimer, the copyright and the legal links were all 0.8rem #aaaaaa, so a 60-word
- * legal notice carried exactly as much weight as the links people actually click.
+ * The darkest surface on the site, one step below the #00293d of the pricing band, the nav
+ * and the sider. The type scale is the other thing that changed: the disclaimer, the
+ * copyright and the legal links were all 0.8rem #aaaaaa, so a 60-word legal notice carried
+ * exactly as much weight as the links people actually click.
  */
 const FooterStyled = styled.footer`
 width: 100%;
-background-color: #00293d;
+// A step below the #00293d pricing band above it, which is what separates the two - the
+// hairline that used to do that job is gone now that the tone change does it.
+background-color: var(--evc-ink-deep);
 padding: clamp(48px, 6vw, 72px) var(--evc-gutter) clamp(36px, 4vw, 48px);
 color: var(--evc-on-ink-muted);
 font-size: 13px;

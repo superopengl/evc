@@ -28,6 +28,7 @@ const Plans = styled.div`
 const HomePricingArea = props => {
   return (
     <HomeSection
+      tone="ink"
       title="Choose the plan that's right for you"
       subtitle="Membership plans start at USD $29.00 / month"
     >
@@ -41,6 +42,7 @@ const HomePricingArea = props => {
               price={s.price}
               interactive={true}
               unit={s.unit}
+              tint={s.tint}
               onClick={() => props.history.push('/signup')}
             />
           </StyledCol>)}

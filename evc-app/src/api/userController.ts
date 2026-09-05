@@ -204,6 +204,9 @@ export const listMyCreditHistory = handlerWrapper(async (req, res) => {
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('uc."createdAt"', 'DESC')
     .select([
+      // CreditHistoryListDrawer's Listy has rowKey="id"; Listy has no index fallback, so
+      // omitting the PK here makes every row key undefined.
+      'uc.id as id',
       'uc."createdAt" as "createdAt"',
       'uc.amount as amount',
       'py.id as "paymentId"',
@@ -225,6 +228,7 @@ export const listUserCreditHistory = handlerWrapper(async (req, res) => {
     .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('uc."createdAt"', 'DESC')
     .select([
+      'uc.id as id',
       'uc."createdAt" as "createdAt"',
       'uc.amount as amount',
       'uc."revertedCreditTransactionId" as "revertedCreditTransactionId"',

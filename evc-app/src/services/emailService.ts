@@ -37,7 +37,7 @@ function getEmailer() {
 
 async function getEmailTemplate(templateName: string, locale: Locale): Promise<EmailTemplate> {
   if (!locale) {
-    locale = Locale.Engish;
+    locale = Locale.English;
   }
 
   const template = await getRepository(EmailTemplate).findOneBy({ key: templateName, locale });
@@ -48,7 +48,7 @@ async function getEmailTemplate(templateName: string, locale: Locale): Promise<E
 
 async function getEmailSignature(locale: Locale): Promise<string> {
   if (!locale) {
-    locale = Locale.Engish;
+    locale = Locale.English;
   }
 
   const { body } = await getRepository(EmailTemplate).findOneBy({ key: 'signature', locale });

@@ -38,9 +38,9 @@ const getAccountForUser = async (userId) => {
     globalReferralCommissionPerc,
     specialReferralCommissionPerc,
     referralCommissionPerc,
-    globalReferreeDiscountPerc,
-    specialReferreeDiscountPerc,
-    referreeDiscountPerc,
+    globalRefereeDiscountPerc,
+    specialRefereeDiscountPerc,
+    refereeDiscountPerc,
     my1stBuyDiscountPerc
   } = await getRepository(UserCommissionDiscountInformation).findOneBy({ userId });
 
@@ -48,10 +48,10 @@ const getAccountForUser = async (userId) => {
     subscription,
     globalReferralCommissionPerc: +globalReferralCommissionPerc,
     specialReferralCommissionPerc: +specialReferralCommissionPerc,
-    globalReferreeDiscountPerc: +globalReferreeDiscountPerc,
-    specialReferreeDiscountPerc: +specialReferreeDiscountPerc,
+    globalRefereeDiscountPerc: +globalRefereeDiscountPerc,
+    specialRefereeDiscountPerc: +specialRefereeDiscountPerc,
     referralCommissionPerc: +referralCommissionPerc,
-    referreeDiscountPerc: +referreeDiscountPerc,
+    refereeDiscountPerc: +refereeDiscountPerc,
     referralUrl,
     referralCount: +referralCount,
     credit: +credit?.amount || 0,

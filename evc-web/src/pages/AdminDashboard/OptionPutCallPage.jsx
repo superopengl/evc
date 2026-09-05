@@ -15,8 +15,8 @@ const OptionPutCallPage = (props) => {
     setLoading(true);
     const resp = await listLatestOptionPutCall();
     const entries = Object.entries(_.groupBy(resp, x => x.type));
-    const sortedEntires = _.orderBy(entries, x => x[1][0].sortGroup)
-    setTypedMap(sortedEntires);
+    const sortedEntries = _.orderBy(entries, x => x[1][0].sortGroup)
+    setTypedMap(sortedEntries);
     setLoading(false);
     
   }

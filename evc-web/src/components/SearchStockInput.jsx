@@ -106,7 +106,7 @@ export const SearchStockInput = (props) => {
     return options
       .map((item, i) => <Select.Option key={i} value={item.symbol} data={item}>
         <Space style={{ justifyContent: 'space-between', width: '100%' }}>
-          <StockName value={item} highlightenText={text} />
+          <StockName value={item} highlightText={text} />
           {showsLink && <TextLink href={`/stock/${item.symbol}`} target='_blank' strong onClick={e => e.stopPropagation()}>
             <Icon component={() => <MdOpenInNew />} />
           </TextLink>}

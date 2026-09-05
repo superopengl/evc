@@ -44,9 +44,9 @@ import { DiscountUserPolicy } from '../DiscountUserPolicy';
     'coalesce(gc.percentage, 0) as "globalReferralCommissionPerc"',
     'coalesce(uc.percentage, 0) as "specialReferralCommissionPerc"',
     'coalesce(uc.percentage, gc.percentage) as "referralCommissionPerc"',
-    'coalesce(gd.percentage, 0) as "globalReferreeDiscountPerc"',
-    'coalesce(ud.percentage, 0) as "specialReferreeDiscountPerc"',
-    'coalesce(ud.percentage, gd.percentage) as "referreeDiscountPerc"',
+    'coalesce(gd.percentage, 0) as "globalRefereeDiscountPerc"',
+    'coalesce(ud.percentage, 0) as "specialRefereeDiscountPerc"',
+    'coalesce(ud.percentage, gd.percentage) as "refereeDiscountPerc"',
     ])
   })
 export class UserCommissionDiscountPolicy {
@@ -67,11 +67,11 @@ export class UserCommissionDiscountPolicy {
   referralCommissionPerc: number;
 
   @ViewColumn()
-  globalReferreeDiscountPerc: number;
+  globalRefereeDiscountPerc: number;
 
   @ViewColumn()
-  specialReferreeDiscountPerc: number;
+  specialRefereeDiscountPerc: number;
 
   @ViewColumn()
-  referreeDiscountPerc: number;
+  refereeDiscountPerc: number;
 }

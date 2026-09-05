@@ -169,7 +169,9 @@ const StyledLayout = styled(ProLayout)`
 // Light at rest, the lifted green on hover, on the dark glass bar.
 //
 // Scoped to .ant-menu-horizontal on purpose: the same <Menu> is re-rendered vertically inside
-// the mobile drawer, which is a light panel - these colours would be invisible there.
+// the mobile drawer. That copy is dark too, but it is coloured by the sider tokens in
+// antdTheme's homeProLayoutToken - one layer per menu, so retuning the bar cannot silently
+// repaint the drawer with hover colours sized for a horizontal row.
 //
 // The class to colour is the <li>, not ant-pro-menu-item-title - that class is pro-layout 5
 // and does not exist in pro-components 3, which emits ant-pro-base-menu-horizontal-item-*
@@ -361,7 +363,8 @@ const HomePage = (props) => {
     siderWidth={270}
     layout="top"
     breakpoint="lg"
-    navTheme="dark"
+    // No navTheme: pro-components 3 only understands 'light' | 'realDark', so navTheme="dark"
+    // was silently ignored. The dark bar and drawer are the tokens below plus the CSS above.
     token={homeProLayoutToken}
     route={{ routes: ROUTES }}
     location={{ pathname: '/' }}

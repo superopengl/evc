@@ -38,7 +38,7 @@ const StockRadarPage = loadable(() => import('pages/Stock/StockRadarPage'));
 const AdminCommissionWithdrawalListPage = loadable(() => import('pages/CommissionWithdrawal/AdminCommissionWithdrawalListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ReferralGlobalPolicyListPage = loadable(() => import('pages/CommissionGlobalPolicy/CommissionGlobalPolicyListPage'));
-const ReferreeDiscountPolicyListPage = loadable(() => import('pages/DiscountGlobalPolicy/DiscountGlobalPolicyListPage'));
+const RefereeDiscountPolicyListPage = loadable(() => import('pages/DiscountGlobalPolicy/DiscountGlobalPolicyListPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const MarketPage = loadable(() => import('pages/Market/MarketPage'));
@@ -202,7 +202,7 @@ const AppLoggedIn = props => {
       roles: ['admin', 'agent']
     },
     {
-      path: '/comission',
+      path: '/commission',
       name: <FormattedMessage id="menu.commissionWithdrawal" />,
       icon: <Icon component={() => <FaMoneyBillWave />} />,
       roles: ['admin', 'agent']
@@ -438,11 +438,11 @@ const AppLoggedIn = props => {
       <Route path="email_template" element={<RoleRoute visible={isAdmin} component={EmailTemplateListPage} />} />
       {/* <RoleRoute visible={isAdmin} exact path="/translation" component={TranslationListPage} /> */}
       <Route path="commission_policy" element={<RoleRoute visible={isAdmin} component={ReferralGlobalPolicyListPage} />} />
-      <Route path="discount_policy" element={<RoleRoute visible={isAdmin} component={ReferreeDiscountPolicyListPage} />} />
+      <Route path="discount_policy" element={<RoleRoute visible={isAdmin} component={RefereeDiscountPolicyListPage} />} />
       <Route path="data" element={<RoleRoute visible={isAdmin} component={DataSourcePage} />} />
       <Route path="tasks" element={<RoleRoute visible={isAdmin} component={TaskExecutionPage} />} />
       <Route path="revenue" element={<RoleRoute visible={isAdmin} component={RevenuePage} />} />
-      <Route path="comission" element={<RoleRoute visible={isAdmin} component={AdminCommissionWithdrawalListPage} />} />
+      <Route path="commission" element={<RoleRoute visible={isAdmin} component={AdminCommissionWithdrawalListPage} />} />
       <Route path="account" element={<RoleRoute visible={isMember || isFree} component={MyAccountPage} />} />
       <Route path="*" element={<Navigate to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} replace />} />
     </Routes>

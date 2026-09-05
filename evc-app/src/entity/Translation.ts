@@ -6,7 +6,7 @@ export class Translation {
   @PrimaryColumn()
   key: string;
 
-  @PrimaryColumn({ default: Locale.Engish })
+  @PrimaryColumn({ default: Locale.English })
   locale: Locale;
 
   @Column()

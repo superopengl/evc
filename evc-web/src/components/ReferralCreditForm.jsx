@@ -195,16 +195,16 @@ const ReferralCreditForm = (props) => {
         </Form>}
         <Divider></Divider>
 
-        {/* Referree discount */}
+        {/* Referee discount */}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Title level={4}>Referree 1st Buy Discount</Title>
-          <Title type="success">{account?.referreeDiscountPerc * 100}%</Title>
+          <Title level={4}>Referee 1st Buy Discount</Title>
+          <Title type="success">{account?.refereeDiscountPerc * 100}%</Title>
         </Space>
-        <Paragraph type="secondary">Setting this policy will override the global referree discount policy. The current global policy is <Text strong>{account?.globalReferreeDiscountPerc * 100}%</Text>.</Paragraph>
+        <Paragraph type="secondary">Setting this policy will override the global referee discount policy. The current global policy is <Text strong>{account?.globalRefereeDiscountPerc * 100}%</Text>.</Paragraph>
         {account && <Form
           ref={discountFormRef}
           onFinish={handleSaveDiscountUserPolicy}
-          initialValues={{ percentage: account.specialReferreeDiscountPerc || null }}>
+          initialValues={{ percentage: account.specialRefereeDiscountPerc || null }}>
           <Form.Item label={<>Discount for the 1st buy</>} name="percentage"
             rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, message: 'Must be 0.01 ~ 0.99', whitespace: true }]}
           >
@@ -226,7 +226,7 @@ const ReferralCreditForm = (props) => {
               loading={loading}
               onClick={() => handleDeleteSpecialDiscount()}
             >
-              Use Global Discount ({account?.globalReferreeDiscountPerc * 100}%)
+              Use Global Discount ({account?.globalRefereeDiscountPerc * 100}%)
                </Button>
           </Form.Item>
         </Form>}

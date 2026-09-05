@@ -41,7 +41,7 @@ async function syncDatabaseSchema(connection: DataSource) {
   await connection.synchronize(false);
   await connection.runMigrations();
 
-  await createIndexOnMaterilializedView();
+  await createIndexOnMaterializedView();
   // await refreshMaterializedView();
 }
 
@@ -61,7 +61,7 @@ where schemaname = 'evc'
   }
 }
 
-async function createIndexOnMaterilializedView() {
+async function createIndexOnMaterializedView() {
   const list: { tableEntity: any; fields: string[]; unique?: boolean }[] = [
     {
       tableEntity: StockDataInformation,

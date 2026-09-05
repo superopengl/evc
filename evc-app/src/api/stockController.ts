@@ -401,7 +401,7 @@ function formatTopResponse(rawResponse, symbolCompanyMap: Map<string, string>): 
   return response;
 }
 
-export const getMartketMost = handlerWrapper(async (req, res) => {
+export const getMarketMost = handlerWrapper(async (req, res) => {
   const data = await getCachedOrFetch(
     () => 'STOCK_MARKET_MOST_ACTIVITIES_TOP_GAINERS_LOSERS',
     async () => {

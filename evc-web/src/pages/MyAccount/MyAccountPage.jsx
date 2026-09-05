@@ -229,7 +229,7 @@ const MyAccountPage = (props) => {
               <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommissionPerc * 319} /> }} />
             </Paragraph>
             <Paragraph type="secondary">
-              <FormattedMessage id="text.currentReferreeDiscountPercentage" values={{ percentage: <Text>{account.referreeDiscountPerc * 100}%</Text> }} />
+              <FormattedMessage id="text.currentRefereeDiscountPercentage" values={{ percentage: <Text>{account.refereeDiscountPerc * 100}%</Text> }} />
             </Paragraph>
           </Card>
           <Card

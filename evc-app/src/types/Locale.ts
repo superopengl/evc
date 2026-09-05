@@ -1,6 +1,6 @@
 
 export enum Locale {
-  Engish = 'en-US',
+  English = 'en-US',
   ChineseSimple = 'zh-CN',
   ChineseTraditional = 'zh-TW'
 }

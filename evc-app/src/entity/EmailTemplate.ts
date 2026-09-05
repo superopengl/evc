@@ -8,7 +8,7 @@ export class EmailTemplate {
   @PrimaryColumn()
   key: string;
 
-  @PrimaryColumn({ default: Locale.Engish })
+  @PrimaryColumn({ default: Locale.English })
   locale: Locale;
 
   @Column({ nullable: true })

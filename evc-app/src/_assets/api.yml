@@ -814,7 +814,7 @@ paths:
           description: OK
   /stock/data/most:
     get:
-      operationId: getMartketMost
+      operationId: getMarketMost
       responses:
         200:
           description: OK          
@@ -834,7 +834,7 @@ paths:
           description: OK
   /subscription:
     get:
-      operationId: getMyCurrnetSubscription
+      operationId: getMyCurrentSubscription
       responses:
         200:
           description: OK

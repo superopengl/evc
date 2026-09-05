@@ -15,7 +15,7 @@ import { UserCommissionDiscountPolicy } from './UserCommissionDiscountPolicy';
     'up.*',
     'u."everPaid" as "everPaid"',
     'u."referredBy" as "referredBy"',
-    'CASE WHEN u."everPaid" THEN 0 ELSE coalesce(cd."referreeDiscountPerc", NULL) END as "my1stBuyDiscountPerc"',
+    'CASE WHEN u."everPaid" THEN 0 ELSE coalesce(cd."refereeDiscountPerc", NULL) END as "my1stBuyDiscountPerc"',
     ])
   })
 export class UserCommissionDiscountInformation {
@@ -36,13 +36,13 @@ export class UserCommissionDiscountInformation {
   referralCommissionPerc: number;
 
   @ViewColumn()
-  globalReferreeDiscountPerc: number;
+  globalRefereeDiscountPerc: number;
 
   @ViewColumn()
-  specialReferreeDiscountPerc: number;
+  specialRefereeDiscountPerc: number;
 
   @ViewColumn()
-  referreeDiscountPerc: number;
+  refereeDiscountPerc: number;
 
   @ViewColumn()
   everPaid: boolean;

@@ -97,7 +97,7 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   res.send(pdfBuffer);
 });
 
-export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
+export const getMyCurrentSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'member', 'free');
   const { user: { id: userId } } = req as any;
 

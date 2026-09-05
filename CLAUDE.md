@@ -75,7 +75,7 @@ Local config lives in gitignored `.env` files: `evc-app/.env` (TypeORM `TYPEORM_
 **The fair-value engine is a chain of PostgreSQL materialized views**, not application code. Defined as TypeORM `@ViewEntity({materialized: true})` in `src/entity/views/`. The dependency order matters and is encoded in two places that must stay in sync:
 
 - `MV_REFRESH_ORDER` in `src/refreshMaterializedView.ts` — refresh order (`REFRESH MATERIALIZED VIEW CONCURRENTLY`, guarded by a Redis lock key so concurrent processes skip).
-- `createIndexOnMaterilializedView()` in `src/db.ts` — the unique indexes that `CONCURRENTLY` requires.
+- `createIndexOnMaterializedView()` in `src/db.ts` — the unique indexes that `CONCURRENTLY` requires.
 
 The pipeline is roughly: `StockHistoricalTtmEps` → `StockDailyPe` → `StockComputedPe90` (90-day rolling PE avg/stddev; fair value = ttmEps × (avg ∓ stddev)) → `StockComputedPe365` (adds 1-year PE lo/hi and forward EPS) → `StockDataInformation` → `StockHistoricalComputedFairValue` (clamps outliers against close price, sets `isAdjustedFairValue`) → `StockLatestFairValue` (overlays admin-entered `StockSpecialFairValue` via COALESCE). Changing a formula means editing the view expression and re-running `pnpm sync:schema`.
 

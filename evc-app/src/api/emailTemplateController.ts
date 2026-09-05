@@ -23,7 +23,7 @@ export const listEmailTemplate = handlerWrapper(async (req, res) => {
 export const saveEmailTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { key, locale } = req.params;
-  assert(locale === Locale.Engish || locale == Locale.ChineseTraditional || locale == Locale.ChineseSimple, 400, `Unsupported locale ${locale}`);
+  assert(locale === Locale.English || locale == Locale.ChineseTraditional || locale == Locale.ChineseSimple, 400, `Unsupported locale ${locale}`);
   const { subject, body } = req.body;
   // await getRepository(EmailTemplate).update({ key, locale: locale as Locale }, { subject, body });
 

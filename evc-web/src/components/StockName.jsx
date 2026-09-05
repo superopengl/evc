@@ -9,15 +9,15 @@ const { Text } = Typography;
 
 export const StockName = (props) => {
 
-  const { value, size, style, direction = 'horizontal', showsLogo = false, logoSize = 18, highlightenText, ...other } = props;
+  const { value, size, style, direction = 'horizontal', showsLogo = false, logoSize = 18, highlightText, ...other } = props;
 
   const { symbol, company } = value;
 
   return (
     <Space orientation={direction} {...other} size="small" style={{ fontSize: size }}>
-      <Text strong><HighlightingText search={highlightenText} value={symbol} /></Text>
+      <Text strong><HighlightingText search={highlightText} value={symbol} /></Text>
       {!!company && <Text type="secondary" style={{ fontSize: size, fontWeight: 300 }}>
-        (<HighlightingText search={highlightenText} value={company} />)
+        (<HighlightingText search={highlightText} value={company} />)
       </Text>}
       {showsLogo && <Image src={getStockLogoUrl(symbol)}
         fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC"
@@ -35,5 +35,5 @@ StockName.propTypes = {
   direction: PropTypes.oneOf(['vertical', 'horizontal']),
   showsLogo: PropTypes.bool,
   logoSize: PropTypes.number,
-  highlightenText: PropTypes.string,
+  highlightText: PropTypes.string,
 };

@@ -39,7 +39,7 @@ export const getLocaleResource = handlerWrapper(async (req, res) => {
     const repo = getRepository(Translation);
     let list = await repo.findBy({ locale: locale as Locale });
     if (!list.length) {
-      list = await repo.findBy({ locale: Locale.Engish });
+      list = await repo.findBy({ locale: Locale.English });
     }
     data = list.reduce((pre, curr) => {
       pre[curr.key] = curr.value;
@@ -56,7 +56,7 @@ export const saveLocaleResourceItem = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { locale, key } = req.params;
   const { value } = req.body;
-  assert(locale === Locale.Engish || locale == Locale.ChineseTraditional || locale == Locale.ChineseSimple, 400, `Unsupported locale ${locale}`);
+  assert(locale === Locale.English || locale == Locale.ChineseTraditional || locale == Locale.ChineseSimple, 400, `Unsupported locale ${locale}`);
   assert(value, 400, 'Translation value is empty');
   const item = new Translation();
   item.key = key;
@@ -77,7 +77,7 @@ export const saveLocaleResourceItem = handlerWrapper(async (req, res) => {
 
 export const flushLocaleResource = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const tasks = [Locale.Engish, Locale.ChineseSimple, Locale.ChineseTraditional].map(locale => {
+  const tasks = [Locale.English, Locale.ChineseSimple, Locale.ChineseTraditional].map(locale => {
     const cacheKey = getCacheKey(locale);
     return redisCache.del(cacheKey);
   });
@@ -90,7 +90,7 @@ export const newLocaleResource = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { key } = req.body;
 
-  const entities = [Locale.Engish, Locale.ChineseSimple, Locale.ChineseTraditional].map(locale => {
+  const entities = [Locale.English, Locale.ChineseSimple, Locale.ChineseTraditional].map(locale => {
     const entity = new Translation();
     entity.key = key;
     entity.locale = locale;

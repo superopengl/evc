@@ -70,7 +70,7 @@ const StockOldFairValuePanel = (props) => {
   }
 
   return (
-    <Container direction="vertical">
+    <Container orientation="vertical">
       <Spin spinning={loading}>
       {!loading && !data?.length && <Empty description="No news" />}
       <Listy

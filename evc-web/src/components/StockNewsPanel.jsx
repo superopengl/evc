@@ -93,7 +93,7 @@ const StockNewsPanel = (props) => {
   }
 
   return (
-    <Container direction="vertical">
+    <Container>
       {/* Listy has no `locale.emptyText`, so the empty state is rendered explicitly. */}
       {!data?.length && <Empty description={'No news data available for ' + symbol} />}
       <Listy

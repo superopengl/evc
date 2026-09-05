@@ -29,7 +29,7 @@ export const TimeAgo = props => {
   if(toNYTime) {
     m = m.tz('America/New_York');
   }
-  return <StyledSpace size="small" direction="horizontal">
+  return <StyledSpace size="small" orientation="horizontal">
     <Space orientation={direction} size="small">
       {prefix}
       {showAgo && <Text strong={strong} type={type}><ReactTimeAgo date={m.toDate()} /></Text>}

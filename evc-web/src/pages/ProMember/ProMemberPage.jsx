@@ -935,7 +935,7 @@ const ProMemberPage = (props) => {
                   size="small"
                   type="inner"
                   title={<FormattedMessage id="text.insiderTransactions" />} styles={{ body: { height: 500, overflow: 'auto' } }}>
-                  <RosterContainer direction="vertical" size="small" style={{ width: '100%' }}>
+                  <RosterContainer orientation="vertical" size="small" style={{ width: '100%' }}>
 
                     <Space orientation="vertical" size="small" style={{ marginBottom: 24 }}>
                       {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
@@ -979,7 +979,7 @@ const ProMemberPage = (props) => {
                     </div>
                   </div>
                   <div className="ant-card-body" style={{ height: '700px', overflow: 'auto' }}>
-                    <div direction="vertical" className="sc-cCcYRi kmLPwf">
+                    <div className="sc-cCcYRi kmLPwf">
                       <div className="ant-list ant-list-split">
                         <div className="ant-spin-nested-loading">
                           <div className="ant-spin-container">

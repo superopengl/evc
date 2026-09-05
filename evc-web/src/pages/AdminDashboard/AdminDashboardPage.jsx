@@ -54,6 +54,23 @@ const countedPanelProps = (count, color) => ({
   collapsible: count ? undefined : 'disabled',
 });
 
+/**
+ * Six of the nine panels are the same four lines with a different heading and a different field
+ * on `data` - a list of symbols rendered as links. They are generated from this instead of
+ * repeated, which is what makes the move to `items` a net deletion.
+ *
+ * `onSupport` is a long-standing typo for one of the keys. It is kept: the key is only the
+ * panel's identity for `accordion`, nothing persists it, and renaming it changes nothing.
+ */
+const SYMBOL_LIST_PANELS = [
+  { key: 'invalidEps', label: 'No fair value (invalid EPS)', field: 'noFairValuesByInvalidTtmEps' },
+  { key: 'noEps', label: 'No fair value (no EPS data)', field: 'noFairValuesByMissingEpsData' },
+  { key: 'noSupport', label: 'No support', field: 'noSupports' },
+  { key: 'noResistance', label: 'No resistance', field: 'noResistances' },
+  { key: 'onSupport', label: 'One support', field: 'oneSupports' },
+  { key: 'oneResistance', label: 'One resistance', field: 'oneResistances' },
+];
+
 const LinkTag = props => {
   return <Link to={props.to}>
     <StyledTag style={props.style}>{props.children}</StyledTag>
@@ -102,213 +119,175 @@ const AdminDashboardPage = () => {
     loadList();
   }
 
+  const collapseItems = [
+    {
+      key: 'closeAlert',
+      label: 'Not up-to-date close price',
+      ...countedPanelProps(data.closeAlerts?.length),
+      children: (
+        <Table
+          loading={loading}
+          size="small"
+          bordered={false}
+          dataSource={data.closeAlerts}
+          rowKey="symbol"
+          pagination={false}
+          columns={[
+            {
+              title: 'Symbol',
+              dataIndex: 'symbol',
+              sorter: (a, b) => a.symbol.localeCompare(b.symbol),
+              render: value => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
+            },
+            {
+              title: 'Close price',
+              dataIndex: 'close',
+              sorter: (a, b) => stringNumberComparer(a.close, b.close),
+              render: value => +value
+            },
+            {
+              title: 'Price date',
+              dataIndex: 'date',
+              sorter: (a, b) => stringDateComparer(a.date, b.date),
+              render: value => <TimeAgo value={value} showAgo={false} accurate={false} />
+            },
+            {
+              title: 'Data input time',
+              dataIndex: 'createdAt',
+              sorter: (a, b) => stringDateComparer(a.createdAt, b.createdAt),
+              render: value => <TimeAgo value={value} showAgo={false} accurate={true} extra={<Text type="secondary">EST</Text>} />
+            },
+          ]}
+        />
+      ),
+    },
+    {
+      key: 'unusualEps',
+      label: 'Unusual EPS',
+      ...countedPanelProps(data.unusualEps?.length),
+      children: (
+        <>
+          <Paragraph type="secondary">
+            Successive identical EPS values within 80 days. Spans ≤ 30 days within 3 months are tagged as <Tag color="warning">recent</Tag>
+          </Paragraph>
+          <Table
+            loading={loading}
+            size="small"
+            bordered={false}
+            dataSource={data.unusualEps}
+            rowKey={item => `${item.symbol}.${item.reportDateFormer}`}
+            pagination={false}
+            columns={[
+              {
+                title: 'Symbol',
+                dataIndex: 'symbol',
+                sorter: (a, b) => a.symbol.localeCompare(b.symbol),
+                render: (value) => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
+              },
+              {
+                title: 'EPS value',
+                dataIndex: 'value',
+                sorter: (a, b) => stringNumberComparer(a.value, b.value),
+                render: value => +value
+              },
+              {
+                title: 'Report date',
+                dataIndex: 'reportDateFormer',
+                sorter: (a, b) => stringDateComparer(a.reportDateFormer, b.reportDateFormer),
+                render: (value, item) => <Space size="small">
+                  <TimeAgo value={item.reportDateFormer} showAgo={false} accurate={false} />
+                  /
+                  <TimeAgo value={item.reportDateLatter} showAgo={false} accurate={false} />
+                </Space>
+              },
+              {
+                title: 'Span (days)',
+                dataIndex: 'span',
+                sorter: (a, b) => stringNumberComparer(a.span, b.span),
+                render: value => value
+              },
+              {
+                title: 'Recent?',
+                dataIndex: 'recent',
+                sorter: (a, b) => {
+                  const x = a.recent;
+                  const y = b.recent;
+                  return x === y ? 0 : x ? -1 : 1;
+                },
+                render: (value, item) => <>{item.recent && <Tag color="warning">recent</Tag>}</>
+              }
+            ]}
+          />
+        </>
+      ),
+    },
+    {
+      key: 'plea',
+      label: 'Unsupported Stock Requests',
+      ...countedPanelProps(data.pleas?.length, '#55B0D4'),
+      children: (
+        <Table
+          loading={loading}
+          size="small"
+          bordered={false}
+          dataSource={data.pleas}
+          rowKey="symbol"
+          pagination={false}
+          columns={[
+            {
+              title: 'Symbol',
+              dataIndex: 'symbol',
+              sorter: (a, b) => a.symbol.localeCompare(b.symbol),
+              render: (value) => <Space>
+                <Tag>{value}</Tag>
+                <Link to={`/stock?create=${value}`}>Click to create</Link>
+              </Space>
+            },
+            {
+              title: 'Request count',
+              dataIndex: 'count',
+              sorter: (a, b) => stringNumberComparer(a.count, b.count),
+              render: value => +value
+            },
+            {
+              align: 'right',
+              render: (value, item) => <Space size="small">
+                <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`}
+                  message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
+                  icon={<DeleteOutlined />}
+                  onOk={() => handleDeleteStockPlea(item.symbol)}
+                />
+              </Space>
+            },
+          ]}
+        />
+      ),
+    },
+    ...SYMBOL_LIST_PANELS.map(({ key, label, field }) => ({
+      key,
+      label,
+      ...countedPanelProps(data[field]?.length),
+      children: (
+        <Paragraph>
+          {data[field]?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
+        </Paragraph>
+      ),
+    })),
+  ];
+
   return (
     <ContainerStyled>
       <Loading loading={loading}>
+        {/* rc-collapse warns that panel `children` go away next major; `items` is the
+            supported API. Note the per-panel prop is `label` there, not `header`. */}
         <Collapse
           // ghost
           bordered={false}
           defaultActiveKey={[]}
           accordion
           expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-        >
-          <Collapse.Panel
-            key="closeAlert"
-            header={<>Not up-to-date close price</>}
-            {...countedPanelProps(data.closeAlerts?.length)}
-          >
-            <Table
-              loading={loading}
-              size="small"
-              bordered={false}
-              dataSource={data.closeAlerts}
-              rowKey="symbol"
-              pagination={false}
-              columns={[
-                {
-                  title: 'Symbol',
-                  dataIndex: 'symbol',
-                  sorter: (a, b) => a.symbol.localeCompare(b.symbol),
-                  render: value => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
-                },
-                {
-                  title: 'Close price',
-                  // align: 'right',
-                  dataIndex: 'close',
-                  sorter: (a, b) => stringNumberComparer(a.close, b.close),
-                  render: value => +value
-                },
-                {
-                  title: 'Price date',
-                  dataIndex: 'date',
-                  sorter: (a, b) => stringDateComparer(a.date, b.date),
-                  render: value => <TimeAgo value={value} showAgo={false} accurate={false} />
-                },
-                {
-                  title: 'Data input time',
-                  dataIndex: 'createdAt',
-                  sorter: (a, b) => stringDateComparer(a.createdAt, b.createdAt),
-                  render: value => <TimeAgo value={value} showAgo={false} accurate={true} extra={<Text type="secondary">EST</Text>} />
-                },
-              ]}
-            />
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="unusualEps"
-            header={<>Unusual EPS</>}
-            {...countedPanelProps(data.unusualEps?.length)}
-          >
-            <Paragraph type="secondary">
-            Successive identical EPS values within 80 days. Spans ≤ 30 days within 3 months are tagged as <Tag color="warning">recent</Tag>
-            </Paragraph>
-            <Table
-              loading={loading}
-              size="small"
-              bordered={false}
-              dataSource={data.unusualEps}
-              rowKey={item => `${item.symbol}.${item.reportDateFormer}`}
-              pagination={false}
-              columns={[
-                {
-                  title: 'Symbol',
-                  dataIndex: 'symbol',
-                  sorter: (a, b) => a.symbol.localeCompare(b.symbol),
-                  render: (value) => <LinkTag to={`/stock/${value}`} style={{ margin: 0 }}>{value}</LinkTag>
-                },
-                {
-                  title: 'EPS value',
-                  // align: 'right',
-                  dataIndex: 'value',
-                  sorter: (a, b) => stringNumberComparer(a.value, b.value),
-                  render: value => +value
-                },
-                {
-                  title: 'Report date',
-                  dataIndex: 'reportDateFormer',
-                  sorter: (a, b) => stringDateComparer(a.reportDateFormer, b.reportDateFormer),
-                  render: (value, item) => <Space size="small">
-                    <TimeAgo value={item.reportDateFormer} showAgo={false} accurate={false} />
-                    /
-                    <TimeAgo value={item.reportDateLatter} showAgo={false} accurate={false} />
-                  </Space>
-                },
-                {
-                  title: 'Span (days)',
-                  // align: 'right',
-                  dataIndex: 'span',
-                  sorter: (a, b) => stringNumberComparer(a.span, b.span),
-                  render: value => value
-                },
-                {
-                  title: 'Recent?',
-                  dataIndex: 'recent',
-                  sorter: (a, b) => {
-                    const x = a.recent;
-                    const y = b.recent;
-                    return x === y ? 0 : x ? -1 : 1;
-                  },
-                  render: (value, item) => <>{item.recent && <Tag color="warning">recent</Tag>}</>
-                }
-              ]}
-            />
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="plea"
-            header={<>Unsupported Stock Requests </>}
-            {...countedPanelProps(data.pleas?.length, '#55B0D4')}
-          >
-            <Table
-              loading={loading}
-              size="small"
-              bordered={false}
-              dataSource={data.pleas}
-              rowKey="symbol"
-              pagination={false}
-              columns={[
-                {
-                  title: 'Symbol',
-                  dataIndex: 'symbol',
-                  sorter: (a, b) => a.symbol.localeCompare(b.symbol),
-                  render: (value) => <Space>
-                    <Tag>{value}</Tag>
-                    <Link to={`/stock?create=${value}`}>Click to create</Link>
-                    </Space>
-                },
-                {
-                  title: 'Request count',
-                  // align: 'right',
-                  dataIndex: 'count',
-                  sorter: (a, b) => stringNumberComparer(a.count, b.count),
-                  render: value => +value
-                },
-                {
-                  align: "right",
-                  render: (value, item) => <Space size="small">
-                    <ConfirmDeleteButton type="link" danger to={`/stock?create=${item.symbol}`}
-                      message={<>Delete stock request <strong>{item.symbol}</strong>?</>}
-                      icon={<DeleteOutlined />}
-                      onOk={() => handleDeleteStockPlea(item.symbol)}
-                    />
-                  </Space>
-                },
-              ]}
-            />
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="invalidEps"
-            header={<>No fair value (invalid EPS)</>}
-            {...countedPanelProps(data.noFairValuesByInvalidTtmEps?.length)}
-          >
-            <Paragraph>
-              {data.noFairValuesByInvalidTtmEps?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
-            </Paragraph>
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="noEps"
-            header={<>No fair value (no EPS data)</>}
-            {...countedPanelProps(data.noFairValuesByMissingEpsData?.length)}
-          >
-            <Paragraph>
-              {data.noFairValuesByMissingEpsData?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
-            </Paragraph>
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="noSupport"
-            header={<>No support</>}
-            {...countedPanelProps(data.noSupports?.length)}
-          >
-            <Paragraph>
-              {data.noSupports?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
-            </Paragraph>
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="noResistance"
-            header={<>No resistance</>}
-            {...countedPanelProps(data.noResistances?.length)}
-          >
-            <Paragraph>
-              {data.noResistances?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
-            </Paragraph>
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="onSupport"
-            header={<>One support</>}
-            {...countedPanelProps(data.oneSupports?.length)}
-          >
-            <Paragraph>
-              {data.oneSupports?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
-            </Paragraph>
-          </Collapse.Panel>
-          <Collapse.Panel
-            key="oneResistance"
-            header={<>One resistance</>}
-            {...countedPanelProps(data.oneResistances?.length)}
-          >
-            <Paragraph>
-              {data.oneResistances?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
-            </Paragraph>
-          </Collapse.Panel>
-        </Collapse>
+          items={collapseItems}
+        />
       </Loading>
     </ContainerStyled>
   );

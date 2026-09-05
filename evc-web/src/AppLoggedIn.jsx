@@ -59,8 +59,12 @@ const StyledLayout = styled(ProLayout)`
   // background-color: white;
 }
 
+// Line the logo up with the sider menu icons below it. pro-layout already gives the header
+// bar margin-inline: 16px, and a menu icon sits 28px in (8px sider paddingInlineLayoutMenu +
+// 4px antd itemMarginInline + 16px itemPaddingInline), so this is the 12px remainder. 24px
+// here - pro-layout's own figure - put the logo 12px right of every icon under it.
 .ant-pro-global-header {
-  padding-left: 24px;
+  padding-left: 12px;
 }
 
 .ant-pro-global-header-collapsed-button {

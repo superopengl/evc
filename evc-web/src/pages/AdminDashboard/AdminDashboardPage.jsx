@@ -40,6 +40,20 @@ const CounterBadge = (props) => {
   return <Badge overflowCount={9999} count={count} showZero style={{ backgroundColor }} />
 }
 
+/**
+ * An empty panel has nothing to reveal, so it does not open: antd greys the header and sets
+ * cursor: not-allowed, keeping the caret in place so the rows stay aligned (showArrow={false}
+ * would drop the icon box and pull the label left of every other row).
+ *
+ * The count comes from the same length the badge renders, so the two cannot disagree - and
+ * while the fetch is in flight `data` is {}, which reads as 0 and leaves every panel shut
+ * rather than letting one open onto an empty table.
+ */
+const countedPanelProps = (count, color) => ({
+  extra: <CounterBadge count={count} color={color} />,
+  collapsible: count ? undefined : 'disabled',
+});
+
 const LinkTag = props => {
   return <Link to={props.to}>
     <StyledTag style={props.style}>{props.children}</StyledTag>
@@ -101,7 +115,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="closeAlert"
             header={<>Not up-to-date close price</>}
-            extra={<CounterBadge count={data.closeAlerts?.length} />}
+            {...countedPanelProps(data.closeAlerts?.length)}
           >
             <Table
               loading={loading}
@@ -142,7 +156,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="unusualEps"
             header={<>Unusual EPS</>}
-            extra={<CounterBadge count={data.unusualEps?.length} />}
+            {...countedPanelProps(data.unusualEps?.length)}
           >
             <Paragraph type="secondary">
             Successive identical EPS values within 80 days. Spans ≤ 30 days within 3 months are tagged as <Tag color="warning">recent</Tag>
@@ -201,7 +215,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="plea"
             header={<>Unsupported Stock Requests </>}
-            extra={<CounterBadge count={data.pleas?.length} color="#55B0D4" />}
+            {...countedPanelProps(data.pleas?.length, '#55B0D4')}
           >
             <Table
               loading={loading}
@@ -243,7 +257,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="invalidEps"
             header={<>No fair value (invalid EPS)</>}
-            extra={<CounterBadge count={data.noFairValuesByInvalidTtmEps?.length} />}
+            {...countedPanelProps(data.noFairValuesByInvalidTtmEps?.length)}
           >
             <Paragraph>
               {data.noFairValuesByInvalidTtmEps?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
@@ -252,7 +266,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="noEps"
             header={<>No fair value (no EPS data)</>}
-            extra={<CounterBadge count={data.noFairValuesByMissingEpsData?.length} />}
+            {...countedPanelProps(data.noFairValuesByMissingEpsData?.length)}
           >
             <Paragraph>
               {data.noFairValuesByMissingEpsData?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
@@ -261,7 +275,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="noSupport"
             header={<>No support</>}
-            extra={<CounterBadge count={data.noSupports?.length} />}
+            {...countedPanelProps(data.noSupports?.length)}
           >
             <Paragraph>
               {data.noSupports?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
@@ -270,7 +284,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="noResistance"
             header={<>No resistance</>}
-            extra={<CounterBadge count={data.noResistances?.length} />}
+            {...countedPanelProps(data.noResistances?.length)}
           >
             <Paragraph>
               {data.noResistances?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
@@ -279,7 +293,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="onSupport"
             header={<>One support</>}
-            extra={<CounterBadge count={data.oneSupports?.length} />}
+            {...countedPanelProps(data.oneSupports?.length)}
           >
             <Paragraph>
               {data.oneSupports?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}
@@ -288,7 +302,7 @@ const AdminDashboardPage = () => {
           <Collapse.Panel
             key="oneResistance"
             header={<>One resistance</>}
-            extra={<CounterBadge count={data.oneResistances?.length} />}
+            {...countedPanelProps(data.oneResistances?.length)}
           >
             <Paragraph>
               {data.oneResistances?.map(x => <LinkTag key={x} to={`/stock/${x}`}>{x}</LinkTag>)}

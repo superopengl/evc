@@ -112,20 +112,17 @@ const StockMostSearched = (props) => {
   const columnDef = [
     {
       title: 'symbol',
+      // Returning antd 4's `{children, props: {colSpan}}` shape here warned in antd 6
+      // ("deprecated with perf issue") and bought nothing: this table has a single column, so
+      // the copy-pasted `colSpan: 4` never had anything to span. Just return the node.
       render: (text, item, index) => {
         const { symbol, company, publishedAt } = item;
-        if (index % 2 === 0) {
-          return <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
-        }
-        return {
-          props: {
-            colSpan: 4,
-          },
-          children: <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        return index % 2
+          ? <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <CompanyName>{company}</CompanyName>
             <TimeAgo direction="horizontal" value={publishedAt} showAgo={false} prefix={<CompanyName><small>published:</small></CompanyName>} />
           </Space>
-        };
+          : <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
       }
     },
   ];

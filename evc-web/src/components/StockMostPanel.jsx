@@ -107,36 +107,39 @@ const CompanyName = styled(Text)`
 `;
 
 const StockMostPanel = (props) => {
+  // Every stock is two rows: an even row with the four data cells, and an odd row whose symbol
+  // cell spans all 4 to hold the company name. antd 4 expressed that by returning
+  // `{children, props: {colSpan}}` from `render`; antd 6 warns on that shape ("deprecated with
+  // perf issue") because it has to render the cell to find out how to lay it out. `onCell`
+  // declares the span up front and `render` goes back to returning only a node.
   const columnDef = [
     {
       title: 'symbol',
+      onCell: (item, index) => ({ colSpan: index % 2 ? 4 : 1 }),
       render: (text, item, index) => {
         const { symbol, company } = item;
-        if (index % 2 === 0) {
-          return <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
-        }
-        return {
-          children: <CompanyName>{company || symbol}</CompanyName>,
-          props: {
-            colSpan: 4,
-          },
-        };
+        return index % 2
+          ? <CompanyName>{company || symbol}</CompanyName>
+          : <StyledSymbolTextLink onClick={() => onSymbolClick(symbol)}>{symbol}</StyledSymbolTextLink>;
       }
     },
     {
       title: 'last price',
       dataIndex: 'latestPrice',
-      render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div className="evc-mono" style={{ width: '100%', textAlign: 'right' }}><Text>{value?.toFixed(2)}</Text></div>
+      onCell: (item, index) => ({ colSpan: index % 2 ? 0 : 1 }),
+      render: (value) => <div className="evc-mono" style={{ width: '100%', textAlign: 'right' }}><Text>{value?.toFixed(2)}</Text></div>
     },
     {
       title: 'change',
       dataIndex: 'change',
-      render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div className="evc-mono" style={{ width: '100%', textAlign: 'right' }}><NumberAmount value={value} /></div>
+      onCell: (item, index) => ({ colSpan: index % 2 ? 0 : 1 }),
+      render: (value) => <div className="evc-mono" style={{ width: '100%', textAlign: 'right' }}><NumberAmount value={value} /></div>
     },
     {
       title: '% change',
       dataIndex: 'changePercent',
-      render: (value, record, index) => index % 2 ? { props: { colSpan: 0 } } : <div className="evc-mono" style={{ width: '100%', textAlign: 'right' }}><NumberAmount postfix="%" digital={2} value={value * 100} /></div>
+      onCell: (item, index) => ({ colSpan: index % 2 ? 0 : 1 }),
+      render: (value) => <div className="evc-mono" style={{ width: '100%', textAlign: 'right' }}><NumberAmount postfix="%" digital={2} value={value * 100} /></div>
     },
   ];
 

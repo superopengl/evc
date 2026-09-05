@@ -32,7 +32,9 @@ async function promoteFairValueLatestSnapshotToPreviousSnapshot() {
   const { tableName: toTableName, schema: toSchema } = getRepository(FairValuePreviousSnapshot).metadata;
 
   await getManager().transaction(async m => {
-    await m.delete(FairValuePreviousSnapshot, {});
+    // TypeORM 1.x rejects an empty criteria object ("Empty criteria(s) are not
+    // allowed for the delete method"), which is how 0.2 spelled delete-all.
+    await m.createQueryBuilder().delete().from(FairValuePreviousSnapshot).execute();
     const sql = `INSERT INTO "${toSchema}"."${toTableName}" (symbol, "fairValueLo", "fairValueHi", hash, "date") SELECT symbol, "fairValueLo", "fairValueHi", hash, "date" FROM "${fromSchema}"."${fromTableName}"`;
     await m.query(sql);
   });

@@ -32,7 +32,9 @@ async function promoteSupportResistanceLatestSnapshotToPreviousSnapshot() {
   const { tableName: toTableName, schema: toSchema } = getRepository(SupportResistancePreviousSnapshot).metadata;
 
   await getManager().transaction(async m => {
-    await m.delete(SupportResistancePreviousSnapshot, {});
+    // TypeORM 1.x rejects an empty criteria object ("Empty criteria(s) are not
+    // allowed for the delete method"), which is how 0.2 spelled delete-all.
+    await m.createQueryBuilder().delete().from(SupportResistancePreviousSnapshot).execute();
     const sql = `INSERT INTO "${toSchema}"."${toTableName}" (symbol, supports, resistances, hash, "date") SELECT symbol, supports, resistances, hash, "date" FROM "${fromSchema}"."${fromTableName}"`;
     await m.query(sql);
   });

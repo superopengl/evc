@@ -72,7 +72,13 @@ export async function request(method, path, queryParams, body, responseType = 'j
       url: `${API_BASE_URL}/${trimSlash(path)}`,
       headers: getHeaders(responseType),
       params: queryParams,
-      data: body,
+      // getHeaders() always sets a JSON Content-Type, and axios 1.x stringifies `data`
+      // whenever it sees one - object or not - so a null body went out as the literal 4-byte
+      // `null`. GET survived it (XHR drops the body on GET), but DELETE is allowed to carry
+      // one, so every bodyless httpDelete was rejected by express.json()'s strict mode with
+      // 400 "Unexpected token 'n', \"null\" is not valid JSON" before its handler ever ran.
+      // undefined is what makes axios send nothing: JSON.stringify(undefined) is undefined.
+      data: body ?? undefined,
       responseType
     });
 

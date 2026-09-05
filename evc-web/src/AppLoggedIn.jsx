@@ -324,7 +324,10 @@ const AppLoggedIn = props => {
     // In 'mix' the sider drops its logo/title (the header renders them instead) and hands the
     // avatar back to the header, which is the pre-upgrade arrangement.
     layout="mix"
-    siderWidth={240}
+    // 240 clipped the longest labels ("Commission Withdrawal", and the extra-indented
+    // "Global Commission Policy" under System Settings) - antd menu items don't wrap, they
+    // ellipsize, so it read as broken text rather than as a narrow sider.
+    siderWidth={280}
     fixSiderbar={true}
     fixedHeader={true}
     collapsed={collapsed}

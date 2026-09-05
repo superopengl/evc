@@ -14,9 +14,9 @@
     "docker:rebuild": "docker build --no-cache -t evc -f ./devops/Dockerfile --memory-swap -1 --memory 4g --build-arg NODE_ENV=prod --build-arg REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) .",
     "docker:run": "docker run -p 8081:80 --rm --env-file ./devops/.env.prod evc",
     "docker:push": "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 115607939215.dkr.ecr.us-east-1.amazonaws.com; docker tag evc:latest 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest; docker push 115607939215.dkr.ecr.us-east-1.amazonaws.com/evc:latest",
-    "ecs:update:portal": "aws ecs update-service --cluster evc --service evc-portal --force-new-deployment --region us-east-1",
-    "ecs:update:daemon": "aws ecs update-service --cluster evc --service evc-daemon --force-new-deployment --region us-east-1",
-    "sync:schema:prod": "aws ecs run-task --cluster evc --task-definition evc-sync-schema:4 --region us-east-1 --launch-type \"FARGATE\" --network-configuration \"awsvpcConfiguration={subnets=[subnet-cfd34dee],securityGroups=[sg-6add9660],assignPublicIp=ENABLED}\"",
+    "ecs:update:portal": "aws ecs update-service --cluster evc --service evc-portal --task-definition evc-portal --force-new-deployment --region us-east-1",
+    "ecs:update:daemon": "aws ecs update-service --cluster evc --service evc-daemon --task-definition evc-daemon --force-new-deployment --region us-east-1",
+    "sync:schema:prod": "aws ecs run-task --cluster evc --task-definition evc-sync-schema --region us-east-1 --launch-type \"FARGATE\" --network-configuration \"awsvpcConfiguration={subnets=[subnet-cfd34dee,subnet-ab7655e6,subnet-41aa3a27,subnet-ce75d2ff,subnet-c321bc9c,subnet-9985cf97],securityGroups=[sg-09bf3f429f4fd79ff],assignPublicIp=ENABLED}\"",
     "flush": "aws cloudfront create-invalidation --distribution-id E3CEI7BQGY3KY1 --paths \"/*\"",
     "release": "pnpm docker:build && pnpm docker:push && pnpm ecs:update:portal && pnpm ecs:update:daemon && pnpm flush",
     "perf:100": "loadtest -c 100 --rps 200 https://easyvaluecheck.com"

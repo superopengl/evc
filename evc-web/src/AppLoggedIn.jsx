@@ -86,6 +86,8 @@ const StyledMenu = styled(Menu)`
 }
 `;
 
+const FULL_ROW_MENU_ITEM = { flex: 1 };
+
 function getSanitizedPathName(pathname) {
   const match = /\/[^/]+/.exec(pathname);
   return match ? match[0] ?? pathname : pathname;
@@ -330,14 +332,20 @@ const AppLoggedIn = props => {
     // The collapsed sub-menu flyout is portalled to body, so the sider tokens above cannot reach
     // it and ProLayout hard-codes its popupBg to the light colorBgElevated. Tag it for index.less.
     menuProps={{ classNames: { popup: { root: 'evc-sider-menu-popup' } } }}
+    // .ant-menu-title-content is display:flex, so whatever this returns becomes a flex item and
+    // shrink-wraps its own label instead of filling the row: "中 文" got a 32px hit area inside a
+    // 206px menu item, and every pixel right of the two glyphs did nothing - which reads as the
+    // Language menu being broken rather than as a small target. flex: 1 makes the anchor (and the
+    // clickHandler wrapper) span the row the way antd's own menu item content does. The plain
+    // routes had the same dead zone, just wide enough labels to hide it.
     menuItemRender={(item, dom) => {
       if (item.clickHandler) {
-        return <div onClick={() => item.clickHandler()}>
+        return <div style={FULL_ROW_MENU_ITEM} onClick={() => item.clickHandler()}>
           {dom}
         </div>
       } else {
 
-        return <Link to={item.path} onClick={() => {
+        return <Link style={FULL_ROW_MENU_ITEM} to={item.path} onClick={() => {
           setPathname(item.path);
         }}>
           {dom}

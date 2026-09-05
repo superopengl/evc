@@ -20,15 +20,29 @@ const span = {
   xxl: 8
 };
 
+/* The plans float on the ink rather than sitting flat on it. The cards themselves are the
+   shared SubscriptionCard, which is also used inside the logged-in app on white - so the
+   elevation is applied from here, on the one band where there is a dark surface to cast
+   onto, instead of being baked into the component. */
 const Plans = styled.div`
   max-width: 1080px;
   margin-inline: auto;
+
+  .ant-card {
+    border: none;
+    border-radius: 22px;
+    box-shadow: var(--evc-lift-ink);
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+  }
+
+  .ant-card.interactive:hover {
+    box-shadow: 0 1px 2px rgba(0, 8, 14, 0.32), 0 26px 56px rgba(0, 8, 14, 0.42);
+  }
 `;
 
 const HomePricingArea = props => {
   return (
     <HomeSection
-      tone="ink"
       title="Choose the plan that's right for you"
       subtitle="Membership plans start at USD $29.00 / month"
     >

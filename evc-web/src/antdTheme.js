@@ -85,20 +85,23 @@ export const proLayoutToken = {
  * nothing else, so with no `token` prop at all the drawer came out fully transparent - the
  * menu items sat directly on top of whatever part of the page was scrolled behind them.
  *
- * Light, not the dark `proLayoutToken` above: the drawer opens under a #57BB60 header on a
- * white page, and a dark panel there would be the only dark surface on the marketing site.
+ * Dark, matching the nav it drops out of. It used to be light, from when the header was a
+ * green slab over a white page; the homepage is ink now and a white drawer was the one light
+ * surface on it that was not a data pane. The panel is painted by the drawer rules in
+ * pages/HomePage - it needs a blur, which is not a token - so the background here stays
+ * transparent and these only carry the menu.
  */
 export const homeProLayoutToken = {
   sider: {
-    colorMenuBackground: '#ffffff',
-    colorTextMenu: 'rgba(6, 32, 46, 0.78)',
-    colorTextMenuSecondary: 'rgba(6, 32, 46, 0.6)',
-    colorTextMenuTitle: '#06202e',
-    colorTextMenuActive: '#06202e',
-    colorTextMenuItemHover: '#06202e',
-    colorTextMenuSelected: '#06202e',
-    colorTextSubMenuSelected: '#06202e',
-    colorBgMenuItemHover: 'rgba(63, 158, 72, 0.1)',
-    colorBgMenuItemSelected: 'rgba(63, 158, 72, 0.14)',
+    colorMenuBackground: 'transparent',
+    colorTextMenu: 'rgba(255, 255, 255, 0.72)',
+    colorTextMenuSecondary: 'rgba(255, 255, 255, 0.6)',
+    colorTextMenuTitle: '#ffffff',
+    colorTextMenuActive: '#ffffff',
+    colorTextMenuItemHover: '#ffffff',
+    colorTextMenuSelected: '#ffffff',
+    colorTextSubMenuSelected: '#ffffff',
+    colorBgMenuItemHover: 'rgba(255, 255, 255, 0.08)',
+    colorBgMenuItemSelected: 'rgba(87, 187, 96, 0.18)',
   },
 };

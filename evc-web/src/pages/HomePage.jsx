@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown } from 'antd';
+import { Menu, Dropdown, Button } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeFooter from 'components/HomeFooter';
 import React from 'react';
@@ -29,9 +29,42 @@ const HomeUnusualOptionActivityArea = loadable(() => import('components/homeArea
 // const HomeEarningsCalendarArea = loadable(() => import('components/homeAreas/HomeEarningsCalendarArea'));
 const HomeStockRadarArea = loadable(() => import('components/homeAreas/HomeStockRadarArea'));
 
+/**
+ * One backdrop for the whole page, rather than a background per section.
+ *
+ * The page used to be a stack of bands - white, pale mint, white, pale cyan - and every
+ * boundary between them was a horizontal line the eye had to cross. It read as a document.
+ * This is a single continuous field instead: the hero's four bands at the top, then ink all
+ * the way down to the footer.
+ *
+ * Ink rather than a pale tint, and the same ink the auth pages stand on (see INK_BG in
+ * components/homeAreas/HomeSection): the data panels floating on it are light, so the page
+ * reads the way /login does - a bright card on a dark ground - instead of as one long white
+ * sheet. A pale version of this was tried first and it just made the whole page washy.
+ *
+ * The two hues moving through it are the hero's own #57BB60 and #55B0D4 at 10-18%, off-canvas
+ * so they read as light in the room rather than as shapes. Percentages are of the whole
+ * content column, so they drift a little as the data sections grow; nothing here has to line
+ * up with a particular section, which is why the stops are far apart.
+ */
+const PAGE_BACKDROP = [
+  'radial-gradient(1500px 900px at 88% 8%, rgba(87, 187, 96, 0.2), transparent 60%)',
+  'radial-gradient(1300px 850px at 0% 26%, rgba(85, 176, 212, 0.16), transparent 60%)',
+  'radial-gradient(1400px 900px at 100% 48%, rgba(87, 187, 96, 0.14), transparent 60%)',
+  'radial-gradient(1300px 850px at 0% 70%, rgba(85, 176, 212, 0.16), transparent 60%)',
+  'radial-gradient(1200px 800px at 92% 88%, rgba(87, 187, 96, 0.12), transparent 60%)',
+  ['linear-gradient(180deg,',
+    '#06202e 0%,',
+    '#013246 16%,',
+    '#063045 40%,',
+    '#013246 62%,',
+    '#00293d 84%,',
+    '#001e2e 100%)'].join(' '),
+].join(', ');
+
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
-  background-color: white;
+  background-color: #06202e;
 }
 
 // pro-components 3 gutters the content with padding (32px 40px) where pro-layout 5
@@ -42,6 +75,7 @@ const StyledLayout = styled(ProLayout)`
   position: absolute;
   top: 0;
   width: 100%;
+  background: ${PAGE_BACKDROP};
 }
 
 .ant-pro-top-menu {
@@ -62,9 +96,13 @@ const StyledLayout = styled(ProLayout)`
   margin: auto;
 }
 
-// #57BB60 is the exact green of the logo tile, so the mark sits on the bar without a seam.
-// It used to be rgba(87,187,96,0.7), which let whatever was underneath tint it - a different
-// green over the hero than over the white boards further down.
+// The bar is glass, not paint. It used to be a flat #57BB60 slab - the logo tile's green -
+// which meant the first 56px of the page hid the top of the hero's four-colour gradient
+// behind a fifth, unrelated green. Translucent ink lets the gradient run to the very top of
+// the viewport and read through the bar, and it is the same navy the page settles into below
+// the hero, so the chrome belongs to the page at every scroll position. A white bar was tried
+// first: correct over the hero, a bright strip across the top of a dark page everywhere else.
+//
 // Both selectors are needed: pro-components renders ant-pro-top-nav-header on desktop and a
 // plain ant-pro-global-header below the lg breakpoint, and the wrapping ant-layout-header
 // carries an inline background-color: transparent that only !important can beat.
@@ -72,20 +110,24 @@ const StyledLayout = styled(ProLayout)`
 .ant-pro-global-header,
 .ant-pro-global-header-layout-top,
 .ant-pro-top-nav-header {
-  background-color: #57bb60 !important;
+  background-color: rgba(4, 25, 37, 0.55) !important;
+  backdrop-filter: var(--evc-glass-blur);
+  -webkit-backdrop-filter: var(--evc-glass-blur);
 }
 
+// The blur is on the inner nodes as well as the wrapper, but only the wrapper draws the
+// edge - otherwise the hairline is painted three times and comes out as a 3px grey band.
 .ant-layout-header {
-  border-block-end: 1px solid rgba(6, 32, 46, 0.08);
-  box-shadow: 0 1px 3px rgba(6, 32, 46, 0.08);
+  border-block-end: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 8px 28px rgba(0, 8, 14, 0.18);
 }
 
 .ant-pro-global-header-collapsed-button {
-  color: #000000;
+  color: var(--evc-on-ink);
   transition: color 0.15s ease;
 
   &:hover {
-    color: #ffffff;
+    color: var(--evc-signal-lift);
   }
 }
 
@@ -99,11 +141,22 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-drawer-content-wrapper {
-  box-shadow: 8px 0 32px rgba(6, 32, 46, 0.18);
+  box-shadow: 8px 0 32px rgba(0, 8, 14, 0.45);
+}
+
+// Dark, like the bar it drops out of. It was a light panel from when the header was a green
+// slab over a white page; against the ink nav and the ink page it was the only light surface
+// on the site that was not a data pane.
+// !important because antd 6 emits .ant-drawer-content { background: colorBgElevated } from
+// its own CSS-in-JS, which is injected after this block and wins on order at equal
+// specificity - the panel came out white with white menu labels on it.
+.ant-drawer-content, .ant-drawer-body, .ant-pro-sider {
+  background-color: rgba(4, 25, 37, 0.94) !important;
+  backdrop-filter: var(--evc-glass-blur);
+  -webkit-backdrop-filter: var(--evc-glass-blur);
 }
 
 .ant-drawer-body {
-  background-color: #ffffff;
   padding: 0;
 }
 
@@ -113,18 +166,24 @@ const StyledLayout = styled(ProLayout)`
   }
 }
 
-// Black at rest, white on hover, on the #57BB60 bar.
+// Light at rest, the lifted green on hover, on the dark glass bar.
 //
 // Scoped to .ant-menu-horizontal on purpose: the same <Menu> is re-rendered vertically inside
-// the mobile drawer, which is white, and a white hover there would be invisible.
+// the mobile drawer, which is a light panel - these colours would be invisible there.
 //
 // The class to colour is the <li>, not ant-pro-menu-item-title - that class is pro-layout 5
 // and does not exist in pro-components 3, which emits ant-pro-base-menu-horizontal-item-*
 // instead. The children below inherit rather than being listed one by one, so a future
 // rename of those internals cannot silently drop the colour again.
 .ant-menu-horizontal {
+  // Tighter than antd's 20px inline padding: six items plus the two auth buttons is a lot of
+  // bar, and this is what keeps them all out of the overflow menu down to ~1100px.
+  > .ant-menu-item, > .ant-menu-submenu {
+    padding-inline: 13px;
+  }
+
   &.ant-menu, .ant-menu-item, .ant-menu-submenu-title {
-    color: #000000;
+    color: var(--evc-on-ink-muted);
     font-size: 14px;
     font-weight: 500;
     letter-spacing: -0.005em;
@@ -142,12 +201,12 @@ const StyledLayout = styled(ProLayout)`
   // item is the one case antd does not claim, so Pricing went white and nothing else did.
   > .ant-menu-item:hover,
   > .ant-menu-submenu:hover > .ant-menu-submenu-title {
-    color: #ffffff !important;
+    color: var(--evc-signal-lift) !important;
   }
 
-  // The current item stays black - white here would read as permanently hovered.
+  // The current item is full white - green here would read as permanently hovered.
   .ant-menu-item-selected {
-    color: #000000;
+    color: var(--evc-on-ink);
     font-weight: 600;
   }
 
@@ -165,13 +224,57 @@ const StyledLayout = styled(ProLayout)`
 
 // Language switcher, in the header's actions slot rather than the menu.
 .ant-pro-global-header-header-actions-item {
-  color: #000000;
+  color: var(--evc-on-ink);
   transition: color 0.15s ease;
 
   &:hover {
-    color: #ffffff;
+    color: var(--evc-signal-lift);
   }
 }
+`;
+
+/**
+ * The Log In / Sign Up pair in the header's actions slot.
+ *
+ * Log In is a text button and Sign Up is the filled one: on a dark bar a single green fill is
+ * the only thing that reads as "start here", and giving both a fill would cancel that out.
+ *
+ * Both survive at every width: on a phone the bar is only carrying a hamburger, the logo tile
+ * and the language switcher, so there is room, and Log In is not in the drawer.
+ */
+const NavAuth = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-inline-start: 4px;
+
+  .ant-btn {
+    height: 34px;
+    padding-inline: 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+  }
+
+  .nav-login {
+    color: var(--evc-on-ink);
+
+    &:hover {
+      color: var(--evc-on-ink) !important;
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+
+  .nav-signup {
+    box-shadow: 0 6px 18px rgba(0, 8, 14, 0.35);
+  }
+
+  @media (max-width: 575px) {
+    .ant-btn {
+      height: 32px;
+      padding-inline: 13px;
+      font-size: 13px;
+    }
+  }
 `;
 
 const HomePage = (props) => {
@@ -199,6 +302,12 @@ const HomePage = (props) => {
   }, []);
 
 
+  /**
+   * The destinations, in the order they were always in. Sign Up and Log In used to be here
+   * too, rendered as menu links indistinguishable from navigation, which is the one thing
+   * that changed: they are buttons in the actions slot now (see actionsRender), because they
+   * are the page's two actions rather than two more places to go.
+   */
   const ROUTES = [
     {
       key: '0',
@@ -230,16 +339,6 @@ const HomePage = (props) => {
       path: '/#pricing',
       name: <FormattedMessage id="menu.pricing" />,
     },
-    {
-      key: '5',
-      path: '/signup',
-      name: <FormattedMessage id="menu.signUp" />,
-    },
-    {
-      key: '6',
-      path: '/login',
-      name: <FormattedMessage id="menu.login" />,
-    }
   ];
 
   const handleMenuClick = (path) => {
@@ -277,8 +376,25 @@ const HomePage = (props) => {
         {dom}
       </div>
     }}
+    // selectedKeys: [] because nothing in this menu is a "current page" - the homepage is all
+    // of them. Without it pro-layout resolves '/' against '/#pricing' and paints Pricing as
+    // the active item, which reads as though the visitor is already on a pricing page.
+    //
+    // The popup class is for antd's own horizontal overflow menu: between the lg breakpoint
+    // and about 1200px the last items collapse behind a "..." trigger, and that panel is
+    // portalled to body where the dark bar's styling cannot reach it. Coloured in index.less.
+    menuProps={{
+      selectedKeys: [],
+      // classNames.popup.root is antd 6's hook for submenu flyouts, but the overflow rest menu
+      // is built by rc-menu and only reads overflowedIndicatorPopupClassName. Both are set;
+      // this menu has no submenus today, so it is the second one doing the work.
+      classNames: { popup: { root: 'evc-home-menu-popup' } },
+      overflowedIndicatorPopupClassName: 'evc-home-menu-popup',
+    }}
     // pro-components 3 dropped rightContentRender; actionsRender is its replacement for the
-    // top layout and takes an array of nodes.
+    // top layout and takes an array of nodes. Log In and Sign Up live here rather than in the
+    // menu: they are the page's two actions, and one of them is the primary call to action on
+    // the whole site, which a text link in a row of nav items cannot say.
     actionsRender={() => {
       const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
         <Menu.Item key="en-US">English</Menu.Item>
@@ -288,7 +404,15 @@ const HomePage = (props) => {
       return [
         <Dropdown key="locale" popupRender={() => menu} trigger={['click']} placement="bottomRight">
           <Icon style={{ fontSize: 19, color: 'inherit' }} component={() => <IoLanguage />} />
-        </Dropdown>
+        </Dropdown>,
+        <NavAuth key="auth">
+          <Button className="nav-login" type="text" onClick={() => props.history.push('/login')}>
+            <FormattedMessage id="menu.login" />
+          </Button>
+          <Button className="nav-signup" type="primary" onClick={() => props.history.push('/signup')}>
+            <FormattedMessage id="menu.signUp" />
+          </Button>
+        </NavAuth>,
       ];
     }}
   >

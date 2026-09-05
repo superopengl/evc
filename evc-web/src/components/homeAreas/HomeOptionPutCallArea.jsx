@@ -7,8 +7,8 @@ import HomeSection from 'components/homeAreas/HomeSection';
 export const HomeOptionPutCallArea = props => {
   return (
     <HomeSection
-      tone="tide"
       wide
+      glass
       title={<FormattedMessage id="menu.optionPutCall" />}
     >
       <OptionPutCallPage size="small" />

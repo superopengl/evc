@@ -17,8 +17,13 @@ const { Text, Paragraph } = Typography;
 
 /**
  * The original four brand bands, unchanged: #89DFF1 / #55B0D4 / #7DD487 / #57BB60, hard stops
- * at 25 / 50 / 75 on a -45deg axis. No blend between them and no white overlay on top - the
- * four colours are flat.
+ * at 25 / 50 / 75 on a -45deg axis. No blend between them, and everything layered over them is
+ * translucent precisely so they stay the loudest thing on the page. This is the brand
+ * signature; nothing here dims it, and it runs full strength to the bottom edge.
+ *
+ * The header above is glass now rather than a green slab, so the gradient runs to the top of
+ * the viewport - hence the taller top padding, which is what keeps the lockup clear of the
+ * bar while letting the bands read at full height behind it.
  *
  * All hero text is ink rather than white: the pale cyan band put white body copy under 2:1,
  * and ink clears 6:1 on every one of the four.
@@ -26,20 +31,51 @@ const { Text, Paragraph } = Typography;
 const Container = styled.div`
   position: relative;
   width: 100%;
-  padding: clamp(92px, 10vw, 132px) var(--evc-gutter) clamp(56px, 7vw, 92px);
-  background-image: linear-gradient(-45deg,
-    #89dff1, #89dff1 25%,
-    #55b0d4 25%, #55b0d4 50%,
-    #7dd487 50%, #7dd487 75%,
-    #57bb60 75%, #57bb60 100%);
+  padding: clamp(116px, 12vw, 168px) var(--evc-gutter) clamp(76px, 9vw, 124px);
 
-  /* The search field is the one control on a coloured ground, so it gets a solid white
-     fill rather than the 0.8 alpha it used to have - translucent white over four different
-     band colours meant the placeholder sat on a different tint at every breakpoint. */
+  /**
+   * The bands live on a pseudo-element only so the bloom can sit on the same layer as them.
+   *
+   * The bottom edge is a clean cut, not a fade. Two versions of a fade were tried - an
+   * ink-coloured overlay, then a mask down to transparent - and both dragged the two bright
+   * greens through the navy on the way down, which comes out as a band of olive sludge. The
+   * bands are saturated and the page below is dark; there is no intermediate state between
+   * them that is not muddy, so the two surfaces just meet.
+   *
+   * The bloom is a soft white radial behind the lockup: the bands are hard-edged and one of
+   * the four seams runs close to the wordmark, so it lifts the type off whichever band it
+   * lands on. Kept tight and at 0.22 - at 0.42 across the full width it desaturated the two
+   * greens, and the gradient losing its punch is the one thing this must not do.
+   */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(38% 40% at 28% 44%, rgba(255, 255, 255, 0.22), transparent 72%),
+      linear-gradient(-45deg,
+        #89dff1, #89dff1 25%,
+        #55b0d4 25%, #55b0d4 50%,
+        #7dd487 50%, #7dd487 75%,
+        #57bb60 75%, #57bb60 100%);
+  }
+
+  /* The bands are on a pseudo-element, so the content has to sit above it. */
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* The search field is glass like everything else in the hero: a near-opaque white pane so
+     the placeholder holds, blurred so the band behind it stays visible at the edges. */
   .ant-select-selector {
-    background-color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: var(--evc-glass-blur);
+    -webkit-backdrop-filter: var(--evc-glass-blur);
     border-color: transparent !important;
-    box-shadow: 0 10px 30px rgba(6, 32, 46, 0.16) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 2px rgba(6, 32, 46, 0.06), 0 14px 34px rgba(6, 32, 46, 0.16) !important;
     padding: 0 18px !important;
 
     .ant-select-selection-search {
@@ -48,7 +84,8 @@ const Container = styled.div`
   }
 
   .ant-select-focused .ant-select-selector {
-    box-shadow: 0 10px 30px rgba(6, 32, 46, 0.16), 0 0 0 3px rgba(255, 255, 255, 0.6) !important;
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    box-shadow: 0 14px 34px rgba(6, 32, 46, 0.16), 0 0 0 3px rgba(255, 255, 255, 0.7) !important;
   }
 `;
 
@@ -153,16 +190,24 @@ const SloganCard = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  padding: 14px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.42);
-  backdrop-filter: blur(6px);
-  transition: background 0.18s ease, border-color 0.18s ease;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.34);
+  /* saturate before blur: averaging the four bands behind the pane washes them out, and the
+     saturate pushes the chroma back so the glass still reads as green or cyan, not grey. */
+  backdrop-filter: var(--evc-glass-blur);
+  -webkit-backdrop-filter: var(--evc-glass-blur);
+  /* The inset highlight is the top edge catching light - it is what makes the pane read as
+     having thickness rather than as a flat translucent rectangle. */
+  box-shadow: var(--evc-glass-edge), 0 2px 6px rgba(6, 32, 46, 0.04),
+    0 16px 34px rgba(6, 32, 46, 0.1);
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.62);
-    border-color: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 2px 6px rgba(6, 32, 46, 0.05),
+      0 26px 52px rgba(6, 32, 46, 0.14);
+    transform: translateY(-2px);
   }
 
   .slogan-icon {
@@ -187,6 +232,10 @@ const SloganCard = styled.div`
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+
+    &:hover {
+      transform: none;
+    }
   }
 `;
 

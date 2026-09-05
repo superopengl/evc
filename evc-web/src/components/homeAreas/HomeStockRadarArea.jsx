@@ -18,19 +18,18 @@ const PreviewNote = styled.div`
   gap: 8px;
   margin-block-start: 20px;
   padding: 7px 14px;
-  border: 1px solid rgba(63, 158, 72, 0.3);
   border-radius: 999px;
-  background: var(--evc-signal-wash);
+  background: rgba(87, 187, 96, 0.16);
   font-size: 13px;
   font-weight: 500;
-  color: var(--evc-signal-deep);
+  color: var(--evc-signal-lift);
 
   &::before {
     content: '';
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--evc-signal);
+    background: var(--evc-signal-lift);
   }
 `;
 
@@ -44,22 +43,12 @@ const Cta = styled.div`
   }
 `;
 
-/* The board keeps a panel of its own so the dense card grid reads as one object against the
-   band, but as white-on-tint with a soft edge rather than the old grey-on-white slab. */
-const Board = styled.div`
-  padding: clamp(12px, 1.6vw, 22px);
-  border: 1px solid var(--evc-line);
-  border-radius: 18px;
-  background: var(--evc-paper);
-  box-shadow: 0 18px 44px rgba(16, 34, 44, 0.05);
-`;
-
 export const HomeStockRadarArea = props => {
   const { onSymbolClick = () => { } } = props;
   return (
     <HomeSection
-      tone="signal"
       wide
+      glass
       title={<FormattedMessage id="menu.stockRadar" />}
       subtitle={<FormattedMessage id="text.stockRadarDescription" />}
       extra={<>
@@ -75,9 +64,7 @@ export const HomeStockRadarArea = props => {
         </Cta>
       </>}
     >
-      <Board>
-        <StockRadarPage onItemClick={onSymbolClick} size={12} />
-      </Board>
+      <StockRadarPage onItemClick={onSymbolClick} size={12} />
     </HomeSection>
   )
 }

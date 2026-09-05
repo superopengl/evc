@@ -425,7 +425,10 @@ export const getMarketMost = handlerWrapper(async (req, res) => {
 });
 
 export const getEarningsCalendar = handlerWrapper(async (req, res) => {
-  const week = +(req.query.week) ?? 0;
+  // The ?? has to be inside the +: `+(x) ?? 0` is always a number (NaN when week is absent),
+  // so the default never applied and the query built an Invalid Date. api.yml has the param
+  // as required:false default:0, and swagger-routes-express does not apply that default.
+  const week = +(req.query.week ?? 0);
   console.log('query', req.query.week, 'week', week);
   const NY_TIMEZONE = 'America/New_York';
   const theWeek = moment.tz(NY_TIMEZONE).add(week, 'week');

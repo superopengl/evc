@@ -1,4 +1,4 @@
-import { getRepository, getManager } from '../src/dataSource';
+import { getManager } from '../src/dataSource';
 import { start } from './jobStarter';
 import { getEarningsCalendarForAll } from '../src/services/alphaVantageService';
 import { StockEarningsCalendar } from '../src/entity/StockEarningsCalendar';
@@ -23,8 +23,14 @@ start(JOB_NAME, async () => {
     .chunk(1000)
     .value();
 
-  // Delete all
-  await getRepository(StockEarningsCalendar).delete({});
+  // Delete all. TypeORM 1.x rejects `delete({})` ("Empty criteria(s) are not
+  // allowed"), which is how 0.2 spelled delete-everything; an unfiltered
+  // DeleteQueryBuilder is the replacement.
+  await getManager()
+    .createQueryBuilder()
+    .delete()
+    .from(StockEarningsCalendar)
+    .execute();
 
   for (const values of chunks) {
     await getManager()

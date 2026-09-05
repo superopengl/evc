@@ -16,9 +16,6 @@ export const StockNoticeButton = (props) => {
   const handleToggleValue = e => {
     e.stopPropagation();
     onChange(!value);
-    if(value) {
-
-    }
   }
 
   return (

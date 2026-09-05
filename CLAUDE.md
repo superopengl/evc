@@ -95,6 +95,18 @@ In production each job is an ECS scheduled task driven by a CloudWatch Events ru
 
 Data sources: AlphaVantage (EPS, earnings calendar), Barchart scraping, Stripe/PayPal for payments. IEX Cloud integration is dead code (the SSE price daemon early-returns).
 
+**Smoke-testing the jobs locally.** Every `:prod` script has a non-`:prod` ts-node peer meant for exactly this. Run them against local Postgres + Redis with Node 24 (`.nvmrc`); `evc-app/.env` points at `localhost:5432` and a Stripe **test** key, so the money paths are safe. Two things make this practical:
+
+- **`EVC_JOB_SYMBOL_LIMIT` caps the symbol list** (`endpoints/jobSymbolLimit.ts`, wired into `feed:close`, `feed:eps`, `daily:putcall`, `daily:opc`). The full lists are 1k–6k symbols against providers that answer in seconds, so an uncapped run takes hours; `EVC_JOB_SYMBOL_LIMIT=100 pnpm feed:close` exercises the same loop, upsert and tail in a couple of minutes. Unset in production, where it is a no-op.
+- **A killed job leaks its `JOBKEY_<name>` lock for 2h**, because the release lives in a `finally` that a SIGKILL skips — every later run then logs "Other process is still running, skip this run" and exits green, which reads like a pass. If a job skips unexpectedly, `redis-cli --scan --pattern 'JOBKEY*'` and delete the stale key. (The release itself is correct: a job that *throws* does release.)
+
+Two jobs need care and are not safe to just run:
+
+- **`adjust:cron` writes to the real production AWS account** (`PutRule` against CloudWatch Events in 115607939215). There is no dry-run flag; the dev variant is only "dev" in that it runs via ts-node.
+- **`daemon` really sends the `email_sent_out_task` backlog through SES.** Park the pending rows (set `sentAt`) before booting it locally, or it delivers whatever has been queued up since the last local run.
+
+`daily:insider` and the price half of `daemon` early-return by design (no insider data provider; IEX SSE is dead), so a green run of those proves startup only.
+
 `src/services/barchartService.ts` (used by `daily-opc-history` and `daily-uoa`) reaches Barchart's `core-api` proxies **through headless Chrome, not an HTTP client**. Barchart sits behind AWS WAF Bot Control, which answers any plain client — regardless of headers — with an empty `202` + `x-amzn-waf-action: challenge` and no `Set-Cookie`; the old `laravel_token`/`XSRF-TOKEN` cookie bootstrap died with it (Aug 2026). Chrome solves the challenge on page load, so the module keeps **one** Puppeteer page alive per process (`getBarchartSession`) and runs each API call as an in-page `fetch`. Two constraints when touching this file:
 
 - Don't open a session per symbol — the previous code re-poked the landing page once per symbol (~7.8k times a run), which is the pattern bot mitigation looks for.

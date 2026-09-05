@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Drawer, Table, Tooltip, Modal, Input, Typography } from 'antd';
+import { Button, Drawer, Table, Tooltip, Input, Typography } from 'antd';
 import {
   StopOutlined, PlusOutlined, RocketOutlined, CopyOutlined
 } from '@ant-design/icons';
@@ -20,6 +20,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { from } from 'rxjs';
 import { FormattedMessage } from 'react-intl';
 import dayjs from 'util/dayjs';
+import { modal } from 'util/antdStatic';
 
 const { Text } = Typography;
 
@@ -136,10 +137,10 @@ const DiscountGlobalPolicyListPage = () => {
 
   const handleEnablePolicy = (policy, toEnable) => {
     if (toEnable) {
-      Modal.confirm({
+      modal.confirm({
         title: <>Change to use this policy as the active global policy?</>,
         onOk: () => setReferralGolbalPolicyEnabled(policy.id, toEnable),
-        maskClosable: true,
+        mask: { closable: true },
         okText: 'Yes, use this'
       });
     } else {

@@ -30,6 +30,7 @@ import { getSubscriptionName } from 'util/getSubscriptionName';
 import GuestSignUpPanel from './GuestSignUpPanel';
 import useLocalStorageState from 'use-local-storage-state'
 import capitalize from 'lodash/capitalize';
+import { modal } from 'util/antdStatic';
 const { Text, Paragraph } = Typography;
 const countries = countryList();
 
@@ -212,7 +213,7 @@ const UserListPage = () => {
   const handleDelete = async (e, item) => {
     e.stopPropagation();
     const { id, email } = item;
-    Modal.confirm({
+    modal.confirm({
       title: <>Delete user</>,
       content: <>Delete user <Text code>{email}</Text>?</>,
       onOk: async () => {
@@ -220,7 +221,7 @@ const UserListPage = () => {
         await deleteUser(id);
         await searchByQueryInfo(queryInfo);
       },
-      maskClosable: true,
+      mask: { closable: true },
       okButtonProps: {
         danger: true
       },
@@ -232,12 +233,12 @@ const UserListPage = () => {
     e.stopPropagation();
     // setSetPasswordVisible(true);
     // setCurrentUser(item);
-    Modal.confirm({
+    modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
       content: <>To impersonate user <Text code>{item.email}</Text></>,
       okText: 'Yes, impersonate',
-      maskClosable: true,
+      mask: { closable: true },
       onOk: async () => {
         await impersonate(item.email);
         reactLocalStorage.clear();

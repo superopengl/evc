@@ -42,7 +42,7 @@ export const TagFilterButton = (props) => {
         confirmLoading={loading}
         open={visible}
         closable
-        maskClosable
+        mask={{ closable: true }}
         destroyOnHidden={true}
         onOk={handleOk}
         onCancel={handleCancel}

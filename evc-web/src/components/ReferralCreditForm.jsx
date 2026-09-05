@@ -15,8 +15,8 @@ import { saveDiscountUserPolicy, deleteDiscountUserPolicy } from 'services/disco
 import CreditHistoryListDrawer from 'components/CreditHistoryListDrawer';
 import { TimeAgo } from 'components/TimeAgo';
 import { from } from 'rxjs';
-import { Modal } from 'antd';
 import { terminateSubscription } from 'services/subscriptionService';
+import { modal } from 'util/antdStatic';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -129,11 +129,11 @@ const ReferralCreditForm = (props) => {
   }
 
   const handleTerminateSubscription = () => {
-    Modal.confirm({
+    modal.confirm({
       title: <>Terminate subscription</>,
       content: <>Terminate the subscription of user <Text code>{user.email}</Text> right away? This operation is not revertable.</>,
       closable: true,
-      maskClosable: true,
+      mask: { closable: true },
       okText: 'Yes, terminate now',
       okButtonProps: {
         danger: true

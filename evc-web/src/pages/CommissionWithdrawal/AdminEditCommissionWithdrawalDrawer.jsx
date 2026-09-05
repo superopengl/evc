@@ -1,4 +1,4 @@
-import { Drawer, Space, Input, Button, Modal } from 'antd';
+import { Drawer, Space, Input, Button } from 'antd';
 import React from 'react';
 import { withRouter } from 'util/withRouter';
 import { changeCommissionWithdrawalStatus } from 'services/commissionService';
@@ -6,6 +6,7 @@ import CommissionWithdrawalCard from './CommissionWithdrawalCard';
 import PropTypes from 'prop-types';
 import { CloseOutlined, CheckOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
+import { modal } from 'util/antdStatic';
 
 const AdminEditCommissionWithdrawalDrawer = (props) => {
   const { value, onClose } = props;
@@ -32,10 +33,10 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
   }
 
   const handleReject = async () => {
-    Modal.confirm({
+    modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title: 'Reject the withdrawal application',
-      maskClosable: true,
+      mask: { closable: true },
       closable: false,
       onOk: () => handleChangeStatus('rejected'),
       okText: 'Reject',
@@ -46,11 +47,11 @@ const AdminEditCommissionWithdrawalDrawer = (props) => {
   }
 
   const handleApprove = async () => {
-    Modal.confirm({
+    modal.confirm({
       icon: <ExclamationCircleOutlined />,
       title: 'Complete the withdrawal application',
       content: <><strong>${item.amount}</strong> will be deducted from the user's credit.</>,
-      maskClosable: true,
+      mask: { closable: true },
       closable: false,
       onOk: () => handleChangeStatus('done'),
       okText: 'Complete',

@@ -1,9 +1,12 @@
-import { notification } from 'antd';
+// Not antd's static `notification`: that renders in its own root, outside
+// <ConfigProvider>, so it loses the theme. See util/antdStatic.
+import { notification } from 'util/antdStatic';
 
 function request(level, title, content, duration) {
   const key = `${title}`;
-  notification[level].call(this, {
-    message: title,
+  notification[level]({
+    // `title`, not `message`: antd 6 renamed the heading and warns on the old name.
+    title,
     description: content,
     key,
     duration: duration || 4,
@@ -13,7 +16,7 @@ function request(level, title, content, duration) {
 
   return {
     close: () => {
-      notification.close(key);
+      notification.destroy(key);
     }
   }
 }
@@ -29,6 +32,7 @@ export const notify = {
     return request('info', title, content, duration);
   },
   warn(title, content = null) {
-    return request('warn', title, content, 5);
+    // 'warning', not 'warn': the App/hook instance drops the deprecated alias.
+    return request('warning', title, content, 5);
   }
 }

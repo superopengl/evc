@@ -5,7 +5,7 @@ import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import { getEventSource } from 'services/eventSourceService';
 import { Subject } from 'rxjs';
-import { ConfigProvider } from 'antd';
+import { App as AntdApp, ConfigProvider } from 'antd';
 import loadable from '@loadable/component'
 import { IntlProvider } from "react-intl";
 import antdLocaleEN from 'antd/locale/en_US';
@@ -14,6 +14,7 @@ import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { antdTheme } from './antdTheme';
+import { AntdStaticHolder } from 'util/antdStatic';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { reactLocalStorage } from 'util/reactLocalStorage';
 import { from } from 'rxjs';
@@ -150,6 +151,10 @@ const App = () => {
     <GlobalContext.Provider value={contextValue}>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_EVC_GOOGLE_SSO_CLIENT_ID}>
       <ConfigProvider locale={antdLocale} theme={antdTheme}>
+        {/* component={false} renders no wrapper element - antd's App defaults to a <div>, which
+            would sit between ConfigProvider and ProLayout and break its full-height layout. */}
+        <AntdApp component={false}>
+        <AntdStaticHolder />
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             {/* v6 matches exactly by default, so `exact` is gone. The last route keeps the
@@ -170,6 +175,7 @@ const App = () => {
             </Routes>
           </BrowserRouter>
         </IntlProvider>
+        </AntdApp>
       </ConfigProvider>
       </GoogleOAuthProvider>
     </GlobalContext.Provider>

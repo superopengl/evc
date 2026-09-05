@@ -50,7 +50,7 @@ const CreditHistoryListDrawer = (props) => {
       title={<FormattedMessage id="text.creditHistory" />}
       open={visible}
       closable={true}
-      maskClosable={true}
+      mask={{ closable: true }}
       destroyOnClose={false}
       onClose={() => onOk()}
       width={400}

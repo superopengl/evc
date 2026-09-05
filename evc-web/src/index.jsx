@@ -1,6 +1,5 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { ConfigProvider } from 'antd';
 
 // Self-hosted webfonts, bundled by Vite rather than pulled from a CDN, so the
 // Docker build has no network dependency and there is no render-blocking
@@ -17,15 +16,14 @@ import '@fontsource/ibm-plex-mono/600.css';
 
 import './index.less';
 import App from './App';
-import { antdTheme } from './antdTheme';
 import * as serviceWorker from './serviceWorker';
 
-// The static Modal.confirm/info/warning calls (14 of them) render into their own React root, so
-// they never see the <ConfigProvider theme> in App.jsx - antd warns "Static function can not
-// consume context" and they come out in stock antd blue instead of the brand green. This sets
-// the global theme those detached roots read, which is cheaper than routing every call site
-// through App.useApp().
-ConfigProvider.config({ theme: antdTheme });
+// There was a ConfigProvider.config({ theme }) call here to theme the static Modal.confirm /
+// notification.error dialogs, which render in their own React root and never see the
+// <ConfigProvider theme> in App.jsx. It only ever patched the colours - antd still warned
+// "Static function can not consume context", because the detached root misses locale and
+// everything else too. Those call sites now go through antd's <App> instead; see
+// util/antdStatic. Nothing reads the global config any more, so it is gone.
 
 console.log(process.env);
 

@@ -17,6 +17,7 @@ import { FormattedMessage } from 'react-intl';
 import MySubscriptionHistoryPanel from './MySubscriptionHistoryPanel';
 import { from } from 'rxjs';
 import dayjs from 'util/dayjs';
+import { modal } from 'util/antdStatic';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('components/CreditHistoryListDrawer'));
@@ -105,12 +106,12 @@ const MyAccountPage = (props) => {
   const isCurrentFree = currentPlanKey === 'free';
 
   const handleTurnOffRecurring = () => {
-    Modal.confirm({
+    modal.confirm({
       title: 'Turn off subscription auto-renew',
       icon: <QuestionCircleOutlined />,
       content: 'The change will take effect from your next payment. Continue?',
       okText: 'Yes, turn off auto-renew',
-      maskClosable: true,
+      mask: { closable: true },
       onOk: async () => {
         await turnOffSubscriptionRecurring();
         load();
@@ -125,7 +126,7 @@ const MyAccountPage = (props) => {
     }
 
     if (currentSubscription?.lastRecurring) {
-      Modal.warning({
+      modal.warning({
         title: 'Auto-renew Payment is On',
         content: <Paragraph>
           The auto-renew payment is on for your current or last subscription. You need to turn it off before changing a plan.

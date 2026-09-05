@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CheckOutlined, CloseOutlined, TagFilled } from '@ant-design/icons';
-import { Button, Tag, Row, Col, Modal, Input, Alert, Typography } from 'antd';
+import { Button, Tag, Row, Col, Input, Alert, Typography } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import styled from 'styled-components';
 import { createCustomTag, deleteCustomTag } from 'services/watchListService';
 import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
+import { modal } from 'util/antdStatic';
 
 const { Paragraph } = Typography;
 const StyledTag = styled(Tag)`
@@ -56,10 +57,10 @@ export const StockCustomTagFilterPanel = (props) => {
 
   const handleDeleteTag = async (e, tag) => {
     e.stopPropagation();
-    Modal.confirm({
+    modal.confirm({
       title: intl.formatMessage({id: 'text.deleteCustomTagTitle'}, {tag: <Tag>{tag.name}</Tag>}),
       content: intl.formatMessage({id: 'text.deleteCustomTagMessage'}),
-      maskClosable: true,
+      mask: { closable: true },
       onOk: async () => {
         await deleteCustomTag(tag.id);
         onDeleteTag(tag.id);

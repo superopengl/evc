@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Modal, Divider } from 'antd';
+import { Typography, Divider } from 'antd';
 import StockList from '../../components/StockList';
 import { getWatchList, listCustomTags } from 'services/watchListService';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { from } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { StockCustomTagFilterPanel } from 'components/StockCustomTagFilterPanel';
 import { reactLocalStorage } from 'util/reactLocalStorage';
+import { modal } from 'util/antdStatic';
 
 const { Paragraph } = Typography;
 
@@ -37,7 +38,7 @@ const StockWatchListPage = (props) => {
       await context.reloadCustomTags();
       if (!selectedTagIds.length && !resp?.data?.length) {
         // Go to /stock page if nothing gets watched.
-        Modal.info({
+        modal.info({
           title: 'Empty Watchlist',
           content: <>You are not watching any stock. On the Stock Radar page, clicking <StarOutlined style={{ fontSize: 18, color: '#8c8c8c' }} /> icon to add stock to your watchlist.</>,
           onOk: () => props.history.push('/stock'),

@@ -19,6 +19,7 @@ import StockEditTagModal from 'components/StockEditTagModal';
 import { updateStock, factorStockValue } from 'services/stockService';
 import { StockNoticeButton } from 'components/StockNoticeButton';
 import { from } from 'rxjs';
+import { modal } from 'util/antdStatic';
 
 const { Text, Paragraph } = Typography;
 
@@ -83,10 +84,10 @@ const StockDetailPage = (props) => {
   }
 
   const handleDeleteStock = () => {
-    Modal.confirm({
+    modal.confirm({
       title: `Permanately delete ${symbol} from EVC`,
       closable: true,
-      maskClosable: true,
+      mask: { closable: true },
       content: <>
         <Paragraph>
           This operation is not revertable. All the associabled data (supports, resistances, fair values) with this stock will be deleted. System may take several minutes to update all views.
@@ -183,7 +184,7 @@ const StockDetailPage = (props) => {
           open={bulkEditVisible}
           title="Bulk edit values"
           closable={true}
-          maskClosable
+          mask={{ closable: true }}
           destroyOnClose
           width={300}
           footer={null}

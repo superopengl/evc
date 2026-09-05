@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Upload, Button, Modal } from 'antd';
+import { Upload, Button } from 'antd';
 import { getOperationStatus } from 'services/dataService';
 import { interval } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { notify } from 'util/notify';
 import { API_BASE_URL } from 'services/http';
 import { UploadOutlined } from '@ant-design/icons';
 import { from } from 'rxjs';
+import { modal } from 'util/antdStatic';
 
 
 export const LongRunningActionButton = props => {
@@ -54,10 +55,10 @@ export const LongRunningActionButton = props => {
   }, [loading]);
 
   const handleConfirm = () => {
-    Modal.confirm({
+    modal.confirm({
       title: buttonText,
       closable: true,
-      maskClosable: true,
+      mask: { closable: true },
       content: confirmMessage,
       onOk: async () => {
         await onOk();

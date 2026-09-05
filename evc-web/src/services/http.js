@@ -1,7 +1,7 @@
 import axios from 'axios';
 import get from 'lodash/get';
 import { notify } from 'util/notify';
-import { Modal } from 'antd';
+import { modal } from 'util/antdStatic';
 import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import queryString from 'query-string';
 import { Subject, of } from 'rxjs';
@@ -51,10 +51,10 @@ function reloadPage() {
 function handleSessionTimeout() {
   if (!isSessionTimeoutModalOn) {
     isSessionTimeoutModalOn = true;
-    Modal.warning({
+    modal.warning({
       title: 'Session timeout',
       content: 'Your session is timeout.',
-      maskClosable: false,
+      mask: { closable: false },
       closable: false,
       okText: 'Reload page',
       onOk: () => {

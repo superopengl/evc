@@ -51,7 +51,7 @@ const CreditHistoryListDrawer = (props) => {
       open={visible}
       closable={true}
       mask={{ closable: true }}
-      destroyOnClose={false}
+      destroyOnHidden={false}
       onClose={() => onOk()}
       width={400}
       footer={

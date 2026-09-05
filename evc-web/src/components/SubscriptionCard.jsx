@@ -82,7 +82,7 @@ export const SubscriptionCard = props => {
       hoverable={interactive}
       onClick={onClick}
       size="large"
-      bodyStyle={{paddingTop: shouldApplyDiscount ? 0 : 24}}
+      styles={{ body: { paddingTop: shouldApplyDiscount ? 0 : 24 } }}
     // bodyStyle={{backgroundColor: bgColor}}
     // headerStyle={{backgroundColor: bgColor}}
     >

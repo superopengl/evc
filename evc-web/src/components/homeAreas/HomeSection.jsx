@@ -140,8 +140,11 @@ const Panel = styled.div`
 
   /* StockRadarPage's stock cards. antd 6 ignores bordered={false} - it wants variant - so
      every one of them came back outlined: twelve hairline boxes inside a frameless pane,
-     which is exactly the bordered-card look the pane exists to get rid of. The over/under
-     valued washes are meaningful and stay, but as alpha so the pane shows through them. */
+     which is exactly the bordered-card look the pane exists to get rid of. StockInfoCard
+     passes variant="borderless" now, but the radius/overflow/background below are still this
+     rule's job, and it keeps catching any card in here that does not opt out itself. The
+     over/under valued washes are meaningful and stay, but as alpha so the pane shows
+     through them. */
   .ant-card {
     border: none !important;
     border-radius: 18px;

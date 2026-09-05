@@ -279,7 +279,7 @@ const MyAccountPage = (props) => {
             closable={!paymentLoading}
            
             title="Subscribe plan"
-            destroyOnClose
+            destroyOnHidden
             footer={null}
             width={520}
             onOk={handleCancelPayment}

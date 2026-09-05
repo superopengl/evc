@@ -19,17 +19,21 @@ const StyledCard = styled(Card)`
 `;
 
 export const MemberOnlyCard = (props) => {
-  const { paidOnly = false, message, children, blockedComponent, bodyStyle: propBodyStyle, ...otherProps } = props;
+  // `styles`, not `bodyStyle`: antd 6 deprecates the flat style props in favour of one semantic
+  // `styles` object, and this took its own name straight from the antd one it forwards. Because
+  // that forwarding went through {...otherProps}, grepping for `bodyStyle=` on a <Card> would
+  // never have found the six call sites in StockDisplayPanel.
+  const { paidOnly = false, message, children, blockedComponent, styles: propStyles, ...otherProps } = props;
   const context = React.useContext(GlobalContext);
   const { role } = context;
   const shouldBlock = paidOnly && !['admin', 'agent', 'member'].includes(role);
 
   const bodyStyle = shouldBlock ? {
-    ...propBodyStyle,
+    ...propStyles?.body,
     overflow: 'auto',
     backgroundColor: 'rgba(0, 41, 61, 0.1)',
   } : {
-    ...propBodyStyle,
+    ...propStyles?.body,
     overflow: 'auto'
   };
   const headStyle = shouldBlock ?
@@ -46,10 +50,9 @@ export const MemberOnlyCard = (props) => {
   return (
     <StyledCard
       type="inner"
-      bordered={false}
+      variant="borderless"
       {...otherProps}
-      bodyStyle={bodyStyle}
-      headStyle={headStyle}
+      styles={{ ...propStyles, body: bodyStyle, header: headStyle }}
       size="small"
     >
       {shouldBlock ? <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>

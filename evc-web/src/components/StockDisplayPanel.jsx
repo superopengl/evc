@@ -82,7 +82,7 @@ const StockDisplayPanel = (props) => {
             <Row gutter={[30, 30]}>
               <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
                 <StockQuotePanel symbol={stock.symbol} />
-                <MemberOnlyCard title={<FormattedMessage id="text.nextReportDate" />} bodyStyle={{ height: 65 }} style={{ marginTop: 30 }}>
+                <MemberOnlyCard title={<FormattedMessage id="text.nextReportDate" />} styles={{ body: { height: 65 } }} style={{ marginTop: 30 }}>
                   <StockNextReportDatePanel symbol={stock.symbol} />
                 </MemberOnlyCard>
               </Col>
@@ -90,7 +90,7 @@ const StockDisplayPanel = (props) => {
                 <MemberOnlyCard
                   title={<FormattedMessage id="text.evcCoreInfo" />}
                   paidOnly={true}
-                  bodyStyle={{ height: 320 }}
+                  styles={{ body: { height: 320 } }}
                   blockedComponent={
                     <StockUnpaidEvcInfoPanel fairValues={stock.fairValues || []} />
                   }>
@@ -107,7 +107,7 @@ const StockDisplayPanel = (props) => {
         {showInlineStockChart && <Row style={{ marginTop: 30 }}>
           <Col span={24}>
             <MemberOnlyCard title={<FormattedMessage id="text.optionPutCallRatio" />} paidOnly={true}
-            //  bodyStyle={{ height: 450 }}
+            //  styles={{ body: { height: 450 } }}
             >
               <OptionPutCallHistoryChart symbol={stock.symbol} />
             </MemberOnlyCard>
@@ -115,7 +115,7 @@ const StockDisplayPanel = (props) => {
         </Row>}
         <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} paidOnly={true} bodyStyle={{ padding: 0 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} paidOnly={true} styles={{ body: { padding: 0 } }}>
               <StockOptionPutCallPanel symbol={stock.symbol} lastDayOnly={true} />
             </MemberOnlyCard>
           </Col>
@@ -134,19 +134,19 @@ const StockDisplayPanel = (props) => {
         </Row>}
         {shouldShowRoster && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
           <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
-            <MemberOnlyCard title={<FormattedMessage id="text.roster" />} bodyStyle={{ height: 500 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.roster" />} styles={{ body: { height: 500 } }}>
               <StockRosterPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
           <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 16, xxl: 18 }}>
-            <MemberOnlyCard title={<FormattedMessage id="text.insiderTransactions" />} paidOnly={true} bodyStyle={{ height: 500 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.insiderTransactions" />} paidOnly={true} styles={{ body: { height: 500 } }}>
               <StockInsiderTransactionPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>
         </Row>}
         <Row style={{ marginTop: 30 }}>
           <Col span={24}>
-            <MemberOnlyCard title={<FormattedMessage id="text.news" />} bodyStyle={{ maxHeight: 700 }}>
+            <MemberOnlyCard title={<FormattedMessage id="text.news" />} styles={{ body: { maxHeight: 700 } }}>
               <StockNewsPanel symbol={stock.symbol} />
             </MemberOnlyCard>
           </Col>

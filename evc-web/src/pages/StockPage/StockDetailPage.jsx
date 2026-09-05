@@ -185,7 +185,7 @@ const StockDetailPage = (props) => {
           title="Bulk edit values"
           closable={true}
           mask={{ closable: true }}
-          destroyOnClose
+          destroyOnHidden
           width={300}
           footer={null}
           onOk={() => setBulkEditVisible(false)}

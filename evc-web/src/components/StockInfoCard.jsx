@@ -233,7 +233,7 @@ const StockInfoCard = (props) => {
   return <StyledCard
     size="small"
     className={className}
-    bordered={false}
+    variant="borderless"
     type="inner"
     title={title ?? <StockName value={stock} showsLogo={true} />}
     extra={isMember && <Space>

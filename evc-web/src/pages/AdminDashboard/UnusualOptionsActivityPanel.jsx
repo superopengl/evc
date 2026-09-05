@@ -296,7 +296,10 @@ const UnusualOptionsActivityPanel = (props) => {
           </Tooltip>
         </Descriptions.Item>
         <Descriptions.Item label="Trade Date">
-          <DatePicker.RangePicker allowClear picker="date" disabled={queryInfo.lastDayOnly} placeholder={['From', 'To']} onChange={handleTimeChange} />
+          {/* rc-picker warns when a range field is `disabled` while empty, because the range can
+              then never be completed. `allowEmpty` says that is intended - this is an optional
+              filter, and handleTimeChange already tolerates a missing end. */}
+          <DatePicker.RangePicker allowClear allowEmpty={[true, true]} picker="date" disabled={queryInfo.lastDayOnly} placeholder={['From', 'To']} onChange={handleTimeChange} />
         </Descriptions.Item>
       </Descriptions>
       <Table

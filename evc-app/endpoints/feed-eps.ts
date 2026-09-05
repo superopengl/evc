@@ -11,6 +11,7 @@ import { refreshMaterializedView } from '../src/refreshMaterializedView';
 import { executeWithDataEvents } from '../src/services/dataLogService';
 import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFairValueChangedNotification';
 import { v4 as uuidv4 } from 'uuid';
+import { applyJobSymbolLimit } from './jobSymbolLimit';
 
 const JOB_NAME = 'feed-eps';
 
@@ -39,7 +40,7 @@ start(JOB_NAME, async () => {
         },
         select: { symbol: true },
       });
-    const symbols = stocks.map(s => s.symbol);
+    const symbols = applyJobSymbolLimit(stocks.map(s => s.symbol), JOB_NAME);
 
     let count = 0;
     const failed = [];

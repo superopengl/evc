@@ -8,6 +8,7 @@ import { closeBarchartSession, grabOptionPutCallHistory } from '../src/services/
 import { sleep } from '../src/utils/sleep';
 import { OptionPutCallAllDefInformation } from '../src/entity/views/OptionPutCallAllDefInformation';
 import errorToJson from 'error-to-json';
+import { applyJobSymbolLimit } from './jobSymbolLimit';
 
 const JOB_NAME = 'daily-opc-history';
 
@@ -54,10 +55,12 @@ start(JOB_NAME, async () => {
   console.log('Grabing option history');
   let counter = 0;
 
-  const optionPutCallDef = await getRepository(OptionPutCallAllDefInformation)
-    .createQueryBuilder()
-    .select(['symbol', '"apiSymbol"', 'type'])
-    .execute();
+  const optionPutCallDef = applyJobSymbolLimit<{ symbol: string; apiSymbol: string; type: string }>(
+    await getRepository(OptionPutCallAllDefInformation)
+      .createQueryBuilder()
+      .select(['symbol', '"apiSymbol"', 'type'])
+      .execute(),
+    JOB_NAME);
 
   const dataLimitBySymbol = await getDataLimitBySymbol();
 

@@ -16,6 +16,7 @@ import { handleWatchlistFairValueChangedNotification } from './handleWatchlistFa
 import { StockDailyClose } from '../src/entity/StockDailyClose';
 import { redisCache } from '../src/services/redisCache';
 import { v4 as uuidv4 } from 'uuid';
+import { applyJobSymbolLimit } from './jobSymbolLimit';
 
 const JOB_NAME = 'feed-historical-close';
 
@@ -132,7 +133,7 @@ start(JOB_NAME, async () => {
       .select('s.symbol as symbol')
       .orderBy('s.symbol', 'ASC')
       .execute();
-    const symbols = stocks.map(s => s.symbol);
+    const symbols = applyJobSymbolLimit<string>(stocks.map(s => s.symbol), JOB_NAME);
 
     let count = 0;
     const failed = [];

@@ -8,6 +8,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import { getAdvancedStat, isUSMarkertOpenNow } from '../src/services/alphaVantageService';
 import { mapWithRateLimit } from '../src/utils/mapWithRateLimit';
+import { applyJobSymbolLimit } from './jobSymbolLimit';
 
 // Same API key as feed-eps, which already runs at this budget.
 const MAX_CALL_TIMES_PER_MINUTE = 300;
@@ -54,7 +55,7 @@ start(JOB_NAME, async () => {
     .createQueryBuilder()
     .select('symbol')
     .getRawMany();
-  const symbols = stocks.map(s => s.symbol);
+  const symbols = applyJobSymbolLimit(stocks.map(s => s.symbol), JOB_NAME);
 
   const batchSize = 100;
   let round = 0;

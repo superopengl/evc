@@ -150,27 +150,6 @@ const Actions = styled.div`
   gap: ${ACTION_GAP}px;
 `;
 
-/**
- * Solid ink rather than the theme green: the primary action used to be #57BB60 on a #57BB60
- * band, which left the highest-intent button on the page all but invisible. #06202e is the
- * same ink as the header, footer and sider, so it stays inside the existing palette.
- */
-const SignUpButton = styled(Button)`
-  &&& {
-    width: ${ACTION_WIDTH}px;
-    height: 40px;
-    background: var(--evc-ink);
-    border-color: var(--evc-ink);
-    color: #ffffff;
-    box-shadow: 0 8px 22px rgba(6, 32, 46, 0.22);
-
-    &:hover {
-      background: var(--evc-ink-raise);
-      border-color: var(--evc-ink-raise);
-      color: #ffffff;
-    }
-  }
-`;
 
 // List -> Listy. styled() still applies for the container metrics; the item rules move to
 // Listy's styles.item, which also has to switch off the divider Listy draws by default.
@@ -308,9 +287,28 @@ const HomeCarouselAreaRaw = props => {
               </SearchSlot>
 
               <Actions>
-                <SignUpButton type="primary" onClick={() => handleSignOn()}>
+                {/*
+                  * Dark, not the theme green: the primary action used to be #57BB60 on a
+                  * #57BB60 band, which left the highest-intent button on the page all but
+                  * invisible. The gradient runs teal -> ink -> deep green, so it picks up
+                  * both hero hues while every stop stays dark enough to hold white text.
+                  *
+                  * classNames/styles are antd 6's semantic API - the supported way to reach a
+                  * component's root node without wrapping it in styled(). Note the Button
+                  * itself has no gradient feature: `color` only takes the preset palette
+                  * names (primary, blue, red...) and there is no gradient design token, so
+                  * the fill is CSS on the root either way. The width is passed through
+                  * `styles` because it comes from the JS constant the Google button is also
+                  * sized from; everything with a hover state lives in the class.
+                  */}
+                <Button
+                  type="primary"
+                  classNames={{ root: 'evc-hero-cta' }}
+                  styles={{ root: { width: ACTION_WIDTH } }}
+                  onClick={() => handleSignOn()}
+                >
                   <FormattedMessage id="button.signUpWithEmail" />
-                </SignUpButton>
+                </Button>
                 <GoogleSsoButton width={ACTION_WIDTH} />
               </Actions>
             </Lockup>

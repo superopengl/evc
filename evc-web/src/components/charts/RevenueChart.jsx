@@ -35,23 +35,25 @@ const RevenueChart = props => {
     data: data,
     xField: 'time',
     yField: 'value',
-    seriesField: 'type',
-    isPercent: true,
-    isStack: true,
+    // `seriesField` only splits in G2 v5; `colorField` splits *and* colours, as v4's did.
+    colorField: 'type',
+    // isPercent/isStack are now percent/stack (they map to the normalizeY/stackY transforms).
+    percent: true,
+    stack: true,
     label: {
-      position: 'middle',
-      content: function content(item) {
-        return item.value.toFixed(2);
-      },
+      // v4's 'middle' is not a G2 v5 position, and `content` is now `text`.
+      position: 'inside',
+      text: (item) => item.value.toFixed(2),
       style: { fill: '#000' },
     },
-    color: ['#55B0D4', '#d7183f', '#fa8c16'],
-    // xAxis: { type: 'time' },
-    yAxis: {
-      label: {
-        formatter: (v) => {
-          return `$ ${(+v).toLocaleString()}`;
-        },
+    // v4's top-level `color: [...]` array is now the color scale's range.
+    scale: {
+      color: { range: ['#55B0D4', '#d7183f', '#fa8c16'] },
+    },
+    // axis: { x: { ... } },
+    axis: {
+      y: {
+        labelFormatter: (v) => `$ ${(+v).toLocaleString()}`,
       },
     },
   };

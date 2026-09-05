@@ -16,31 +16,26 @@ const GuestSignUpChart = props => {
     data,
     xField: 'time',
     yField: 'value',
-    seriesField: 'type',
-    isGroup: true,
-    // isPercent: true,
-    // isStack: true,
+    // `seriesField` only splits in G2 v5; `colorField` splits *and* colours, as v4's did.
+    colorField: 'type',
+    // isGroup/isStack/isPercent are now group/stack/percent (they map to G2 transforms).
+    group: true,
+    // percent: true,
+    // stack: true,
     label: {
-      position: 'middle',
-      layout: [
-        { type: 'interval-adjust-position' },
-        { type: 'interval-hide-overlap' },
-        { type: 'adjust-color' },
+      // v4's 'middle' is not a G2 v5 position, and `layout` is now `transform`.
+      position: 'inside',
+      transform: [
+        { type: 'exceedAdjust' },
+        { type: 'overlapHide' },
+        { type: 'contrastReverse' },
       ],
-      // content: function content(item) {
-      //   return item.value;
-      // },
-      // style: { fill: '#000' },
+      // text: (item) => item.value,
     },
-    color: ['#fa8c16', '#55B0D4'],
-    // xAxis: { type: 'time' },
-    // yAxis: {
-    //   label: {
-    //     formatter: (v) => {
-    //       return `$ ${(+v).toLocaleString()}`;
-    //     },
-    //   },
-    // },
+    // v4's top-level `color: [...]` array is now the color scale's range.
+    scale: {
+      color: { range: ['#fa8c16', '#55B0D4'] },
+    },
   };
 
   // return <Line {...config} />

@@ -319,43 +319,39 @@ const PutCallDummyChart = () => {
     data: data,
     xField: 'date',
     yField: 'value',
-    seriesField: 'type',
-    smooth: false,
-    //// Don't enable xAxis, which will break tooltip on window resizing. 
-    // xAxis: {
-    //   type: 'time',
-    //   nice: true,
-    // },
-    yAxis: {
-      nice: true,
-      position: 'right',
-      // min: 0,
-      // max: 200,
-      tickCount: 10,
-      visible: true,
-      label: {
-        formatter: (label) => {
+    // v4's `seriesField` both split and coloured the lines; in G2 v5 `encode.series` only splits,
+    // and `colorField` is what does both (MaybeSeries infers the series from the color channel).
+    colorField: 'type',
+    //// Don't enable axis.x, which will break tooltip on window resizing.
+    // axis: { x: { ... } },
+    scale: {
+      y: { nice: true },
+      // v4's top-level `color: [...]` array is now the color scale's range.
+      color: { range: ['#1570FF', '#ffc53d', '#F31dab'] },
+    },
+    axis: {
+      y: {
+        position: 'right',
+        tickCount: 10,
+        labelFormatter: (label) => {
           const value = +label;
 
           return value === 100 ? '0%\n1.0' : value < 100 ? (value / 100).toFixed(1) : (value - 100) + '%';
         },
+        grid: true,
+        gridLineWidth: 0.5,
+        gridLineDash: [3, 2],
       },
-      grid: {
-        line: {
-          style: {
-            lineWidth: 0.5,
-            lineDash: [3, 2],
-          }
-        }
-      }
     },
+    // @ant-design/charts 2 turns every `annotations` entry into a child mark verbatim, with none
+    // of the parent's fields extended onto it. v4's `{type: 'line', start: ['min', 100], end:
+    // ['max', 100]}` therefore became a plain `line` mark with no x/y encode, and G2's line mark
+    // throws `Missing encode for x or y channel` for that. `lineY` is the reference-line mark:
+    // `data: [100]` is read as its y encode, against the shared y scale.
     annotations: [
       {
-        type: 'line',
-        /** 起始位置 */
-        start: ['min', 100],
-        /** 结束位置 */
-        end: ['max', 100],
+        type: 'lineY',
+        data: [100],
         style: {
           lineWidth: 1,
           stroke: '#AAAAAA',
@@ -363,23 +359,20 @@ const PutCallDummyChart = () => {
       },
     ],
     tooltip: {
-      formatter: (item, x, y) => {
-        const { value: rawValue, type } = item;
-        let value = rawValue;
-        switch (type) {
-          case 'Today %Put Vol':
-          case 'Today %Call Vol':
-            value = `${(rawValue - 100).toFixed(2)} % `;
-            break;
-          default:
-            value = (value / 100).toFixed(3);
-            break;
-        }
-        return { name: item.type, value };
-      }
+      items: [
+        (d) => {
+          const { value: rawValue, type } = d;
+          switch (type) {
+            case 'Today %Put Vol':
+            case 'Today %Call Vol':
+              return { name: type, value: `${(rawValue - 100).toFixed(2)} % ` };
+            default:
+              return { name: type, value: (rawValue / 100).toFixed(3) };
+          }
+        },
+      ],
     },
-    color: ['#1570FF', '#ffc53d', '#F31dab'],
-    lineStyle: {
+    style: {
       lineWidth: 2.0,
     },
   };

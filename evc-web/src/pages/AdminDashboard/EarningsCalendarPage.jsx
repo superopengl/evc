@@ -183,10 +183,16 @@ const EarningsCalendarPage = props => {
   const renderTitleComponent = (dayOfWeek) => {
     const date = dayjs().add(week, 'week').day(dayOfWeek);
     const isToday = date.isSame(dayjs(), 'day');
-    return <>
+    // A column title must be a real element, not a fragment. rc-table renders a hidden
+    // measure row because this table sets `scroll.x`, and that row does
+    // `cloneElement(column.title, { ref: null })` to strip refs before measuring. React 19
+    // rejects every prop but `key`/`children` on a Fragment by looking at the prop *keys*, so
+    // even `ref: null` trips "Invalid prop `ref` supplied to `React.Fragment`" - once per
+    // column per measure pass, which is why it arrived in bursts on navigation.
+    return <div>
       <div><Text style={{ fontWeight: isToday ? 800 : 400 }}>{dayOfWeek}</Text></div>
       <Text type="secondary" style={{ fontWeight: isToday ? 600 : 400 }}><small>{date.format('ll')}</small></Text>
-    </>
+    </div>
   }
 
 

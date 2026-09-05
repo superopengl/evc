@@ -7,8 +7,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "bs": "cd ./*app; pnpm dev",
-    "fs": "cd ./*web; pnpm start",
+    "start": "concurrently -n api,web -c cyan,magenta -p \"[{name}]\" \"pnpm bs\" \"pnpm fs\"",
+    "bs": "pnpm --filter evc-app dev",
+    "fs": "pnpm --filter web start",
     "docker:build": "docker build -t evc -f ./devops/Dockerfile --memory-swap -1 --memory 4g --build-arg NODE_ENV=prod --build-arg REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) --build-arg PNPM_STORE_PATH=/pnpm-store --build-context store=$(pnpm store path) .",
     "docker:rebuild": "docker build --no-cache -t evc -f ./devops/Dockerfile --memory-swap -1 --memory 4g --build-arg NODE_ENV=prod --build-arg REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) .",
     "docker:run": "docker run -p 8081:80 --rm --env-file ./devops/.env.prod evc",
@@ -24,6 +25,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.7.1",
   "devDependencies": {
+    "concurrently": "^10.0.5",
     "loadtest": "^5.2.0"
   }
 }

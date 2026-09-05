@@ -1,0 +1,4 @@
+packages:
+  - evc-app
+  - evc-web
+# evc-chrome-ext is deliberately absent: it has no package.json (unbundled JS + manifest).

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-EasyValueCheck (evc) — a stock fair-value analysis SaaS (easyvaluecheck.com). Three sub-projects in one repo, each with its own `package.json` and its own `pnpm-lock.yaml` (there is **no** pnpm workspace; install deps inside each folder):
+EasyValueCheck (evc) — a stock fair-value analysis SaaS (easyvaluecheck.com). It is a **pnpm workspace** (`pnpm-workspace.yaml`): `evc-app` and `evc-web` are the two members, with a single root `pnpm-lock.yaml` and a shared root virtual store. One `pnpm i` at the root installs both. `evc-chrome-ext` is deliberately not a member — it has no `package.json`.
 
 - `evc-app/` — TypeScript Express API + TypeORM/PostgreSQL + Redis. Also serves the built frontend as static files.
 - `evc-web/` — JavaScript React 19 SPA (Vite, antd 6, react-router 7).
@@ -12,15 +12,48 @@ EasyValueCheck (evc) — a stock fair-value analysis SaaS (easyvaluecheck.com). 
 
 Package manager is pinned to `pnpm@10.7.1` everywhere.
 
+Two consequences of the workspace that bite if you forget them:
+
+- **Only the root `.npmrc` is read for install settings.** `only-built-dependencies[]=puppeteer` lives there now (it used to be `evc-app/.npmrc`); a package-level `.npmrc` is ignored, so puppeteer would silently stop fetching its Chrome build.
+- **`rm -rf evc-web` no longer discards evc-web's dependencies** — both packages share `node_modules/.pnpm` at the root. `devops/Dockerfile` uses `pnpm deploy` to get a prod-only tree for evc-app instead; see "Deploy".
+
 ## Common commands
 
 From the repo root:
 
 ```bash
-pnpm bs          # backend: cd evc-app && pnpm dev  (nodemon + ts-node, watches src)
-pnpm fs          # frontend: cd evc-web && pnpm start (vite dev server on :6007)
+pnpm i           # installs the whole workspace (root + evc-app + evc-web)
+pnpm start       # runs the API and the SPA together via concurrently, labelled [api] / [web]
+pnpm bs          # just the backend: pnpm --filter evc-app dev (nodemon + ts-node)
+pnpm fs          # just the frontend: pnpm --filter web start (vite dev server on :6007)
 pnpm release     # docker build → push to ECR → force ECS redeploy (portal+daemon) → CloudFront invalidation
 ```
+
+`pnpm start` deliberately does **not** pass `--kill-others`: a TS error that takes down nodemon
+should not also kill the Vite server. Ctrl-C stops both.
+
+Then use **http://localhost:6007 only** — that is the whole app. The Vite dev server
+proxies `/api`, `/r/` and `/healthcheck` to the API (`server.proxy` in `vite.config.mjs`), so
+`evc-web/.env` carries the same relative `REACT_APP_EVC_API_ENDPOINT=/api/v1` the Dockerfile
+bakes into the image, and dev matches production's single origin. The API still binds its own
+port (`EVC_HTTP_PORT=6008` in `evc-app/.env`) because two processes cannot share one, but nothing
+in the browser addresses it: the proxy target is read out of `evc-app/.env` so it cannot drift
+from the port the backend actually listens on (`EVC_API_PROXY_PORT` overrides). Consequences
+worth knowing:
+
+- **No CORS or cross-site cookies locally.** The `cors()` allowlist in `src/app.ts` and the
+  manual `Access-Control-Allow-Origin` in `eventController` are now inert in the normal flow —
+  don't take their presence as proof the browser is cross-origin.
+- **A new backend route needs a proxy prefix** if it lives outside `/api`. `/r/:token` (the
+  password-reset redirect) is listed explicitly for exactly this reason; anything unlisted is
+  swallowed by Vite's SPA fallback and comes back as `index.html` with a 200, which reads like
+  the route works.
+- `EVC_API_DOMAIN_NAME` in `evc-app/.env` is `http://localhost:6007`, so emailed reset links
+  point at the proxy rather than at a port the browser no longer talks to.
+- **The Vite server is `strictPort`.** Without it Vite would take the next free port when 6007 is
+  busy — usually 6008, the API's own — and the relative `/api/v1` would proxy the app to itself.
+  It now refuses to start instead, so "port 6007 is already in use" means a stale dev server is
+  still running, not that you should use whatever port it printed.
 
 `evc-app`:
 
@@ -40,14 +73,14 @@ pnpm feed:eps        # one-off data jobs; see "Batch jobs" below
 `evc-web`:
 
 ```bash
-pnpm start     # vite dev server on :6007
+pnpm start     # vite dev server on :6007 (also proxies the API — see "Common commands")
 pnpm build     # dev-flavored build (sourcemaps on)
 pnpm compile   # production build (CLIENT_ENV=production, no sourcemaps)
 pnpm g -- Name # scaffold a component into src/components (generate-react-cli)
 pnpm p -- Name # scaffold a page into src/pages
 ```
 
-The frontend is Vite, not CRA. `vite.config.mjs` carries the pieces CRA used to provide: aliases for the bare `components/...`-style imports that used to come from `jsconfig.json` baseUrl, `define` for `process.env`, and less support. Build output still goes to `build/` so the Dockerfile's copy into `evc-app/www` is unchanged.
+The frontend is Vite, not CRA. `vite.config.mjs` carries the pieces CRA used to provide: aliases for the bare `components/...`-style imports that used to come from `jsconfig.json` baseUrl, `define` for `process.env`, less support, and the dev proxy that puts the API on the SPA's own origin. Build output still goes to `build/` so the Dockerfile's copy into `evc-app/www` is unchanged.
 
 Local config lives in gitignored `.env` files: `evc-app/.env` (TypeORM `TYPEORM_*` vars, AWS, Redis, Stripe/PayPal, AlphaVantage, Google SSO) and `evc-web/.env` (`REACT_APP_*`). `evc-app/src/index.ts` hard-fails at boot if required env vars are missing, and in non-prod also loads `.env.${NODE_ENV}` on top of `.env`.
 
@@ -114,7 +147,7 @@ Two jobs need care and are not safe to just run:
 
 Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). Both call sites launch with `--no-sandbox --disable-setuid-sandbox`. Three things to know:
 
-- **Locally**, `pnpm install` downloads the Chrome build matching the pinned puppeteer version, because `evc-app/.npmrc` sets `only-built-dependencies[]=puppeteer` (pnpm 10 skips dependency lifecycle scripts otherwise). Note the `pnpm.onlyBuiltDependencies` field in `package.json` is **not** honoured by pnpm 10.7.1 — it has to be the `.npmrc`. If the browser is ever missing, `pnpm exec puppeteer browsers install chrome` fetches it. Don't pin an old puppeteer: its Chrome is pinned too, and builds more than a year or so behind the OS crash on launch on current macOS — that was the long-standing "crashes on Apple Silicon" problem, not an arm64 issue.
+- **Locally**, `pnpm install` downloads the Chrome build matching the pinned puppeteer version, because the **root** `.npmrc` sets `only-built-dependencies[]=puppeteer` (pnpm 10 skips dependency lifecycle scripts otherwise). It has to be root: in a workspace pnpm ignores package-level `.npmrc`, and the `pnpm.onlyBuiltDependencies` field in `package.json` is **not** honoured by pnpm 10.7.1 either. (Now that `pnpm-workspace.yaml` exists, pnpm 10 would also accept `onlyBuiltDependencies` there; the `.npmrc` is what is actually verified to work, including in the image.) If the browser is ever missing, `pnpm exec puppeteer browsers install chrome` fetches it. Don't pin an old puppeteer: its Chrome is pinned too, and builds more than a year or so behind the OS crash on launch on current macOS — that was the long-standing "crashes on Apple Silicon" problem, not an arm64 issue.
 - **In the image**, `PUPPETEER_SKIP_DOWNLOAD=true` and `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable` reuse the apt-installed Chrome instead of paying ~150MB for a second browser. Those two ENVs must stay **above** the `pnpm install` lines in the Dockerfile, or the allowlisted lifecycle script downloads Chrome before the skip flag is set.
 - `page.pdf()` returns a `Uint8Array`, not a `Buffer`. `generatePdfBufferFromHtml` wraps it in `Buffer.from()` because `res.send` and the nodemailer attachments need a real Buffer.
 
@@ -144,8 +177,12 @@ Puppeteer also renders receipt PDFs (`src/utils/generatePdfBufferFromHtml.ts`). 
 - **`defaultProps` on function components does nothing in React 19.** All 128 were converted to destructuring defaults, which matches React's old semantics (apply when the prop is `undefined`). Don't reintroduce the pattern - it fails silently.
 - Entry point uses `createRoot`. antd 6 supports React 19 natively, so `@ant-design/v5-patch-for-react-19` is no longer needed and was removed.
 - Google SSO is `@react-oauth/google` (Google Identity Services). GIS only issues the id_token the backend reads from **its own rendered button**, so the old custom-antd-button `render` prop is gone for good; theme/size/width are the only styling knobs.
-- `vite.config.mjs` aliases `tslib` to one hoisted copy: `@antv/g2plot` (via `@ant-design/charts`) reaches G2 v4, whose `@antv/adjust` declares tslib ^1.10 but emits `__spreadArray`, a tslib 2.1+ helper. Note pnpm 10.7.1 ignores the `pnpm` field in `package.json` (both `overrides` and `onlyBuiltDependencies`), which is why this is a bundler alias rather than a dependency override.
+- `vite.config.mjs` aliases `tslib` to one hoisted copy: `@antv/g2plot` (via `@ant-design/charts`) reaches G2 v4, whose `@antv/adjust` declares tslib ^1.10 but emits `__spreadArray`, a tslib 2.1+ helper. Note pnpm 10.7.1 ignores the `pnpm` field in `package.json` (both `overrides` and `onlyBuiltDependencies`), which is why this is a bundler alias rather than a dependency override. Since the repo became a workspace, `overrides` in `pnpm-workspace.yaml` would be a viable alternative — but the alias works and is verified, so it has not been changed.
 
 ## Deploy
 
-`devops/Dockerfile` is a single-stage image that installs and builds both sub-projects, copies `evc-web/build` into `evc-app/www`, prunes dev deps, and runs `node index.js`. Production runs two ECS services off the same image in cluster `evc`: `evc-portal` (API + SPA) and `evc-daemon`. `devops/terraform-docker/` holds the infra definition. Note the Dockerfile bakes public client-side keys (Google SSO client id, PayPal client id, Stripe publishable key) as build args — secrets stay in the ECS task env/`devops/.env.prod`.
+`devops/Dockerfile` is a single-stage image that installs the workspace once at the root (`pnpm fetch` on the lockfile alone, then `pnpm install --offline --frozen-lockfile` on the manifests, so editing source never re-downloads), builds both packages via `--filter`, copies `evc-web/build` into `evc-app/www`, and runs `node index.js` from `/usr/portal/evc-app`. Three things there are easy to break:
+
+- **Build order.** `evc-app`'s `build:prod` starts with `rm -rf www`, so the frontend must be copied in *after* the backend compile.
+- **Pruning goes through `pnpm deploy`,** not `pnpm prune --production` + `rm -rf web`: in a workspace those leave every evc-web dependency behind in the shared root store. Only `deploy`'s `node_modules` is kept — its copy of the *package files* is discarded, because npm packing rules fall back to `.gitignore` when there is no `files` field, and `evc-app/.gitignore` lists `**/*.js` while the root lists `evc-app/www`. Letting `deploy` place the app would ship it with no compiled output and no frontend. `--legacy` is required; pnpm 10's default deploy path wants `inject-workspace-packages`.
+- These deletes do **not** shrink the finished image (Docker layers are additive) — same as the code they replaced. They exist to give the container a correct prod-only tree. A genuinely smaller image needs a second stage that copies just `/usr/portal/evc-app`. Production runs two ECS services off the same image in cluster `evc`: `evc-portal` (API + SPA) and `evc-daemon`. `devops/terraform-docker/` holds the infra definition. Note the Dockerfile bakes public client-side keys (Google SSO client id, PayPal client id, Stripe publishable key) as build args — secrets stay in the ECS task env/`devops/.env.prod`.

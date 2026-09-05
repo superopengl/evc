@@ -32,13 +32,17 @@ const OptionPutCallPage = (props) => {
   return (
     <Card style={{ backgroundColor: 'white' }}>
       <Loading loading={loading}>
-        <Tabs defaultActiveKey="stock" type="card" >
-          {
-            typedMap.map(([t, data]) => <Tabs.TabPane tab={t} key={t}>
-              <OptionPutCallPanel data={data} tagId={t} onOrdinalChange={handleOrdinalChange} showsLink={true} />
-            </Tabs.TabPane>)
-          }
-        </Tabs>
+        {/* antd 6 keeps `Tabs.TabPane` only as a deprecation shim (`() => null` plus a legacy
+            children->items conversion) and drops it in v7. `items` is the supported API. */}
+        <Tabs
+          defaultActiveKey="stock"
+          type="card"
+          items={typedMap.map(([t, data]) => ({
+            key: t,
+            label: t,
+            children: <OptionPutCallPanel data={data} tagId={t} onOrdinalChange={handleOrdinalChange} showsLink={true} />,
+          }))}
+        />
       </Loading>
     </Card>
   );

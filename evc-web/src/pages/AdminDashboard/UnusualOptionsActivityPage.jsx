@@ -8,17 +8,19 @@ const UnusualOptionsActivityPage = (props) => {
 
   return (
     <Card style={{ backgroundColor: 'white' }}>
-      <Tabs defaultActiveKey="stock" type="card">
-        <Tabs.TabPane tab="Stocks" key="stocks">
-          <UnusualOptionsActivityPanel type="stock" size={size} />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="ETFs" key="etfs">
-          <UnusualOptionsActivityPanel type="etfs" size={size} />
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="INDICES" key="index">
-          <UnusualOptionsActivityPanel type="index" size={size} />
-        </Tabs.TabPane>
-      </Tabs>
+      {/* antd 6 keeps `Tabs.TabPane` only as a deprecation shim (`() => null` plus a legacy
+          children->items conversion) and drops it in v7. `items` is the supported API.
+          `defaultActiveKey` was "stock", which matches no tab - Tabs then silently fell back
+          to the first one, so it happened to look right. */}
+      <Tabs
+        defaultActiveKey="stocks"
+        type="card"
+        items={[
+          { key: 'stocks', label: 'Stocks', children: <UnusualOptionsActivityPanel type="stock" size={size} /> },
+          { key: 'etfs', label: 'ETFs', children: <UnusualOptionsActivityPanel type="etfs" size={size} /> },
+          { key: 'index', label: 'INDICES', children: <UnusualOptionsActivityPanel type="index" size={size} /> },
+        ]}
+      />
     </Card>
   );
 };

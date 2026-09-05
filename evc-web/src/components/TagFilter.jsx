@@ -37,7 +37,7 @@ export const TagFilter = (props) => {
           key={i}
           color={t.color}
           clickable={true}
-          style={{ marginBottom: 10 }}
+          style={{ marginInlineEnd: 4, marginBottom: 10 }}
           checked={isSelected(t)}
           onClick={() => toggleSelected(t)}
         >

@@ -21,7 +21,14 @@ const Tag = (props) => {
 
   const TagComponent = clickable ? ClicableTag : AntdTag;
 
-  const colorProp = checked ? {color: '#3f9e48'} : null;
+  // `success` is one of antd's preset *status* colours, so the fill comes from the configured
+  // `colorSuccess` token (see src/antdTheme.js) rather than a hex pinned here.
+  //
+  // `variant="solid"` is load-bearing. antd 6 defaults Tag to `variant="filled"`, which for a
+  // status colour resolves to `colorSuccessBg` behind `colorSuccess` text - a pale wash. Only
+  // the solid variant puts `colorSuccess` on the background, and `.ant-tag-solid` is what sets
+  // `colorTextLightSolid` (white) on the label.
+  const colorProp = checked ? { color: 'success', variant: 'solid' } : null;
 
   return (
     <TagComponent

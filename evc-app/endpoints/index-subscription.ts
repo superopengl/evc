@@ -253,7 +253,10 @@ async function timeoutProvisioningSubscriptions() {
   const subscriptionIds = list.map(x => x.subscriptionId);
   await getManager().transaction(async m => {
     await m.save(creditTransactions);
-    m.update(Subscription, { id: In(subscriptionIds) }, { status: SubscriptionStatus.Timeout });
+    // Must be awaited inside the transaction: RevertableCreditTransaction keys off the
+    // Provisioning status alone, so if this update loses the race with COMMIT the same
+    // transactions are reverted again on the next run.
+    await m.update(Subscription, { id: In(subscriptionIds) }, { status: SubscriptionStatus.Timeout });
   });
 
   console.log(`Timed out provisioning subscriptions ${subscriptionIds.join(', ')}`);

@@ -6,7 +6,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 export const Loading = props => {
   const { loading = true, message, children } = props;
   const loadingIndicator = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-  return <Spin spinning={loading} indicator={loadingIndicator} tip={message} style={{width: '100%'}}>{children}</Spin>
+  return <Spin spinning={loading} indicator={loadingIndicator} description={message} style={{width: '100%'}}>{children}</Spin>
 }
 
 Loading.propTypes = {

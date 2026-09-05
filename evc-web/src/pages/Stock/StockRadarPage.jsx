@@ -169,7 +169,7 @@ const StockRadarPage = (props) => {
               </Button>
             </Col>
             {tags && <Col flex="auto">
-              <Divider type="vertical" style={{ height: '100%' }} />
+              <Divider orientation="vertical" style={{ height: '100%' }} />
             </Col>}
             {tags && <Col flex="auto">
               <TagFilterButton value={queryInfo.tags} group={true} onChange={handleTagFilterChange} tags={tags} />

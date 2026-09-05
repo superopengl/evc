@@ -53,7 +53,7 @@ const CreditHistoryListDrawer = (props) => {
       mask={{ closable: true }}
       destroyOnHidden={false}
       onClose={() => onOk()}
-      width={400}
+      size={400}
       footer={
         <>
           <Text strong>Sub Total</Text>
@@ -61,7 +61,7 @@ const CreditHistoryListDrawer = (props) => {
         </>
 
       }
-      footerStyle={{ textAlign: 'right' }}
+      styles={{ footer: { textAlign: 'right' } }}
     >
       <Spin spinning={loading}>
         <Listy

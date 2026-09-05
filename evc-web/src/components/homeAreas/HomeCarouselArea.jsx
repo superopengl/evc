@@ -34,31 +34,27 @@ const Container = styled.div`
   padding: clamp(116px, 12vw, 168px) var(--evc-gutter) clamp(76px, 9vw, 124px);
 
   /**
-   * The bands live on a pseudo-element only so the bloom can sit on the same layer as them.
-   *
    * The bottom edge is a clean cut, not a fade. Two versions of a fade were tried - an
    * ink-coloured overlay, then a mask down to transparent - and both dragged the two bright
    * greens through the navy on the way down, which comes out as a band of olive sludge. The
    * bands are saturated and the page below is dark; there is no intermediate state between
    * them that is not muddy, so the two surfaces just meet.
    *
-   * The bloom is a soft white radial behind the lockup: the bands are hard-edged and one of
-   * the four seams runs close to the wordmark, so it lifts the type off whichever band it
-   * lands on. Kept tight and at 0.22 - at 0.42 across the full width it desaturated the two
-   * greens, and the gradient losing its punch is the one thing this must not do.
+   * There is no white veil over the bands either. A soft bloom used to sit behind the lockup
+   * to lift the type off whichever band it landed on, but white over a saturated green comes
+   * out chalky, and ink type on top of that read as grey-on-grey rather than as black on
+   * green. The bands are clean and the type carries its own contrast instead.
    */
   &::before {
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image:
-      radial-gradient(38% 40% at 28% 44%, rgba(255, 255, 255, 0.22), transparent 72%),
-      linear-gradient(-45deg,
-        #89dff1, #89dff1 25%,
-        #55b0d4 25%, #55b0d4 50%,
-        #7dd487 50%, #7dd487 75%,
-        #57bb60 75%, #57bb60 100%);
+    background-image: linear-gradient(-45deg,
+      #89dff1, #89dff1 25%,
+      #55b0d4 25%, #55b0d4 50%,
+      #7dd487 50%, #7dd487 75%,
+      #57bb60 75%, #57bb60 100%);
   }
 
   /* The bands are on a pseudo-element, so the content has to sit above it. */
@@ -115,13 +111,17 @@ const Lockup = styled.div`
     color: var(--evc-ink);
   }
 
+  /* Solid, not ink at 0.72. Translucent black over a saturated band does not read as a
+     lighter black - it mixes with the green and lands on olive, which is what made the line
+     under the wordmark look dirty. Every colour in this lockup is opaque for that reason;
+     the hierarchy comes from weight and size rather than from alpha. */
   .evc-catch-phrase.ant-typography {
     margin: 12px 0 0;
     max-width: 460px;
     font-size: clamp(15px, 1.5vw, 18px);
     font-weight: 500;
     line-height: 1.5;
-    color: rgba(6, 32, 46, 0.72);
+    color: var(--evc-ink-raise);
   }
 `;
 
@@ -227,7 +227,7 @@ const SloganCard = styled.div`
     font-size: 14.5px;
     font-weight: 500;
     line-height: 1.5;
-    color: rgba(6, 32, 46, 0.86);
+    color: var(--evc-ink);
   }
 
   @media (prefers-reduced-motion: reduce) {

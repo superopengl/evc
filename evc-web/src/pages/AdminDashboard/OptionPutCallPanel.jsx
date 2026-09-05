@@ -164,7 +164,6 @@ const OptionPutCallPanel = (props) => {
         placeholder='ordinal'
         min={1}
         max={9999}
-        allowClear
         onBlur={e => handleChangeOrder(record, e.target.value)} />,
 
     } : null,

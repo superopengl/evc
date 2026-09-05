@@ -191,7 +191,9 @@ const TagManagementPanel = (props) => {
       showHeader={true}
       dataSource={list}
       size="small"
-      rowKey="id"
+      // The first row is the unsaved NEW_TAG_ITEM, which has no id, so `rowKey="id"` gave it
+      // key={undefined} and React warned about duplicate keys once per panel.
+      rowKey={item => item.id ?? 'new'}
       loading={loading}
       pagination={false}
     />

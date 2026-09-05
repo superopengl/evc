@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from 'antd';
+import { Flex, Select } from 'antd';
 import Tag from './Tag';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { createCustomTag } from 'services/watchListService';
@@ -43,11 +43,13 @@ const StockCustomTagSelect = (props) => {
 
   return <Container>
     {readonly ?
-      <>
+      // antd 6 dropped Tag's default `margin-inline-end`, so a bare list of them runs together.
+      // Flex supplies the gap, plus the row gap the old margin never gave when the list wrapped.
+      <Flex wrap gap="small">
         {(context.customTags || [])
           .filter(t => (selected || []).includes(t.id))
           .map((t, i) => <Tag color="#55B0D4" key={i}>{t.name}</Tag>)}
-      </>
+      </Flex>
       :
       <Select
         placeholder={intl.formatMessage({id: 'text.selectTags'})}

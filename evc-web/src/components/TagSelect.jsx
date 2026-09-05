@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tag as AntdTag } from 'antd';
+import { Flex, Tag as AntdTag } from 'antd';
 import Tag from './Tag';
 import CreatableSelect from 'react-select/creatable';
 import { v4 as uuidv4 } from 'uuid';
@@ -157,7 +157,11 @@ const TagSelect = (props) => {
   }
 
   if (readonly) {
-    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color="#00293d">{x.label}</AntdTag>)}</>
+    // antd 6 dropped Tag's default `margin-inline-end`, so a bare list of them runs together.
+    // Flex supplies the gap - and the row gap the old margin never gave when the list wrapped.
+    return <Flex wrap gap="small">
+      {selectedOptions.map((x, i) => <AntdTag key={i} color="#00293d">{x.label}</AntdTag>)}
+    </Flex>
   }
 
   return <CreatableSelect

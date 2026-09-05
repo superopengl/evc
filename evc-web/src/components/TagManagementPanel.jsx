@@ -71,9 +71,12 @@ const TagManagementPanel = (props) => {
       />
     } : null,
     showIncludesOptionPutCall ? {
-      title: <>Put/call fetch ordinal
+      // <div>, not a fragment - rc-table's measure row clones the title with `ref: null`, which
+      // React 19 rejects on a Fragment. Harmless while this table has no `scroll.x` (no measure
+      // row), but it warns the moment one is added.
+      title: <div>Put/call fetch ordinal
         <Paragraph type="secondary" style={{ margin: 0 }}>Smaller numbers will be fetched first.</Paragraph>
-      </>,
+      </div>,
       dataIndex: 'optionPutCallFetchTagOrdinal',
       render: (value, item) => item.includesOptionPutCall && <InputNumber
         value={value}

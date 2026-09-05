@@ -121,9 +121,13 @@ const AdminCommissionWithdrawalListPage = () => {
     }
   }
 
+  // The filter titles are wrapped in a <div>, not a fragment: this table sets `scroll.x`, so
+  // rc-table renders a hidden measure row that does `cloneElement(column.title, { ref: null })`,
+  // and React 19 rejects any prop but `key`/`children` on a Fragment by prop key - `ref: null`
+  // included.
   const columns = [
     {
-      title: <>
+      title: <div>
         <div>Status</div>
         <Select
           style={{ width: 120 }}
@@ -136,7 +140,7 @@ const AdminCommissionWithdrawalListPage = () => {
           <Select.Option value="done">Done</Select.Option>
           <Select.Option value="rejected">Rejected</Select.Option>
         </Select>
-      </>,
+      </div>,
       dataIndex: 'status',
       render: (value) => {
         switch (value) {
@@ -153,18 +157,18 @@ const AdminCommissionWithdrawalListPage = () => {
     },
     {
 
-      title: <>
+      title: <div>
         <div>Reference No.</div>
         <Input maxLength={36} onPressEnter={handleIdChange} onBlur={handleIdChange} allowClear />
-      </>,
+      </div>,
       dataIndex: 'id',
       render: value => <Text code>{value}</Text>,
     },
     {
-      title: <>
+      title: <div>
         <div>User</div>
         <UserSelect onChange={handleUserChange} />
-      </>,
+      </div>,
       dataIndex: 'email',
       render: value => <Text code>{value}</Text>
     },
@@ -173,14 +177,14 @@ const AdminCommissionWithdrawalListPage = () => {
       render: (value, item) => <>{item.givenName} {item.surname}</>
     },
     {
-      title: <>
+      title: <div>
         <div>Created At</div>
         <Space>
           <DatePicker picker="date" onChange={handleAfterChange} format="ll" />
           -
           <DatePicker picker="date" onChange={handleBeforeChange} format="ll" />
         </Space>
-      </>,
+      </div>,
       dataIndex: 'createdAt',
       render: (value) => <TimeAgo value={value} />
     },

@@ -22,10 +22,22 @@ margin: 0;
 
 `;
 
+// Inherit the tag's own text colour rather than pinning near-black: the selected tag is
+// solid brand blue, where a dark cross all but disappears.
 const StyledCloseButton = styled.span`
-// font-size: 12px;
-color: rgba(0,0,0,0.35);
+color: inherit;
+opacity: 0.55;
+
+&:hover {
+  opacity: 1;
+}
 `;
+
+// A border in the tag's own text colour, matching the stock cards (StockCustomTagSelect).
+// It has to be an inline style rather than a rule on StyledTag: antd 6's `&.ant-tag-solid`
+// pins `border-color: transparent` at a higher specificity than a styled-components class,
+// so the selected tag would come out borderless.
+const TAG_BORDER_STYLE = { borderColor: 'currentColor' };
 
 const StyledNewTagInput = styled(Input.Search)`
 input {
@@ -91,8 +103,17 @@ export const StockCustomTagFilterPanel = (props) => {
     <Row gutter={[8, 8]}>
       {(customTags || [])
         .map((t, i) => <Col key={i}>
+          {/*
+            Same colour as the tags on the stock cards below (StockCustomTagSelect): `processing`
+            is antd's status colour for `colorInfo`, which src/antdTheme.js pins to the brand blue.
+            Selection is carried by the variant instead of by the colour - antd 6 defaults Tag to
+            `variant="filled"` (pale `colorInfoBg` behind `colorInfo` text, matching the cards), and
+            only `solid` puts `colorInfo` on the background with white text.
+          */}
           <StyledTag
-            color={isSelected(t.id) ? "#55B0D4" : null}
+            color="processing"
+            variant={isSelected(t.id) ? 'solid' : 'filled'}
+            style={TAG_BORDER_STYLE}
             onClick={() => toggleTag(t.id)}
           >
             {t.name} <StyledCloseButton onClick={e => handleDeleteTag(e, t)}>

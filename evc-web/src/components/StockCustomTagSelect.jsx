@@ -15,6 +15,11 @@ width: 100%;
 }
 `;
 
+// A border in the tag's own text colour, matching the filter panel above the list
+// (StockCustomTagFilterPanel). Inline rather than CSS so it outranks the `border-color`
+// antd 6 sets per variant.
+const TAG_BORDER_STYLE = { borderColor: 'currentColor' };
+
 const StockCustomTagSelect = (props) => {
 
   const { value = [], readonly = true, onChange = () => { }, onBlur = () => { } } = props;
@@ -45,10 +50,16 @@ const StockCustomTagSelect = (props) => {
     {readonly ?
       // antd 6 dropped Tag's default `margin-inline-end`, so a bare list of them runs together.
       // Flex supplies the gap, plus the row gap the old margin never gave when the list wrapped.
+      //
+      // `processing` is antd's status colour for `colorInfo`, which src/antdTheme.js pins to the
+      // brand blue - so the fill tracks the theme instead of a hex repeated per call site. It has
+      // to be the preset rather than the raw hex to stay in step with StockCustomTagFilterPanel:
+      // under the default `variant="filled"` a custom hex is washed out to l=95% of its own hue,
+      // which is close to `colorInfoBg` but not equal to it.
       <Flex wrap gap="small">
         {(context.customTags || [])
           .filter(t => (selected || []).includes(t.id))
-          .map((t, i) => <Tag color="#55B0D4" key={i}>{t.name}</Tag>)}
+          .map((t, i) => <Tag color="processing" style={TAG_BORDER_STYLE} key={i}>{t.name}</Tag>)}
       </Flex>
       :
       <Select

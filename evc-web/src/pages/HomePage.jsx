@@ -399,10 +399,17 @@ const HomePage = (props) => {
     // menu: they are the page's two actions, and one of them is the primary call to action on
     // the whole site, which a text link in a row of nav items cannot say.
     actionsRender={() => {
-      const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
-        <Menu.Item key="en-US">English</Menu.Item>
-        <Menu.Item key="zh-CN">中 文</Menu.Item>
-      </Menu>
+      // `items` rather than children: antd 6 deprecates Menu children. No mode either - it
+      // used to be "horizontal", which antd rejects for a Dropdown's Menu ("mode=horizontal
+      // is not supported for Dropdown's Menu"); a dropdown popup wants the default vertical
+      // list, which is also the ordinary shape for a language picker.
+      const menu = <Menu
+        onClick={e => handleLocaleChange(e.key)}
+        items={[
+          { key: 'en-US', label: 'English' },
+          { key: 'zh-CN', label: '中 文' },
+        ]}
+      />
 
       return [
         <Dropdown key="locale" popupRender={() => menu} trigger={['click']} placement="bottomRight">

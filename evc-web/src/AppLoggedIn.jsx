@@ -290,22 +290,36 @@ const AppLoggedIn = props => {
     window.location.reload(false);
   }
 
-  const avatarMenu = <StyledMenu>
-    <Menu.Item key="email" disabled={true}>
-      <pre style={{ fontSize: 14, margin: 0 }}>{user.profile.email}</pre>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
-      <FormattedMessage id="menu.profile" />
-    </Menu.Item>
-    {user.loginType === 'local' && <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
-      <FormattedMessage id="menu.changePassword" />
-    </Menu.Item>}
-    <Menu.Divider />
-    <Menu.Item key="logout" danger onClick={handleLogout}>
-      <FormattedMessage id="menu.logout" />
-    </Menu.Item>
-  </StyledMenu>
+  // antd 6 deprecates Menu `children` in favour of `items` (and drops it next major). Note
+  // `items` admits null entries and rc-menu filters them, so the conditional row stays inline
+  // rather than being spread in.
+  const avatarMenu = <StyledMenu
+    items={[
+      {
+        key: 'email',
+        disabled: true,
+        label: <pre style={{ fontSize: 14, margin: 0 }}>{user.profile.email}</pre>,
+      },
+      { type: 'divider' },
+      {
+        key: 'profile',
+        label: <FormattedMessage id="menu.profile" />,
+        onClick: () => setProfileVisible(true),
+      },
+      user.loginType === 'local' ? {
+        key: 'change_password',
+        label: <FormattedMessage id="menu.changePassword" />,
+        onClick: () => setChangePasswordVisible(true),
+      } : null,
+      { type: 'divider' },
+      {
+        key: 'logout',
+        danger: true,
+        label: <FormattedMessage id="menu.logout" />,
+        onClick: handleLogout,
+      },
+    ]}
+  />
 
   return <StyledLayout
     title={APP_TITLE}

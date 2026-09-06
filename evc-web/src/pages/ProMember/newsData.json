@@ -1,0 +1,56 @@
+[
+  {
+    "id": "news-1",
+    "image": "https://cdn.benzinga.com/files/images/story/2024/08/23/magnificent-7-shutter.jpeg?width=1200&height=800&fit=crop",
+    "headline": "Leaked memo: Facebook details how Apple's privacy change will impact its advertising business",
+    "summary": "Summary List Placement Facebook sent a memo to advertisers April 28 detailing the effects Apple's new privacy settings will have on ad campaigns. The memo, obtained by Insider, elaborates on an April 26 blog post advising advertisers on how to prepare for the change. Facebook warned that the results of their ad campaigns will fluctuate, with the size of audiences shrinking as users gradually update their Apple devices in the coming weeks. Facebook and Instagram will automatically opt those users out of tracking settings. Specifically, the memo says: 1-day click-through opt-out data will be modeled for advertisers. 7-day click-through and 1-day view-through attribution settings will no longer include iOS 14.5 opted-out events. 28-day click-through, 7-day view-through, 28-day view-through attribution tools will no longer be available to advertisers. The memo comes as advertisers brace for big changes from Apple, Google and others that are expected to make it harder for advertisers to target and measure digital ads."
+  },
+  {
+    "id": "news-2",
+    "image": "https://cdn.benzinga.com/files/images/story/2024/08/22/Apple-M1-MacBook-Air.jpeg?width=1200&height=800&fit=crop",
+    "headline": "Apple's Numbers Are 'Jaw-Droppers' According Wedbush's Dan Ives",
+    "summary": "Apple Inc (NASDAQ: AAPL ) continues to prove the skeptics wrong, Wedbush analyst Dan Ives said Wednesday on CNBC's \"Closing Bell.\" What Happened: Apple reported quarterly earnings of $1.40 per share, beating the estimate of 99 cents. Revenue of $89.58 billion beat the estimate of $77.35 billion. The company also added $90 billion to its share … Full story available on Benzinga.com"
+  },
+  {
+    "id": "news-3",
+    "image": "https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F787545%2Fai-square-chip.jpg&op=resize&w=700",
+    "headline": "Facebook beats expectations to post positive first quarter earnings",
+    "summary": "Despite a slew of antitrust hearings, an operating system update threat, and reports of a data leak, the company’s revenue rose to $26.17bn Facebook earnings beat analyst expectations Wednesday, bolstered by pandemic-driven traffic and ad sales. The positive earnings report for Facebook comes despite a number of roadblocks for the company in previous months – including a slew of antitrust hearings in the US Congress, an Apple operating system update threatening its advertising revenue and reports of a 2019 data leak that had affected millions of users. Continue reading…"
+  },
+  {
+    "id": "news-4",
+    "image": "https://g.foolcdn.com/editorial/images/787428/happy-trader-investing-growth-profit-buy-stock-celebrate.jpg",
+    "headline": "Apple’s sales and profits surge amid soaring demand for iPhones, Macs",
+    "summary": "Apple on Wednesday posted sales and profits far ahead of Wall Street expectations and announced a $90 billion share buyback as customers continued to upgrade to 5G iPhones and snapped up new Mac models with Apple’s house-designed processor chips. Sales to China nearly doubled and results topped analyst targets in every category, led by $6.5 billion more…"
+  },
+  {
+    "id": "news-5",
+    "image": "https://staticx-tuner.zacks.com/images/articles/main/b9/69037.jpg",
+    "headline": "Apple Retail Pioneer Ron Johnson Lands SPAC Deal For Enjoy Technology: What Investors Should Know",
+    "summary": "A leading telecommunications retail partner for large companies is going public with plans to bring the experience to customer's homes. The SPAC Deal: Enjoy Technology is merging with Marquee Raine Acquisition Corp (NASDAQ: MRAC ) in a deal valuing the company at $1.2 billion. The deal will provide Enjoy with around $450 million in growth capital. Current Marquee Raine Acquisition shareholders will own 23% of the company if the merger is approved. About Enjoy: With strong exclusive relationships with leading consumer brands, Enjoy is a partner for retail efforts. The company’s partners include AT&T (NYSE: T ) in the U.S., BT Group in the U.K., Rogers Communications (NYSE: RCI ) in Canada and Apple Inc (NASDAQ: AAPL ) in … Full story available on Benzinga.com"
+  },
+  {
+    "id": "news-6",
+    "image": "https://g.foolcdn.com/editorial/images/787859/apple-iphone-getty.jpg",
+    "headline": "Apple's Q2 Results Exceed Expectations On Strong Product Momentum, Stellar Services Performance",
+    "summary": "Apple Inc. (NASDAQ: AAPL ) shares are solidly higher after the tech giant announced fiscal-year 2021 second-quarter results that exceeded expectations, thanks to better-than-expected iPhone revenues, record contribution by the Services segment and strong showing by the key Greater China region. The company's board authorized a dividend increase and increased share repurchase authorization. Apple's Key Q2 Numbers: Apple reported second-quarter earnings per share of $1.40, up from the year-ago 64 cents. Revenues climbed 54% year-over-year from $58.3 billion to $89.6 billion. The consensus estimates had called for EPS of 99 cents on revenues of $77.35 billion. In the previous quarter that encompassed the key holiday selling season, Apple reported EPS of $1.68 and revenues of $111.4 billion. International sales accounted for 67% of the total revenues in the second quarter compared to 64% in the previous quarter. Gross margin came in at 42.5%, up from 39.8% in the previous quarter. Operating cash flow was at $24 billion. \"We are proud of our March quarter performance, which included revenue records in each of our geographic segments and strong double-digit growth in each of our product categories, driving our installed base of active devices …"
+  },
+  {
+    "id": "news-7",
+    "image": "https://staticx-tuner.zacks.com/images/articles/main/49/2653.jpg",
+    "headline": "Apple sees another quarter of record revenue amid Covid buying surge",
+    "summary": "Company, which brought in $89.6bn, has thrived during the pandemic as consumers bought more products Apple executives announced another quarter of record revenue on Wednesday, with growth driven in large part by a continued surge in sales. Earnings surpassed analysts’ expectations across categories, as sales in China doubled, Mac sales were a third higher than predicted and iPhone sales came in around $48bn – roughly $6.5bn higher than initial estimates. Continue reading…"
+  },
+  {
+    "id": "news-8",
+    "image": "https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F787169%2Fgettyimages-1283813790-1201x742-1536a11.jpg&op=resize&w=700",
+    "headline": "Facebook Expects ‘Ad-Targeting Headwinds’ From Apple’s Privacy Changes",
+    "summary": "Facebook reported strong first quarter earnings on Wednesday amidst industry-wide concerns around how Apple's latest privacy changes will affect the digital advertising business, a space that Facebook dominates. \"We had a strong quarter as we helped people stay connected and businesses grow,\" said Facebook founder and CEO Mark Zuckerberg. \"We will continue to invest aggressively…"
+  },
+  {
+    "id": "news-9",
+    "image": "https://staticx-tuner.zacks.com/images/articles/main/58/2932.jpg",
+    "headline": "Apple starts 2021 strong with $89.6 billion in revenue",
+    "summary": "Apple's steady stream of hardware upgrades and new services launched throughout the pandemic has held the company in good stead going into 2021."
+  }
+]

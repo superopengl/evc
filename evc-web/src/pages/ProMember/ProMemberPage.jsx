@@ -1,19 +1,28 @@
-import { Alert, Button, Card, Space, Modal, Image, Row, Col, Listy, Tooltip, Tag, Descriptions } from 'antd';
+import { Alert, Button, Card, Space, Modal, Image, Row, Col, Listy, Tooltip, Tag, Flex, Table, Descriptions } from 'antd';
 import React from 'react';
 import { Typography } from 'antd';
 import styled from 'styled-components';
 import { StockNoticeButton } from 'components/StockNoticeButton';
+import { StockWatchButton } from 'components/StockWatchButton';
 import { withRouter } from 'util/withRouter';
 import SignUpForm from 'components/SignUpForm';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/charts';
 import putCallData from './putCallData';
 import rosterListData from './rosterData';
+import newsListData from './newsData';
 import { FormattedMessage } from 'react-intl';
 import { useMediaQuery } from 'react-responsive'
 import { TimeAgo } from 'components/TimeAgo';
+import { PageHeader } from 'components/PageHeader';
+import { StockName } from 'components/StockName';
+import { SectionTitleDivider } from 'components/SectionTitleDivider';
+import { NumberValueDisplay } from 'components/NumberValueDisplay';
+import { ListyItemMeta } from 'components/ListyItemMeta';
+import { IconContext } from 'react-icons';
+import { MdOpenInNew } from 'react-icons/md';
 
-import { Joyride } from 'react-joyride';
+import { Joyride, ACTIONS, EVENTS, STATUS } from 'react-joyride';
 import {
   BarChartOutlined,
   LineChartOutlined,
@@ -23,16 +32,31 @@ import dayjs from 'util/dayjs';
 
 const { Paragraph, Text } = Typography;
 
+/**
+ * A public, API-free replica of the member stock page (components/StockDisplayPanel), on a made-up
+ * symbol, so a visitor can see what a Pro Member gets before signing up.
+ *
+ * Everything here is hardcoded on purpose - the page is reachable while logged out, and every
+ * panel the real page uses fetches from an endpoint that would 401 (or, worse for a sales page,
+ * render a MemberOnlyCard's paywall over the very features being advertised).
+ *
+ * **Build the replica out of real components, never out of copied DOM.** The page used to be
+ * ~700 lines of antd 4 markup captured from a live browser - `<div class="ant-card">`, an
+ * `EVC_CORE_INFO` HTML string fed through dangerouslySetInnerHTML, even stale styled-components
+ * hashes like `sc-jcwpoC kyvWZW`. antd 6 emits its CSS-in-JS under
+ * `:where(.css-dev-only-do-not-override-<hash>).ant-card ...` and puts a matching `css-var-*`
+ * class on the component root, so markup that antd did not render matches *none* of those rules:
+ * the cards lost their padding, border and min-height and collapsed into bare green title bars,
+ * and the index tags ran together into one dark strip. The hash is per-build, so it cannot be
+ * hardcoded back in. Composing the same primitives the real panels compose is what keeps this
+ * page upright across the next antd upgrade.
+ */
 
 const Container = styled.div`
 margin: 0;
 padding: 30px 0;
 background-color: #f0f2f5;
 position:relative;
-
-img {
-  width: 200px;
-}
 
 .ant-card-head {
   background-color: #3f9e48;
@@ -92,6 +116,64 @@ const insiderSpan = {
   xxl: 3
 };
 
+/**
+ * Off, exactly as it is in StockDisplayPanel - there is no insider data provider. It is a module
+ * constant rather than a local so the tour can read it too: its `#tour-insider` step targets a
+ * section that only exists when this is true, and a step whose target never appears is a
+ * `error:target_not_found` failure that strands the tour.
+ */
+const SHOW_ROSTER = false;
+
+// ---------------------------------------------------------------------------------------------
+// The made-up figures. One block, so it is obvious at a glance that nothing here is live data.
+// ---------------------------------------------------------------------------------------------
+
+const DEMO_STOCK = { symbol: 'EVCT', company: 'Easy Value Check Inc' };
+
+const DEMO_TAGS = [
+  'S&P 500',
+  'Dow Jones 30',
+  'Nasdaq 100',
+  'Nasdaq Composite',
+  'S&P 100',
+  'Russell 1000',
+  'Russell 3000',
+  'S&P 500 Information Technology',
+];
+
+const DEMO_QUOTE = {
+  price: '133.67',
+  delta: '+0.720 (+0.536%)',
+  priceAt: '5 Dec 2023',
+  extendedPrice: '25.98',
+  extendedDelta: '+0.010 (+0.039%)',
+};
+
+const DEMO_EVC_INFO = {
+  reportDate: '2 Dec 2023',
+  fairValue: [177.19, 187.84],
+  forwardNextFyFairValue: [190.68, 205.27],
+  forwardNextFyMaxValue: [199.77, 208.92],
+  beta: 1.17,
+  peRatio: 31.77,
+  forwardPeRatio: 30.04,
+};
+
+const DEMO_NEXT_REPORT_DATE = '7 Dec 2023';
+
+const DEMO_PUTCALL_ROW = {
+  key: 'evct',
+  symbol: 'EVCT',
+  date: '07 Dec 2023',
+  todayOptionVol: 884200,
+  todayPercentPutVol: 46.59,
+  todayPercentCallVol: 53.41,
+  putCallOIRatio: 0.95,
+  totalOpenInterest: 7218375,
+};
+
+const TRADINGVIEW_SRC = 'https://s.tradingview.com/widgetembed/?frameElementId=tradingview_f5b45&symbol=AAPL&interval=D&hidelegend=1&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=F1F3F6&studies=%5B%5D&hideideas=1&theme=Light&style=1&timezone=America%2FNew_York&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=localhost&utm_medium=widget&utm_campaign=chart&utm_term=AAPL';
+
 const WalkthroughTour = withRouter((props) => {
 
   const { visible: visibleProp, onClose, onComplete } = props;
@@ -103,11 +185,17 @@ const WalkthroughTour = withRouter((props) => {
     setVisible(visibleProp);
   }, [visibleProp])
 
+  /**
+   * `skipBeacon`, not `disableBeacon`: react-joyride 3 renamed it (and moved it onto the shared
+   * step Options). Under the old name the flag was silently ignored, so instead of opening on
+   * the first target the tour parked a lone pulsing dot next to the EVC panel and waited for a
+   * click nobody knew to make - which is what "the tour doesn't work" looked like on screen.
+   */
   const tourConfig = [
     {
       target: '#tour-fair-value',
       placement: 'auto',
-      disableBeacon: true,
+      skipBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.fairValueTitle" />
@@ -123,7 +211,7 @@ const WalkthroughTour = withRouter((props) => {
     {
       target: '#tour-forward-next-fy-fair-value',
       placement: 'auto',
-      disableBeacon: true,
+      skipBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.forwardNextFyFairValueTitle" />
@@ -139,7 +227,7 @@ const WalkthroughTour = withRouter((props) => {
     {
       target: '#tour-forward-next-fy-fair-value-range',
       placement: 'auto',
-      disableBeacon: true,
+      skipBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.forwardNextFyFairValueRangeTitle" />
@@ -152,41 +240,10 @@ const WalkthroughTour = withRouter((props) => {
         </Paragraph>
       </>
     },
-    // {
-    //   target: '#tour-support',
-    //   disableBeacon: true,
-    //   placement: 'top',
-    //   content: <>
-    //     <Paragraph strong>
-    //       <FormattedMessage id="tour.supportTitle" />
-    //     </Paragraph>
-    //     <Paragraph style={{ fontSize: 12 }}>
-    //       <FormattedMessage id="tour.supportDescription" />
-    //     </Paragraph>
-    //     <Paragraph type="danger" style={{ fontSize: 12 }}>
-    //       <FormattedMessage id="tour.supportNote" />
-    //     </Paragraph>
-    //   </>
-    // },
-    // {
-    //   target: '#tour-resistance',
-    //   disableBeacon: true,
-    //   content: <>
-    //     <Paragraph strong>
-    //       <FormattedMessage id="tour.resistanceTitle" />
-    //     </Paragraph>
-    //     <Paragraph style={{ fontSize: 12 }}>
-    //       <FormattedMessage id="tour.resistanceDescription" />
-    //     </Paragraph>
-    //     <Paragraph type="danger" style={{ fontSize: 12 }}>
-    //       <FormattedMessage id="tour.resistanceNote" />
-    //     </Paragraph>
-    //   </>
-    // },
     {
       target: '#tour-putcall',
       placement: 'auto',
-      disableBeacon: true,
+      skipBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.putCallTitle" />
@@ -202,7 +259,7 @@ const WalkthroughTour = withRouter((props) => {
     {
       target: '#tour-putcall-table',
       placement: 'auto',
-      disableBeacon: true,
+      skipBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.putCallTableTitle" />
@@ -215,26 +272,11 @@ const WalkthroughTour = withRouter((props) => {
         </Paragraph>
       </>
     },
-    // {
-    //   target: '#tour-putcall-button',
-    //   placement: 'auto',
-    //   disableBeacon: true,
-    //   content: <>
-    //     <Paragraph strong>
-    //       <FormattedMessage id="tour.putCallTitle" />
-    //     </Paragraph>
-    //     <Paragraph style={{ fontSize: 12 }}>
-    //       <FormattedMessage id="tour.putCallDescription" />
-    //     </Paragraph>
-    //     <Paragraph type="danger" style={{ fontSize: 12 }}>
-    //       <FormattedMessage id="tour.putCallNote" />
-    //     </Paragraph>
-    //   </>
-    // },
-    {
+    // Only reachable when the insider section is rendered - see SHOW_ROSTER.
+    SHOW_ROSTER ? {
       target: '#tour-insider',
       placement: 'auto',
-      disableBeacon: true,
+      skipBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.insiderTitle" />
@@ -243,11 +285,11 @@ const WalkthroughTour = withRouter((props) => {
           <FormattedMessage id="tour.insiderDescription" />
         </Paragraph>
       </>
-    },
+    } : null,
     {
       target: '#tour-alert',
       placement: 'auto',
-      disableBeacon: true,
+      skipBeacon: true,
       content: <>
         <Paragraph strong>
           <FormattedMessage id="tour.alertTitle" />
@@ -257,24 +299,28 @@ const WalkthroughTour = withRouter((props) => {
         </Paragraph>
       </>
     },
-  ];
+  ].filter(x => !!x);
 
-  const handleTourStepChange = data => {
-    const { action, index } = data;
-    switch (action) {
-      case 'reset': {
+  /**
+   * react-joyride 3 renamed `callback` to `onEvent` and replaced the v2 action vocabulary with
+   * events. `callback` is not in the v3 prop list at all, so it was accepted and dropped: Skip
+   * and the last Next both ran the tour to its end and then left the page exactly as it was -
+   * no sign-up modal, and `visible` still true, so restarting the tour did nothing either.
+   *
+   * One event carries both outcomes now. TOUR_END fires for a finished *and* a skipped tour, and
+   * `status` is what tells them apart; ACTIONS.CLOSE is the separate case of dismissing a single
+   * step (ESC, or clicking the overlay).
+   */
+  const handleTourEvent = data => {
+    const { type, status, action } = data;
+
+    if (type === EVENTS.TOUR_END) {
+      if (status === STATUS.FINISHED) {
         onComplete();
-        onClose();
-        break;
       }
-      case 'skip':
-      case 'stop':
-      case 'close': {
-        onClose();
-        break;
-      }
-      default:
-        break;
+      onClose();
+    } else if (action === ACTIONS.CLOSE) {
+      onClose();
     }
   }
 
@@ -282,23 +328,18 @@ const WalkthroughTour = withRouter((props) => {
     steps={tourConfig}
     run={visible}
     continuous={true}
-    // scrollToFirstStep={true}
-    // showProgress={true}
-    // scrollToFirstStep={true}
-    // stepIndex={current}
-    showSkipButton={true}
-    callback={handleTourStepChange}
+    onEvent={handleTourEvent}
+    // v2's styles.options is v3's `options`, and the theme keys moved with it. `showSkipButton`
+    // is gone too - the tooltip's buttons are declared outright, and 'skip' is one of them.
+    // 'close' is deliberately left out: it is the X that advances a step, which reads as a
+    // second, contradictory Next next to the real one.
+    options={{
+      primaryColor: '#3f9e48',
+      width: 600,
+      zIndex: 1000,
+      buttons: ['back', 'skip', 'primary'],
+    }}
     styles={{
-      options: {
-        // arrowColor: '#e3ffeb',
-        // backgroundColor: '#e3ffeb',
-        // overlayColor: 'rgba(79, 26, 0, 0.4)',
-        primaryColor: '#3f9e48',
-        textAlign: 'left',
-        // textColor: '#004a14',
-        width: 600,
-        zIndex: 1000,
-      },
       tooltipContainer: {
         textAlign: 'left'
       },
@@ -380,175 +421,194 @@ const PutCallDummyChart = () => {
   return <Line {...config} />
 }
 
-const EVC_CORE_INFO = `
-<div class="ant-space ant-space-vertical" style="width: 100%; gap: 8px;">
-   <div class="ant-space-item">
-      <div class="ant-row ant-row-no-wrap ant-row-center" style="margin-left: -2px; margin-right: -2px; row-gap: 0px;">
-         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 0 0 auto;"><span class="ant-typography">Report Date: 2 Dec 2023</span></div>
-         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 1 1 auto; min-width: 0px; display: flex; align-items: center;">
-            <div class="ant-divider ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
-         </div>
-      </div>
-   </div>
-   <div class="ant-space-item" id="tour-fair-value">
-      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; gap: 8px;">
-         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Recent FY Fair Value</span></div>
-         <div class="ant-space-item">
-            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
-               <div class="ant-space-item">
-                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">177.19</span> ~ <span class="ant-typography">187.84</span></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="ant-space-item" id="tour-forward-next-fy-fair-value">
-      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
-         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward Next FY Fair Value</span></div>
-         <div class="ant-space-item">
-            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
-               <div class="ant-space-item">
-                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">190.68</span> ~ <span class="ant-typography">205.27</span></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="ant-space-item" id="tour-forward-next-fy-fair-value-range">
-      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start;  gap: 8px;">
-         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward Next FY Max Value Range</span></div>
-         <div class="ant-space-item">
-            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
-               <div class="ant-space-item">
-                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">199.77</span> ~ <span class="ant-typography">208.92</span></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="ant-space-item" style="margin-top: 1rem;">
-      <div class="ant-row ant-row-no-wrap ant-row-center" style="margin-left: -2px; margin-right: -2px; row-gap: 0px;">
-         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 0 0 auto;">Daily update</div>
-         <div class="ant-col" style="padding-left: 2px; padding-right: 2px; flex: 1 1 auto; min-width: 0px; display: flex; align-items: center;">
-            <div class="ant-divider ant-divider-horizontal" role="separator" style="margin: 0px;"></div>
-         </div>
-      </div>
-   </div>
-   <div class="ant-space-item" style="">
-      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
-         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">BETA</span></div>
-         <div class="ant-space-item">
-            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
-               <div class="ant-space-item">
-                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">1.170</span></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="ant-space-item" style="">
-      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
-         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">PE (TTM)</span></div>
-         <div class="ant-space-item">
-            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
-               <div class="ant-space-item">
-                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">31.77</span></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="ant-space-item">
-      <div class="ant-space ant-space-horizontal ant-space-align-center" style="width: 100%; justify-content: space-between; align-items: flex-start; gap: 8px;">
-         <div class="ant-space-item" style=""><span class="ant-typography ant-typography-secondary">Forward PE</span></div>
-         <div class="ant-space-item">
-            <div class="ant-space ant-space-horizontal ant-space-align-center number" style="gap: 8px;">
-               <div class="ant-space-item">
-                  <div class="sc-jcwpoC kyvWZW"><span class="ant-typography">30.04</span></div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
+/**
+ * components/MemberOnlyCard with the member gate taken out - same `type`/`variant`/`size` and the
+ * same `#00293d` head text, so the demo's panels sit at the same weight as the real ones, but
+ * nothing here is ever swapped for the paywall. (The green head fill comes from Container above,
+ * which is where MemberOnlyCard's own styled(Card) puts it.)
+ */
+const DemoCard = ({ children, styles: propStyles, ...other }) => (
+  <Card
+    type="inner"
+    variant="borderless"
+    size="small"
+    {...other}
+    styles={{
+      ...propStyles,
+      body: { ...propStyles?.body, overflow: 'auto' },
+      header: { color: '#00293d' },
+    }}
+  >
+    {children}
+  </Card>
+);
+
+const TooltipLabel = props => <Text type="secondary">{props.children}</Text>
+
+// components/StockQuotePanel, minus the fetch and the price-event subscription. The deltas are
+// pre-formatted strings rather than numbers run back through the panel's formatter: they are
+// invented figures, and spelling them the way they appear keeps the demo data readable.
+const DemoQuotePanel = () => {
+  const superNarrow = useMediaQuery({ query: '(max-width: 465px)' });
+
+  return (
+    <Card size="middle" title={null} styles={{ body: { minHeight: 178 } }}>
+      <Space size="small" orientation="vertical">
+        <div>
+          <Text style={{ fontSize: 30 }} strong>
+            {DEMO_QUOTE.price} <Text type="success"><small>{DEMO_QUOTE.delta}</small></Text>
+          </Text>
+          <div><Text type="secondary"><small>Price At: {DEMO_QUOTE.priceAt} EST</small></Text></div>
+        </div>
+        <div>
+          <Text style={{ fontSize: 20 }} strong>
+            {DEMO_QUOTE.extendedPrice} <Text type="success"><small>{DEMO_QUOTE.extendedDelta}</small></Text>
+          </Text>
+          <div>
+            <Space size="small" style={{ width: '100%', alignItems: 'flex-start' }}>
+              <Text type="secondary"><small>extended hours</small></Text>
+              <TimeAgo direction={superNarrow ? 'vertical' : 'horizontal'} value={dayjs().add(-1, 'day').toDate()} />
+            </Space>
+          </div>
+        </div>
+      </Space>
+    </Card>
+  );
+};
+
+// components/StockEvcInfoPanel, minus the fetch. The three tour anchors live on the rows the tour
+// talks about, which is the whole reason this panel is spelled out rather than screenshotted.
+const DemoEvcInfoPanel = () => (
+  <Space orientation="vertical" style={{ width: '100%' }}>
+    <SectionTitleDivider title={<Text><FormattedMessage id="text.reportDate" />: {DEMO_EVC_INFO.reportDate}</Text>} />
+    <Space id="tour-fair-value" style={{ width: '100%', justifyContent: 'space-between' }}>
+      <TooltipLabel><FormattedMessage id="text.fairValue" /></TooltipLabel>
+      <NumberValueDisplay className="number" value={DEMO_EVC_INFO.fairValue} />
+    </Space>
+    <Space id="tour-forward-next-fy-fair-value" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <TooltipLabel><FormattedMessage id="text.forwardNextFyFairValue" /></TooltipLabel>
+      <NumberValueDisplay className="number" value={DEMO_EVC_INFO.forwardNextFyFairValue} />
+    </Space>
+    <Space id="tour-forward-next-fy-fair-value-range" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+      <TooltipLabel><FormattedMessage id="text.forwardNextFyMaxValue" /></TooltipLabel>
+      <NumberValueDisplay className="number" value={DEMO_EVC_INFO.forwardNextFyMaxValue} />
+    </Space>
+    <SectionTitleDivider title={<FormattedMessage id="text.dailyUpdate" />} />
+    <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <TooltipLabel><FormattedMessage id="text.beta" /></TooltipLabel>
+      <NumberValueDisplay className="number" value={DEMO_EVC_INFO.beta} fixedDecimal={3} />
+    </Space>
+    <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <TooltipLabel><FormattedMessage id="text.peRatio" /></TooltipLabel>
+      <NumberValueDisplay className="number" value={DEMO_EVC_INFO.peRatio} />
+    </Space>
+    <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <TooltipLabel><FormattedMessage id="text.forwardRatio" /></TooltipLabel>
+      <NumberValueDisplay className="number" value={DEMO_EVC_INFO.forwardPeRatio} />
+    </Space>
+  </Space>
+);
+
+// pages/AdminDashboard/OptionPutCallPanel's columns for a single row. Its own table reads
+// `context.role` and locks the three ratio columns behind a LockIcon for guests - which is
+// precisely the data this page exists to advertise, so the demo states the columns itself.
+const PUTCALL_COLUMNS = [
+  {
+    fixed: 'left',
+    width: 40,
+    align: 'center',
+    render: () => <Button shape="circle" size="small" icon={<PlusOutlined />} type="text" disabled />
+  },
+  { title: 'Symbol', dataIndex: 'symbol', fixed: 'left', width: 100 },
+  { title: 'Date', dataIndex: 'date', align: 'left' },
+  { title: 'Today Option Volume', dataIndex: 'todayOptionVol', align: 'right', render: v => v.toLocaleString() },
+  { title: 'Today %Put Vol', dataIndex: 'todayPercentPutVol', align: 'right', render: v => v.toFixed(2) + '%' },
+  { title: 'Today %Call Vol', dataIndex: 'todayPercentCallVol', align: 'right', render: v => v.toFixed(2) + '%' },
+  { title: 'Total P/C OI Ratio', dataIndex: 'putCallOIRatio', align: 'right', render: v => v.toFixed(3) },
+  { title: 'Total Open Interest', dataIndex: 'totalOpenInterest', align: 'right', render: v => v.toLocaleString() },
+];
+
+const DemoPutCallTable = () => (
+  <Table
+    bordered={false}
+    size="small"
+    columns={PUTCALL_COLUMNS}
+    dataSource={[DEMO_PUTCALL_ROW]}
+    rowKey="key"
+    pagination={false}
+    scroll={{ x: 'max-content' }}
+  />
+);
+
+// Hoisted out of the page component. It used to be created inside the render, which makes a new
+// styled component on every pass - styled-components warns about exactly that, and it was the one
+// warning this page logged on load. The responsive width is a style prop instead.
+const NewsImage = styled(Image)`
+cursor: pointer;
 `;
 
-const PUTCALL_TABLE = `
-<div class="ant-table ant-table-small ant-table-fixed-column ant-table-scroll-horizontal ant-table-has-fix-left">
-   <div class="ant-table-container">
-      <div class="ant-table-content" style="overflow: auto hidden;">
-         <table style="width: max-content; min-width: 100%; table-layout: auto;">
-            <colgroup>
-               <col style="width: 40px;">
-               <col style="width: 100px;">
-            </colgroup>
-            <thead class="ant-table-thead">
-               <tr>
-                  <th class="ant-table-cell ant-table-cell-fix-left" style="text-align: center; position: sticky; left: 0px;"></th>
-                  <th class="ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last" style="position: sticky; left: 40px;">Symbol</th>
-                  <th class="ant-table-cell" style="text-align: left;">Date</th>
-                  <th class="ant-table-cell" style="text-align: right;">Today Option Volume</th>
-                  <th class="ant-table-cell" style="text-align: right;">Today %Put Vol</th>
-                  <th class="ant-table-cell" style="text-align: right;">Today %Call Vol</th>
-                  <th class="ant-table-cell" style="text-align: right;">Total P/C OI Ratio</th>
-                  <th class="ant-table-cell" style="text-align: right;">Total Open Interest</th>
-               </tr>
-            </thead>
-            <tbody class="ant-table-tbody">
-               <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-                  <td style="padding: 0px; border: 0px; height: 0px;">
-                     <div style="height: 0px; overflow: hidden;">&nbsp;</div>
-                  </td>
-               </tr>
-               <tr data-row-key="0" class="ant-table-row ant-table-row-level-0">
-                  <td class="ant-table-cell ant-table-cell-fix-left" style="text-align: center; position: sticky; left: 0px;">
-                     <button type="button" class="ant-btn ant-btn-text ant-btn-circle ant-btn-sm ant-btn-icon-only">
-                        <span role="img" aria-label="plus" class="anticon anticon-plus">
-                           <svg viewBox="64 64 896 896" focusable="false" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                              <defs>
-                                 <style></style>
-                              </defs>
-                              <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
-                              <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path>
-                           </svg>
-                        </span>
-                     </button>
-                  </td>
-                  <td class="ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last" style="position: sticky; left: 40px;">EVCT</td>
-                  <td class="ant-table-cell" style="text-align: left;">07 Dec 2023</td>
-                  <td class="ant-table-cell" style="text-align: right;">884,200</td>
-                  <td class="ant-table-cell" style="text-align: right;">46.59%</td>
-                  <td class="ant-table-cell" style="text-align: right;">53.41%</td>
-                  <td class="ant-table-cell" style="text-align: right;">0.950</td>
-                  <td class="ant-table-cell" style="text-align: right;">7,218,375</td>
-               </tr>
-            </tbody>
-         </table>
-      </div>
-   </div>
-</div>
+const StyledNewsItem = styled.div`
+.news-title {
+  font-weight: 400;
+}
+&:hover {
+  .news-title {
+    color: #55B0D4;
+    text-decoration: underline;
+  }
+}
 `;
+
+const NEWS_ITEM_STYLE = { padding: '12px 0', border: 'none' };
+
+// components/StockNewsPanel, minus the fetch. The headlines carry no href on purpose: they are a
+// sample of the feed, and a demo page should not send a visitor off to a three-year-old article.
+const DemoNewsPanel = () => {
+  const showImage = useMediaQuery({ query: '(min-width: 576px)' });
+  const showBigImage = useMediaQuery({ query: '(min-width: 876px)' });
+
+  return (
+    <Listy
+      items={newsListData}
+      rowKey="id"
+      styles={{ item: NEWS_ITEM_STYLE }}
+      itemRender={item => (
+        <StyledNewsItem>
+          <ListyItemMeta
+            avatar={showImage
+              ? <NewsImage preview={false} src={item.image} style={{ width: showBigImage ? 200 : 100 }} />
+              : null}
+            title={
+              <Space size="small" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <Text strong style={{ margin: 0 }} className="news-title">{item.headline}</Text>
+                <div style={{ position: 'relative', top: 4 }}>
+                  <IconContext.Provider value={{ color: '#3273A4', size: 20 }}><MdOpenInNew /></IconContext.Provider>
+                </div>
+              </Space>
+            }
+            description={
+              <Paragraph ellipsis={{ rows: 3, expandable: false, symbol: 'more' }} style={{ color: '#555555' }}>
+                {item.summary}
+              </Paragraph>
+            }
+          />
+        </StyledNewsItem>
+      )}
+    />
+  );
+};
+
+const TradingViewChart = ({ height }) => (
+  <div style={{ height, minWidth: 400 }}>
+    <iframe
+      title="EVCT chart"
+      src={TRADINGVIEW_SRC}
+      style={{ width: '100%', height: '100%', border: 0 }}
+      scrolling="no"
+      allowFullScreen
+    />
+  </div>
+);
 
 const ProMemberPage = (props) => {
   const [visible, setVisible] = React.useState(true);
@@ -557,28 +617,16 @@ const ProMemberPage = (props) => {
   const [putCallChartVisible, setPutCallChartVisible] = React.useState(false);
 
   const showInlineStockChart = useMediaQuery({ query: '(min-width: 576px)' });
-  const showImage = showInlineStockChart;
-  const showBigImage = useMediaQuery({ query: '(min-width: 876px)' });
   const superNarrow = useMediaQuery({ query: '(max-width: 465px)' });
-
-  const NewsImage = styled(Image)`
-  display: ${showImage ? 'inline-block' : 'none'};
-  width: ${showBigImage ? 200 : 100}px !important;
-  cursor: pointer;
-  `;
-
-  const shouldShowRoster = false;
 
   const handleShowStockChart = () => {
     setStockChartVisible(true);
     setPutCallChartVisible(false);
-    
   }
 
   const handleShowPutCallRatioChart = () => {
     setStockChartVisible(false);
     setPutCallChartVisible(true);
-    
   }
 
   const getBadgeComponent = (transactionType) => {
@@ -599,32 +647,22 @@ const ProMemberPage = (props) => {
         <WalkthroughTour visible={visible} onClose={() => setVisible(false)} onComplete={() => setSignUpVisible(true)} />
         <Modal
           open={stockChartVisible}
-          title="EVCT"
+          title={DEMO_STOCK.symbol}
           onOk={() => setStockChartVisible(false)}
           onCancel={() => setStockChartVisible(false)}
           closable={true}
           destroyOnHidden={true}
-         
           footer={null}
           width="100vw"
           centered styles={{ body: { padding: 0 } }} mask={{ closable: true }}>
-          <div style={{ height: '649px', minWidth: '400px' }}>
-            <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
-              <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
-                <div style={{ width: '100%', height: '100%', background: 'transparent', padding: '0 !important' }}>
-                  <iframe id="tradingview_ad891" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_f5b45&symbol=AAPL&interval=D&hidelegend=1&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=F1F3F6&studies=%5B%5D&hideideas=1&theme=Light&style=1&timezone=America%2FNew_York&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=localhost&utm_medium=widget&utm_campaign=chart&utm_term=AAPL" style={{ width: '100%', height: '100%', margin: '0 !important', padding: '0 !important' }} scrolling="no" allowFullScreen frameBorder={0} />
-                </div>
-              </div>
-            </article>
-          </div>
+          <TradingViewChart height={649} />
         </Modal>
         <Modal
           open={putCallChartVisible}
-          title="EVCT"
+          title={DEMO_STOCK.symbol}
           onOk={() => setPutCallChartVisible(false)}
           onCancel={() => setPutCallChartVisible(false)}
           closable={true}
-         
           destroyOnHidden={true}
           footer={null}
           width="100vw"
@@ -635,576 +673,138 @@ const ProMemberPage = (props) => {
           style={{ maxWidth: 'calc(100vw - 20px)', width: 300 }}
           width={340}
           open={signUpVisible}
-         
           destroyOnHidden={true}
           onOk={() => setSignUpVisible(false)}
           onCancel={() => setSignUpVisible(false)}
           footer={null} mask={{ closable: true }}>
           <SignUpForm onOk={() => props.history.push('/')} />
         </Modal>
-        <main className="ant-layout-content ant-pro-basicLayout-content ant-pro-basicLayout-has-header">
-          {/* <Space style={{ marginBottom: 30, width: '100%', justifyContent: 'flex-end' }}>
-          <Link to="/"><Button type="link">Home</Button></Link>
-          <Button type="link" onClick={() => setVisible(true)}>Restart Tour</Button>
-          <Link to="/signup"><Button type="primary" onClick={() => setVisible(true)}>Sign Up</Button></Link>
-        </Space> */}
-          <Alert
-            type="success"
-            icon={<InfoCircleOutlined />}
-            showIcon
-            description={<FormattedMessage id="text.startTourAlert" />}
-            style={{ marginBottom: 30 }}
-            action={
-              <Button type="primary" onClick={() => setVisible(true)}>
-                <FormattedMessage id="text.startTour" />
-              </Button>
-            }
-          />
-          <div className="sc-khQdMy cdJLiE">
-            <div className="ant-page-header" style={{ backgroundColor: 'white', padding: '30px 30px 14px' }}>
-              <div className="ant-page-header-heading">
-                <div className="ant-page-header-heading-left">
-                  <span className="ant-page-header-heading-title">
-                    <div className="ant-space ant-space-horizontal ant-space-align-center">
-                      <div className="ant-space-item">
-                        <div className="ant-space ant-space-horizontal ant-space-align-center">
-                          <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography"><strong>EVCT</strong></span></div>
-                          <div className="ant-space-item"><span className="ant-typography ant-typography-secondary" style={{ fontWeight: 300 }}>(Easy Value Check Inc)</span></div>
-                        </div>
-                      </div>
-                    </div>
-                  </span>
-                </div>
-                <span className="ant-page-header-heading-extra">
-                  <Space id="tour-alert">
-                    <StockNoticeButton value={true} />
-
-                    <span role="img" aria-label="star" style={{ fontSize: '20px', color: 'rgb(250, 219, 20)' }} tabIndex={-1} className="anticon anticon-star">
-                      <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                        <path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3z" />
-                      </svg>
-                    </span>
+        <Alert
+          type="success"
+          icon={<InfoCircleOutlined />}
+          showIcon
+          description={<FormattedMessage id="text.startTourAlert" />}
+          style={{ marginBottom: 30 }}
+          action={
+            <Button type="primary" onClick={() => setVisible(true)}>
+              <FormattedMessage id="text.startTour" />
+            </Button>
+          }
+        />
+        <PageHeader
+          style={{
+            backgroundColor: 'white',
+            padding: '30px 30px 14px',
+          }}
+          title={<StockName value={DEMO_STOCK} />}
+          extra={[
+            <Space key="actions" id="tour-alert">
+              <StockNoticeButton size={20} value={true} />
+              <StockWatchButton size={20} value={true} />
+            </Space>
+          ]}
+        >
+          {/* components/TagSelect's readonly branch: antd 6 dropped Tag's trailing margin, so the
+              gap comes from Flex. Without it the eight index tags butt together into one bar. */}
+          <Flex wrap gap="small">
+            {DEMO_TAGS.map(tag => <Tag key={tag} color="#00293d">{tag}</Tag>)}
+          </Flex>
+        </PageHeader>
+        <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 10, xxl: 8 }}>
+            <Row gutter={[30, 30]}>
+              <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
+                <DemoQuotePanel />
+                <DemoCard title={<FormattedMessage id="text.nextReportDate" />} styles={{ body: { height: 65 } }} style={{ marginTop: 30 }}>
+                  <Space>
+                    <Text strong style={{ fontSize: 20 }}>{DEMO_NEXT_REPORT_DATE}</Text>
+                    {/* The date beside it is frozen demo data, but the relative phrase is not:
+                        feeding TimeAgo the 2023 date would read "3 years ago" under a heading
+                        that says *next* expected. The old page dodged this by hardcoding the
+                        words "in 2 days" into the markup. */}
+                    <TimeAgo value={dayjs().add(2, 'day').toDate()} showTime={false} accurate={false} direction="horizontal" />
                   </Space>
-                </span>
-              </div>
-              <div className="ant-page-header-content"><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Dow Jones 30</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Nasdaq Composite</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 100</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 1000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>Russell 3000</span><span className="ant-tag ant-tag-has-color" style={{ backgroundColor: 'rgb(0, 41, 61)' }}>S&amp;P 500 Information Technology</span></div>
-            </div>
-            <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
-              <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 10, xxl: 8 }}>
-                <Row gutter={[30, 30]}>
-                  <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
-                    <div className="ant-card ant-card-bordered ant-card-small">
-                      <div className="ant-card-body" style={{ minHeight: '178px' }}>
-                        <Space size="small" orientation="vertical">
-                          <div>
-                            <Text style={{ fontSize: 30 }} strong>133.67 <span className="ant-typography ant-typography-success"><small>+0.720 (+0.536%)</small></span></Text>
-                            <div><Text type="secondary"><small>Price At: 5 Dec 2023 EST</small></Text></div>
-                          </div>
-
-                          <div>
-                            <Text style={{ fontSize: 20 }} strong>25.98 <span className="ant-typography ant-typography-success"><small>+0.010 (+0.039%)</small></span></Text>
-                            <div>
-                              <Space size="small" style={{ width: '100%', alignItems: 'flex-start' }}>
-                                <Text type="secondary"><small>extended hours</small></Text>
-                                <TimeAgo direction={superNarrow ? 'vertical' : 'horizontal'} value={dayjs().add(-1, 'day').toDate()} />
-                              </Space>
-                            </div>
-                          </div>
-                        </Space>
-                      </div>
-                    </div>
-                    <div style={{ marginTop: '30px' }} className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
-                      <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
-                        <div className="ant-card-head-wrapper">
-                          <div className="ant-card-head-title">
-                            <FormattedMessage id="text.nextReportDate" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ant-card-body" style={{ height: '65px', overflow: 'auto' }}>
-                        <div className="ant-space ant-space-horizontal ant-space-align-center">
-                          <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography" style={{ fontSize: '20px' }}><strong>7 Dec 2023</strong></span></div>
-                          <div className="ant-space-item">
-                            <div className="ant-space ant-space-horizontal ant-space-align-center sc-bqiQRQ hUhAjW">
-                              <div className="ant-space-item">
-                                <div className="ant-space ant-space-horizontal ant-space-align-center">
-                                  <div className="ant-space-item"><span className="ant-typography ant-typography-secondary"><time dateTime="2021-04-27T14:00:00.000Z" title="Wednesday, April 28, 2021, 12:00:00 AM">in 2 days</time></span></div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Col>
-                  <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
-                    <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
-                      <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
-                        <div className="ant-card-head-wrapper">
-                          <div className="ant-card-head-title">
-                            <FormattedMessage id="text.evcCoreInfo" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ant-card-body" style={{ height: 320, overflow: 'auto' }} dangerouslySetInnerHTML={{ __html: EVC_CORE_INFO }} />
-                    </div>
-                  </Col>
-                </Row>
+                </DemoCard>
               </Col>
-              {showInlineStockChart && <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
-                <div style={{ height: 695, minWidth: 400 }}>
-                  <article id="tradingview-widget-0.4101095987438359" style={{ width: '100%', height: '100%' }}>
-                    <div id="tradingview_ad891-wrapper" style={{ position: 'relative', boxSizing: 'content-box', width: '100%', height: '100%', margin: '0 auto !important', padding: '0 !important', fontFamily: 'Arial,sans-serif' }}>
-                      <div style={{ width: '100%', height: '100%', background: 'transparent', padding: '0 !important' }}>
-                        <iframe id="tradingview_ad891" src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_f5b45&symbol=AAPL&interval=D&hidelegend=1&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=F1F3F6&studies=%5B%5D&hideideas=1&theme=Light&style=1&timezone=America%2FNew_York&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=localhost&utm_medium=widget&utm_campaign=chart&utm_term=AAPL" style={{ width: '100%', height: '100%', margin: '0 !important', padding: '0 !important' }} scrolling="no" allowFullScreen frameBorder={0} />
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              </Col>}
-            </Row>
-            {showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
-              <Col span={24} id="tour-putcall">
-                <Card
-                  size="small"
-                  type="inner"
-                  title={<FormattedMessage id="text.optionPutCallRatio" />}
-                >
-                  <PutCallDummyChart />
-                </Card>
-              </Col>
-            </Row>}
-            {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
-              <Col span={superNarrow ? 24 : 12}>
-                <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
-                  {' '}<FormattedMessage id="text.stockChart" />
-                </Button>
-              </Col>
-              <Col span={superNarrow ? 24 : 12}>
-                <Button block type="primary" id="tour-putcall" icon={<LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()}>
-                  {' '}<FormattedMessage id="text.optionPutCallRatio" />
-                </Button>
-              </Col>
-            </Row>}
-            <Row gutter={[30, 30]} style={{ marginTop: 30 }} id="tour-putcall-table">
-              <Col span={24}>
-                <Card
-                  size="small"
-                  type="inner"
-                 
-                  title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} styles={{ body: { padding: 0 } }}>
-                  <div dangerouslySetInnerHTML={{ __html: PUTCALL_TABLE }} />
-                </Card>
+              <Col {...{ xs: 24, sm: 24, md: 12, lg: 12, xl: 24, xxl: 24 }}>
+                <DemoCard title={<FormattedMessage id="text.evcCoreInfo" />} styles={{ body: { height: 320 } }}>
+                  <DemoEvcInfoPanel />
+                </DemoCard>
               </Col>
             </Row>
-            {shouldShowRoster && <Row gutter={[30, 30]} style={{ marginTop: 30 }} id="tour-insider">
-              <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 8, xxl: 6 }}>
-                <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
-                  <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
-                    <div className="ant-card-head-wrapper">
-                      <div className="ant-card-head-title">
-                        <FormattedMessage id="text.roster" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ant-card-body" style={{ height: '500px', overflow: 'auto' }}>
-                    <div className="ant-spin-nested-loading">
-                      <div className="ant-spin-container">
-                        <div className="ant-list ant-list-sm ant-list-split ant-list-grid sc-caiKgP ipNIuR">
-                          <div className="ant-spin-nested-loading">
-                            <div className="ant-spin-container">
-                              <div className="ant-row" style={{ marginLeft: '-5px', marginRight: '-5px', rowGap: '0px' }}>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">COOK TIMOTHY D</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">333,987</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">Adams Katherine L.</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">Maestri Luca</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">WILLIAMS JEFFREY E</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">118,128</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">O'BRIEN DEIRDRE</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">49,836</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">KONDO CHRIS</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">15,586</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">BELL JAMES A</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">GORE ALBERT JR</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">JUNG ANDREA</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div style={{ width: '100%', maxWidth: '100%' }}>
-                                  <div style={{ paddingLeft: '5px', paddingRight: '5px', flex: '1 1 auto' }} className="ant-col">
-                                    <div className="ant-list-item">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', borderBottom: '1px dotted rgba(0, 0, 0, 0.1)' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography">LEVINSON ARTHUR D</span></div>
-                                        <div className="ant-space-item"><span className="ant-typography">1,986</span></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Col>
-              <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 16, xxl: 18 }}>
-                <Card
-                  size="small"
-                  type="inner"
-                  title={<FormattedMessage id="text.insiderTransactions" />} styles={{ body: { height: 500, overflow: 'auto' } }}>
-                  <RosterContainer orientation="vertical" size="small" style={{ width: '100%' }}>
-
-                    <Space orientation="vertical" size="small" style={{ marginBottom: 24 }}>
-                      {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
-                        <Tag color={v.color}>{k}</Tag>
-                        {v.message}
-                      </div>)}
-                    </Space>
-                    <Listy
-                      items={rosterListData}
-                      rowKey={rosterRowKey}
-                      styles={{ item: ROSTER_ITEM_STYLE }}
-                      itemRender={item => (
-                        <Descriptions
-                          title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
-                          size="small"
-                          column={insiderSpan}
-                          extra={getBadgeComponent(item.transactionCode)}
-                        >
-                          <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
-                          <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
-                          <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
-                          <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
-                          <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
-                          <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
-                          <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
-                        </Descriptions>
-                      )}
-                    />
-                  </RosterContainer>
-                </Card>
-              </Col>
-            </Row>}
-            <Row style={{ marginTop: 30 }}>
-              <Col span={24}>
-                <div className="ant-card ant-card-small ant-card-type-inner sc-cTApHj fVRyQa">
-                  <div className="ant-card-head" style={{ color: 'rgb(0, 41, 61)' }}>
-                    <div className="ant-card-head-wrapper">
-                      <div className="ant-card-head-title">
-                        <FormattedMessage id="text.news" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ant-card-body" style={{ height: '700px', overflow: 'auto' }}>
-                    <div className="sc-cCcYRi kmLPwf">
-                      <div className="ant-list ant-list-split">
-                        <div className="ant-spin-nested-loading">
-                          <div className="ant-spin-container">
-                            <ul className="ant-list-items">
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://cdn.benzinga.com/files/images/story/2024/08/23/magnificent-7-shutter.jpeg?width=1200&height=800&fit=crop" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Leaked memo: Facebook details how Apple's privacy change will impact its advertising business</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Summary List Placement Facebook sent a memo to advertisers April 28 detailing the effects Apple's new privacy settings will have on ad campaigns. The memo, obtained by Insider, elaborates on an April 26 blog post advising advertisers on how to prepare for the change. Facebook warned that the results of their ad campaigns will fluctuate, with the size of audiences shrinking as users gradually update their Apple devices in the coming weeks. Facebook and Instagram will automatically opt those users out of tracking settings. Specifically, the memo says: 1-day click-through opt-out data will be modeled for advertisers. 7-day click-through and 1-day view-through attribution settings will no longer include iOS 14.5 opted-out events. 28-day click-through, 7-day view-through, 28-day view-through attribution tools will no longer be available to advertisers. The memo comes as advertisers brace for big changes from Apple, Google and others that are expected to make it harder for advertisers to target and measure digital ads.</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://cdn.benzinga.com/files/images/story/2024/08/22/Apple-M1-MacBook-Air.jpeg?width=1200&height=800&fit=crop" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Apple's Numbers Are 'Jaw-Droppers' According Wedbush's Dan Ives</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Apple Inc (NASDAQ: AAPL ) continues to prove the skeptics wrong, Wedbush analyst Dan Ives said Wednesday on CNBC's "Closing Bell." What Happened: Apple reported quarterly earnings of $1.40 per share, beating the estimate of 99 cents. Revenue of $89.58 billion beat the estimate of $77.35 billion. The company also added $90 billion to its share … Full story available on Benzinga.com</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F787545%2Fai-square-chip.jpg&op=resize&w=700" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Facebook beats expectations to post positive first quarter earnings</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Despite a slew of antitrust hearings, an operating system update threat, and reports of a data leak, the company’s revenue rose to $26.17bn Facebook earnings beat analyst expectations Wednesday, bolstered by pandemic-driven traffic and ad sales. The positive earnings report for Facebook comes despite a number of roadblocks for the company in previous months – including a slew of antitrust hearings in the US Congress, an Apple operating system update threatening its advertising revenue and reports of a 2019 data leak that had affected millions of users. Continue reading…</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://g.foolcdn.com/editorial/images/787428/happy-trader-investing-growth-profit-buy-stock-celebrate.jpg" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Apple’s sales and profits surge amid soaring demand for iPhones, Macs</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Apple on Wednesday posted sales and profits far ahead of Wall Street expectations and announced a $90 billion share buyback as customers continued to upgrade to 5G iPhones and snapped up new Mac models with Apple’s house-designed processor chips. Sales to China nearly doubled and results topped analyst targets in every category, led by $6.5 billion more…</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://staticx-tuner.zacks.com/images/articles/main/b9/69037.jpg" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Apple Retail Pioneer Ron Johnson Lands SPAC Deal For Enjoy Technology: What Investors Should Know</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>A leading telecommunications retail partner for large companies is going public with plans to bring the experience to customer's homes. The SPAC Deal: Enjoy Technology is merging with Marquee Raine Acquisition Corp (NASDAQ: MRAC ) in a deal valuing the company at $1.2 billion. The deal will provide Enjoy with around $450 million in growth capital. Current Marquee Raine Acquisition shareholders will own 23% of the company if the merger is approved. About Enjoy: With strong exclusive relationships with leading consumer brands, Enjoy is a partner for retail efforts. The company’s partners include AT&amp;T (NYSE: T ) in the U.S., BT Group in the U.K., Rogers Communications (NYSE: RCI ) in Canada and Apple Inc (NASDAQ: AAPL ) in … Full story available on Benzinga.com</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://g.foolcdn.com/editorial/images/787859/apple-iphone-getty.jpg" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Apple's Q2 Results Exceed Expectations On Strong Product Momentum, Stellar Services Performance</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Apple Inc. (NASDAQ: AAPL ) shares are solidly higher after the tech giant announced fiscal-year 2021 second-quarter results that exceeded expectations, thanks to better-than-expected iPhone revenues, record contribution by the Services segment and strong showing by the key Greater China region. The company's board authorized a dividend increase and increased share repurchase authorization. Apple's Key Q2 Numbers: Apple reported second-quarter earnings per share of $1.40, up from the year-ago 64 cents. Revenues climbed 54% year-over-year from $58.3 billion to $89.6 billion. The consensus estimates had called for EPS of 99 cents on revenues of $77.35 billion. In the previous quarter that encompassed the key holiday selling season, Apple reported EPS of $1.68 and revenues of $111.4 billion. International sales accounted for 67% of the total revenues in the second quarter compared to 64% in the previous quarter. Gross margin came in at 42.5%, up from 39.8% in the previous quarter. Operating cash flow was at $24 billion. "We are proud of our March quarter performance, which included revenue records in each of our geographic segments and strong double-digit growth in each of our product categories, driving our installed base of active devices …</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://staticx-tuner.zacks.com/images/articles/main/49/2653.jpg" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Apple sees another quarter of record revenue amid Covid buying surge</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Company, which brought in $89.6bn, has thrived during the pandemic as consumers bought more products Apple executives announced another quarter of record revenue on Wednesday, with growth driven in large part by a continued surge in sales. Earnings surpassed analysts’ expectations across categories, as sales in China doubled, Mac sales were a third higher than predicted and iPhone sales came in around $48bn – roughly $6.5bn higher than initial estimates. Continue reading…</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F787169%2Fgettyimages-1283813790-1201x742-1536a11.jpg&op=resize&w=700" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Facebook Expects ‘Ad-Targeting Headwinds’ From Apple’s Privacy Changes</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Facebook reported strong first quarter earnings on Wednesday amidst industry-wide concerns around how Apple's latest privacy changes will affect the digital advertising business, a space that Facebook dominates. "We had a strong quarter as we helped people stay connected and businesses grow," said Facebook founder and CEO Mark Zuckerberg. "We will continue to invest aggressively…</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                              <li className="ant-list-item sc-jcFkyM ihvgJG">
-                                <div className="ant-list-item-meta">
-                                  <div className="ant-list-item-meta-avatar">
-                                    <NewsImage preview={false} src="https://staticx-tuner.zacks.com/images/articles/main/58/2932.jpg" />
-                                  </div>
-                                  <div className="ant-list-item-meta-content">
-                                    <h4 className="ant-list-item-meta-title">
-                                      <div className="ant-space ant-space-horizontal ant-space-align-center" style={{ width: '100%', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                        <div className="ant-space-item" style={{ marginRight: '8px' }}><span className="ant-typography news-title" style={{ margin: '0px' }}><strong>Apple starts 2021 strong with $89.6 billion in revenue</strong></span></div>
-                                        <div className="ant-space-item">
-                                          <div style={{ position: 'relative', top: '4px' }}>
-                                            <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" style={{ color: 'rgb(50, 115, 164)' }} height={20} width={20} xmlns="http://www.w3.org/2000/svg">
-                                              <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                                            </svg>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </h4>
-                                    <div className="ant-list-item-meta-description">
-                                      <div className="ant-typography ant-typography-ellipsis ant-typography-ellipsis-multiple-line" style={{ WebkitLineClamp: 3 }}>Apple's steady stream of hardware upgrades and new services launched throughout the pandemic has held the company in good stead going into 2021.</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        </main>
-        {/* <WalkthroughTour visible={visible} onClose={() => setVisible(false)} /> */}
+          </Col>
+          {showInlineStockChart && <Col {...{ xs: 24, sm: 24, md: 24, lg: 24, xl: 14, xxl: 16 }}>
+            <TradingViewChart height={695} />
+          </Col>}
+        </Row>
+        {showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col span={24} id="tour-putcall">
+            <DemoCard title={<FormattedMessage id="text.optionPutCallRatio" />}>
+              <PutCallDummyChart />
+            </DemoCard>
+          </Col>
+        </Row>}
+        {!showInlineStockChart && <Row gutter={[30, 30]} style={{ marginTop: 30 }}>
+          <Col span={superNarrow ? 24 : 12}>
+            <Button block type="primary" icon={<BarChartOutlined />} onClick={() => handleShowStockChart()}>
+              {' '}<FormattedMessage id="text.stockChart" />
+            </Button>
+          </Col>
+          <Col span={superNarrow ? 24 : 12}>
+            <Button block type="primary" id="tour-putcall" icon={<LineChartOutlined />} onClick={() => handleShowPutCallRatioChart()}>
+              {' '}<FormattedMessage id="text.optionPutCallRatio" />
+            </Button>
+          </Col>
+        </Row>}
+        <Row gutter={[30, 30]} style={{ marginTop: 30 }} id="tour-putcall-table">
+          <Col span={24}>
+            <DemoCard title={<FormattedMessage id="text.historicalDailyPutCallRatio" />} styles={{ body: { padding: 0 } }}>
+              <DemoPutCallTable />
+            </DemoCard>
+          </Col>
+        </Row>
+        {SHOW_ROSTER && <Row gutter={[30, 30]} style={{ marginTop: 30 }} id="tour-insider">
+          <Col {...{ xs: 24, sm: 24, md: 24, lg: 12, xl: 16, xxl: 18 }}>
+            <DemoCard title={<FormattedMessage id="text.insiderTransactions" />} styles={{ body: { height: 500 } }}>
+              <RosterContainer orientation="vertical" size="small" style={{ width: '100%' }}>
+                <Space orientation="vertical" size="small" style={{ marginBottom: 24 }}>
+                  {Object.entries(INSIDER_LEGEND_INFOS).map(([k, v]) => <div key={k}>
+                    <Tag color={v.color}>{k}</Tag>
+                    {v.message}
+                  </div>)}
+                </Space>
+                <Listy
+                  items={rosterListData}
+                  rowKey={rosterRowKey}
+                  styles={{ item: ROSTER_ITEM_STYLE }}
+                  itemRender={item => (
+                    <Descriptions
+                      title={<Space>{item.fullName} {item.reportedTitle && <Text type="secondary" style={{ fontWeight: 400, fontSize: '0.8rem' }}>{item.reportedTitle}</Text>}</Space>}
+                      size="small"
+                      column={insiderSpan}
+                      extra={getBadgeComponent(item.transactionCode)}
+                    >
+                      <Descriptions.Item label="Exercise price">{item.conversionOrExercisePrice}</Descriptions.Item>
+                      <Descriptions.Item label="Filing date">{formatDate(item.filingDate)}</Descriptions.Item>
+                      <Descriptions.Item label="Post shares">{item.postShares?.toLocaleString()}</Descriptions.Item>
+                      <Descriptions.Item label="Transaction date">{formatDate(item.transactionDate)}</Descriptions.Item>
+                      <Descriptions.Item label="Transaction price">{item.transactionPrice?.toLocaleString()}</Descriptions.Item>
+                      <Descriptions.Item label="Transaction shares">{item.transactionShares?.toLocaleString()}</Descriptions.Item>
+                      <Descriptions.Item label="Transaction value">{item.transactionValue?.toLocaleString()}</Descriptions.Item>
+                    </Descriptions>
+                  )}
+                />
+              </RosterContainer>
+            </DemoCard>
+          </Col>
+        </Row>}
+        <Row style={{ marginTop: 30 }}>
+          <Col span={24}>
+            <DemoCard title={<FormattedMessage id="text.news" />} styles={{ body: { maxHeight: 700 } }}>
+              <DemoNewsPanel />
+            </DemoCard>
+          </Col>
+        </Row>
       </ContainerBody>
     </Container>
   );

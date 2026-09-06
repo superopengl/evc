@@ -78,6 +78,23 @@ const StyledLayout = styled(ProLayout)`
   transition: none;
 }
 
+// ...and below the lg breakpoint, drop the button entirely.
+//
+// ProLayout hangs it off the sider's *outer* edge (inset-inline-start: calc(100% - 11px)),
+// which is what you want on desktop: the disc straddles the boundary and reads as the handle
+// between sider and content. On mobile the sider is a drawer, that boundary clips, and all
+// that survives is the inner sliver of a white disc pinned to the seam - a cut-off circle
+// that reads as a rendering fault rather than as a control. The drawer is dismissed by
+// tapping the dimmed page, as a nav drawer on a phone is expected to be.
+//
+// The -is-mobile modifier rather than a media query: CollapsedIcon adds it from ProLayout's
+// own isMobile, which is the same flag that decides the sider is a drawer, so the desktop
+// toggle above cannot be caught by a breakpoint drifting out of sync with the layout's.
+// (HomePage hides it unqualified - layout="top" has no desktop sider for the rule to hit.)
+.ant-pro-sider-collapsed-button-is-mobile {
+  display: none;
+}
+
 `;
 
 const StyledMenu = styled(Menu)`

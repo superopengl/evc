@@ -35,7 +35,18 @@ export const ContactWidget = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
 
   return <>
-    <Affix style={{ position: 'fixed', bottom: 80, right: 20 }}>
+    {/*
+      * The z-index is not decoration. Fixed positioning alone leaves this at z-index auto,
+      * and the homepage hero raises its own content to z-index 1 (see Container's `> *` rule
+      * in homeAreas/HomeCarouselArea) so it can sit above the four-band gradient painted on
+      * its ::before. Nothing between them establishes a stacking context - ant-layout-content
+      * is positioned but z-index auto - so the two compare directly at the root and the
+      * catch phrase won, painting over the button whenever the hero was in view.
+      *
+      * 10 clears the page's own layers while staying under the fixed header (19), the cookie
+      * bar (999) and the mobile nav drawer (1001), all of which should cover this button.
+      */}
+    <Affix style={{ position: 'fixed', bottom: 80, right: 20, zIndex: 10 }}>
       <AffixContactButton type="primary" shape="square" size="large" onClick={() => setModalVisible(true)}>
         <AiOutlineMessage size={36} />
       </AffixContactButton>

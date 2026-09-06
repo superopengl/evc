@@ -9,26 +9,34 @@ import { theme } from 'antd';
 import { notify } from 'util/notify';
 
 /**
- * Google Identity Services renders one of two buttons here, and they are not the same DOM.
+ * GIS renders this button through one of three different DOMs, and which one you get depends
+ * on the **origin**, not just on whether the visitor has a Google session. All three were
+ * observed directly; do not assume from one environment what the other does.
  *
- * With no live Google session it renders the stock "Continue with Google" as real DOM in
- * this page (`div[role=button]`), so its frame can be brought in line with the antd controls
- * it sits beside: out of the box it is a 4px radius, a #dadce0 hairline and Google Sans 500
- * against antd's borderRadiusLG (10px at the current token) and Inter 600.
+ * 1. **Non-FedCM, no session** - the stock "Continue with Google" as real DOM in this page
+ *    (`div[role=button].nsm7Bb-HzV7m-LgbsSe`), with only a hidden 0x0 transport iframe. This
+ *    is what `localhost` gets, and it is the only path the class-based CSS below reaches.
+ * 2. **Non-FedCM, live session** - the personalized "Continue as <name>" variant in a
+ *    cross-origin iframe, wrapped in `.L5Fo6c-sM5MNb` (pinned to an inline
+ *    `width: fit-content`) under a `.L5Fo6c-bF1uUb` click target.
+ * 3. **FedCM** - `accounts.google.com/gsi/button?...&is_fedcm_supported=true` in a
+ *    cross-origin iframe inside `.S9gUrf-YoZ4jf`. **This is what production serves**, for the
+ *    stock and personalized button alike. The iframe deliberately bleeds past its box
+ *    (`margin: -2px -10px`, so a 341px button ships as a 361x44 frame) and the painted button
+ *    lands back on the wrapper's own content box.
  *
- * With a live session it renders the personalized "Continue as <name>" variant instead, and
- * that one lives in a **cross-origin iframe** - GIS wraps it in `.L5Fo6c-sM5MNb`, pins that
- * wrapper to an inline `width: fit-content`, and lays a `.L5Fo6c-bF1uUb` click target over
- * it. Nothing inside the frame is reachable from here, so every class-based rule below
- * misses it, and it came out ~220px wide with 4px corners next to a full-width 10px antd
- * button. (An earlier version of this file asserted the only iframe GIS creates is a hidden
- * 0x0 transport. That holds for the stock button only.)
- *
- * Width therefore goes through the one lever that reaches both: the `width` **parameter**,
- * which Google applies itself inside the frame. It takes a pixel number only, and the auth
- * card is fluid (`max-width: 420px` with fluid padding), so the host is measured and the
+ * So the frame's interior is unreachable on prod: no radius, border colour or font can be set
+ * on it, by design. Width is the one thing that crosses the boundary, via the `width`
+ * **parameter** Google applies itself inside the frame. It takes a pixel number only and the
+ * auth card is fluid (`max-width: 420px` with fluid padding), so the host is measured and the
  * number re-fed on resize - `width` is in @react-oauth/google's effect deps, so a new value
- * re-issues `renderButton`. The corners are clipped on the wrapper, which is on our side.
+ * re-issues `renderButton`. That is what puts the button on the same 341px as the email field
+ * and the submit button; before it, prod rendered GIS's ~220px intrinsic width.
+ *
+ * The radius/border/typography rules below therefore only take effect on path 1. On prod the
+ * button keeps Google's 4px corners, and `shape` (rectangular | pill | square | circle) is the
+ * only lever there is - clipping `.S9gUrf-YoZ4jf` does not help, because the frame's bleed
+ * puts the painted corners off the wrapper's own rounding.
  */
 
 /** GIS floors the personalized variant at 200px and caps every variant at 400px. */
@@ -54,7 +62,8 @@ const Styled = styled.div`
      layout shift. */
   min-height: ${props => (props.$block ? `${CONTROL_HEIGHT}px` : 'auto')};
 
-  /* --- Stock button: real DOM, in this page. ---
+  /* --- Path 1 only: the stock button as real DOM in this page (non-FedCM, e.g. localhost).
+     Production is path 3 and none of this reaches it. ---
      GIS emits its own hashed classes and no stable hook, so these are the class names it
      ships. They have been stable for the life of the library; if a future version renames
      them the button falls back to Google's stock styling rather than breaking. */
@@ -82,12 +91,13 @@ const Styled = styled.div`
     color: var(--evc-text);
   }
 
-  /* --- Personalized button: cross-origin iframe. ---
-     Only the frame is ours. Its width is already the measured column width via the width
-     parameter, so releasing GIS's inline fit-content here just lets the frame sit flush
-     rather than resizing anything; the 4px corners are what actually needs clipping back to
-     the antd radius. Google's 1px hairline is drawn inside the frame and gets clipped with it,
-     which is as square as a cross-origin button gets. */
+  /* --- Path 2 only: the personalized button's iframe wrapper (non-FedCM + live session).
+     Production is path 3, whose wrapper is .S9gUrf-YoZ4jf and cannot be clipped - see the
+     note at the top of the file. ---
+     Only the frame is ours. Its width already comes from the width parameter, so releasing
+     GIS's inline fit-content here just lets the frame sit flush rather than resizing
+     anything; the corners are clipped because this wrapper's box does coincide with the
+     painted button, unlike path 3's. */
   .L5Fo6c-sM5MNb {
     width: ${props => (props.$block ? '100% !important' : 'auto')};
     max-width: 100%;
@@ -108,7 +118,7 @@ const Styled = styled.div`
  * GIS only hands out the id_token that the backend decodes from its own rendered button, so
  * the previous `render` prop - a custom antd Button - has no equivalent. The text/theme/size/
  * shape/width props below are the whole styling surface Google exposes; anything past that is
- * the CSS above, and for the personalized variant not even that.
+ * the CSS above, and on prod's FedCM path not even that.
  */
 const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);

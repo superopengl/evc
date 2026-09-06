@@ -92,8 +92,36 @@ const StyledLayout = styled(ProLayout)`
   }
 }
 
+// The bar stands on the page's own gutter, not on pro-layout's.
+//
+// pro-components hard-codes both edges, differently, and only the leading one: 16px of
+// margin-inline on the mobile ant-pro-global-header, 16px of padding-inline-start on the
+// desktop ant-pro-top-nav-header-main, and nothing at all on the trailing side - the actions
+// slot runs to the viewport edge, and the only thing keeping the Sign Up button off it is the
+// 2px + 6px of hover padding around the last actions item. So on a phone the hamburger sat
+// 16px in, the Sign Up pill 24px in, and the cards below them 18px in: three different
+// margins down one edge, with the bar's two not even matching each other.
+//
+// Both edges are --evc-gutter now, the same variable every section below uses (index.less),
+// so the hamburger, the logo tile and the Sign Up button land on the content column at every
+// width - including the wide end, where the gutter opens to 40px and the bar used to stay
+// pinned at 16.
+//
+// This costs the horizontal menu ~64px at the desktop end, which moves the width where the
+// last items fall behind the "..." overflow from ~1060px to ~1100px. That is the width the
+// 13px item padding below was already tuned for, so nothing new collapses on a laptop.
+//
+// The -8px cancels that hover padding on the last item. It is the button's fill the eye
+// aligns to, not the invisible box around it, so without this the pill stops 8px short of
+// the gutter while the hamburger opposite it sits on the line.
+.ant-pro-global-header,
 .ant-pro-top-nav-header-main {
-  margin: auto;
+  margin: 0;
+  padding-inline: var(--evc-gutter);
+}
+
+.ant-pro-global-header-header-actions > *:last-child {
+  margin-inline-end: -8px;
 }
 
 // The bar is glass, not paint. It used to be a flat #57BB60 slab - the logo tile's green -

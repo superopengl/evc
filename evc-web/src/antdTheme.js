@@ -77,6 +77,19 @@ export const proLayoutToken = {
     colorTextCollapsedButton: 'rgba(255, 255, 255, 0.65)',
     colorTextCollapsedButtonHover: '#ffffff',
   },
+  /**
+   * The content gutter, down from pro-components' default 40. Block padding is left alone.
+   *
+   * A token rather than a `.ant-pro-layout-content { padding-inline: 28px }` rule in
+   * AppLoggedIn's StyledLayout, because pro-components emits the padding from this token and
+   * zeroes it again under `-content-has-page-container` - a plain CSS override would put the
+   * gutter back inside any page that renders a <PageContainer>, on top of the one the
+   * PageContainer draws itself. Nothing in evc uses PageContainer today, so both routes look
+   * identical on screen right now; this is the one that stays correct if something does.
+   */
+  pageContainer: {
+    paddingInlinePageContainerContent: 28,
+  },
 };
 
 /**

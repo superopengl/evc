@@ -293,7 +293,19 @@ freeze() {
   aws rds create-db-snapshot --db-instance-identifier "$INSTANCE" \
     --db-snapshot-identifier "$SNAP" --query 'DBSnapshot.DBSnapshotIdentifier' --output text
   echo "$SNAP" > /tmp/evc-pre-pg18-snapshot.txt
-  aws rds wait db-snapshot-available --db-snapshot-identifier "$SNAP"
+  # `aws rds wait db-snapshot-available` gives up after 10 min, but a snapshot here takes
+  # ~60: progress is measured against the 182 GB ALLOCATED volume, not the 16 GB used,
+  # and the gp2->gp3 conversion likely broke the incremental chain. This instance's own
+  # automated backups take 27-39 min. Poll it ourselves, and show progress.
+  say "waiting for the snapshot (expect ~60 min - this is the longest step in the window)"
+  while :; do
+    read -r st pct < <(aws rds describe-db-snapshots --db-snapshot-identifier "$SNAP" \
+      --query 'DBSnapshots[0].[Status,PercentProgress]' --output text) || true
+    printf '    %s  %s%%\n' "$st" "$pct"
+    [ "$st" = available ] && break
+    case "$st" in failed|error) warn "snapshot $st - do NOT continue"; return 1 ;; esac
+    sleep 60
+  done
   say "snapshot $SNAP available - this is your rollback"
 }
 
@@ -399,19 +411,33 @@ unlock() { clear_job_locks; }
 stats() {
   ensure_ca
   say "PG18's pg_upgrade transfers most optimizer statistics. Check whether RDS kept them."
+  # NOT pg_statistic: RDS denies it to `postgres` ("permission denied for table
+  # pg_statistic"), and under `set -e` that aborts this step before the top-up below
+  # ever runs - a silent no-op. pg_stats is the permission-filtered view and is readable.
+  # Note last_analyze/last_autoanalyze are useless here: pg_upgrade resets the stat
+  # collector, so they read 0 for every relation whether stats exist or not.
   psql_ro -c "
-    SELECT count(*) AS relations_with_stats FROM pg_class c
-    JOIN pg_namespace n ON n.oid=c.relnamespace
-    WHERE n.nspname='evc' AND c.relkind IN ('r','m')
-      AND EXISTS (SELECT 1 FROM pg_statistic s WHERE s.starelid=c.oid);"
-  say "cheap top-up for anything missing (NOT a full ANALYZE).
-      --missing-stats-only is a PG18 client flag; verified present in psql 18.6."
-  if ! time PGPASSWORD=$(pw) vacuumdb --analyze-in-stages --missing-stats-only \
-       --host="$(host)" --port=5432 --dbname="$DBNAME" --username="$DBUSER" --echo; then
-    warn "top-up failed (old client?). Falling back to a full analyze-only pass."
-    time PGPASSWORD=$(pw) vacuumdb --analyze-only --jobs "$JOBS" \
-      --host="$(host)" --port=5432 --dbname="$DBNAME" --username="$DBUSER"
-  fi
+    SELECT (SELECT count(DISTINCT tablename) FROM pg_stats WHERE schemaname='evc')
+             AS relations_with_stats,
+           (SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+             WHERE n.nspname='evc' AND c.relkind IN ('r','m')) AS relations_total;"
+  # The plan was `--analyze-in-stages --missing-stats-only` to avoid a full ANALYZE, but
+  # that flag is UNUSABLE ON RDS: the client implements it by querying pg_statistic, which
+  # RDS denies to `postgres` ("permission denied for table pg_statistic"). It is also
+  # pointless here - a full analyze-only over this database takes ~25s, measured.
+  say "full analyze-only pass ($JOBS jobs)"
+  time PGPASSWORD=$(pw) vacuumdb --analyze-only --jobs "$JOBS" \
+    --host="$(host)" --port=5432 --dbname="$DBNAME" --username="$DBUSER"
+  # Relations with reltuples=0 legitimately end up with no rows in pg_stats - an empty
+  # table has nothing to sample. Do not read that as missing statistics.
+  psql_ro -c "
+    SELECT (SELECT count(DISTINCT tablename) FROM pg_stats WHERE schemaname='evc')
+             AS with_stats,
+           (SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+             WHERE n.nspname='evc' AND c.relkind IN ('r','m')) AS total,
+           (SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+             WHERE n.nspname='evc' AND c.relkind IN ('r','m') AND c.reltuples = 0)
+             AS empty_so_no_stats;"
 }
 
 revert_params() {

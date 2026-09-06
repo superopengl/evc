@@ -160,6 +160,22 @@ const StyledLayout = styled(ProLayout)`
   padding: 0;
 }
 
+// ProLayout hangs the sider's collapse toggle off the panel's *outer* edge
+// (inset-inline-start: calc(100% - 11px)), which is where a desktop sider wants it - half on
+// the sider, half on the page. Inside the mobile drawer that edge is a clipping boundary, so
+// all that survives is the inner sliver of a white disc pinned to the seam: it reads as a
+// rendering fault rather than as a control.
+//
+// Hidden rather than repositioned. The drawer is dismissed by tapping the dimmed page, which
+// is what a nav drawer on a phone is expected to do, and this toggle is the only thing in the
+// panel that would have to be styled and given a row of its own to earn its place.
+//
+// No media query needed: layout="top" renders no sider on desktop, so this element only ever
+// exists inside the drawer below the lg breakpoint.
+.ant-pro-sider-collapsed-button {
+  display: none;
+}
+
 .ant-menu-item, .ant-menu-submenu {
   &::after {
     display: none !important;

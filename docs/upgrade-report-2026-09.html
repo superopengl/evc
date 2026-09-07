@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EasyValueCheck — Platform Upgrade Report (Sep 2026)</title>
+<style>
+  :root{
+    --ink:#16202b; --ink-2:#4a5a6a; --ink-3:#7a8a99;
+    --line:#e2e8ee; --line-2:#eef2f6; --bg:#fbfcfd; --card:#ffffff;
+    --accent:#3f9e48;
+    --red-bg:#fdecec; --red-ink:#a1231f; --red-line:#f3c9c7;
+    --amb-bg:#fff4e3; --amb-ink:#8a5300; --amb-line:#f5dcb4;
+    --yel-bg:#fbf6dd; --yel-ink:#6e5f14; --yel-line:#ece2ae;
+    --grn-bg:#e9f5ea; --grn-ink:#1f6b2b; --grn-line:#c6e3c9;
+    --blu-bg:#e9f0fa; --blu-ink:#1d4f8f; --blu-line:#c6d8f0;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:48px 32px 96px; background:var(--bg); color:var(--ink);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto}
+  header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:28px}
+  h1{font-size:27px;line-height:1.2;margin:0 0 8px;letter-spacing:-.02em}
+  .sub{color:var(--ink-2);font-size:14px;margin:0}
+  .sub code{background:var(--line-2);padding:1px 5px;border-radius:4px;font-size:12.5px}
+  .lede{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);
+        border-radius:6px;padding:16px 20px;margin:0 0 24px;color:var(--ink-2);font-size:14.5px}
+  .lede strong{color:var(--ink)}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);
+     margin:32px 0 12px;font-weight:600}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px;font-size:13px;color:var(--ink-2);align-items:center}
+  .legend span.t{margin-right:2px}
+  .controls{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .controls button{font:inherit;font-size:13px;padding:5px 12px;border:1px solid var(--line);
+    background:var(--card);border-radius:999px;color:var(--ink-2);cursor:pointer}
+  .controls button:hover{border-color:var(--ink-3);color:var(--ink)}
+  .controls button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  table{width:100%;border-collapse:collapse;background:var(--card);
+        border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13.5px}
+  thead th{position:sticky;top:0;background:#f5f8fa;text-align:left;font-weight:600;font-size:11.5px;
+    text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);
+    padding:11px 12px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:2}
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--line-2);vertical-align:top}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#f9fbfc}
+  td.num{color:var(--ink-3);font-variant-numeric:tabular-nums;width:34px;text-align:right;padding-right:14px}
+  td.area{white-space:nowrap;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td.item{font-weight:600;min-width:190px}
+  td.item .pkg{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;font-weight:600}
+  td.ver{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;white-space:nowrap;color:var(--ink-2)}
+  td.to{color:var(--ink);font-weight:600}
+  td.note{color:var(--ink-2);font-size:13px}
+  td.note strong{color:var(--ink)}
+  .b{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;
+     white-space:nowrap;border:1px solid}
+  .b.eol{background:var(--red-bg);color:var(--red-ink);border-color:var(--red-line)}
+  .b.dep{background:var(--amb-bg);color:var(--amb-ink);border-color:var(--amb-line)}
+  .b.unm{background:var(--yel-bg);color:var(--yel-ink);border-color:var(--yel-line)}
+  .b.cur{background:var(--grn-bg);color:var(--grn-ink);border-color:var(--grn-line)}
+  .b.pre{background:var(--blu-bg);color:var(--blu-ink);border-color:var(--blu-line)}
+  tr.grp td{background:#f5f8fa;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;
+    font-weight:600;color:var(--ink-3);padding:8px 12px;border-bottom:1px solid var(--line)}
+  .foot{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+        color:var(--ink-3);font-size:12.5px}
+  .foot ul{margin:8px 0 0;padding-left:18px}
+  .foot li{margin:4px 0}
+  @media print{
+    @page{margin:10mm 9mm 12mm}
+    body{padding:0;background:#fff;font-size:11px}
+    .controls{display:none}
+    thead{display:table-header-group}
+    thead th{position:static;font-size:9px;padding:6px 7px}
+    tbody tr:hover{background:transparent}
+    tbody td{padding:5px 7px}
+    table{font-size:9.5px;overflow:visible;border-radius:0}
+    tr{break-inside:avoid;page-break-inside:avoid}
+    tr.grp{break-after:avoid;page-break-after:avoid}
+    tr.grp td{padding:5px 7px}
+    /* the group separator rows already name the area, so the column is pure
+       duplication once the interactive filter is gone */
+    thead th:nth-child(2),tbody td.area{display:none}
+    header{break-after:avoid}
+    h1{font-size:20px}
+    .lede{font-size:11px;padding:10px 13px}
+    .legend{font-size:10px;gap:7px}
+    td.ver,td.item .pkg{font-size:9px}
+    td.note{font-size:9.5px}
+    .b{font-size:8.5px;padding:1px 6px}
+    .foot{font-size:9.5px;break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>EasyValueCheck — Platform Upgrade Report</h1>
+  <p class="sub">
+    Branch <code>upgrade/node-24</code> &nbsp;·&nbsp; <code>2a08f7b3</code> → <code>a215eb2b</code>
+    &nbsp;·&nbsp; 91 commits &nbsp;·&nbsp; 3–6 Sep 2026
+    &nbsp;·&nbsp; 349 files, ~20.8k added / ~32.7k removed (net −12k lines)
+  </p>
+</header>
+
+<p class="lede">
+  Every major runtime, framework and library the product depends on was lifted onto a current,
+  supported version. <strong>48 known security advisories in the frontend were cleared to zero.</strong>
+  The product surface is unchanged; the codebase is ~12k lines smaller. The driver was risk, not
+  novelty — Node 18, Create React App, AWS SDK v2, TypeORM 0.2, rxjs 6, react-router 5 and antd 4
+  were all past end-of-life, meaning no security patches and no viable path to future upgrades.
+  <strong>The PostgreSQL 14 → 18 upgrade is written but not yet executed</strong>, and PG14 reaches
+  end of life in November 2026. Its driver script has since been removed from the repo and is
+  recoverable from commit <code>a215eb2b</code>.
+</p>
+
+<h2>Status of the version being replaced</h2>
+<div class="legend">
+  <span class="b eol">EOL</span><span class="t">no patches at all</span>
+  <span class="b dep">Deprecating soon</span><span class="t">supported today, ends within ~12 months</span>
+  <span class="b unm">Unmaintained</span><span class="t">no formal EOL, effectively abandoned</span>
+  <span class="b cur">Current</span><span class="t">upgraded for compatibility, not risk</span>
+  <span class="b pre">Watch</span><span class="t">prerelease or pending action</span>
+</div>
+
+<div class="controls" id="filters">
+  <button data-f="all" aria-pressed="true">All (63)</button>
+  <button data-f="eol" aria-pressed="false">EOL</button>
+  <button data-f="dep" aria-pressed="false">Deprecating soon</button>
+  <button data-f="unm" aria-pressed="false">Unmaintained</button>
+  <button data-f="pre" aria-pressed="false">Watch / pending</button>
+  <button data-f="sec" aria-pressed="false">Security-driven</button>
+</div>
+
+<table id="tbl">
+<thead>
+  <tr>
+    <th class="num">#</th>
+    <th>Area</th>
+    <th>Item</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Old status</th>
+    <th>Notes</th>
+  </tr>
+</thead>
+<tbody>
+
+<tr class="grp"><td colspan="7">Database</td></tr>
+<tr data-s="dep"><td class="num">1</td><td class="area">Database</td><td class="item">PostgreSQL — AWS RDS <span class="pkg">evc</span></td><td class="ver">14.22</td><td class="ver to">18.6</td><td><span class="b dep">Deprecating soon</span></td><td class="note"><strong>PG14 community EOL 12 Nov 2026</strong> (~2 months out). RDS standard support ends shortly after, then billed Extended Support. A staged, idempotent, resumable driver script was written for this, then removed from the repo; it lives only in history at <span class="pkg">a215eb2b:devops/pg18-upgrade.sh</span>.</td></tr>
+<tr data-s="cur"><td class="num">2</td><td class="area">Database</td><td class="item">RDS storage class</td><td class="ver">gp2</td><td class="ver to">gp3</td><td><span class="b cur">Current</span></td><td class="note">Throughput and cost; done as no-downtime pre-window prep.</td></tr>
+
+<tr class="grp"><td colspan="7">Runtime &amp; build</td></tr>
+<tr data-s="eol"><td class="num">3</td><td class="area">Runtime</td><td class="item">Node.js</td><td class="ver">18</td><td class="ver to">24 LTS</td><td><span class="b eol">EOL</span></td><td class="note"><strong>Node 18 EOL 30 Apr 2025.</strong> Node 24 is Active LTS, maintained to Apr 2028. Also removed the legacy OpenSSL / <span class="pkg">--no-experimental-fetch</span> workarounds Node 18 needed.</td></tr>
+<tr data-s="eol"><td class="num">4</td><td class="area">Runtime</td><td class="item">Docker base image</td><td class="ver">node:18-slim</td><td class="ver to">node:24-slim</td><td><span class="b eol">EOL</span></td><td class="note">Follows the Node runtime.</td></tr>
+<tr data-s="eol"><td class="num">5</td><td class="area">Build</td><td class="item">Frontend bundler — <span class="pkg">react-scripts</span> / <span class="pkg">@craco/craco</span></td><td class="ver">5.0 / 6.4</td><td class="ver to">Vite 8.2</td><td><span class="b eol">EOL</span></td><td class="note"><strong>Create React App was officially deprecated by the React team in Feb 2025.</strong> Dev builds now sub-second; 157 components converted to <span class="pkg">.jsx</span>. Build output path unchanged, so the deploy pipeline needed no rework.</td></tr>
+<tr data-s="cur"><td class="num">6</td><td class="area">Build</td><td class="item">Repository layout</td><td class="ver">2 independent installs</td><td class="ver to">pnpm workspace</td><td><span class="b cur">Current</span></td><td class="note">One lockfile, one <span class="pkg">pnpm i</span>, one-command <span class="pkg">pnpm start</span>. Local dev now runs on a single origin, matching production. Dockerfile rewritten with lockfile-only layer caching and <span class="pkg">pnpm deploy</span> pruning.</td></tr>
+
+<tr class="grp"><td colspan="7">Backend — evc-app</td></tr>
+<tr data-s="eol"><td class="num">7</td><td class="area">Backend</td><td class="item"><span class="pkg">aws-sdk</span> → <span class="pkg">@aws-sdk/*</span></td><td class="ver">2.848</td><td class="ver to">3.1120</td><td><span class="b eol">EOL</span></td><td class="note"><strong>AWS SDK for JavaScript v2 reached end of support 8 Sep 2025.</strong> Modular v3 clients for S3, SES and CloudWatch Events.</td></tr>
+<tr data-s="eol"><td class="num">8</td><td class="area">Backend</td><td class="item"><span class="pkg">typeorm</span></td><td class="ver">0.2.34</td><td class="ver to">1.1.0</td><td><span class="b eol">EOL</span></td><td class="note">0.2 line frozen. Two-major jump that deleted the global API used in ~350 places; a compatibility layer preserved every call site. Surfaced and fixed <strong>three real production bugs</strong> — <span class="pkg">daily:calendar</span>, <span class="pkg">feed:close</span> and <span class="pkg">feed:eps</span> all crashed on an empty-criteria delete.</td></tr>
+<tr data-s="eol"><td class="num">9</td><td class="area">Backend</td><td class="item"><span class="pkg">typeorm-plus</span></td><td class="ver">0.1.2</td><td class="ver to">removed</td><td><span class="b eol">EOL</span></td><td class="note">Abandoned community fork; no longer needed.</td></tr>
+<tr data-s="dep"><td class="num">10</td><td class="area">Backend</td><td class="item"><span class="pkg">express</span></td><td class="ver">4.17</td><td class="ver to">5.2</td><td><span class="b dep">Deprecating soon</span></td><td class="note">v4 is maintenance / security-only since v5 GA. Required routing and typing changes across all controllers.</td></tr>
+<tr data-s="eol"><td class="num">11</td><td class="area">Backend</td><td class="item"><span class="pkg">redis</span> (node-redis)</td><td class="ver">3.0</td><td class="ver to">5.12</td><td><span class="b eol">EOL</span></td><td class="note">v3 unmaintained. Promise-based client with lazy connect and a connect timeout race, so a Redis outage fails fast instead of hanging.</td></tr>
+<tr data-s="unm"><td class="num">12</td><td class="area">Backend</td><td class="item"><span class="pkg">puppeteer</span></td><td class="ver">21.5</td><td class="ver to">25.9</td><td><span class="b unm">Unmaintained</span></td><td class="note">Its pinned Chrome build no longer launches on current macOS — the long-standing "crashes on Apple Silicon" problem.</td></tr>
+<tr data-s="dep"><td class="num">13</td><td class="area">Backend</td><td class="item"><span class="pkg">body-parser</span></td><td class="ver">1.19</td><td class="ver to">2.3</td><td><span class="b dep">Deprecating soon</span></td><td class="note">v1 tracks Express 4.</td></tr>
+<tr data-s="dep"><td class="num">14</td><td class="area">Backend</td><td class="item"><span class="pkg">serve-static</span></td><td class="ver">1.14</td><td class="ver to">2.2</td><td><span class="b dep">Deprecating soon</span></td><td class="note">v1 tracks Express 4.</td></tr>
+<tr data-s="cur"><td class="num">15</td><td class="area">Backend</td><td class="item"><span class="pkg">express-fileupload</span></td><td class="ver">1.2</td><td class="ver to">1.5</td><td><span class="b cur">Current</span></td><td class="note">Express 5 compatibility.</td></tr>
+<tr data-s="cur"><td class="num">16</td><td class="area">Backend</td><td class="item"><span class="pkg">compression</span></td><td class="ver">1.7</td><td class="ver to">1.8</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">17</td><td class="area">Backend</td><td class="item"><span class="pkg">cookie-parser</span></td><td class="ver">1.4.5</td><td class="ver to">1.4.7</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">18</td><td class="area">Backend</td><td class="item"><span class="pkg">cors</span></td><td class="ver">2.8.5</td><td class="ver to">2.8.6</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="unm"><td class="num">19</td><td class="area">Backend</td><td class="item"><span class="pkg">express-list-endpoints</span></td><td class="ver">5.0</td><td class="ver to">removed</td><td><span class="b unm">Unmaintained</span></td><td class="note">Reads the Express 4 internal router and silently returns nothing on Express 5. Replaced with an in-house 30-line equivalent.</td></tr>
+<tr data-s="cur"><td class="num">20</td><td class="area">Backend</td><td class="item"><span class="pkg">@types/express</span></td><td class="ver">4.17</td><td class="ver to">5.0</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+
+<tr class="grp"><td colspan="7">Frontend — evc-web</td></tr>
+<tr data-s="eol"><td class="num">21</td><td class="area">Frontend</td><td class="item"><span class="pkg">react</span> / <span class="pkg">react-dom</span></td><td class="ver">17.0</td><td class="ver to">19.2</td><td><span class="b eol">EOL</span></td><td class="note">v17 receives no patches. 128 <span class="pkg">defaultProps</span> converted (silently a no-op in React 19) and 33 <span class="pkg">unstable_batchedUpdates</span> call sites removed.</td></tr>
+<tr data-s="eol"><td class="num">22</td><td class="area">Frontend</td><td class="item"><span class="pkg">antd</span></td><td class="ver">4.16</td><td class="ver to">6.6</td><td><span class="b eol">EOL</span></td><td class="note">v4 unmaintained. Theming moved from Less variables to design tokens; 29 silently-broken <span class="pkg">visible</span> props, <span class="pkg">List</span>→<span class="pkg">Listy</span>, <span class="pkg">Tabs.TabPane</span> and <span class="pkg">Collapse</span> children → items API all migrated.</td></tr>
+<tr data-s="pre"><td class="num">23</td><td class="area">Frontend</td><td class="item"><span class="pkg">@ant-design/pro-layout</span> → <span class="pkg">pro-components</span></td><td class="ver">6.19</td><td class="ver to">3.1.14-7</td><td><span class="b pre">Watch</span></td><td class="note"><strong>Prerelease.</strong> No stable antd-6 build of the layout library exists yet; pro-layout tops out at 7.22.7 which peers antd 4/5 only. Pin to stable when it ships.</td></tr>
+<tr data-s="cur"><td class="num">24</td><td class="area">Frontend</td><td class="item"><span class="pkg">@ant-design/icons</span></td><td class="ver">4.6</td><td class="ver to">6.3</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="unm"><td class="num">25</td><td class="area">Frontend</td><td class="item"><span class="pkg">@ant-design/charts</span></td><td class="ver">1.4</td><td class="ver to">2.6</td><td><span class="b unm">Unmaintained</span></td><td class="note">Underlying G2 v4 → v5; all chart configs ported.</td></tr>
+<tr data-s="cur"><td class="num">26</td><td class="area">Frontend</td><td class="item"><span class="pkg">@ant-design/plots</span></td><td class="ver">2.2</td><td class="ver to">2.6</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="unm"><td class="num">27</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-router-dom</span></td><td class="ver">5.2</td><td class="ver to">7.18</td><td><span class="b unm">Unmaintained</span></td><td class="note">Two-major jump; a <span class="pkg">withRouter</span> shim keeps existing class components working.</td></tr>
+<tr data-s="eol"><td class="num">28</td><td class="area">Frontend</td><td class="item"><span class="pkg">rxjs</span></td><td class="ver">6.6</td><td class="ver to">7.8</td><td><span class="b eol">EOL</span></td><td class="note">v6 end-of-life. Also removed a deprecated alias import that would break on the v8 line.</td></tr>
+<tr data-s="unm"><td class="num">29</td><td class="area">Frontend</td><td class="item"><span class="pkg">moment</span> + <span class="pkg">moment-timezone</span></td><td class="ver">2.29 / 0.5</td><td class="ver to">dayjs 1.11</td><td><span class="b unm">Unmaintained</span></td><td class="note">Moment self-declared legacy since 2020. dayjs is also what antd 6 uses internally, so this removes a duplicate date stack.</td></tr>
+<tr data-s="eol"><td class="num">30</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-google-login</span></td><td class="ver">5.2</td><td class="ver to">@react-oauth/google 0.13</td><td><span class="b eol">EOL</span></td><td class="note"><strong>The underlying Google Sign-In JavaScript platform library was shut down 31 Mar 2023.</strong> Replaced with Google Identity Services.</td></tr>
+<tr data-s="unm"><td class="num">31</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-paypal-button-v2</span></td><td class="ver">2.6</td><td class="ver to">@paypal/react-paypal-js 10.4</td><td><span class="b unm">Unmaintained</span></td><td class="note">Abandoned wrapper replaced by PayPal's own SDK.</td></tr>
+<tr data-s="unm"><td class="num">32</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-tradingview-widget</span></td><td class="ver">1.3</td><td class="ver to">react-ts-tradingview-widgets 1.2</td><td><span class="b unm">Unmaintained</span></td><td class="note">Abandoned; maintained equivalent.</td></tr>
+<tr data-s="unm"><td class="num">33</td><td class="area">Frontend</td><td class="item"><span class="pkg">wangeditor-for-react</span></td><td class="ver">1.4</td><td class="ver to">@wangeditor/editor 5.1 + -for-react 1.0</td><td><span class="b unm">Unmaintained</span></td><td class="note">Rich-text editor moved onto the vendor's supported packages.</td></tr>
+<tr data-s="eol"><td class="num">34</td><td class="area">Frontend</td><td class="item"><span class="pkg">reactjs-localstorage</span></td><td class="ver">1.0</td><td class="ver to">in-house util</td><td><span class="b eol">EOL</span></td><td class="note">Assigned to an undeclared global — a silent implicit global under CRA, a hard runtime error under ESM. Replaced with 54 lines we own.</td></tr>
+<tr data-s="cur"><td class="num">35</td><td class="area">Frontend</td><td class="item"><span class="pkg">@stripe/react-stripe-js</span></td><td class="ver">1.4</td><td class="ver to">6.8</td><td><span class="b cur">Current</span></td><td class="note">Payment path — React 19 compatibility.</td></tr>
+<tr data-s="cur"><td class="num">36</td><td class="area">Frontend</td><td class="item"><span class="pkg">@stripe/stripe-js</span></td><td class="ver">1.15</td><td class="ver to">9.14</td><td><span class="b cur">Current</span></td><td class="note">Payment path.</td></tr>
+<tr data-s="cur"><td class="num">37</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-intl</span></td><td class="ver">5.20</td><td class="ver to">10.1</td><td><span class="b cur">Current</span></td><td class="note">en-US / zh-CN localisation.</td></tr>
+<tr data-s="cur"><td class="num">38</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-big-calendar</span></td><td class="ver">0.32</td><td class="ver to">1.20</td><td><span class="b cur">Current</span></td><td class="note">Earnings calendar.</td></tr>
+<tr data-s="cur"><td class="num">39</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-select</span></td><td class="ver">4.3</td><td class="ver to">5.10</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">40</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-icons</span></td><td class="ver">4.2</td><td class="ver to">5.7</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">41</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-joyride</span></td><td class="ver">2.8</td><td class="ver to">3.2</td><td><span class="b cur">Current</span></td><td class="note">Pro Member guided tour rebuilt on the v3 API.</td></tr>
+<tr data-s="cur"><td class="num">42</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-responsive</span></td><td class="ver">8.2</td><td class="ver to">10.0</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">43</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-cookie-consent</span></td><td class="ver">6.2</td><td class="ver to">10.0</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">44</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-time-ago</span></td><td class="ver">6.2</td><td class="ver to">7.4</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">45</td><td class="area">Frontend</td><td class="item"><span class="pkg">react-highlight-words</span></td><td class="ver">0.17</td><td class="ver to">0.21</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">46</td><td class="area">Frontend</td><td class="item"><span class="pkg">styled-components</span></td><td class="ver">5.3</td><td class="ver to">6.5</td><td><span class="b cur">Current</span></td><td class="note">React 19 compatibility.</td></tr>
+<tr data-s="cur"><td class="num">47</td><td class="area">Frontend</td><td class="item"><span class="pkg">use-local-storage-state</span></td><td class="ver">11.0</td><td class="ver to">20.0</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="cur"><td class="num">48</td><td class="area">Frontend</td><td class="item"><span class="pkg">@loadable/component</span></td><td class="ver">5.15</td><td class="ver to">5.16</td><td><span class="b cur">Current</span></td><td class="note">Route-level code splitting.</td></tr>
+<tr data-s="cur"><td class="num">49</td><td class="area">Frontend</td><td class="item"><span class="pkg">javascript-time-ago</span></td><td class="ver">2.3</td><td class="ver to">2.6</td><td><span class="b cur">Current</span></td><td class="note">—</td></tr>
+<tr data-s="unm"><td class="num">50</td><td class="area">Frontend</td><td class="item">Dead dependencies removed — <span class="pkg">i18next</span>, <span class="pkg">react-to-print</span>, <span class="pkg">history</span>, <span class="pkg">react-router-hash-link</span>, <span class="pkg">babel-plugin-import</span>, <span class="pkg">@testing-library/jest-dom</span>, <span class="pkg">nodemon</span>, <span class="pkg">rollup</span>, <span class="pkg">rollup-plugin-typescript2</span></td><td class="ver">—</td><td class="ver to">removed</td><td><span class="b unm">Unmaintained</span></td><td class="note">Every declared dependency was scanned for an actual import, script or config reference. Two long-broken npm scripts removed with them.</td></tr>
+
+<tr class="grp"><td colspan="7">Security — 48 known advisories cleared to 0</td></tr>
+<tr data-s="eol sec"><td class="num">51</td><td class="area">Security</td><td class="item"><span class="pkg">dompurify</span></td><td class="ver">2.2.9</td><td class="ver to">3.4.14</td><td><span class="b eol">EOL</span></td><td class="note"><strong>19 advisories cleared</strong>, including a <strong>critical</strong> prototype-pollution tampering issue and high-severity nesting-based mXSS. This is the XSS sanitizer guarding admin-authored email-template HTML rendered via <span class="pkg">dangerouslySetInnerHTML</span> — a bypass defeats the only reason the dependency exists.</td></tr>
+<tr data-s="eol sec"><td class="num">52</td><td class="area">Security</td><td class="item"><span class="pkg">axios</span></td><td class="ver">0.21.1</td><td class="ver to">1.20.0</td><td><span class="b eol">EOL</span></td><td class="note"><strong>24 advisories cleared, 11 high</strong> — credential theft and response hijacking via prototype pollution, header injection, ReDoS. All traffic goes through one wrapper in <span class="pkg">services/http.js</span>, so the blast radius of the change was small.</td></tr>
+<tr data-s="eol sec"><td class="num">53</td><td class="area">Security</td><td class="item"><span class="pkg">form-data</span></td><td class="ver">3.0.1</td><td class="ver to">removed</td><td><span class="b eol">EOL</span></td><td class="note"><strong>2 advisories cleared</strong> — critical unsafe boundary generation, high CRLF injection. Its browser build was a plain re-export of native <span class="pkg">FormData</span>, so deletion is exactly equivalent.</td></tr>
+<tr data-s="cur sec"><td class="num">54</td><td class="area">Security</td><td class="item"><span class="pkg">uuid</span></td><td class="ver">8.3</td><td class="ver to">14.0</td><td><span class="b cur">Current</span></td><td class="note">Part of the advisory sweep.</td></tr>
+<tr data-s="cur sec"><td class="num">55</td><td class="area">Security</td><td class="item"><span class="pkg">query-string</span></td><td class="ver">6.14</td><td class="ver to">9.5</td><td><span class="b cur">Current</span></td><td class="note">Part of the sweep; ESM-only, which Vite unblocked. Caught one silent runtime break during the migration (default-only export).</td></tr>
+<tr data-s="eol sec"><td class="num">56</td><td class="area">Security</td><td class="item">Unpatched dependency trees removed — aws-sdk v2, Express 4, TypeORM 0.2, CRA</td><td class="ver">—</td><td class="ver to">—</td><td><span class="b eol">EOL</span></td><td class="note">Four large unmaintained trees off the patch-risk surface as a side effect of items 5, 7, 8 and 10.</td></tr>
+
+<tr class="grp"><td colspan="7">Not upgraded — remaining exposure</td></tr>
+<tr data-s="eol pre"><td class="num">57</td><td class="area">Remaining</td><td class="item"><span class="pkg">jest</span></td><td class="ver">26.6</td><td class="ver to">not upgraded</td><td><span class="b eol">EOL</span></td><td class="note">Also note there are no test files in either package; the migration was verified by browser walkthrough and batch-job smoke runs. Adding Vitest is the natural next investment.</td></tr>
+<tr data-s="eol pre"><td class="num">58</td><td class="area">Remaining</td><td class="item"><span class="pkg">eslint</span></td><td class="ver">7.20</td><td class="ver to">not upgraded</td><td><span class="b eol">EOL</span></td><td class="note">v8 is also EOL; current is v9 flat config.</td></tr>
+<tr data-s="eol pre"><td class="num">59</td><td class="area">Remaining</td><td class="item"><span class="pkg">@types/node</span></td><td class="ver">14</td><td class="ver to">not upgraded</td><td><span class="b eol">EOL</span></td><td class="note">Ten majors behind the Node 24 runtime it is meant to describe.</td></tr>
+<tr data-s="unm pre"><td class="num">60</td><td class="area">Remaining</td><td class="item"><span class="pkg">ts-node</span></td><td class="ver">9.1</td><td class="ver to">not upgraded</td><td><span class="b unm">Unmaintained</span></td><td class="note">Used by the dev server, the TypeORM CLI and every batch job's dev variant.</td></tr>
+<tr data-s="unm pre"><td class="num">61</td><td class="area">Remaining</td><td class="item"><span class="pkg">nodemon</span> (backend)</td><td class="ver">2.0</td><td class="ver to">not upgraded</td><td><span class="b unm">Unmaintained</span></td><td class="note">Dev-only.</td></tr>
+<tr data-s="pre"><td class="num">62</td><td class="area">Remaining</td><td class="item"><span class="pkg">@ant-design/pro-components</span></td><td class="ver">3.1.14-7</td><td class="ver to">pin to stable</td><td><span class="b pre">Watch</span></td><td class="note">Currently on a prerelease (see item 23). Swap when an antd-6 stable release ships.</td></tr>
+<tr data-s="dep pre"><td class="num">63</td><td class="area">Remaining</td><td class="item">PostgreSQL 18 migration execution</td><td class="ver">not started</td><td class="ver to">needs a window</td><td><span class="b dep">Deprecating soon</span></td><td class="note"><strong>Hard deadline: PG14 EOL 12 Nov 2026.</strong> A staged, resumable driver script exists but is no longer in the working tree — recover it with <span class="pkg">git show a215eb2b:devops/pg18-upgrade.sh</span>. Needs a booked maintenance window and an operator.</td></tr>
+
+</tbody>
+</table>
+
+<div class="foot">
+  <strong>Recommended next slice</strong>
+  <ul>
+    <li><strong>Execute the PostgreSQL 18 upgrade (item 63)</strong> — the only item with an external deadline.</li>
+    <li><strong>Backend dev toolchain (items 57–61)</strong> — low risk, dev-only, and the last remaining EOL entries in the stack.</li>
+    <li><strong>Pin pro-components to stable (item 62)</strong> when upstream ships it.</li>
+  </ul>
+  <p style="margin-top:14px">
+    Support-status dates cited: Node 18 EOL 30 Apr 2025 · AWS SDK for JavaScript v2 end of support 8 Sep 2025 ·
+    Create React App deprecated Feb 2025 · Google Sign-In JS platform shutdown 31 Mar 2023 ·
+    PostgreSQL 14 community EOL 12 Nov 2026. AWS RDS end-of-standard-support for PG14 follows the community
+    date; confirm the exact RDS cut-off with the AWS console before scheduling the window.
+    Advisory counts are from OSV at the time of the upgrade.
+  </p>
+  <p>Generated from <code>2a08f7b3..a215eb2b</code> on branch <code>upgrade/node-24</code>.</p>
+</div>
+
+</div>
+<script>
+(function(){
+  var btns = document.querySelectorAll('#filters button');
+  var rows = document.querySelectorAll('#tbl tbody tr');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      btns.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      var f = b.dataset.f;
+      rows.forEach(function(r){
+        if (r.classList.contains('grp')) { r.style.display = (f === 'all') ? '' : 'none'; return; }
+        var s = (r.dataset.s || '').split(' ');
+        r.style.display = (f === 'all' || s.indexOf(f) !== -1) ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

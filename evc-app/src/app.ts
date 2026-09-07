@@ -121,27 +121,45 @@ export function createAppInstance() {
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listAppEndpoints(app)));
   /**
-   * Two different caching rules, because these are two different kinds of file.
+   * Two caching rules, because these are two different kinds of file.
    *
    * Everything Vite emits into build/assets carries a content hash in its filename, so a given
-   * URL's bytes can never change and `immutable` is exactly right - the browser is told not to
-   * revalidate for a year, and a new build simply produces new names.
+   * URL's bytes can never change. `immutable` is exactly right there: never revalidate, and a
+   * new build simply produces new names.
    *
    * index.html is the opposite. It always lives at the same URL and it is the only thing that
-   * maps to those hashed names. Serving it `immutable` pinned every returning visitor to
-   * whichever bundle was current the first time they loaded the site: `immutable` means the
-   * browser will not even send a conditional request, so a release stayed invisible until the
-   * visitor hard-refreshed. It has to revalidate. `no-cache` still allows the cached copy to be
-   * reused - it just requires an ETag check first, which is a 304 in the common case.
+   * maps to those hashed names, so whatever a client has cached decides which bundle it runs.
+   * The split below is deliberate, and the two halves are aimed at two different caches:
+   *
+   * `s-maxage` is read by shared caches, i.e. CloudFront, which holds the HTML for a year and is
+   * emptied by the invalidation at the end of `pnpm release`. So the CDN still serves the HTML
+   * from the edge, and the release remains the thing that controls freshness. (The
+   * distribution's evc-cache-policy has MaxTTL 31536000, so this lands at the ceiling rather
+   * than being clamped.)
+   *
+   * `max-age=0, must-revalidate` is what the browser reads: ask every time, and take the 304.
+   *
+   * That distinction is the whole point, because it is the one an invalidation cannot cross.
+   * This used to be a flat `public, max-age=36536000, immutable` on everything, and since there
+   * is no ResponseHeadersPolicy on the distribution, CloudFront passed it straight through to
+   * the browser. `immutable` means the browser does not send a conditional request at all, so a
+   * returning visitor never reached CloudFront to discover it had been invalidated - they stayed
+   * on the bundle they first loaded, for fourteen months, and a release was invisible to them
+   * until they hard-refreshed.
+   *
+   * If a release ever ships without the invalidation, the s-maxage year means CloudFront will
+   * serve stale HTML until someone notices. Drop it to a few minutes if that trade stops looking
+   * right; the edge hit rate barely moves at this traffic level.
    */
+  const HTML_CACHE_CONTROL = 'public, max-age=0, s-maxage=31536000, must-revalidate';
+  const ASSET_CACHE_CONTROL = 'public, max-age=31536000, immutable'; // 1 year, the max a year actually is
+
   app.use('/', serveStatic(staticWwwDir, {
     cacheControl: true,
     setHeaders: (res, filePath) => {
       res.setHeader(
         'Cache-Control',
-        /\.html$/i.test(filePath)
-          ? 'no-cache'
-          : 'public, max-age=31536000, immutable' // 1 year, the max a year actually is
+        /\.html$/i.test(filePath) ? HTML_CACHE_CONTROL : ASSET_CACHE_CONTROL
       );
     }
   }));
@@ -154,9 +172,11 @@ export function createAppInstance() {
   // Same file, same rule as above - this is the SPA deep-link path (/dashboard, /stock/AAPL),
   // and it must not pin a visitor to an old bundle either. res.sendFile would otherwise send
   // its own `public, max-age=0`.
-  // `cacheControl: false` so send() does not overwrite the header with its own max-age.
+  // Same file as above, so the same rule - this is the SPA deep-link path (/dashboard,
+  // /stock/AAPL) and it must not pin a visitor to an old bundle either. `cacheControl: false`
+  // so send() does not overwrite the header with its own max-age.
   app.get('/{*splat}', (req, res) => {
-    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Cache-Control', HTML_CACHE_CONTROL);
     res.sendFile(`${staticWwwDir}/index.html`, { cacheControl: false });
   });
 

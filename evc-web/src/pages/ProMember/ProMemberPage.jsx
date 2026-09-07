@@ -669,9 +669,23 @@ const ProMemberPage = (props) => {
           centered mask={{ closable: true }}>
           <PutCallDummyChart />
         </Modal>
+        {/* The same card as /signup, not a dialog that happens to contain the same form. It
+            used to be a 340px box with antd's own corners and no brand strip, next to a 420px
+            page card with 18px corners and the hero bands - the two read as different products.
+            `.evc-auth-card` carries all of that and is mapped onto the modal's content element;
+            body padding goes to 0 because the class already owns the padding.
+
+            The `style`/`width` pair it replaces disagreed with each other (300 vs 340) - antd
+            takes `width`, so the 300 was dead.
+
+            The semantic key is `container`, not `content`: antd 6 renamed the element to
+            `.ant-modal-container` and there is no `content` key any more. An unknown key is
+            dropped in silence, so the wrong one looks exactly like the CSS not matching. */}
         <Modal
-          style={{ maxWidth: 'calc(100vw - 20px)', width: 300 }}
-          width={340}
+          classNames={{ container: 'evc-auth-card' }}
+          styles={{ body: { padding: 0 } }}
+          width={420}
+          style={{ maxWidth: 'calc(100vw - 32px)' }}
           open={signUpVisible}
           destroyOnHidden={true}
           onOk={() => setSignUpVisible(false)}

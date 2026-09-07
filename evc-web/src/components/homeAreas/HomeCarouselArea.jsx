@@ -130,8 +130,9 @@ const Lockup = styled.div`
  * single set of numbers rather than each carrying its own. The search box used to be a
  * round 420px against a 402px button row, which left it visibly 18px proud on either side.
  *
- * Google renders its own button and only takes a pixel `width`, so ACTION_WIDTH has to be
- * passed to it as a number as well as used in CSS here.
+ * The Google button takes the same number so the two actions match. It used to be Google's own
+ * rendered widget, which floored its width at 200px and so sat 5px proud of the button beside
+ * it; now that it is a plain antd Button the two are genuinely the same width.
  */
 const ACTION_WIDTH = 195;
 const ACTION_GAP = 12;

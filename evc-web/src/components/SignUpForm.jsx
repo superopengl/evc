@@ -8,7 +8,7 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import { notify } from 'util/notify';
 import queryString from 'query-string';
 import { FormattedMessage, useIntl } from 'react-intl';
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 /**
  * The control stack is the same one /login uses, in the same order - Google, an "or" rule,
@@ -54,9 +54,21 @@ const SignUpForm = (props) => {
 
   return (
     <div className="evc-auth-form">
-      {showTitle && <Title level={2} style={{ marginBottom: 24 }}>
-        <FormattedMessage id="menu.signUp" />
-      </Title>}
+      {/* The same head AuthPageShell renders on /signup, in the same markup, so the modal on
+          /pro-member gets the page's eyebrow + display heading + subtitle rather than a bare
+          antd Title. `.evc-auth-card` styles all three; the shell owns them on the page, this
+          owns them in the modal, and only one of the two ever renders. */}
+      {showTitle && <div className="auth-head">
+        <span className="evc-eyebrow auth-eyebrow">
+          <FormattedMessage id="auth.signUpEyebrow" />
+        </span>
+        <h1 className="evc-display">
+          <FormattedMessage id="auth.signUpTitle" />
+        </h1>
+        <p className="auth-subtitle">
+          <FormattedMessage id="auth.signUpSubtitle" />
+        </p>
+      </div>}
       <GoogleSsoButton block referralCode={referralCode} />
       <Divider className="auth-divider" plain>
         <FormattedMessage id="text.or" />

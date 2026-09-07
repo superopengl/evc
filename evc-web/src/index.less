@@ -372,6 +372,76 @@ section[id] {
   scroll-margin-top: 72px;
 }
 
+// The card the auth form sits in. Defined here rather than in components/AuthPageShell so the
+// /signup page and the sign-up modal ProMemberPage opens share ONE definition - they used to
+// disagree, the modal being a bare 340px antd dialog with square-ish corners and no brand
+// strip while the page was an 18px card with the hero bands across its top edge.
+//
+// The shell adds the page-only parts (max-width, drop shadow); the modal maps it onto
+// .ant-modal-content. Everything visual is here so neither can drift from the other.
+@auth-card-radius: 18px;
+@auth-card-padding: clamp(28px, 3vw, 40px);
+
+.evc-auth-card {
+  position: relative;
+  padding: @auth-card-padding;
+  border: 1px solid var(--evc-line);
+  border-radius: @auth-card-radius;
+  background: var(--evc-paper);
+  // Required: it is what clips the ::before strip to the 18px corners.
+  overflow: hidden;
+
+  // The hero's four bands, 4px, pinned to the top edge. This is the one literal quote of the
+  // homepage on the auth screens, and what makes them read as the same site.
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 4px;
+    background-image: linear-gradient(-45deg,
+      #89dff1, #89dff1 25%,
+      #55b0d4 25%, #55b0d4 50%,
+      #7dd487 50%, #7dd487 75%,
+      #57bb60 75%, #57bb60 100%);
+  }
+
+  .auth-head {
+    margin-block-end: 28px;
+  }
+
+  .auth-eyebrow {
+    display: block;
+    color: var(--evc-signal-deep);
+    margin-block-end: 12px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(24px, 2.4vw, 30px);
+    color: var(--evc-text);
+  }
+
+  .auth-subtitle {
+    margin: 12px 0 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--evc-text-muted);
+  }
+}
+
+// antd 6 sets the box on `.ant-modal .ant-modal-container` - two classes, so it outranks the
+// single `.evc-auth-card` and the modal came out with antd's 10px corners and 20px/24px padding
+// instead of the card's. Matching antd's own selector puts this at three classes, which wins on
+// specificity rather than on which stylesheet happens to be injected last: antd 6 mounts its
+// CSS-in-JS at render time, so a tie would resolve in antd's favour here and ours on the page.
+.ant-modal .ant-modal-container.evc-auth-card {
+  padding: @auth-card-padding;
+  border: 1px solid var(--evc-line);
+  border-radius: @auth-card-radius;
+  background: var(--evc-paper);
+}
+
 // The /login and /signup control stack - Google button, "or" rule, fields, one primary
 // action. It lives here rather than in components/AuthPageShell because SignUpForm is also
 // opened in a modal from ProMemberPage, which is outside the shell; both roots carry the

@@ -33,6 +33,9 @@ export async function inviteUser(email, role = 'member') {
   return httpPost(`auth/invite`, { email, role });
 }
 
+// `token` is the Google OAuth authorization code from the popup flow, not an id_token. The
+// field name is kept because api.yml declares no request schema and the API reads req.body.token;
+// renaming it would be churn on both sides for nothing.
 export async function ssoGoogle(token, referralCode) {
   return httpPost(`auth/sso/google`, { token, referralCode });
 }

@@ -28,13 +28,6 @@ import { INK_BG } from 'components/homeAreas/HomeSection';
  * logo lockup it carries reappears above the card at that width.
  */
 
-// The hero's bands: #89DFF1 / #55B0D4 / #7DD487 / #57BB60, hard stops on a -45deg axis.
-const HERO_BANDS = `linear-gradient(-45deg,
-  #89dff1, #89dff1 25%,
-  #55b0d4 25%, #55b0d4 50%,
-  #7dd487 50%, #7dd487 75%,
-  #57bb60 75%, #57bb60 100%)`;
-
 const BRAND_BREAKPOINT = 992;
 
 const Page = styled.div`
@@ -204,50 +197,16 @@ const MobileLockup = styled(Link)`
   }
 `;
 
-const Card = styled.div`
-  position: relative;
+/**
+ * Only the page-specific box. The card's own look - 18px corners, the hero strip along the top
+ * edge, the padding and the heading scale - is `.evc-auth-card` in index.less, because the
+ * sign-up modal on /pro-member has to be the same card and cannot reach a styled-component
+ * defined in here.
+ */
+const Card = styled.div.attrs({ className: 'evc-auth-card' })`
   width: 100%;
   max-width: 420px;
-  padding: clamp(28px, 3vw, 40px);
-  border: 1px solid var(--evc-line);
-  border-radius: 18px;
-  background: var(--evc-paper);
   box-shadow: 0 18px 48px rgba(6, 32, 46, 0.08);
-  overflow: hidden;
-
-  /* The hero bands, 4px, pinned to the top edge. overflow:hidden above is what keeps it
-     inside the 18px corners. */
-  &::before {
-    content: '';
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline: 0;
-    height: 4px;
-    background-image: ${HERO_BANDS};
-  }
-
-  .auth-head {
-    margin-block-end: 28px;
-  }
-
-  .auth-eyebrow {
-    display: block;
-    color: var(--evc-signal-deep);
-    margin-block-end: 12px;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: clamp(24px, 2.4vw, 30px);
-    color: var(--evc-text);
-  }
-
-  .auth-subtitle {
-    margin: 12px 0 0;
-    font-size: 14.5px;
-    line-height: 1.6;
-    color: var(--evc-text-muted);
-  }
 `;
 
 const BackLink = styled(Link)`

@@ -95,6 +95,7 @@
     "express-async-handler": "^1.1.4",
     "express-fileupload": "^1.5.2",
     "express-sse-middleware": "^3.0.3",
+    "google-auth-library": "^11.0.2",
     "handlebars": "^4.7.7",
     "html-to-text": "^7.0.0",
     "http-assert": "^1.4.1",

@@ -11,7 +11,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { sendEmail, enqueueEmail } from '../services/emailService';
 import { getUtcNow } from '../utils/getUtcNow';
 import { Role } from '../types/Role';
-import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
@@ -276,19 +276,69 @@ export const inviteUser = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-async function decodeEmailFromGoogleToken(token) {
-  assert(token, 400, 'Empty code payload');
-  const secret = process.env.EVC_GOOGLE_SSO_CLIENT_SECRET;
-  const decoded = jwt.decode(token, secret);
-  const { email, given_name: givenName, family_name: surname } = decoded;
-  assert(email, 400, 'Invalid Google token');
-  return { email, givenName, surname };
+/**
+ * The frontend no longer hands us a Google id_token. It runs the OAuth 2.0 authorization-code
+ * flow in a popup and posts the one-time `code`; we redeem it here, server side, with the
+ * client secret. See `evc-web/src/components/GoogleSsoButton.jsx` for why the button moved off
+ * Google's own rendered widget.
+ *
+ * This also closes a hole. The previous implementation was `jwt.decode(token, secret)`.
+ * `jwt.decode()` in jsonwebtoken does not verify anything - its second parameter is an options
+ * object, so the secret was silently ignored - and it happily decodes an `alg: none` token. Any
+ * caller could POST a hand-written JWT carrying `{"email": "<any user>"}` and be issued that
+ * user's session cookie. Nothing about the token was ever checked against Google.
+ *
+ * `getToken` talks to Google directly over TLS and only succeeds for a code Google itself just
+ * issued to this client id, so the id_token that comes back is trusted by provenance rather
+ * than by us parsing it. `verifyIdToken` is still run on top: it checks the RS256 signature
+ * against Google's published keys, and pins `aud` to our client id so a code obtained for some
+ * other Google app cannot be replayed here.
+ *
+ * `redirect_uri: 'postmessage'` is not a URL - it is the literal value Google requires when the
+ * code came from a popup/JS flow rather than from a redirect to a registered URI.
+ */
+const GOOGLE_POPUP_REDIRECT_URI = 'postmessage';
+
+async function resolveProfileFromGoogleAuthCode(code) {
+  assert(code, 400, 'Empty code payload');
+
+  const clientId = process.env.EVC_GOOGLE_SSO_CLIENT_ID;
+  const clientSecret = process.env.EVC_GOOGLE_SSO_CLIENT_SECRET;
+  assert(clientId && clientSecret, 500, 'Google SSO is not configured');
+
+  const client = new OAuth2Client(clientId, clientSecret, GOOGLE_POPUP_REDIRECT_URI);
+
+  let idToken: string | undefined;
+  try {
+    const { tokens } = await client.getToken(code);
+    idToken = tokens.id_token ?? undefined;
+  } catch {
+    // A code is single-use and short-lived, so this is the ordinary "stale or replayed" case
+    // as much as it is an attack. Don't echo Google's error back to the client.
+    assert(false, 400, 'Invalid Google authorization code');
+  }
+  assert(idToken, 400, 'Google did not return an id token');
+
+  const ticket = await client.verifyIdToken({ idToken, audience: clientId });
+  const payload = ticket.getPayload();
+  assert(payload?.email, 400, 'Invalid Google token');
+  // Google will hand back an unverified address for some account types; treating it as proof of
+  // identity would let someone claim an email they merely typed in.
+  assert(payload.email_verified, 400, 'Google email address is not verified');
+
+  return {
+    email: payload.email,
+    givenName: payload.given_name,
+    surname: payload.family_name,
+  };
 }
 
 export const ssoGoogle = handlerWrapper(async (req, res) => {
+  // `token` is the legacy field name kept so the request shape does not change; it now carries
+  // an authorization code, not an id_token.
   const { token, referralCode } = req.body;
 
-  const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
+  const { email, givenName, surname } = await resolveProfileFromGoogleAuthCode(token);
 
   let user = await getActiveUserByEmail(email);
 

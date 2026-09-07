@@ -120,10 +120,29 @@ export function createAppInstance() {
 
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listAppEndpoints(app)));
+  /**
+   * Two different caching rules, because these are two different kinds of file.
+   *
+   * Everything Vite emits into build/assets carries a content hash in its filename, so a given
+   * URL's bytes can never change and `immutable` is exactly right - the browser is told not to
+   * revalidate for a year, and a new build simply produces new names.
+   *
+   * index.html is the opposite. It always lives at the same URL and it is the only thing that
+   * maps to those hashed names. Serving it `immutable` pinned every returning visitor to
+   * whichever bundle was current the first time they loaded the site: `immutable` means the
+   * browser will not even send a conditional request, so a release stayed invisible until the
+   * visitor hard-refreshed. It has to revalidate. `no-cache` still allows the cached copy to be
+   * reused - it just requires an ETag check first, which is a 304 in the common case.
+   */
   app.use('/', serveStatic(staticWwwDir, {
     cacheControl: true,
-    setHeaders: (res, path) => {
-      res.setHeader('Cache-Control', 'public, max-age=36536000, immutable'); // 1 year
+    setHeaders: (res, filePath) => {
+      res.setHeader(
+        'Cache-Control',
+        /\.html$/i.test(filePath)
+          ? 'no-cache'
+          : 'public, max-age=31536000, immutable' // 1 year, the max a year actually is
+      );
     }
   }));
 
@@ -132,7 +151,14 @@ export function createAppInstance() {
   // Debounce to frontend routing.
   // Express 5 uses path-to-regexp 8, where a bare '*' is a syntax error. '/{*splat}' is the
   // equivalent catch-all: the braces make it optional so it still matches '/' the way '*' did.
-  app.get('/{*splat}', (req, res) => res.sendFile(`${staticWwwDir}/index.html`));
+  // Same file, same rule as above - this is the SPA deep-link path (/dashboard, /stock/AAPL),
+  // and it must not pin a visitor to an old bundle either. res.sendFile would otherwise send
+  // its own `public, max-age=0`.
+  // `cacheControl: false` so send() does not overwrite the header with its own max-age.
+  app.get('/{*splat}', (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.sendFile(`${staticWwwDir}/index.html`, { cacheControl: false });
+  });
 
   console.log(listAppEndpoints(app));
 

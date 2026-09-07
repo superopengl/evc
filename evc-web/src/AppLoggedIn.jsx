@@ -59,6 +59,33 @@ const StyledLayout = styled(ProLayout)`
   // background-color: white;
 }
 
+/**
+ * Pin the sider panel colour, because the token alone loses a coin toss.
+ *
+ * pro-components paints the sider from one rule whose selector carries no per-instance hash:
+ *
+ *     .ant-pro-layout .ant-layout-sider.ant-pro-sider { background: <sider.colorMenuBackground> }
+ *
+ * Every ProLayout in the app emits that *same* selector with its own token's value, so the two
+ * we render collide: this one is #00293d, and HomePage's homeProLayoutToken is deliberately
+ * \`transparent\` (its mobile drawer paints its own blurred panel, which a token cannot express).
+ * Which one applies is then decided purely by which <style> tag sits later in <head>.
+ *
+ * Load /dashboard directly and only this layout ever mounts, so the dark rule is the only one
+ * and everything looks right. Arrive by logging in from the homepage instead - no reload, so
+ * HomePage's rule is already registered - and the transparent one can win: the panel goes clear,
+ * the white page shows through, and the menu labels (still white, from tokens that did apply)
+ * vanish into it. A refresh "fixes" it because it drops the homepage's rule again.
+ *
+ * The styled-components class lands on the same element as .ant-pro-layout, so &.ant-pro-layout
+ * is two classes there plus two below - four against pro-components' three. That wins on
+ * specificity rather than on insertion order, which is the whole point: order is what was
+ * unreliable. Value comes from the token so there is still one definition of the colour.
+ */
+&.ant-pro-layout .ant-layout-sider.ant-pro-sider {
+  background: ${proLayoutToken.sider.colorMenuBackground};
+}
+
 // Line the logo up with the sider menu icons below it. pro-layout already gives the header
 // bar margin-inline: 16px, and a menu icon sits 28px in (8px sider paddingInlineLayoutMenu +
 // 4px antd itemMarginInline + 16px itemPaddingInline), so this is the 12px remainder. 24px
